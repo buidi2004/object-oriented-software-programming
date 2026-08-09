@@ -1,10 +1,10 @@
+using CloudServiceStore.Domain.Primitives;
 using System;
 
 namespace CloudServiceStore.Domain.Entities;
 
-public class WishlistItem
+public class WishlistItem : AggregateRoot
 {
-    public Guid Id { get; set; }
     public Guid UserId { get; set; }
     public Guid ServicePlanId { get; set; }
     public DateTime AddedAt { get; set; }

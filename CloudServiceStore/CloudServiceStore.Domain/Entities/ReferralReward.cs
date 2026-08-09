@@ -1,10 +1,10 @@
+using CloudServiceStore.Domain.Primitives;
 using System;
 
 namespace CloudServiceStore.Domain.Entities;
 
-public class ReferralReward
+public class ReferralReward : AggregateRoot
 {
-    public Guid Id { get; set; }
     public Guid ReferrerUserId { get; set; }  // người giới thiệu
     public Guid ReferredUserId { get; set; }  // người được giới thiệu
     public decimal RewardAmount { get; set; } // số tiền thưởng nạp vào ví

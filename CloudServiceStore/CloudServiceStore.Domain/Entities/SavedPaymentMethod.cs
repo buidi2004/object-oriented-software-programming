@@ -1,10 +1,10 @@
+using CloudServiceStore.Domain.Primitives;
 using System;
 
 namespace CloudServiceStore.Domain.Entities;
 
-public class SavedPaymentMethod
+public class SavedPaymentMethod : AggregateRoot
 {
-    public Guid Id { get; set; }
     public Guid UserId { get; set; }
     public string Gateway { get; set; } = null!;    // e.g. "VNPAY", "MOMO", "PAYPAL"
     public string MaskedInfo { get; set; } = null!; // e.g. "**** **** **** 1234"

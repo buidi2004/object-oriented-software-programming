@@ -1,10 +1,10 @@
+using CloudServiceStore.Domain.Primitives;
 using System;
 
 namespace CloudServiceStore.Domain.Entities;
 
-public class UserSession
+public class UserSession : AggregateRoot
 {
-    public Guid Id { get; set; }
     public Guid UserId { get; set; }
     public string RefreshTokenHash { get; set; } = null!;
     public string DeviceInfo { get; set; } = null!;

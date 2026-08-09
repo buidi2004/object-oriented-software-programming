@@ -1,10 +1,10 @@
+using CloudServiceStore.Domain.Primitives;
 using System;
 
 namespace CloudServiceStore.Domain.Entities;
 
-public class Banner
+public class Banner : AggregateRoot
 {
-    public Guid Id { get; set; }
     public string ImageUrl { get; set; } = null!;
     public string? LinkUrl { get; set; }
     public int DisplayOrder { get; set; }

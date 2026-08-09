@@ -14,20 +14,17 @@ public class AddToCartCommandHandler : IRequestHandler<AddToCartCommand, Guid>
 {
     private readonly IUnitOfWork _uow;
     private readonly IRepository<Cart> _cartRepo;
-    private readonly IRepository<CartItem> _cartItemRepo;
     private readonly IRepository<ServicePlan> _planRepo;
     private readonly ICurrentUserService _currentUser;
 
     public AddToCartCommandHandler(
-        IUnitOfWork uow, 
-        IRepository<Cart> cartRepo, 
-        IRepository<CartItem> cartItemRepo,
+        IUnitOfWork uow,
+        IRepository<Cart> cartRepo,
         IRepository<ServicePlan> planRepo,
         ICurrentUserService currentUser)
     {
         _uow = uow;
         _cartRepo = cartRepo;
-        _cartItemRepo = cartItemRepo;
         _planRepo = planRepo;
         _currentUser = currentUser;
     }
@@ -41,35 +38,50 @@ public class AddToCartCommandHandler : IRequestHandler<AddToCartCommand, Guid>
             throw new NotFoundException("Gói dịch vụ không tồn tại hoặc đã bị khoá.");
 
         var cart = await _cartRepo.FirstOrDefaultAsync(c => c.UserId == userId && c.Status == CloudServiceStore.Domain.Enums.CartStatus.Active, ct);
+        Console.WriteLine($"Cart from repo is null? {cart == null}");
+
         if (cart == null)
         {
-            cart = new Cart { Id = Guid.NewGuid(), UserId = userId, Status = CloudServiceStore.Domain.Enums.CartStatus.Active };
+            Console.WriteLine("CREATING NEW CART!");
+            cart = new Cart(userId);
             await _cartRepo.AddAsync(cart, ct);
-            // Must save changes to get cart ID before adding item, though since we generate ID here, it's fine.
         }
 
-        var existingItems = await _cartItemRepo.WhereAsync(ci => ci.CartId == cart.Id && ci.ServicePlanId == request.ServicePlanId && ci.BillingCycle == request.BillingCycle, ct);
-        var item = existingItems.FirstOrDefault();
+        if (cart == null) throw new Exception("CART IS NULL!");
+        if (request == null) throw new Exception("REQUEST IS NULL!");
 
-        if (item != null)
+        Console.WriteLine($"cart is null? {cart == null}");
+        Console.WriteLine($"cart.Items is null? {cart?.Items == null}");
+        
+        try
         {
-            item.Quantity += request.Quantity;
-            _cartItemRepo.Update(item);
+            cart.AddItem(request.ServicePlanId, request.BillingCycle, request.Quantity);
         }
-        else
+        catch (Exception ex)
         {
-            item = new CartItem
-            {
-                Id = Guid.NewGuid(),
-                CartId = cart.Id,
-                ServicePlanId = request.ServicePlanId,
-                BillingCycle = request.BillingCycle,
-                Quantity = request.Quantity
-            };
-            await _cartItemRepo.AddAsync(item, ct);
+            Console.WriteLine($"AddItem threw: {ex}");
+            throw;
         }
 
-        await _uow.SaveChangesAsync(ct);
-        return item.Id;
+        try
+        {
+            await _uow.SaveChangesAsync(ct);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"SaveChanges threw: {ex}");
+            throw;
+        }
+        
+        try
+        {
+            var addedItem = cart.Items.FirstOrDefault(i => i.ServicePlanId == request.ServicePlanId && i.BillingCycle == request.BillingCycle);
+            return addedItem?.Id ?? Guid.Empty;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"FirstOrDefault threw: {ex}");
+            throw;
+        }
     }
 }

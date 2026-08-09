@@ -54,8 +54,11 @@ public class PayWithWalletCommandHandlerTests
         var userId = Guid.NewGuid();
         _currentUserMock.Setup(c => c.UserId).Returns(userId);
         _orderRepoMock.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(new OrderRequest { UserId = userId, Status = OrderStatus.Pending, TotalAmount = 100 });
+        var wallet = new Domain.Entities.Wallet(Guid.NewGuid());
+        wallet.Deposit(50);
+
         _walletRepoMock.Setup(r => r.WhereAsync(It.IsAny<System.Linq.Expressions.Expression<Func<Domain.Entities.Wallet, bool>>>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new List<Domain.Entities.Wallet> { new Domain.Entities.Wallet { Balance = 50 } }); // Not enough
+            .ReturnsAsync(new List<Domain.Entities.Wallet> { wallet }); // Not enough
 
         await Assert.ThrowsAsync<ConflictException>(() => CreateHandler().Handle(new PayWithWalletCommand(Guid.NewGuid()), CancellationToken.None));
     }
@@ -65,7 +68,8 @@ public class PayWithWalletCommandHandlerTests
     {
         var userId = Guid.NewGuid();
         var order = new OrderRequest { Id = Guid.NewGuid(), UserId = userId, Status = OrderStatus.Pending, TotalAmount = 100 };
-        var wallet = new Domain.Entities.Wallet { Id = Guid.NewGuid(), UserId = userId, Balance = 150 };
+        var wallet = new Domain.Entities.Wallet(userId);
+        wallet.Deposit(150);
 
         _currentUserMock.Setup(c => c.UserId).Returns(userId);
         _orderRepoMock.Setup(r => r.GetByIdAsync(order.Id, It.IsAny<CancellationToken>())).ReturnsAsync(order);

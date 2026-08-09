@@ -8,9 +8,9 @@
 /home/buidi/Tài liệu/laptrinhphanemhuogndoituong/CloudServiceStore/CloudServiceStore.Application/obj/Debug/net10.0/CloudServiceStore.Application.AssemblyInfoInputs.cache
 /home/buidi/Tài liệu/laptrinhphanemhuogndoituong/CloudServiceStore/CloudServiceStore.Application/obj/Debug/net10.0/CloudServiceStore.Application.AssemblyInfo.cs
 /home/buidi/Tài liệu/laptrinhphanemhuogndoituong/CloudServiceStore/CloudServiceStore.Application/obj/Debug/net10.0/CloudServiceStore.Application.csproj.CoreCompileInputs.cache
+/home/buidi/Tài liệu/laptrinhphanemhuogndoituong/CloudServiceStore/CloudServiceStore.Application/obj/Debug/net10.0/CloudServiceStore.Application.sourcelink.json
 /home/buidi/Tài liệu/laptrinhphanemhuogndoituong/CloudServiceStore/CloudServiceStore.Application/obj/Debug/net10.0/CloudSer.ECC85741.Up2Date
 /home/buidi/Tài liệu/laptrinhphanemhuogndoituong/CloudServiceStore/CloudServiceStore.Application/obj/Debug/net10.0/CloudServiceStore.Application.dll
 /home/buidi/Tài liệu/laptrinhphanemhuogndoituong/CloudServiceStore/CloudServiceStore.Application/obj/Debug/net10.0/refint/CloudServiceStore.Application.dll
 /home/buidi/Tài liệu/laptrinhphanemhuogndoituong/CloudServiceStore/CloudServiceStore.Application/obj/Debug/net10.0/CloudServiceStore.Application.pdb
 /home/buidi/Tài liệu/laptrinhphanemhuogndoituong/CloudServiceStore/CloudServiceStore.Application/obj/Debug/net10.0/ref/CloudServiceStore.Application.dll
-/home/buidi/Tài liệu/laptrinhphanemhuogndoituong/CloudServiceStore/CloudServiceStore.Application/obj/Debug/net10.0/CloudServiceStore.Application.sourcelink.json

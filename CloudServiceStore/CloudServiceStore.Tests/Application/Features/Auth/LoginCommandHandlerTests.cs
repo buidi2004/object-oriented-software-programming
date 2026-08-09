@@ -35,7 +35,7 @@ public class LoginCommandHandlerTests
     public async Task Handle_UserNotFound_ThrowsUnauthorizedException()
     {
         var command = new LoginCommand("nonexistent@test.com", "pass", "1.1.1.1", "Agent", "Device");
-        _userRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<AppUser, bool>>>(), default))
+        _userRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<AppUser, bool>>>(), default, It.IsAny<Expression<Func<AppUser, object>>[]>()))
             .ReturnsAsync((AppUser?)null);
 
         var handler = CreateHandler();
@@ -48,7 +48,7 @@ public class LoginCommandHandlerTests
         var user = new AppUser { Id = Guid.NewGuid(), Email = "a@test.com", PasswordHash = "hash" };
         var command = new LoginCommand("a@test.com", "wrong", "1.1.1.1", "Agent", "Device");
         
-        _userRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<AppUser, bool>>>(), default))
+        _userRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<AppUser, bool>>>(), default, It.IsAny<Expression<Func<AppUser, object>>[]>()))
             .ReturnsAsync(user);
         _hasherMock.Setup(h => h.Verify("wrong", "hash")).Returns(false);
 
@@ -66,7 +66,7 @@ public class LoginCommandHandlerTests
         var user = new AppUser { Id = Guid.NewGuid(), Email = "a@test.com", PasswordHash = "hash", IsActive = true, RoleId = roleId };
         var command = new LoginCommand("a@test.com", "correct", "1.1.1.1", "Agent", "Device");
         
-        _userRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<AppUser, bool>>>(), default))
+        _userRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<AppUser, bool>>>(), default, It.IsAny<Expression<Func<AppUser, object>>[]>()))
             .ReturnsAsync(user);
         _hasherMock.Setup(h => h.Verify("correct", "hash")).Returns(true);
         _hasherMock.Setup(h => h.Hash("refresh-token-123")).Returns("hashed-refresh-token");

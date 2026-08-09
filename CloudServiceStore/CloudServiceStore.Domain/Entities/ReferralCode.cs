@@ -1,10 +1,10 @@
+using CloudServiceStore.Domain.Primitives;
 using System;
 
 namespace CloudServiceStore.Domain.Entities;
 
-public class ReferralCode
+public class ReferralCode : AggregateRoot
 {
-    public Guid Id { get; set; }
     public Guid UserId { get; set; } // unique — 1 user = 1 code
     public string Code { get; set; } = null!;
 

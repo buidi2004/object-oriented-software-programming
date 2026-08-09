@@ -1,10 +1,10 @@
+using CloudServiceStore.Domain.Primitives;
 using System;
 
 namespace CloudServiceStore.Domain.Entities;
 
-public class DnsRecord
+public class DnsRecord : AggregateRoot
 {
-    public Guid Id { get; set; }
     public Guid DomainId { get; set; }
     public string Type { get; set; } = null!;
     public string Name { get; set; } = null!;

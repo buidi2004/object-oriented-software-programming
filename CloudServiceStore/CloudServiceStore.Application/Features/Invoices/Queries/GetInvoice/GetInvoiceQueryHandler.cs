@@ -39,14 +39,14 @@ public class GetInvoiceQueryHandler : IRequestHandler<GetInvoiceQuery, InvoiceDt
         if (order.UserId != userId)
             throw new UnauthorizedException("You do not have permission to view this invoice.");
 
-        var invoice = await _invoiceRepository.FirstOrDefaultAsync(x => x.OrderRequestId == request.OrderRequestId, cancellationToken);
+        var invoice = await _invoiceRepository.FirstOrDefaultAsync(x => x.OrderId == request.OrderRequestId, cancellationToken);
         if (invoice == null)
             throw new NotFoundException(nameof(Invoice), request.OrderRequestId);
 
         return new InvoiceDto
         {
             Id = invoice.Id,
-            OrderRequestId = invoice.OrderRequestId,
+            OrderRequestId = invoice.OrderId,
             InvoiceNumber = invoice.InvoiceNumber,
             IssuedAt = invoice.IssuedAt,
             PdfUrl = invoice.PdfUrl

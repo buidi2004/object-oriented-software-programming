@@ -34,18 +34,15 @@ public class GenerateInvoiceCommandHandler : IRequestHandler<GenerateInvoiceComm
         if (order.Status != CloudServiceStore.Domain.Enums.OrderStatus.Paid)
             throw new ConflictException("Invoice can only be generated for Paid orders.");
 
-        var existingInvoice = await _invoiceRepository.FirstOrDefaultAsync(x => x.OrderRequestId == request.OrderRequestId, cancellationToken);
+        var existingInvoice = await _invoiceRepository.FirstOrDefaultAsync(x => x.OrderId == request.OrderRequestId, cancellationToken);
         if (existingInvoice != null)
             throw new ConflictException("Invoice already exists for this order.");
 
-        var invoice = new Invoice
-        {
-            Id = Guid.NewGuid(),
-            OrderRequestId = request.OrderRequestId,
-            InvoiceNumber = $"INV-{DateTime.UtcNow:yyyyMMdd}-{request.OrderRequestId.ToString().Substring(0, 6).ToUpper()}",
-            IssuedAt = DateTime.UtcNow,
-            PdfUrl = $"https://s3.cloudservicestore.com/invoices/{request.OrderRequestId}.pdf" // Mock URL
-        };
+        var invoice = new Invoice(
+            request.OrderRequestId,
+            $"INV-{DateTime.UtcNow:yyyyMMdd}-{request.OrderRequestId.ToString().Substring(0, 6).ToUpper()}",
+            $"https://s3.cloudservicestore.com/invoices/{request.OrderRequestId}.pdf" // Mock URL
+        );
 
         await _invoiceRepository.AddAsync(invoice, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);

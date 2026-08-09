@@ -1,10 +1,10 @@
+using CloudServiceStore.Domain.Primitives;
 using System;
 
 namespace CloudServiceStore.Domain.Entities;
 
-public class GiftCard
+public class GiftCard : AggregateRoot
 {
-    public Guid Id { get; set; }
     public string Code { get; set; } = null!; // unique
     public decimal Amount { get; set; }
     public decimal RemainingAmount { get; set; }

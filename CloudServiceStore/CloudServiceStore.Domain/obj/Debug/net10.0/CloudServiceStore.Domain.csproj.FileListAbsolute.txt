@@ -1,12 +1,13 @@
 /home/buidi/Tài liệu/laptrinhphanemhuogndoituong/CloudServiceStore/CloudServiceStore.Domain/bin/Debug/net10.0/CloudServiceStore.Domain.deps.json
 /home/buidi/Tài liệu/laptrinhphanemhuogndoituong/CloudServiceStore/CloudServiceStore.Domain/bin/Debug/net10.0/CloudServiceStore.Domain.dll
 /home/buidi/Tài liệu/laptrinhphanemhuogndoituong/CloudServiceStore/CloudServiceStore.Domain/bin/Debug/net10.0/CloudServiceStore.Domain.pdb
+/home/buidi/Tài liệu/laptrinhphanemhuogndoituong/CloudServiceStore/CloudServiceStore.Domain/obj/Debug/net10.0/CloudServiceStore.Domain.csproj.AssemblyReference.cache
 /home/buidi/Tài liệu/laptrinhphanemhuogndoituong/CloudServiceStore/CloudServiceStore.Domain/obj/Debug/net10.0/CloudServiceStore.Domain.GeneratedMSBuildEditorConfig.editorconfig
 /home/buidi/Tài liệu/laptrinhphanemhuogndoituong/CloudServiceStore/CloudServiceStore.Domain/obj/Debug/net10.0/CloudServiceStore.Domain.AssemblyInfoInputs.cache
 /home/buidi/Tài liệu/laptrinhphanemhuogndoituong/CloudServiceStore/CloudServiceStore.Domain/obj/Debug/net10.0/CloudServiceStore.Domain.AssemblyInfo.cs
 /home/buidi/Tài liệu/laptrinhphanemhuogndoituong/CloudServiceStore/CloudServiceStore.Domain/obj/Debug/net10.0/CloudServiceStore.Domain.csproj.CoreCompileInputs.cache
+/home/buidi/Tài liệu/laptrinhphanemhuogndoituong/CloudServiceStore/CloudServiceStore.Domain/obj/Debug/net10.0/CloudServiceStore.Domain.sourcelink.json
 /home/buidi/Tài liệu/laptrinhphanemhuogndoituong/CloudServiceStore/CloudServiceStore.Domain/obj/Debug/net10.0/CloudServiceStore.Domain.dll
 /home/buidi/Tài liệu/laptrinhphanemhuogndoituong/CloudServiceStore/CloudServiceStore.Domain/obj/Debug/net10.0/refint/CloudServiceStore.Domain.dll
 /home/buidi/Tài liệu/laptrinhphanemhuogndoituong/CloudServiceStore/CloudServiceStore.Domain/obj/Debug/net10.0/CloudServiceStore.Domain.pdb
 /home/buidi/Tài liệu/laptrinhphanemhuogndoituong/CloudServiceStore/CloudServiceStore.Domain/obj/Debug/net10.0/ref/CloudServiceStore.Domain.dll
-/home/buidi/Tài liệu/laptrinhphanemhuogndoituong/CloudServiceStore/CloudServiceStore.Domain/obj/Debug/net10.0/CloudServiceStore.Domain.sourcelink.json

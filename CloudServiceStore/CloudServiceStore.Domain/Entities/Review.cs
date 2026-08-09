@@ -1,10 +1,10 @@
+using CloudServiceStore.Domain.Primitives;
 using System;
 
 namespace CloudServiceStore.Domain.Entities;
 
-public class Review
+public class Review : AggregateRoot
 {
-    public Guid Id { get; set; }
     public Guid ServicePlanId { get; set; }
     public Guid UserId { get; set; }
     public int Rating { get; set; } // 1-5

@@ -18,20 +18,15 @@ public class CreateCouponCommandHandler : IRequestHandler<CreateCouponCommand, G
 
     public async Task<Guid> Handle(CreateCouponCommand request, CancellationToken cancellationToken)
     {
-        var coupon = new Coupon
+        var coupon = new Coupon(request.Code.ToUpperInvariant(), request.DiscountPercent, request.MaxUsage, request.ExpiryDate);
+        if (!request.IsActive)
         {
-            Id = Guid.NewGuid(),
-            Code = request.Code.ToUpperInvariant(),
-            DiscountPercent = request.DiscountPercent,
-            MaxUsage = request.MaxUsage,
-            ExpiryDate = request.ExpiryDate,
-            IsActive = request.IsActive,
-            UsedCount = 0
-        };
+            coupon.Deactivate();
+        }
 
         await _couponRepo.AddAsync(coupon, cancellationToken);
         await _uow.SaveChangesAsync(cancellationToken);
-        
+
         return coupon.Id;
     }
 }

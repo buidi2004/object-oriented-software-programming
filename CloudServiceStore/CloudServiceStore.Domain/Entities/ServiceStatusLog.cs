@@ -1,10 +1,10 @@
+using CloudServiceStore.Domain.Primitives;
 using System;
 
 namespace CloudServiceStore.Domain.Entities;
 
-public class ServiceStatusLog
+public class ServiceStatusLog : AggregateRoot
 {
-    public Guid Id { get; set; }
     public Guid? ServicePlanId { get; set; }
     public Guid? OrderRequestId { get; set; }
     public DateTime CheckedAt { get; set; }

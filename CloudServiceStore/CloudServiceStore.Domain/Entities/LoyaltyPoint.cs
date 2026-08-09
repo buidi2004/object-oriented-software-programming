@@ -1,10 +1,10 @@
+using CloudServiceStore.Domain.Primitives;
 using System;
 
 namespace CloudServiceStore.Domain.Entities;
 
-public class LoyaltyPoint
+public class LoyaltyPoint : AggregateRoot
 {
-    public Guid Id { get; set; }
     public Guid UserId { get; set; } // unique
     public int Points { get; set; }
 

@@ -70,7 +70,7 @@ public class GetInvoiceQueryHandlerTests
         _orderRepoMock.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(order);
             
-        _invoiceRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<Invoice, bool>>>(), It.IsAny<CancellationToken>()))
+        _invoiceRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<Invoice, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<Invoice, object>>[]>()))
             .ReturnsAsync((Invoice?)null);
 
         var query = new GetInvoiceQuery { OrderRequestId = order.Id };
@@ -92,13 +92,13 @@ public class GetInvoiceQueryHandlerTests
         var invoice = new Invoice 
         { 
             Id = Guid.NewGuid(), 
-            OrderRequestId = order.Id, 
+            OrderId = order.Id, 
             InvoiceNumber = "INV-12345",
             IssuedAt = DateTime.UtcNow,
             PdfUrl = "https://example.com/inv-12345.pdf"
         };
         
-        _invoiceRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<Invoice, bool>>>(), It.IsAny<CancellationToken>()))
+        _invoiceRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<Invoice, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<Invoice, object>>[]>()))
             .ReturnsAsync(invoice);
 
         var query = new GetInvoiceQuery { OrderRequestId = order.Id };

@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CloudServiceStore.Application.Exceptions;
@@ -11,23 +13,26 @@ namespace CloudServiceStore.Application.Features.Carts.Commands.RemoveFromCart;
 public class RemoveFromCartCommandHandler : IRequestHandler<RemoveFromCartCommand>
 {
     private readonly IUnitOfWork _uow;
-    private readonly IRepository<CartItem> _cartItemRepo;
-    private readonly IRepository<Cart> _cartRepo;
     private readonly ICurrentUserService _currentUser;
+    private readonly IRepository<Cart> _cartRepo;
 
-    public RemoveFromCartCommandHandler(IUnitOfWork uow, IRepository<CartItem> cartItemRepo, IRepository<Cart> cartRepo, ICurrentUserService currentUser)
-    { _uow = uow; _cartItemRepo = cartItemRepo; _cartRepo = cartRepo; _currentUser = currentUser; }
+    public RemoveFromCartCommandHandler(IUnitOfWork uow, ICurrentUserService currentUser, IRepository<Cart> cartRepo)
+    { _uow = uow; _currentUser = currentUser; _cartRepo = cartRepo; }
 
     public async Task Handle(RemoveFromCartCommand request, CancellationToken ct)
     {
         var userId = _currentUser.UserId ?? throw new UnauthorizedException("Chưa đăng nhập");
-        var item = await _cartItemRepo.GetByIdAsync(request.ItemId, ct) ?? throw new NotFoundException("Item không tồn tại");
-        
-        var cart = await _cartRepo.GetByIdAsync(item.CartId, ct);
-        if (cart == null || cart.UserId != userId || cart.Status != CloudServiceStore.Domain.Enums.CartStatus.Active)
-            throw new UnauthorizedException("Không có quyền xoá item này");
 
-        _cartItemRepo.Delete(item);
+        var cart = await _cartRepo.FirstOrDefaultAsync(c => c.UserId == userId && c.Status == CloudServiceStore.Domain.Enums.CartStatus.Active, ct, c => c.Items);
+
+        if (cart == null)
+            throw new NotFoundException("Cart không tồn tại");
+
+        var itemExists = cart.Items.Any(i => i.Id == request.ItemId);
+        if (!itemExists) throw new UnauthorizedException("Không có quyền xóa item này");
+
+        cart.RemoveItem(request.ItemId);
+
         await _uow.SaveChangesAsync(ct);
     }
 }

@@ -55,7 +55,7 @@ public class GenerateInvoiceCommandHandlerTests
             .ReturnsAsync(order);
             
         var existingInvoice = new Invoice { Id = Guid.NewGuid() };
-        _invoiceRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<Invoice, bool>>>(), It.IsAny<CancellationToken>()))
+        _invoiceRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<Invoice, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<Invoice, object>>[]>()))
             .ReturnsAsync(existingInvoice);
 
         var command = new GenerateInvoiceCommand { OrderRequestId = order.Id };
@@ -72,7 +72,7 @@ public class GenerateInvoiceCommandHandlerTests
         _orderRepoMock.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(order);
             
-        _invoiceRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<Invoice, bool>>>(), It.IsAny<CancellationToken>()))
+        _invoiceRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<Invoice, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<Invoice, object>>[]>()))
             .ReturnsAsync((Invoice?)null);
 
         var command = new GenerateInvoiceCommand { OrderRequestId = order.Id };

@@ -22,7 +22,7 @@ public class UpsertExchangeRateCommandHandlerTests
     [Fact]
     public async Task Handle_NewCurrencyPair_CreatesNewExchangeRate()
     {
-        _rateRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<ExchangeRate, bool>>>(), It.IsAny<CancellationToken>()))
+        _rateRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<ExchangeRate, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<ExchangeRate, object>>[]>()))
             .ReturnsAsync((ExchangeRate?)null); // Does not exist yet
 
         var command = new UpsertExchangeRateCommand { FromCurrency = "VND", ToCurrency = "USD", Rate = 1m / 25000m };
@@ -39,7 +39,7 @@ public class UpsertExchangeRateCommandHandlerTests
     public async Task Handle_ExistingCurrencyPair_UpdatesRate()
     {
         var existing = new ExchangeRate { Id = Guid.NewGuid(), FromCurrency = "VND", ToCurrency = "USD", Rate = 1m / 23000m, UpdatedAt = DateTime.UtcNow.AddDays(-1) };
-        _rateRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<ExchangeRate, bool>>>(), It.IsAny<CancellationToken>()))
+        _rateRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<ExchangeRate, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<ExchangeRate, object>>[]>()))
             .ReturnsAsync(existing);
 
         var command = new UpsertExchangeRateCommand { FromCurrency = "VND", ToCurrency = "USD", Rate = 1m / 25000m };

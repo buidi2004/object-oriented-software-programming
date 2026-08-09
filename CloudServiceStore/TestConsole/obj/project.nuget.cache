@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "A14uujDQmQg=",
+  "success": true,
+  "projectFilePath": "/home/buidi/Tài liệu/laptrinhphanemhuogndoituong/CloudServiceStore/TestConsole/TestConsole.csproj",
+  "expectedPackageFiles": [
+    "/home/buidi/.nuget/packages/castle.core/5.1.1/castle.core.5.1.1.nupkg.sha512",
+    "/home/buidi/.nuget/packages/mediatr.contracts/2.0.1/mediatr.contracts.2.0.1.nupkg.sha512",
+    "/home/buidi/.nuget/packages/moq/4.20.72/moq.4.20.72.nupkg.sha512",
+    "/home/buidi/.nuget/packages/system.diagnostics.eventlog/6.0.0/system.diagnostics.eventlog.6.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

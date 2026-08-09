@@ -25,41 +25,26 @@ public class PayWithWalletCommandHandler : IRequestHandler<PayWithWalletCommand,
     public async Task<bool> Handle(PayWithWalletCommand request, CancellationToken cancellationToken)
     {
         var userId = _currentUser.UserId ?? throw new UnauthorizedException("Chưa đăng nhập");
-        
-        var order = await _orderRepo.GetByIdAsync(request.OrderId, cancellationToken)
-            ?? throw new NotFoundException("Đơn hàng không tồn tại.");
-            
-        if (order.UserId != userId)
-            throw new UnauthorizedException("Đơn hàng không thuộc về bạn.");
-            
-        if (order.Status == OrderStatus.Paid)
-            throw new ConflictException("Đơn hàng này đã được thanh toán.");
-            
-        var wallets = await _walletRepo.WhereAsync(w => w.UserId == userId, cancellationToken);
-        var wallet = Enumerable.FirstOrDefault(wallets);
-        
-        if (wallet == null || wallet.Balance < order.TotalAmount)
-            throw new ConflictException("Số dư ví không đủ để thanh toán.");
 
-        // Deduct balance
-        wallet.Balance -= order.TotalAmount;
-        wallet.UpdatedAt = DateTime.UtcNow;
+        var order = await _orderRepo.GetByIdAsync(request.OrderId, cancellationToken);
+        if (order == null || order.UserId != userId) throw new NotFoundException("Đơn hàng không hợp lệ.");
+        if (order.Status != OrderStatus.Pending) throw new ConflictException("Đơn hàng đã được thanh toán hoặc hủy.");
+
+        var wallets = await _walletRepo.WhereAsync(w => w.UserId == userId, cancellationToken);
+        var wallet = wallets.FirstOrDefault();
+
+        if (wallet == null || wallet.Balance < order.TotalAmount)
+            throw new ConflictException("Số dư ví không đủ.");
+
+        wallet.Withdraw(order.TotalAmount);
         _walletRepo.Update(wallet);
 
-        // Update order status
-        order.Status = OrderStatus.Paid;
+        var transaction = new WalletTransaction(wallet.Id, order.TotalAmount, TransactionType.Payment, order.Id);
+        await _transactionRepo.AddAsync(transaction, cancellationToken);
+
+        order.Pay();
         _orderRepo.Update(order);
 
-        // Record transaction
-        var transaction = new WalletTransaction
-        {
-            WalletId = wallet.Id,
-            Amount = -order.TotalAmount,
-            Type = TransactionType.Payment,
-            RefOrderId = order.Id
-        };
-        await _transactionRepo.AddAsync(transaction, cancellationToken);
-        
         await _uow.SaveChangesAsync(cancellationToken);
         return true;
     }

@@ -1,10 +1,10 @@
+using CloudServiceStore.Domain.Primitives;
 using System;
 
 namespace CloudServiceStore.Domain.Entities;
 
-public class LoyaltyTransaction
+public class LoyaltyTransaction : AggregateRoot
 {
-    public Guid Id { get; set; }
     public Guid UserId { get; set; }
     public int Points { get; set; } // positive for earned, negative for redeemed
     public string Reason { get; set; } = null!;

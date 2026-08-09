@@ -74,7 +74,7 @@ public class WishlistCommandHandlerTests
         _planRepoMock.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(plan);
 
         var existingItem = new WishlistItem { Id = Guid.NewGuid() };
-        _repoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<WishlistItem, bool>>>(), It.IsAny<CancellationToken>()))
+        _repoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<WishlistItem, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<WishlistItem, object>>[]>()))
             .ReturnsAsync(existingItem);
 
         var handler = new AddToWishlistCommandHandler(_repoMock.Object, _planRepoMock.Object, _uowMock.Object, _currentUserMock.Object);
@@ -91,7 +91,7 @@ public class WishlistCommandHandlerTests
         var plan = new ServicePlan { Id = Guid.NewGuid() };
         _planRepoMock.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(plan);
 
-        _repoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<WishlistItem, bool>>>(), It.IsAny<CancellationToken>()))
+        _repoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<WishlistItem, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<WishlistItem, object>>[]>()))
             .ReturnsAsync((WishlistItem?)null);
 
         var handler = new AddToWishlistCommandHandler(_repoMock.Object, _planRepoMock.Object, _uowMock.Object, _currentUserMock.Object);

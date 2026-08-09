@@ -51,7 +51,7 @@ public class GetServicePlansWithCurrencyQueryHandlerTests
 
         // 1 USD = 25000 VND => VND to USD: price / 25000
         var rate = new ExchangeRate { Id = Guid.NewGuid(), FromCurrency = "VND", ToCurrency = "USD", Rate = 1m / 25000m, UpdatedAt = DateTime.UtcNow };
-        _exchangeRateRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<ExchangeRate, bool>>>(), It.IsAny<CancellationToken>()))
+        _exchangeRateRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<ExchangeRate, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<ExchangeRate, object>>[]>()))
             .ReturnsAsync(rate);
 
         var query = new GetServicePlansWithCurrencyQuery { Currency = "USD" };
@@ -72,7 +72,7 @@ public class GetServicePlansWithCurrencyQueryHandlerTests
         var prices = SamplePrices();
         _planPriceRepoMock.Setup(r => r.GetAllAsync(It.IsAny<CancellationToken>())).ReturnsAsync(prices);
 
-        _exchangeRateRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<ExchangeRate, bool>>>(), It.IsAny<CancellationToken>()))
+        _exchangeRateRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<ExchangeRate, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<ExchangeRate, object>>[]>()))
             .ReturnsAsync((ExchangeRate?)null); // No rate found
 
         var query = new GetServicePlansWithCurrencyQuery { Currency = "JPY" };

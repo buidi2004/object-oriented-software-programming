@@ -1,10 +1,10 @@
+using CloudServiceStore.Domain.Primitives;
 using System;
 
 namespace CloudServiceStore.Domain.Entities;
 
-public class LoginHistory
+public class LoginHistory : AggregateRoot
 {
-    public Guid Id { get; set; }
     public Guid UserId { get; set; }
     public string IpAddress { get; set; } = null!;
     public string UserAgent { get; set; } = null!;

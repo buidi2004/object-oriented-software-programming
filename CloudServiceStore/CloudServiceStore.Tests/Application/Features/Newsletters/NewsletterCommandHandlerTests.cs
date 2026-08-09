@@ -20,7 +20,7 @@ public class NewsletterCommandHandlerTests
     [Fact]
     public async Task Subscribe_NewEmail_AddsSubscriber()
     {
-        _repoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<NewsletterSubscriber, bool>>>(), It.IsAny<CancellationToken>()))
+        _repoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<NewsletterSubscriber, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<NewsletterSubscriber, object>>[]>()))
             .ReturnsAsync((NewsletterSubscriber?)null);
 
         var handler = new SubscribeNewsletterCommandHandler(_repoMock.Object, _uowMock.Object);
@@ -35,7 +35,7 @@ public class NewsletterCommandHandlerTests
     public async Task Subscribe_ExistingActive_ThrowsConflictException()
     {
         var sub = new NewsletterSubscriber { Email = "test@test.com", IsActive = true };
-        _repoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<NewsletterSubscriber, bool>>>(), It.IsAny<CancellationToken>()))
+        _repoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<NewsletterSubscriber, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<NewsletterSubscriber, object>>[]>()))
             .ReturnsAsync(sub);
 
         var handler = new SubscribeNewsletterCommandHandler(_repoMock.Object, _uowMock.Object);
@@ -46,7 +46,7 @@ public class NewsletterCommandHandlerTests
     public async Task Subscribe_ExistingInactive_Reactivates()
     {
         var sub = new NewsletterSubscriber { Email = "test@test.com", IsActive = false };
-        _repoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<NewsletterSubscriber, bool>>>(), It.IsAny<CancellationToken>()))
+        _repoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<NewsletterSubscriber, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<NewsletterSubscriber, object>>[]>()))
             .ReturnsAsync(sub);
 
         var handler = new SubscribeNewsletterCommandHandler(_repoMock.Object, _uowMock.Object);
@@ -61,7 +61,7 @@ public class NewsletterCommandHandlerTests
     [Fact]
     public async Task Unsubscribe_NotFoundOrInactive_ThrowsNotFoundException()
     {
-        _repoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<NewsletterSubscriber, bool>>>(), It.IsAny<CancellationToken>()))
+        _repoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<NewsletterSubscriber, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<NewsletterSubscriber, object>>[]>()))
             .ReturnsAsync((NewsletterSubscriber?)null);
 
         var handler = new UnsubscribeNewsletterCommandHandler(_repoMock.Object, _uowMock.Object);
@@ -72,7 +72,7 @@ public class NewsletterCommandHandlerTests
     public async Task Unsubscribe_Active_Deactivates()
     {
         var sub = new NewsletterSubscriber { Email = "test@test.com", IsActive = true };
-        _repoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<NewsletterSubscriber, bool>>>(), It.IsAny<CancellationToken>()))
+        _repoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<NewsletterSubscriber, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<NewsletterSubscriber, object>>[]>()))
             .ReturnsAsync(sub);
 
         var handler = new UnsubscribeNewsletterCommandHandler(_repoMock.Object, _uowMock.Object);

@@ -25,7 +25,7 @@ public class LoyaltyCommandHandlerTests
     {
         var userId = Guid.NewGuid();
         _currentUserMock.Setup(c => c.UserId).Returns(userId);
-        _pointRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<LoyaltyPoint, bool>>>(), It.IsAny<CancellationToken>()))
+        _pointRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<LoyaltyPoint, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<LoyaltyPoint, object>>[]>()))
             .ReturnsAsync((LoyaltyPoint?)null);
 
         var handler = new GetMyLoyaltyQueryHandler(_pointRepoMock.Object, _currentUserMock.Object);
@@ -41,7 +41,7 @@ public class LoyaltyCommandHandlerTests
         var userId = Guid.NewGuid();
         _currentUserMock.Setup(c => c.UserId).Returns(userId);
         var point = new LoyaltyPoint { UserId = userId, Points = 150 };
-        _pointRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<LoyaltyPoint, bool>>>(), It.IsAny<CancellationToken>()))
+        _pointRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<LoyaltyPoint, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<LoyaltyPoint, object>>[]>()))
             .ReturnsAsync(point);
 
         var handler = new GetMyLoyaltyQueryHandler(_pointRepoMock.Object, _currentUserMock.Object);
@@ -56,7 +56,7 @@ public class LoyaltyCommandHandlerTests
         var userId = Guid.NewGuid();
         _currentUserMock.Setup(c => c.UserId).Returns(userId);
         var point = new LoyaltyPoint { UserId = userId, Points = 50 };
-        _pointRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<LoyaltyPoint, bool>>>(), It.IsAny<CancellationToken>()))
+        _pointRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<LoyaltyPoint, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<LoyaltyPoint, object>>[]>()))
             .ReturnsAsync(point);
 
         var handler = new RedeemLoyaltyCommandHandler(_pointRepoMock.Object, _transactionRepoMock.Object, _uowMock.Object, _currentUserMock.Object);
@@ -69,7 +69,7 @@ public class LoyaltyCommandHandlerTests
         var userId = Guid.NewGuid();
         _currentUserMock.Setup(c => c.UserId).Returns(userId);
         var point = new LoyaltyPoint { UserId = userId, Points = 150 };
-        _pointRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<LoyaltyPoint, bool>>>(), It.IsAny<CancellationToken>()))
+        _pointRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<LoyaltyPoint, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<LoyaltyPoint, object>>[]>()))
             .ReturnsAsync(point);
 
         var handler = new RedeemLoyaltyCommandHandler(_pointRepoMock.Object, _transactionRepoMock.Object, _uowMock.Object, _currentUserMock.Object);

@@ -9,31 +9,29 @@ using CloudServiceStore.Domain.Enums;
 using CloudServiceStore.Domain.Interfaces;
 using MediatR;
 
-
 namespace CloudServiceStore.Application.Features.Orders.Commands.Checkout;
 
 public class CheckoutCommandHandler : IRequestHandler<CheckoutCommand, Guid>
 {
     private readonly IUnitOfWork _uow;
-    private readonly IRepository<Cart> _cartRepo;
-    private readonly IRepository<CartItem> _cartItemRepo;
     private readonly IRepository<OrderRequest> _orderRepo;
     private readonly IRepository<Coupon> _couponRepo;
     private readonly IRepository<PlanPrice> _priceRepo;
     private readonly ICurrentUserService _currentUser;
+    private readonly IRepository<Cart> _cartRepo;
 
-    public CheckoutCommandHandler(IUnitOfWork uow, IRepository<Cart> cartRepo, IRepository<CartItem> cartItemRepo, IRepository<OrderRequest> orderRepo, IRepository<Coupon> couponRepo, IRepository<PlanPrice> priceRepo, ICurrentUserService currentUser)
-    { _uow = uow; _cartRepo = cartRepo; _cartItemRepo = cartItemRepo; _orderRepo = orderRepo; _couponRepo = couponRepo; _priceRepo = priceRepo; _currentUser = currentUser; }
+    public CheckoutCommandHandler(IUnitOfWork uow, IRepository<OrderRequest> orderRepo, IRepository<Coupon> couponRepo, IRepository<PlanPrice> priceRepo, ICurrentUserService currentUser, IRepository<Cart> cartRepo)
+    { _uow = uow; _orderRepo = orderRepo; _couponRepo = couponRepo; _priceRepo = priceRepo; _currentUser = currentUser; _cartRepo = cartRepo; }
 
     public async Task<Guid> Handle(CheckoutCommand request, CancellationToken ct)
     {
         var userId = _currentUser.UserId ?? throw new UnauthorizedException("Chưa đăng nhập");
 
-        var cart = await _cartRepo.FirstOrDefaultAsync(c => c.UserId == userId && c.Status == CartStatus.Active, ct);
-        if (cart == null) throw new ConflictException("Giỏ hàng rỗng.");
+        var cart = await _cartRepo.FirstOrDefaultAsync(c => c.UserId == userId && c.Status == CartStatus.Active, ct, c => c.Items);
 
-        var items = await _cartItemRepo.WhereAsync(ci => ci.CartId == cart.Id, ct);
-        var item = items.FirstOrDefault();
+        if (cart == null || !cart.Items.Any()) throw new ConflictException("Giỏ hàng rỗng.");
+        
+        var item = cart.Items.FirstOrDefault();
         if (item == null) throw new ConflictException("Giỏ hàng rỗng.");
 
         // Get Price — filter by Currency="VND" for backward-compatibility after multi-currency schema update
@@ -50,30 +48,17 @@ public class CheckoutCommandHandler : IRequestHandler<CheckoutCommand, Guid>
             if (coupon == null || coupon.UsedCount >= coupon.MaxUsage)
                 throw new ConflictException("Mã giảm giá không hợp lệ hoặc đã hết lượt.");
 
-            coupon.UsedCount++;
+            coupon.Use();
             _couponRepo.Update(coupon);
             discountAmount = subTotal * (coupon.DiscountPercent / 100m);
             couponId = coupon.Id;
         }
 
-        var order = new OrderRequest
-        {
-            Id = Guid.NewGuid(),
-            UserId = userId,
-            ServicePlanId = item.ServicePlanId,
-            BillingCycle = item.BillingCycle,
-            Status = OrderStatus.Pending,
-            CouponId = couponId,
-            DiscountAmount = discountAmount,
-            SubTotal = subTotal,
-            TotalAmount = subTotal - discountAmount,
-            CreatedAt = DateTime.UtcNow
-        };
+        var order = new OrderRequest(userId, item.ServicePlanId, item.BillingCycle, couponId, discountAmount, subTotal, false);
 
         await _orderRepo.AddAsync(order, ct);
 
-        cart.Status = CartStatus.CheckedOut;
-        _cartRepo.Update(cart);
+        cart.Checkout();
 
         await _uow.SaveChangesAsync(ct);
         return order.Id;

@@ -1,9 +1,9 @@
+using CloudServiceStore.Domain.Primitives;
 using System;
 
 namespace CloudServiceStore.Domain.Entities;
 
-public class Role
+public class Role : AggregateRoot
 {
-    public Guid Id { get; set; }
     public string Name { get; set; } = null!;
 }

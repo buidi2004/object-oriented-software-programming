@@ -30,17 +30,13 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, RegisterR
 
         var roleId = await _uow.Roles.GetIdByNameAsync("Customer", ct);
 
-        var user = new AppUser
-        {
-            Id = Guid.NewGuid(),
-            FullName = request.FullName,
-            Email = request.Email,
-            PasswordHash = _hasher.Hash(request.Password),
-            PhoneNumber = request.PhoneNumber,
-            RoleId = roleId,
-            IsActive = true,
-            CreatedAt = DateTime.UtcNow
-        };
+        var user = new AppUser(
+            request.FullName,
+            request.Email,
+            _hasher.Hash(request.Password),
+            roleId,
+            request.PhoneNumber
+        );
 
         await _userRepo.AddAsync(user, ct);
         await _uow.SaveChangesAsync(ct);

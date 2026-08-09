@@ -26,7 +26,7 @@ public class RegisterDomainCommandHandlerTests
     public async Task Handle_DomainAlreadyRegistered_ThrowsConflictException()
     {
         _currentUserMock.Setup(c => c.UserId).Returns(Guid.NewGuid());
-        _domainRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<DomainRecord, bool>>>(), It.IsAny<CancellationToken>()))
+        _domainRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<DomainRecord, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<DomainRecord, object>>[]>()))
             .ReturnsAsync(new DomainRecord());
 
         await Assert.ThrowsAsync<ConflictException>(() => CreateHandler().Handle(new RegisterDomainCommand("test.com", Guid.NewGuid()), CancellationToken.None));
@@ -36,7 +36,7 @@ public class RegisterDomainCommandHandlerTests
     public async Task Handle_OrderNotPaid_ThrowsConflictException()
     {
         _currentUserMock.Setup(c => c.UserId).Returns(Guid.NewGuid());
-        _domainRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<DomainRecord, bool>>>(), It.IsAny<CancellationToken>()))
+        _domainRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<DomainRecord, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<DomainRecord, object>>[]>()))
             .ReturnsAsync((DomainRecord)null);
 
         var order = new OrderRequest { Status = OrderStatus.Pending }; // Not Paid
@@ -51,7 +51,7 @@ public class RegisterDomainCommandHandlerTests
     {
         var userId = Guid.NewGuid();
         _currentUserMock.Setup(c => c.UserId).Returns(userId);
-        _domainRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<DomainRecord, bool>>>(), It.IsAny<CancellationToken>()))
+        _domainRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<DomainRecord, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<DomainRecord, object>>[]>()))
             .ReturnsAsync((DomainRecord)null);
 
         var order = new OrderRequest { Id = Guid.NewGuid(), Status = OrderStatus.Paid, UserId = userId };

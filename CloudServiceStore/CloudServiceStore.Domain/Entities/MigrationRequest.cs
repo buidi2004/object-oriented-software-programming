@@ -1,11 +1,11 @@
+using CloudServiceStore.Domain.Primitives;
 using System;
 using CloudServiceStore.Domain.Enums;
 
 namespace CloudServiceStore.Domain.Entities;
 
-public class MigrationRequest
+public class MigrationRequest : AggregateRoot
 {
-    public Guid Id { get; set; } = Guid.NewGuid();
     public Guid UserId { get; set; }
     public Guid OrderRequestId { get; set; }
     public string FromProvider { get; set; } = string.Empty;

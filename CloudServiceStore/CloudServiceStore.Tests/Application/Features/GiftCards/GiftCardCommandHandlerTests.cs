@@ -20,7 +20,7 @@ public class GiftCardCommandHandlerTests
     [Fact]
     public async Task GetBalance_NotFound_ThrowsNotFoundException()
     {
-        _repoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<GiftCard, bool>>>(), It.IsAny<CancellationToken>()))
+        _repoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<GiftCard, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<GiftCard, object>>[]>()))
             .ReturnsAsync((GiftCard?)null);
 
         var handler = new GetGiftCardBalanceQueryHandler(_repoMock.Object);
@@ -31,7 +31,7 @@ public class GiftCardCommandHandlerTests
     public async Task GetBalance_Valid_ReturnsDto()
     {
         var card = new GiftCard { Code = "VALID", RemainingAmount = 100, IsActive = true };
-        _repoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<GiftCard, bool>>>(), It.IsAny<CancellationToken>()))
+        _repoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<GiftCard, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<GiftCard, object>>[]>()))
             .ReturnsAsync(card);
 
         var handler = new GetGiftCardBalanceQueryHandler(_repoMock.Object);
@@ -45,7 +45,7 @@ public class GiftCardCommandHandlerTests
     public async Task Redeem_Inactive_ThrowsBadRequestException()
     {
         var card = new GiftCard { Code = "INACTIVE", IsActive = false };
-        _repoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<GiftCard, bool>>>(), It.IsAny<CancellationToken>()))
+        _repoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<GiftCard, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<GiftCard, object>>[]>()))
             .ReturnsAsync(card);
 
         var handler = new RedeemGiftCardCommandHandler(_repoMock.Object, _uowMock.Object);
@@ -57,7 +57,7 @@ public class GiftCardCommandHandlerTests
     public async Task Redeem_Expired_ThrowsBadRequestException()
     {
         var card = new GiftCard { Code = "EXPIRED", IsActive = true, ExpiryDate = DateTime.UtcNow.AddDays(-1) };
-        _repoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<GiftCard, bool>>>(), It.IsAny<CancellationToken>()))
+        _repoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<GiftCard, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<GiftCard, object>>[]>()))
             .ReturnsAsync(card);
 
         var handler = new RedeemGiftCardCommandHandler(_repoMock.Object, _uowMock.Object);
@@ -69,7 +69,7 @@ public class GiftCardCommandHandlerTests
     public async Task Redeem_InsufficientBalance_ThrowsBadRequestException()
     {
         var card = new GiftCard { Code = "VALID", IsActive = true, ExpiryDate = DateTime.UtcNow.AddDays(1), RemainingAmount = 40 };
-        _repoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<GiftCard, bool>>>(), It.IsAny<CancellationToken>()))
+        _repoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<GiftCard, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<GiftCard, object>>[]>()))
             .ReturnsAsync(card);
 
         var handler = new RedeemGiftCardCommandHandler(_repoMock.Object, _uowMock.Object);
@@ -81,7 +81,7 @@ public class GiftCardCommandHandlerTests
     public async Task Redeem_Valid_UpdatesBalance()
     {
         var card = new GiftCard { Code = "VALID", IsActive = true, ExpiryDate = DateTime.UtcNow.AddDays(1), RemainingAmount = 100 };
-        _repoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<GiftCard, bool>>>(), It.IsAny<CancellationToken>()))
+        _repoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<GiftCard, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<GiftCard, object>>[]>()))
             .ReturnsAsync(card);
 
         var handler = new RedeemGiftCardCommandHandler(_repoMock.Object, _uowMock.Object);
@@ -98,7 +98,7 @@ public class GiftCardCommandHandlerTests
     public async Task Redeem_ValidZeroRemaining_SetsInactive()
     {
         var card = new GiftCard { Code = "VALID", IsActive = true, ExpiryDate = DateTime.UtcNow.AddDays(1), RemainingAmount = 50 };
-        _repoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<GiftCard, bool>>>(), It.IsAny<CancellationToken>()))
+        _repoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<GiftCard, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<GiftCard, object>>[]>()))
             .ReturnsAsync(card);
 
         var handler = new RedeemGiftCardCommandHandler(_repoMock.Object, _uowMock.Object);

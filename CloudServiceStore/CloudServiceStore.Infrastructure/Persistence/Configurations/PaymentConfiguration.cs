@@ -11,6 +11,6 @@ public class PaymentConfiguration : IEntityTypeConfiguration<Payment>
         builder.HasIndex(p => p.IdempotencyKey).IsUnique();
         builder.HasIndex(p => p.TransactionRef).IsUnique();
         builder.Property(p => p.IdempotencyKey).IsRequired().HasMaxLength(100);
-        builder.HasOne(p => p.OrderRequest).WithOne(o => o.Payment).HasForeignKey<Payment>(p => p.OrderRequestId);
+        builder.HasOne(p => p.OrderRequest).WithOne(o => o.Payment).HasForeignKey<Payment>(p => p.OrderId);
     }
 }

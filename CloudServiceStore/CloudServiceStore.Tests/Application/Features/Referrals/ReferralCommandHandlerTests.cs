@@ -27,7 +27,7 @@ public class ReferralCommandHandlerTests
     {
         var userId = Guid.NewGuid();
         _currentUserMock.Setup(c => c.UserId).Returns(userId);
-        _codeRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<ReferralCode, bool>>>(), It.IsAny<CancellationToken>()))
+        _codeRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<ReferralCode, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<ReferralCode, object>>[]>()))
             .ReturnsAsync((ReferralCode?)null);
 
         var handler = new GetMyReferralQueryHandler(_codeRepoMock.Object, _uowMock.Object, _currentUserMock.Object);
@@ -45,7 +45,7 @@ public class ReferralCommandHandlerTests
         var userId = Guid.NewGuid();
         _currentUserMock.Setup(c => c.UserId).Returns(userId);
         var existing = new ReferralCode { Id = Guid.NewGuid(), UserId = userId, Code = "REF-12345678" };
-        _codeRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<ReferralCode, bool>>>(), It.IsAny<CancellationToken>()))
+        _codeRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<ReferralCode, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<ReferralCode, object>>[]>()))
             .ReturnsAsync(existing);
 
         var handler = new GetMyReferralQueryHandler(_codeRepoMock.Object, _uowMock.Object, _currentUserMock.Object);
@@ -62,7 +62,7 @@ public class ReferralCommandHandlerTests
     public async Task ApplyCode_InvalidCode_ThrowsNotFoundException()
     {
         _currentUserMock.Setup(c => c.UserId).Returns(Guid.NewGuid());
-        _codeRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<ReferralCode, bool>>>(), It.IsAny<CancellationToken>()))
+        _codeRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<ReferralCode, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<ReferralCode, object>>[]>()))
             .ReturnsAsync((ReferralCode?)null);
 
         var handler = new ApplyReferralCodeCommandHandler(_codeRepoMock.Object, _rewardRepoMock.Object, _uowMock.Object, _currentUserMock.Object);
@@ -75,7 +75,7 @@ public class ReferralCommandHandlerTests
         var userId = Guid.NewGuid();
         _currentUserMock.Setup(c => c.UserId).Returns(userId);
         var code = new ReferralCode { Id = Guid.NewGuid(), UserId = userId, Code = "MY-CODE" };
-        _codeRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<ReferralCode, bool>>>(), It.IsAny<CancellationToken>()))
+        _codeRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<ReferralCode, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<ReferralCode, object>>[]>()))
             .ReturnsAsync(code);
 
         var handler = new ApplyReferralCodeCommandHandler(_codeRepoMock.Object, _rewardRepoMock.Object, _uowMock.Object, _currentUserMock.Object);
@@ -89,11 +89,11 @@ public class ReferralCommandHandlerTests
         var userId = Guid.NewGuid();
         _currentUserMock.Setup(c => c.UserId).Returns(userId);
         var code = new ReferralCode { Id = Guid.NewGuid(), UserId = Guid.NewGuid(), Code = "OTHER-CODE" };
-        _codeRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<ReferralCode, bool>>>(), It.IsAny<CancellationToken>()))
+        _codeRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<ReferralCode, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<ReferralCode, object>>[]>()))
             .ReturnsAsync(code);
         
         var reward = new ReferralReward();
-        _rewardRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<ReferralReward, bool>>>(), It.IsAny<CancellationToken>()))
+        _rewardRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<ReferralReward, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<ReferralReward, object>>[]>()))
             .ReturnsAsync(reward);
 
         var handler = new ApplyReferralCodeCommandHandler(_codeRepoMock.Object, _rewardRepoMock.Object, _uowMock.Object, _currentUserMock.Object);
@@ -107,10 +107,10 @@ public class ReferralCommandHandlerTests
         var userId = Guid.NewGuid();
         _currentUserMock.Setup(c => c.UserId).Returns(userId);
         var code = new ReferralCode { Id = Guid.NewGuid(), UserId = Guid.NewGuid(), Code = "OTHER-CODE" };
-        _codeRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<ReferralCode, bool>>>(), It.IsAny<CancellationToken>()))
+        _codeRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<ReferralCode, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<ReferralCode, object>>[]>()))
             .ReturnsAsync(code);
         
-        _rewardRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<ReferralReward, bool>>>(), It.IsAny<CancellationToken>()))
+        _rewardRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<ReferralReward, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<ReferralReward, object>>[]>()))
             .ReturnsAsync((ReferralReward?)null);
 
         var handler = new ApplyReferralCodeCommandHandler(_codeRepoMock.Object, _rewardRepoMock.Object, _uowMock.Object, _currentUserMock.Object);

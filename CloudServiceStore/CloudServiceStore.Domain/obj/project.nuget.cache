@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "g09d0sR848Q=",
+  "dgSpecHash": "vhkhK3jWQ8I=",
   "success": true,
   "projectFilePath": "/home/buidi/Tài liệu/laptrinhphanemhuogndoituong/CloudServiceStore/CloudServiceStore.Domain/CloudServiceStore.Domain.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "/home/buidi/.nuget/packages/mediatr.contracts/2.0.1/mediatr.contracts.2.0.1.nupkg.sha512"
+  ],
   "logs": []
 }
