@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using CloudServiceStore.Application.Features.Categories.Commands.Create;
 using CloudServiceStore.Application.Features.Categories.Commands.Delete;
 using CloudServiceStore.Application.Features.Categories.Queries.GetCategories;
+using CloudServiceStore.Application.Features.Categories.Commands.Update;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -27,6 +28,18 @@ public class CategoriesController : ControllerBase
     {
         var id = await _mediator.Send(command, ct);
         return CreatedAtAction(nameof(GetAll), new { id }, id);
+    }
+
+
+    [HttpPut("{id}")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> Update(Guid id, UpdateCategoryCommand command, CancellationToken ct)
+    {
+        if (id != command.Id)
+            return BadRequest(new { message = "ID trong URL và body không khớp." });
+            
+        await _mediator.Send(command, ct);
+        return NoContent();
     }
 
     [HttpDelete("{id}")]
