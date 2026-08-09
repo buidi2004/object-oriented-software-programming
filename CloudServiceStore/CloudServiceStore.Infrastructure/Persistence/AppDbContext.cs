@@ -34,6 +34,9 @@ public class AppDbContext : DbContext
     public DbSet<ReferralCode> ReferralCodes => Set<ReferralCode>();
     public DbSet<ReferralReward> ReferralRewards => Set<ReferralReward>();
     public DbSet<WishlistItem> WishlistItems => Set<WishlistItem>();
+    public DbSet<LoyaltyPoint> LoyaltyPoints => Set<LoyaltyPoint>();
+    public DbSet<LoyaltyTransaction> LoyaltyTransactions => Set<LoyaltyTransaction>();
+    public DbSet<GiftCard> GiftCards => Set<GiftCard>();
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
