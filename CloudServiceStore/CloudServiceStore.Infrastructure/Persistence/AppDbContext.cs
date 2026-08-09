@@ -21,6 +21,7 @@ public class AppDbContext : DbContext
     public DbSet<CartItem> CartItems => Set<CartItem>();
     public DbSet<Payment> Payments => Set<Payment>();
     public DbSet<Coupon> Coupons => Set<Coupon>();
+    public DbSet<RefundRequest> RefundRequests => Set<RefundRequest>();
     public DbSet<Review> Reviews => Set<Review>();
     public DbSet<SupportTicket> SupportTickets => Set<SupportTicket>();
     public DbSet<TicketMessage> TicketMessages => Set<TicketMessage>();
