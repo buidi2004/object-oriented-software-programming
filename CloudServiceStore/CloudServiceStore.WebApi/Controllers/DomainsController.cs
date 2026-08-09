@@ -1,8 +1,11 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using CloudServiceStore.Application.Features.Domains.Commands.AddDnsRecord;
+using CloudServiceStore.Application.Features.Domains.Commands.DeleteDnsRecord;
 using CloudServiceStore.Application.Features.Domains.Commands.RegisterDomain;
 using CloudServiceStore.Application.Features.Domains.Queries.CheckDomain;
+using CloudServiceStore.Application.Features.Domains.Queries.GetDnsRecords;
 using CloudServiceStore.Application.Features.Domains.Queries.GetMyDomains;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -39,5 +42,32 @@ public class DomainsController : ControllerBase
     {
         var domainId = await _mediator.Send(command, ct);
         return Ok(new { domainId });
+    }
+
+    // --- DNS RECORDS ---
+
+    [HttpGet("{id:guid}/dns")]
+    [Authorize(Roles = "Customer")]
+    public async Task<IActionResult> GetDnsRecords(Guid id, CancellationToken ct)
+    {
+        var records = await _mediator.Send(new GetDnsRecordsQuery(id), ct);
+        return Ok(records);
+    }
+
+    [HttpPost("{id:guid}/dns")]
+    [Authorize(Roles = "Customer")]
+    public async Task<IActionResult> AddDnsRecord(Guid id, [FromBody] AddDnsRecordCommand command, CancellationToken ct)
+    {
+        if (id != command.DomainId) return BadRequest("Mismatched Domain Id");
+        var recordId = await _mediator.Send(command, ct);
+        return Ok(new { recordId });
+    }
+
+    [HttpDelete("{id:guid}/dns/{recordId:guid}")]
+    [Authorize(Roles = "Customer")]
+    public async Task<IActionResult> DeleteDnsRecord(Guid id, Guid recordId, CancellationToken ct)
+    {
+        await _mediator.Send(new DeleteDnsRecordCommand(id, recordId), ct);
+        return NoContent();
     }
 }
