@@ -36,8 +36,8 @@ public class CheckoutCommandHandler : IRequestHandler<CheckoutCommand, Guid>
         var item = items.FirstOrDefault();
         if (item == null) throw new ConflictException("Giỏ hàng rỗng.");
 
-        // Get Price
-        var prices = await _priceRepo.WhereAsync(p => p.ServicePlanId == item.ServicePlanId && p.BillingCycle == item.BillingCycle, ct);
+        // Get Price — filter by Currency="VND" for backward-compatibility after multi-currency schema update
+        var prices = await _priceRepo.WhereAsync(p => p.ServicePlanId == item.ServicePlanId && p.BillingCycle == item.BillingCycle && p.Currency == "VND", ct);
         var price = prices.OrderByDescending(p => p.EffectiveFrom).FirstOrDefault()?.Price ?? 100000m; // Default 100k if no price set
 
         decimal subTotal = price * item.Quantity;
