@@ -30,6 +30,10 @@ public class AppDbContext : DbContext
     public DbSet<NotificationSetting> NotificationSettings => Set<NotificationSetting>();
     public DbSet<Invoice> Invoices => Set<Invoice>();
     public DbSet<ExchangeRate> ExchangeRates => Set<ExchangeRate>();
+    public DbSet<SavedPaymentMethod> SavedPaymentMethods => Set<SavedPaymentMethod>();
+    public DbSet<ReferralCode> ReferralCodes => Set<ReferralCode>();
+    public DbSet<ReferralReward> ReferralRewards => Set<ReferralReward>();
+    public DbSet<WishlistItem> WishlistItems => Set<WishlistItem>();
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
