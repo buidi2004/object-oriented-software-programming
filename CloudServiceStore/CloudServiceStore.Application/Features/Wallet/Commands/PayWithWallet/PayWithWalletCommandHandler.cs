@@ -39,7 +39,7 @@ public class PayWithWalletCommandHandler : IRequestHandler<PayWithWalletCommand,
         wallet.Withdraw(order.TotalAmount);
         _walletRepo.Update(wallet);
 
-        var transaction = new WalletTransaction(wallet.Id, order.TotalAmount, TransactionType.Payment, order.Id);
+        var transaction = new WalletTransaction(wallet.Id, -order.TotalAmount, TransactionType.Payment, order.Id);
         await _transactionRepo.AddAsync(transaction, cancellationToken);
 
         order.Pay();

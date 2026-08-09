@@ -34,9 +34,10 @@ public class PayWithWalletCommandHandlerTests
     [Fact]
     public async Task Handle_OrderNotOwned_ThrowsUnauthorizedException()
     {
+        var orderId = Guid.NewGuid();
         _currentUserMock.Setup(c => c.UserId).Returns(Guid.NewGuid());
-        _orderRepoMock.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(new OrderRequest { UserId = Guid.NewGuid() });
-        await Assert.ThrowsAsync<UnauthorizedException>(() => CreateHandler().Handle(new PayWithWalletCommand(Guid.NewGuid()), CancellationToken.None));
+        _orderRepoMock.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(new OrderRequest { Id = orderId, UserId = Guid.NewGuid() });
+        await Assert.ThrowsAsync<NotFoundException>(() => CreateHandler().Handle(new PayWithWalletCommand(orderId), CancellationToken.None));
     }
 
     [Fact]

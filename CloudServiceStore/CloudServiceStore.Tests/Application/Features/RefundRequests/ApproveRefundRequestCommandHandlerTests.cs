@@ -51,7 +51,7 @@ public class ApproveRefundRequestCommandHandlerTests
 
         Assert.True(result);
         Assert.Equal(RefundStatus.Approved, refund.Status);
-        Assert.Equal(OrderStatus.Cancelled, order.Status);
+        Assert.Equal(OrderStatus.Refunded, order.Status);
         Assert.Equal(150, wallet.Balance); // 100 + 50
 
         _refundRepoMock.Verify(r => r.Update(refund), Times.Once);

@@ -37,7 +37,7 @@ public class ApproveRefundRequestCommandHandler : IRequestHandler<ApproveRefundR
 
         refund.Approve();
         
-        order.Cancel();
+        order.MarkRefunded();
         
         wallet.Deposit(refund.Amount);
         
