@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using CloudServiceStore.Infrastructure.Security;
+using CloudServiceStore.Infrastructure.ExternalServices.QrCode;
 using CloudServiceStore.Application.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -45,6 +46,7 @@ builder.Services.AddCors(options =>
               .AllowAnyMethod());
 });
 
+builder.Services.AddSingleton<IQrCodeGeneratorFactory, QrCodeGeneratorFactory>();
 builder.Services.AddControllers();
 
 builder.Services.AddDbContext<CloudServiceStore.Infrastructure.Persistence.AppDbContext>(opt =>
