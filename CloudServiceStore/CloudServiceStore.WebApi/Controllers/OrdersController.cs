@@ -51,4 +51,11 @@ public class OrdersController : ControllerBase
         var uptime = await _mediator.Send(new GetOrderUptimeQuery(id), ct);
         return Ok(uptime);
     }
+
+    [HttpPatch("{id:guid}/auto-renew")]
+    public async Task<IActionResult> ToggleAutoRenew(Guid id, CancellationToken ct)
+    {
+        var result = await _mediator.Send(new CloudServiceStore.Application.Features.AutoRenew.Commands.ToggleAutoRenew.ToggleAutoRenewCommand(id), ct);
+        return Ok(new { success = result });
+    }
 }
