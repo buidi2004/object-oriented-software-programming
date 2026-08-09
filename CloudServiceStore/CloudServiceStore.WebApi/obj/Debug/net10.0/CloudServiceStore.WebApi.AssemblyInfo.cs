@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CloudServiceStore.WebApi")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ebc37628b1dbde70d47f9ce94168502672c842a5")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ecd2c691998f50c7e4f637dbfd2d63dc3aa3a502")]
 [assembly: System.Reflection.AssemblyProductAttribute("CloudServiceStore.WebApi")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CloudServiceStore.WebApi")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
