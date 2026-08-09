@@ -1,3 +1,4 @@
+using CloudServiceStore.WebApi.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -47,6 +48,8 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddSingleton<IQrCodeGeneratorFactory, QrCodeGeneratorFactory>();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 builder.Services.AddControllers();
 
 builder.Services.AddDbContext<CloudServiceStore.Infrastructure.Persistence.AppDbContext>(opt =>
