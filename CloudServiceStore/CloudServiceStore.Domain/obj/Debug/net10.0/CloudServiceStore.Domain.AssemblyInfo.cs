@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CloudServiceStore.Domain")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d78d0b269d980fbf3a15c5ec96a51072324123df")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bc38f90e38502bd5f4423e22dea14195a26da5d3")]
 [assembly: System.Reflection.AssemblyProductAttribute("CloudServiceStore.Domain")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CloudServiceStore.Domain")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
