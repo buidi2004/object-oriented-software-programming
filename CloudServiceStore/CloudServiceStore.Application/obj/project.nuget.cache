@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "IpXgi3FsxOU=",
+  "dgSpecHash": "pP4Twpv8Tuk=",
   "success": true,
   "projectFilePath": "/home/buidi/Tài liệu/laptrinhphanemhuogndoituong/CloudServiceStore/CloudServiceStore.Application/CloudServiceStore.Application.csproj",
   "expectedPackageFiles": [
+    "/home/buidi/.nuget/packages/dapper/2.1.79/dapper.2.1.79.nupkg.sha512",
     "/home/buidi/.nuget/packages/fluentvalidation/12.1.1/fluentvalidation.12.1.1.nupkg.sha512",
     "/home/buidi/.nuget/packages/fluentvalidation.dependencyinjectionextensions/12.1.1/fluentvalidation.dependencyinjectionextensions.12.1.1.nupkg.sha512",
     "/home/buidi/.nuget/packages/mediatr/14.2.0/mediatr.14.2.0.nupkg.sha512",

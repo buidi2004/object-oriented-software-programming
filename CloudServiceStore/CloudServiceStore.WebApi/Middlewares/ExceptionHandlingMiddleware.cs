@@ -45,6 +45,12 @@ public class ExceptionHandlingMiddleware
             type = "https://tools.ietf.org/html/rfc7235#section-3.1";
             title = "Unauthorized";
         }
+        else if (exception is NotFoundException)
+        {
+            statusCode = StatusCodes.Status404NotFound;
+            type = "https://tools.ietf.org/html/rfc7231#section-6.5.4";
+            title = "Not Found";
+        }
         else if (exception is ConflictException)
         {
             statusCode = StatusCodes.Status409Conflict;
