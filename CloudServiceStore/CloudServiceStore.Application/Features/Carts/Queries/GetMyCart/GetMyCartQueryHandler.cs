@@ -30,7 +30,7 @@ public class GetMyCartQueryHandler : IRequestHandler<GetMyCartQuery, CartDto>
     {
         var userId = _currentUser.UserId ?? throw new UnauthorizedException("Người dùng chưa đăng nhập");
 
-        var cart = await _cartRepo.FirstOrDefaultAsync(c => c.UserId == userId && c.Status == "Active", ct);
+        var cart = await _cartRepo.FirstOrDefaultAsync(c => c.UserId == userId && c.Status == CloudServiceStore.Domain.Enums.CartStatus.Active, ct);
         
         if (cart == null)
         {
@@ -38,7 +38,7 @@ public class GetMyCartQueryHandler : IRequestHandler<GetMyCartQuery, CartDto>
             {
                 Id = Guid.NewGuid(),
                 UserId = userId,
-                Status = "Active"
+                Status = CloudServiceStore.Domain.Enums.CartStatus.Active
             };
             await _cartRepo.AddAsync(cart, ct);
             await _uow.SaveChangesAsync(ct);

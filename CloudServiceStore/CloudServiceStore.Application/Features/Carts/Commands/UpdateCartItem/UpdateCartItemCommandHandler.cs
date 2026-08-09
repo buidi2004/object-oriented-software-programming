@@ -25,7 +25,7 @@ public class UpdateCartItemCommandHandler : IRequestHandler<UpdateCartItemComman
         var item = await _cartItemRepo.GetByIdAsync(request.ItemId, ct) ?? throw new NotFoundException("Item không tồn tại");
         
         var cart = await _cartRepo.GetByIdAsync(item.CartId, ct);
-        if (cart == null || cart.UserId != userId || cart.Status != "Active")
+        if (cart == null || cart.UserId != userId || cart.Status != CloudServiceStore.Domain.Enums.CartStatus.Active)
             throw new UnauthorizedException("Không có quyền cập nhật item này");
 
         if (request.Quantity <= 0)

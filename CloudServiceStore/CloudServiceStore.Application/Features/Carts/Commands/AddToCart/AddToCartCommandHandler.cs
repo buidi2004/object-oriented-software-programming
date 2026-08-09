@@ -40,10 +40,10 @@ public class AddToCartCommandHandler : IRequestHandler<AddToCartCommand, Guid>
         if (!planExists)
             throw new NotFoundException("Gói dịch vụ không tồn tại hoặc đã bị khoá.");
 
-        var cart = await _cartRepo.FirstOrDefaultAsync(c => c.UserId == userId && c.Status == "Active", ct);
+        var cart = await _cartRepo.FirstOrDefaultAsync(c => c.UserId == userId && c.Status == CloudServiceStore.Domain.Enums.CartStatus.Active, ct);
         if (cart == null)
         {
-            cart = new Cart { Id = Guid.NewGuid(), UserId = userId, Status = "Active" };
+            cart = new Cart { Id = Guid.NewGuid(), UserId = userId, Status = CloudServiceStore.Domain.Enums.CartStatus.Active };
             await _cartRepo.AddAsync(cart, ct);
             // Must save changes to get cart ID before adding item, though since we generate ID here, it's fine.
         }
