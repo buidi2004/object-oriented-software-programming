@@ -35,6 +35,16 @@ builder.Services.AddRateLimiter(options =>
     };
 });
 
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("Frontend", policy =>
+        policy.WithOrigins("https://your-frontend-domain.com")
+              .AllowCredentials()
+              .AllowAnyHeader()
+              .AllowAnyMethod());
+});
+
 builder.Services.AddControllers();
 
 builder.Services.AddDbContext<CloudServiceStore.Infrastructure.Persistence.AppDbContext>(opt =>
@@ -87,6 +97,7 @@ app.UseMiddleware<CloudServiceStore.WebApi.Middlewares.ExceptionHandlingMiddlewa
 app.UseHttpsRedirection();
 
 app.UseRateLimiter();
+app.UseCors("Frontend");
 app.UseAuthentication();
 app.UseAuthorization();
 

@@ -169,3 +169,4 @@
 /home/buidi/Tài liệu/laptrinhphanemhuogndoituong/CloudServiceStore/CloudServiceStore.WebApi/obj/Debug/net10.0/ref/CloudServiceStore.WebApi.dll
 /home/buidi/Tài liệu/laptrinhphanemhuogndoituong/CloudServiceStore/CloudServiceStore.WebApi/bin/Debug/net10.0/BCrypt-Net-Next.dll
 /home/buidi/Tài liệu/laptrinhphanemhuogndoituong/CloudServiceStore/CloudServiceStore.WebApi/bin/Debug/net10.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
+/home/buidi/Tài liệu/laptrinhphanemhuogndoituong/CloudServiceStore/CloudServiceStore.WebApi/obj/Debug/net10.0/CloudServiceStore.WebApi.sourcelink.json

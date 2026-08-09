@@ -1011,6 +1011,7 @@
       "CloudServiceStore.Application/1.0.0": {
         "dependencies": {
           "CloudServiceStore.Domain": "1.0.0",
+          "Dapper": "2.1.79",
           "FluentValidation.DependencyInjectionExtensions": "12.1.1",
           "MediatR": "14.2.0"
         },
