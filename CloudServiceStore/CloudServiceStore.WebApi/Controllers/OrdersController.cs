@@ -5,6 +5,8 @@ using CloudServiceStore.Application.Features.Backups.Commands.ScheduleBackup;
 using CloudServiceStore.Application.Features.Backups.Queries.GetBackupsForOrder;
 using CloudServiceStore.Application.Features.Uptime.Queries.GetOrderUptime;
 using CloudServiceStore.Application.Features.Orders.Commands.Checkout;
+using CloudServiceStore.Application.Features.Invoices.Queries.GetInvoice;
+using CloudServiceStore.Application.Features.Invoices.Commands.GenerateInvoice;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -57,5 +59,21 @@ public class OrdersController : ControllerBase
     {
         var result = await _mediator.Send(new CloudServiceStore.Application.Features.AutoRenew.Commands.ToggleAutoRenew.ToggleAutoRenewCommand(id), ct);
         return Ok(new { success = result });
+    }
+
+    // --- INVOICES ---
+
+    [HttpGet("{id:guid}/invoice")]
+    public async Task<IActionResult> GetInvoice(Guid id, CancellationToken ct)
+    {
+        var invoice = await _mediator.Send(new GetInvoiceQuery { OrderRequestId = id }, ct);
+        return Ok(invoice);
+    }
+
+    [HttpPost("{id:guid}/invoice")]
+    public async Task<IActionResult> GenerateInvoice(Guid id, CancellationToken ct)
+    {
+        var invoiceId = await _mediator.Send(new GenerateInvoiceCommand { OrderRequestId = id }, ct);
+        return Ok(new { invoiceId });
     }
 }

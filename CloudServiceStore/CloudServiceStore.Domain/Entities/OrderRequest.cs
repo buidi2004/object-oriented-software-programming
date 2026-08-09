@@ -21,4 +21,5 @@ public class OrderRequest
     public ServicePlan ServicePlan { get; set; } = null!;
     public Payment? Payment { get; set; }
     public Coupon? Coupon { get; set; }
+    public Invoice? Invoice { get; set; }
 }

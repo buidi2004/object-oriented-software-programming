@@ -28,7 +28,7 @@ public class AppDbContext : DbContext
     public DbSet<LoginHistory> LoginHistories => Set<LoginHistory>();
     public DbSet<UserSession> UserSessions => Set<UserSession>();
     public DbSet<NotificationSetting> NotificationSettings => Set<NotificationSetting>();
-
+    public DbSet<Invoice> Invoices => Set<Invoice>();
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
