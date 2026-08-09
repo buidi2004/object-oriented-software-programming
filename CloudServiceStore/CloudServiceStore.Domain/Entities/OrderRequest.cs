@@ -14,6 +14,7 @@ public class OrderRequest
     public decimal DiscountAmount { get; set; }
     public decimal SubTotal { get; set; }
     public decimal TotalAmount { get; set; }
+    public bool AutoRenew { get; set; } = false;
     public DateTime CreatedAt { get; set; }
     
     public AppUser User { get; set; } = null!;
