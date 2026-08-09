@@ -39,6 +39,16 @@ public class AppDbContext : DbContext
     public DbSet<GiftCard> GiftCards => Set<GiftCard>();
     public DbSet<NewsletterSubscriber> NewsletterSubscribers => Set<NewsletterSubscriber>();
     public DbSet<Banner> Banners => Set<Banner>();
+    public DbSet<ApiKey> ApiKeys => Set<ApiKey>();
+    public DbSet<BackupJob> BackupJobs => Set<BackupJob>();
+    public DbSet<DnsRecord> DnsRecords => Set<DnsRecord>();
+    public DbSet<DomainRecord> DomainRecords => Set<DomainRecord>();
+    public DbSet<MigrationRequest> MigrationRequests => Set<MigrationRequest>();
+    public DbSet<RenewalJob> RenewalJobs => Set<RenewalJob>();
+    public DbSet<ServiceStatusLog> ServiceStatusLogs => Set<ServiceStatusLog>();
+    public DbSet<SslCertificate> SslCertificates => Set<SslCertificate>();
+    public DbSet<Wallet> Wallets => Set<Wallet>();
+    public DbSet<WalletTransaction> WalletTransactions => Set<WalletTransaction>();
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
