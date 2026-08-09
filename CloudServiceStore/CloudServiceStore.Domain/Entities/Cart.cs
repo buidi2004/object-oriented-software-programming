@@ -8,6 +8,7 @@ public class Cart
     public Guid Id { get; set; }
     public Guid UserId { get; set; }
     public Enums.CartStatus Status { get; set; } = Enums.CartStatus.Active;
+    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     
     public AppUser User { get; set; } = null!;
     public ICollection<CartItem> Items { get; set; } = new List<CartItem>();

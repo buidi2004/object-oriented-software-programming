@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using CloudServiceStore.Application.DTOs;
+using CloudServiceStore.Application.Features.Carts.Queries.GetMyCart; // For CartDto
 using MediatR;
 
 namespace CloudServiceStore.Application.Features.Carts.Queries.GetAbandonedCarts;

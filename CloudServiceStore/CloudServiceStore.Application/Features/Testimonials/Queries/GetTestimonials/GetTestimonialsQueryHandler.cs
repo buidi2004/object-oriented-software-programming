@@ -6,7 +6,6 @@ using CloudServiceStore.Application.DTOs;
 using CloudServiceStore.Domain.Entities;
 using CloudServiceStore.Domain.Interfaces;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace CloudServiceStore.Application.Features.Testimonials.Queries.GetTestimonials;
 

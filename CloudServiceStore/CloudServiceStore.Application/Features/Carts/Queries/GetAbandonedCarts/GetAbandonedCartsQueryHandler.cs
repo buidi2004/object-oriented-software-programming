@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 using CloudServiceStore.Application.DTOs;
 using CloudServiceStore.Domain.Entities;
 using CloudServiceStore.Domain.Interfaces;
+using CloudServiceStore.Application.Features.Carts.Queries.GetMyCart; // For CartDto
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace CloudServiceStore.Application.Features.Carts.Queries.GetAbandonedCarts;
 
@@ -24,14 +24,12 @@ public class GetAbandonedCartsQueryHandler : IRequestHandler<GetAbandonedCartsQu
     {
         var thresholdDate = DateTime.UtcNow.AddHours(-request.HoursThreshold);
 
-        var carts = await _repo.WhereAsync(c => c.Status == "Active" && c.UpdatedAt < thresholdDate, cancellationToken);
+        var carts = await _repo.WhereAsync(c => c.Status == CloudServiceStore.Domain.Enums.CartStatus.Active && c.UpdatedAt < thresholdDate, cancellationToken);
         
-        return carts.Select(c => new CartDto
-        {
-            Id = c.Id,
-            UserId = c.UserId,
-            Status = c.Status,
-            Items = new List<CartItemDto>() // Simplification for background job return type
-        }).ToList();
+        return carts.Select(c => new CartDto(
+            c.Id,
+            c.Status,
+            new List<CartItemDto>() // Simplification for background job return type
+        )).ToList();
     }
 }
