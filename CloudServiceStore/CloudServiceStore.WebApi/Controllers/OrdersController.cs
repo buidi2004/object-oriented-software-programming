@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using CloudServiceStore.Application.Features.Backups.Commands.ScheduleBackup;
 using CloudServiceStore.Application.Features.Backups.Queries.GetBackupsForOrder;
+using CloudServiceStore.Application.Features.Uptime.Queries.GetOrderUptime;
 using CloudServiceStore.Application.Features.Orders.Commands.Checkout;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -40,5 +41,14 @@ public class OrdersController : ControllerBase
         if (id != command.OrderId) return BadRequest("Mismatched Order Id");
         var backupId = await _mediator.Send(command, ct);
         return Ok(new { backupId });
+    }
+
+    // --- UPTIME ---
+
+    [HttpGet("{id:guid}/uptime")]
+    public async Task<IActionResult> GetOrderUptime(Guid id, CancellationToken ct)
+    {
+        var uptime = await _mediator.Send(new GetOrderUptimeQuery(id), ct);
+        return Ok(uptime);
     }
 }
