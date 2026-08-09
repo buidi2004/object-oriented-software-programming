@@ -37,6 +37,8 @@ public class AppDbContext : DbContext
     public DbSet<LoyaltyPoint> LoyaltyPoints => Set<LoyaltyPoint>();
     public DbSet<LoyaltyTransaction> LoyaltyTransactions => Set<LoyaltyTransaction>();
     public DbSet<GiftCard> GiftCards => Set<GiftCard>();
+    public DbSet<NewsletterSubscriber> NewsletterSubscribers => Set<NewsletterSubscriber>();
+    public DbSet<Banner> Banners => Set<Banner>();
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);

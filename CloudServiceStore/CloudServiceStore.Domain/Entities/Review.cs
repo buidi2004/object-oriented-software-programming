@@ -11,6 +11,9 @@ public class Review
     public string Comment { get; set; } = null!;
     public bool IsApproved { get; set; } = false;
     
+    public DateTime CreatedAt { get; set; }
+    public bool IsFeatured { get; set; } = false;
+
     public ServicePlan ServicePlan { get; set; } = null!;
     public AppUser User { get; set; } = null!;
 }
