@@ -7,7 +7,6 @@ using CloudServiceStore.Application.Features.Uptime.Queries.GetOrderUptime;
 using CloudServiceStore.Application.Features.Orders.Commands.Checkout;
 using CloudServiceStore.Application.Features.Invoices.Queries.GetInvoice;
 using CloudServiceStore.Application.Features.Invoices.Commands.GenerateInvoice;
-using CloudServiceStore.Application.Features.ControlPanel.Commands.GenerateControlPanelToken;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -53,15 +52,6 @@ public class OrdersController : ControllerBase
     {
         var uptime = await _mediator.Send(new GetOrderUptimeQuery(id), ct);
         return Ok(uptime);
-    }
-
-    // --- CONTROL PANEL ---
-
-    [HttpPost("{id:guid}/control-panel/access-token")]
-    public async Task<IActionResult> GenerateControlPanelToken(Guid id, CancellationToken ct)
-    {
-        var url = await _mediator.Send(new GenerateControlPanelTokenCommand(id), ct);
-        return Ok(new { loginUrl = url });
     }
 
     [HttpPatch("{id:guid}/auto-renew")]
