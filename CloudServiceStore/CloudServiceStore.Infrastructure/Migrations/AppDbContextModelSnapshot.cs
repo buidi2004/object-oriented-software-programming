@@ -397,6 +397,35 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.ToTable("ExchangeRates", (string)null);
                 });
 
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.FaqItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Answer")
+                        .IsRequired()
+                        .HasMaxLength(4000)
+                        .HasColumnType("nvarchar(4000)");
+
+                    b.Property<string>("CategoryTag")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("DisplayOrder")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Question")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Faqs", (string)null);
+                });
+
             modelBuilder.Entity("CloudServiceStore.Domain.Entities.GiftCard", b =>
                 {
                     b.Property<Guid>("Id")
