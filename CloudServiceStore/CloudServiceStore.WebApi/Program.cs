@@ -12,8 +12,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using CloudServiceStore.Infrastructure.Security;
-using CloudServiceStore.Infrastructure.ExternalServices.QrCode;
 using CloudServiceStore.Application.Interfaces;
+using CloudServiceStore.Application;
+using CloudServiceStore.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,29 +48,14 @@ builder.Services.AddCors(options =>
               .AllowAnyMethod());
 });
 
-builder.Services.AddSingleton<IQrCodeGeneratorFactory, QrCodeGeneratorFactory>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 builder.Services.AddControllers();
 
-builder.Services.AddDbContext<CloudServiceStore.Infrastructure.Persistence.AppDbContext>(opt =>
-    opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-builder.Services.AddSingleton<CloudServiceStore.Domain.Interfaces.IDapperContext, CloudServiceStore.Infrastructure.Dapper.DapperContext>();
-
-builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CloudServiceStore.Application.AssemblyMarker).Assembly));
-builder.Services.AddValidatorsFromAssembly(typeof(CloudServiceStore.Application.AssemblyMarker).Assembly);
-
-builder.Services.AddTransient(typeof(MediatR.IPipelineBehavior<,>), typeof(CloudServiceStore.Application.Behaviors.ValidationBehavior<,>));
-builder.Services.AddTransient(typeof(MediatR.IPipelineBehavior<,>), typeof(CloudServiceStore.Application.Behaviors.LoggingBehavior<,>));
-builder.Services.AddTransient(typeof(MediatR.IPipelineBehavior<,>), typeof(CloudServiceStore.Application.Behaviors.CachingBehavior<,>));
-builder.Services.AddTransient(typeof(MediatR.IPipelineBehavior<,>), typeof(CloudServiceStore.Application.Behaviors.PerformanceBehavior<,>));
-
-
+builder.Services.AddApplication();
+builder.Services.AddInfrastructure(builder.Configuration);
 
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(JwtSettings.SectionName));
-builder.Services.AddSingleton<IPasswordHasher, BCryptPasswordHasher>();
-builder.Services.AddSingleton<ITokenGenerator, JwtTokenGenerator>();
 
 // JWT Bearer Configuration
 var jwtSettings = builder.Configuration.GetSection(JwtSettings.SectionName).Get<JwtSettings>();

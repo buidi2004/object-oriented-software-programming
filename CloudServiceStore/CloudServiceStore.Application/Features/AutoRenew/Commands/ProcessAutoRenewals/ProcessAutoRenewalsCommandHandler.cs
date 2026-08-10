@@ -25,9 +25,9 @@ public class ProcessAutoRenewalsCommandHandler : IRequestHandler<ProcessAutoRene
     {
         var now = DateTime.UtcNow;
         var pendingJobs = await _jobRepo.WhereAsync(j => j.Status == RenewalStatus.Pending && j.NextRunAt <= now, cancellationToken);
-        
+
         int successCount = 0;
-        
+
         foreach (var job in pendingJobs)
         {
             var order = await _orderRepo.GetByIdAsync(job.OrderRequestId, cancellationToken);
@@ -39,22 +39,15 @@ public class ProcessAutoRenewalsCommandHandler : IRequestHandler<ProcessAutoRene
             }
 
             var wallets = await _walletRepo.WhereAsync(w => w.UserId == order.UserId, cancellationToken);
-            var wallet = Enumerable.FirstOrDefault(wallets);
+            var wallet = wallets.FirstOrDefault();
 
             if (wallet != null && wallet.Balance >= order.TotalAmount)
             {
                 // Sufficient balance
-                wallet.Balance -= order.TotalAmount;
-                wallet.UpdatedAt = DateTime.UtcNow;
+                wallet.Withdraw(order.TotalAmount);
                 _walletRepo.Update(wallet);
 
-                var transaction = new WalletTransaction
-                {
-                    WalletId = wallet.Id,
-                    Amount = -order.TotalAmount,
-                    Type = TransactionType.Payment,
-                    RefOrderId = order.Id
-                };
+                var transaction = new WalletTransaction(wallet.Id, -order.TotalAmount, TransactionType.Payment, order.Id);
                 await _transactionRepo.AddAsync(transaction, cancellationToken);
 
                 job.Status = RenewalStatus.Success;
@@ -68,7 +61,7 @@ public class ProcessAutoRenewalsCommandHandler : IRequestHandler<ProcessAutoRene
                     Status = RenewalStatus.Pending
                 };
                 await _jobRepo.AddAsync(nextJob, cancellationToken);
-                
+
                 successCount++;
             }
             else

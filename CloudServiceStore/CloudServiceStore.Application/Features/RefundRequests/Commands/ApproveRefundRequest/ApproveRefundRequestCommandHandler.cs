@@ -26,21 +26,20 @@ public class ApproveRefundRequestCommandHandler : IRequestHandler<ApproveRefundR
         var refund = await _refundRepo.GetByIdAsync(request.Id, cancellationToken)
             ?? throw new NotFoundException("Yêu cầu hoàn tiền không tồn tại.");
 
-        if (refund.Status != RefundRequestStatus.Pending)
+        if (refund.Status != RefundStatus.Pending)
             throw new ConflictException("Yêu cầu này không ở trạng thái chờ xử lý.");
 
-        var order = await _orderRepo.GetByIdAsync(refund.OrderRequestId, cancellationToken)
+        var order = await _orderRepo.GetByIdAsync(refund.OrderId, cancellationToken)
             ?? throw new NotFoundException("Đơn hàng không tồn tại.");
             
         var wallets = await _walletRepo.WhereAsync(w => w.UserId == refund.UserId, cancellationToken);
         var wallet = wallets.FirstOrDefault() ?? throw new NotFoundException("Ví không tồn tại.");
 
-        refund.Status = RefundRequestStatus.Approved;
-        refund.UpdatedAt = DateTime.UtcNow;
+        refund.Approve();
         
-        order.Status = OrderStatus.Cancelled;
+        order.MarkRefunded();
         
-        wallet.Balance += refund.RefundAmount;
+        wallet.Deposit(refund.Amount);
         
         _refundRepo.Update(refund);
         _orderRepo.Update(order);

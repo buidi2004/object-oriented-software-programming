@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CloudServiceStore.Application.Exceptions;
@@ -25,33 +26,34 @@ public class ApproveRefundRequestCommandHandlerTests
     [Fact]
     public async Task Handle_RefundNotFound_ThrowsNotFoundException()
     {
-        _refundRepoMock.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync((RefundRequest)null);
+        _refundRepoMock.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>(), It.IsAny<System.Linq.Expressions.Expression<Func<RefundRequest, object>>[]>())).ReturnsAsync((RefundRequest)null);
         await Assert.ThrowsAsync<NotFoundException>(() => CreateHandler().Handle(new ApproveRefundRequestCommand(Guid.NewGuid()), CancellationToken.None));
     }
-    
+
     [Fact]
     public async Task Handle_ValidRequest_ApprovesRefundAndCancelsOrder()
     {
         var refundId = Guid.NewGuid();
         var orderId = Guid.NewGuid();
         var userId = Guid.NewGuid();
-        
-        var refund = new RefundRequest { Id = refundId, OrderRequestId = orderId, UserId = userId, Status = RefundRequestStatus.Pending, RefundAmount = 50 };
-        var order = new OrderRequest { Id = orderId, UserId = userId, Status = OrderStatus.Paid };
-        var wallet = new Domain.Entities.Wallet { Id = Guid.NewGuid(), UserId = userId, Balance = 100 };
 
-        _refundRepoMock.Setup(r => r.GetByIdAsync(refundId, It.IsAny<CancellationToken>())).ReturnsAsync(refund);
-        _orderRepoMock.Setup(r => r.GetByIdAsync(orderId, It.IsAny<CancellationToken>())).ReturnsAsync(order);
+        var refund = new RefundRequest { Id = refundId, OrderId = orderId, UserId = userId, Status = RefundStatus.Pending, Amount = 50 };
+        var order = new OrderRequest { Id = orderId, UserId = userId, Status = OrderStatus.Paid };
+        var wallet = new Domain.Entities.Wallet(userId);
+        wallet.Deposit(100);
+
+        _refundRepoMock.Setup(r => r.GetByIdAsync(refundId, It.IsAny<CancellationToken>(), It.IsAny<System.Linq.Expressions.Expression<Func<RefundRequest, object>>[]>())).ReturnsAsync(refund);
+        _orderRepoMock.Setup(r => r.GetByIdAsync(orderId, It.IsAny<CancellationToken>(), It.IsAny<System.Linq.Expressions.Expression<Func<OrderRequest, object>>[]>())).ReturnsAsync(order);
         _walletRepoMock.Setup(r => r.WhereAsync(It.IsAny<System.Linq.Expressions.Expression<Func<Domain.Entities.Wallet, bool>>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new List<Domain.Entities.Wallet> { wallet });
 
         var result = await CreateHandler().Handle(new ApproveRefundRequestCommand(refundId), CancellationToken.None);
-        
+
         Assert.True(result);
-        Assert.Equal(RefundRequestStatus.Approved, refund.Status);
-        Assert.Equal(OrderStatus.Cancelled, order.Status);
+        Assert.Equal(RefundStatus.Approved, refund.Status);
+        Assert.Equal(OrderStatus.Refunded, order.Status);
         Assert.Equal(150, wallet.Balance); // 100 + 50
-        
+
         _refundRepoMock.Verify(r => r.Update(refund), Times.Once);
         _orderRepoMock.Verify(r => r.Update(order), Times.Once);
         _walletRepoMock.Verify(r => r.Update(wallet), Times.Once);

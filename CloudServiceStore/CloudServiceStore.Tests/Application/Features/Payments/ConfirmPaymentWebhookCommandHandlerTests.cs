@@ -26,12 +26,12 @@ public class ConfirmPaymentWebhookCommandHandlerTests
     [Fact]
     public async Task Handle_IdempotencyKeyValid_UpdatesPaymentAndPublishesEvent()
     {
-        var payment = new Payment { Id = Guid.NewGuid(), OrderRequestId = Guid.NewGuid(), IdempotencyKey = "KEY", Status = PaymentStatus.Pending };
-        var order = new OrderRequest { Id = payment.OrderRequestId, Status = OrderStatus.Pending };
+        var payment = new Payment { Id = Guid.NewGuid(), OrderId = Guid.NewGuid(), IdempotencyKey = "KEY", Status = PaymentStatus.Pending };
+        var order = new OrderRequest { Id = payment.OrderId, Status = OrderStatus.Pending };
 
-        _paymentRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<Payment, bool>>>(), It.IsAny<CancellationToken>()))
+        _paymentRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<Payment, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<Payment, object>>[]>()))
             .ReturnsAsync(payment);
-        _orderRepoMock.Setup(r => r.GetByIdAsync(payment.OrderRequestId, It.IsAny<CancellationToken>()))
+        _orderRepoMock.Setup(r => r.GetByIdAsync(payment.OrderId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(order);
 
         await CreateHandler().Handle(new ConfirmPaymentWebhookCommand("KEY"), CancellationToken.None);
@@ -47,9 +47,9 @@ public class ConfirmPaymentWebhookCommandHandlerTests
     [Fact]
     public async Task Handle_PaymentAlreadyConfirmed_DoesNothing_Idempotent()
     {
-        var payment = new Payment { Id = Guid.NewGuid(), OrderRequestId = Guid.NewGuid(), IdempotencyKey = "KEY", Status = PaymentStatus.Confirmed };
+        var payment = new Payment { Id = Guid.NewGuid(), OrderId = Guid.NewGuid(), IdempotencyKey = "KEY", Status = PaymentStatus.Confirmed };
 
-        _paymentRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<Payment, bool>>>(), It.IsAny<CancellationToken>()))
+        _paymentRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<Payment, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<Payment, object>>[]>()))
             .ReturnsAsync(payment);
 
         await CreateHandler().Handle(new ConfirmPaymentWebhookCommand("KEY"), CancellationToken.None);

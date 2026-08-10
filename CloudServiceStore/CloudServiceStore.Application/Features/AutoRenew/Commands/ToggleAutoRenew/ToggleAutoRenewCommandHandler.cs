@@ -28,7 +28,7 @@ public class ToggleAutoRenewCommandHandler : IRequestHandler<ToggleAutoRenewComm
         if (order.UserId != userId)
             throw new UnauthorizedException("Đơn hàng không thuộc về bạn.");
 
-        order.AutoRenew = !order.AutoRenew;
+        order.ToggleAutoRenew(!order.AutoRenew);
         _orderRepo.Update(order);
         await _uow.SaveChangesAsync(cancellationToken);
         

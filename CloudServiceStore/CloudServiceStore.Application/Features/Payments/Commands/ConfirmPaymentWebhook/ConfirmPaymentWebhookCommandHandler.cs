@@ -26,21 +26,19 @@ public class ConfirmPaymentWebhookCommandHandler : IRequestHandler<ConfirmPaymen
         if (payment.Status == PaymentStatus.Confirmed)
             return; // Already processed (Idempotent)
 
-        payment.Status = PaymentStatus.Confirmed;
-        payment.ConfirmedAt = DateTime.UtcNow;
-        payment.TransactionRef = Guid.NewGuid().ToString("N"); // Mock transaction ref
+        payment.Confirm(Guid.NewGuid().ToString("N")); // Mock transaction ref
 
         _paymentRepo.Update(payment);
 
-        var order = await _orderRepo.GetByIdAsync(payment.OrderRequestId, ct);
+        var order = await _orderRepo.GetByIdAsync(payment.OrderId, ct);
         if (order != null)
         {
-            order.Status = OrderStatus.Paid;
+            order.Pay();
             _orderRepo.Update(order);
         }
 
         await _uow.SaveChangesAsync(ct);
 
-        await _mediator.Publish(new PaymentConfirmedEvent(payment.Id, payment.OrderRequestId), ct);
+        await _mediator.Publish(new PaymentConfirmedEvent(payment.Id, payment.OrderId), ct);
     }
 }

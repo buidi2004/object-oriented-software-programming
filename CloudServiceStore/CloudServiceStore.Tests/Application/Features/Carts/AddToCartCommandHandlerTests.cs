@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,13 +18,12 @@ namespace CloudServiceStore.Tests.Application.Features.Carts;
 public class AddToCartCommandHandlerTests
 {
     private readonly Mock<IUnitOfWork> _uowMock = new();
-    private readonly Mock<IRepository<Cart>> _cartRepoMock = new();
-    private readonly Mock<IRepository<CartItem>> _cartItemRepoMock = new();
+    private readonly Mock<IRepository<Cart>> _cartRepoMock = new(MockBehavior.Strict);
     private readonly Mock<IRepository<ServicePlan>> _planRepoMock = new();
     private readonly Mock<ICurrentUserService> _currentUserMock = new();
 
     private AddToCartCommandHandler CreateHandler() =>
-        new(_uowMock.Object, _cartRepoMock.Object, _cartItemRepoMock.Object, _planRepoMock.Object, _currentUserMock.Object);
+        new(_uowMock.Object, _cartRepoMock.Object, _planRepoMock.Object, _currentUserMock.Object);
 
     [Fact]
     public async Task Handle_UserNotLoggedIn_ThrowsUnauthorizedException()
@@ -53,38 +53,34 @@ public class AddToCartCommandHandlerTests
         _currentUserMock.Setup(x => x.UserId).Returns(userId);
         _planRepoMock.Setup(r => r.AnyAsync(It.IsAny<Expression<Func<ServicePlan, bool>>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(true);
-        _cartRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<Cart, bool>>>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync((Cart?)null); // No cart
-        _cartItemRepoMock.Setup(r => r.WhereAsync(It.IsAny<Expression<Func<CartItem, bool>>>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new List<CartItem>());
+        _cartRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<Cart, bool>>>(), It.IsAny<CancellationToken>(), Array.Empty<Expression<Func<Cart, object>>>()))
+            .ReturnsAsync((Cart?)null);
+        _cartRepoMock.Setup(r => r.AddAsync(It.IsAny<Cart>(), It.IsAny<CancellationToken>()))
+            .Returns((Cart c, CancellationToken ct) => Task.FromResult(c));
 
         await CreateHandler().Handle(new AddToCartCommand(planId, CloudServiceStore.Domain.Enums.BillingCycle.Monthly, 2), CancellationToken.None);
 
         _cartRepoMock.Verify(r => r.AddAsync(It.Is<Cart>(c => c.UserId == userId && c.Status == CloudServiceStore.Domain.Enums.CartStatus.Active), It.IsAny<CancellationToken>()), Times.Once);
-        _cartItemRepoMock.Verify(r => r.AddAsync(It.Is<CartItem>(i => i.ServicePlanId == planId && i.Quantity == 2), It.IsAny<CancellationToken>()), Times.Once);
         _uowMock.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
-    
+
     [Fact]
     public async Task Handle_ItemAlreadyInCart_UpdatesQuantity()
     {
         var userId = Guid.NewGuid();
         var planId = Guid.NewGuid();
-        var cart = new Cart { Id = Guid.NewGuid(), UserId = userId, Status = CloudServiceStore.Domain.Enums.CartStatus.Active };
-        var existingItem = new CartItem { Id = Guid.NewGuid(), CartId = cart.Id, ServicePlanId = planId, BillingCycle = CloudServiceStore.Domain.Enums.BillingCycle.Monthly, Quantity = 1 };
-
+        var cart = new Cart(userId);
+        cart.AddItem(planId, CloudServiceStore.Domain.Enums.BillingCycle.Monthly, 1);
+        
         _currentUserMock.Setup(x => x.UserId).Returns(userId);
         _planRepoMock.Setup(r => r.AnyAsync(It.IsAny<Expression<Func<ServicePlan, bool>>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(true);
-        _cartRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<Cart, bool>>>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(cart); 
-        _cartItemRepoMock.Setup(r => r.WhereAsync(It.IsAny<Expression<Func<CartItem, bool>>>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new List<CartItem> { existingItem });
+        _cartRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<Cart, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<Cart, object>>[]>()))
+            .ReturnsAsync(cart);
 
         await CreateHandler().Handle(new AddToCartCommand(planId, CloudServiceStore.Domain.Enums.BillingCycle.Monthly, 3), CancellationToken.None);
 
-        existingItem.Quantity.Should().Be(4);
-        _cartItemRepoMock.Verify(r => r.Update(existingItem), Times.Once);
+        cart.Items.First().Quantity.Should().Be(4);
         _uowMock.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 }

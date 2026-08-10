@@ -73,7 +73,7 @@ public class ApplyCouponCommandHandlerTests
             .ReturnsAsync(new List<Coupon> { coupon });
 
         var ex = await Assert.ThrowsAsync<ConflictException>(() => CreateHandler().Handle(new ApplyCouponCommand(order.Id, "FULL"), CancellationToken.None));
-        Assert.Contains("hết lượt", ex.Message);
+        Assert.Contains("vượt quá", ex.Message);
     }
 
     [Fact]

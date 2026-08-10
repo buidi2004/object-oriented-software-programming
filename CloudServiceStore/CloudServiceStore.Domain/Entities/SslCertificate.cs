@@ -1,10 +1,10 @@
+using CloudServiceStore.Domain.Primitives;
 using System;
 
 namespace CloudServiceStore.Domain.Entities;
 
-public class SslCertificate
+public class SslCertificate : AggregateRoot
 {
-    public Guid Id { get; set; }
     public Guid DomainId { get; set; }
     public string Csr { get; set; } = null!;
     public string? Certificate { get; set; }

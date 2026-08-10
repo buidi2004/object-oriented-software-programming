@@ -1,11 +1,11 @@
+using CloudServiceStore.Domain.Primitives;
 using System;
 using CloudServiceStore.Domain.Enums;
 
 namespace CloudServiceStore.Domain.Entities;
 
-public class DomainRecord
+public class DomainRecord : AggregateRoot
 {
-    public Guid Id { get; set; }
     public Guid UserId { get; set; }
     public string Name { get; set; } = null!;
     public Guid OrderRequestId { get; set; }

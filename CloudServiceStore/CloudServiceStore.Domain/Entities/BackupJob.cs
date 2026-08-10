@@ -1,11 +1,11 @@
+using CloudServiceStore.Domain.Primitives;
 using System;
 using CloudServiceStore.Domain.Enums;
 
 namespace CloudServiceStore.Domain.Entities;
 
-public class BackupJob
+public class BackupJob : AggregateRoot
 {
-    public Guid Id { get; set; }
     public Guid OrderRequestId { get; set; }
     public DateTime ScheduledAt { get; set; }
     public BackupStatus Status { get; set; }

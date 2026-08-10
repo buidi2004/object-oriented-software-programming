@@ -24,28 +24,22 @@ public class TopUpWalletCommandHandler : IRequestHandler<TopUpWalletCommand, boo
     public async Task<bool> Handle(TopUpWalletCommand request, CancellationToken cancellationToken)
     {
         var userId = _currentUser.UserId ?? throw new UnauthorizedException("Chưa đăng nhập");
-        
+
         var wallets = await _walletRepo.WhereAsync(w => w.UserId == userId, cancellationToken);
-        var wallet = Enumerable.FirstOrDefault(wallets);
-        
+        var wallet = wallets.FirstOrDefault();
+
         if (wallet == null)
         {
-            wallet = new Domain.Entities.Wallet { UserId = userId, Balance = 0 };
+            wallet = new Domain.Entities.Wallet(userId);
             await _walletRepo.AddAsync(wallet, cancellationToken);
         }
 
-        wallet.Balance += request.Amount;
-        wallet.UpdatedAt = DateTime.UtcNow;
+        wallet.Deposit(request.Amount);
         _walletRepo.Update(wallet);
 
-        var transaction = new WalletTransaction
-        {
-            WalletId = wallet.Id,
-            Amount = request.Amount,
-            Type = TransactionType.TopUp
-        };
+        var transaction = new WalletTransaction(wallet.Id, request.Amount, TransactionType.TopUp);
         await _transactionRepo.AddAsync(transaction, cancellationToken);
-        
+
         await _uow.SaveChangesAsync(cancellationToken);
         return true;
     }

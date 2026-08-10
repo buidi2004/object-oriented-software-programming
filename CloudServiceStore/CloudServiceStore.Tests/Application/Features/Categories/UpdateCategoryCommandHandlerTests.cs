@@ -39,7 +39,7 @@ public class UpdateCategoryCommandHandlerTests
         _repoMock.Setup(r => r.GetByIdAsync(categoryId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(existingCategory);
 
-        _repoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<ServiceCategory, bool>>>(), It.IsAny<CancellationToken>()))
+        _repoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<ServiceCategory, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<ServiceCategory, object>>[]>()))
             .ReturnsAsync(new ServiceCategory { Id = Guid.NewGuid() }); // Returns another category
 
         await Assert.ThrowsAsync<ConflictException>(
@@ -55,7 +55,7 @@ public class UpdateCategoryCommandHandlerTests
         _repoMock.Setup(r => r.GetByIdAsync(categoryId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(existingCategory);
 
-        _repoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<ServiceCategory, bool>>>(), It.IsAny<CancellationToken>()))
+        _repoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<ServiceCategory, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<ServiceCategory, object>>[]>()))
             .ReturnsAsync((ServiceCategory?)null);
 
         await CreateHandler().Handle(new UpdateCategoryCommand(categoryId, "New Name", "new-slug"), CancellationToken.None);

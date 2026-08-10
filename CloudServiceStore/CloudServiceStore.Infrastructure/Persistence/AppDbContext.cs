@@ -1,11 +1,21 @@
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using CloudServiceStore.Domain.Entities;
+using CloudServiceStore.Domain.Primitives;
+using MediatR;
 
 namespace CloudServiceStore.Infrastructure.Persistence;
 
 public class AppDbContext : DbContext
 {
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+    private readonly IPublisher? _publisher;
+
+    public AppDbContext(DbContextOptions<AppDbContext> options, IPublisher publisher = null!) : base(options) 
+    { 
+        _publisher = publisher;
+    }
 
     public DbSet<AppUser> AppUsers => Set<AppUser>();
     public DbSet<Role> Roles => Set<Role>();
@@ -28,10 +38,57 @@ public class AppDbContext : DbContext
     public DbSet<LoginHistory> LoginHistories => Set<LoginHistory>();
     public DbSet<UserSession> UserSessions => Set<UserSession>();
     public DbSet<NotificationSetting> NotificationSettings => Set<NotificationSetting>();
-
+    public DbSet<Invoice> Invoices => Set<Invoice>();
+    public DbSet<ExchangeRate> ExchangeRates => Set<ExchangeRate>();
+    public DbSet<SavedPaymentMethod> SavedPaymentMethods => Set<SavedPaymentMethod>();
+    public DbSet<ReferralCode> ReferralCodes => Set<ReferralCode>();
+    public DbSet<ReferralReward> ReferralRewards => Set<ReferralReward>();
+    public DbSet<WishlistItem> WishlistItems => Set<WishlistItem>();
+    public DbSet<LoyaltyPoint> LoyaltyPoints => Set<LoyaltyPoint>();
+    public DbSet<LoyaltyTransaction> LoyaltyTransactions => Set<LoyaltyTransaction>();
+    public DbSet<GiftCard> GiftCards => Set<GiftCard>();
+    public DbSet<NewsletterSubscriber> NewsletterSubscribers => Set<NewsletterSubscriber>();
+    public DbSet<Banner> Banners => Set<Banner>();
+    public DbSet<ApiKey> ApiKeys => Set<ApiKey>();
+    public DbSet<BackupJob> BackupJobs => Set<BackupJob>();
+    public DbSet<DnsRecord> DnsRecords => Set<DnsRecord>();
+    public DbSet<DomainRecord> DomainRecords => Set<DomainRecord>();
+    public DbSet<MigrationRequest> MigrationRequests => Set<MigrationRequest>();
+    public DbSet<RenewalJob> RenewalJobs => Set<RenewalJob>();
+    public DbSet<ServiceStatusLog> ServiceStatusLogs => Set<ServiceStatusLog>();
+    public DbSet<SslCertificate> SslCertificates => Set<SslCertificate>();
+    public DbSet<Wallet> Wallets => Set<Wallet>();
+    public DbSet<WalletTransaction> WalletTransactions => Set<WalletTransaction>();
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
         base.OnModelCreating(builder);
+    }
+
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        var result = await base.SaveChangesAsync(cancellationToken);
+
+        // Dispatch Domain Events after saving to database
+        if (_publisher != null)
+        {
+            var entities = ChangeTracker.Entries<Entity>()
+                .Where(e => e.Entity.GetDomainEvents().Any())
+                .Select(e => e.Entity)
+                .ToList();
+
+            var domainEvents = entities
+                .SelectMany(e => e.GetDomainEvents())
+                .ToList();
+
+            entities.ForEach(e => e.ClearDomainEvents());
+
+            foreach (var domainEvent in domainEvents)
+            {
+                await _publisher.Publish(domainEvent, cancellationToken);
+            }
+        }
+
+        return result;
     }
 }

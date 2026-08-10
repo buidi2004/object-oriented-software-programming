@@ -23,11 +23,10 @@ public class RejectRefundRequestCommandHandler : IRequestHandler<RejectRefundReq
         var refund = await _refundRepo.GetByIdAsync(request.Id, cancellationToken)
             ?? throw new NotFoundException("Yêu cầu hoàn tiền không tồn tại.");
 
-        if (refund.Status != RefundRequestStatus.Pending)
+        if (refund.Status != RefundStatus.Pending)
             throw new ConflictException("Yêu cầu này không ở trạng thái chờ xử lý.");
 
-        refund.Status = RefundRequestStatus.Rejected;
-        refund.UpdatedAt = DateTime.UtcNow;
+        refund.Reject();
         
         _refundRepo.Update(refund);
         await _uow.SaveChangesAsync(cancellationToken);

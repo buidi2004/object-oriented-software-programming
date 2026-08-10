@@ -57,7 +57,7 @@ public class ExceptionHandlingMiddleware
             type = "https://tools.ietf.org/html/rfc7231#section-6.5.8";
             title = "Conflict";
         }
-        else if (exception is ArgumentException || exception is ArgumentNullException)
+        else if (exception is ArgumentException || exception is ArgumentNullException || exception is BadRequestException)
         {
             statusCode = StatusCodes.Status400BadRequest;
             type = "https://tools.ietf.org/html/rfc7231#section-6.5.1";

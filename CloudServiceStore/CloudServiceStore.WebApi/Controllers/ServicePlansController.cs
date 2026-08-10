@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using CloudServiceStore.Application.Features.ServicePlans.Commands.Create;
+using CloudServiceStore.Application.Features.ServicePlans.Queries.GetServicePlansWithCurrency;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -20,7 +21,15 @@ public class ServicePlansController : ControllerBase
     public async Task<IActionResult> Create(CreateServicePlanCommand command, CancellationToken ct)
     {
         var id = await _mediator.Send(command, ct);
-        // Returns 201 Created but GET endpoint doesn't exist yet, so we return a simple object.
         return CreatedAtAction(nameof(Create), new { id }, new { id }); 
+    }
+
+    /// <summary>GET /api/service-plans?currency=USD — Public: view prices in requested currency</summary>
+    [HttpGet]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetWithCurrency([FromQuery] string currency = "VND", CancellationToken ct = default)
+    {
+        var prices = await _mediator.Send(new GetServicePlansWithCurrencyQuery { Currency = currency }, ct);
+        return Ok(prices);
     }
 }

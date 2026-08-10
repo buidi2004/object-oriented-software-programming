@@ -1,11 +1,11 @@
+using CloudServiceStore.Domain.Primitives;
 using System;
 using CloudServiceStore.Domain.Enums;
 
 namespace CloudServiceStore.Domain.Entities;
 
-public class AuditLog
+public class AuditLog : AggregateRoot
 {
-    public Guid Id { get; set; }
     public Guid? UserId { get; set; }
     public AuditAction Action { get; set; }
     public string EntityName { get; set; } = null!;

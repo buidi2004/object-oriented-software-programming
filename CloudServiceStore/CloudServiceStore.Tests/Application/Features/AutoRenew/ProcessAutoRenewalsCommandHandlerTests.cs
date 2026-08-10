@@ -39,7 +39,8 @@ public class ProcessAutoRenewalsCommandHandlerTests
         var userId = Guid.NewGuid();
         var job = new RenewalJob { Id = Guid.NewGuid(), OrderRequestId = orderId, NextRunAt = DateTime.UtcNow.AddMinutes(-1), Status = RenewalStatus.Pending };
         var order = new OrderRequest { Id = orderId, UserId = userId, TotalAmount = 100, AutoRenew = true };
-        var wallet = new Domain.Entities.Wallet { Id = Guid.NewGuid(), UserId = userId, Balance = 150 };
+        var wallet = new Domain.Entities.Wallet(userId);
+        wallet.Deposit(150);
 
         _jobRepoMock.Setup(r => r.WhereAsync(It.IsAny<System.Linq.Expressions.Expression<Func<RenewalJob, bool>>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new List<RenewalJob> { job });
@@ -68,7 +69,8 @@ public class ProcessAutoRenewalsCommandHandlerTests
         var userId = Guid.NewGuid();
         var job = new RenewalJob { Id = Guid.NewGuid(), OrderRequestId = orderId, NextRunAt = DateTime.UtcNow.AddMinutes(-1), Status = RenewalStatus.Pending };
         var order = new OrderRequest { Id = orderId, UserId = userId, TotalAmount = 100, AutoRenew = true };
-        var wallet = new Domain.Entities.Wallet { Id = Guid.NewGuid(), UserId = userId, Balance = 50 }; // Insufficient
+        var wallet = new Domain.Entities.Wallet(userId);
+        wallet.Deposit(50);
 
         _jobRepoMock.Setup(r => r.WhereAsync(It.IsAny<System.Linq.Expressions.Expression<Func<RenewalJob, bool>>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new List<RenewalJob> { job });

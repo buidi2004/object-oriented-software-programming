@@ -1,5 +1,7 @@
+using MediatR;
+
 namespace CloudServiceStore.Domain.Events;
 
-public interface IDomainEvent
+public interface IDomainEvent : INotification
 {
 }

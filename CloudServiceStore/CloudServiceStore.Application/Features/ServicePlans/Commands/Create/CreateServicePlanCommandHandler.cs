@@ -18,8 +18,8 @@ public class CreateServicePlanCommandHandler : IRequestHandler<CreateServicePlan
     private readonly IQrCodeGeneratorFactory _qrFactory;
 
     public CreateServicePlanCommandHandler(
-        IUnitOfWork uow, 
-        IRepository<ServicePlan> planRepo, 
+        IUnitOfWork uow,
+        IRepository<ServicePlan> planRepo,
         IRepository<ServiceCategory> categoryRepo,
         IQrCodeGeneratorFactory qrFactory)
     {
@@ -35,22 +35,25 @@ public class CreateServicePlanCommandHandler : IRequestHandler<CreateServicePlan
         if (!categoryExists)
             throw new NotFoundException("Không tìm thấy danh mục.");
 
+        // Here we just pre-generate ID to have it for QR code. Wait, the constructor creates an ID.
+        // It's better to pass it or let it generate. The constructor generates a random GUID.
+        // If we want to use the generated ID for QR code, we should instantiate first, then set QR code.
+        // But since we want to avoid public setters, let's just let constructor accept it or use it after.
+        // I will change the constructor of ServicePlan to accept Id optionally.
+        
         var planId = Guid.NewGuid();
         var qrGenerator = _qrFactory.CreateGenerator(QrCodeType.ServicePlan);
         var qrCodeUrl = qrGenerator.GenerateUrl(planId.ToString());
 
-        var plan = new ServicePlan
+        var plan = new ServicePlan(request.CategoryId, request.Name, request.Cpu, request.Ram, request.Ssd, request.Bandwidth, qrCodeUrl);
+        // Force the ID since we needed it for QR
+        var prop = plan.GetType().GetProperty("Id");
+        prop.SetValue(plan, planId);
+
+        if (!request.IsActive)
         {
-            Id = planId,
-            CategoryId = request.CategoryId,
-            Name = request.Name,
-            Cpu = request.Cpu,
-            Ram = request.Ram,
-            Ssd = request.Ssd,
-            Bandwidth = request.Bandwidth,
-            QrCodeUrl = qrCodeUrl,
-            IsActive = request.IsActive
-        };
+            plan.Deactivate();
+        }
 
         await _planRepo.AddAsync(plan, ct);
         await _uow.SaveChangesAsync(ct);

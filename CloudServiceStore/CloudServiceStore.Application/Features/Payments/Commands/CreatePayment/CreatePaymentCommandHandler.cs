@@ -27,16 +27,12 @@ public class CreatePaymentCommandHandler : IRequestHandler<CreatePaymentCommand,
 
         var idempotencyKey = $"PAY_{order.Id}_{DateTime.UtcNow.Ticks}";
         
-        var payment = new Payment
-        {
-            Id = Guid.NewGuid(),
-            OrderRequestId = order.Id,
-            Gateway = "VNPay",
-            IdempotencyKey = idempotencyKey,
-            Amount = order.TotalAmount,
-            Status = PaymentStatus.Pending,
-            CreatedAt = DateTime.UtcNow
-        };
+        var payment = new Payment(
+            order.Id,
+            "VNPay",
+            idempotencyKey,
+            order.TotalAmount
+        );
 
         await _paymentRepo.AddAsync(payment, ct);
         await _uow.SaveChangesAsync(ct);

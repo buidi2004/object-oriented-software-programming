@@ -23,14 +23,14 @@ public class RejectRefundRequestCommandHandlerTests
     public async Task Handle_ValidRequest_RejectsRefund()
     {
         var refundId = Guid.NewGuid();
-        var refund = new RefundRequest { Id = refundId, Status = RefundRequestStatus.Pending };
+        var refund = new RefundRequest { Id = refundId, Status = RefundStatus.Pending };
 
         _refundRepoMock.Setup(r => r.GetByIdAsync(refundId, It.IsAny<CancellationToken>())).ReturnsAsync(refund);
 
         var result = await CreateHandler().Handle(new RejectRefundRequestCommand(refundId), CancellationToken.None);
         
         Assert.True(result);
-        Assert.Equal(RefundRequestStatus.Rejected, refund.Status);
+        Assert.Equal(RefundStatus.Rejected, refund.Status);
         
         _refundRepoMock.Verify(r => r.Update(refund), Times.Once);
         _uowMock.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
