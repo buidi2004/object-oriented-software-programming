@@ -61,6 +61,14 @@ public class AppDbContext : DbContext
     public DbSet<WalletTransaction> WalletTransactions => Set<WalletTransaction>();
     public DbSet<FaqItem> Faqs => Set<FaqItem>();
     public DbSet<KnowledgeBaseArticle> KnowledgeBaseArticles => Set<KnowledgeBaseArticle>();
+    public DbSet<ChatSession> ChatSessions => Set<ChatSession>();
+    public DbSet<ChatMessage> ChatMessages => Set<ChatMessage>();
+    public DbSet<ArticleComment> ArticleComments => Set<ArticleComment>();
+    public DbSet<RecentlyViewed> RecentlyViewedRecords => Set<RecentlyViewed>();
+    public DbSet<Permission> Permissions => Set<Permission>();
+    public DbSet<RolePermission> RolePermissions => Set<RolePermission>();
+    public DbSet<SystemSetting> SystemSettings => Set<SystemSetting>();
+    
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);

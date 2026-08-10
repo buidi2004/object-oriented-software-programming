@@ -1,4 +1,8 @@
 using CloudServiceStore.Application.Features.KnowledgeBase.Commands.Create;
+using CloudServiceStore.Application.Features.KnowledgeBase.Commands.Delete;
+using CloudServiceStore.Application.Features.KnowledgeBase.Commands.IncrementViewCount;
+using CloudServiceStore.Application.Features.KnowledgeBase.Commands.Update;
+using CloudServiceStore.Application.Features.KnowledgeBase.Queries.GetAll;
 using CloudServiceStore.Application.Features.KnowledgeBase.Queries.GetById;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -19,6 +23,14 @@ public class KnowledgeBaseController : ControllerBase
         _mediator = mediator;
     }
 
+    [HttpGet]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetAll()
+    {
+        var result = await _mediator.Send(new GetAllKbArticlesQuery());
+        return Ok(result);
+    }
+
     [HttpGet("{id}")]
     [AllowAnonymous]
     public async Task<IActionResult> GetById(Guid id)
@@ -36,5 +48,41 @@ public class KnowledgeBaseController : ControllerBase
     {
         var id = await _mediator.Send(command);
         return Ok(new { Id = id });
+    }
+
+    [HttpPut("{id}")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateKbArticleCommand command)
+    {
+        if (id != command.Id)
+            return BadRequest("Id in route does not match Id in command");
+
+        var result = await _mediator.Send(command);
+        if (!result)
+            return NotFound();
+
+        return NoContent();
+    }
+
+    [HttpDelete("{id}")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> Delete(Guid id)
+    {
+        var result = await _mediator.Send(new DeleteKbArticleCommand(id));
+        if (!result)
+            return NotFound();
+
+        return NoContent();
+    }
+
+    [HttpPatch("{id}/view")]
+    [AllowAnonymous]
+    public async Task<IActionResult> IncrementViewCount(Guid id)
+    {
+        var result = await _mediator.Send(new IncrementKbArticleViewCountCommand(id));
+        if (!result)
+            return NotFound();
+
+        return NoContent();
     }
 }

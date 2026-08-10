@@ -61,6 +61,15 @@ public class OrdersController : ControllerBase
         return Ok(new { success = result });
     }
 
+    // --- CONTROL PANEL ---
+
+    [HttpPost("{id:guid}/control-panel/access-token")]
+    public async Task<IActionResult> GetControlPanelAccessToken(Guid id, CancellationToken ct)
+    {
+        var token = await _mediator.Send(new CloudServiceStore.Application.Features.Orders.Commands.GetControlPanelAccessToken.GetControlPanelAccessTokenCommand(id), ct);
+        return Ok(new { token });
+    }
+
     // --- INVOICES ---
 
     [HttpGet("{id:guid}/invoice")]
