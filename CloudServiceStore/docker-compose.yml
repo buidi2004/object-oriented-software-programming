@@ -1,0 +1,31 @@
+
+
+services:
+  webapi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cloudservicestore_api
+    ports:
+      - "5053:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=CloudServiceStoreDb;User Id=sa;Password=Your_Strong_Password_123!;TrustServerCertificate=True;
+    depends_on:
+      - sqlserver
+    restart: unless-stopped
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: cloudservicestore_sqlserver
+    ports:
+      - "1433:1433"
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Your_Strong_Password_123!
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    restart: unless-stopped
+
+volumes:
+  sqlserver_data:
