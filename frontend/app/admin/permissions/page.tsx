@@ -77,7 +77,7 @@ export default function AdminPermissionsPage() {
         // Get permissions for each role
         const rolePerms = await Promise.all(
           rolesData.map(async (role: any) => {
-            const rolePermRes = await fetch(`/api/permissions/role/${role.id}`, {
+            const rolePermRes = await fetch(`/api/roles/${role.id}/permissions`, {
               headers: { Authorization: `Bearer ${token}` }
             });
             const perms = rolePermRes.ok ? await rolePermRes.json() : [];
@@ -94,53 +94,24 @@ export default function AdminPermissionsPage() {
   };
 
   const handleAddPermission = async () => {
-    const token = localStorage.getItem('accessToken') ?? '';
-    try {
-      await fetch('/api/permissions', {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}` 
-        },
-        body: JSON.stringify({ 
-          name: permName,
-          description: permDescription,
-          category: permCategory
-        })
-      });
-      setShowAddModal(false);
-      resetForm();
-      fetchData(token);
-    } catch (error) {
-      console.error('Failed to add permission:', error);
-    }
+    // Disabled: Permissions are seeded statically on backend.
+    setShowAddModal(false);
   };
 
   const handleDeletePermission = async (id: string) => {
-    if (!confirm('Bạn có chắc chắn muốn xóa quyền này?')) return;
-    
-    const token = localStorage.getItem('accessToken') ?? '';
-    try {
-      await fetch(`/api/permissions/${id}`, {
-        method: 'DELETE',
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setPermissions(prev => prev.filter(p => p.id !== id));
-    } catch (error) {
-      console.error('Failed to delete permission:', error);
-    }
+    alert("Cannot delete permissions: they are statically seeded in the system.");
   };
 
   const handleAssignPermission = async (roleId: string, permId: string) => {
     const token = localStorage.getItem('accessToken') ?? '';
     try {
-      await fetch(`/api/permissions/role/${roleId}`, {
-        method: 'POST',
+      await fetch(`/api/roles/${roleId}/permissions`, {
+        method: 'PUT',
         headers: { 
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}` 
         },
-        body: JSON.stringify({ permissionIds: [permId] })
+        body: JSON.stringify({ roleId, permissionIds: [permId] })
       });
       // Refresh data
       fetchData(token);
@@ -185,13 +156,13 @@ export default function AdminPermissionsPage() {
               <p className="text-sm text-slate-500">{permissions.length} quyền • {roles.length} vai trò</p>
             </div>
           </div>
-          <button 
+          {/* <button 
             onClick={() => setShowAddModal(true)}
             className="px-4 py-2 rounded-lg bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 transition-colors flex items-center gap-2"
           >
             <Plus className="w-4 h-4" />
             Thêm quyền
-          </button>
+          </button> */}
         </div>
       </header>
 
@@ -227,12 +198,7 @@ export default function AdminPermissionsPage() {
                     </span>
                   </td>
                   <td className="px-6 py-4 text-right">
-                    <button 
-                      onClick={() => handleDeletePermission(perm.id)}
-                      className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
+                    {/* Delete hidden for statically seeded permissions */}
                   </td>
                 </tr>
               ))}

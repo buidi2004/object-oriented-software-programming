@@ -18,13 +18,18 @@ public class CreateCategoryCommandHandlerTests
 {
     private readonly Mock<IUnitOfWork> _mockUnitOfWork;
     private readonly Mock<IRepository<ServiceCategory>> _mockRepositoryServiceCategory;
+    private readonly Mock<ICatalogCache> _mockCatalogCache;
     private readonly CreateCategoryCommandHandler _handler;
 
     public CreateCategoryCommandHandlerTests()
     {
         _mockUnitOfWork = new Mock<IUnitOfWork>();
         _mockRepositoryServiceCategory = new Mock<IRepository<ServiceCategory>>();
-        _handler = new CreateCategoryCommandHandler(_mockUnitOfWork.Object, _mockRepositoryServiceCategory.Object);
+        _mockCatalogCache = new Mock<ICatalogCache>();
+        _handler = new CreateCategoryCommandHandler(
+            _mockUnitOfWork.Object,
+            _mockRepositoryServiceCategory.Object,
+            _mockCatalogCache.Object);
     }
 
     [Fact]

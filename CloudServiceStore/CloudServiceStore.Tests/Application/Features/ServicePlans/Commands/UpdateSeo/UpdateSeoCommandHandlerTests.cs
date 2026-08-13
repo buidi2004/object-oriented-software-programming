@@ -18,13 +18,18 @@ public class UpdateSeoCommandHandlerTests
 {
     private readonly Mock<IRepository<ServicePlan>> _mockRepositoryServicePlan;
     private readonly Mock<IUnitOfWork> _mockUnitOfWork;
+    private readonly Mock<ICatalogCache> _mockCatalogCache;
     private readonly UpdateSeoCommandHandler _handler;
 
     public UpdateSeoCommandHandlerTests()
     {
         _mockRepositoryServicePlan = new Mock<IRepository<ServicePlan>>();
         _mockUnitOfWork = new Mock<IUnitOfWork>();
-        _handler = new UpdateSeoCommandHandler(_mockRepositoryServicePlan.Object, _mockUnitOfWork.Object);
+        _mockCatalogCache = new Mock<ICatalogCache>();
+        _handler = new UpdateSeoCommandHandler(
+            _mockRepositoryServicePlan.Object,
+            _mockUnitOfWork.Object,
+            _mockCatalogCache.Object);
     }
 
     [Fact]

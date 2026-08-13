@@ -1,10 +1,10 @@
-using System;
 using System.Collections.Generic;
 using MediatR;
-using CloudServiceStore.Domain.Entities;
+using CloudServiceStore.Application.DTOs;
 
 namespace CloudServiceStore.Application.Features.VpsInstances.Queries.GetVpsInstances;
 
-public class GetVpsInstancesQuery : IRequest<IEnumerable<VpsInstance>>
+public class GetVpsInstancesQuery : IRequest<IEnumerable<VpsInstanceDto>>
 {
+    public bool AdminAll { get; set; }
 }

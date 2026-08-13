@@ -36,12 +36,41 @@ export default function AdminNewsPage() {
       if (response.ok) {
         const userData = await response.json();
         if (userData.role !== 'Admin') { router.push('/dashboard'); return; }
-        setNews([
-          { id: '1', title: 'CloudHost VN ra mắt dịch vụ mới', slug: 'cloudhost-vn-new-service', excerpt: 'Thông tin về dịch vụ mới...', author: 'Admin', views: 567, status: 'published', createdAt: '2024-01-01', publishedAt: '2024-01-02' }
-        ]);
-        setIsLoading(false);
+        fetchNews(token);
       } else { router.push('/login'); }
     } catch (error) { router.push('/login'); }
+  };
+
+  const fetchNews = async (token: string) => {
+    try {
+      const res = await fetch('/api/news', { headers: { Authorization: `Bearer ${token}` } });
+      if (res.ok) {
+        const data = await res.json();
+        setNews(data);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm('Bạn có chắc chắn muốn xóa bài viết này?')) return;
+    const token = localStorage.getItem('accessToken');
+    try {
+      const res = await fetch(`/api/news/${id}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.ok) {
+        setNews(prev => prev.filter(n => n.id !== id));
+      } else {
+        alert('Xóa thất bại');
+      }
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const filteredNews = news.filter(n => 
@@ -69,7 +98,7 @@ export default function AdminNewsPage() {
               <p className="text-sm text-slate-500">{news.length} bài viết</p>
             </div>
           </div>
-          <button className="px-4 py-2 rounded-lg bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 transition-colors flex items-center gap-2">
+          <button onClick={() => alert('Chức năng đang phát triển')} className="px-4 py-2 rounded-lg bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 transition-colors flex items-center gap-2">
             <Plus className="w-4 h-4" />
             Viết bài mới
           </button>
@@ -112,10 +141,10 @@ export default function AdminNewsPage() {
               </div>
               
               <div className="flex items-center gap-2">
-                <button className="flex-1 py-2 rounded-lg bg-slate-100 text-slate-700 text-xs font-semibold hover:bg-slate-200 transition-colors flex items-center justify-center gap-1">
+                <button onClick={() => alert('Chức năng đang phát triển')} className="flex-1 py-2 rounded-lg bg-slate-100 text-slate-700 text-xs font-semibold hover:bg-slate-200 transition-colors flex items-center justify-center gap-1">
                   <Edit2 className="w-3 h-3" /> Sửa
                 </button>
-                <button className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+                <button onClick={() => handleDelete(item.id)} className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer">
                   <Trash2 className="w-4 h-4" />
                 </button>
               </div>

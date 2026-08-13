@@ -18,13 +18,18 @@ public class UpdatePromotionCommandHandlerTests
 {
     private readonly Mock<IUnitOfWork> _mockUnitOfWork;
     private readonly Mock<IRepository<Promotion>> _mockRepositoryPromotion;
+    private readonly Mock<ICatalogCache> _mockCatalogCache;
     private readonly UpdatePromotionCommandHandler _handler;
 
     public UpdatePromotionCommandHandlerTests()
     {
         _mockUnitOfWork = new Mock<IUnitOfWork>();
         _mockRepositoryPromotion = new Mock<IRepository<Promotion>>();
-        _handler = new UpdatePromotionCommandHandler(_mockUnitOfWork.Object, _mockRepositoryPromotion.Object);
+        _mockCatalogCache = new Mock<ICatalogCache>();
+        _handler = new UpdatePromotionCommandHandler(
+            _mockUnitOfWork.Object,
+            _mockRepositoryPromotion.Object,
+            _mockCatalogCache.Object);
     }
 
     [Fact]

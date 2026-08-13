@@ -153,7 +153,6 @@ export default function DashboardPage() {
           { title: 'Hỗ trợ', desc: 'Tạo ticket hoặc xem lịch sử', href: '/tickets', icon: Activity, colorKey: 'indigo' },
           { title: 'Tên miền', desc: 'Quản lý DNS', href: '/domains', icon: Globe, colorKey: 'cyan' },
           { title: 'Tự động gia hạn', desc: 'Quản lý gia hạn tự động', href: '/dashboard/auto-renew', icon: Clock, colorKey: 'violet' },
-          { title: 'Control Panel', desc: 'Thông tin truy cập Cpanel', href: '/dashboard/control-panel', icon: Server, colorKey: 'purple' },
           { title: 'Backup VPS', desc: 'Sao lưu và khôi phục', href: '/dashboard/vps-backups', icon: Clock, colorKey: 'teal' },
           { title: 'Lịch sử thanh toán', desc: 'Xem giao dịch ví', href: '/dashboard/payments', icon: CreditCard, colorKey: 'emerald' },
           { title: 'Hóa đơn', desc: 'Tải xuống hóa đơn', href: '/dashboard/invoices', icon: FileText, colorKey: 'sky' },

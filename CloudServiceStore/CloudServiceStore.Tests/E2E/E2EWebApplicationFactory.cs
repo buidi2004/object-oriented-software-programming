@@ -35,7 +35,8 @@ public class E2EWebApplicationFactory : WebApplicationFactory<Program>, IAsyncLi
         {
             config.AddInMemoryCollection(new System.Collections.Generic.Dictionary<string, string?>
             {
-                { "ConnectionStrings:DefaultConnection", _dbContainer.GetConnectionString() }
+                { "ConnectionStrings:DefaultConnection", _dbContainer.GetConnectionString() },
+                { "Cache:Enabled", "false" }
             });
         });
 

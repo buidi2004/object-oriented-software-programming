@@ -1,6 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using CloudServiceStore.Application.Exceptions;
+using CloudServiceStore.Application.Interfaces;
 using CloudServiceStore.Domain.Entities;
 using CloudServiceStore.Domain.Interfaces;
 using MediatR;
@@ -11,11 +12,16 @@ public class UpdatePromotionCommandHandler : IRequestHandler<UpdatePromotionComm
 {
     private readonly IUnitOfWork _uow;
     private readonly IRepository<Promotion> _promoRepo;
+    private readonly ICatalogCache _catalogCache;
 
-    public UpdatePromotionCommandHandler(IUnitOfWork uow, IRepository<Promotion> promoRepo)
+    public UpdatePromotionCommandHandler(
+        IUnitOfWork uow,
+        IRepository<Promotion> promoRepo,
+        ICatalogCache catalogCache)
     {
         _uow = uow;
         _promoRepo = promoRepo;
+        _catalogCache = catalogCache;
     }
 
     public async Task Handle(UpdatePromotionCommand request, CancellationToken ct)
@@ -33,5 +39,6 @@ public class UpdatePromotionCommandHandler : IRequestHandler<UpdatePromotionComm
 
         _promoRepo.Update(promotion);
         await _uow.SaveChangesAsync(ct);
+        await _catalogCache.InvalidateCatalogAsync(ct);
     }
 }

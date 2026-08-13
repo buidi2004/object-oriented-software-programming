@@ -13,11 +13,16 @@ public class CreatePromotionCommandHandler : IRequestHandler<CreatePromotionComm
 {
     private readonly IUnitOfWork _uow;
     private readonly IRepository<Promotion> _promoRepo;
+    private readonly ICatalogCache _catalogCache;
 
-    public CreatePromotionCommandHandler(IUnitOfWork uow, IRepository<Promotion> promoRepo)
+    public CreatePromotionCommandHandler(
+        IUnitOfWork uow,
+        IRepository<Promotion> promoRepo,
+        ICatalogCache catalogCache)
     {
         _uow = uow;
         _promoRepo = promoRepo;
+        _catalogCache = catalogCache;
     }
 
     public async Task<Guid> Handle(CreatePromotionCommand request, CancellationToken ct)
@@ -36,6 +41,7 @@ public class CreatePromotionCommandHandler : IRequestHandler<CreatePromotionComm
 
         await _promoRepo.AddAsync(promotion, ct);
         await _uow.SaveChangesAsync(ct);
+        await _catalogCache.InvalidateCatalogAsync(ct);
 
         return promotion.Id;
     }

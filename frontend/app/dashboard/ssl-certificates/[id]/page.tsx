@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { requestAuth } from '@/src/lib/authNavigation';
 import { ArrowLeft, ShieldCheck, Lock, Copy, Download, Loader, AlertCircle } from 'lucide-react';
 
 export default function SslCertificateDetailPage() {
@@ -20,7 +21,7 @@ export default function SslCertificateDetailPage() {
   const fetchCertificate = async () => {
     const token = localStorage.getItem('accessToken');
     if (!token) {
-      router.push('/login?redirect=/dashboard/ssl-certificates/' + certId);
+      requestAuth('login', '/dashboard/ssl-certificates/' + certId);
       return;
     }
 

@@ -78,7 +78,7 @@ public class SupportLoyaltyE2ETests : BaseE2ETest
         var ticketsMeResponse = await Client.GetAsync("/api/tickets/me");
         ticketsMeResponse.EnsureSuccessStatusCode();
         var ticketsMeJson = await ticketsMeResponse.Content.ReadFromJsonAsync<System.Text.Json.JsonElement>();
-        ticketsMeJson.GetProperty("items").GetArrayLength().Should().BeGreaterThan(0);
+        GetItemsCount(ticketsMeJson).Should().BeGreaterThan(0);
 
         // 12. Admin checks the ticket queue
         Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", adminToken);

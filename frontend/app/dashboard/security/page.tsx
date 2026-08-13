@@ -1,7 +1,14 @@
 'use client';
 
-import React, { useState } from 'react';
-import { Shield, Key, EyeOff, Eye, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Shield, Key, EyeOff, Eye, CheckCircle2, AlertCircle, Loader2, Laptop, Smartphone, LogOut } from 'lucide-react';
+
+interface SessionDto {
+  id: string;
+  deviceInfo: string;
+  expiresAt: string;
+  isRevoked: boolean;
+}
 import { api } from '@/src/lib/api';
 
 export default function SecurityPage() {
@@ -11,6 +18,34 @@ export default function SecurityPage() {
   const [showCurrent, setShowCurrent] = useState(false);
   const [showNew, setShowNew] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [sessions, setSessions] = useState<SessionDto[]>([]);
+  const [isSessionsLoading, setIsSessionsLoading] = useState(true);
+
+  useEffect(() => {
+    fetchSessions();
+  }, []);
+
+  const fetchSessions = async () => {
+    setIsSessionsLoading(true);
+    try {
+      const res = await api.get('/security/sessions');
+      setSessions(res.data);
+    } catch (err) {
+      console.error('Failed to load sessions', err);
+    } finally {
+      setIsSessionsLoading(false);
+    }
+  };
+
+  const handleRevoke = async (id: string) => {
+    try {
+      await api.delete(`/security/sessions/${id}`);
+      setSessions(prev => prev.map(s => s.id === id ? { ...s, isRevoked: true } : s));
+    } catch (err) {
+      console.error('Failed to revoke session', err);
+      alert('Không thể đăng xuất phiên này.');
+    }
+  };
 
   const [formData, setFormData] = useState({
     currentPassword: '',
@@ -204,13 +239,45 @@ export default function SecurityPage() {
             </button>
           </div>
           
-          <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm">
-            <h3 className="font-semibold text-slate-900 dark:text-white mb-2">Lời khuyên bảo mật</h3>
-            <ul className="text-sm text-slate-600 dark:text-slate-400 space-y-2 list-disc list-inside">
-              <li>Sử dụng mật khẩu dài ít nhất 12 ký tự</li>
-              <li>Không sử dụng chung mật khẩu cho nhiều trang web</li>
-              <li>Thay đổi mật khẩu định kỳ 6 tháng/lần</li>
-            </ul>
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+            <div className="p-6 border-b border-slate-200 dark:border-slate-800">
+              <h3 className="font-semibold text-slate-900 dark:text-white flex items-center gap-2">
+                <Laptop className="w-5 h-5 text-indigo-500" />
+                Phiên Đăng Nhập
+              </h3>
+            </div>
+            <div className="p-0 divide-y divide-slate-100 dark:divide-slate-800">
+              {isSessionsLoading ? (
+                <div className="p-6 flex justify-center"><Loader2 className="w-6 h-6 animate-spin text-slate-400" /></div>
+              ) : sessions.length === 0 ? (
+                <div className="p-6 text-center text-sm text-slate-500">Không có dữ liệu.</div>
+              ) : sessions.map(session => (
+                <div key={session.id} className="p-4 sm:px-6 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                  <div className="flex items-center gap-3">
+                    <div className={`p-2 rounded-lg ${session.isRevoked ? 'bg-slate-100 text-slate-400 dark:bg-slate-800 dark:text-slate-500' : 'bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400'}`}>
+                      {session.deviceInfo?.toLowerCase().includes('mobile') ? <Smartphone className="w-5 h-5" /> : <Laptop className="w-5 h-5" />}
+                    </div>
+                    <div>
+                      <p className={`text-sm font-semibold ${session.isRevoked ? 'text-slate-500 line-through dark:text-slate-500' : 'text-slate-900 dark:text-white'}`}>
+                        {session.deviceInfo || 'Unknown Device'}
+                      </p>
+                      <p className="text-xs text-slate-500 mt-0.5">
+                        {session.isRevoked ? 'Đã đăng xuất' : `Hết hạn: ${new Date(session.expiresAt).toLocaleDateString('vi-VN')}`}
+                      </p>
+                    </div>
+                  </div>
+                  {!session.isRevoked && (
+                    <button
+                      onClick={() => handleRevoke(session.id)}
+                      className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+                      title="Đăng xuất thiết bị này"
+                    >
+                      <LogOut className="w-5 h-5" />
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 

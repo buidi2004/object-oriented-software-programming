@@ -50,25 +50,54 @@ export default function AdminCouponsPage() {
       if (response.ok) {
         const userData = await response.json();
         if (userData.role !== 'Admin') { router.push('/dashboard'); return; }
-        // Mock data for now
-        setCoupons([
-          {
-            id: '1',
-            code: 'WELCOME50',
-            description: 'Giảm 50% cho đơn hàng đầu tiên',
-            discountType: 'percentage',
-            discountValue: 50,
-            minOrderValue: 100000,
-            usageLimit: 100,
-            usedCount: 23,
-            startDate: '2024-01-01',
-            endDate: '2024-12-31',
-            isActive: true
-          }
-        ]);
-        setIsLoading(false);
+        fetchCoupons(token);
       } else { router.push('/login'); }
     } catch (error) { router.push('/login'); }
+  };
+
+  const fetchCoupons = async (token: string) => {
+    try {
+      const res = await fetch('/api/coupons', { headers: { Authorization: `Bearer ${token}` } });
+      if (res.ok) {
+        const data = await res.json();
+        setCoupons(data);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleAddCoupon = async () => {
+    const token = localStorage.getItem('accessToken');
+    try {
+      const res = await fetch('/api/coupons', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          ...newCoupon,
+          // Convert date string to ISO format if needed, though C# backend might accept "yyyy-MM-dd"
+          startDate: new Date(newCoupon.startDate).toISOString(),
+          endDate: new Date(newCoupon.endDate).toISOString()
+        })
+      });
+      if (res.ok) {
+        setShowAddModal(false);
+        setNewCoupon({
+          code: '', description: '', discountType: 'percentage', discountValue: 0,
+          minOrderValue: 0, maxDiscount: 0, usageLimit: 0, startDate: '', endDate: ''
+        });
+        fetchCoupons(token!);
+      } else {
+        alert('Thêm thất bại');
+      }
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const handleDeleteCoupon = async (id: string) => {
@@ -231,6 +260,24 @@ export default function AdminCouponsPage() {
                 />
               </div>
               <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-1">Ngày bắt đầu</label>
+                <input
+                  type="date"
+                  value={newCoupon.startDate}
+                  onChange={(e) => setNewCoupon({ ...newCoupon, startDate: e.target.value })}
+                  className="w-full px-4 py-2.5 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-1">Ngày kết thúc</label>
+                <input
+                  type="date"
+                  value={newCoupon.endDate}
+                  onChange={(e) => setNewCoupon({ ...newCoupon, endDate: e.target.value })}
+                  className="w-full px-4 py-2.5 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                />
+              </div>
+              <div>
                 <label className="block text-sm font-semibold text-slate-700 mb-1">Giới hạn sử dụng</label>
                 <input
                   type="number"
@@ -241,7 +288,7 @@ export default function AdminCouponsPage() {
               </div>
             </div>
             <div className="flex gap-3 mt-6">
-              <button className="flex-1 py-2.5 rounded-lg bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 transition-colors">
+              <button onClick={handleAddCoupon} className="flex-1 py-2.5 rounded-lg bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 transition-colors">
                 Lưu
               </button>
               <button onClick={() => setShowAddModal(false)} className="flex-1 py-2.5 rounded-lg bg-slate-100 text-slate-700 font-semibold text-sm hover:bg-slate-200 transition-colors">

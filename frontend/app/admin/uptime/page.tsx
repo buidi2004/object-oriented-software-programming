@@ -57,7 +57,7 @@ export default function AdminUptimePage() {
     try {
       const [statusRes, servicesRes] = await Promise.all([
         fetch('/api/uptime/system', { headers: { Authorization: `Bearer ${token}` } }),
-        fetch('/api/vps-instances', { headers: { Authorization: `Bearer ${token}` } })
+        fetch('/api/VpsInstances', { headers: { Authorization: `Bearer ${token}` } })
       ]);
 
       if (statusRes.ok) {

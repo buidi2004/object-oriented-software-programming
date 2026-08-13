@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { ShoppingCart, Eye, AlertCircle, RefreshCw } from 'lucide-react';
+import { ShoppingCart, Eye, AlertCircle, RefreshCw, Download } from 'lucide-react';
 
 interface Order {
   id: string;
@@ -38,6 +38,7 @@ export default function CustomerOrdersPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isExporting, setIsExporting] = useState(false);
 
   useEffect(() => {
     fetchOrders();
@@ -47,7 +48,10 @@ export default function CustomerOrdersPage() {
     setIsLoading(true);
     setError(null);
     const token = localStorage.getItem('accessToken');
-    if (!token) return;
+    if (!token) {
+      setIsLoading(false);
+      return;
+    }
 
     try {
       const response = await fetch('/api/orders/me', {
@@ -66,6 +70,43 @@ export default function CustomerOrdersPage() {
     }
   };
 
+  const handleExport = async () => {
+    setIsExporting(true);
+    const token = localStorage.getItem('accessToken');
+    try {
+      const response = await fetch('/api/exports/orders?format=csv', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (!response.ok) throw new Error('Export failed');
+      
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      
+      // Try to get filename from Content-Disposition header if possible
+      const contentDisposition = response.headers.get('Content-Disposition');
+      let filename = 'orders.csv';
+      if (contentDisposition) {
+        const filenameMatch = contentDisposition.match(/filename="?([^"]+)"?/);
+        if (filenameMatch && filenameMatch.length === 2) {
+          filename = filenameMatch[1];
+        }
+      }
+      
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (err) {
+      console.error(err);
+      alert('Không thể xuất dữ liệu. Vui lòng thử lại.');
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
@@ -81,13 +122,24 @@ export default function CustomerOrdersPage() {
           <h1 className="text-2xl font-black text-slate-900 tracking-tight">Đơn hàng của tôi</h1>
           <p className="text-slate-500 mt-1">Theo dõi trạng thái và chi tiết đơn hàng</p>
         </div>
-        <button
-          onClick={fetchOrders}
-          className="p-2 rounded-lg hover:bg-slate-100 text-slate-500 transition-colors"
-          title="Làm mới"
-        >
-          <RefreshCw className="w-4 h-4" />
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleExport}
+            data-testid="export-csv-btn"
+            disabled={isExporting || orders.length === 0}
+            className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm font-semibold transition-colors flex items-center gap-2 disabled:opacity-50"
+          >
+            {isExporting ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+            <span className="hidden sm:inline">Xuất CSV</span>
+          </button>
+          <button
+            onClick={fetchOrders}
+            className="p-2 rounded-lg hover:bg-slate-100 text-slate-500 transition-colors"
+            title="Làm mới"
+          >
+            <RefreshCw className="w-4 h-4" />
+          </button>
+        </div>
       </div>
 
       {error && (

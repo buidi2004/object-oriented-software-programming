@@ -21,6 +21,7 @@ public class CreateServicePlanCommandHandlerTests
     private readonly Mock<IRepository<ServiceCategory>> _categoryRepoMock = new();
     private readonly Mock<IQrCodeGeneratorFactory> _qrFactoryMock = new();
     private readonly Mock<IQrCodeGenerator> _qrGeneratorMock = new();
+    private readonly Mock<ICatalogCache> _catalogCacheMock = new();
 
     public CreateServicePlanCommandHandlerTests()
     {
@@ -31,7 +32,7 @@ public class CreateServicePlanCommandHandlerTests
     }
 
     private CreateServicePlanCommandHandler CreateHandler() =>
-        new(_uowMock.Object, _planRepoMock.Object, _categoryRepoMock.Object, _qrFactoryMock.Object);
+        new(_uowMock.Object, _planRepoMock.Object, _categoryRepoMock.Object, _qrFactoryMock.Object, _catalogCacheMock.Object);
 
     [Fact]
     public async Task Handle_CategoryNotFound_ThrowsNotFoundException()

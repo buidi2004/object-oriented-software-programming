@@ -942,6 +942,38 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.ToTable("OrderRequests");
                 });
 
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.PasswordResetToken", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsUsed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("TokenHash")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TokenHash");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("PasswordResetTokens");
+                });
+
             modelBuilder.Entity("CloudServiceStore.Domain.Entities.Payment", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1564,14 +1596,33 @@ namespace CloudServiceStore.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("CpuCores")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("DiskGb")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("ExpiresAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime>("LastActiveAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<Guid>("OrderId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("PlanId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("PlanName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("RamMb")
+                        .HasColumnType("int");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -1737,7 +1788,7 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.HasOne("CloudServiceStore.Domain.Entities.Cart", "Cart")
                         .WithMany("Items")
                         .HasForeignKey("CartId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("CloudServiceStore.Domain.Entities.ServicePlan", "ServicePlan")
@@ -1929,6 +1980,17 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.Navigation("Coupon");
 
                     b.Navigation("ServicePlan");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.PasswordResetToken", b =>
+                {
+                    b.HasOne("CloudServiceStore.Domain.Entities.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });

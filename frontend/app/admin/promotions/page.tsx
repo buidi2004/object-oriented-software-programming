@@ -3,20 +3,14 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, Plus, Edit2, Trash2, AlertCircle, Tag, Calendar, Percent } from 'lucide-react';
+import { ArrowLeft, Plus, Edit2, Trash2, AlertCircle, Calendar, Percent, Tag } from 'lucide-react';
 
 interface Promotion {
   id: string;
-  code: string;
-  type: 'percentage' | 'fixed';
-  value: number;
-  description: string;
+  servicePlanId: string | null;
+  discountPercent: number;
   startDate: string;
   endDate: string;
-  minOrderValue: number;
-  usageLimit: number;
-  timesUsed: number;
-  isActive: boolean;
 }
 
 export default function AdminPromotionsPage() {
@@ -27,14 +21,10 @@ export default function AdminPromotionsPage() {
   const [editingId, setEditingId] = useState<string | null>(null);
   
   // Form state
-  const [code, setCode] = useState('');
-  const [type, setType] = useState<'percentage' | 'fixed'>('percentage');
-  const [value, setValue] = useState('');
-  const [description, setDescription] = useState('');
+  const [servicePlanId, setServicePlanId] = useState('');
+  const [discountPercent, setDiscountPercent] = useState('');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
-  const [minOrderValue, setMinOrderValue] = useState('');
-  const [usageLimit, setUsageLimit] = useState('');
 
   useEffect(() => {
     checkAdminAccess();
@@ -92,14 +82,10 @@ export default function AdminPromotionsPage() {
           Authorization: `Bearer ${token}` 
         },
         body: JSON.stringify({ 
-          code,
-          type,
-          value: parseFloat(value),
-          description,
+          servicePlanId: servicePlanId ? servicePlanId : null,
+          discountPercent: parseFloat(discountPercent) || 0,
           startDate: startDate || new Date().toISOString(),
-          endDate,
-          minOrderValue: parseFloat(minOrderValue) || 0,
-          usageLimit: parseInt(usageLimit) || 0
+          endDate: endDate || new Date().toISOString()
         })
       });
 
@@ -114,7 +100,7 @@ export default function AdminPromotionsPage() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Bạn có chắc chắn muốn xóa mã khuyến mãi này?')) return;
+    if (!confirm('Bạn có chắc chắn muốn xóa khuyến mãi này?')) return;
     
     const token = localStorage.getItem('accessToken');
     try {
@@ -130,27 +116,19 @@ export default function AdminPromotionsPage() {
 
   const openEdit = (promo: Promotion) => {
     setEditingId(promo.id);
-    setCode(promo.code);
-    setType(promo.type);
-    setValue(promo.value.toString());
-    setDescription(promo.description);
-    setStartDate(promo.startDate);
-    setEndDate(promo.endDate);
-    setMinOrderValue(promo.minOrderValue.toString());
-    setUsageLimit(promo.usageLimit.toString());
+    setServicePlanId(promo.servicePlanId || '');
+    setDiscountPercent(promo.discountPercent.toString());
+    setStartDate(promo.startDate.split('T')[0]);
+    setEndDate(promo.endDate.split('T')[0]);
     setShowAddModal(true);
   };
 
   const resetForm = () => {
     setEditingId(null);
-    setCode('');
-    setType('percentage');
-    setValue('');
-    setDescription('');
+    setServicePlanId('');
+    setDiscountPercent('');
     setStartDate('');
     setEndDate('');
-    setMinOrderValue('');
-    setUsageLimit('');
   };
 
   const getStatusColor = (promo: Promotion) => {
@@ -160,7 +138,6 @@ export default function AdminPromotionsPage() {
     
     if (now < start) return { text: 'Sắp diễn ra', class: 'bg-blue-100 text-blue-700' };
     if (now > end) return { text: 'Đã hết hạn', class: 'bg-slate-100 text-slate-500' };
-    if (!promo.isActive) return { text: 'Tạm ngưng', class: 'bg-slate-100 text-slate-500' };
     return { text: 'Đang hoạt động', class: 'bg-emerald-100 text-emerald-700' };
   };
 
@@ -182,7 +159,7 @@ export default function AdminPromotionsPage() {
             </Link>
             <div>
               <h1 className="text-xl font-bold text-slate-900">Quản lý Khuyến mãi</h1>
-              <p className="text-sm text-slate-500">{promotions.length} mã khuyến mãi</p>
+              <p className="text-sm text-slate-500">{promotions.length} khuyến mãi</p>
             </div>
           </div>
           <button 
@@ -190,7 +167,7 @@ export default function AdminPromotionsPage() {
             className="px-4 py-2 rounded-lg bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 transition-colors flex items-center gap-2"
           >
             <Plus className="w-4 h-4" />
-            Thêm mã KM
+            Thêm KM
           </button>
         </div>
       </header>
@@ -200,9 +177,8 @@ export default function AdminPromotionsPage() {
           <table className="w-full">
             <thead className="bg-slate-50 border-b border-slate-200">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Mã</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Giá trị</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Mô tả</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Phạm vi</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Giảm giá (%)</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Thời gian</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Trạng thái</th>
                 <th className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase">Thao tác</th>
@@ -216,16 +192,13 @@ export default function AdminPromotionsPage() {
                     <td className="px-6 py-4">
                       <span className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-purple-100 text-purple-700 font-mono font-bold">
                         <Tag className="w-4 h-4" />
-                        {promo.code}
+                        {promo.servicePlanId ? promo.servicePlanId : 'Toàn bộ trang web'}
                       </span>
                     </td>
                     <td className="px-6 py-4">
-                      <span className={`font-bold ${type === 'percentage' ? 'text-orange-600' : 'text-emerald-600'}`}>
-                        {type === 'percentage' ? `${promo.value}%` : `${promo.value.toLocaleString()}₫`}
+                      <span className="font-bold text-orange-600">
+                        {promo.discountPercent}%
                       </span>
-                    </td>
-                    <td className="px-6 py-4 text-sm text-slate-600 max-w-xs truncate">
-                      {promo.description}
                     </td>
                     <td className="px-6 py-4">
                       <div className="text-xs text-slate-500">
@@ -236,7 +209,7 @@ export default function AdminPromotionsPage() {
                         <div className="text-slate-400">→</div>
                         <div className="flex items-center gap-1">
                           <Calendar className="w-3 h-3" />
-                          {promo.endDate ? new Date(promo.endDate).toLocaleDateString('vi-VN') : 'Khác định'}
+                          {promo.endDate ? new Date(promo.endDate).toLocaleDateString('vi-VN') : 'Không giới hạn'}
                         </div>
                       </div>
                     </td>
@@ -244,9 +217,6 @@ export default function AdminPromotionsPage() {
                       <span className={`px-2 py-1 rounded-full text-xs font-bold ${status.class}`}>
                         {status.text}
                       </span>
-                      <div className="text-xs text-slate-400 mt-1">
-                        Đã dùng: {promo.timesUsed}/{promo.usageLimit || '∞'}
-                      </div>
                     </td>
                     <td className="px-6 py-4 text-right">
                       <button 
@@ -271,7 +241,7 @@ export default function AdminPromotionsPage() {
           {promotions.length === 0 && (
             <div className="text-center py-12">
               <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-300" />
-              <p className="font-medium text-slate-500">Chưa có mã khuyến mãi nào</p>
+              <p className="font-medium text-slate-500">Chưa có khuyến mãi nào</p>
             </div>
           )}
         </div>
@@ -282,53 +252,29 @@ export default function AdminPromotionsPage() {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl w-full max-w-md p-6">
             <h2 className="text-lg font-bold text-slate-900 mb-4">
-              {editingId ? 'Chỉnh sửa mã khuyến mãi' : 'Thêm mã khuyến mãi mới'}
+              {editingId ? 'Chỉnh sửa khuyến mãi' : 'Thêm khuyến mãi mới'}
             </h2>
             
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Mã KM</label>
+                <label className="block text-sm font-medium text-slate-700 mb-1">Áp dụng cho gói (ID) (Để trống nếu áp dụng toàn trang)</label>
                 <input 
                   type="text"
-                  value={code}
-                  onChange={(e) => setCode(e.target.value.toUpperCase())}
-                  placeholder="VD: SUMMER2024"
+                  value={servicePlanId}
+                  onChange={(e) => setServicePlanId(e.target.value)}
+                  placeholder="ID Gói dịch vụ..."
                   className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 font-mono"
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Loại</label>
-                  <select 
-                    value={type}
-                    onChange={(e) => setType(e.target.value as 'percentage' | 'fixed')}
-                    className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                  >
-                    <option value="percentage">Phần trăm (%)</option>
-                    <option value="fixed">Số tiền cố định (₫)</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Giá trị</label>
-                  <input 
-                    type="number"
-                    step="0.01"
-                    value={value}
-                    onChange={(e) => setValue(e.target.value)}
-                    placeholder={type === 'percentage' ? '20' : '50000'}
-                    className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                  />
-                </div>
-              </div>
-
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Mô tả</label>
-                <textarea
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Giảm 20% cho đơn từ 500k..."
-                  rows={2}
+                <label className="block text-sm font-medium text-slate-700 mb-1">Phần trăm giảm (%)</label>
+                <input 
+                  type="number"
+                  step="0.01"
+                  value={discountPercent}
+                  onChange={(e) => setDiscountPercent(e.target.value)}
+                  placeholder="10"
                   className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                 />
               </div>
@@ -349,29 +295,6 @@ export default function AdminPromotionsPage() {
                     type="date"
                     value={endDate}
                     onChange={(e) => setEndDate(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Đơn tối thiểu</label>
-                  <input 
-                    type="number"
-                    value={minOrderValue}
-                    onChange={(e) => setMinOrderValue(e.target.value)}
-                    placeholder="0"
-                    className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Giới hạn sử dụng</label>
-                  <input 
-                    type="number"
-                    value={usageLimit}
-                    onChange={(e) => setUsageLimit(e.target.value)}
-                    placeholder="Không giới hạn"
                     className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                   />
                 </div>

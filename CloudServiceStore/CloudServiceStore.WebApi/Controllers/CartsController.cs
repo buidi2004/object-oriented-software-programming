@@ -34,9 +34,9 @@ public class CartsController : ControllerBase
     }
 
     [HttpPut("items/{id}")]
-    public async Task<IActionResult> UpdateItem(Guid id, [FromBody] int quantity, CancellationToken ct)
+    public async Task<IActionResult> UpdateItem(Guid id, [FromBody] UpdateCartItemRequest request, CancellationToken ct)
     {
-        await _mediator.Send(new UpdateCartItemCommand(id, quantity), ct);
+        await _mediator.Send(new UpdateCartItemCommand(id, request.Quantity), ct);
         return NoContent();
     }
 
@@ -54,3 +54,5 @@ public class CartsController : ControllerBase
         return Ok(await _mediator.Send(new GetAbandonedCartsQuery { HoursThreshold = hoursThreshold }, ct));
     }
 }
+
+public record UpdateCartItemRequest(int Quantity);

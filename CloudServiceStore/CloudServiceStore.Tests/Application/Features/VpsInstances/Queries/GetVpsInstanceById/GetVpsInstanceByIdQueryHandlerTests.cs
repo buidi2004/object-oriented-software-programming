@@ -17,12 +17,16 @@ namespace CloudServiceStore.Tests.Application.Features.VpsInstances.Queries.GetV
 public class GetVpsInstanceByIdQueryHandlerTests
 {
     private readonly Mock<IRepository<VpsInstance>> _mockRepositoryVpsInstance;
+    private readonly Mock<ICurrentUserService> _mockCurrentUserService;
     private readonly GetVpsInstanceByIdQueryHandler _handler;
 
     public GetVpsInstanceByIdQueryHandlerTests()
     {
         _mockRepositoryVpsInstance = new Mock<IRepository<VpsInstance>>();
-        _handler = new GetVpsInstanceByIdQueryHandler(_mockRepositoryVpsInstance.Object);
+        _mockCurrentUserService = new Mock<ICurrentUserService>();
+        _handler = new GetVpsInstanceByIdQueryHandler(
+            _mockRepositoryVpsInstance.Object,
+            _mockCurrentUserService.Object);
     }
 
     [Fact]

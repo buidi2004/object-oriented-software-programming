@@ -2,6 +2,7 @@ using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Text.Json;
 using System.Threading.Tasks;
 using CloudServiceStore.Application.Features.Auth.Commands.Login;
 using CloudServiceStore.Application.Features.Auth.Commands.Register;
@@ -73,6 +74,11 @@ public abstract class BaseE2ETest : IAsyncLifetime
     {
         Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
     }
+
+    protected static JsonElement GetItemsArray(JsonElement json) =>
+        json.ValueKind == JsonValueKind.Array ? json : json.GetProperty("items");
+
+    protected static int GetItemsCount(JsonElement json) => GetItemsArray(json).GetArrayLength();
 
     // A small DTO to read the response of /api/auth/login
     public class AuthResultDto

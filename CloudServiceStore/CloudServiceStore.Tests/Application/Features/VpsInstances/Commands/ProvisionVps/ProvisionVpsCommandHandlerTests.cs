@@ -1,16 +1,19 @@
 using System;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using Xunit;
-using Moq;
-using FluentAssertions;
-using Microsoft.Extensions.Logging;
+using CloudServiceStore.Application.Configuration;
 using CloudServiceStore.Application.Features.VpsInstances.Commands.ProvisionVps;
-using MediatR;
 using CloudServiceStore.Application.Interfaces;
-using CloudServiceStore.Domain.Interfaces;
+using CloudServiceStore.Application.Models;
 using CloudServiceStore.Domain.Entities;
 using CloudServiceStore.Domain.Enums;
+using CloudServiceStore.Domain.Interfaces;
+using CloudServiceStore.Infrastructure.Services;
+using FluentAssertions;
+using Microsoft.Extensions.Options;
+using Moq;
+using Xunit;
 
 namespace CloudServiceStore.Tests.Application.Features.VpsInstances.Commands.ProvisionVps;
 
@@ -18,30 +21,66 @@ public class ProvisionVpsCommandHandlerTests
 {
     private readonly Mock<IVpsProvisioningService> _mockVpsProvisioningService;
     private readonly Mock<IRepository<VpsInstance>> _mockRepositoryVpsInstance;
+    private readonly Mock<IRepository<OrderRequest>> _mockOrderRepository;
+    private readonly Mock<IRepository<ServiceCategory>> _mockCategoryRepository;
     private readonly Mock<IUnitOfWork> _mockUnitOfWork;
     private readonly Mock<IJobScheduler> _mockJobScheduler;
+    private readonly Mock<ICurrentUserService> _mockCurrentUserService;
     private readonly ProvisionVpsCommandHandler _handler;
 
     public ProvisionVpsCommandHandlerTests()
     {
         _mockVpsProvisioningService = new Mock<IVpsProvisioningService>();
         _mockRepositoryVpsInstance = new Mock<IRepository<VpsInstance>>();
+        _mockOrderRepository = new Mock<IRepository<OrderRequest>>();
+        _mockCategoryRepository = new Mock<IRepository<ServiceCategory>>();
         _mockUnitOfWork = new Mock<IUnitOfWork>();
         _mockJobScheduler = new Mock<IJobScheduler>();
-        _handler = new ProvisionVpsCommandHandler(_mockVpsProvisioningService.Object, _mockRepositoryVpsInstance.Object, _mockUnitOfWork.Object, _mockJobScheduler.Object);
+        _mockCurrentUserService = new Mock<ICurrentUserService>();
+
+        _handler = new ProvisionVpsCommandHandler(
+            _mockVpsProvisioningService.Object,
+            new VpsSpecParser(),
+            _mockRepositoryVpsInstance.Object,
+            _mockOrderRepository.Object,
+            _mockCategoryRepository.Object,
+            _mockUnitOfWork.Object,
+            _mockJobScheduler.Object,
+            _mockCurrentUserService.Object,
+            Options.Create(new VpsSettings { DemoTtlMinutes = 2 }));
     }
 
     [Fact]
-    public async Task Handle_ShouldExecuteSuccessfully_WhenRequestIsValid()
+    public async Task Handle_ShouldProvisionVps_WhenOrderIsPaidCloudVps()
     {
-        // Arrange
-        // var request = new ProvisionVpsCommand();
-        var cancellationToken = new CancellationToken();
+        var userId = Guid.NewGuid();
+        var categoryId = Guid.NewGuid();
+        var plan = new ServicePlan(categoryId, "Nano VPS", "2 Core", "4GB", "40GB NVMe", "Unlimited", null);
+        var order = new OrderRequest(userId, plan.Id, BillingCycle.Monthly, null, 0, 100m);
+        order.Pay();
+        var orderId = order.Id;
+        typeof(OrderRequest).GetProperty("ServicePlan", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)!
+            .SetValue(order, plan);
 
-        // Act
-        // var result = await _handler.Handle(request, cancellationToken);
+        _mockCurrentUserService.Setup(x => x.UserId).Returns(userId);
+        _mockOrderRepository
+            .Setup(x => x.GetByIdAsync(orderId, It.IsAny<CancellationToken>(), It.IsAny<System.Linq.Expressions.Expression<Func<OrderRequest, object>>[]>()))
+            .ReturnsAsync(order);
+        _mockCategoryRepository
+            .Setup(x => x.GetByIdAsync(categoryId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new ServiceCategory { Id = categoryId, Name = "Cloud VPS", Slug = "cloud-vps" });
+        _mockRepositoryVpsInstance
+            .Setup(x => x.FirstOrDefaultAsync(It.IsAny<System.Linq.Expressions.Expression<Func<VpsInstance, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<System.Linq.Expressions.Expression<Func<VpsInstance, object>>[]>()))
+            .ReturnsAsync((VpsInstance?)null);
+        _mockVpsProvisioningService
+            .Setup(x => x.ProvisionAsync(It.IsAny<VpsProvisionSpec>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new ProvisionResult(true, "container-123", "vps-nano-test", null));
 
-        // Assert
-        Assert.True(true);
+        var result = await _handler.Handle(new ProvisionVpsCommand { OrderId = orderId }, CancellationToken.None);
+
+        result.ContainerId.Should().Be("container-123");
+        result.CpuCores.Should().Be(2);
+        result.RamMb.Should().Be(4096);
+        result.DiskGb.Should().Be(40);
     }
 }

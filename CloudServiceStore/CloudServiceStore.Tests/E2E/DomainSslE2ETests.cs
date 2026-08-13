@@ -94,8 +94,9 @@ public class DomainSslE2ETests : BaseE2ETest
         var getDnsRes = await Client.GetAsync($"/api/domains/{registerResult.DomainId}/dns");
         getDnsRes.EnsureSuccessStatusCode();
         var dnsJson = await getDnsRes.Content.ReadFromJsonAsync<System.Text.Json.JsonElement>();
-        dnsJson.GetProperty("items").GetArrayLength().Should().BeGreaterThan(0);
-        var dnsId = dnsJson.GetProperty("items")[0].GetProperty("id").GetGuid();
+        var dnsArray = GetItemsArray(dnsJson);
+        dnsArray.GetArrayLength().Should().BeGreaterThan(0);
+        var dnsId = dnsArray[0].GetProperty("id").GetGuid();
 
         // 9. Delete DNS Record
         var delDnsRes = await Client.DeleteAsync($"/api/domains/{registerResult.DomainId}/dns/{dnsId}");

@@ -18,13 +18,18 @@ public class DeletePromotionCommandHandlerTests
 {
     private readonly Mock<IUnitOfWork> _mockUnitOfWork;
     private readonly Mock<IRepository<Promotion>> _mockRepositoryPromotion;
+    private readonly Mock<ICatalogCache> _mockCatalogCache;
     private readonly DeletePromotionCommandHandler _handler;
 
     public DeletePromotionCommandHandlerTests()
     {
         _mockUnitOfWork = new Mock<IUnitOfWork>();
         _mockRepositoryPromotion = new Mock<IRepository<Promotion>>();
-        _handler = new DeletePromotionCommandHandler(_mockUnitOfWork.Object, _mockRepositoryPromotion.Object);
+        _mockCatalogCache = new Mock<ICatalogCache>();
+        _handler = new DeletePromotionCommandHandler(
+            _mockUnitOfWork.Object,
+            _mockRepositoryPromotion.Object,
+            _mockCatalogCache.Object);
     }
 
     [Fact]

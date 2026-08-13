@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Server, Terminal, Play, Square, RefreshCw, ArrowLeft, Cpu, MemoryStick, HardDrive, Shield } from 'lucide-react';
 import VpsTerminalModal from '@/src/components/VpsTerminalModal';
 import BackupManager from '@/src/components/BackupManager';
+import { getVpsStatusMeta, formatRamMb } from '@/src/utils/vpsStatus';
 
 export default function VpsDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const [vps, setVps] = useState<any>(null);
@@ -70,6 +71,9 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
 
   if (!vps) return null;
 
+  const statusMeta = getVpsStatusMeta(vps.status);
+  const isRunning = vps.status === 'Running' || vps.status === 2;
+
   return (
     <div className="min-h-screen bg-slate-50 py-8">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -89,8 +93,8 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
               <div>
                 <h1 className="text-2xl font-black text-slate-900 flex items-center gap-2">
                   {vps.containerName || 'VPS Instance'}
-                  <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${vps.status === 1 ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'}`}>
-                    {vps.status === 1 ? 'Đang chạy' : 'Đã dừng'}
+                  <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${statusMeta.color}`}>
+                    {statusMeta.label}
                   </span>
                 </h1>
                 <p className="text-sm text-slate-500 mt-1 font-mono">ID: {vps.containerId || 'Pending'}</p>
@@ -100,7 +104,7 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
             <div className="flex flex-wrap items-center gap-2">
               <button 
                 onClick={() => setIsTerminalOpen(true)}
-                disabled={vps.status !== 1}
+                disabled={!isRunning}
                 className="bg-slate-900 hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed text-white px-5 py-2.5 rounded-xl font-bold transition-all shadow-lg hover:shadow-slate-900/30 flex items-center gap-2"
               >
                 <Terminal className="w-5 h-5" /> Web Terminal
@@ -126,7 +130,7 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
                 </div>
                 <div>
                   <p className="text-xs text-slate-500 font-medium">CPU</p>
-                  <p className="font-bold text-slate-900">1 Core</p>
+                  <p className="font-bold text-slate-900">{vps.cpuCores ?? 1} Core</p>
                 </div>
               </div>
               <div className="bg-white p-4 rounded-xl border border-slate-200 flex items-center gap-3">
@@ -135,7 +139,7 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
                 </div>
                 <div>
                   <p className="text-xs text-slate-500 font-medium">RAM</p>
-                  <p className="font-bold text-slate-900">512 MB</p>
+                  <p className="font-bold text-slate-900">{formatRamMb(vps.ramMb ?? 512)}</p>
                 </div>
               </div>
               <div className="bg-white p-4 rounded-xl border border-slate-200 flex items-center gap-3">
@@ -144,7 +148,7 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
                 </div>
                 <div>
                   <p className="text-xs text-slate-500 font-medium">Storage</p>
-                  <p className="font-bold text-slate-900">10 GB SSD</p>
+                  <p className="font-bold text-slate-900">{vps.diskGb ? `${vps.diskGb} GB SSD` : 'N/A'}</p>
                 </div>
               </div>
               <div className="bg-white p-4 rounded-xl border border-slate-200 flex items-center gap-3">
@@ -153,7 +157,7 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
                 </div>
                 <div>
                   <p className="text-xs text-slate-500 font-medium">OS</p>
-                  <p className="font-bold text-slate-900">Ubuntu 24.04</p>
+                  <p className="font-bold text-slate-900">{vps.planName || 'Ubuntu 24.04'}</p>
                 </div>
               </div>
             </div>

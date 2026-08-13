@@ -74,7 +74,7 @@ public class AdminE2ETests : BaseE2ETest
         var usersRes = await Client.GetAsync("/api/users");
         usersRes.EnsureSuccessStatusCode();
         var usersJson = await usersRes.Content.ReadFromJsonAsync<System.Text.Json.JsonElement>();
-        usersJson.GetProperty("items").GetArrayLength().Should().BeGreaterThan(0);
+        GetItemsCount(usersJson).Should().BeGreaterThan(0);
 
         // 8. Change User Role
         // Let's create a role or fetch existing non-admin role

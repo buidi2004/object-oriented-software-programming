@@ -30,7 +30,8 @@ export function hasAdminRole(token: string | undefined): boolean {
 }
 
 export function buildLoginRedirect(pathname: string, origin: string): string {
-  const url = new URL('/login', origin);
+  const url = new URL('/', origin);
+  url.searchParams.set('auth', 'login');
   url.searchParams.set('redirect', pathname);
   return url.toString();
 }

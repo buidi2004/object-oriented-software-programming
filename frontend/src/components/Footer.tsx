@@ -1,13 +1,71 @@
 'use client';
 
-import React from 'react';
-import { Cloud, ShieldCheck, Heart } from 'lucide-react';
+import React, { useState } from 'react';
+import { Cloud, ShieldCheck, Heart, Send, CheckCircle2, Loader2 } from 'lucide-react';
+import { api } from '../lib/api';
 
 export const Footer: React.FC = () => {
+  const [email, setEmail] = useState('');
+  const [subscribed, setSubscribed] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
+    setLoading(true);
+    setError(null);
+    try {
+      await api.post('/newsletter/subscribe', { email });
+      setSubscribed(true);
+      setEmail('');
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Có lỗi xảy ra.');
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <footer id="footer" className="bg-slate-950 text-white pt-16 pb-12 border-t border-slate-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
+        {/* Newsletter Section */}
+        <div className="bg-slate-900 rounded-2xl p-8 mb-12 border border-slate-800 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="max-w-xl">
+            <h3 className="text-xl font-bold text-white mb-2">Đăng ký nhận bản tin</h3>
+            <p className="text-sm text-slate-400">Nhận thông báo về các chương trình khuyến mãi, cập nhật dịch vụ và tin tức công nghệ mới nhất từ CloudHost VN.</p>
+          </div>
+          <div className="w-full md:w-auto flex-1 max-w-md">
+            {!subscribed ? (
+              <form onSubmit={handleSubscribe} className="flex gap-2">
+                <div className="flex-1">
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Nhập email của bạn..."
+                    className="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors"
+                    required
+                  />
+                  {error && <p className="text-red-500 text-xs mt-1 absolute">{error}</p>}
+                </div>
+                <button 
+                  type="submit" 
+                  disabled={loading}
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold text-sm transition-colors flex items-center gap-2 disabled:opacity-50"
+                >
+                  {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <><span>Đăng ký</span><Send className="w-4 h-4" /></>}
+                </button>
+              </form>
+            ) : (
+              <div className="bg-emerald-950/50 border border-emerald-900 rounded-xl p-4 flex items-center gap-3 text-emerald-400">
+                <CheckCircle2 className="w-5 h-5 shrink-0" />
+                <span className="text-sm font-medium">Cảm ơn bạn đã đăng ký! Chúng tôi sẽ gửi thông tin cập nhật sớm nhất.</span>
+              </div>
+            )}
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-slate-800">
           
           {/* Brand Info */}

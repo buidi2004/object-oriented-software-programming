@@ -49,14 +49,15 @@ public class LiveSupportE2ETests : BaseE2ETest
         var myActiveRes = await Client.GetAsync("/api/chats/my-active");
         myActiveRes.EnsureSuccessStatusCode();
         var myActiveJson = await myActiveRes.Content.ReadFromJsonAsync<System.Text.Json.JsonElement>();
-        myActiveJson.GetProperty("items").GetArrayLength().Should().BeGreaterThan(0);
+        myActiveJson.TryGetProperty("id", out var sessionIdProp).Should().BeTrue();
+        sessionIdProp.GetGuid().Should().NotBeEmpty();
 
         // 6.6 Admin checks active chats
         Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", adminToken);
         var activeRes = await Client.GetAsync("/api/chats/active");
         activeRes.EnsureSuccessStatusCode();
         var activeJson = await activeRes.Content.ReadFromJsonAsync<System.Text.Json.JsonElement>();
-        activeJson.GetProperty("items").GetArrayLength().Should().BeGreaterThan(0);
+        GetItemsCount(activeJson).Should().BeGreaterThan(0);
 
         // 7. Close Session
         var closeRes = await Client.PatchAsync($"/api/chats/{sessionId}/close", null);

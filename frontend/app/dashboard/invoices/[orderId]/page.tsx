@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { api } from '@/src/lib/api';
+import { requestAuth } from '@/src/lib/authNavigation';
 import { ArrowLeft, FileText, Download, AlertCircle, Loader, Calendar, DollarSign } from 'lucide-react';
 
 interface InvoiceDetail {
@@ -29,7 +31,7 @@ export default function InvoiceDetailPage() {
   const fetchInvoice = async () => {
     const token = localStorage.getItem('accessToken');
     if (!token) {
-      router.push('/login?redirect=/dashboard/invoices/' + orderId);
+      requestAuth('login', '/dashboard/invoices/' + orderId);
       return;
     }
 

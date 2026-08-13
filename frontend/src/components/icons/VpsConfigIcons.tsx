@@ -1,5 +1,5 @@
 import React from 'react';
-import type { OsTemplateKey, DatacenterRegionKey } from '../types';
+import type { OsTemplateKey, DatacenterRegionKey } from '../../types';
 
 interface OsTemplateIconProps {
   os: OsTemplateKey;
@@ -10,7 +10,7 @@ interface OsTemplateIconProps {
 const sizeMap = { sm: 36, md: 44 };
 
 /** Icon OS chuẩn thương hiệu — thay emoji 🐧🛡️🪟 */
-export type { OsTemplateKey, DatacenterRegionKey } from '../types';
+export type { OsTemplateKey, DatacenterRegionKey } from '../../types';
 
 export function OsTemplateIcon({ os, size = 'sm', className = '' }: OsTemplateIconProps) {
   const px = sizeMap[size];

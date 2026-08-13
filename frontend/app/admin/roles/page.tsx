@@ -31,7 +31,7 @@ export default function RolesPage() {
       setIsLoading(true);
       const token = localStorage.getItem("token");
       
-      const rolesRes = await fetch("http://localhost:5000/api/roles", {
+      const rolesRes = await fetch("/api/roles", {
         headers: { Authorization: `Bearer ${token}` }
       });
       
@@ -56,7 +56,7 @@ export default function RolesPage() {
     if (!newRoleName) return;
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:5000/api/roles", {
+      const res = await fetch("/api/roles", {
         method: "POST",
         headers: { 
           "Content-Type": "application/json",
@@ -81,7 +81,7 @@ export default function RolesPage() {
     setSelectedRole(role);
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch(`http://localhost:5000/api/roles/${role.id}/permissions`, {
+      const res = await fetch(`/api/roles/${role.id}/permissions`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (res.ok) {
@@ -105,7 +105,7 @@ export default function RolesPage() {
     if (!selectedRole) return;
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch(`http://localhost:5000/api/roles/${selectedRole.id}/permissions`, {
+      const res = await fetch(`/api/roles/${selectedRole.id}/permissions`, {
         method: "PUT",
         headers: { 
           "Content-Type": "application/json",

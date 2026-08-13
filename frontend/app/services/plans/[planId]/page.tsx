@@ -4,6 +4,7 @@ import React, { Suspense, useEffect, useMemo, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { api } from '@/src/lib/api';
+import { requestAuth } from '@/src/lib/authNavigation';
 import { useCartStore } from '@/src/store/useCartStore';
 import {
   Loader2, ArrowLeft, Server, Shield, Zap, Star, Cpu, HardDrive, Database, Wifi,
@@ -112,7 +113,7 @@ function PlanDetailInner() {
 
     const token = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
     if (!token) {
-      router.push(`/login?redirect=${encodeURIComponent(`/services/plans/${planId}`)}`);
+      requestAuth('login', `/services/plans/${planId}`);
       return;
     }
 

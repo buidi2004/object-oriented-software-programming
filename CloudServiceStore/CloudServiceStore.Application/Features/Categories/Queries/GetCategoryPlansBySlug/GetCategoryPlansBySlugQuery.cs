@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using CloudServiceStore.Application.Caching;
 using CloudServiceStore.Application.DTOs;
 using CloudServiceStore.Application.Exceptions;
+using CloudServiceStore.Application.Interfaces;
 using CloudServiceStore.Domain.Entities;
 using CloudServiceStore.Domain.Enums;
 using CloudServiceStore.Domain.Interfaces;
@@ -12,7 +14,12 @@ using MediatR;
 
 namespace CloudServiceStore.Application.Features.Categories.Queries.GetCategoryPlansBySlug;
 
-public record GetCategoryPlansBySlugQuery(string Slug, string Currency = "VND") : IRequest<CategoryPlansDto>;
+public record GetCategoryPlansBySlugQuery(string Slug, string Currency = "VND")
+    : IRequest<CategoryPlansDto>, ICacheableQuery
+{
+    public string CacheKey => CatalogCacheKeys.CategoryPlans(Slug, Currency);
+    public TimeSpan CacheDuration => CatalogCacheKeys.CategoryPlansTtl;
+}
 
 public class GetCategoryPlansBySlugQueryHandler : IRequestHandler<GetCategoryPlansBySlugQuery, CategoryPlansDto>
 {

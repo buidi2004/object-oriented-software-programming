@@ -12,26 +12,13 @@ import { ContactSection } from './components/ContactSection';
 import { Footer } from './components/Footer';
 import { CartDrawer } from './components/CartDrawer';
 import { useUIStore } from './store/useUIStore';
-import { CartItem } from './types';
+import { useCartStore } from './store/useCartStore';
 
 export default function App() {
   const router = useRouter();
   const setIsDashboardOpen = useUIStore((s) => s.setIsDashboardOpen);
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
-  const [isCartOpen, setIsCartOpen] = useState(false);
-
-  const handleAddToCart = (item: CartItem) => {
-    setCartItems((prev) => [...prev, item]);
-    setIsCartOpen(true);
-  };
-
-  const handleRemoveFromCart = (id: string) => {
-    setCartItems((prev) => prev.filter((item) => item.id !== id));
-  };
-
-  const handleClearCart = () => {
-    setCartItems([]);
-  };
+  const setIsCartOpen = useUIStore((s) => s.setIsCartOpen);
+  const cartItemsCount = useCartStore((s) => s.items.length);
 
   const handleTabChange = (tab: string) => {
     if (tab === 'home') {
@@ -54,7 +41,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-[#f8fafc] text-slate-900 font-sans antialiased selection:bg-blue-500 selection:text-white relative">
       <Header
-        cartCount={cartItems.length}
+        cartCount={cartItemsCount}
         onOpenCart={() => setIsCartOpen(true)}
         onOpenDashboard={() => setIsDashboardOpen(true)}
       />
@@ -64,22 +51,14 @@ export default function App() {
           onStartClick={() => handleTabChange('vps')}
           onPriceClick={() => handleTabChange('vps')}
         />
-        <DomainSearch onAddToCart={handleAddToCart} />
-        <VpsCalculator onAddToCart={handleAddToCart} onViewDetails={handleViewServiceDetails} />
-        <HostingPlans onAddToCart={handleAddToCart} onViewDetails={handleViewServiceDetails} />
+        <DomainSearch onAddToCart={() => router.push('/services/ten-mien')} />
+        <VpsCalculator onAddToCart={() => router.push('/services/cloud-vps')} onViewDetails={handleViewServiceDetails} />
+        <HostingPlans onAddToCart={() => router.push('/services/web-hosting')} onViewDetails={handleViewServiceDetails} />
         <InfrastructureFeatures />
         <ContactSection />
       </main>
 
       <Footer />
-
-      <CartDrawer
-        isOpen={isCartOpen}
-        onClose={() => setIsCartOpen(false)}
-        cartItems={cartItems}
-        onRemoveItem={handleRemoveFromCart}
-        onClearCart={handleClearCart}
-      />
     </div>
   );
 }

@@ -30,6 +30,14 @@ public class ReviewsController : ControllerBase
         return Ok(result);
     }
 
+    [HttpGet("me")]
+    [Authorize(Roles = "Customer")]
+    public async Task<IActionResult> GetMyReviews(CancellationToken ct)
+    {
+        var result = await _mediator.Send(new CloudServiceStore.Application.Features.Reviews.Queries.GetMyReviews.GetMyReviewsQuery(), ct);
+        return Ok(result);
+    }
+
     [HttpPost]
     [Authorize(Roles = "Customer")]
     public async Task<IActionResult> Create([FromBody] CloudServiceStore.Application.Features.Reviews.Commands.CreateReview.CreateReviewCommand command, CancellationToken ct)

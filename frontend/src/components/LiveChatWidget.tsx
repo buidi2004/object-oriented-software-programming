@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
-import { MessageSquare, X, Send, Bot, User, Sparkles } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { MessageSquare, X, Send, Bot, User, Sparkles, Loader2 } from 'lucide-react';
+import { api } from '../lib/api';
 
 export const LiveChatWidget: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -9,8 +10,29 @@ export const LiveChatWidget: React.FC = () => {
     { sender: 'bot', text: 'Xin chào! Tôi là Trợ lý AI của CloudHost VN. Bạn cần tư vấn về Cloud VPS, Hosting hay Đăng ký Tên miền?' }
   ]);
   const [input, setInput] = useState('');
+  const [sessionId, setSessionId] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  const handleSend = (e: React.FormEvent) => {
+  useEffect(() => {
+    if (isOpen && !sessionId) {
+      // Try to get or create session when opened
+      api.get('/chats/my-active')
+        .then(res => setSessionId(res.data.id))
+        .catch(err => {
+          if (err.response?.status === 404) {
+            api.post('/chats').then(res => setSessionId(res.data.id)).catch(e => {
+              if (e.response?.status === 401) {
+                setMessages([{ sender: 'bot', text: 'Vui lòng đăng nhập để sử dụng tính năng Chat!' }]);
+              }
+            });
+          } else if (err.response?.status === 401) {
+            setMessages([{ sender: 'bot', text: 'Vui lòng đăng nhập để sử dụng tính năng Chat!' }]);
+          }
+        });
+    }
+  }, [isOpen, sessionId]);
+
+  const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim()) return;
 
@@ -18,15 +40,23 @@ export const LiveChatWidget: React.FC = () => {
     setMessages(prev => [...prev, { sender: 'user', text: userText }]);
     setInput('');
 
-    setTimeout(() => {
-      let botReply = 'Cảm ơn bạn! Đội ngũ tư vấn viên CloudHost VN đang kiểm tra cấu hình phù hợp nhất cho bạn. hotline 1900 6888 luông sẵn sàng!';
-      if (userText.toLowerCase().includes('vps') || userText.toLowerCase().includes('máy chủ')) {
-        botReply = 'Cloud VPS của CloudHost VN sử dụng 100% chip AMD EPYC & ổ cứng NVMe RAID 10. Bạn có thể sử dụng công cụ Tùy chỉnh cấu hình ngay trên trang chủ để xem báo giá chính xác!';
-      } else if (userText.toLowerCase().includes('tên miền') || userText.toLowerCase().includes('domain')) {
-        botReply = 'Tên miền quốc tế .COM chỉ 290k/năm, tên miền thương hiệu .VN 750k/năm. Bạn thử tra cứu tên miền ở thanh tìm kiếm xem nhé!';
+    if (sessionId) {
+      setLoading(true);
+      try {
+        await api.post(`/chats/${sessionId}/messages`, `"${userText}"`, {
+          headers: { 'Content-Type': 'application/json' }
+        });
+        
+        // Mock bot reply after sending to backend
+        setTimeout(() => {
+          setMessages(prev => [...prev, { sender: 'bot', text: 'Cảm ơn bạn! Yêu cầu đã được ghi nhận vào hệ thống backend.' }]);
+        }, 800);
+      } catch (err) {
+        console.error("Lỗi gửi tin nhắn:", err);
+      } finally {
+        setLoading(false);
       }
-      setMessages(prev => [...prev, { sender: 'bot', text: botReply }]);
-    }, 800);
+    }
   };
 
   return (
@@ -95,9 +125,10 @@ export const LiveChatWidget: React.FC = () => {
             />
             <button
               type="submit"
-              className="p-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white transition-colors cursor-pointer"
+              disabled={loading}
+              className="p-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white transition-colors cursor-pointer disabled:opacity-50"
             >
-              <Send className="w-4 h-4" />
+              {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
             </button>
           </form>
 

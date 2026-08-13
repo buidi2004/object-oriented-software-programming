@@ -61,7 +61,7 @@ public class AffiliateE2ETests : BaseE2ETest
         var appMeRes = await Client.GetAsync("/api/affiliate-applications/me");
         appMeRes.EnsureSuccessStatusCode();
         var appMeJson = await appMeRes.Content.ReadFromJsonAsync<System.Text.Json.JsonElement>();
-        appMeJson.GetProperty("items").GetArrayLength().Should().BeGreaterThan(0);
+        appMeJson.TryGetProperty("id", out _).Should().BeTrue();
 
         // 6. Customer 2 creates an application to be rejected
         var createRejectCmd = new CreateAffiliateApplicationCommand("Bad Company", 15.0m);

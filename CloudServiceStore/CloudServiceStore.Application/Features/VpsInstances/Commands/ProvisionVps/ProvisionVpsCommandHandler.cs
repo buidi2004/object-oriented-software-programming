@@ -1,66 +1,165 @@
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using CloudServiceStore.Application.Configuration;
+using CloudServiceStore.Application.DTOs;
 using CloudServiceStore.Application.Exceptions;
 using CloudServiceStore.Application.Interfaces;
+using CloudServiceStore.Application.Models;
 using CloudServiceStore.Domain.Entities;
 using CloudServiceStore.Domain.Enums;
 using CloudServiceStore.Domain.Interfaces;
 using MediatR;
+using Microsoft.Extensions.Options;
 
 namespace CloudServiceStore.Application.Features.VpsInstances.Commands.ProvisionVps;
 
-public class ProvisionVpsCommandHandler : IRequestHandler<ProvisionVpsCommand, string>
+public class ProvisionVpsCommandHandler : IRequestHandler<ProvisionVpsCommand, VpsInstanceDto>
 {
     private readonly IVpsProvisioningService _provisioningService;
+    private readonly IVpsSpecParser _specParser;
     private readonly IRepository<VpsInstance> _vpsRepo;
+    private readonly IRepository<OrderRequest> _orderRepo;
+    private readonly IRepository<ServiceCategory> _categoryRepo;
     private readonly IUnitOfWork _uow;
     private readonly IJobScheduler _jobScheduler;
+    private readonly ICurrentUserService _currentUserService;
+    private readonly VpsSettings _vpsSettings;
 
     public ProvisionVpsCommandHandler(
         IVpsProvisioningService provisioningService,
+        IVpsSpecParser specParser,
         IRepository<VpsInstance> vpsRepo,
+        IRepository<OrderRequest> orderRepo,
+        IRepository<ServiceCategory> categoryRepo,
         IUnitOfWork uow,
-        IJobScheduler jobScheduler)
+        IJobScheduler jobScheduler,
+        ICurrentUserService currentUserService,
+        IOptions<VpsSettings> vpsSettings)
     {
         _provisioningService = provisioningService;
+        _specParser = specParser;
         _vpsRepo = vpsRepo;
+        _orderRepo = orderRepo;
+        _categoryRepo = categoryRepo;
         _uow = uow;
         _jobScheduler = jobScheduler;
+        _currentUserService = currentUserService;
+        _vpsSettings = vpsSettings.Value;
     }
 
-    public async Task<string> Handle(ProvisionVpsCommand request, CancellationToken cancellationToken)
+    public async Task<VpsInstanceDto> Handle(ProvisionVpsCommand request, CancellationToken cancellationToken)
     {
-        // 1. Provision the VPS container
-        var containerId = await _provisioningService.ProvisionAsync(request.OrderId, request.UserId, cancellationToken);
-        
-        if (string.IsNullOrEmpty(containerId))
+        var order = await _orderRepo.GetByIdAsync(request.OrderId, cancellationToken, o => o.ServicePlan!)
+            ?? throw new NotFoundException("Đơn hàng không tồn tại.");
+
+        if (order.Status != OrderStatus.Paid)
         {
-            throw new BadRequestException("Failed to provision VPS container.");
+            throw new BadRequestException("Chỉ có thể tạo VPS cho đơn hàng đã thanh toán.");
         }
 
-        // 2. Save instance details to DB
-        // Demo purpose: 2 minutes TTL to test quickly
-        var ttl = TimeSpan.FromMinutes(2);
-        
+        if (_currentUserService.UserId.HasValue
+            && order.UserId != _currentUserService.UserId.Value
+            && !_currentUserService.IsInRole("Admin"))
+        {
+            throw new UnauthorizedException("Bạn không có quyền tạo VPS cho đơn hàng này.");
+        }
+
+        var category = await _categoryRepo.GetByIdAsync(order.ServicePlan.CategoryId, cancellationToken);
+        if (category?.Slug != "cloud-vps")
+        {
+            throw new BadRequestException("Đơn hàng này không phải gói Cloud VPS.");
+        }
+
+        var existing = await _vpsRepo.FirstOrDefaultAsync(
+            v => v.OrderId == order.Id && v.Status != VpsInstanceStatus.Terminated,
+            cancellationToken);
+
+        if (existing != null)
+        {
+            return VpsInstanceMapper.ToDto(existing);
+        }
+
+        var plan = order.ServicePlan;
+        var (cpuCores, memoryBytes, diskGb) = _specParser.Parse(plan);
+        var containerName = BuildContainerName(plan.Name, order.UserId);
+        var spec = new VpsProvisionSpec(
+            containerName,
+            cpuCores,
+            memoryBytes,
+            diskGb,
+            _vpsSettings.DefaultImage);
+
+        var ttl = ResolveTtl(order.BillingCycle);
+        var now = DateTime.UtcNow;
+
         var vpsInstance = new VpsInstance
         {
             Id = Guid.NewGuid(),
-            OrderId = request.OrderId,
-            UserId = request.UserId,
-            ContainerId = containerId,
-            ContainerName = $"vps-demo-{request.UserId}-{Guid.NewGuid().ToString().Substring(0, 8)}",
-            Status = VpsInstanceStatus.Running,
-            CreatedAt = DateTime.UtcNow,
-            ExpiresAt = DateTime.UtcNow.Add(ttl)
+            OrderId = order.Id,
+            UserId = order.UserId,
+            PlanId = plan.Id,
+            PlanName = plan.Name,
+            CpuCores = cpuCores,
+            RamMb = (int)(memoryBytes / (1024 * 1024)),
+            DiskGb = diskGb,
+            ContainerName = containerName,
+            Status = VpsInstanceStatus.Provisioning,
+            CreatedAt = now,
+            ExpiresAt = now.Add(ttl),
+            LastActiveAt = now
         };
 
         await _vpsRepo.AddAsync(vpsInstance, cancellationToken);
         await _uow.SaveChangesAsync(cancellationToken);
 
-        // 3. Schedule auto-cleanup
-        _jobScheduler.Schedule<ITerminateVpsJob>(x => x.TerminateAsync(containerId), ttl);
+        var provisionResult = await _provisioningService.ProvisionAsync(spec, cancellationToken);
+        if (!provisionResult.Success || string.IsNullOrEmpty(provisionResult.ContainerId))
+        {
+            vpsInstance.Status = VpsInstanceStatus.Failed;
+            _vpsRepo.Update(vpsInstance);
+            await _uow.SaveChangesAsync(cancellationToken);
+            throw new BadRequestException(
+                provisionResult.ErrorMessage ?? "Failed to provision VPS container.");
+        }
 
-        return containerId;
+        vpsInstance.ContainerId = provisionResult.ContainerId;
+        vpsInstance.ContainerName = provisionResult.ContainerName;
+        vpsInstance.Status = VpsInstanceStatus.Running;
+        _vpsRepo.Update(vpsInstance);
+        await _uow.SaveChangesAsync(cancellationToken);
+
+        return VpsInstanceMapper.ToDto(vpsInstance);
+    }
+
+    private TimeSpan ResolveTtl(BillingCycle billingCycle)
+    {
+        return billingCycle switch
+        {
+            BillingCycle.Yearly => TimeSpan.FromDays(365),
+            _ => TimeSpan.FromDays(30)
+        };
+    }
+
+    private static string BuildContainerName(string planName, Guid userId)
+    {
+        var slug = new string(planName
+            .ToLowerInvariant()
+            .Select(ch => char.IsLetterOrDigit(ch) ? ch : '-')
+            .ToArray())
+            .Trim('-');
+
+        while (slug.Contains("--", StringComparison.Ordinal))
+        {
+            slug = slug.Replace("--", "-", StringComparison.Ordinal);
+        }
+
+        if (string.IsNullOrWhiteSpace(slug))
+        {
+            slug = "vps";
+        }
+
+        return $"vps-{slug}-{userId.ToString()[..8]}-{Guid.NewGuid().ToString()[..8]}";
     }
 }

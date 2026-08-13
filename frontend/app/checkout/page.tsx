@@ -63,25 +63,40 @@ export default function CheckoutPage() {
 
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await fetch('/api/payments', {
+      
+      // 1. Checkout to create order
+      const orderResponse = await fetch('/api/orders/checkout', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          amount: finalAmount,
-          paymentMethod: selectedMethod,
-          items: cartItems,
-        }),
+        body: JSON.stringify({ couponCode: null }),
       });
 
-      if (!response.ok) {
-        const data = await response.json();
+      if (!orderResponse.ok) {
+        const data = await orderResponse.json();
+        throw new Error(data.message || 'Lỗi tạo đơn hàng');
+      }
+
+      const { orderId } = await orderResponse.json();
+
+      // 2. Create Payment for the order
+      const paymentResponse = await fetch('/api/payments', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ orderRequestId: orderId }),
+      });
+
+      if (!paymentResponse.ok) {
+        const data = await paymentResponse.json();
         throw new Error(data.message || 'Thanh toán thất bại');
       }
 
-      const data = await response.json();
+      const data = await paymentResponse.json();
       setPaymentUrl(data.url);
       setStep('success');
     } catch (err) {

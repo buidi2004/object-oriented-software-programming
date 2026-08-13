@@ -1,6 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using CloudServiceStore.Application.Exceptions;
+using CloudServiceStore.Application.Interfaces;
 using CloudServiceStore.Domain.Entities;
 using CloudServiceStore.Domain.Interfaces;
 using MediatR;
@@ -11,11 +12,16 @@ public class DeletePromotionCommandHandler : IRequestHandler<DeletePromotionComm
 {
     private readonly IUnitOfWork _uow;
     private readonly IRepository<Promotion> _promoRepo;
+    private readonly ICatalogCache _catalogCache;
 
-    public DeletePromotionCommandHandler(IUnitOfWork uow, IRepository<Promotion> promoRepo)
+    public DeletePromotionCommandHandler(
+        IUnitOfWork uow,
+        IRepository<Promotion> promoRepo,
+        ICatalogCache catalogCache)
     {
         _uow = uow;
         _promoRepo = promoRepo;
+        _catalogCache = catalogCache;
     }
 
     public async Task Handle(DeletePromotionCommand request, CancellationToken ct)
@@ -25,5 +31,6 @@ public class DeletePromotionCommandHandler : IRequestHandler<DeletePromotionComm
 
         _promoRepo.Delete(promotion);
         await _uow.SaveChangesAsync(ct);
+        await _catalogCache.InvalidateCatalogAsync(ct);
     }
 }

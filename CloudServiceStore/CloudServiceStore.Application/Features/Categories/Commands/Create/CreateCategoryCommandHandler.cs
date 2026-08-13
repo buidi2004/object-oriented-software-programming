@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using CloudServiceStore.Application.Exceptions;
+using CloudServiceStore.Application.Interfaces;
 using CloudServiceStore.Domain.Entities;
 using CloudServiceStore.Domain.Interfaces;
 using MediatR;
@@ -12,9 +13,17 @@ public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryComman
 {
     private readonly IUnitOfWork _uow;
     private readonly IRepository<ServiceCategory> _repo;
+    private readonly ICatalogCache _catalogCache;
 
-    public CreateCategoryCommandHandler(IUnitOfWork uow, IRepository<ServiceCategory> repo)
-    { _uow = uow; _repo = repo; }
+    public CreateCategoryCommandHandler(
+        IUnitOfWork uow,
+        IRepository<ServiceCategory> repo,
+        ICatalogCache catalogCache)
+    {
+        _uow = uow;
+        _repo = repo;
+        _catalogCache = catalogCache;
+    }
 
     public async Task<Guid> Handle(CreateCategoryCommand request, CancellationToken ct)
     {
@@ -25,6 +34,7 @@ public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryComman
         var category = new ServiceCategory { Id = Guid.NewGuid(), Name = request.Name, Slug = request.Slug };
         await _repo.AddAsync(category, ct);
         await _uow.SaveChangesAsync(ct);
+        await _catalogCache.InvalidateCatalogAsync(ct);
         return category.Id;
     }
 }

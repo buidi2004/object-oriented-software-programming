@@ -15,9 +15,10 @@ public class UpsertExchangeRateCommandHandlerTests
 {
     private readonly Mock<IRepository<ExchangeRate>> _rateRepoMock = new();
     private readonly Mock<IUnitOfWork> _unitOfWorkMock = new();
+    private readonly Mock<ICatalogCache> _catalogCacheMock = new();
 
     private UpsertExchangeRateCommandHandler CreateHandler()
-        => new(_rateRepoMock.Object, _unitOfWorkMock.Object);
+        => new(_rateRepoMock.Object, _unitOfWorkMock.Object, _catalogCacheMock.Object);
 
     [Fact]
     public async Task Handle_NewCurrencyPair_CreatesNewExchangeRate()

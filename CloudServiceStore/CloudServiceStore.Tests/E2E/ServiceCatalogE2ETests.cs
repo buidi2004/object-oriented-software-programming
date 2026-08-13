@@ -34,7 +34,7 @@ public class ServiceCatalogE2ETests : BaseE2ETest
         var categoriesRes = await Client.GetAsync("/api/categories");
         categoriesRes.EnsureSuccessStatusCode();
         var categories = await categoriesRes.Content.ReadFromJsonAsync<JsonElement>();
-        categories.GetArrayLength().Should().BeGreaterOrEqualTo(3);
+        categories.GetArrayLength().Should().BeGreaterThanOrEqualTo(3);
         categories.EnumerateArray().Select(c => c.GetProperty("slug").GetString()).Should()
             .Contain(new[] { "cloud-vps", "web-hosting", "ten-mien" });
 

@@ -65,7 +65,7 @@ public class CustomerJourneyE2ETests : BaseE2ETest
 
         // 4.2 Update Cart Item
         var updateItemCommand = new CloudServiceStore.Application.Features.Carts.Commands.UpdateCartItem.UpdateCartItemCommand(cartItemId, 2);
-        var updateItemRes = await Client.PutAsJsonAsync($"/api/carts/items/{cartItemId}", updateItemCommand);
+        var updateItemRes = await Client.PutAsJsonAsync($"/api/carts/items/{cartItemId}", new { quantity = 2 });
         updateItemRes.EnsureSuccessStatusCode();
 
         // 4.3 Delete Cart Item

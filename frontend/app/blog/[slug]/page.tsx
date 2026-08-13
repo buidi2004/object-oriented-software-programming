@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, Calendar, User, AlertCircle, Loader2 } from 'lucide-react';
+import { BlogComments } from '@/src/components/BlogComments';
 
 interface BlogPost {
   id: string;
@@ -140,6 +141,8 @@ export default function BlogPostPage() {
             />
           </div>
         </article>
+
+        <BlogComments postSlug={slug} />
 
         {/* Related Posts Placeholder */}
         <div className="mt-12">

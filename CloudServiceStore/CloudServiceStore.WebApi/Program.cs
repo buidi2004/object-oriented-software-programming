@@ -14,6 +14,7 @@ using System.Text;
 using CloudServiceStore.Infrastructure.Security;
 using CloudServiceStore.Application.Interfaces;
 using CloudServiceStore.Application;
+using CloudServiceStore.Application.Configuration;
 using CloudServiceStore.Infrastructure;
 using Hangfire;
 
@@ -59,6 +60,7 @@ builder.Services.AddInfrastructure(builder.Configuration);
 
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(JwtSettings.SectionName));
 builder.Services.Configure<FrontendSettings>(builder.Configuration.GetSection(FrontendSettings.SectionName));
+builder.Services.Configure<VpsSettings>(builder.Configuration.GetSection(VpsSettings.SectionName));
 
 // Hangfire configuration
 builder.Services.AddHangfire(config => config.UseInMemoryStorage());

@@ -1,10 +1,10 @@
 using System;
 using MediatR;
-using CloudServiceStore.Domain.Entities;
+using CloudServiceStore.Application.DTOs;
 
 namespace CloudServiceStore.Application.Features.VpsInstances.Queries.GetVpsInstanceById;
 
-public class GetVpsInstanceByIdQuery : IRequest<VpsInstance?>
+public class GetVpsInstanceByIdQuery : IRequest<VpsInstanceDto?>
 {
     public Guid Id { get; set; }
 }

@@ -40,18 +40,22 @@ public class AuthController : ControllerBase
     {
         var result = await _mediator.Send(command, ct);
         SetRefreshTokenCookie(result.RefreshToken);
-        return Ok(new { accessToken = result.AccessToken });
+        return Ok(new { accessToken = result.AccessToken, refreshToken = result.RefreshToken });
     }
 
     [HttpPost("refresh-token")]
-    public async Task<IActionResult> RefreshToken(CancellationToken ct)
+    public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest? body, CancellationToken ct)
     {
-        if (!Request.Cookies.TryGetValue("refreshToken", out var refreshToken))
+        var refreshToken = Request.Cookies.TryGetValue("refreshToken", out var cookieToken)
+            ? cookieToken
+            : body?.RefreshToken;
+
+        if (string.IsNullOrWhiteSpace(refreshToken))
             return Unauthorized();
 
         var result = await _mediator.Send(new RefreshTokenCommand(refreshToken), ct);
         SetRefreshTokenCookie(result.RefreshToken);
-        return Ok(new { accessToken = result.AccessToken });
+        return Ok(new { accessToken = result.AccessToken, refreshToken = result.RefreshToken });
     }
 
     [HttpPost("forgot-password")]
@@ -72,3 +76,4 @@ public class AuthController : ControllerBase
 }
 
 public record ForgotPasswordRequest(string Email);
+public record RefreshTokenRequest(string RefreshToken);

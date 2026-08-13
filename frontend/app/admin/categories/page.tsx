@@ -44,7 +44,12 @@ export default function AdminCategoriesPage() {
       const response = await fetch('/api/categories', { headers: { Authorization: `Bearer ${token}` } });
       if (response.ok) {
         const data = await response.json();
-        setCategories(data);
+        setCategories(data.map((c: any) => ({
+          ...c,
+          description: c.description || 'Chưa có mô tả',
+          serviceCount: c.serviceCount || 0,
+          createdAt: c.createdAt || new Date().toISOString()
+        })));
       }
     } catch (error) { console.error('Failed to fetch categories:', error); }
     finally { setIsLoading(false); }

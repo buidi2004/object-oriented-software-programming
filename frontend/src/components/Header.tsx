@@ -46,8 +46,18 @@ export const Header: React.FC<HeaderProps> = ({
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [servicesDropdownOpen, setServicesDropdownOpen] = useState(false);
+  const [currencyDropdownOpen, setCurrencyDropdownOpen] = useState(false);
+  const [currency, setCurrency] = useState<string>('VND');
+  const [rates, setRates] = useState<any[]>([]);
   const [walletBalance, setWalletBalance] = useState(0);
   const { user, logout } = useAuthStore();
+
+  React.useEffect(() => {
+    // Lấy tỷ giá từ Backend
+    api.get('/exchange-rates')
+      .then(res => setRates(res.data))
+      .catch(e => console.warn('Failed to load exchange rates', e));
+  }, []);
 
   React.useEffect(() => {
     if (user) {
@@ -214,6 +224,35 @@ export const Header: React.FC<HeaderProps> = ({
 
         {/* Actions — luôn icon-first, không chiếm width cố định lớn */}
         <div className="flex items-center justify-end gap-0.5 sm:gap-1 shrink-0 ml-auto lg:ml-0">
+          {/* Currency Switcher */}
+          <div className="relative shrink-0 hidden sm:block">
+            <button
+              onClick={() => setCurrencyDropdownOpen(!currencyDropdownOpen)}
+              className="flex items-center gap-1 p-2 rounded-lg text-xs font-bold text-slate-600 hover:bg-slate-100 transition-colors"
+            >
+              {currency} <ChevronDown className="w-3 h-3" />
+            </button>
+            {currencyDropdownOpen && (
+              <div className="absolute top-full right-0 mt-1 w-24 bg-white border border-slate-100 rounded-lg shadow-lg py-1 z-50">
+                <button
+                  onClick={() => { setCurrency('VND'); setCurrencyDropdownOpen(false); }}
+                  className={`w-full text-left px-4 py-2 text-xs font-semibold ${currency === 'VND' ? 'text-blue-600 bg-blue-50' : 'text-slate-700 hover:bg-slate-50'}`}
+                >
+                  VND
+                </button>
+                {rates.map(r => (
+                  <button
+                    key={r.currencyCode}
+                    onClick={() => { setCurrency(r.currencyCode); setCurrencyDropdownOpen(false); }}
+                    className={`w-full text-left px-4 py-2 text-xs font-semibold ${currency === r.currencyCode ? 'text-blue-600 bg-blue-50' : 'text-slate-700 hover:bg-slate-50'}`}
+                  >
+                    {r.currencyCode}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
           <GlobalSearch />
 
           <button

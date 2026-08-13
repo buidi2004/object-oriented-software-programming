@@ -6,6 +6,8 @@ import { api } from '../../src/lib/api';
 import { useAuthStore } from '../../src/store/useAuthStore';
 import Link from 'next/link';
 
+import { requestAuth } from '@/src/lib/authNavigation';
+
 export default function GiftCardsPage() {
   const [code, setCode] = useState('');
   const [balance, setBalance] = useState<number | null>(null);
@@ -73,9 +75,9 @@ export default function GiftCardsPage() {
               <AlertCircle className="w-12 h-12 text-amber-500 mx-auto mb-4" />
               <h2 className="text-xl font-bold text-slate-900 mb-2">Vui lòng đăng nhập</h2>
               <p className="text-slate-500 mb-6">Bạn cần đăng nhập để có thể nạp thẻ quà tặng vào ví.</p>
-              <Link href="/login?redirect=/gift-cards" className="inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition">
-                Đăng nhập ngay
-              </Link>
+              <button onClick={() => requestAuth('login', '/gift-cards')} className="inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition cursor-pointer">
+                Đăng nhập để Mua thẻ
+              </button>
             </div>
           ) : (
             <div className="space-y-8">

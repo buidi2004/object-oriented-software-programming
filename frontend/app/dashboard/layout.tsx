@@ -26,7 +26,7 @@ interface DashboardLayoutProps {
 
 const menuItems = [
   { name: 'Tổng quan', href: '/dashboard', icon: LayoutDashboard },
-  { name: 'VPS của tôi', href: '/dashboard/vps-instances', icon: Server },
+  { name: 'Quản lý VPS', href: '/dashboard/vps-instances', icon: Server },
   { name: 'Đơn hàng', href: '/dashboard/orders', icon: ShoppingCart },
   { name: 'Hỗ trợ', href: '/dashboard/tickets', icon: Shield },
   { name: 'Tên miền', href: '/domains', icon: Globe },
@@ -35,7 +35,6 @@ const menuItems = [
   { name: 'Thanh toán', href: '/dashboard/payments', icon: CreditCard },
   { name: 'Tài khoản', href: '/dashboard/profile', icon: User },
   { name: 'Tự động gia hạn', href: '/dashboard/auto-renew', icon: Repeat },
-  { name: 'Control Panel', href: '/dashboard/control-panel', icon: Monitor },
   { name: 'Backup VPS', href: '/dashboard/vps-backups', icon: RefreshCw },
   { name: 'Lịch sử xem', href: '/dashboard/recently-viewed', icon: History },
   { name: 'Tình trạng hệ thống', href: '/dashboard/uptime', icon: Activity },

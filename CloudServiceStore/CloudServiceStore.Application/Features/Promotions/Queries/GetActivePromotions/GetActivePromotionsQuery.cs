@@ -6,11 +6,17 @@ using System.Threading.Tasks;
 using CloudServiceStore.Application.Features.Promotions.Queries.GetPromotions;
 using CloudServiceStore.Domain.Entities;
 using CloudServiceStore.Domain.Interfaces;
+using CloudServiceStore.Application.Caching;
+using CloudServiceStore.Application.Interfaces;
 using MediatR;
 
 namespace CloudServiceStore.Application.Features.Promotions.Queries.GetActivePromotions;
 
-public record GetActivePromotionsQuery() : IRequest<IReadOnlyList<PromotionDto>>;
+public record GetActivePromotionsQuery() : IRequest<IReadOnlyList<PromotionDto>>, ICacheableQuery
+{
+    public string CacheKey => CatalogCacheKeys.ActivePromotions;
+    public TimeSpan CacheDuration => CatalogCacheKeys.ActivePromotionsTtl;
+}
 
 public class GetActivePromotionsQueryHandler : IRequestHandler<GetActivePromotionsQuery, IReadOnlyList<PromotionDto>>
 {

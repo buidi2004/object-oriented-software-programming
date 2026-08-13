@@ -16,17 +16,20 @@ public class CreateServicePlanCommandHandler : IRequestHandler<CreateServicePlan
     private readonly IRepository<ServicePlan> _planRepo;
     private readonly IRepository<ServiceCategory> _categoryRepo;
     private readonly IQrCodeGeneratorFactory _qrFactory;
+    private readonly ICatalogCache _catalogCache;
 
     public CreateServicePlanCommandHandler(
         IUnitOfWork uow,
         IRepository<ServicePlan> planRepo,
         IRepository<ServiceCategory> categoryRepo,
-        IQrCodeGeneratorFactory qrFactory)
+        IQrCodeGeneratorFactory qrFactory,
+        ICatalogCache catalogCache)
     {
         _uow = uow;
         _planRepo = planRepo;
         _categoryRepo = categoryRepo;
         _qrFactory = qrFactory;
+        _catalogCache = catalogCache;
     }
 
     public async Task<Guid> Handle(CreateServicePlanCommand request, CancellationToken ct)
@@ -57,6 +60,7 @@ public class CreateServicePlanCommandHandler : IRequestHandler<CreateServicePlan
 
         await _planRepo.AddAsync(plan, ct);
         await _uow.SaveChangesAsync(ct);
+        await _catalogCache.InvalidateCatalogAsync(ct);
         return plan.Id;
     }
 }

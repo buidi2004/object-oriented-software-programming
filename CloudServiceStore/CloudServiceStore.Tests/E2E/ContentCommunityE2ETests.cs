@@ -94,7 +94,7 @@ public class ContentCommunityE2ETests : BaseE2ETest
         var getAllNewsRes = await Client.GetAsync("/api/news");
         getAllNewsRes.EnsureSuccessStatusCode();
         var allNewsJson = await getAllNewsRes.Content.ReadFromJsonAsync<System.Text.Json.JsonElement>();
-        allNewsJson.GetProperty("items").GetArrayLength().Should().BeGreaterThan(0);
+        GetItemsCount(allNewsJson).Should().BeGreaterThan(0);
 
         // 11. Admin Deletes News Article
         var deleteNewsRes = await Client.DeleteAsync($"/api/news/{articleId}");

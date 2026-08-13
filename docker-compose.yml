@@ -11,9 +11,22 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=CloudServiceStoreDb;User Id=sa;Password=Your_Strong_Password_123!;TrustServerCertificate=True;
+      - Vps__DefaultImage=vps-demo-image
+      - Cache__Enabled=true
+      - Cache__RedisConnectionString=redis:6379
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
       - sqlserver
+      - redis
     restart: unless-stopped
+
+  vps-demo-image:
+    build:
+      context: ./CloudServiceStore/docker/vps-demo-image
+    image: vps-demo-image
+    profiles:
+      - build
 
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
@@ -27,6 +40,13 @@ services:
       - sqlserver_data:/var/opt/mssql
     restart: unless-stopped
 
+  redis:
+    image: redis:7-alpine
+    container_name: cloudservicestore_redis
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+
   frontend:
     build:
       context: ./frontend
@@ -35,7 +55,6 @@ services:
     ports:
       - "3000:3000"
     environment:
-      # Next.js Server sẽ proxy requests tới container webapi qua Docker DNS
       - BACKEND_URL=http://webapi:8080
     depends_on:
       - webapi
