@@ -35,6 +35,12 @@ public class GetServicePlansWithCurrencyQueryHandler
 
         // Get all VND prices (the source of truth)
         var allPrices = await _planPriceRepo.GetAllAsync(cancellationToken);
+        
+        // Since generic repo GetAllAsync might not Include, let's fetch ServicePlans manually
+        var planIds = allPrices.Select(p => p.ServicePlanId).Distinct().ToList();
+        var plans = await _servicePlanRepo.WhereAsync(p => planIds.Contains(p.Id), cancellationToken);
+        var planDict = plans.ToDictionary(p => p.Id, p => p.Name);
+
         var vndPrices = allPrices.Where(p => p.Currency == "VND").ToList();
 
         ExchangeRate? rate = null;
@@ -52,7 +58,7 @@ public class GetServicePlansWithCurrencyQueryHandler
             return new ServicePlanPriceDto
             {
                 ServicePlanId = p.ServicePlanId,
-                ServicePlanName = p.ServicePlan?.Name ?? string.Empty,
+                ServicePlanName = planDict.GetValueOrDefault(p.ServicePlanId, string.Empty),
                 BillingCycle = p.BillingCycle,
                 Price = convertedPrice,
                 Currency = currency

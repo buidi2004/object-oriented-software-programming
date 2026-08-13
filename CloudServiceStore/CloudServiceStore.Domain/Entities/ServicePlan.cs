@@ -14,6 +14,10 @@ public class ServicePlan : AggregateRoot
     public string? Bandwidth { get; internal set; }
     public string? QrCodeUrl { get; internal set; }
     public bool IsActive { get; internal set; }
+    public string? MetaTitle { get; internal set; }
+    public string? MetaDescription { get; internal set; }
+    public string? Keywords { get; internal set; }
+    public string? OpenGraphImage { get; internal set; }
 
     public ServiceCategory Category { get; internal set; } = null!;
     
@@ -48,6 +52,14 @@ public class ServicePlan : AggregateRoot
         Ram = ram;
         Ssd = ssd;
         Bandwidth = bandwidth;
+    }
+
+    public void UpdateSeo(string? metaTitle, string? metaDescription, string? keywords, string? openGraphImage)
+    {
+        MetaTitle = metaTitle;
+        MetaDescription = metaDescription;
+        Keywords = keywords;
+        OpenGraphImage = openGraphImage;
     }
 
     public void AddPrice(PlanPrice price)

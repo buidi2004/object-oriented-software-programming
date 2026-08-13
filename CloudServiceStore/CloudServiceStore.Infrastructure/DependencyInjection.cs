@@ -5,6 +5,8 @@ using CloudServiceStore.Infrastructure.Persistence;
 using CloudServiceStore.Infrastructure.Persistence.Repositories;
 using CloudServiceStore.Infrastructure.Security;
 using CloudServiceStore.Application.Interfaces;
+using CloudServiceStore.Infrastructure.Services;
+using CloudServiceStore.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,6 +28,11 @@ public static class DependencyInjection
         services.AddSingleton<IQrCodeGeneratorFactory, QrCodeGeneratorFactory>();
         services.AddSingleton<IPasswordHasher, BCryptPasswordHasher>();
         services.AddSingleton<ITokenGenerator, JwtTokenGenerator>();
+        services.AddScoped<IEmailService, LoggingEmailService>();
+
+        services.AddSingleton<IVpsProvisioningService, DockerVpsProvisioningService>();
+        services.AddSingleton<IJobScheduler, HangfireJobScheduler>();
+        services.AddScoped<ITerminateVpsJob, TerminateVpsJob>();
 
         return services;
     }

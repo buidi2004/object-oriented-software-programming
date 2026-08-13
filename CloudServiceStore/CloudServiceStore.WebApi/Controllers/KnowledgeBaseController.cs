@@ -1,5 +1,6 @@
 using CloudServiceStore.Application.Features.KnowledgeBase.Commands.Create;
 using CloudServiceStore.Application.Features.KnowledgeBase.Queries.GetById;
+using CloudServiceStore.Application.Features.KnowledgeBase.Queries.GetPublishedKbArticles;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +18,14 @@ public class KnowledgeBaseController : ControllerBase
     public KnowledgeBaseController(IMediator mediator)
     {
         _mediator = mediator;
+    }
+
+    [HttpGet]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetPublished(CancellationToken ct)
+    {
+        var result = await _mediator.Send(new GetPublishedKbArticlesQuery(), ct);
+        return Ok(result);
     }
 
     [HttpGet("{id}")]

@@ -7,6 +7,7 @@ using CloudServiceStore.Application.Features.Domains.Commands.RegisterDomain;
 using CloudServiceStore.Application.Features.Domains.Queries.CheckDomain;
 using CloudServiceStore.Application.Features.Domains.Queries.GetDnsRecords;
 using CloudServiceStore.Application.Features.Domains.Queries.GetMyDomains;
+using CloudServiceStore.Application.Features.Domains.Queries.GetDomainById;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -42,6 +43,14 @@ public class DomainsController : ControllerBase
     {
         var domainId = await _mediator.Send(command, ct);
         return Ok(new { domainId });
+    }
+
+    [HttpGet("{id:guid}")]
+    [Authorize(Roles = "Customer")]
+    public async Task<IActionResult> GetById(Guid id, CancellationToken ct)
+    {
+        var domain = await _mediator.Send(new GetDomainByIdQuery(id), ct);
+        return Ok(domain);
     }
 
     // --- DNS RECORDS ---

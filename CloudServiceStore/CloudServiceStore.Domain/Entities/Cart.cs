@@ -16,7 +16,7 @@ public class Cart : AggregateRoot
     private readonly List<CartItem> _items = new();
     public IReadOnlyCollection<CartItem> Items => _items.AsReadOnly();
 
-    // private Cart() { } // EF Core
+    private Cart() { } // EF Core
 
     public Cart(Guid userId)
     {
@@ -34,7 +34,9 @@ public class Cart : AggregateRoot
         }
         else
         {
-            _items.Add(new CartItem(servicePlanId, billingCycle, quantity));
+            var newItem = new CartItem(servicePlanId, billingCycle, quantity);
+            newItem.Id = Guid.Empty; // Force EF Core to treat it as Added instead of Modified
+            _items.Add(newItem);
         }
         UpdatedAt = DateTime.UtcNow;
         // RaiseDomainEvent(new CartItemAddedEvent(Id, servicePlanId));
@@ -77,6 +79,12 @@ public class Cart : AggregateRoot
     {
         if (!_items.Any()) throw new InvalidOperationException("Cannot checkout an empty cart");
         Status = Enums.CartStatus.CheckedOut;
+        UpdatedAt = DateTime.UtcNow;
+    }
+
+    public void Reactivate()
+    {
+        Status = Enums.CartStatus.Active;
         UpdatedAt = DateTime.UtcNow;
     }
 }

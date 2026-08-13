@@ -12,7 +12,8 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=CloudServiceStoreDb;User Id=sa;Password=Your_Strong_Password_123!;TrustServerCertificate=True;
     depends_on:
-      - sqlserver
+      sqlserver:
+        condition: service_healthy
     restart: unless-stopped
 
   sqlserver:
@@ -25,7 +26,14 @@ services:
       - SA_PASSWORD=Your_Strong_Password_123!
     volumes:
       - sqlserver_data:/var/opt/mssql
+    healthcheck:
+      test: /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P Your_Strong_Password_123! -C -Q "SELECT 1" || exit 1
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
     restart: unless-stopped
 
 volumes:
   sqlserver_data:
+

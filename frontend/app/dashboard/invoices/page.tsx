@@ -1,0 +1,185 @@
+'use client';
+
+import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { Toast, useToast } from '@/components/Toast';
+import { FileText, Download, AlertCircle, DollarSign, Calendar, RefreshCw } from 'lucide-react';
+import { api } from '@/src/lib/api';
+
+interface Invoice {
+  id: string;
+  orderId: string;
+  invoiceNumber: string;
+  amount: number;
+  status: 'paid' | 'pending' | 'failed';
+  issuedDate: string;
+  pdfUrl?: string;
+}
+
+export default function InvoicesPage() {
+  const { toast, showToast } = useToast();
+  const [invoices, setInvoices] = useState<Invoice[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchInvoices();
+  }, []);
+
+  const fetchInvoices = async () => {
+    setIsLoading(true);
+    setError(null);
+    const token = localStorage.getItem('accessToken');
+    if (!token) return;
+
+    try {
+      const response = await api.get('/orders/me/invoices');
+      if (response.data && Array.isArray(response.data)) {
+        const mappedInvoices: Invoice[] = response.data.map((inv: any) => ({
+          id: inv.id,
+          orderId: inv.orderId,
+          invoiceNumber: inv.invoiceNumber || '',
+          amount: inv.amount || 0,
+          status: 'paid',
+          issuedDate: inv.issuedAt,
+          pdfUrl: inv.pdfUrl,
+        }));
+        setInvoices(mappedInvoices);
+      } else {
+        setInvoices([]);
+      }
+    } catch (err) {
+      console.error('Failed to fetch invoices:', err);
+      setError('Không thể tải hóa đơn. Vui lòng thử lại.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleDownload = (id: string) => {
+    // TODO: Replace with actual PDF download
+    showToast(`Đang tải hóa đơn #${id}`, 'info');
+  };
+
+  const colorMap: Record<string, string> = {
+    blue: 'text-blue-600 bg-blue-100',
+    emerald: 'text-emerald-600 bg-emerald-100',
+    amber: 'text-amber-600 bg-amber-100',
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  return (
+    <>
+      {toast && (
+        <Toast message={toast.message} type={toast.type} onClose={() => showToast('', 'info')} />
+      )}
+      <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-black text-slate-900 tracking-tight">Hóa đơn của tôi</h1>
+          <p className="text-slate-500 mt-1">Quản lý và tải xuống hóa đơn thanh toán</p>
+        </div>
+        <button
+          onClick={fetchInvoices}
+          className="p-2 rounded-lg hover:bg-slate-100 text-slate-500 transition-colors"
+          title="Làm mới"
+        >
+          <RefreshCw className="w-4 h-4" />
+        </button>
+      </div>
+
+      {/* Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {[
+          { label: 'Đã thanh toán', count: invoices.filter(i => i.status === 'paid').length, icon: DollarSign, colorKey: 'emerald' },
+          { label: 'Chờ thanh toán', count: invoices.filter(i => i.status === 'pending').length, icon: Calendar, colorKey: 'amber' },
+          { label: 'Tổng hóa đơn', count: invoices.length, icon: FileText, colorKey: 'blue' },
+        ].map((stat, idx) => (
+          <div key={idx} className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+            <div className="flex items-center gap-4">
+              <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${colorMap[stat.colorKey]}`}>
+                <stat.icon className="w-6 h-6" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-slate-900">{stat.count}</p>
+                <p className="text-sm text-slate-500">{stat.label}</p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Invoices List */}
+      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div className="px-6 py-4 border-b border-slate-100">
+          <h2 className="text-lg font-bold text-slate-900">Lịch sử hóa đơn</h2>
+        </div>
+
+        {error && (
+          <div className="mx-6 mt-4 p-3 bg-red-50 border border-red-200 rounded-xl flex items-center gap-2 text-sm text-red-700">
+            <AlertCircle className="w-4 h-4 shrink-0" />
+            <span>{error}</span>
+            <button onClick={fetchInvoices} className="ml-auto px-3 py-1 bg-red-100 hover:bg-red-200 rounded-lg text-xs font-semibold">
+              Thử lại
+            </button>
+          </div>
+        )}
+
+        <div className="divide-y divide-slate-100">
+          {invoices.map((invoice) => (
+            <div key={invoice.id} className="px-6 py-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center">
+                  <FileText className="w-5 h-5 text-slate-600" />
+                </div>
+                <div>
+                  <p className="font-semibold text-slate-900">{invoice.invoiceNumber || `Hóa đơn #${invoice.orderId.slice(0, 8)}`}</p>
+                  <div className="flex items-center gap-4 mt-1">
+                    <span className="text-xs text-slate-500 flex items-center gap-1">
+                      <Calendar className="w-3 h-3" />
+                      {new Date(invoice.issuedDate).toLocaleDateString('vi-VN')}
+                    </span>
+                    <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
+                      invoice.status === 'paid'
+                        ? 'bg-emerald-100 text-emerald-700'
+                        : 'bg-amber-100 text-amber-700'
+                    }`}>
+                      {invoice.status === 'paid' ? 'Đã thanh toán' : 'Chờ thanh toán'}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-4">
+                <div className="text-right">
+                  <p className="font-bold text-slate-900">{invoice.amount.toLocaleString('vi-VN')}₫</p>
+                </div>
+                <Link
+                  href={`/dashboard/invoices/${invoice.orderId}`}
+                  className="p-2 rounded-lg bg-slate-100 hover:bg-blue-50 text-slate-600 hover:text-blue-600 transition-colors"
+                >
+                  <Download className="w-4 h-4" />
+                </Link>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {invoices.length === 0 && !error && (
+          <div className="text-center py-12">
+            <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-300" />
+            <p className="font-medium text-slate-500">Chưa có hóa đơn nào</p>
+          </div>
+        )}
+      </div>
+      </div>
+    </>
+  );
+}

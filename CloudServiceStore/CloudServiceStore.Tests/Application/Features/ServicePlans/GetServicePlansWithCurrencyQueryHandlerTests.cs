@@ -20,7 +20,11 @@ public class GetServicePlansWithCurrencyQueryHandlerTests
     private readonly Mock<IRepository<ServicePlan>> _servicePlanRepoMock = new();
 
     private GetServicePlansWithCurrencyQueryHandler CreateHandler()
-        => new(_planPriceRepoMock.Object, _exchangeRateRepoMock.Object, _servicePlanRepoMock.Object);
+    {
+        _servicePlanRepoMock.Setup(r => r.WhereAsync(It.IsAny<Expression<Func<ServicePlan, bool>>>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new List<ServicePlan>());
+        return new(_planPriceRepoMock.Object, _exchangeRateRepoMock.Object, _servicePlanRepoMock.Object);
+    }
 
     private List<PlanPrice> SamplePrices() => new()
     {

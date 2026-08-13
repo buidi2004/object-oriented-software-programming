@@ -13,12 +13,18 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, RegisterR
 {
     private readonly IUnitOfWork _uow;
     private readonly IRepository<AppUser> _userRepo;
+    private readonly IRepository<NewsletterSubscriber> _newsletterRepo;
     private readonly IPasswordHasher _hasher;
 
-    public RegisterCommandHandler(IUnitOfWork uow, IRepository<AppUser> userRepo, IPasswordHasher hasher)
+    public RegisterCommandHandler(
+        IUnitOfWork uow, 
+        IRepository<AppUser> userRepo, 
+        IRepository<NewsletterSubscriber> newsletterRepo,
+        IPasswordHasher hasher)
     {
         _uow = uow;
         _userRepo = userRepo;
+        _newsletterRepo = newsletterRepo;
         _hasher = hasher;
     }
 
@@ -35,10 +41,34 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, RegisterR
             request.Email,
             _hasher.Hash(request.Password),
             roleId,
-            request.PhoneNumber
+            request.PhoneNumber,
+            request.FirstName,
+            request.LastName,
+            request.Country,
+            request.City,
+            request.Ward,
+            request.AddressLine,
+            request.CompanyName,
+            request.TaxCode
         );
 
         await _userRepo.AddAsync(user, ct);
+
+        if (request.SubscribeNewsletter)
+        {
+            var existingSubscriber = await _newsletterRepo.FirstOrDefaultAsync(n => n.Email == request.Email, ct);
+            if (existingSubscriber == null)
+            {
+                var subscriber = new NewsletterSubscriber
+                {
+                    Email = request.Email,
+                    SubscribedAt = DateTime.UtcNow,
+                    IsActive = true
+                };
+                await _newsletterRepo.AddAsync(subscriber, ct);
+            }
+        }
+
         await _uow.SaveChangesAsync(ct);
 
         return new RegisterResult(user.Id, user.Email);

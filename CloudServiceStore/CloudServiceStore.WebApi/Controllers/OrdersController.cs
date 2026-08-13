@@ -5,7 +5,11 @@ using CloudServiceStore.Application.Features.Backups.Commands.ScheduleBackup;
 using CloudServiceStore.Application.Features.Backups.Queries.GetBackupsForOrder;
 using CloudServiceStore.Application.Features.Uptime.Queries.GetOrderUptime;
 using CloudServiceStore.Application.Features.Orders.Commands.Checkout;
+using CloudServiceStore.Application.Features.Orders.Queries.GetMyOrders;
+using CloudServiceStore.Application.Features.Orders.Queries.GetOrderById;
+using CloudServiceStore.Application.Features.Orders.Queries.GetOrders;
 using CloudServiceStore.Application.Features.Invoices.Queries.GetInvoice;
+using CloudServiceStore.Application.Features.Invoices.Queries.GetMyInvoices;
 using CloudServiceStore.Application.Features.Invoices.Commands.GenerateInvoice;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -15,22 +19,48 @@ namespace CloudServiceStore.WebApi.Controllers;
 
 [ApiController]
 [Route("api/orders")]
-[Authorize(Roles = "Customer")]
+[Authorize]
 public class OrdersController : ControllerBase
 {
     private readonly IMediator _mediator;
     public OrdersController(IMediator mediator) => _mediator = mediator;
 
     [HttpPost("checkout")]
+    [Authorize(Roles = "Customer")]
     public async Task<IActionResult> Checkout([FromBody] CheckoutCommand command, CancellationToken ct)
     {
         var orderId = await _mediator.Send(command, ct);
         return Ok(new { orderId });
     }
 
+    [HttpGet]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> GetOrders([FromQuery] string? status, CancellationToken ct)
+    {
+        var orders = await _mediator.Send(new GetOrdersQuery(status), ct);
+        return Ok(orders);
+    }
+
+    [HttpGet("me")]
+    [Authorize(Roles = "Customer")]
+    public async Task<IActionResult> GetMyOrders([FromQuery] string? status, CancellationToken ct)
+    {
+        var orders = await _mediator.Send(new GetMyOrdersQuery(status), ct);
+        return Ok(orders);
+    }
+
+    [HttpGet("{id:guid}")]
+    [Authorize(Roles = "Customer,Admin")]
+    public async Task<IActionResult> GetById(Guid id, CancellationToken ct)
+    {
+        var order = await _mediator.Send(new GetOrderByIdQuery(id), ct);
+        return Ok(order);
+    }
+
     // --- BACKUPS ---
 
     [HttpGet("{id:guid}/backups")]
+    [Authorize(Roles = "Customer")]
     public async Task<IActionResult> GetBackups(Guid id, CancellationToken ct)
     {
         var backups = await _mediator.Send(new GetBackupsForOrderQuery(id), ct);
@@ -38,6 +68,7 @@ public class OrdersController : ControllerBase
     }
 
     [HttpPost("{id:guid}/backups/schedule")]
+    [Authorize(Roles = "Customer")]
     public async Task<IActionResult> ScheduleBackup(Guid id, [FromBody] ScheduleBackupCommand command, CancellationToken ct)
     {
         if (id != command.OrderId) return BadRequest("Mismatched Order Id");
@@ -48,6 +79,7 @@ public class OrdersController : ControllerBase
     // --- UPTIME ---
 
     [HttpGet("{id:guid}/uptime")]
+    [Authorize(Roles = "Customer")]
     public async Task<IActionResult> GetOrderUptime(Guid id, CancellationToken ct)
     {
         var uptime = await _mediator.Send(new GetOrderUptimeQuery(id), ct);
@@ -55,6 +87,7 @@ public class OrdersController : ControllerBase
     }
 
     [HttpPatch("{id:guid}/auto-renew")]
+    [Authorize(Roles = "Customer")]
     public async Task<IActionResult> ToggleAutoRenew(Guid id, CancellationToken ct)
     {
         var result = await _mediator.Send(new CloudServiceStore.Application.Features.AutoRenew.Commands.ToggleAutoRenew.ToggleAutoRenewCommand(id), ct);
@@ -64,6 +97,7 @@ public class OrdersController : ControllerBase
     // --- INVOICES ---
 
     [HttpGet("{id:guid}/invoice")]
+    [Authorize(Roles = "Customer,Admin")]
     public async Task<IActionResult> GetInvoice(Guid id, CancellationToken ct)
     {
         var invoice = await _mediator.Send(new GetInvoiceQuery { OrderRequestId = id }, ct);
@@ -71,9 +105,18 @@ public class OrdersController : ControllerBase
     }
     
     [HttpPost("{id:guid}/invoice")]
+    [Authorize(Roles = "Customer")]
     public async Task<IActionResult> GenerateInvoice(Guid id, CancellationToken ct)
     {
         var invoiceId = await _mediator.Send(new GenerateInvoiceCommand { OrderRequestId = id }, ct);
         return Ok(new { invoiceId });
+    }
+
+    [HttpGet("me/invoices")]
+    [Authorize(Roles = "Customer")]
+    public async Task<IActionResult> GetMyInvoices(CancellationToken ct)
+    {
+        var invoices = await _mediator.Send(new GetMyInvoicesQuery(), ct);
+        return Ok(invoices);
     }
 }

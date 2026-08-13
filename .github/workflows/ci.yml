@@ -1,0 +1,81 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  # Có thể thêm schedule cho Regression (Nightly build)
+  # schedule:
+  #   - cron: '0 0 * * *' # Chạy vào nửa đêm mỗi ngày
+
+jobs:
+  # 1. UNIT TESTING (Chạy đầu tiên, nhanh nhất)
+  unit-tests:
+    name: ⚡ Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '10.0.x'
+
+    - name: Restore dependencies
+      run: dotnet restore CloudServiceStore/CloudServiceStore.slnx
+
+    - name: Build
+      run: dotnet build CloudServiceStore/CloudServiceStore.slnx --no-restore
+
+    - name: Run Unit Tests
+      # Lọc riêng Unit Test (bỏ qua Integration và E2E)
+      run: dotnet test CloudServiceStore/CloudServiceStore.Tests/CloudServiceStore.Tests.csproj --no-build --verbosity normal --filter "FullyQualifiedName~CloudServiceStore.Tests.Application"
+
+  # 2. INTEGRATION TESTING (Chạy sau khi Unit Test pass)
+  integration-tests:
+    name: 🔗 Integration Tests
+    needs: unit-tests # Fail-fast: Chỉ chạy nếu unit-tests thành công
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '10.0.x'
+
+    - name: Restore dependencies
+      run: dotnet restore CloudServiceStore/CloudServiceStore.slnx
+
+    - name: Build
+      run: dotnet build CloudServiceStore/CloudServiceStore.slnx --no-restore
+
+    - name: Run Integration Tests
+      # Gọi DB/Redis thật qua Testcontainers nên sẽ chậm hơn
+      run: dotnet test CloudServiceStore/CloudServiceStore.Tests/CloudServiceStore.Tests.csproj --no-build --verbosity normal --filter "FullyQualifiedName~CloudServiceStore.Tests.Integration"
+
+  # 3. FUNCTIONAL / REGRESSION TESTING (Chỉ chạy khi merge vào main hoặc chạy Nightly)
+  functional-and-regression-tests:
+    name: 🛡️ Functional & Regression Tests (E2E)
+    needs: integration-tests # Fail-fast: Chỉ chạy nếu integration-tests thành công
+    # Chỉ chạy trên branch main (sau khi merge) hoặc chạy theo lịch (event schedule)
+    if: github.ref == 'refs/heads/main' || github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '10.0.x'
+
+    - name: Restore dependencies
+      run: dotnet restore CloudServiceStore/CloudServiceStore.slnx
+
+    - name: Build
+      run: dotnet build CloudServiceStore/CloudServiceStore.slnx --no-restore
+
+    - name: Run E2E / Functional Tests
+      # Chạy các luồng End-to-End đầy đủ nghiệp vụ
+      run: dotnet test CloudServiceStore/CloudServiceStore.Tests/CloudServiceStore.Tests.csproj --no-build --verbosity normal --filter "FullyQualifiedName~CloudServiceStore.Tests.E2E"

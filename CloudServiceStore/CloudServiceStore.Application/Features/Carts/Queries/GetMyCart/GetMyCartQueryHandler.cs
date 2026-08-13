@@ -40,7 +40,32 @@ public class GetMyCartQueryHandler : IRequestHandler<GetMyCartQuery, CartDto>
         }
 
         // Query items using Dapper
-        const string sql = "SELECT Id, ServicePlanId, BillingCycle, Quantity FROM CartItems WHERE CartId = @CartId";
+        const string sql = @"
+            SELECT 
+                ci.Id, 
+                ci.ServicePlanId, 
+                CASE 
+                    WHEN c.Slug = 'cloud-vps' THEN 'vps'
+                    WHEN c.Slug = 'web-hosting' THEN 'hosting'
+                    WHEN c.Slug = 'ten-mien' THEN 'domain'
+                    ELSE 'vps'
+                END as Type,
+                sp.Name as Title,
+                COALESCE('CPU: ' + sp.Cpu + ' Core - RAM: ' + sp.Ram + ' - SSD: ' + sp.Ssd, 'Cấu hình tiêu chuẩn') as Details,
+                COALESCE(pp.Price, 0) as Price,
+                CASE 
+                    WHEN ci.BillingCycle = 1 THEN N'1 tháng' 
+                    WHEN ci.BillingCycle = 2 THEN N'1 năm' 
+                    WHEN ci.BillingCycle = 3 THEN N'2 năm' 
+                    ELSE N'Khác' 
+                END as BillingCycle,
+                ci.Quantity
+            FROM CartItems ci
+            JOIN ServicePlans sp ON ci.ServicePlanId = sp.Id
+            JOIN ServiceCategories c ON sp.CategoryId = c.Id
+            LEFT JOIN PlanPrices pp ON pp.ServicePlanId = sp.Id AND pp.BillingCycle = ci.BillingCycle
+            WHERE ci.CartId = @CartId";
+            
         using var conn = _dapper.CreateConnection();
         var items = await conn.QueryAsync<CartItemDto>(sql, new { CartId = cart.Id });
 
