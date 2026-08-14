@@ -1,0 +1,32 @@
+# Build and Output directories
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Node & Next.js
+node_modules/
+.next/
+out/
+.env*.local
+*.tsbuildinfo
+
+# Test results and reports
+frontend/playwright-report/
+frontend/test-results/
+test-results/
+coverage/
+TestResults/
+*.log
+*.exit
+
+# Scratch and temp build files
+CloudServiceStore/build_errors*.txt
+CloudServiceStore/errors*.txt
+CloudServiceStore/test-vps-output.log
+CloudServiceStore/report.txt
+CloudServiceStore/migration.sql
+.agnes/cache/
+.DS_Store

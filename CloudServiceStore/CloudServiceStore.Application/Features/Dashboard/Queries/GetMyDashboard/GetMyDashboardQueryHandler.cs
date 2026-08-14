@@ -38,20 +38,26 @@ public class GetMyDashboardQueryHandler : IRequestHandler<GetMyDashboardQuery, C
         
         foreach(var o in orders)
         {
-            var plan = await _planRepo.GetByIdAsync(o.ServicePlanId, ct);
-            if (plan != null)
+            if (o.Items != null)
             {
-                var status = o.Status == OrderStatus.Paid ? "running" : "stopped";
-                activeServices.Add(new ActiveServiceDto(
-                    o.Id,
-                    plan.Name,
-                    status,
-                    $"103.11.{new System.Random().Next(10, 250)}.{new System.Random().Next(10, 250)}",
-                    "Ubuntu 24.04 LTS",
-                    plan.Cpu ?? "1",
-                    plan.Ram ?? "1GB",
-                    status == "running" ? new System.Random().Next(1, 30) : 0
-                ));
+                foreach(var item in o.Items)
+                {
+                    var plan = await _planRepo.GetByIdAsync(item.ServicePlanId, ct);
+                    if (plan != null)
+                    {
+                        var status = o.Status == OrderStatus.Paid ? "running" : "stopped";
+                        activeServices.Add(new ActiveServiceDto(
+                            o.Id,
+                            plan.Name,
+                            status,
+                            $"103.11.{new System.Random().Next(10, 250)}.{new System.Random().Next(10, 250)}",
+                            "Ubuntu 24.04 LTS",
+                            plan.Cpu ?? "1",
+                            plan.Ram ?? "1GB",
+                            status == "running" ? new System.Random().Next(1, 30) : 0
+                        ));
+                    }
+                }
             }
         }
 

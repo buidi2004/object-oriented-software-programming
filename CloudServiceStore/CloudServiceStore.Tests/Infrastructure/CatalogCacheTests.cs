@@ -24,7 +24,7 @@ public class CatalogCacheKeysTests
     {
         var planId = Guid.Parse("11111111-1111-1111-1111-111111111111");
         var key = CatalogCacheKeys.ServicePlan(planId, "usd");
-        key.Should().Contain("11111111-1111-1111-1111-111111111111");
+        key.Should().Contain(planId.ToString("N"));
         key.Should().Contain("USD");
     }
 

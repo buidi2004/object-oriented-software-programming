@@ -1,4 +1,6 @@
 using System;
+using CloudServiceStore.Domain.Entities;
+using CloudServiceStore.Domain.Enums;
 using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -75,15 +77,8 @@ public class VpsProvisioningE2ETests : BaseE2ETest
                 null);
             db.ServicePlans.Add(plan);
 
-            var order = new CloudServiceStore.Domain.Entities.OrderRequest(
-                actualUserId,
-                plan.Id,
-                CloudServiceStore.Domain.Enums.BillingCycle.Monthly,
-                null, 0, 10.0m);
+            var order = new OrderRequest(actualUserId, new System.Collections.Generic.List<CloudServiceStore.Domain.Entities.OrderItem> { new CloudServiceStore.Domain.Entities.OrderItem(plan.Id, BillingCycle.Monthly, 1, 10.0m) }, null, 0, 10.0m, false);
             order.Pay();
-            typeof(CloudServiceStore.Domain.Entities.OrderRequest)
-                .GetProperty("ServicePlan", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)!
-                .SetValue(order, plan);
 
             db.OrderRequests.Add(order);
             db.SaveChanges();

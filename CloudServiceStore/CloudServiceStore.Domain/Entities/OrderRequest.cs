@@ -7,8 +7,6 @@ namespace CloudServiceStore.Domain.Entities;
 public class OrderRequest : AggregateRoot
 {
     public Guid UserId { get; internal set; }
-    public Guid ServicePlanId { get; internal set; }
-    public BillingCycle BillingCycle { get; internal set; }
     public OrderStatus Status { get; set; } // Left internal or handled via method
     public Guid? CouponId { get; internal set; }
     public decimal DiscountAmount { get; internal set; }
@@ -18,19 +16,20 @@ public class OrderRequest : AggregateRoot
     public DateTime CreatedAt { get; internal set; }
 
     public AppUser User { get; internal set; } = null!;
-    public ServicePlan ServicePlan { get; internal set; } = null!;
     public Payment? Payment { get; internal set; }
     public Coupon? Coupon { get; internal set; }
     public Invoice? Invoice { get; internal set; }
 
+    private readonly List<OrderItem> _items = new();
+    public IReadOnlyCollection<OrderItem> Items => _items.AsReadOnly();
+
     internal OrderRequest() { } // ORM only
 
-    public OrderRequest(Guid userId, Guid servicePlanId, BillingCycle billingCycle, Guid? couponId, decimal discountAmount, decimal subTotal, bool autoRenew = false)
+    public OrderRequest(Guid userId, List<OrderItem> items, Guid? couponId, decimal discountAmount, decimal subTotal, bool autoRenew = false)
     {
         Id = Guid.NewGuid();
         UserId = userId;
-        ServicePlanId = servicePlanId;
-        BillingCycle = billingCycle;
+        _items = items ?? new List<OrderItem>();
         Status = OrderStatus.Pending;
         CouponId = couponId;
         DiscountAmount = discountAmount;

@@ -36,7 +36,8 @@ public class DomainSslE2ETests : BaseE2ETest
 
         var user = await GetUserByEmailAsync("domain_customer@test.com");
         
-        var order = new OrderRequest(user.Id, plan.Id, BillingCycle.Monthly, null, 0m, 15m, false);
+        var orderItems = new System.Collections.Generic.List<OrderItem> { new OrderItem(plan.Id, BillingCycle.Monthly, 1, 15m) };
+        var order = new OrderRequest(user.Id, orderItems, null, 0, 15m, false);
         order.Pay();
         await AddEntityAsync(order);
 
@@ -108,7 +109,7 @@ public class DomainSslE2ETests : BaseE2ETest
         reqCertRes.EnsureSuccessStatusCode();
         var certJson = await reqCertRes.Content.ReadFromJsonAsync<System.Text.Json.JsonElement>();
         // Wait, SslCertificatesController wraps it in { CertificateId = result }
-        var certId = certJson.GetProperty("certificateId").GetProperty("sslId").GetGuid(); // Since RequestSslCertificateCommand returns RequestSslResultDto, it becomes { certificateId = { sslId = "..." } }
+        var certId = certJson.GetProperty("certificateId").GetGuid();
 
         var getCertsRes = await Client.GetAsync("/api/ssl/certificates");
         getCertsRes.EnsureSuccessStatusCode();

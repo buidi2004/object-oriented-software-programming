@@ -35,6 +35,9 @@ public class ApproveRefundRequestCommandHandler : IRequestHandler<ApproveRefundR
         var wallets = await _walletRepo.WhereAsync(w => w.UserId == refund.UserId, cancellationToken);
         var wallet = wallets.FirstOrDefault() ?? throw new NotFoundException("Ví không tồn tại.");
 
+        if (refund.Amount > order.TotalAmount)
+            throw new ConflictException("Số tiền hoàn không được vượt quá giá trị đơn hàng.");
+
         refund.Approve();
         
         order.MarkRefunded();

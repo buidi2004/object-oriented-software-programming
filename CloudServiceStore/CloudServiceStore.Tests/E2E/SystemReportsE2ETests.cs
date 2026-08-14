@@ -38,14 +38,9 @@ public class SystemReportsE2ETests : BaseE2ETest
         var planId = Guid.NewGuid();
         await AddEntityAsync(new ServicePlan { Id = planId, Name = "VPS Pro", CategoryId = categoryId, IsActive = true });
         
-        await AddEntityAsync(new OrderRequest 
-        { 
-            Id = orderId, 
-            UserId = customerId, 
-            ServicePlanId = planId, 
-            Status = OrderStatus.Paid,
-            CreatedAt = DateTime.UtcNow
-        });
+        var orderItems = new System.Collections.Generic.List<OrderItem> { new OrderItem(planId, BillingCycle.Monthly, 1, 100m) };
+        var order = new OrderRequest(customerId, orderItems, null, 0, 100m, false) { Id = orderId, Status = OrderStatus.Paid, CreatedAt = DateTime.UtcNow };
+        await AddEntityAsync(order);
 
         // 2. Customer Creates Refund Request
         var refundReqDto = new { Reason = "Not satisfied", RefundAmount = 50.0m };

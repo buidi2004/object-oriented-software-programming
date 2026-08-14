@@ -10,5 +10,6 @@ public class WalletConfiguration : IEntityTypeConfiguration<Wallet>
     {
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Balance).HasColumnType("decimal(18,2)");
+        builder.Property(x => x.RowVersion).IsRowVersion();
     }
 }

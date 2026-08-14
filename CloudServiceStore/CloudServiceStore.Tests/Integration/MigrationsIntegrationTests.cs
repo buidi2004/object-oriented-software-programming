@@ -1,4 +1,5 @@
 using System;
+using CloudServiceStore.Domain.Entities;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using CloudServiceStore.Application.Features.Migrations.Commands.CreateMigration;
@@ -31,13 +32,8 @@ public class MigrationsIntegrationTests : BaseIntegrationTest
         await AddEntityAsync(servicePlan);
 
         var orderId = Guid.NewGuid();
-        var order = new CloudServiceStore.Domain.Entities.OrderRequest(
-            customerId, 
-            servicePlanId, 
-            CloudServiceStore.Domain.Enums.BillingCycle.Monthly, 
-            null, 
-            0, 
-            100);
+        var orderItems = new System.Collections.Generic.List<CloudServiceStore.Domain.Entities.OrderItem> { new CloudServiceStore.Domain.Entities.OrderItem(servicePlanId, CloudServiceStore.Domain.Enums.BillingCycle.Monthly, 1, 100m) };
+        var order = new OrderRequest(customerId, orderItems, null, 0, 100m, false);
         order.Id = orderId;
         order.Pay();
         await AddEntityAsync(order);

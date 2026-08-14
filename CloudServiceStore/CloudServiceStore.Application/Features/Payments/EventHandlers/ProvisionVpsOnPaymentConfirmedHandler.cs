@@ -31,14 +31,8 @@ public class ProvisionVpsOnPaymentConfirmedHandler : INotificationHandler<Paymen
 
     public async Task Handle(PaymentConfirmedEvent notification, CancellationToken cancellationToken)
     {
-        var order = await _orderRepo.GetByIdAsync(notification.OrderRequestId, cancellationToken, o => o.ServicePlan!);
+        var order = await _orderRepo.GetByIdAsync(notification.OrderRequestId, cancellationToken, o => o.Items!);
         if (order == null || order.Status != OrderStatus.Paid)
-        {
-            return;
-        }
-
-        var category = await _categoryRepo.GetByIdAsync(order.ServicePlan.CategoryId, cancellationToken);
-        if (category?.Slug != "cloud-vps")
         {
             return;
         }

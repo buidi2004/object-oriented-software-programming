@@ -32,7 +32,7 @@ public class PaymentIntegrationTests : BaseIntegrationTest
         var orderId = Guid.NewGuid();
         
         // Seed an OrderRequest
-        await AddEntityAsync(new OrderRequest(userId, planId, BillingCycle.Monthly, null, 0, 150000m) { Id = orderId });
+        await AddEntityAsync(new OrderRequest(userId, new System.Collections.Generic.List<CloudServiceStore.Domain.Entities.OrderItem> { new CloudServiceStore.Domain.Entities.OrderItem(planId, BillingCycle.Monthly, 1, 150000m) }, null, 0, 150000m, false) { Id = orderId });
 
         // 2. Act
         var command = new CreatePaymentCommand(orderId);

@@ -37,14 +37,9 @@ public class ServiceOperationsE2ETests : BaseE2ETest
         await AddEntityAsync(new ServicePlan { Id = planId, Name = "VPS Pro", CategoryId = categoryId, IsActive = true });
         
         var orderId = Guid.NewGuid();
-        await AddEntityAsync(new OrderRequest 
-        { 
-            Id = orderId, 
-            UserId = customerId, 
-            ServicePlanId = planId, 
-            Status = OrderStatus.Paid,
-            CreatedAt = DateTime.UtcNow
-        });
+        var orderItems = new System.Collections.Generic.List<OrderItem> { new OrderItem(planId, BillingCycle.Monthly, 1, 100m) };
+        var order = new OrderRequest(customerId, orderItems, null, 0, 100m, false) { Id = orderId, Status = OrderStatus.Paid, CreatedAt = DateTime.UtcNow };
+        await AddEntityAsync(order);
 
         // 2. Schedule Backup
         var backupCmd = new ScheduleBackupCommand(orderId, DateTime.UtcNow.AddDays(1));

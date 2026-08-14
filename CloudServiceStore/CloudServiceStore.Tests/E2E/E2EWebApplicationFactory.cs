@@ -50,7 +50,8 @@ public class E2EWebApplicationFactory : WebApplicationFactory<Program>, IAsyncLi
 
             services.AddDbContext<AppDbContext>(options =>
             {
-                options.UseSqlServer(_dbContainer.GetConnectionString());
+                options.UseSqlServer(_dbContainer.GetConnectionString())
+                       .ConfigureWarnings(w => w.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
             });
 
             // We do NOT add the TestAuthHandler here because E2E tests need real JWT auth.

@@ -12,6 +12,6 @@ public class OrderRequestConfiguration : IEntityTypeConfiguration<OrderRequest>
         builder.Property(o => o.SubTotal).HasColumnType("decimal(18,2)");
         builder.Property(o => o.TotalAmount).HasColumnType("decimal(18,2)");
         builder.HasOne(o => o.User).WithMany().HasForeignKey(o => o.UserId).OnDelete(DeleteBehavior.Restrict);
-        builder.HasOne(o => o.ServicePlan).WithMany().HasForeignKey(o => o.ServicePlanId).OnDelete(DeleteBehavior.Restrict);
+        builder.Metadata.FindNavigation(nameof(OrderRequest.Items))?.SetPropertyAccessMode(PropertyAccessMode.Field);
     }
 }

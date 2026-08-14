@@ -21,16 +21,20 @@ public class RedisCatalogCache : ICatalogCache
     private readonly CacheSettings _settings;
     private readonly ILogger<RedisCatalogCache> _logger;
 
+    private readonly string _instanceName;
+
     public RedisCatalogCache(
         IDistributedCache cache,
         IOptions<CacheSettings> settings,
         ILogger<RedisCatalogCache> logger,
-        IConnectionMultiplexer? redis = null)
+        IConnectionMultiplexer? redis = null,
+        string instanceName = "css:")
     {
         _cache = cache;
         _redis = redis;
         _settings = settings.Value;
         _logger = logger;
+        _instanceName = instanceName;
     }
 
     public async Task<T> GetOrSetAsync<T>(
@@ -98,8 +102,8 @@ public class RedisCatalogCache : ICatalogCache
                 if (endpoints.Length > 0)
                 {
                     var server = _redis.GetServer(endpoints[0]);
-                    await DeleteByPatternAsync(server, db, $"{CatalogCacheKeys.CatalogPrefix}*");
-                    await DeleteByPatternAsync(server, db, $"{CatalogCacheKeys.ContentPrefix}faqs:*");
+                    await DeleteByPatternAsync(server, db, $"{_instanceName}{CatalogCacheKeys.CatalogPrefix}*");
+                    await DeleteByPatternAsync(server, db, $"{_instanceName}{CatalogCacheKeys.ContentPrefix}faqs:*");
                 }
             }
             else

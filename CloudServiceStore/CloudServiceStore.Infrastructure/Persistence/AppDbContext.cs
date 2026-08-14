@@ -31,6 +31,7 @@ public class AppDbContext : DbContext
     public DbSet<Promotion> Promotions => Set<Promotion>();
     public DbSet<NewsArticle> NewsArticles => Set<NewsArticle>();
     public DbSet<OrderRequest> OrderRequests => Set<OrderRequest>();
+    public DbSet<OrderItem> OrderItems => Set<OrderItem>();
     public DbSet<AffiliateApplication> AffiliateApplications => Set<AffiliateApplication>();
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
     public DbSet<Cart> Carts => Set<Cart>();

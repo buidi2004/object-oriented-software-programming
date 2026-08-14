@@ -32,11 +32,14 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IAsyn
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
+        builder.UseEnvironment("Testing");
+
         builder.ConfigureAppConfiguration((context, config) =>
         {
             config.AddInMemoryCollection(new System.Collections.Generic.Dictionary<string, string?>
             {
-                { "ConnectionStrings:DefaultConnection", _dbContainer.GetConnectionString() }
+                { "ConnectionStrings:DefaultConnection", _dbContainer.GetConnectionString() },
+                { "Cache:Enabled", "false" }
             });
         });
 
@@ -50,7 +53,8 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IAsyn
 
             services.AddDbContext<AppDbContext>(options =>
             {
-                options.UseSqlServer(_dbContainer.GetConnectionString());
+                options.UseSqlServer(_dbContainer.GetConnectionString())
+                       .ConfigureWarnings(w => w.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
             });
 
             services.AddAuthentication(options =>
@@ -67,7 +71,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IAsyn
 
         using var scope = Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        await db.Database.MigrateAsync();
+        await db.Database.EnsureCreatedAsync();
 
         if (!await db.Roles.AnyAsync())
         {

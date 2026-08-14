@@ -65,15 +65,12 @@ public class GetOrdersQueryHandler : IRequestHandler<GetOrdersQuery, List<AdminO
                 Status = MapStatusForFrontend(o.Status),
                 TotalAmount = o.TotalAmount,
                 CreatedAt = o.CreatedAt,
-                Items = new List<AdminOrderItemDto>
+                Items = o.Items?.Select(i => new AdminOrderItemDto
                 {
-                    new()
-                    {
-                        Type = "service",
-                        Title = o.ServicePlan?.Name ?? "Dịch vụ " + o.ServicePlanId.ToString()[..8],
-                        Price = o.TotalAmount
-                    }
-                }
+                    Type = "service",
+                    Title = i.ServicePlan?.Name ?? "Dịch vụ " + i.ServicePlanId.ToString()[..8],
+                    Price = i.Price * i.Quantity
+                }).ToList() ?? new List<AdminOrderItemDto>()
             };
         }).OrderByDescending(x => x.CreatedAt).ToList();
     }

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using MediatR;
 using CloudServiceStore.Application.Exceptions;
 using CloudServiceStore.Application.Interfaces;
+using CloudServiceStore.Application.Security;
 using CloudServiceStore.Domain.Entities;
 using CloudServiceStore.Domain.Interfaces;
 
@@ -66,7 +67,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginResult>
         {
             Id = Guid.NewGuid(),
             UserId = user.Id,
-            RefreshTokenHash = _hasher.Hash(refreshToken),
+            RefreshTokenHash = RefreshTokenHasher.Hash(refreshToken),
             DeviceInfo = request.DeviceInfo,
             ExpiresAt = DateTime.UtcNow.AddDays(7), // 7 days refresh token validity
             IsRevoked = false

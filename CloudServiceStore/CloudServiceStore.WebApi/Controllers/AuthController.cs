@@ -46,9 +46,11 @@ public class AuthController : ControllerBase
     [HttpPost("refresh-token")]
     public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest? body, CancellationToken ct)
     {
-        var refreshToken = Request.Cookies.TryGetValue("refreshToken", out var cookieToken)
-            ? cookieToken
-            : body?.RefreshToken;
+        var refreshToken = !string.IsNullOrWhiteSpace(body?.RefreshToken)
+            ? body.RefreshToken
+            : Request.Cookies.TryGetValue("refreshToken", out var cookieToken)
+                ? cookieToken
+                : null;
 
         if (string.IsNullOrWhiteSpace(refreshToken))
             return Unauthorized();

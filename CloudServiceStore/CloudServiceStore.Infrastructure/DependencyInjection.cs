@@ -9,9 +9,14 @@ using CloudServiceStore.Infrastructure.Persistence.Repositories;
 using CloudServiceStore.Infrastructure.Security;
 using CloudServiceStore.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Caching.StackExchangeRedis;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using StackExchange.Redis;
 
 namespace CloudServiceStore.Infrastructure;
@@ -47,26 +52,45 @@ public static class DependencyInjection
 
     private static void AddCatalogCaching(IServiceCollection services, IConfiguration configuration)
     {
-        var cacheSettings = configuration.GetSection(CacheSettings.SectionName).Get<CacheSettings>() ?? new CacheSettings();
-        var environment = configuration["ASPNETCORE_ENVIRONMENT"] ?? "Production";
-        var useRedis = cacheSettings.Enabled && !string.Equals(environment, "Testing", StringComparison.OrdinalIgnoreCase);
+        services.Configure<CacheSettings>(configuration.GetSection(CacheSettings.SectionName));
 
-        if (useRedis)
+        services.AddSingleton<ICatalogCache>(sp =>
         {
-            services.AddStackExchangeRedisCache(options =>
+            var settings = sp.GetRequiredService<IOptions<CacheSettings>>().Value;
+            var env = sp.GetRequiredService<IHostEnvironment>();
+            var logger = sp.GetRequiredService<ILogger<RedisCatalogCache>>();
+            var useRedis = settings.Enabled && !env.IsEnvironment("Testing") && !string.IsNullOrWhiteSpace(settings.RedisConnectionString);
+
+            IDistributedCache cache;
+            IConnectionMultiplexer? redis = null;
+
+            if (useRedis)
             {
-                options.Configuration = cacheSettings.RedisConnectionString;
-                options.InstanceName = "css:";
-            });
+                try
+                {
+                    var redisOptions = ConfigurationOptions.Parse(settings.RedisConnectionString);
+                    redisOptions.AbortOnConnectFail = false;
+                    redisOptions.ConnectTimeout = 1000;
+                    redisOptions.AsyncTimeout = 1000;
+                    redis = ConnectionMultiplexer.Connect(redisOptions);
+                    cache = new RedisCache(new RedisCacheOptions
+                    {
+                        ConfigurationOptions = redisOptions,
+                        InstanceName = "css:"
+                    });
+                }
+                catch (Exception ex)
+                {
+                    logger.LogWarning(ex, "Failed to connect to Redis. Falling back to MemoryDistributedCache.");
+                    cache = new MemoryDistributedCache(Options.Create(new MemoryDistributedCacheOptions()));
+                }
+            }
+            else
+            {
+                cache = new MemoryDistributedCache(Options.Create(new MemoryDistributedCacheOptions()));
+            }
 
-            services.AddSingleton<IConnectionMultiplexer>(_ =>
-                ConnectionMultiplexer.Connect(cacheSettings.RedisConnectionString));
-        }
-        else
-        {
-            services.AddDistributedMemoryCache();
-        }
-
-        services.AddSingleton<ICatalogCache, RedisCatalogCache>();
+            return new RedisCatalogCache(cache, Options.Create(settings), logger, redis);
+        });
     }
 }

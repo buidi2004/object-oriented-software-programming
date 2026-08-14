@@ -31,7 +31,7 @@ public class ApplyCouponCommandHandler : IRequestHandler<ApplyCouponCommand, boo
         if (order.UserId != userId)
             throw new UnauthorizedException("Đơn hàng không thuộc về bạn.");
 
-        var coupons = await _couponRepo.WhereAsync(c => c.Code == request.Code, cancellationToken);
+        var coupons = await _couponRepo.WhereAsync(c => c.Code == request.Code && c.IsActive && c.ExpiryDate > DateTime.UtcNow, cancellationToken);
         var coupon = coupons.FirstOrDefault() ?? throw new NotFoundException("Mã giảm giá không hợp lệ.");
 
         try

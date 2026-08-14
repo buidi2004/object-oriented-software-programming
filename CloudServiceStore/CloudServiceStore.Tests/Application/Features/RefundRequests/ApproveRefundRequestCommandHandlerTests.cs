@@ -38,7 +38,7 @@ public class ApproveRefundRequestCommandHandlerTests
         var userId = Guid.NewGuid();
 
         var refund = new RefundRequest { Id = refundId, OrderId = orderId, UserId = userId, Status = RefundStatus.Pending, Amount = 50 };
-        var order = new OrderRequest { Id = orderId, UserId = userId, Status = OrderStatus.Paid };
+        var order = new OrderRequest { Id = orderId, UserId = userId, Status = OrderStatus.Paid, TotalAmount = 50 };
         var wallet = new Domain.Entities.Wallet(userId);
         wallet.Deposit(100);
 

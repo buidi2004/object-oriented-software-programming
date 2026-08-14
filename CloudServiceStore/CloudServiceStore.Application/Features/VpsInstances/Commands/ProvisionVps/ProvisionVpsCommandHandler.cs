@@ -15,7 +15,7 @@ using Microsoft.Extensions.Options;
 
 namespace CloudServiceStore.Application.Features.VpsInstances.Commands.ProvisionVps;
 
-public class ProvisionVpsCommandHandler : IRequestHandler<ProvisionVpsCommand, VpsInstanceDto>
+public class ProvisionVpsCommandHandler : IRequestHandler<ProvisionVpsCommand, System.Collections.Generic.List<VpsInstanceDto>>
 {
     private readonly IVpsProvisioningService _provisioningService;
     private readonly IVpsSpecParser _specParser;
@@ -49,9 +49,9 @@ public class ProvisionVpsCommandHandler : IRequestHandler<ProvisionVpsCommand, V
         _vpsSettings = vpsSettings.Value;
     }
 
-    public async Task<VpsInstanceDto> Handle(ProvisionVpsCommand request, CancellationToken cancellationToken)
+    public async Task<System.Collections.Generic.List<VpsInstanceDto>> Handle(ProvisionVpsCommand request, CancellationToken cancellationToken)
     {
-        var order = await _orderRepo.GetByIdAsync(request.OrderId, cancellationToken, o => o.ServicePlan!)
+        var order = await _orderRepo.GetByIdAsync(request.OrderId, cancellationToken, o => o.Items!)
             ?? throw new NotFoundException("Đơn hàng không tồn tại.");
 
         if (order.Status != OrderStatus.Paid)
@@ -66,71 +66,87 @@ public class ProvisionVpsCommandHandler : IRequestHandler<ProvisionVpsCommand, V
             throw new UnauthorizedException("Bạn không có quyền tạo VPS cho đơn hàng này.");
         }
 
-        var category = await _categoryRepo.GetByIdAsync(order.ServicePlan.CategoryId, cancellationToken);
-        if (category?.Slug != "cloud-vps")
+        var results = new System.Collections.Generic.List<VpsInstanceDto>();
+        
+        foreach (var item in order.Items)
         {
-            throw new BadRequestException("Đơn hàng này không phải gói Cloud VPS.");
-        }
+            var category = await _categoryRepo.GetByIdAsync(item.ServicePlan.CategoryId, cancellationToken);
+            if (category?.Slug != "cloud-vps")
+            {
+                continue; // Skip non-vps items
+            }
 
-        var existing = await _vpsRepo.FirstOrDefaultAsync(
-            v => v.OrderId == order.Id && v.Status != VpsInstanceStatus.Terminated,
-            cancellationToken);
+            // We should use a unique key for existing check, perhaps add OrderItemId later, 
+            // but for now, this may have issues if multiple same VPS plans are ordered.
+            // We just let it create. Wait, existing check needs PlanId at least.
+            var existing = await _vpsRepo.FirstOrDefaultAsync(
+                v => v.OrderId == order.Id && v.PlanId == item.ServicePlanId && v.Status != VpsInstanceStatus.Terminated,
+                cancellationToken);
 
-        if (existing != null)
-        {
-            return VpsInstanceMapper.ToDto(existing);
-        }
+            if (existing != null)
+            {
+                results.Add(VpsInstanceMapper.ToDto(existing));
+                continue;
+            }
 
-        var plan = order.ServicePlan;
-        var (cpuCores, memoryBytes, diskGb) = _specParser.Parse(plan);
-        var containerName = BuildContainerName(plan.Name, order.UserId);
-        var spec = new VpsProvisionSpec(
-            containerName,
-            cpuCores,
-            memoryBytes,
-            diskGb,
-            _vpsSettings.DefaultImage);
+            var plan = item.ServicePlan;
+            var (cpuCores, memoryBytes, diskGb) = _specParser.Parse(plan);
+            var containerName = BuildContainerName(plan.Name, order.UserId);
+            var spec = new VpsProvisionSpec(
+                containerName,
+                cpuCores,
+                memoryBytes,
+                diskGb,
+                _vpsSettings.DefaultImage);
 
-        var ttl = ResolveTtl(order.BillingCycle);
-        var now = DateTime.UtcNow;
+            var ttl = ResolveTtl(item.BillingCycle);
+            var now = DateTime.UtcNow;
 
-        var vpsInstance = new VpsInstance
-        {
-            Id = Guid.NewGuid(),
-            OrderId = order.Id,
-            UserId = order.UserId,
-            PlanId = plan.Id,
-            PlanName = plan.Name,
-            CpuCores = cpuCores,
-            RamMb = (int)(memoryBytes / (1024 * 1024)),
-            DiskGb = diskGb,
-            ContainerName = containerName,
-            Status = VpsInstanceStatus.Provisioning,
-            CreatedAt = now,
-            ExpiresAt = now.Add(ttl),
-            LastActiveAt = now
-        };
+            var vpsInstance = new VpsInstance
+            {
+                Id = Guid.NewGuid(),
+                OrderId = order.Id,
+                UserId = order.UserId,
+                PlanId = plan.Id,
+                PlanName = plan.Name,
+                CpuCores = cpuCores,
+                RamMb = (int)(memoryBytes / (1024 * 1024)),
+                DiskGb = diskGb,
+                ContainerName = containerName,
+                Status = VpsInstanceStatus.Provisioning,
+                CreatedAt = now,
+                ExpiresAt = now.Add(ttl),
+                LastActiveAt = now
+            };
 
-        await _vpsRepo.AddAsync(vpsInstance, cancellationToken);
-        await _uow.SaveChangesAsync(cancellationToken);
+            await _vpsRepo.AddAsync(vpsInstance, cancellationToken);
+            await _uow.SaveChangesAsync(cancellationToken);
 
-        var provisionResult = await _provisioningService.ProvisionAsync(spec, cancellationToken);
-        if (!provisionResult.Success || string.IsNullOrEmpty(provisionResult.ContainerId))
-        {
-            vpsInstance.Status = VpsInstanceStatus.Failed;
+            var provisionResult = await _provisioningService.ProvisionAsync(spec, cancellationToken);
+            if (!provisionResult.Success || string.IsNullOrEmpty(provisionResult.ContainerId))
+            {
+                vpsInstance.Status = VpsInstanceStatus.Failed;
+                _vpsRepo.Update(vpsInstance);
+                await _uow.SaveChangesAsync(cancellationToken);
+                throw new BadRequestException(
+                    provisionResult.ErrorMessage ?? "Failed to provision VPS container.");
+            }
+
+            vpsInstance.ContainerId = provisionResult.ContainerId;
+            vpsInstance.ContainerName = provisionResult.ContainerName;
+            vpsInstance.Status = VpsInstanceStatus.Running;
             _vpsRepo.Update(vpsInstance);
             await _uow.SaveChangesAsync(cancellationToken);
-            throw new BadRequestException(
-                provisionResult.ErrorMessage ?? "Failed to provision VPS container.");
+
+            results.Add(VpsInstanceMapper.ToDto(vpsInstance));
         }
 
-        vpsInstance.ContainerId = provisionResult.ContainerId;
-        vpsInstance.ContainerName = provisionResult.ContainerName;
-        vpsInstance.Status = VpsInstanceStatus.Running;
-        _vpsRepo.Update(vpsInstance);
-        await _uow.SaveChangesAsync(cancellationToken);
+        if (results.Count == 0)
+        {
+            throw new BadRequestException("Đơn hàng này không có gói Cloud VPS nào để tạo.");
+        }
 
-        return VpsInstanceMapper.ToDto(vpsInstance);
+        return results;
     }
 
     private TimeSpan ResolveTtl(BillingCycle billingCycle)

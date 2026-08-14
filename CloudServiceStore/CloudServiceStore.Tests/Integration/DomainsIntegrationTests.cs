@@ -1,4 +1,6 @@
 using System;
+using CloudServiceStore.Domain.Entities;
+using CloudServiceStore.Domain.Enums;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using CloudServiceStore.Application.Features.Domains.Commands.AddDnsRecord;
@@ -35,13 +37,14 @@ public class DomainsIntegrationTests : BaseIntegrationTest
         await AddEntityAsync(servicePlan);
 
         var orderId = Guid.NewGuid();
+        var orderItems = new System.Collections.Generic.List<CloudServiceStore.Domain.Entities.OrderItem> { new CloudServiceStore.Domain.Entities.OrderItem(servicePlanId, CloudServiceStore.Domain.Enums.BillingCycle.Monthly, 1, 100m) };
         var order = new CloudServiceStore.Domain.Entities.OrderRequest(
             customerId, 
-            servicePlanId, 
-            CloudServiceStore.Domain.Enums.BillingCycle.Monthly, 
+            orderItems, 
             null, 
             0, 
-            100);
+            100m,
+            false);
         order.Id = orderId;
         order.Pay();
         await AddEntityAsync(order);

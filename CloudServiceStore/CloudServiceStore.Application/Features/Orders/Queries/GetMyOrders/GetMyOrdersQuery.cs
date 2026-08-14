@@ -11,18 +11,25 @@ using MediatR;
 
 namespace CloudServiceStore.Application.Features.Orders.Queries.GetMyOrders;
 
-public class OrderDto
+public class OrderItemDto
 {
-    public Guid Id { get; set; }
     public Guid ServicePlanId { get; set; }
     public string ServicePlanName { get; set; } = string.Empty;
     public BillingCycle BillingCycle { get; set; }
+    public int Quantity { get; set; }
+    public decimal Price { get; set; }
+}
+
+public class OrderDto
+{
+    public Guid Id { get; set; }
     public string Status { get; set; } = string.Empty;
     public decimal SubTotal { get; set; }
     public decimal DiscountAmount { get; set; }
     public decimal TotalAmount { get; set; }
     public bool AutoRenew { get; set; }
     public DateTime CreatedAt { get; set; }
+    public List<OrderItemDto> Items { get; set; } = new();
 }
 
 public record GetMyOrdersQuery(string? Status = null) : IRequest<List<OrderDto>>;
@@ -60,15 +67,20 @@ public class GetMyOrdersQueryHandler : IRequestHandler<GetMyOrdersQuery, List<Or
         return orders.Select(o => new OrderDto
         {
             Id = o.Id,
-            ServicePlanId = o.ServicePlanId,
-            ServicePlanName = o.ServicePlan?.Name ?? "Dịch vụ " + o.ServicePlanId.ToString().Substring(0, 8),
-            BillingCycle = o.BillingCycle,
             Status = o.Status.ToString(),
             SubTotal = o.SubTotal,
             DiscountAmount = o.DiscountAmount,
             TotalAmount = o.TotalAmount,
             AutoRenew = o.AutoRenew,
-            CreatedAt = o.CreatedAt
+            CreatedAt = o.CreatedAt,
+            Items = o.Items?.Select(i => new OrderItemDto
+            {
+                ServicePlanId = i.ServicePlanId,
+                ServicePlanName = i.ServicePlan?.Name ?? "Dịch vụ " + i.ServicePlanId.ToString()[..8],
+                BillingCycle = i.BillingCycle,
+                Quantity = i.Quantity,
+                Price = i.Price
+            }).ToList() ?? new List<OrderItemDto>()
         }).OrderByDescending(x => x.CreatedAt).ToList();
     }
 }

@@ -37,7 +37,7 @@ public class ExceptionHandlingMiddleware
         int statusCode = StatusCodes.Status500InternalServerError;
         string type = "https://tools.ietf.org/html/rfc7231#section-6.6.1";
         string title = "An internal server error occurred.";
-        string detail = exception.Message;
+        string detail = exception.Message + (exception.InnerException != null ? " Inner: " + exception.InnerException.Message : "");
         
         if (exception is UnauthorizedException || exception is UnauthorizedAccessException)
         {

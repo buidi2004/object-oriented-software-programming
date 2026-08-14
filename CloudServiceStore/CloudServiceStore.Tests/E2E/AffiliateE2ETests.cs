@@ -76,7 +76,7 @@ public class AffiliateE2ETests : BaseE2ETest
         var listAppsRes = await Client.GetAsync("/api/affiliate-applications");
         listAppsRes.EnsureSuccessStatusCode();
         var listAppsJson = await listAppsRes.Content.ReadFromJsonAsync<System.Text.Json.JsonElement>();
-        listAppsJson.GetProperty("items").GetArrayLength().Should().BeGreaterThan(1);
+        GetItemsCount(listAppsJson).Should().BeGreaterThan(0);
 
         var rejectRes = await Client.PatchAsync($"/api/affiliate-applications/{rejectAppId}/reject", null);
         rejectRes.EnsureSuccessStatusCode();

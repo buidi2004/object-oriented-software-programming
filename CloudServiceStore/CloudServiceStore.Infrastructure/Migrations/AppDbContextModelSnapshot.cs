@@ -895,6 +895,36 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.ToTable("NotificationSettings");
                 });
 
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.OrderItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("BillingCycle")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("OrderRequestId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("ServicePlanId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderRequestId");
+
+                    b.HasIndex("ServicePlanId");
+
+                    b.ToTable("OrderItems");
+                });
+
             modelBuilder.Entity("CloudServiceStore.Domain.Entities.OrderRequest", b =>
                 {
                     b.Property<Guid>("Id")
@@ -904,9 +934,6 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.Property<bool>("AutoRenew")
                         .HasColumnType("bit");
 
-                    b.Property<int>("BillingCycle")
-                        .HasColumnType("int");
-
                     b.Property<Guid?>("CouponId")
                         .HasColumnType("uniqueidentifier");
 
@@ -915,9 +942,6 @@ namespace CloudServiceStore.Infrastructure.Migrations
 
                     b.Property<decimal>("DiscountAmount")
                         .HasColumnType("decimal(18,2)");
-
-                    b.Property<Guid>("ServicePlanId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -934,8 +958,6 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CouponId");
-
-                    b.HasIndex("ServicePlanId");
 
                     b.HasIndex("UserId");
 
@@ -1648,6 +1670,12 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.Property<decimal>("Balance")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
@@ -1958,18 +1986,31 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("CloudServiceStore.Domain.Entities.OrderRequest", b =>
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.OrderItem", b =>
                 {
-                    b.HasOne("CloudServiceStore.Domain.Entities.Coupon", "Coupon")
-                        .WithMany()
-                        .HasForeignKey("CouponId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                    b.HasOne("CloudServiceStore.Domain.Entities.OrderRequest", "OrderRequest")
+                        .WithMany("Items")
+                        .HasForeignKey("OrderRequestId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("CloudServiceStore.Domain.Entities.ServicePlan", "ServicePlan")
                         .WithMany()
                         .HasForeignKey("ServicePlanId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("OrderRequest");
+
+                    b.Navigation("ServicePlan");
+                });
+
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.OrderRequest", b =>
+                {
+                    b.HasOne("CloudServiceStore.Domain.Entities.Coupon", "Coupon")
+                        .WithMany()
+                        .HasForeignKey("CouponId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("CloudServiceStore.Domain.Entities.AppUser", "User")
                         .WithMany()
@@ -1978,8 +2019,6 @@ namespace CloudServiceStore.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Coupon");
-
-                    b.Navigation("ServicePlan");
 
                     b.Navigation("User");
                 });
@@ -2258,6 +2297,8 @@ namespace CloudServiceStore.Infrastructure.Migrations
             modelBuilder.Entity("CloudServiceStore.Domain.Entities.OrderRequest", b =>
                 {
                     b.Navigation("Invoice");
+
+                    b.Navigation("Items");
 
                     b.Navigation("Payment");
                 });

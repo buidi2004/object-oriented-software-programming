@@ -99,19 +99,32 @@ public class DockerVpsProvisioningService : IVpsProvisioningService
     {
         try
         {
-            var execResponse = await _dockerClient.Exec.ExecCreateContainerAsync(containerId, new ContainerExecCreateParameters
+            var createParams = new ContainerExecCreateParameters
             {
                 AttachStderr = true,
                 AttachStdout = true,
                 Cmd = new List<string> { "bash", "-c", command },
                 Tty = false,
                 User = "root"
-            }, ct);
+            };
 
-            using var stream = await _dockerClient.Exec.StartAndAttachContainerExecAsync(execResponse.ID, false, ct);
-            var (stdout, stderr) = await stream.ReadOutputToEndAsync(ct);
+            // Docker.DotNet 3.125.x interface omits generic return types; cast to implementation types.
+            var execResponse = await ((Task<ContainerExecCreateResponse>)(object)_dockerClient.Exec.ExecCreateContainerAsync(
+                containerId, createParams, ct));
 
-            return string.IsNullOrEmpty(stderr) ? stdout : $"{stdout}\n{stderr}";
+            var multiplexed = await ((Task<MultiplexedStream>)(object)_dockerClient.Exec.StartAndAttachContainerExecAsync(
+                execResponse.ID, false, ct));
+
+            using (multiplexed)
+            {
+                using var stdout = new MemoryStream();
+                using var stderr = new MemoryStream();
+                await multiplexed.CopyOutputToAsync(null, stdout, stderr, ct);
+
+                var stdoutText = System.Text.Encoding.UTF8.GetString(stdout.ToArray());
+                var stderrText = System.Text.Encoding.UTF8.GetString(stderr.ToArray());
+                return string.IsNullOrEmpty(stderrText) ? stdoutText : $"{stdoutText}\n{stderrText}";
+            }
         }
         catch (Exception ex)
         {

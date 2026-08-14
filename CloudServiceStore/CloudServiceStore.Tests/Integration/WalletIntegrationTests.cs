@@ -34,7 +34,7 @@ public class WalletIntegrationTests : BaseIntegrationTest
         var orderId = Guid.NewGuid();
 
         await AddEntityAsync(new Wallet(userId) { Id = walletId });
-        await AddEntityAsync(new OrderRequest(userId, planId, BillingCycle.Monthly, null, 0, 150000m) { Id = orderId });
+        await AddEntityAsync(new OrderRequest(userId, new System.Collections.Generic.List<CloudServiceStore.Domain.Entities.OrderItem> { new CloudServiceStore.Domain.Entities.OrderItem(planId, BillingCycle.Monthly, 1, 150000m) }, null, 0, 150000m, false) { Id = orderId });
 
         // 2. Act: Top Up
         var topUpCommand = new TopUpWalletCommand(200000m);

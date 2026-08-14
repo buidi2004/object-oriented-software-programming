@@ -21,7 +21,11 @@ public class AuthIntegrationTests : BaseIntegrationTest
 
         // 2. Act - Register
         var registerResponse = await Client.PostAsJsonAsync("/api/auth/register", registerCommand);
-        registerResponse.EnsureSuccessStatusCode();
+        if (!registerResponse.IsSuccessStatusCode)
+        {
+            var err = await registerResponse.Content.ReadAsStringAsync();
+            throw new System.Exception($"Register failed: {err}");
+        }
 
         // 3. Act - Login
         var loginCommand = new LoginCommand("test@example.com", "Password123!", "127.0.0.1", "TestAgent", "TestDevice");

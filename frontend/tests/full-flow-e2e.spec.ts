@@ -5,6 +5,7 @@
  * KHÔNG mock — đảm bảo FE-BE hoạt động end-to-end.
  */
 import { test, expect, request as pwRequest } from '@playwright/test';
+import crypto from 'crypto';
 
 const API = 'http://localhost:5053/api';
 const ts = Date.now();
@@ -227,10 +228,24 @@ test.describe.serial('Full User Journey E2E', () => {
     const res = await ctx.post(`${API}/payments`, {
       data: { orderRequestId: orderId },
     });
-    // Payment endpoint might return URL or just 200
     expect([200, 201]).toContain(res.status());
     const body = await res.json();
-    console.log('Payment result:', JSON.stringify(body, null, 2));
+    const paymentUrl = body.url as string;
+    console.log('Payment result:', paymentUrl);
+
+    const keyMatch = paymentUrl.match(/key=([^&]+)/);
+    expect(keyMatch).toBeTruthy();
+    const idempotencyKey = decodeURIComponent(keyMatch![1]);
+    const signature = crypto
+      .createHmac('sha256', 'vnpay_secret_key_123')
+      .update(idempotencyKey)
+      .digest('hex');
+
+    const webhookRes = await ctx.post(`${API}/payments/webhook/vnpay`, {
+      data: { idempotencyKey },
+      headers: { 'X-VNPAY-Signature': signature },
+    });
+    expect(webhookRes.status()).toBe(200);
     await ctx.dispose();
   });
 
@@ -242,17 +257,16 @@ test.describe.serial('Full User Journey E2E', () => {
     const res = await ctx.post(`${API}/VpsInstances`, {
       data: {
         orderId: orderId,
-        userId: userId,
       },
     });
-    // Expect either 200 (success) or 500 if Docker is not available on the server
     console.log('VPS Provision status:', res.status());
     const body = await res.json();
     console.log('VPS Provision result:', JSON.stringify(body, null, 2));
 
-    if (res.status() === 200) {
-      expect(body.containerId).toBeTruthy();
-    }
+    expect(res.status()).toBe(200);
+    expect(body.containerId).toBeTruthy();
+    expect(body.cpuCores).toBeGreaterThan(0);
+    expect(body.ramMb).toBeGreaterThan(0);
     await ctx.dispose();
   });
 
@@ -264,6 +278,7 @@ test.describe.serial('Full User Journey E2E', () => {
     expect(res.status()).toBe(200);
     const instances = await res.json();
     console.log('VPS Instances:', JSON.stringify(instances, null, 2));
+    expect(instances.length).toBeGreaterThanOrEqual(1);
     await ctx.dispose();
   });
 

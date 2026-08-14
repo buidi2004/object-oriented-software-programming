@@ -54,7 +54,7 @@ public class InfrastructureOpsE2ETests : BaseE2ETest
             var plan = new ServicePlan(category.Id, $"Plan-{emailPrefix}", "1", "1", "10", "100", null);
             db.ServicePlans.Add(plan);
 
-            var order = new OrderRequest(userId, plan.Id, BillingCycle.Monthly, null, 0, 100m);
+            var order = new OrderRequest(userId, new System.Collections.Generic.List<CloudServiceStore.Domain.Entities.OrderItem> { new CloudServiceStore.Domain.Entities.OrderItem(plan.Id, BillingCycle.Monthly, 1, 100m) }, null, 0, 100m, false);
             db.OrderRequests.Add(order);
 
             await db.SaveChangesAsync();
@@ -86,7 +86,7 @@ public class InfrastructureOpsE2ETests : BaseE2ETest
             db.ServiceCategories.Add(category);
             var plan = new ServicePlan(category.Id, "Backup Plan", "1", "1", "10", "100", null);
             db.ServicePlans.Add(plan);
-            var order = new OrderRequest(user.Id, plan.Id, BillingCycle.Monthly, null, 0, 100m);
+            var order = new OrderRequest(user.Id, new System.Collections.Generic.List<CloudServiceStore.Domain.Entities.OrderItem> { new CloudServiceStore.Domain.Entities.OrderItem(plan.Id, BillingCycle.Monthly, 1, 100m) }, null, 0, 100m, false);
             order.Pay(); // Mark as Paid
             db.OrderRequests.Add(order);
             await db.SaveChangesAsync();

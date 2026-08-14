@@ -62,7 +62,7 @@ public class PaymentWebhookE2ETests : BaseE2ETest
         var idempotencyKey = payment!.IdempotencyKey;
 
         // 3. Test Fake Webhook (Invalid HMAC)
-        var webhookPayload = new ConfirmPaymentWebhookCommand(idempotencyKey);
+        var webhookPayload = new ConfirmPaymentWebhookCommand(idempotencyKey, 150000m);
         var fakeRequest = new HttpRequestMessage(HttpMethod.Post, "/api/payments/webhook/vnpay");
         fakeRequest.Content = JsonContent.Create(webhookPayload);
         fakeRequest.Headers.Add("X-VNPAY-Signature", "invalid_signature_123");

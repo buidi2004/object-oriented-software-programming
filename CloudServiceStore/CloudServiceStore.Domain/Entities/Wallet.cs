@@ -8,6 +8,7 @@ public class Wallet : AggregateRoot
     public Guid UserId { get; private set; }
     public decimal Balance { get; private set; }
     public DateTime UpdatedAt { get; private set; }
+    public byte[] RowVersion { get; private set; } = null!;
 
     private Wallet() { }
 

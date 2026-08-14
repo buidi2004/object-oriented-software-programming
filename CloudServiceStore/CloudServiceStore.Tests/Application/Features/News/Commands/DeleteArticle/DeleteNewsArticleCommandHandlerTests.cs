@@ -24,7 +24,7 @@ public class DeleteNewsArticleCommandHandlerTests
     {
         _mockUnitOfWork = new Mock<IUnitOfWork>();
         _mockRepositoryNewsArticle = new Mock<IRepository<NewsArticle>>();
-        _handler = new DeleteNewsArticleCommandHandler(_mockUnitOfWork.Object, _mockRepositoryNewsArticle.Object);
+        _handler = new DeleteNewsArticleCommandHandler(_mockUnitOfWork.Object, _mockRepositoryNewsArticle.Object, new Mock<IRepository<ArticleComment>>().Object);
     }
 
     [Fact]

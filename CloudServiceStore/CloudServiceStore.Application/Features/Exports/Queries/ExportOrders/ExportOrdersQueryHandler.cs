@@ -26,7 +26,8 @@ public class ExportOrdersQueryHandler : IRequestHandler<ExportOrdersQuery, Expor
         
         foreach (var o in orders)
         {
-            sb.AppendLine($"{o.Id},{o.UserId},{o.ServicePlanId},{o.Status},{o.TotalAmount},{o.CreatedAt:yyyy-MM-dd HH:mm:ss}");
+            var planId = o.Items?.FirstOrDefault()?.ServicePlanId.ToString() ?? "";
+            sb.AppendLine($"{o.Id},{o.UserId},{planId},{o.Status},{o.TotalAmount},{o.CreatedAt:yyyy-MM-dd HH:mm:ss}");
         }
 
         var data = Encoding.UTF8.GetBytes(sb.ToString());

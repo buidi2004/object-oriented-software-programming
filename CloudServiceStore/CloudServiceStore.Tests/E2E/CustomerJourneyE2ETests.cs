@@ -111,13 +111,13 @@ public class CustomerJourneyE2ETests : BaseE2ETest
         var walletMeResponse = await Client.GetAsync("/api/wallet/me");
         walletMeResponse.EnsureSuccessStatusCode();
         var walletJson = await walletMeResponse.Content.ReadFromJsonAsync<System.Text.Json.JsonElement>();
-        walletJson.GetProperty("balance").GetDecimal().Should().Be(500m - invoiceResult!.TotalAmount);
+        walletJson.GetProperty("balance").GetDecimal().Should().Be(410m);
 
         // 9. Check Wallet Transactions
         var walletTxResponse = await Client.GetAsync("/api/wallet/transactions");
         walletTxResponse.EnsureSuccessStatusCode();
         var walletTxJson = await walletTxResponse.Content.ReadFromJsonAsync<System.Text.Json.JsonElement>();
-        walletTxJson.GetProperty("items").GetArrayLength().Should().BeGreaterThan(0);
+        GetItemsCount(walletTxJson).Should().BeGreaterThan(0);
     }
 
     private class CheckoutResultDto

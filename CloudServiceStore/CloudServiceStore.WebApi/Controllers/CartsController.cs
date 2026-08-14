@@ -14,19 +14,21 @@ namespace CloudServiceStore.WebApi.Controllers;
 
 [ApiController]
 [Route("api/carts")]
-[Authorize(Roles = "Customer")]
+[Authorize]
 public class CartsController : ControllerBase
 {
     private readonly IMediator _mediator;
     public CartsController(IMediator mediator) => _mediator = mediator;
 
     [HttpGet("me")]
+    [Authorize(Roles = "Customer")]
     public async Task<IActionResult> GetMyCart(CancellationToken ct)
     {
         return Ok(await _mediator.Send(new GetMyCartQuery(), ct));
     }
 
     [HttpPost("items")]
+    [Authorize(Roles = "Customer")]
     public async Task<IActionResult> AddItem(AddToCartCommand command, CancellationToken ct)
     {
         var id = await _mediator.Send(command, ct);
@@ -34,6 +36,7 @@ public class CartsController : ControllerBase
     }
 
     [HttpPut("items/{id}")]
+    [Authorize(Roles = "Customer")]
     public async Task<IActionResult> UpdateItem(Guid id, [FromBody] UpdateCartItemRequest request, CancellationToken ct)
     {
         await _mediator.Send(new UpdateCartItemCommand(id, request.Quantity), ct);
@@ -41,6 +44,7 @@ public class CartsController : ControllerBase
     }
 
     [HttpDelete("items/{id}")]
+    [Authorize(Roles = "Customer")]
     public async Task<IActionResult> RemoveItem(Guid id, CancellationToken ct)
     {
         await _mediator.Send(new RemoveFromCartCommand(id), ct);

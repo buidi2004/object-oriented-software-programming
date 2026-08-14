@@ -1,0 +1,16 @@
+**/.git
+**/.gitignore
+**/.vs
+**/.vscode
+**/.idea
+**/bin
+**/obj
+**/TestResults
+**/*.log
+**/*.txt
+**/*.exit
+**/*.md
+**/node_modules
+**/.next
+**/playwright-report
+**/test-results

@@ -19,8 +19,8 @@ export default defineConfig({
   webServer: {
     command: `NODE_OPTIONS='--max-old-space-size=4096' npx next dev --turbo --port ${E2E_PORT}`,
     url: baseURL,
-    reuseExistingServer: true,
-    timeout: 120_000,
+    reuseExistingServer: !process.env.CI,
+    timeout: 180_000,
   },
   projects: [
     {

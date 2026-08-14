@@ -21,6 +21,7 @@ services:
       redis:
         condition: service_started
     restart: unless-stopped
+    mem_limit: 512m
 
   vps-demo-image:
     build:
@@ -37,6 +38,7 @@ services:
     environment:
       - ACCEPT_EULA=Y
       - SA_PASSWORD=Your_Strong_Password_123!
+      - MSSQL_MEMORY_LIMIT_MB=1024
     volumes:
       - sqlserver_data:/var/opt/mssql
     healthcheck:
@@ -46,6 +48,7 @@ services:
       retries: 10
       start_period: 15s
     restart: unless-stopped
+    mem_limit: 1536m
 
   redis:
     image: redis:7-alpine
@@ -53,6 +56,7 @@ services:
     ports:
       - "6379:6379"
     restart: unless-stopped
+    mem_limit: 256m
 
 volumes:
   sqlserver_data:

@@ -53,15 +53,20 @@ public class GetOrderByIdQueryHandler : IRequestHandler<GetOrderByIdQuery, Order
             UserId = order.UserId,
             CustomerName = customer?.FullName ?? string.Empty,
             CustomerEmail = customer?.Email ?? string.Empty,
-            ServicePlanId = order.ServicePlanId,
-            ServicePlanName = order.ServicePlan?.Name ?? "Dịch vụ " + order.ServicePlanId.ToString()[..8],
-            BillingCycle = order.BillingCycle,
             Status = order.Status.ToString(),
             SubTotal = order.SubTotal,
             DiscountAmount = order.DiscountAmount,
             TotalAmount = order.TotalAmount,
             AutoRenew = order.AutoRenew,
-            CreatedAt = order.CreatedAt
+            CreatedAt = order.CreatedAt,
+            Items = order.Items?.Select(i => new OrderItemDto
+            {
+                ServicePlanId = i.ServicePlanId,
+                ServicePlanName = i.ServicePlan?.Name ?? "Dịch vụ " + i.ServicePlanId.ToString()[..8],
+                BillingCycle = i.BillingCycle,
+                Quantity = i.Quantity,
+                Price = i.Price
+            }).ToList() ?? new System.Collections.Generic.List<OrderItemDto>()
         };
     }
 }

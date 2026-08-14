@@ -35,4 +35,9 @@
     <ProjectReference Include="..\CloudServiceStore.WebApi\CloudServiceStore.WebApi.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="xunit.runner.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>

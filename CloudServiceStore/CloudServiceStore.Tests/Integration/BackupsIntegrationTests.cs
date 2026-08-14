@@ -1,4 +1,6 @@
 using System;
+using CloudServiceStore.Domain.Entities;
+using CloudServiceStore.Domain.Enums;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using CloudServiceStore.Application.Features.Backups.Commands.ScheduleBackup;
@@ -30,13 +32,7 @@ public class BackupsIntegrationTests : BaseIntegrationTest
         await AddEntityAsync(servicePlan);
 
         var orderId = Guid.NewGuid();
-        var order = new CloudServiceStore.Domain.Entities.OrderRequest(
-            customerId, 
-            servicePlanId, 
-            CloudServiceStore.Domain.Enums.BillingCycle.Monthly, 
-            null, 
-            0, 
-            100);
+        var order = new OrderRequest(customerId, new System.Collections.Generic.List<CloudServiceStore.Domain.Entities.OrderItem> { new CloudServiceStore.Domain.Entities.OrderItem(servicePlanId, BillingCycle.Monthly, 1, 100m) }, null, 0, 100, false);
         order.Id = orderId;
         order.Pay();
         await AddEntityAsync(order);

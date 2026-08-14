@@ -29,7 +29,7 @@ public class CouponsIntegrationTests : BaseIntegrationTest
         
         await AddEntityAsync(new ServiceCategory { Id = categoryId, Name = "Cat C", Slug = "cat-c" });
         await AddEntityAsync(new ServicePlan(categoryId, "Plan C", null, null, null, null, null) { Id = planId });
-        await AddEntityAsync(new OrderRequest(userId, planId, BillingCycle.Monthly, null, 0, 150000m) { Id = orderId });
+        await AddEntityAsync(new OrderRequest(userId, new System.Collections.Generic.List<CloudServiceStore.Domain.Entities.OrderItem> { new CloudServiceStore.Domain.Entities.OrderItem(planId, BillingCycle.Monthly, 1, 150000m) }, null, 0, 150000m, false) { Id = orderId });
 
         // 2. Act: Admin creates Coupon
         AuthenticateAdmin();

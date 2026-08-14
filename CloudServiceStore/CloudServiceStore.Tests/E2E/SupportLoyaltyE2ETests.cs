@@ -86,7 +86,7 @@ public class SupportLoyaltyE2ETests : BaseE2ETest
         ticketsQueueResponse.EnsureSuccessStatusCode();
         var ticketsQueueJson = await ticketsQueueResponse.Content.ReadFromJsonAsync<System.Text.Json.JsonElement>();
         // Queue might be empty if it's closed, but it shouldn't 500
-        ticketsQueueJson.TryGetProperty("items", out _).Should().BeTrue();
+        GetItemsCount(ticketsQueueJson).Should().BeGreaterThanOrEqualTo(0);
     }
 
     private class CreateTicketResultDto

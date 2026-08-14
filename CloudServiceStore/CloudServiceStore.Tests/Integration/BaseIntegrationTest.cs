@@ -58,6 +58,7 @@ public abstract class BaseIntegrationTest : IAsyncLifetime
     {
         // Reset DB before each test
         await Factory.ResetDatabaseAsync();
+        await SeedUserAsync(Guid.Parse("11111111-1111-1111-1111-111111111111"));
     }
 
     public Task DisposeAsync() => Task.CompletedTask;

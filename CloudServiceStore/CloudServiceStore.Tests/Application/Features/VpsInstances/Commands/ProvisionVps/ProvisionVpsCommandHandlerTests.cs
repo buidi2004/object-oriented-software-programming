@@ -56,11 +56,13 @@ public class ProvisionVpsCommandHandlerTests
         var userId = Guid.NewGuid();
         var categoryId = Guid.NewGuid();
         var plan = new ServicePlan(categoryId, "Nano VPS", "2 Core", "4GB", "40GB NVMe", "Unlimited", null);
-        var order = new OrderRequest(userId, plan.Id, BillingCycle.Monthly, null, 0, 100m);
+        plan.GetType().GetProperty("Id")!.SetValue(plan, Guid.NewGuid());
+        var items = new System.Collections.Generic.List<OrderItem> { new OrderItem(plan.Id, BillingCycle.Monthly, 1, 100m) };
+        var order = new OrderRequest(userId, items, null, 0, 100m, false);
         order.Pay();
         var orderId = order.Id;
-        typeof(OrderRequest).GetProperty("ServicePlan", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)!
-            .SetValue(order, plan);
+        typeof(OrderItem).GetProperty("ServicePlan", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)!
+            .SetValue(items[0], plan);
 
         _mockCurrentUserService.Setup(x => x.UserId).Returns(userId);
         _mockOrderRepository
@@ -76,7 +78,8 @@ public class ProvisionVpsCommandHandlerTests
             .Setup(x => x.ProvisionAsync(It.IsAny<VpsProvisionSpec>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new ProvisionResult(true, "container-123", "vps-nano-test", null));
 
-        var result = await _handler.Handle(new ProvisionVpsCommand { OrderId = orderId }, CancellationToken.None);
+        var resultList = await _handler.Handle(new ProvisionVpsCommand { OrderId = orderId }, CancellationToken.None);
+        var result = resultList[0];
 
         result.ContainerId.Should().Be("container-123");
         result.CpuCores.Should().Be(2);
