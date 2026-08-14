@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using CloudServiceStore.Application.Features.Coupons.Commands.ApplyCoupon;
 using CloudServiceStore.Application.Features.Coupons.Commands.CreateCoupon;
 using CloudServiceStore.Application.Features.Coupons.Queries.GetCoupons;
+using CloudServiceStore.Application.Features.Coupons.Queries.GetActiveCoupons;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -22,6 +23,14 @@ public class CouponsController : ControllerBase
     public async Task<IActionResult> GetAll(CancellationToken ct)
     {
         var coupons = await _mediator.Send(new GetCouponsQuery(), ct);
+        return Ok(coupons);
+    }
+
+    [HttpGet("active")]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetActive(CancellationToken ct)
+    {
+        var coupons = await _mediator.Send(new GetActiveCouponsQuery(), ct);
         return Ok(coupons);
     }
 

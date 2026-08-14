@@ -45,7 +45,14 @@ public class PayWithWalletCommandHandler : IRequestHandler<PayWithWalletCommand,
         order.Pay();
         _orderRepo.Update(order);
 
-        await _uow.SaveChangesAsync(cancellationToken);
+        try
+        {
+            await _uow.SaveChangesAsync(cancellationToken);
+        }
+        catch (Exception ex) when (ex.GetType().Name == "DbUpdateConcurrencyException")
+        {
+            throw new ConflictException("Ví đang được giao dịch, vui lòng thử lại.");
+        }
         return true;
     }
 }

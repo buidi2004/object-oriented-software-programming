@@ -37,7 +37,7 @@ public class CreatePaymentCommandHandler : IRequestHandler<CreatePaymentCommand,
         await _paymentRepo.AddAsync(payment, ct);
         await _uow.SaveChangesAsync(ct);
 
-        // Mock payment URL
-        return $"https://mock-vnpay.com/pay?key={idempotencyKey}&amount={order.TotalAmount}";
+        // Sandbox payment URL
+        return $"/sandbox/vnpay?key={idempotencyKey}&amount={order.TotalAmount}";
     }
 }

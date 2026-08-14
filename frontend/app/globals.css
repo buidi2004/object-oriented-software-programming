@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .vps-tier-range {
+    @apply h-2.5 w-full cursor-pointer appearance-none bg-transparent;
+  }
+
+  .vps-tier-range:focus {
+    @apply outline-none;
+  }
+
+  .vps-tier-range:focus-visible {
+    @apply ring-2 ring-offset-2 ring-blue-500/40 rounded-full;
+  }
+
+  .vps-tier-range::-webkit-slider-runnable-track {
+    height: 0.625rem;
+    border-radius: 9999px;
+    background: linear-gradient(
+      to right,
+      var(--vps-range-accent, #2563eb) 0%,
+      var(--vps-range-accent, #2563eb) var(--vps-range-fill, 0%),
+      #e2e8f0 var(--vps-range-fill, 0%),
+      #e2e8f0 100%
+    );
+  }
+
+  .vps-tier-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-top: -0.3125rem;
+    border-radius: 9999px;
+    border: 2px solid #ffffff;
+    background: var(--vps-range-accent, #2563eb);
+    box-shadow: 0 1px 4px rgb(15 23 42 / 0.2);
+    cursor: pointer;
+  }
+
+  .vps-tier-range::-moz-range-track {
+    height: 0.625rem;
+    border-radius: 9999px;
+    background: #e2e8f0;
+  }
+
+  .vps-tier-range::-moz-range-progress {
+    height: 0.625rem;
+    border-radius: 9999px;
+    background: var(--vps-range-accent, #2563eb);
+  }
+
+  .vps-tier-range::-moz-range-thumb {
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 9999px;
+    border: 2px solid #ffffff;
+    background: var(--vps-range-accent, #2563eb);
+    box-shadow: 0 1px 4px rgb(15 23 42 / 0.2);
+    cursor: pointer;
+  }
+}

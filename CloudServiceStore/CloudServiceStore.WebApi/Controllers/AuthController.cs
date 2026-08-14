@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using CloudServiceStore.Application.Features.Auth.Commands.Login;
 using CloudServiceStore.Application.Features.Auth.Commands.Register;
 using CloudServiceStore.Application.Features.Auth.Commands.RefreshToken;
+using CloudServiceStore.Application.Features.Auth.Commands.ForgotPassword;
+using CloudServiceStore.Application.Features.Auth.Commands.ResetPassword;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -38,17 +40,42 @@ public class AuthController : ControllerBase
     {
         var result = await _mediator.Send(command, ct);
         SetRefreshTokenCookie(result.RefreshToken);
-        return Ok(new { accessToken = result.AccessToken });
+        return Ok(new { accessToken = result.AccessToken, refreshToken = result.RefreshToken });
     }
 
     [HttpPost("refresh-token")]
-    public async Task<IActionResult> RefreshToken(CancellationToken ct)
+    public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest? body, CancellationToken ct)
     {
-        if (!Request.Cookies.TryGetValue("refreshToken", out var refreshToken))
+        var refreshToken = !string.IsNullOrWhiteSpace(body?.RefreshToken)
+            ? body.RefreshToken
+            : Request.Cookies.TryGetValue("refreshToken", out var cookieToken)
+                ? cookieToken
+                : null;
+
+        if (string.IsNullOrWhiteSpace(refreshToken))
             return Unauthorized();
 
         var result = await _mediator.Send(new RefreshTokenCommand(refreshToken), ct);
         SetRefreshTokenCookie(result.RefreshToken);
-        return Ok(new { accessToken = result.AccessToken });
+        return Ok(new { accessToken = result.AccessToken, refreshToken = result.RefreshToken });
+    }
+
+    [HttpPost("forgot-password")]
+    [EnableRateLimiting("login")]
+    public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest body, CancellationToken ct)
+    {
+        var result = await _mediator.Send(new ForgotPasswordCommand(body.Email), ct);
+        return Ok(new { success = result.Success });
+    }
+
+    [HttpPost("reset-password")]
+    [EnableRateLimiting("login")]
+    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordCommand command, CancellationToken ct)
+    {
+        await _mediator.Send(command, ct);
+        return Ok(new { success = true });
     }
 }
+
+public record ForgotPasswordRequest(string Email);
+public record RefreshTokenRequest(string RefreshToken);

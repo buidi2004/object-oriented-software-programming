@@ -6,6 +6,7 @@ using CloudServiceStore.Application.Features.RefundRequests.Commands.CreateRefun
 using CloudServiceStore.Application.Features.RefundRequests.Commands.RejectRefundRequest;
 using CloudServiceStore.Application.Features.RefundRequests.Queries.GetAllRefundRequests;
 using CloudServiceStore.Application.Features.RefundRequests.Queries.GetMyRefundRequests;
+using CloudServiceStore.Application.Features.RefundRequests.Queries.GetRefundRequestById;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -42,6 +43,14 @@ public class RefundRequestsController : ControllerBase
     {
         var requests = await _mediator.Send(new GetAllRefundRequestsQuery(), ct);
         return Ok(requests);
+    }
+
+    [HttpGet("refund-requests/{id:guid}")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> GetById(Guid id, CancellationToken ct)
+    {
+        var result = await _mediator.Send(new GetRefundRequestByIdQuery(id), ct);
+        return Ok(result);
     }
 
     [HttpPatch("refund-requests/{id}/approve")]

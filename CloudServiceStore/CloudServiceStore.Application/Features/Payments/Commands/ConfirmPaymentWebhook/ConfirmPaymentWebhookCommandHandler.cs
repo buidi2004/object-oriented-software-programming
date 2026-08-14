@@ -26,6 +26,9 @@ public class ConfirmPaymentWebhookCommandHandler : IRequestHandler<ConfirmPaymen
         if (payment.Status == PaymentStatus.Confirmed)
             return; // Already processed (Idempotent)
 
+        if (payment.Amount != request.Amount)
+            throw new Application.Exceptions.ConflictException("Số tiền thanh toán không khớp.");
+
         payment.Confirm(Guid.NewGuid().ToString("N")); // Mock transaction ref
 
         _paymentRepo.Update(payment);

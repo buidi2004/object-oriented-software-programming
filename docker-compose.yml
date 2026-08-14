@@ -1,0 +1,53 @@
+services:
+  webapi:
+    build:
+      context: ./CloudServiceStore
+      dockerfile: Dockerfile
+    container_name: cloudservicestore_api
+    ports:
+      - "5053:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=CloudServiceStoreDb;User Id=sa;Password=Your_Strong_Password_123!;TrustServerCertificate=True;
+      - Vps__DefaultImage=vps-demo-image
+      - Cache__Enabled=true
+      - Cache__RedisConnectionString=redis:6379
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - sqlserver
+      - redis
+    restart: unless-stopped
+    mem_limit: 512m
+
+  vps-demo-image:
+    build:
+      context: ./CloudServiceStore/docker/vps-demo-image
+    image: vps-demo-image
+    profiles:
+      - build
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: cloudservicestore_sqlserver
+    ports:
+      - "1433:1433"
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Your_Strong_Password_123!
+      - MSSQL_MEMORY_LIMIT_MB=1024
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    restart: unless-stopped
+    mem_limit: 1536m
+
+  redis:
+    image: redis:7-alpine
+    container_name: cloudservicestore_redis
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+    mem_limit: 256m
+
+volumes:
+  sqlserver_data:

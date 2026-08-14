@@ -1,15 +1,32 @@
+using CloudServiceStore.Application.Interfaces;
 using MediatR;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace CloudServiceStore.Application.Behaviors;
 
 public class CachingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
 {
-    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
+    private readonly ICatalogCache _catalogCache;
+
+    public CachingBehavior(ICatalogCache catalogCache)
     {
-        // Simple placeholder for caching logic
-        return await next();
+        _catalogCache = catalogCache;
+    }
+
+    public Task<TResponse> Handle(
+        TRequest request,
+        RequestHandlerDelegate<TResponse> next,
+        CancellationToken cancellationToken)
+    {
+        if (request is not ICacheableQuery cacheable)
+        {
+            return next();
+        }
+
+        return _catalogCache.GetOrSetAsync(
+            cacheable.CacheKey,
+            cacheable.CacheDuration,
+            async ct => await next(),
+            cancellationToken);
     }
 }

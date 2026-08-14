@@ -35,7 +35,8 @@ public class TopUpWalletCommandHandler : IRequestHandler<TopUpWalletCommand, boo
         }
 
         wallet.Deposit(request.Amount);
-        _walletRepo.Update(wallet);
+        // We don't need to call Update because the entity is already tracked by EF Core.
+        // If it was newly created, it remains in Added state. If fetched, it will be tracked as Modified automatically.
 
         var transaction = new WalletTransaction(wallet.Id, request.Amount, TransactionType.TopUp);
         await _transactionRepo.AddAsync(transaction, cancellationToken);

@@ -1,16 +1,7 @@
-using MediatR;
-using System;
 using System.Collections.Generic;
+using CloudServiceStore.Application.Features.Permissions.Queries.GetRolePermissions;
+using MediatR;
 
 namespace CloudServiceStore.Application.Features.Permissions.Queries.GetAllPermissions;
 
-public class GetAllPermissionsQuery : IRequest<IEnumerable<PermissionDto>>
-{
-}
-
-public class PermissionDto
-{
-    public Guid Id { get; set; }
-    public string Code { get; set; } = null!;
-    public string Description { get; set; } = null!;
-}
+public record GetAllPermissionsQuery() : IRequest<IReadOnlyList<PermissionDto>>;

@@ -53,7 +53,7 @@ public class AddToCartCommandHandlerTests
         _currentUserMock.Setup(x => x.UserId).Returns(userId);
         _planRepoMock.Setup(r => r.AnyAsync(It.IsAny<Expression<Func<ServicePlan, bool>>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(true);
-        _cartRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<Cart, bool>>>(), It.IsAny<CancellationToken>(), Array.Empty<Expression<Func<Cart, object>>>()))
+        _cartRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<Cart, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<Cart, object>>[]>()))
             .ReturnsAsync((Cart?)null);
         _cartRepoMock.Setup(r => r.AddAsync(It.IsAny<Cart>(), It.IsAny<CancellationToken>()))
             .Returns((Cart c, CancellationToken ct) => Task.FromResult(c));

@@ -1,16 +1,9 @@
-using MediatR;
 using System;
 using System.Collections.Generic;
+using MediatR;
 
 namespace CloudServiceStore.Application.Features.RecentlyViewed.Queries.GetMyRecentlyViewed;
 
-public class GetMyRecentlyViewedQuery : IRequest<IEnumerable<RecentlyViewedDto>>
-{
-}
+public record RecentlyViewedDto(Guid ServicePlanId, DateTime ViewedAt);
 
-public class RecentlyViewedDto
-{
-    public Guid ServicePlanId { get; set; }
-    public string PlanName { get; set; } = null!;
-    public DateTime ViewedAt { get; set; }
-}
+public record GetMyRecentlyViewedQuery() : IRequest<IReadOnlyList<RecentlyViewedDto>>;

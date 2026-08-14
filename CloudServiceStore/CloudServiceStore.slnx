@@ -3,4 +3,5 @@
   <Project Path="CloudServiceStore.Domain/CloudServiceStore.Domain.csproj" />
   <Project Path="CloudServiceStore.Infrastructure/CloudServiceStore.Infrastructure.csproj" />
   <Project Path="CloudServiceStore.WebApi/CloudServiceStore.WebApi.csproj" />
+  <Project Path="CloudServiceStore.Tests/CloudServiceStore.Tests.csproj" />
 </Solution>

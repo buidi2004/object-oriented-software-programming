@@ -27,7 +27,24 @@ public class PaymentsController : ControllerBase
     [HttpPost("webhook/vnpay")]
     public async Task<IActionResult> VnpayWebhook([FromBody] ConfirmPaymentWebhookCommand command, CancellationToken ct)
     {
-        // Ideally verify HMAC here before processing
+        // Verify HMAC to block fake webhooks (IdempotencyKey signed with a secret)
+        var signature = Request.Headers["X-VNPAY-Signature"].ToString();
+        if (string.IsNullOrEmpty(signature))
+        {
+            return BadRequest(new { message = "Missing signature" });
+        }
+
+        // Mock secret key
+        var secret = "vnpay_secret_key_123";
+        using var hmac = new System.Security.Cryptography.HMACSHA256(System.Text.Encoding.UTF8.GetBytes(secret));
+        var hashBytes = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(command.IdempotencyKey));
+        var expectedSignature = BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
+
+        if (signature.ToLower() != expectedSignature)
+        {
+            return BadRequest(new { message = "Invalid signature" });
+        }
+
         await _mediator.Send(command, ct);
         return Ok(new { message = "Webhook processed" });
     }

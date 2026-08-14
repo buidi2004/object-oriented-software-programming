@@ -84,6 +84,18 @@ namespace CloudServiceStore.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("AddressLine")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("City")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CompanyName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Country")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -92,12 +104,18 @@ namespace CloudServiceStore.Infrastructure.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
+                    b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("FullName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
@@ -109,6 +127,12 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.Property<Guid>("RoleId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("TaxCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Ward")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Email")
@@ -117,6 +141,34 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AppUsers");
+                });
+
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.ArticleComment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ArticleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ArticleId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ArticleComments");
                 });
 
             modelBuilder.Entity("CloudServiceStore.Domain.Entities.AuditLog", b =>
@@ -262,6 +314,115 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.HasIndex("ServicePlanId");
 
                     b.ToTable("CartItems");
+                });
+
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.CartReminder", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CartId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("SentAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CartId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("CartReminders");
+                });
+
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.ChatMessage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("SenderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("SessionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SenderId");
+
+                    b.HasIndex("SessionId");
+
+                    b.ToTable("ChatMessages");
+                });
+
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.ChatSession", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ChatSessions");
+                });
+
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.ControlPanelCredential", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("PanelType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ControlPanelCredentials");
                 });
 
             modelBuilder.Entity("CloudServiceStore.Domain.Entities.Coupon", b =>
@@ -490,6 +651,52 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.ToTable("Invoices", (string)null);
                 });
 
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.KnowledgeBaseArticle", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("AuthorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CategoryTag")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsPublished")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("ViewCount")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuthorId");
+
+                    b.HasIndex("Slug")
+                        .IsUnique();
+
+                    b.ToTable("KnowledgeBaseArticles", (string)null);
+                });
+
             modelBuilder.Entity("CloudServiceStore.Domain.Entities.LoginHistory", b =>
                 {
                     b.Property<Guid>("Id")
@@ -688,6 +895,36 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.ToTable("NotificationSettings");
                 });
 
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.OrderItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("BillingCycle")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("OrderRequestId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("ServicePlanId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderRequestId");
+
+                    b.HasIndex("ServicePlanId");
+
+                    b.ToTable("OrderItems");
+                });
+
             modelBuilder.Entity("CloudServiceStore.Domain.Entities.OrderRequest", b =>
                 {
                     b.Property<Guid>("Id")
@@ -697,9 +934,6 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.Property<bool>("AutoRenew")
                         .HasColumnType("bit");
 
-                    b.Property<int>("BillingCycle")
-                        .HasColumnType("int");
-
                     b.Property<Guid?>("CouponId")
                         .HasColumnType("uniqueidentifier");
 
@@ -708,9 +942,6 @@ namespace CloudServiceStore.Infrastructure.Migrations
 
                     b.Property<decimal>("DiscountAmount")
                         .HasColumnType("decimal(18,2)");
-
-                    b.Property<Guid>("ServicePlanId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -728,11 +959,41 @@ namespace CloudServiceStore.Infrastructure.Migrations
 
                     b.HasIndex("CouponId");
 
-                    b.HasIndex("ServicePlanId");
-
                     b.HasIndex("UserId");
 
                     b.ToTable("OrderRequests");
+                });
+
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.PasswordResetToken", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsUsed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("TokenHash")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TokenHash");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("PasswordResetTokens");
                 });
 
             modelBuilder.Entity("CloudServiceStore.Domain.Entities.Payment", b =>
@@ -781,6 +1042,25 @@ namespace CloudServiceStore.Infrastructure.Migrations
                         .HasFilter("[TransactionRef] IS NOT NULL");
 
                     b.ToTable("Payments");
+                });
+
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.Permission", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Permissions");
                 });
 
             modelBuilder.Entity("CloudServiceStore.Domain.Entities.PlanPrice", b =>
@@ -839,6 +1119,30 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.HasIndex("ServicePlanId");
 
                     b.ToTable("Promotions");
+                });
+
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.RecentlyViewedItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ServicePlanId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("ViewedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ServicePlanId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RecentlyViewedItems");
                 });
 
             modelBuilder.Entity("CloudServiceStore.Domain.Entities.ReferralCode", b =>
@@ -1004,6 +1308,27 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.ToTable("Roles");
                 });
 
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.RolePermission", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("PermissionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PermissionId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("RolePermissions");
+                });
+
             modelBuilder.Entity("CloudServiceStore.Domain.Entities.SavedPaymentMethod", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1077,8 +1402,20 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
+                    b.Property<string>("Keywords")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MetaDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MetaTitle")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OpenGraphImage")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("QrCodeUrl")
@@ -1187,6 +1524,28 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.ToTable("SupportTickets");
                 });
 
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.SystemSetting", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SystemSettings");
+                });
+
             modelBuilder.Entity("CloudServiceStore.Domain.Entities.TicketMessage", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1245,6 +1604,63 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.ToTable("UserSessions");
                 });
 
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.VpsInstance", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ContainerId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ContainerName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CpuCores")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("DiskGb")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("LastActiveAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("PlanId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("PlanName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("RamMb")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("VpsInstances");
+                });
+
             modelBuilder.Entity("CloudServiceStore.Domain.Entities.Wallet", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1253,6 +1669,12 @@ namespace CloudServiceStore.Infrastructure.Migrations
 
                     b.Property<decimal>("Balance")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -1321,7 +1743,7 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.HasOne("CloudServiceStore.Domain.Entities.AppUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -1332,17 +1754,37 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.HasOne("CloudServiceStore.Domain.Entities.Role", "Role")
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.ArticleComment", b =>
+                {
+                    b.HasOne("CloudServiceStore.Domain.Entities.NewsArticle", "Article")
+                        .WithMany()
+                        .HasForeignKey("ArticleId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("CloudServiceStore.Domain.Entities.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Article");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("CloudServiceStore.Domain.Entities.AuditLog", b =>
                 {
                     b.HasOne("CloudServiceStore.Domain.Entities.AppUser", "User")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("User");
                 });
@@ -1352,7 +1794,7 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.HasOne("CloudServiceStore.Domain.Entities.OrderRequest", "OrderRequest")
                         .WithMany()
                         .HasForeignKey("OrderRequestId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("OrderRequest");
@@ -1363,7 +1805,7 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.HasOne("CloudServiceStore.Domain.Entities.AppUser", "User")
                         .WithOne()
                         .HasForeignKey("CloudServiceStore.Domain.Entities.Cart", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -1380,7 +1822,7 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.HasOne("CloudServiceStore.Domain.Entities.ServicePlan", "ServicePlan")
                         .WithMany()
                         .HasForeignKey("ServicePlanId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Cart");
@@ -1388,12 +1830,61 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.Navigation("ServicePlan");
                 });
 
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.CartReminder", b =>
+                {
+                    b.HasOne("CloudServiceStore.Domain.Entities.Cart", "Cart")
+                        .WithMany()
+                        .HasForeignKey("CartId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("CloudServiceStore.Domain.Entities.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Cart");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.ChatMessage", b =>
+                {
+                    b.HasOne("CloudServiceStore.Domain.Entities.AppUser", "Sender")
+                        .WithMany()
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("CloudServiceStore.Domain.Entities.ChatSession", "Session")
+                        .WithMany()
+                        .HasForeignKey("SessionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Sender");
+
+                    b.Navigation("Session");
+                });
+
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.ChatSession", b =>
+                {
+                    b.HasOne("CloudServiceStore.Domain.Entities.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("CloudServiceStore.Domain.Entities.DnsRecord", b =>
                 {
                     b.HasOne("CloudServiceStore.Domain.Entities.DomainRecord", "Domain")
                         .WithMany()
                         .HasForeignKey("DomainId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Domain");
@@ -1404,7 +1895,7 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.HasOne("CloudServiceStore.Domain.Entities.OrderRequest", "OrderRequest")
                         .WithMany()
                         .HasForeignKey("OrderRequestId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("CloudServiceStore.Domain.Entities.AppUser", "User")
@@ -1423,10 +1914,21 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.HasOne("CloudServiceStore.Domain.Entities.OrderRequest", "OrderRequest")
                         .WithOne("Invoice")
                         .HasForeignKey("CloudServiceStore.Domain.Entities.Invoice", "OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("OrderRequest");
+                });
+
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.KnowledgeBaseArticle", b =>
+                {
+                    b.HasOne("CloudServiceStore.Domain.Entities.AppUser", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Author");
                 });
 
             modelBuilder.Entity("CloudServiceStore.Domain.Entities.LoginHistory", b =>
@@ -1434,7 +1936,7 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.HasOne("CloudServiceStore.Domain.Entities.AppUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -1445,7 +1947,7 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.HasOne("CloudServiceStore.Domain.Entities.AppUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -1456,7 +1958,7 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.HasOne("CloudServiceStore.Domain.Entities.AppUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -1467,7 +1969,7 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.HasOne("CloudServiceStore.Domain.Entities.AppUser", "Author")
                         .WithMany()
                         .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Author");
@@ -1478,23 +1980,37 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.HasOne("CloudServiceStore.Domain.Entities.AppUser", "User")
                         .WithOne()
                         .HasForeignKey("CloudServiceStore.Domain.Entities.NotificationSetting", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("CloudServiceStore.Domain.Entities.OrderRequest", b =>
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.OrderItem", b =>
                 {
-                    b.HasOne("CloudServiceStore.Domain.Entities.Coupon", "Coupon")
-                        .WithMany()
-                        .HasForeignKey("CouponId");
+                    b.HasOne("CloudServiceStore.Domain.Entities.OrderRequest", "OrderRequest")
+                        .WithMany("Items")
+                        .HasForeignKey("OrderRequestId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("CloudServiceStore.Domain.Entities.ServicePlan", "ServicePlan")
                         .WithMany()
                         .HasForeignKey("ServicePlanId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("OrderRequest");
+
+                    b.Navigation("ServicePlan");
+                });
+
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.OrderRequest", b =>
+                {
+                    b.HasOne("CloudServiceStore.Domain.Entities.Coupon", "Coupon")
+                        .WithMany()
+                        .HasForeignKey("CouponId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("CloudServiceStore.Domain.Entities.AppUser", "User")
                         .WithMany()
@@ -1504,7 +2020,16 @@ namespace CloudServiceStore.Infrastructure.Migrations
 
                     b.Navigation("Coupon");
 
-                    b.Navigation("ServicePlan");
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.PasswordResetToken", b =>
+                {
+                    b.HasOne("CloudServiceStore.Domain.Entities.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });
@@ -1514,7 +2039,7 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.HasOne("CloudServiceStore.Domain.Entities.OrderRequest", "OrderRequest")
                         .WithOne("Payment")
                         .HasForeignKey("CloudServiceStore.Domain.Entities.Payment", "OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("OrderRequest");
@@ -1525,7 +2050,7 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.HasOne("CloudServiceStore.Domain.Entities.ServicePlan", "ServicePlan")
                         .WithMany("Prices")
                         .HasForeignKey("ServicePlanId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("ServicePlan");
@@ -1535,9 +2060,29 @@ namespace CloudServiceStore.Infrastructure.Migrations
                 {
                     b.HasOne("CloudServiceStore.Domain.Entities.ServicePlan", "ServicePlan")
                         .WithMany("Promotions")
-                        .HasForeignKey("ServicePlanId");
+                        .HasForeignKey("ServicePlanId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("ServicePlan");
+                });
+
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.RecentlyViewedItem", b =>
+                {
+                    b.HasOne("CloudServiceStore.Domain.Entities.ServicePlan", "ServicePlan")
+                        .WithMany()
+                        .HasForeignKey("ServicePlanId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("CloudServiceStore.Domain.Entities.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("ServicePlan");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("CloudServiceStore.Domain.Entities.ReferralCode", b =>
@@ -1545,7 +2090,7 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.HasOne("CloudServiceStore.Domain.Entities.AppUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -1575,13 +2120,13 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.HasOne("CloudServiceStore.Domain.Entities.ServicePlan", "ServicePlan")
                         .WithMany("Reviews")
                         .HasForeignKey("ServicePlanId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("CloudServiceStore.Domain.Entities.AppUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("ServicePlan");
@@ -1589,12 +2134,31 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.RolePermission", b =>
+                {
+                    b.HasOne("CloudServiceStore.Domain.Entities.Permission", "Permission")
+                        .WithMany()
+                        .HasForeignKey("PermissionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("CloudServiceStore.Domain.Entities.Role", "Role")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Permission");
+
+                    b.Navigation("Role");
+                });
+
             modelBuilder.Entity("CloudServiceStore.Domain.Entities.SavedPaymentMethod", b =>
                 {
                     b.HasOne("CloudServiceStore.Domain.Entities.AppUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -1605,7 +2169,7 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.HasOne("CloudServiceStore.Domain.Entities.ServiceCategory", "Category")
                         .WithMany("ServicePlans")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Category");
@@ -1616,12 +2180,12 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.HasOne("CloudServiceStore.Domain.Entities.OrderRequest", "OrderRequest")
                         .WithMany()
                         .HasForeignKey("OrderRequestId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("CloudServiceStore.Domain.Entities.ServicePlan", "ServicePlan")
                         .WithMany()
                         .HasForeignKey("ServicePlanId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("OrderRequest");
 
@@ -1633,7 +2197,7 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.HasOne("CloudServiceStore.Domain.Entities.DomainRecord", "Domain")
                         .WithMany()
                         .HasForeignKey("DomainId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Domain");
@@ -1643,12 +2207,13 @@ namespace CloudServiceStore.Infrastructure.Migrations
                 {
                     b.HasOne("CloudServiceStore.Domain.Entities.AppUser", "AssignedStaff")
                         .WithMany()
-                        .HasForeignKey("AssignedStaffId");
+                        .HasForeignKey("AssignedStaffId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("CloudServiceStore.Domain.Entities.AppUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("AssignedStaff");
@@ -1661,13 +2226,13 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.HasOne("CloudServiceStore.Domain.Entities.AppUser", "Sender")
                         .WithMany()
                         .HasForeignKey("SenderId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("CloudServiceStore.Domain.Entities.SupportTicket", "Ticket")
                         .WithMany("Messages")
                         .HasForeignKey("TicketId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Sender");
@@ -1680,8 +2245,27 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.HasOne("CloudServiceStore.Domain.Entities.AppUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.VpsInstance", b =>
+                {
+                    b.HasOne("CloudServiceStore.Domain.Entities.OrderRequest", "Order")
+                        .WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("CloudServiceStore.Domain.Entities.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Order");
 
                     b.Navigation("User");
                 });
@@ -1691,13 +2275,13 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.HasOne("CloudServiceStore.Domain.Entities.ServicePlan", "ServicePlan")
                         .WithMany()
                         .HasForeignKey("ServicePlanId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("CloudServiceStore.Domain.Entities.AppUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("ServicePlan");
@@ -1713,6 +2297,8 @@ namespace CloudServiceStore.Infrastructure.Migrations
             modelBuilder.Entity("CloudServiceStore.Domain.Entities.OrderRequest", b =>
                 {
                     b.Navigation("Invoice");
+
+                    b.Navigation("Items");
 
                     b.Navigation("Payment");
                 });

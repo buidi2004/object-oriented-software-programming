@@ -1,38 +1,42 @@
-using CloudServiceStore.Application.Features.Permissions.Commands.UpdateRolePermissions;
-using CloudServiceStore.Application.Features.Permissions.Queries.GetAllPermissions;
-using MediatR;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using CloudServiceStore.Application.Features.Permissions.Commands.AssignPermissions;
+using CloudServiceStore.Application.Features.Permissions.Queries.GetRolePermissions;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CloudServiceStore.WebApi.Controllers;
 
 [ApiController]
-[Route("api/permissions")]
+[Route("api")]
 [Authorize(Roles = "Admin")]
 public class PermissionsController : ControllerBase
 {
     private readonly IMediator _mediator;
+    public PermissionsController(IMediator mediator) => _mediator = mediator;
 
-    public PermissionsController(IMediator mediator)
-    {
-        _mediator = mediator;
-    }
-
-    [HttpGet]
+    [HttpGet("permissions")]
     public async Task<IActionResult> GetAllPermissions(CancellationToken ct)
     {
-        var result = await _mediator.Send(new GetAllPermissionsQuery(), ct);
+        var result = await _mediator.Send(new CloudServiceStore.Application.Features.Permissions.Queries.GetAllPermissions.GetAllPermissionsQuery(), ct);
         return Ok(result);
     }
 
-    [HttpPut("/api/roles/{id:guid}/permissions")]
-    public async Task<IActionResult> UpdateRolePermissions(Guid id, [FromBody] UpdateRolePermissionsCommand command, CancellationToken ct)
+    [HttpGet("roles/{roleId:guid}/permissions")]
+    public async Task<IActionResult> GetRolePermissions(Guid roleId, CancellationToken ct)
     {
-        if (id != command.RoleId) return BadRequest("Role ID mismatch");
-        var success = await _mediator.Send(command, ct);
-        return success ? NoContent() : BadRequest();
+        var result = await _mediator.Send(new GetRolePermissionsQuery(roleId), ct);
+        return Ok(result);
+    }
+
+    [HttpPut("roles/{roleId:guid}/permissions")]
+    public async Task<IActionResult> AssignPermissions(Guid roleId, [FromBody] AssignPermissionsToRoleCommand command, CancellationToken ct)
+    {
+        if (roleId != command.RoleId) return BadRequest();
+        
+        await _mediator.Send(command, ct);
+        return NoContent();
     }
 }

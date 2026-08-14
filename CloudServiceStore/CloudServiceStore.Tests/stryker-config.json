@@ -1,0 +1,22 @@
+{
+  "stryker-config": {
+    "project": "CloudServiceStore.Application.csproj",
+    "mutate": [
+      "**/Features/Orders/**/*.cs",
+      "**/Features/Payments/**/*.cs",
+      "**/Caching/**/*.cs",
+      "!**/Features/Orders/**/CheckoutCommand.cs",
+      "!**/Features/Orders/**/GetMyOrdersQuery.cs",
+      "!**/Features/Orders/**/GetOrderByIdQuery.cs",
+      "!**/Features/Orders/**/GetOrdersQuery.cs",
+      "!**/Features/Payments/**/ConfirmPaymentWebhookCommand.cs",
+      "!**/Features/Payments/**/CreatePaymentCommand.cs"
+    ],
+    "reporters": ["html", "progress"],
+    "thresholds": {
+      "high": 80,
+      "low": 60,
+      "break": 50
+    }
+  }
+}

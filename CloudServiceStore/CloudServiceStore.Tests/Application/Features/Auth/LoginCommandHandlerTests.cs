@@ -83,7 +83,8 @@ public class LoginCommandHandlerTests
         result.AccessToken.Should().Be("access-token-123");
         result.RefreshToken.Should().Be("refresh-token-123");
 
-        _sessionRepoMock.Verify(s => s.AddAsync(It.Is<UserSession>(x => x.RefreshTokenHash == "hashed-refresh-token" && x.UserId == user.Id), It.IsAny<CancellationToken>()), Times.Once);
+        var expectedHash = CloudServiceStore.Application.Security.RefreshTokenHasher.Hash("refresh-token-123");
+        _sessionRepoMock.Verify(s => s.AddAsync(It.Is<UserSession>(x => x.RefreshTokenHash == expectedHash && x.UserId == user.Id), It.IsAny<CancellationToken>()), Times.Once);
         _historyRepoMock.Verify(h => h.AddAsync(It.Is<LoginHistory>(x => x.IsSuccess), It.IsAny<CancellationToken>()), Times.Once);
         _uowMock.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }

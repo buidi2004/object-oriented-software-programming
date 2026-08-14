@@ -1,4 +1,5 @@
 using CloudServiceStore.Application.Features.Faqs.Commands.CreateFaqItem;
+using CloudServiceStore.Application.Interfaces;
 using CloudServiceStore.Domain.Entities;
 using CloudServiceStore.Domain.Interfaces;
 using FluentAssertions;
@@ -14,13 +15,18 @@ public class CreateFaqItemCommandHandlerTests
 {
     private readonly Mock<IRepository<FaqItem>> _faqRepositoryMock;
     private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+    private readonly Mock<ICatalogCache> _catalogCacheMock;
     private readonly CreateFaqItemCommandHandler _handler;
 
     public CreateFaqItemCommandHandlerTests()
     {
         _faqRepositoryMock = new Mock<IRepository<FaqItem>>();
         _unitOfWorkMock = new Mock<IUnitOfWork>();
-        _handler = new CreateFaqItemCommandHandler(_faqRepositoryMock.Object, _unitOfWorkMock.Object);
+        _catalogCacheMock = new Mock<ICatalogCache>();
+        _handler = new CreateFaqItemCommandHandler(
+            _faqRepositoryMock.Object,
+            _unitOfWorkMock.Object,
+            _catalogCacheMock.Object);
     }
 
     [Fact]

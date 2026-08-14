@@ -14,7 +14,9 @@ using System.Text;
 using CloudServiceStore.Infrastructure.Security;
 using CloudServiceStore.Application.Interfaces;
 using CloudServiceStore.Application;
+using CloudServiceStore.Application.Configuration;
 using CloudServiceStore.Infrastructure;
+using Hangfire;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,7 +29,7 @@ builder.Services.AddRateLimiter(options =>
 {
     options.AddFixedWindowLimiter("login", opt =>
     {
-        opt.PermitLimit = 5;
+        opt.PermitLimit = (builder.Environment.IsDevelopment() || builder.Environment.IsEnvironment("Testing")) ? 1000 : 5;
         opt.Window = TimeSpan.FromMinutes(15);
         opt.QueueLimit = 0;
     });
@@ -57,6 +59,15 @@ builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(JwtSettings.SectionName));
+builder.Services.Configure<FrontendSettings>(builder.Configuration.GetSection(FrontendSettings.SectionName));
+builder.Services.Configure<VpsSettings>(builder.Configuration.GetSection(VpsSettings.SectionName));
+
+// Hangfire configuration
+builder.Services.AddHangfire(config => config.UseInMemoryStorage());
+builder.Services.AddHangfireServer();
+
+// SignalR
+builder.Services.AddSignalR();
 
 // JWT Bearer Configuration
 var jwtSettings = builder.Configuration.GetSection(JwtSettings.SectionName).Get<JwtSettings>();
@@ -73,10 +84,29 @@ builder.Services.AddAuthentication(defaultScheme: JwtBearerDefaults.Authenticati
             ValidAudience = jwtSettings.Audience,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Secret))
         };
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                var accessToken = context.Request.Query["access_token"];
+                var path = context.HttpContext.Request.Path;
+                if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/hubs"))
+                {
+                    context.Token = accessToken;
+                }
+                return Task.CompletedTask;
+            }
+        };
     });
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
+
+// Seed Database
+using (var scope = app.Services.CreateScope())
+{
+    await CloudServiceStore.Infrastructure.Persistence.DbSeeder.SeedAsync(scope.ServiceProvider);
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -95,6 +125,14 @@ app.UseCors("Frontend");
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.UseHangfireDashboard("/hangfire", new DashboardOptions
+{
+    // Authorization = new[] { new HangfireCustomBasicAuthenticationFilter{ ... } } // Should protect this in production
+});
+
 app.MapControllers();
+app.MapHub<CloudServiceStore.WebApi.Hubs.VpsTerminalHub>("/hubs/vps-terminal");
+app.MapHub<CloudServiceStore.WebApi.Hubs.LiveChatHub>("/hubs/chat");
 
 app.Run();
+public partial class Program { }

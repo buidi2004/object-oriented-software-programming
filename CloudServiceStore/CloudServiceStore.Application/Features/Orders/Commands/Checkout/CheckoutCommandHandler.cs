@@ -31,14 +31,19 @@ public class CheckoutCommandHandler : IRequestHandler<CheckoutCommand, Guid>
 
         if (cart == null || !cart.Items.Any()) throw new ConflictException("Giỏ hàng rỗng.");
         
-        var item = cart.Items.FirstOrDefault();
-        if (item == null) throw new ConflictException("Giỏ hàng rỗng.");
+        var orderItems = new System.Collections.Generic.List<OrderItem>();
+        decimal subTotal = 0;
 
-        // Get Price — filter by Currency="VND" for backward-compatibility after multi-currency schema update
-        var prices = await _priceRepo.WhereAsync(p => p.ServicePlanId == item.ServicePlanId && p.BillingCycle == item.BillingCycle && p.Currency == "VND", ct);
-        var price = prices.OrderByDescending(p => p.EffectiveFrom).FirstOrDefault()?.Price ?? 100000m; // Default 100k if no price set
+        foreach (var item in cart.Items)
+        {
+            var prices = await _priceRepo.WhereAsync(p => p.ServicePlanId == item.ServicePlanId && p.BillingCycle == item.BillingCycle && p.Currency == "VND", ct);
+            var price = prices.OrderByDescending(p => p.EffectiveFrom).FirstOrDefault()?.Price ?? 100000m; // Default 100k if no price set
 
-        decimal subTotal = price * item.Quantity;
+            decimal itemTotal = price * item.Quantity;
+            subTotal += itemTotal;
+            orderItems.Add(new OrderItem(item.ServicePlanId, item.BillingCycle, item.Quantity, price));
+        }
+
         decimal discountAmount = 0;
         Guid? couponId = null;
 
@@ -54,7 +59,7 @@ public class CheckoutCommandHandler : IRequestHandler<CheckoutCommand, Guid>
             couponId = coupon.Id;
         }
 
-        var order = new OrderRequest(userId, item.ServicePlanId, item.BillingCycle, couponId, discountAmount, subTotal, false);
+        var order = new OrderRequest(userId, orderItems, couponId, discountAmount, subTotal, false);
 
         await _orderRepo.AddAsync(order, ct);
 

@@ -15,6 +15,45 @@ public class ReviewsController : ControllerBase
     private readonly IMediator _mediator;
     public ReviewsController(IMediator mediator) => _mediator = mediator;
 
+    [HttpGet]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> GetAll(CancellationToken ct)
+    {
+        var result = await _mediator.Send(new CloudServiceStore.Application.Features.Reviews.Queries.GetAllReviews.GetAllReviewsQuery(), ct);
+        return Ok(result);
+    }
+
+    [HttpGet("service-plan/{id:guid}")]
+    public async Task<IActionResult> GetByServicePlan(Guid id, CancellationToken ct)
+    {
+        var result = await _mediator.Send(new CloudServiceStore.Application.Features.Reviews.Queries.GetReviewsByServicePlan.GetReviewsByServicePlanQuery(id), ct);
+        return Ok(result);
+    }
+
+    [HttpGet("me")]
+    [Authorize(Roles = "Customer")]
+    public async Task<IActionResult> GetMyReviews(CancellationToken ct)
+    {
+        var result = await _mediator.Send(new CloudServiceStore.Application.Features.Reviews.Queries.GetMyReviews.GetMyReviewsQuery(), ct);
+        return Ok(result);
+    }
+
+    [HttpPost]
+    [Authorize(Roles = "Customer")]
+    public async Task<IActionResult> Create([FromBody] CloudServiceStore.Application.Features.Reviews.Commands.CreateReview.CreateReviewCommand command, CancellationToken ct)
+    {
+        var id = await _mediator.Send(command, ct);
+        return CreatedAtAction(null, new { id });
+    }
+
+    [HttpPatch("{id:guid}/approve")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> Approve(Guid id, CancellationToken ct)
+    {
+        var result = await _mediator.Send(new CloudServiceStore.Application.Features.Reviews.Commands.ApproveReview.ApproveReviewCommand(id), ct);
+        return Ok(new { success = result });
+    }
+
     [HttpPatch("{id:guid}/feature")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Feature(Guid id, [FromBody] FeatureTestimonialCommand command, CancellationToken ct)

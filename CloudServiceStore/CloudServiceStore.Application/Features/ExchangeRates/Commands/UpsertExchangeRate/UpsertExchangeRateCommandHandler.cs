@@ -12,11 +12,16 @@ public class UpsertExchangeRateCommandHandler : IRequestHandler<UpsertExchangeRa
 {
     private readonly IRepository<ExchangeRate> _rateRepo;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly ICatalogCache _catalogCache;
 
-    public UpsertExchangeRateCommandHandler(IRepository<ExchangeRate> rateRepo, IUnitOfWork unitOfWork)
+    public UpsertExchangeRateCommandHandler(
+        IRepository<ExchangeRate> rateRepo,
+        IUnitOfWork unitOfWork,
+        ICatalogCache catalogCache)
     {
         _rateRepo = rateRepo;
         _unitOfWork = unitOfWork;
+        _catalogCache = catalogCache;
     }
 
     public async Task<bool> Handle(UpsertExchangeRateCommand request, CancellationToken cancellationToken)
@@ -48,6 +53,7 @@ public class UpsertExchangeRateCommandHandler : IRequestHandler<UpsertExchangeRa
         }
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
+        await _catalogCache.InvalidateCatalogAsync(cancellationToken);
         return true;
     }
 }

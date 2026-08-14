@@ -1,20 +1,15 @@
 using System;
-using System.Threading;
-using System.Threading.Tasks;
-using CloudServiceStore.Domain.Entities;
-using CloudServiceStore.Domain.Enums;
-using Moq;
+using System.Reflection;
 
 class Program
 {
     static void Main()
     {
-        var walletId = Guid.NewGuid();
-        var orderId = Guid.NewGuid();
-        var transaction = new WalletTransaction(walletId, 100m, TransactionType.Payment, orderId);
-        
-        Console.WriteLine($"Amount: {transaction.Amount}");
-        Console.WriteLine($"Type: {(int)transaction.Type}");
-        Console.WriteLine($"Match: {transaction.Amount == -100m && (int)transaction.Type == 1}");
+        var asm = Assembly.LoadFrom("/root/.nuget/packages/docker.dotnet.enhanced/4.3.3/lib/net10.0/Docker.DotNet.dll");
+        foreach (var t in asm.GetExportedTypes())
+        {
+            if (t.Name.Contains("Docker") || t.Name.Contains("Client") || t.Name.Contains("Configuration"))
+                Console.WriteLine(t.FullName);
+        }
     }
 }

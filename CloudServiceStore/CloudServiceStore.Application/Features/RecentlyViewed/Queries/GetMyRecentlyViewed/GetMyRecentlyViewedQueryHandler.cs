@@ -1,40 +1,35 @@
-using CloudServiceStore.Domain.Interfaces;
-using CloudServiceStore.Application.Interfaces;
-using MediatR;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using CloudServiceStore.Application.Exceptions;
+using CloudServiceStore.Application.Interfaces;
+using CloudServiceStore.Domain.Entities;
+using CloudServiceStore.Domain.Interfaces;
+using MediatR;
 
 namespace CloudServiceStore.Application.Features.RecentlyViewed.Queries.GetMyRecentlyViewed;
 
-public class GetMyRecentlyViewedQueryHandler : IRequestHandler<GetMyRecentlyViewedQuery, IEnumerable<RecentlyViewedDto>>
+public class GetMyRecentlyViewedQueryHandler : IRequestHandler<GetMyRecentlyViewedQuery, IReadOnlyList<RecentlyViewedDto>>
 {
-    private readonly IRepository<CloudServiceStore.Domain.Entities.RecentlyViewed> _repository;
-    private readonly ICurrentUserService _currentUserService;
+    private readonly IRepository<RecentlyViewedItem> _repo;
+    private readonly ICurrentUserService _currentUser;
 
-    public GetMyRecentlyViewedQueryHandler(IRepository<CloudServiceStore.Domain.Entities.RecentlyViewed> repository, ICurrentUserService currentUserService)
+    public GetMyRecentlyViewedQueryHandler(IRepository<RecentlyViewedItem> repo, ICurrentUserService currentUser)
     {
-        _repository = repository;
-        _currentUserService = currentUserService;
+        _repo = repo;
+        _currentUser = currentUser;
     }
 
-    public async Task<IEnumerable<RecentlyViewedDto>> Handle(GetMyRecentlyViewedQuery request, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<RecentlyViewedDto>> Handle(GetMyRecentlyViewedQuery request, CancellationToken ct)
     {
-        if (!_currentUserService.UserId.HasValue)
-            throw new UnauthorizedAccessException();
+        var userId = _currentUser.UserId ?? throw new UnauthorizedException("Unauthorized");
 
-        var records = await _repository.WhereAsync(r => r.UserId == _currentUserService.UserId.Value, cancellationToken);
+        var items = await _repo.WhereAsync(x => x.UserId == userId, ct);
 
-        return records
-            .OrderByDescending(r => r.ViewedAt)
-            .Take(10)
-            .Select(r => new RecentlyViewedDto
-            {
-                ServicePlanId = r.ServicePlanId,
-                PlanName = r.ServicePlan?.Name ?? "Unknown Plan",
-                ViewedAt = r.ViewedAt
-            }).ToList();
+        return items.OrderByDescending(x => x.ViewedAt)
+            .Take(50)
+            .Select(x => new RecentlyViewedDto(x.ServicePlanId, x.ViewedAt))
+            .ToList().AsReadOnly();
     }
 }

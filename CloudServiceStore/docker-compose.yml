@@ -1,5 +1,4 @@
 
-
 services:
   webapi:
     build:
@@ -11,9 +10,25 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=CloudServiceStoreDb;User Id=sa;Password=Your_Strong_Password_123!;TrustServerCertificate=True;
+      - Vps__DefaultImage=vps-demo-image
+      - Cache__Enabled=true
+      - Cache__RedisConnectionString=redis:6379
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
-      - sqlserver
+      sqlserver:
+        condition: service_healthy
+      redis:
+        condition: service_started
     restart: unless-stopped
+    mem_limit: 512m
+
+  vps-demo-image:
+    build:
+      context: ./docker/vps-demo-image
+    image: vps-demo-image
+    profiles:
+      - build
 
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
@@ -23,9 +38,25 @@ services:
     environment:
       - ACCEPT_EULA=Y
       - SA_PASSWORD=Your_Strong_Password_123!
+      - MSSQL_MEMORY_LIMIT_MB=1024
     volumes:
       - sqlserver_data:/var/opt/mssql
+    healthcheck:
+      test: /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P Your_Strong_Password_123! -C -Q "SELECT 1" || exit 1
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
     restart: unless-stopped
+    mem_limit: 1536m
+
+  redis:
+    image: redis:7-alpine
+    container_name: cloudservicestore_redis
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+    mem_limit: 256m
 
 volumes:
   sqlserver_data:

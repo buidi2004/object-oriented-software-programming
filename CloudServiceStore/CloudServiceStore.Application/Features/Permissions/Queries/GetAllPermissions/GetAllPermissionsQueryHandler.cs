@@ -1,32 +1,26 @@
-using CloudServiceStore.Domain.Interfaces;
-using CloudServiceStore.Application.Interfaces;
-using CloudServiceStore.Domain.Entities;
-using MediatR;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using CloudServiceStore.Application.Features.Permissions.Queries.GetRolePermissions;
+using CloudServiceStore.Domain.Entities;
+using CloudServiceStore.Domain.Interfaces;
+using MediatR;
 
 namespace CloudServiceStore.Application.Features.Permissions.Queries.GetAllPermissions;
 
-public class GetAllPermissionsQueryHandler : IRequestHandler<GetAllPermissionsQuery, IEnumerable<PermissionDto>>
+public class GetAllPermissionsQueryHandler : IRequestHandler<GetAllPermissionsQuery, IReadOnlyList<PermissionDto>>
 {
-    private readonly IRepository<Permission> _repository;
+    private readonly IRepository<Permission> _permissionRepo;
 
-    public GetAllPermissionsQueryHandler(IRepository<Permission> repository)
+    public GetAllPermissionsQueryHandler(IRepository<Permission> permissionRepo)
     {
-        _repository = repository;
+        _permissionRepo = permissionRepo;
     }
 
-    public async Task<IEnumerable<PermissionDto>> Handle(GetAllPermissionsQuery request, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<PermissionDto>> Handle(GetAllPermissionsQuery request, CancellationToken ct)
     {
-        var permissions = await _repository.GetAllAsync(cancellationToken);
-        
-        return permissions.Select(p => new PermissionDto
-        {
-            Id = p.Id,
-            Code = p.Code,
-            Description = p.Description
-        }).ToList();
+        var permissions = await _permissionRepo.GetAllAsync(ct);
+        return permissions.Select(p => new PermissionDto(p.Id, p.Code, p.Name)).ToList().AsReadOnly();
     }
 }

@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using CloudServiceStore.Application.Exceptions;
 using CloudServiceStore.Application.Features.Categories.Commands.Update;
+using CloudServiceStore.Application.Interfaces;
 using CloudServiceStore.Domain.Entities;
 using CloudServiceStore.Domain.Interfaces;
 using Moq;
@@ -16,9 +17,10 @@ public class UpdateCategoryCommandHandlerTests
 {
     private readonly Mock<IUnitOfWork> _uowMock = new();
     private readonly Mock<IRepository<ServiceCategory>> _repoMock = new();
+    private readonly Mock<ICatalogCache> _catalogCacheMock = new();
 
     private UpdateCategoryCommandHandler CreateHandler() =>
-        new(_uowMock.Object, _repoMock.Object);
+        new(_uowMock.Object, _repoMock.Object, _catalogCacheMock.Object);
 
     [Fact]
     public async Task Handle_CategoryNotFound_ThrowsNotFoundException()

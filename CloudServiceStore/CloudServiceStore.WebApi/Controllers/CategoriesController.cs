@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using CloudServiceStore.Application.Features.Categories.Commands.Create;
 using CloudServiceStore.Application.Features.Categories.Commands.Delete;
 using CloudServiceStore.Application.Features.Categories.Queries.GetCategories;
+using CloudServiceStore.Application.Features.Categories.Queries.GetCategoryPlansBySlug;
 using CloudServiceStore.Application.Features.Categories.Commands.Update;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -19,8 +20,18 @@ public class CategoriesController : ControllerBase
     public CategoriesController(IMediator mediator) => _mediator = mediator;
 
     [HttpGet]
+    [AllowAnonymous]
     public async Task<IActionResult> GetAll(CancellationToken ct) =>
         Ok(await _mediator.Send(new GetCategoriesQuery(), ct));
+
+    /// <summary>GET /api/categories/{slug}/plans?currency=VND — Public: plans in a category</summary>
+    [HttpGet("{slug}/plans")]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetPlansBySlug(string slug, [FromQuery] string currency = "VND", CancellationToken ct = default)
+    {
+        var result = await _mediator.Send(new GetCategoryPlansBySlugQuery(slug, currency), ct);
+        return Ok(result);
+    }
 
     [HttpPost]
     [Authorize(Roles = "Admin")]
