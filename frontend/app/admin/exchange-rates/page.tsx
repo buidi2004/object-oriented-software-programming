@@ -3,14 +3,15 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, Plus, Edit2, Trash2, AlertCircle, RefreshCw, DollarSign } from 'lucide-react';
+import { ArrowLeft, Plus, Edit2, AlertCircle, RefreshCw, DollarSign, X, Loader2 } from 'lucide-react';
+import { api } from '@/src/lib/api';
 
 interface ExchangeRate {
-  id: string;
+  id?: string;
   fromCurrency: string;
   toCurrency: string;
   rate: number;
-  updatedAt: string;
+  updatedAt?: string;
 }
 
 export default function AdminExchangeRatesPage() {
@@ -18,7 +19,7 @@ export default function AdminExchangeRatesPage() {
   const [exchangeRates, setExchangeRates] = useState<ExchangeRate[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
-  const [editingId, setEditingId] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
   // Form state
   const [fromCurrency, setFromCurrency] = useState('USD');
@@ -30,101 +31,72 @@ export default function AdminExchangeRatesPage() {
   }, []);
 
   const checkAdminAccess = async () => {
-    const token = localStorage.getItem('accessToken');
-    if (!token) { router.push('/login'); return; }
-    
     try {
-      const response = await fetch('/api/users/me', { 
-        headers: { Authorization: `Bearer ${token}` } 
-      });
-      if (response.ok) {
-        const userData = await response.json();
-        if (userData.role !== 'Admin') { router.push('/dashboard'); return; }
-        fetchExchangeRates();
-      } else { 
-        router.push('/login'); 
+      const res = await api.get('/users/me');
+      if (res.data?.role !== 'Admin') {
+        router.push('/dashboard');
+        return;
       }
-    } catch (error) { 
-      router.push('/login'); 
-    }
-  };
-
-  const fetchExchangeRates = async () => {
-    const token = localStorage.getItem('accessToken');
-    try {
-      const response = await fetch('/api/exchange-rates', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setExchangeRates(data);
-      }
+      await fetchExchangeRates();
     } catch (error) {
-      console.error('Failed to fetch exchange rates:', error);
+      router.push('/login');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleAddOrUpdate = async () => {
-    const token = localStorage.getItem('accessToken');
-    const url = editingId 
-      ? `/api/exchange-rates/${editingId}`
-      : '/api/exchange-rates';
-    const method = editingId ? 'PUT' : 'POST';
-
+  const fetchExchangeRates = async () => {
     try {
-      const response = await fetch(url, {
-        method,
-        headers: { 
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}` 
-        },
-        body: JSON.stringify({ 
-          fromCurrency, 
-          toCurrency, 
-          rate: parseFloat(rate) 
-        })
-      });
-
-      if (response.ok) {
-        setShowAddModal(false);
-        resetForm();
-        fetchExchangeRates();
-      }
+      const res = await api.get('/exchange-rates');
+      setExchangeRates(res.data || []);
     } catch (error) {
-      console.error('Failed to save exchange rate:', error);
+      console.error('Failed to fetch exchange rates:', error);
     }
-  };
-
-  const handleDelete = async (id: string) => {
-    if (!confirm('Bạn có chắc chắn muốn xóa tỷ giá này?')) return;
-    
-    const token = localStorage.getItem('accessToken');
-    try {
-      await fetch(`/api/exchange-rates/${id}`, {
-        method: 'DELETE',
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setExchangeRates(prev => prev.filter(r => r.id !== id));
-    } catch (error) {
-      console.error('Failed to delete exchange rate:', error);
-    }
-  };
-
-  const openEdit = (rate: ExchangeRate) => {
-    setEditingId(rate.id);
-    setFromCurrency(rate.fromCurrency);
-    setToCurrency(rate.toCurrency);
-    setRate(rate.rate.toString());
-    setShowAddModal(true);
   };
 
   const resetForm = () => {
-    setEditingId(null);
     setFromCurrency('USD');
     setToCurrency('VND');
     setRate('');
+  };
+
+  const handleOpenCreateModal = () => {
+    resetForm();
+    setShowAddModal(true);
+  };
+
+  const handleOpenEditModal = (item: ExchangeRate) => {
+    setFromCurrency(item.fromCurrency);
+    setToCurrency(item.toCurrency);
+    setRate(item.rate.toString());
+    setShowAddModal(true);
+  };
+
+  const handleUpsert = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const rateVal = parseFloat(rate);
+    if (isNaN(rateVal) || rateVal <= 0) {
+      alert('Vui lòng nhập tỷ giá quy đổi hợp lệ (> 0)');
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      await api.post('/exchange-rates', {
+        fromCurrency,
+        toCurrency,
+        rate: rateVal
+      });
+
+      setShowAddModal(false);
+      resetForm();
+      await fetchExchangeRates();
+    } catch (error: any) {
+      console.error('Failed to save exchange rate:', error);
+      alert(error.response?.data?.message || 'Lỗi khi cập nhật tỷ giá');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (isLoading) {
@@ -144,143 +116,146 @@ export default function AdminExchangeRatesPage() {
               <ArrowLeft className="w-5 h-5 text-slate-600" />
             </Link>
             <div>
-              <h1 className="text-xl font-bold text-slate-900">Quản lý Tỷ giá</h1>
-              <p className="text-sm text-slate-500">{exchangeRates.length} tỷ giá</p>
+              <h1 className="text-xl font-bold text-slate-900">Quản lý Tỷ Giá Tiền Tệ</h1>
+              <p className="text-sm text-slate-500">{exchangeRates.length} cặp tỷ giá</p>
             </div>
           </div>
-          <button 
-            onClick={() => { resetForm(); setShowAddModal(true); }}
-            className="px-4 py-2 rounded-lg bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 transition-colors flex items-center gap-2"
-          >
-            <Plus className="w-4 h-4" />
-            Thêm tỷ giá
-          </button>
+          <div className="flex items-center gap-3">
+            <button 
+              onClick={fetchExchangeRates}
+              className="p-2 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors"
+              title="Làm mới tỷ giá"
+            >
+              <RefreshCw className="w-4 h-4" />
+            </button>
+            <button 
+              onClick={handleOpenCreateModal}
+              className="px-4 py-2 rounded-lg bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 transition-colors flex items-center gap-2"
+            >
+              <Plus className="w-4 h-4" />
+              Cập nhật tỷ giá
+            </button>
+          </div>
         </div>
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-          <table className="w-full">
-            <thead className="bg-slate-50 border-b border-slate-200">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Từ</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Đến</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Tỷ giá</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Cập nhật</th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase">Thao tác</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-200">
-              {exchangeRates.map((er) => (
-                <tr key={er.id} className="hover:bg-slate-50 transition-colors">
-                  <td className="px-6 py-4">
-                    <span className="font-semibold text-slate-900">{er.fromCurrency}</span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className="font-semibold text-slate-900">{er.toCurrency}</span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className="text-emerald-600 font-bold">{er.rate.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
-                  </td>
-                  <td className="px-6 py-4 text-sm text-slate-500">
-                    {new Date(er.updatedAt).toLocaleDateString('vi-VN')}
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    <button 
-                      onClick={() => openEdit(er)}
-                      className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors mr-2"
-                    >
-                      <Edit2 className="w-4 h-4" />
-                    </button>
-                    <button 
-                      onClick={() => handleDelete(er.id)}
-                      className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {exchangeRates.map((rateItem, idx) => (
+            <div key={idx} className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition-shadow">
+              <div className="flex items-start justify-between mb-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-lg">
+                    {rateItem.fromCurrency}
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-slate-900">1 {rateItem.fromCurrency}</h3>
+                    <p className="text-xs text-slate-500">Quy đổi sang {rateItem.toCurrency}</p>
+                  </div>
+                </div>
+                <button 
+                  onClick={() => handleOpenEditModal(rateItem)}
+                  className="p-1.5 text-slate-400 hover:text-blue-600 rounded-lg hover:bg-blue-50 transition-colors"
+                  title="Chỉnh sửa tỷ giá"
+                >
+                  <Edit2 className="w-4 h-4" />
+                </button>
+              </div>
 
-          {exchangeRates.length === 0 && (
-            <div className="text-center py-12">
-              <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-300" />
-              <p className="font-medium text-slate-500">Chưa có tỷ giá nào</p>
+              <div className="pt-4 border-t border-slate-100 flex items-baseline justify-between">
+                <span className="text-xs text-slate-400 font-medium">Tỷ giá hiện tại:</span>
+                <span className="text-2xl font-black text-blue-600 font-mono">
+                  {rateItem.rate.toLocaleString('vi-VN')} {rateItem.toCurrency}
+                </span>
+              </div>
             </div>
-          )}
+          ))}
         </div>
+
+        {exchangeRates.length === 0 && (
+          <div className="text-center py-12 text-slate-500 bg-white rounded-2xl border border-slate-200 mt-4">
+            <DollarSign className="w-12 h-12 mx-auto mb-3 text-slate-300" />
+            <p className="font-medium">Chưa có dữ liệu tỷ giá tiền tệ nào</p>
+          </div>
+        )}
       </main>
 
-      {/* Add/Edit Modal */}
+      {/* Modal Add/Edit Exchange Rate */}
       {showAddModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl w-full max-w-md p-6">
-            <h2 className="text-lg font-bold text-slate-900 mb-4">
-              {editingId ? 'Chỉnh sửa tỷ giá' : 'Thêm tỷ giá mới'}
-            </h2>
-            
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Từ</label>
-                <select 
-                  value={fromCurrency}
-                  onChange={(e) => setFromCurrency(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                >
-                  <option value="USD">USD - Mỹ Dollar</option>
-                  <option value="EUR">EUR - Euro</option>
-                  <option value="GBP">GBP - British Pound</option>
-                  <option value="JPY">JPY - Japanese Yen</option>
-                  <option value="KRW">KRW - Korean Won</option>
-                  <option value="VND">VND - Việt Nam Đồng</option>
-                </select>
+        <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6">
+            <div className="flex items-center justify-between pb-4 border-b border-slate-200 mb-4">
+              <h2 className="text-lg font-bold text-slate-900">
+                Cập Nhật Tỷ Giá Hối Đoái
+              </h2>
+              <button onClick={() => setShowAddModal(false)} className="text-slate-400 hover:text-slate-600">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleUpsert} className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Từ tiền tệ *</label>
+                  <select
+                    value={fromCurrency}
+                    onChange={(e) => setFromCurrency(e.target.value)}
+                    className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                  >
+                    <option value="USD">USD ($)</option>
+                    <option value="EUR">EUR (€)</option>
+                    <option value="JPY">JPY (¥)</option>
+                    <option value="VND">VND (đ)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Sang tiền tệ *</label>
+                  <select
+                    value={toCurrency}
+                    onChange={(e) => setToCurrency(e.target.value)}
+                    className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                  >
+                    <option value="VND">VND (đ)</option>
+                    <option value="USD">USD ($)</option>
+                    <option value="EUR">EUR (€)</option>
+                  </select>
+                </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Đến</label>
-                <select 
-                  value={toCurrency}
-                  onChange={(e) => setToCurrency(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                >
-                  <option value="VND">VND - Việt Nam Đồng</option>
-                  <option value="USD">USD - Mỹ Dollar</option>
-                  <option value="EUR">EUR - Euro</option>
-                  <option value="GBP">GBP - British Pound</option>
-                  <option value="JPY">JPY - Japanese Yen</option>
-                  <option value="KRW">KRW - Korean Won</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Tỷ giá</label>
-                <input 
+                <label className="block text-xs font-bold text-slate-700 mb-1">
+                  Tỷ giá quy đổi (1 {fromCurrency} = ? {toCurrency}) *
+                </label>
+                <input
                   type="number"
-                  step="0.01"
+                  step="any"
+                  required
+                  placeholder="Ví dụ: 25450"
                   value={rate}
                   onChange={(e) => setRate(e.target.value)}
-                  placeholder="Nhập tỷ giá"
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 font-mono"
                 />
               </div>
-            </div>
 
-            <div className="flex gap-3 mt-6">
-              <button 
-                onClick={() => { setShowAddModal(false); resetForm(); }}
-                className="flex-1 py-2 rounded-lg bg-slate-100 text-slate-700 font-semibold hover:bg-slate-200 transition-colors"
-              >
-                Hủy
-              </button>
-              <button 
-                onClick={handleAddOrUpdate}
-                className="flex-1 py-2 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors"
-              >
-                {editingId ? 'Cập nhật' : 'Thêm mới'}
-              </button>
-            </div>
+              <div className="pt-4 border-t border-slate-200 flex justify-end gap-3">
+                <button
+                  type="button"
+                  onClick={() => setShowAddModal(false)}
+                  className="px-4 py-2 rounded-lg border border-slate-200 text-slate-600 text-sm font-semibold hover:bg-slate-50"
+                >
+                  Hủy
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 flex items-center gap-2 disabled:opacity-50"
+                >
+                  {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
+                  Lưu tỷ giá
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

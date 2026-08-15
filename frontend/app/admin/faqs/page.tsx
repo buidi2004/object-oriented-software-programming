@@ -5,8 +5,9 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { 
   ArrowLeft, Plus, Edit2, Trash2, HelpCircle, Search, AlertCircle, 
-  ChevronDown, ChevronUp 
+  ChevronDown, ChevronUp, X, Loader2 
 } from 'lucide-react';
+import { api } from '@/src/lib/api';
 
 interface FAQ {
   id: string;
@@ -26,25 +27,44 @@ export default function AdminFAQsPage() {
   const [openId, setOpenId] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [newFaq, setNewFaq] = useState({ question: '', answer: '', categoryTag: 'General', displayOrder: 1 });
+  const [editingFaq, setEditingFaq] = useState<FAQ | null>(null);
+
+  const [formData, setFormData] = useState({
+    question: '',
+    answer: '',
+    categoryTag: 'General',
+    displayOrder: 1
+  });
 
   useEffect(() => {
     checkAdminAccess();
   }, []);
 
-  const fetchFaqs = async (token: string) => {
+  const checkAdminAccess = async () => {
     try {
-      const response = await fetch('/api/faqs', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setFaqs(data.map((item: any) => ({
+      const res = await api.get('/users/me');
+      if (res.data?.role !== 'Admin') {
+        router.push('/dashboard');
+        return;
+      }
+      await fetchFaqs();
+    } catch (error) {
+      router.push('/login');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const fetchFaqs = async () => {
+    try {
+      const res = await api.get('/faqs');
+      if (res.data) {
+        setFaqs(res.data.map((item: any) => ({
           id: item.id,
           question: item.question,
           answer: item.answer,
-          category: item.categoryTag,
-          order: item.displayOrder,
+          category: item.categoryTag || 'General',
+          order: item.displayOrder || 1,
           views: 0,
           isActive: true
         })));
@@ -54,58 +74,82 @@ export default function AdminFAQsPage() {
     }
   };
 
-  const checkAdminAccess = async () => {
-    const token = localStorage.getItem('accessToken');
-    if (!token) { router.push('/login'); return; }
-    
-    try {
-      const response = await fetch('/api/users/me', { headers: { Authorization: `Bearer ${token}` } });
-      if (response.ok) {
-        const userData = await response.json();
-        if (userData.role !== 'Admin') { router.push('/dashboard'); return; }
-        await fetchFaqs(token);
-        setIsLoading(false);
-      } else { router.push('/login'); }
-    } catch (error) { router.push('/login'); }
+  const handleOpenCreateModal = () => {
+    setEditingFaq(null);
+    setFormData({
+      question: '',
+      answer: '',
+      categoryTag: 'General',
+      displayOrder: faqs.length + 1
+    });
+    setIsModalOpen(true);
   };
 
-  const filteredFaqs = faqs.filter(f => 
-    f.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    f.answer.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const toggleStatus = (id: string) => {
-    setFaqs(prev => prev.map(f => f.id === id ? { ...f, isActive: !f.isActive } : f));
+  const handleOpenEditModal = (faq: FAQ, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setEditingFaq(faq);
+    setFormData({
+      question: faq.question,
+      answer: faq.answer,
+      categoryTag: faq.category,
+      displayOrder: faq.order
+    });
+    setIsModalOpen(true);
   };
 
-  const handleCreateFaq = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
-    const token = localStorage.getItem('accessToken');
-    try {
-      const response = await fetch('/api/faqs', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(newFaq)
-      });
+    if (!formData.question.trim() || !formData.answer.trim()) {
+      alert('Vui lòng nhập đầy đủ câu hỏi và câu trả lời.');
+      return;
+    }
 
-      if (response.ok) {
-        setIsModalOpen(false);
-        setNewFaq({ question: '', answer: '', categoryTag: 'General', displayOrder: 1 });
-        await fetchFaqs(token!);
+    setIsSubmitting(true);
+    try {
+      if (editingFaq) {
+        await api.put(`/faqs/${editingFaq.id}`, {
+          id: editingFaq.id,
+          question: formData.question,
+          answer: formData.answer,
+          categoryTag: formData.categoryTag,
+          displayOrder: Number(formData.displayOrder)
+        });
       } else {
-        alert('Failed to create FAQ');
+        await api.post('/faqs', {
+          question: formData.question,
+          answer: formData.answer,
+          categoryTag: formData.categoryTag,
+          displayOrder: Number(formData.displayOrder)
+        });
       }
-    } catch (error) {
-      console.error('Error creating FAQ:', error);
-      alert('An error occurred');
+
+      setIsModalOpen(false);
+      await fetchFaqs();
+    } catch (error: any) {
+      console.error('Error saving FAQ:', error);
+      alert(error.response?.data?.message || 'Lỗi khi lưu câu hỏi FAQ');
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  const handleDelete = async (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!confirm('Bạn có chắc chắn muốn xóa câu hỏi FAQ này?')) return;
+    try {
+      await api.delete(`/faqs/${id}`);
+      setFaqs(prev => prev.filter(f => f.id !== id));
+    } catch (err: any) {
+      console.error('Error deleting FAQ', err);
+      alert(err.response?.data?.message || 'Không thể xóa câu hỏi FAQ');
+    }
+  };
+
+  const filteredFaqs = faqs.filter(f => 
+    f.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    f.answer.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    f.category.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   if (isLoading) {
     return (
@@ -124,12 +168,12 @@ export default function AdminFAQsPage() {
               <ArrowLeft className="w-5 h-5 text-slate-600" />
             </Link>
             <div>
-              <h1 className="text-xl font-bold text-slate-900">Quản lý FAQ</h1>
+              <h1 className="text-xl font-bold text-slate-900">Quản lý Câu hỏi FAQ</h1>
               <p className="text-sm text-slate-500">{faqs.length} câu hỏi</p>
             </div>
           </div>
           <button 
-            onClick={() => setIsModalOpen(true)}
+            onClick={handleOpenCreateModal}
             className="px-4 py-2 rounded-lg bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 transition-colors flex items-center gap-2"
           >
             <Plus className="w-4 h-4" />
@@ -154,7 +198,7 @@ export default function AdminFAQsPage() {
 
         <div className="space-y-3">
           {filteredFaqs.map((faq) => (
-            <div key={faq.id} className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+            <div key={faq.id} className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
               <button
                 onClick={() => setOpenId(openId === faq.id ? null : faq.id)}
                 className="w-full p-4 flex items-center justify-between text-left hover:bg-slate-50 transition-colors"
@@ -164,33 +208,33 @@ export default function AdminFAQsPage() {
                   <div className="flex-1 min-w-0">
                     <h3 className="font-semibold text-slate-900">{faq.question}</h3>
                     <div className="flex items-center gap-2 mt-1">
-                      <span className="px-2 py-0.5 rounded-full bg-slate-100 text-xs font-medium text-slate-600">
+                      <span className="px-2 py-0.5 rounded-full bg-blue-50 text-xs font-medium text-blue-700">
                         {faq.category}
                       </span>
-                      <span className="text-xs text-slate-400">{faq.views} lượt xem</span>
+                      <span className="text-xs text-slate-400">Thứ tự: {faq.order}</span>
                     </div>
                   </div>
                 </div>
                 <div className="flex items-center gap-2 ml-4">
-                  <span className={`px-2 py-1 rounded-full text-xs font-bold ${faq.isActive ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-500'}`}>
-                    {faq.isActive ? 'Hiển thị' : 'Ẩn'}
-                  </span>
                   {openId === faq.id ? <ChevronUp className="w-5 h-5 text-slate-400" /> : <ChevronDown className="w-5 h-5 text-slate-400" />}
                 </div>
               </button>
               
               {openId === faq.id && (
-                <div className="px-4 pb-4 border-t border-slate-100 pt-4">
-                  <p className="text-sm text-slate-600 mb-4">{faq.answer}</p>
-                  <div className="flex items-center gap-2">
-                    <button onClick={() => toggleStatus(faq.id)} className="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 text-xs font-semibold hover:bg-slate-200 transition-colors">
-                      {faq.isActive ? 'Ẩn câu hỏi' : 'Hiển thị câu hỏi'}
+                <div className="px-4 pb-4 border-t border-slate-100 pt-4 bg-slate-50/50">
+                  <p className="text-sm text-slate-600 mb-4 whitespace-pre-wrap">{faq.answer}</p>
+                  <div className="flex items-center justify-end gap-2">
+                    <button 
+                      onClick={(e) => handleOpenEditModal(faq, e)}
+                      className="px-3 py-1.5 rounded-lg bg-blue-100 text-blue-700 hover:bg-blue-200 text-xs font-semibold flex items-center gap-1 transition-colors"
+                    >
+                      <Edit2 className="w-3.5 h-3.5" /> Chỉnh sửa
                     </button>
-                    <button disabled className="opacity-50 cursor-not-allowed px-3 py-1.5 rounded-lg bg-blue-100 text-blue-700 text-xs font-semibold flex items-center gap-1">
-                      <Edit2 className="w-3 h-3" /> Sửa
-                    </button>
-                    <button disabled className="opacity-50 cursor-not-allowed px-3 py-1.5 rounded-lg bg-red-100 text-red-700 text-xs font-semibold flex items-center gap-1">
-                      <Trash2 className="w-3 h-3" /> Xóa
+                    <button 
+                      onClick={(e) => handleDelete(faq.id, e)}
+                      className="px-3 py-1.5 rounded-lg bg-red-100 text-red-700 hover:bg-red-200 text-xs font-semibold flex items-center gap-1 transition-colors"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" /> Xóa
                     </button>
                   </div>
                 </div>
@@ -200,88 +244,93 @@ export default function AdminFAQsPage() {
         </div>
 
         {filteredFaqs.length === 0 && (
-          <div className="text-center py-12 text-slate-500">
-            <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-300" />
-            <p className="font-medium">Không tìm thấy câu hỏi nào</p>
+          <div className="text-center py-12 text-slate-500 bg-white rounded-2xl border border-slate-200 mt-4">
+            <HelpCircle className="w-12 h-12 mx-auto mb-3 text-slate-300" />
+            <p className="font-medium">Chưa có câu hỏi FAQ nào</p>
           </div>
         )}
       </main>
 
-      {/* Modal Thêm FAQ */}
+      {/* Modal Add/Edit FAQ */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl w-full max-w-lg overflow-hidden shadow-xl">
-            <div className="p-6 border-b border-slate-100 flex items-center justify-between">
-              <h2 className="text-xl font-bold text-slate-900">Thêm Câu Hỏi Mới</h2>
-              <button 
-                onClick={() => setIsModalOpen(false)}
-                className="text-slate-400 hover:text-slate-600"
-              >
-                &times;
+        <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-xl max-w-lg w-full p-6">
+            <div className="flex items-center justify-between pb-4 border-b border-slate-200 mb-4">
+              <h2 className="text-lg font-bold text-slate-900">
+                {editingFaq ? 'Chỉnh Sửa Câu Hỏi FAQ' : 'Thêm Câu Hỏi FAQ Mới'}
+              </h2>
+              <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-slate-600">
+                <X className="w-5 h-5" />
               </button>
             </div>
-            <form onSubmit={handleCreateFaq} className="p-6 space-y-4">
+
+            <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Câu hỏi</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Câu hỏi (Question) *</label>
                 <input
                   type="text"
                   required
-                  value={newFaq.question}
-                  onChange={e => setNewFaq({...newFaq, question: e.target.value})}
-                  className="w-full px-4 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Nhập câu hỏi..."
+                  placeholder="Ví dụ: Làm sao để cài đặt SSL miễn phí?"
+                  value={formData.question}
+                  onChange={(e) => setFormData({ ...formData, question: e.target.value })}
+                  className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Câu trả lời</label>
-                <textarea
-                  required
-                  value={newFaq.answer}
-                  onChange={e => setNewFaq({...newFaq, answer: e.target.value})}
-                  rows={4}
-                  className="w-full px-4 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
-                  placeholder="Nhập câu trả lời..."
-                />
-              </div>
+
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Danh mục</label>
-                  <input
-                    type="text"
-                    required
-                    value={newFaq.categoryTag}
-                    onChange={e => setNewFaq({...newFaq, categoryTag: e.target.value})}
-                    className="w-full px-4 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="VD: VPS, Hosting..."
-                  />
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Danh mục *</label>
+                  <select
+                    value={formData.categoryTag}
+                    onChange={(e) => setFormData({ ...formData, categoryTag: e.target.value })}
+                    className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                  >
+                    <option value="General">Chung (General)</option>
+                    <option value="VPS">Cloud VPS</option>
+                    <option value="Hosting">Web Hosting</option>
+                    <option value="Domain">Tên miền & DNS</option>
+                    <option value="Billing">Thanh toán & Hóa đơn</option>
+                    <option value="Technical">Kỹ thuật</option>
+                  </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Thứ tự hiển thị</label>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Thứ tự hiển thị</label>
                   <input
                     type="number"
-                    required
-                    min={1}
-                    value={newFaq.displayOrder}
-                    onChange={e => setNewFaq({...newFaq, displayOrder: parseInt(e.target.value) || 1})}
-                    className="w-full px-4 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    value={formData.displayOrder}
+                    onChange={(e) => setFormData({ ...formData, displayOrder: parseInt(e.target.value) || 1 })}
+                    className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                   />
                 </div>
               </div>
-              <div className="pt-4 flex items-center justify-end gap-3">
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Câu trả lời (Answer) *</label>
+                <textarea
+                  required
+                  rows={6}
+                  placeholder="Nhập câu trả lời chi tiết..."
+                  value={formData.answer}
+                  onChange={(e) => setFormData({ ...formData, answer: e.target.value })}
+                  className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                />
+              </div>
+
+              <div className="pt-4 border-t border-slate-200 flex justify-end gap-3">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
+                  className="px-4 py-2 rounded-lg border border-slate-200 text-slate-600 text-sm font-semibold hover:bg-slate-50"
                 >
                   Hủy
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="px-4 py-2 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors disabled:opacity-50 flex items-center gap-2"
+                  className="px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 flex items-center gap-2 disabled:opacity-50"
                 >
-                  {isSubmitting && <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />}
-                  Lưu câu hỏi
+                  {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
+                  {editingFaq ? 'Lưu thay đổi' : 'Tạo FAQ'}
                 </button>
               </div>
             </form>

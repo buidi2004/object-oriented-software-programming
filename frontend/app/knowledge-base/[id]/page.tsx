@@ -32,6 +32,7 @@ export default function KnowledgeBaseDetailPage() {
       const res = await api.get(`/KnowledgeBase/${articleId}`);
       if (res.data) {
         setArticle(res.data);
+        api.patch(`/knowledgebase/${articleId}/view`).catch(() => {});
       } else {
         setError('Không tìm thấy bài viết.');
       }
