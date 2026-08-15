@@ -30,15 +30,15 @@ public class CreateNewsArticleCommandHandler : IRequestHandler<CreateNewsArticle
         if (await _repo.AnyAsync(a => a.Slug == request.Slug, ct))
             throw new ConflictException("Slug đã tồn tại.");
 
-        var article = new NewsArticle
-        {
-            Id = Guid.NewGuid(),
-            Title = request.Title,
-            Slug = request.Slug,
-            Content = request.Content,
-            AuthorId = userId,
-            Status = ArticleStatus.Draft
-        };
+        var article = new NewsArticle(
+            title: request.Title,
+            slug: request.Slug,
+            content: request.Content,
+            authorId: userId,
+            thumbnailUrl: null, // Default
+            tags: null,         // Default
+            status: ArticleStatus.Draft
+        );
 
         await _repo.AddAsync(article, ct);
         await _uow.SaveChangesAsync(ct);

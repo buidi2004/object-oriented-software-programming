@@ -24,7 +24,14 @@ public class PublishNewsArticleCommandHandler : IRequestHandler<PublishNewsArtic
         var article = await _repo.GetByIdAsync(request.Id, ct)
             ?? throw new NotFoundException($"Bài viết {request.Id} không tồn tại.");
 
-        article.Status = ArticleStatus.Published;
+        article.Update(
+            title: article.Title,
+            slug: article.Slug,
+            content: article.Content,
+            thumbnailUrl: article.ThumbnailUrl,
+            tags: article.Tags,
+            status: ArticleStatus.Published
+        );
 
         _repo.Update(article);
         await _uow.SaveChangesAsync(ct);

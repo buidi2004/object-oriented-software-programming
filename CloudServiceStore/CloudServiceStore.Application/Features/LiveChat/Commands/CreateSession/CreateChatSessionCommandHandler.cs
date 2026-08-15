@@ -20,7 +20,13 @@ public class CreateChatSessionCommandHandler : IRequestHandler<CreateChatSession
 
     public async Task<Guid> Handle(CreateChatSessionCommand request, CancellationToken cancellationToken)
     {
-        var session = new ChatSession(request.UserId, request.GuestName);
+        var session = new ChatSession
+        {
+            Id = Guid.NewGuid(),
+            UserId = request.UserId ?? Guid.Empty,
+            Status = "Open",
+            CreatedAt = DateTime.UtcNow
+        };
         
         await _chatRepository.AddAsync(session);
         await _unitOfWork.SaveChangesAsync(cancellationToken);

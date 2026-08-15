@@ -19,16 +19,16 @@ public class GetChatSessionMessagesQueryHandler : IRequestHandler<GetChatSession
 
     public async Task<List<ChatMessageDto>> Handle(GetChatSessionMessagesQuery request, CancellationToken cancellationToken)
     {
-        var messages = await _messageRepository.WhereAsync(m => m.ChatSessionId == request.ChatSessionId);
+        var messages = await _messageRepository.WhereAsync(m => m.SessionId == request.ChatSessionId);
 
         return messages
-            .OrderBy(m => m.SentAt)
+            .OrderBy(m => m.CreatedAt)
             .Select(m => new ChatMessageDto(
                 m.Id,
                 m.SenderId,
-                m.SenderName,
-                m.Content,
-                m.SentAt
+                "User", // Dummy SenderName since it's not in the entity
+                m.Message,
+                m.CreatedAt
             ))
             .ToList();
     }

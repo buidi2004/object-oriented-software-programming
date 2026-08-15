@@ -26,15 +26,17 @@ public class SendMessageCommandHandler : IRequestHandler<SendMessageCommand, Gui
         if (session == null)
             throw new ArgumentException("Chat session not found.", nameof(request.ChatSessionId));
 
-        if (session.Status == CloudServiceStore.Domain.Enums.ChatSessionStatus.Closed)
+        if (session.Status == "Closed")
             throw new InvalidOperationException("Cannot send message to a closed chat session.");
 
-        var message = new ChatMessage(
-            request.ChatSessionId,
-            request.SenderId,
-            request.SenderName,
-            request.Content
-        );
+        var message = new ChatMessage
+        {
+            Id = Guid.NewGuid(),
+            SessionId = request.ChatSessionId,
+            SenderId = request.SenderId ?? Guid.Empty,
+            Message = request.Content,
+            CreatedAt = DateTime.UtcNow
+        };
         
         await _messageRepository.AddAsync(message);
         await _unitOfWork.SaveChangesAsync(cancellationToken);

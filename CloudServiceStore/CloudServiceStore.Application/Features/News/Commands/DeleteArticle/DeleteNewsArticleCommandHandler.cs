@@ -28,7 +28,7 @@ public class DeleteNewsArticleCommandHandler : IRequestHandler<DeleteNewsArticle
         var article = await _repo.GetByIdAsync(request.Id, ct)
             ?? throw new NotFoundException($"Bài viết {request.Id} không tồn tại.");
 
-        var comments = await _commentRepo.WhereAsync(c => c.ArticleId == request.Id, ct);
+        var comments = await _commentRepo.WhereAsync(c => c.NewsArticleId == article.Id, ct);
         foreach (var comment in comments)
         {
             _commentRepo.Delete(comment);

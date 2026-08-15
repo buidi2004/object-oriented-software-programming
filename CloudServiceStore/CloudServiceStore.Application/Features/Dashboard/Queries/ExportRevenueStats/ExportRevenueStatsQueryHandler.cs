@@ -24,11 +24,11 @@ public class ExportRevenueStatsQueryHandler : IRequestHandler<ExportRevenueStats
         var orders = await _repository.WhereAsync(o => o.Status == OrderStatus.Paid, cancellationToken);
         
         var sb = new StringBuilder();
-        sb.AppendLine("OrderId,ServicePlanId,TotalAmount,CreatedAt");
+        sb.AppendLine("OrderId,UserId,TotalAmount,CreatedAt");
         
         foreach (var order in orders)
         {
-            sb.AppendLine($"{order.Id},{order.ServicePlanId},{order.TotalAmount},{order.CreatedAt:yyyy-MM-dd HH:mm:ss}");
+            sb.AppendLine($"{order.Id},{order.UserId},{order.TotalAmount},{order.CreatedAt:yyyy-MM-dd HH:mm:ss}");
         }
 
         return Encoding.UTF8.GetBytes(sb.ToString());

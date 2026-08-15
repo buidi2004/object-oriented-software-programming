@@ -23,12 +23,12 @@ public class UpdateSettingCommandHandler : IRequestHandler<UpdateSettingCommand,
 
         if (setting == null)
         {
-            setting = new SystemSetting(request.Key, request.Value);
+            setting = new SystemSetting { Id = System.Guid.NewGuid(), Key = request.Key, Value = request.Value };
             await _repository.AddAsync(setting, cancellationToken);
         }
         else
         {
-            setting.UpdateValue(request.Value);
+            setting.Value = request.Value;
             _repository.Update(setting);
         }
 

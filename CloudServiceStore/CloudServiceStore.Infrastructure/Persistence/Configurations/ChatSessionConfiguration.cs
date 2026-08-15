@@ -12,13 +12,11 @@ public class ChatSessionConfiguration : IEntityTypeConfiguration<ChatSession>
 
         builder.HasKey(c => c.Id);
 
-        builder.Property(c => c.GuestName)
-            .HasMaxLength(100);
 
         builder.Property(c => c.Status)
             .IsRequired();
 
-        builder.Property(c => c.StartedAt)
+        builder.Property(c => c.CreatedAt)
             .IsRequired();
 
         builder.HasOne(c => c.User)
@@ -26,14 +24,6 @@ public class ChatSessionConfiguration : IEntityTypeConfiguration<ChatSession>
             .HasForeignKey(c => c.UserId)
             .OnDelete(DeleteBehavior.SetNull);
 
-        builder.HasOne(c => c.Agent)
-            .WithMany()
-            .HasForeignKey(c => c.AgentId)
-            .OnDelete(DeleteBehavior.SetNull);
-            
-        builder.HasMany(c => c.Messages)
-            .WithOne(m => m.Session)
-            .HasForeignKey(m => m.ChatSessionId)
-            .OnDelete(DeleteBehavior.Cascade);
+
     }
 }

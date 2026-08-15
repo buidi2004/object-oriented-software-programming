@@ -30,7 +30,7 @@ public class UpdateRolePermissionsCommandHandler : IRequestHandler<UpdateRolePer
 
         foreach (var pId in request.PermissionIds)
         {
-            await _repository.AddAsync(new RolePermission(request.RoleId, pId), cancellationToken);
+            await _repository.AddAsync(new RolePermission { Id = System.Guid.NewGuid(), RoleId = request.RoleId, PermissionId = pId }, cancellationToken);
         }
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);

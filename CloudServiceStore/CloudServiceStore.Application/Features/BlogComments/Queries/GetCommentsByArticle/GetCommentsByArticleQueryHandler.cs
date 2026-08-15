@@ -19,7 +19,7 @@ public class GetCommentsByArticleQueryHandler : IRequestHandler<GetCommentsByArt
 
     public async Task<IReadOnlyList<CommentDto>> Handle(GetCommentsByArticleQuery request, CancellationToken ct)
     {
-        var comments = await _repo.WhereAsync(c => c.ArticleId == request.ArticleId, ct);
+        var comments = await _repo.WhereAsync(c => c.NewsArticleId == request.ArticleId, ct);
 
         return comments.OrderByDescending(c => c.CreatedAt)
             .Select(c => new CommentDto(c.Id, c.UserId, c.Content, c.CreatedAt))

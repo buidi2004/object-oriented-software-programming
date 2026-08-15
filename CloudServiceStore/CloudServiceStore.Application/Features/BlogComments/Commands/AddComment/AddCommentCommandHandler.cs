@@ -41,7 +41,7 @@ public class AddCommentCommandHandler : IRequestHandler<AddCommentCommand, Guid>
         var comment = new ArticleComment
         {
             Id = Guid.NewGuid(),
-            ArticleId = request.ArticleId,
+            NewsArticleId = request.ArticleId,
             UserId = userId,
             Content = request.Content,
             CreatedAt = DateTime.UtcNow

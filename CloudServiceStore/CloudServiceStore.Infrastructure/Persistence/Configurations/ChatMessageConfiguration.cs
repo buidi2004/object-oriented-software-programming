@@ -12,14 +12,12 @@ public class ChatMessageConfiguration : IEntityTypeConfiguration<ChatMessage>
 
         builder.HasKey(m => m.Id);
 
-        builder.Property(m => m.SenderName)
-            .HasMaxLength(100);
 
-        builder.Property(m => m.Content)
+        builder.Property(m => m.Message)
             .IsRequired()
             .HasMaxLength(2000);
 
-        builder.Property(m => m.SentAt)
+        builder.Property(m => m.CreatedAt)
             .IsRequired();
 
         builder.HasOne(m => m.Sender)

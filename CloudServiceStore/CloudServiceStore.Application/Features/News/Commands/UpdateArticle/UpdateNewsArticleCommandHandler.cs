@@ -27,9 +27,14 @@ public class UpdateNewsArticleCommandHandler : IRequestHandler<UpdateNewsArticle
         if (article.Slug != request.Slug && await _repo.AnyAsync(a => a.Slug == request.Slug, ct))
             throw new ConflictException("Slug đã tồn tại.");
 
-        article.Title = request.Title;
-        article.Slug = request.Slug;
-        article.Content = request.Content;
+        article.Update(
+            title: request.Title,
+            slug: request.Slug,
+            content: request.Content,
+            thumbnailUrl: article.ThumbnailUrl, // Keep existing if not in request
+            tags: article.Tags,                 // Keep existing if not in request
+            status: article.Status              // Keep existing if not in request
+        );
 
         _repo.Update(article);
         await _uow.SaveChangesAsync(ct);
