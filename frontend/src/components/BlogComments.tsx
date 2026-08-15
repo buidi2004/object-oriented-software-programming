@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { User, MessageCircle, Clock, Send, Loader2 } from 'lucide-react';
+import { User, MessageCircle, Clock, Send, Loader2, Trash2 } from 'lucide-react';
 import { api } from '../lib/api';
 
 interface Comment {
@@ -54,6 +54,17 @@ export const BlogComments: React.FC<{ postSlug: string }> = ({ postSlug }) => {
     }
   };
 
+  const handleDeleteComment = async (commentId: string) => {
+    if (!confirm('Bạn có chắc chắn muốn xóa bình luận này?')) return;
+    try {
+      await api.delete(`/comments/${commentId}`);
+      setComments(prev => prev.filter(c => c.id !== commentId));
+    } catch (err: any) {
+      console.error("Error deleting comment:", err);
+      alert(err.response?.data?.message || 'Không thể xóa bình luận.');
+    }
+  };
+
   return (
     <div className="mt-12 bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
       <div className="flex items-center gap-3 mb-8">
@@ -78,14 +89,23 @@ export const BlogComments: React.FC<{ postSlug: string }> = ({ postSlug }) => {
               <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 font-bold shrink-0">
                 {(comment.author || 'User').charAt(0).toUpperCase()}
               </div>
-              <div>
-                <div className="bg-slate-50 rounded-2xl rounded-tl-none p-4 border border-slate-100">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="font-bold text-slate-900 text-sm">{comment.author || 'Người dùng'}</span>
-                    <span className="text-xs text-slate-400 flex items-center gap-1">
-                      <Clock className="w-3 h-3" />
-                      {new Date(comment.createdAt).toLocaleDateString('vi-VN')}
-                    </span>
+              <div className="flex-1">
+                <div className="bg-slate-50 rounded-2xl rounded-tl-none p-4 border border-slate-100 relative group">
+                  <div className="flex items-center justify-between mb-1">
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold text-slate-900 text-sm">{comment.author || 'Người dùng'}</span>
+                      <span className="text-xs text-slate-400 flex items-center gap-1">
+                        <Clock className="w-3 h-3" />
+                        {new Date(comment.createdAt).toLocaleDateString('vi-VN')}
+                      </span>
+                    </div>
+                    <button
+                      onClick={() => handleDeleteComment(comment.id)}
+                      className="p-1 text-slate-400 hover:text-red-500 transition-colors"
+                      title="Xóa bình luận"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
                   </div>
                   <p className="text-slate-700 text-sm">{comment.content}</p>
                 </div>

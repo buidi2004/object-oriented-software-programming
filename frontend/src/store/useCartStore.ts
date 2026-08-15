@@ -15,6 +15,7 @@ interface CartState {
   isLoading: boolean;
   fetchCart: () => Promise<void>;
   addItem: (planId: string, billingCycle: number, autoRenew: boolean) => Promise<void>;
+  updateQuantity: (itemId: string, quantity: number) => Promise<void>;
   removeItem: (itemId: string) => Promise<void>;
   clearCart: () => void;
 }
@@ -51,6 +52,20 @@ export const useCartStore = create<CartState>((set, get) => ({
     } catch (error) {
       console.error('Failed to add item', error);
       throw error;
+    }
+  },
+
+  updateQuantity: async (itemId: string, quantity: number) => {
+    if (quantity <= 0) {
+      await get().removeItem(itemId);
+      return;
+    }
+    try {
+      await api.put(`/carts/items/${itemId}`, { quantity });
+      // Refresh cart
+      await get().fetchCart();
+    } catch (error) {
+      console.error('Failed to update item quantity', error);
     }
   },
 

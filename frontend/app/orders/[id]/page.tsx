@@ -5,10 +5,12 @@ import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { 
   ArrowLeft, FileText, Download, ShieldCheck, Server, 
-  Globe, Clock, CheckCircle2, AlertCircle, RefreshCw, Package
+  Globe, Clock, CheckCircle2, AlertCircle, RefreshCw, Package,
+  ExternalLink, Key, Loader2
 } from 'lucide-react';
 import AutoRenewToggle from '@/src/components/AutoRenewToggle';
 import ReviewForm from '@/src/components/ReviewForm';
+import { api } from '@/src/lib/api';
 
 interface OrderDetail {
   id: string;
@@ -104,6 +106,24 @@ export default function OrderDetailPage() {
       console.error('Failed to fetch order:', error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const [isCpLoading, setIsCpLoading] = useState(false);
+  const [cpToken, setCpToken] = useState<string | null>(null);
+
+  const handleAccessControlPanel = async () => {
+    setIsCpLoading(true);
+    try {
+      const res = await api.post(`/orders/${orderId}/control-panel/access-token`);
+      const token = res.data?.token || res.data;
+      setCpToken(token);
+      alert(`Mã truy cập Control Panel của bạn: ${token}\n(Đang chuyển hướng đến bảng điều khiển...)`);
+    } catch (err: any) {
+      console.error('Failed to get CP access token', err);
+      alert(err.response?.data?.message || 'Không thể lấy token Control Panel.');
+    } finally {
+      setIsCpLoading(false);
     }
   };
 
@@ -324,6 +344,14 @@ export default function OrderDetailPage() {
             <div className="bg-white rounded-2xl p-6 border border-slate-200">
               <h2 className="text-lg font-bold text-slate-900 mb-4">Thao tác nhanh</h2>
               <div className="space-y-3">
+                <button 
+                  onClick={handleAccessControlPanel}
+                  disabled={isCpLoading}
+                  className="w-full py-3 rounded-xl bg-blue-600 text-white font-bold text-sm hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 shadow-sm shadow-blue-500/20 disabled:opacity-50"
+                >
+                  {isCpLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Key className="w-4 h-4" />}
+                  Đăng nhập Control Panel
+                </button>
                 <button className="w-full py-3 rounded-xl bg-slate-100 text-slate-700 font-bold text-sm hover:bg-slate-200 transition-colors flex items-center justify-center gap-2">
                   <RefreshCw className="w-4 h-4" />
                   Khởi động lại

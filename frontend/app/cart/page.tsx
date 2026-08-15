@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ShoppingCart, Trash2, ArrowRight, ShieldCheck, Clock } from 'lucide-react';
+import { ShoppingCart, Trash2, ArrowRight, ShieldCheck, Clock, Plus, Minus } from 'lucide-react';
 import { CouponInput, useCoupon } from '@/components/CouponInput';
 
 interface CartItem {
@@ -12,6 +12,7 @@ interface CartItem {
   title: string;
   details: string;
   price: number;
+  quantity?: number;
   billingCycle: string;
 }
 
@@ -40,6 +41,27 @@ export default function CartPage() {
       console.error('Failed to fetch cart:', error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const updateQuantity = async (itemId: string, newQuantity: number) => {
+    if (newQuantity <= 0) {
+      await removeItem(itemId);
+      return;
+    }
+    try {
+      const token = localStorage.getItem('accessToken');
+      await fetch(`/api/carts/items/${itemId}`, {
+        method: 'PUT',
+        headers: { 
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}` 
+        },
+        body: JSON.stringify({ quantity: newQuantity }),
+      });
+      fetchCart();
+    } catch (error) {
+      console.error('Failed to update item quantity:', error);
     }
   };
 
@@ -134,6 +156,28 @@ export default function CartPage() {
                           >
                             <Trash2 className="w-5 h-5" />
                           </button>
+                          
+                          {/* Quantity Controls */}
+                          <div className="flex items-center gap-2 border border-slate-200 rounded-lg p-1">
+                            <button
+                              onClick={() => updateQuantity(item.id, (item.quantity || 1) - 1)}
+                              className="w-6 h-6 flex items-center justify-center rounded hover:bg-slate-100 text-slate-600 transition-colors"
+                              title="Giảm số lượng"
+                            >
+                              <Minus className="w-3.5 h-3.5" />
+                            </button>
+                            <span className="w-6 text-center text-xs font-bold text-slate-900">
+                              {item.quantity || 1}
+                            </span>
+                            <button
+                              onClick={() => updateQuantity(item.id, (item.quantity || 1) + 1)}
+                              className="w-6 h-6 flex items-center justify-center rounded hover:bg-slate-100 text-slate-600 transition-colors"
+                              title="Tăng số lượng"
+                            >
+                              <Plus className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+
                           <div className="text-xl font-black text-slate-900">
                             {item.price.toLocaleString('vi-VN')} đ
                           </div>
