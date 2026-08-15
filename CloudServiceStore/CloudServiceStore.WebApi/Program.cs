@@ -45,7 +45,7 @@ builder.Services.AddRateLimiter(options =>
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("Frontend", policy =>
-        policy.WithOrigins("https://your-frontend-domain.com")
+        policy.WithOrigins("https://your-frontend-domain.com", "http://localhost:3000")
               .AllowCredentials()
               .AllowAnyHeader()
               .AllowAnyMethod());

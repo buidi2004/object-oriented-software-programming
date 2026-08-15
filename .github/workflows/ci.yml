@@ -5,77 +5,154 @@ on:
     branches: [ main, develop ]
   pull_request:
     branches: [ main, develop ]
-  # Có thể thêm schedule cho Regression (Nightly build)
-  # schedule:
-  #   - cron: '0 0 * * *' # Chạy vào nửa đêm mỗi ngày
+  schedule:
+    - cron: '0 0 * * *'
 
 jobs:
-  # 1. UNIT TESTING (Chạy đầu tiên, nhanh nhất)
+  build-and-cache:
+    name: 🏗️ Build & Cache
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '10.0.x'
+
+    - name: Cache NuGet Packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj', '**/*.slnx') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-
+
+    - name: Restore dependencies
+      run: dotnet restore CloudServiceStore/CloudServiceStore.slnx
+
+    - name: Build
+      run: dotnet build CloudServiceStore/CloudServiceStore.slnx --no-restore -c Release
+
+    - name: Upload Build Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-artifacts
+        path: CloudServiceStore/
+        retention-days: 1
+
+  security-scan:
+    name: 🛡️ Security Scan
+    needs: build-and-cache
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '10.0.x'
+    - name: Check for vulnerable packages
+      run: dotnet list CloudServiceStore/CloudServiceStore.slnx package --vulnerable --include-transitive
+
   unit-tests:
     name: ⚡ Unit Tests
+    needs: build-and-cache
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: '10.0.x'
+    - name: Download Build Artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: build-artifacts
+        path: CloudServiceStore/
+    - name: Run Unit Tests with Coverage
+      run: >
+        dotnet test CloudServiceStore/CloudServiceStore.Tests/CloudServiceStore.Tests.csproj 
+        -c Release --no-build --verbosity normal 
+        --filter "FullyQualifiedName!~CloudServiceStore.Tests.Integration&FullyQualifiedName!~CloudServiceStore.Tests.E2E"
+        --collect:"XPlat Code Coverage"
+        --results-directory ./coverage
 
-    - name: Restore dependencies
-      run: dotnet restore CloudServiceStore/CloudServiceStore.slnx
-
-    - name: Build
-      run: dotnet build CloudServiceStore/CloudServiceStore.slnx --no-restore
-
-    - name: Run Unit Tests
-      # Lọc riêng Unit Test (bỏ qua Integration và E2E)
-      run: dotnet test CloudServiceStore/CloudServiceStore.Tests/CloudServiceStore.Tests.csproj --no-build --verbosity normal --filter "FullyQualifiedName~CloudServiceStore.Tests.Application"
-
-  # 2. INTEGRATION TESTING (Chạy sau khi Unit Test pass)
   integration-tests:
     name: 🔗 Integration Tests
-    needs: unit-tests # Fail-fast: Chỉ chạy nếu unit-tests thành công
+    needs: unit-tests
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: '10.0.x'
-
-    - name: Restore dependencies
-      run: dotnet restore CloudServiceStore/CloudServiceStore.slnx
-
-    - name: Build
-      run: dotnet build CloudServiceStore/CloudServiceStore.slnx --no-restore
-
+    - name: Download Build Artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: build-artifacts
+        path: CloudServiceStore/
     - name: Run Integration Tests
-      # Gọi DB/Redis thật qua Testcontainers nên sẽ chậm hơn
-      run: dotnet test CloudServiceStore/CloudServiceStore.Tests/CloudServiceStore.Tests.csproj --no-build --verbosity normal --filter "FullyQualifiedName~CloudServiceStore.Tests.Integration"
+      run: dotnet test CloudServiceStore/CloudServiceStore.Tests/CloudServiceStore.Tests.csproj -c Release --no-build --verbosity normal --filter "FullyQualifiedName~CloudServiceStore.Tests.Integration"
 
-  # 3. FUNCTIONAL / REGRESSION TESTING (Chỉ chạy khi merge vào main hoặc chạy Nightly)
-  functional-and-regression-tests:
-    name: 🛡️ Functional & Regression Tests (E2E)
-    needs: integration-tests # Fail-fast: Chỉ chạy nếu integration-tests thành công
-    # Chỉ chạy trên branch main, develop hoặc chạy theo lịch (event schedule)
+  e2e-tests:
+    name: 🚀 Functional & Regression Tests (E2E)
+    needs: integration-tests
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' || github.event_name == 'schedule'
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: '10.0.x'
+    - name: Download Build Artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: build-artifacts
+        path: CloudServiceStore/
+    - name: Run E2E Tests
+      run: dotnet test CloudServiceStore/CloudServiceStore.Tests/CloudServiceStore.Tests.csproj -c Release --no-build --verbosity normal --filter "FullyQualifiedName~CloudServiceStore.Tests.E2E"
 
-    - name: Restore dependencies
-      run: dotnet restore CloudServiceStore/CloudServiceStore.slnx
+  mutation-testing:
+    name: 👽 Mutation Testing (Stryker)
+    needs: unit-tests
+    if: github.event_name == 'pull_request'
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '10.0.x'
+    - name: Download Build Artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: build-artifacts
+        path: CloudServiceStore/
+    - name: Install Stryker
+      run: dotnet tool install -g dotnet-stryker
+    - name: Run Stryker
+      run: dotnet stryker
+      working-directory: CloudServiceStore/CloudServiceStore.Tests
 
-    - name: Build
-      run: dotnet build CloudServiceStore/CloudServiceStore.slnx --no-restore
-
-    - name: Run E2E / Functional Tests
-      # Chạy các luồng End-to-End đầy đủ nghiệp vụ
-      run: dotnet test CloudServiceStore/CloudServiceStore.Tests/CloudServiceStore.Tests.csproj --no-build --verbosity normal --filter "FullyQualifiedName~CloudServiceStore.Tests.E2E"
+  docker-build:
+    name: 🐳 Docker Build & Push
+    needs: [security-scan, e2e-tests]
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Log in to GitHub Container Registry
+      uses: docker/login-action@v2
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v4
+      with:
+        context: ./CloudServiceStore
+        push: true
+        tags: ghcr.io/${{ github.repository }}/backend:latest

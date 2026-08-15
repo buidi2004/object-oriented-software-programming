@@ -50,6 +50,12 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IAsyn
             {
                 services.Remove(descriptor);
             }
+            
+            var hostedServices = services.Where(d => d.ServiceType == typeof(Microsoft.Extensions.Hosting.IHostedService)).ToList();
+            foreach (var hostedService in hostedServices)
+            {
+                services.Remove(hostedService);
+            }
 
             services.AddDbContext<AppDbContext>(options =>
             {
