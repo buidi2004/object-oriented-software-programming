@@ -2,9 +2,9 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, develop ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, develop ]
   # Có thể thêm schedule cho Regression (Nightly build)
   # schedule:
   #   - cron: '0 0 * * *' # Chạy vào nửa đêm mỗi ngày
