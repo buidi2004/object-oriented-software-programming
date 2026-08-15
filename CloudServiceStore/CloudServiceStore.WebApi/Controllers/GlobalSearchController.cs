@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CloudServiceStore.WebApi.Controllers;
 
 [ApiController]
-[Route("api/search")]
+[Route("api/global-search")]
 public class GlobalSearchController : ControllerBase
 {
     private readonly IMediator _mediator;

@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CloudServiceStore.WebApi.Controllers;
 
 [ApiController]
-[Route("api/settings")]
+[Route("api/system-settings")]
 public class SystemSettingsController : ControllerBase
 {
     private readonly IMediator _mediator;

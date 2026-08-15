@@ -9,7 +9,7 @@ using CloudServiceStore.Application.Features.Ssl.Commands.RequestSslCertificate;
 
 namespace CloudServiceStore.WebApi.Controllers;
 
-[Route("api/ssl")]
+[Route("api/ssl-certificates")]
 [ApiController]
 public class SslCertificatesController : ControllerBase
 {

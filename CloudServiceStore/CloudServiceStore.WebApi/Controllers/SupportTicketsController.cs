@@ -14,7 +14,8 @@ using System.Threading.Tasks;
 namespace CloudServiceStore.WebApi.Controllers;
 
 [ApiController]
-[Route("api/tickets")]
+[Route("api/support-tickets")]
+[Authorize]
 public class SupportTicketsController : ControllerBase
 {
     private readonly IMediator _mediator;
