@@ -36,8 +36,8 @@ public class CreateChatSessionCommandHandlerTests
         result.Should().NotBeEmpty();
         
         _chatRepositoryMock.Verify(x => x.AddAsync(It.Is<ChatSession>(s => 
-            s.GuestName == "Guest User" &&
-            s.UserId == null)), Times.Once);
+            s.Status == "Open" &&
+            s.UserId == Guid.Empty)), Times.Once);
 
         _unitOfWorkMock.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }

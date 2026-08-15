@@ -36,7 +36,7 @@ namespace CloudServiceStore.Tests.Application.Features.GroupC
             var userId = Guid.NewGuid();
             var orderId = Guid.NewGuid();
 
-            var order = new OrderRequest(userId, Guid.NewGuid(), BillingCycle.Monthly, null, 0m, 100m);
+            var order = new OrderRequest(userId, new List<OrderItem>(), null, 0m, 100m, false);
             typeof(OrderRequest).GetProperty("Id").SetValue(order, orderId);
             typeof(OrderRequest).GetProperty("Status").SetValue(order, OrderStatus.Paid);
 

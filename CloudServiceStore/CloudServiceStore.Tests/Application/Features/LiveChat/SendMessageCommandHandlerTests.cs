@@ -30,7 +30,7 @@ public class SendMessageCommandHandlerTests
     {
         // Arrange
         var sessionId = Guid.NewGuid();
-        var session = new ChatSession(null, "Guest");
+        var session = new ChatSession { Id = sessionId, UserId = Guid.Empty, Status = "Open" };
         // We need to set Id using reflection or use the setup correctly since Id is init/private set, but we mock the repo
         
         _sessionRepositoryMock.Setup(x => x.GetByIdAsync(sessionId)).ReturnsAsync(session);
@@ -44,9 +44,8 @@ public class SendMessageCommandHandlerTests
         result.Should().NotBeEmpty();
         
         _messageRepositoryMock.Verify(x => x.AddAsync(It.Is<ChatMessage>(m => 
-            m.ChatSessionId == sessionId &&
-            m.Content == "Hello!" &&
-            m.SenderName == "Guest")), Times.Once);
+            m.SessionId == sessionId &&
+            m.Message == "Hello!")), Times.Once);
 
         _unitOfWorkMock.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
@@ -56,8 +55,7 @@ public class SendMessageCommandHandlerTests
     {
         // Arrange
         var sessionId = Guid.NewGuid();
-        var session = new ChatSession(null, "Guest");
-        session.Close(); // Set status to Closed
+        var session = new ChatSession { Id = sessionId, UserId = Guid.Empty, Status = "Closed" };
         
         _sessionRepositoryMock.Setup(x => x.GetByIdAsync(sessionId)).ReturnsAsync(session);
 
