@@ -112,7 +112,7 @@ public class MiscellaneousE2ETests : BaseE2ETest
 
         // 10. Public Endpoints
         Client.DefaultRequestHeaders.Authorization = null;
-        var searchRes = await Client.GetAsync("/api/search?q=VPS");
+        var searchRes = await Client.GetAsync("/api/global-search?q=VPS");
         searchRes.EnsureSuccessStatusCode();
 
         var sitemapRes = await Client.GetAsync("/sitemap.xml");

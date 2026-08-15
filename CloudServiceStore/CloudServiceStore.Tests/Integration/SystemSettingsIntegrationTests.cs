@@ -23,29 +23,29 @@ public class SystemSettingsIntegrationTests : BaseIntegrationTest, IClassFixture
         await AddEntityAsync(setting);
 
         // 2. Unauthenticated GetByKey
-        var getByKeyResponse = await Client.GetAsync($"/api/settings/SiteName");
+        var getByKeyResponse = await Client.GetAsync($"/api/system-settings/SiteName");
         getByKeyResponse.EnsureSuccessStatusCode();
         var content = await getByKeyResponse.Content.ReadFromJsonAsync<System.Text.Json.JsonElement>();
         content.GetProperty("value").GetString().Should().Be("My Store");
 
         // 3. Unauthenticated GetAll (Should Fail - Forbidden due to TestAuthHandler)
-        var getAllResponse = await Client.GetAsync("/api/settings");
+        var getAllResponse = await Client.GetAsync("/api/system-settings");
         getAllResponse.StatusCode.Should().Be(HttpStatusCode.Forbidden);
 
         // 4. Authenticate as Admin
         AuthenticateAdmin();
 
         // 5. Admin GetAll
-        var adminGetAllResponse = await Client.GetAsync("/api/settings");
+        var adminGetAllResponse = await Client.GetAsync("/api/system-settings");
         adminGetAllResponse.EnsureSuccessStatusCode();
 
         // 6. Admin Update
         var updateCommand = new UpdateSettingCommand("SiteName", "New Store Name", null);
-        var updateResponse = await Client.PutAsJsonAsync("/api/settings/SiteName", updateCommand);
+        var updateResponse = await Client.PutAsJsonAsync("/api/system-settings/SiteName", updateCommand);
         updateResponse.EnsureSuccessStatusCode();
 
         // 7. Verify Update
-        var verifyResponse = await Client.GetAsync($"/api/settings/SiteName");
+        var verifyResponse = await Client.GetAsync($"/api/system-settings/SiteName");
         var verifyContent = await verifyResponse.Content.ReadFromJsonAsync<System.Text.Json.JsonElement>();
         verifyContent.GetProperty("value").GetString().Should().Be("New Store Name");
     }

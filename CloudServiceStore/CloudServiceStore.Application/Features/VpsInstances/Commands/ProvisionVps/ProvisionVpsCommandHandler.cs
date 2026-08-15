@@ -22,6 +22,7 @@ public class ProvisionVpsCommandHandler : IRequestHandler<ProvisionVpsCommand, S
     private readonly IRepository<VpsInstance> _vpsRepo;
     private readonly IRepository<OrderRequest> _orderRepo;
     private readonly IRepository<ServiceCategory> _categoryRepo;
+    private readonly IRepository<ServicePlan> _planRepo;
     private readonly IUnitOfWork _uow;
     private readonly IJobScheduler _jobScheduler;
     private readonly ICurrentUserService _currentUserService;
@@ -33,6 +34,7 @@ public class ProvisionVpsCommandHandler : IRequestHandler<ProvisionVpsCommand, S
         IRepository<VpsInstance> vpsRepo,
         IRepository<OrderRequest> orderRepo,
         IRepository<ServiceCategory> categoryRepo,
+        IRepository<ServicePlan> planRepo,
         IUnitOfWork uow,
         IJobScheduler jobScheduler,
         ICurrentUserService currentUserService,
@@ -43,6 +45,7 @@ public class ProvisionVpsCommandHandler : IRequestHandler<ProvisionVpsCommand, S
         _vpsRepo = vpsRepo;
         _orderRepo = orderRepo;
         _categoryRepo = categoryRepo;
+        _planRepo = planRepo;
         _uow = uow;
         _jobScheduler = jobScheduler;
         _currentUserService = currentUserService;
@@ -70,10 +73,15 @@ public class ProvisionVpsCommandHandler : IRequestHandler<ProvisionVpsCommand, S
         
         foreach (var item in order.Items)
         {
-            var category = await _categoryRepo.GetByIdAsync(item.ServicePlan.CategoryId, cancellationToken);
-            if (category?.Slug != "cloud-vps")
+            var plan = await _planRepo.GetByIdAsync(item.ServicePlanId, cancellationToken);
+            if (plan == null) throw new BadRequestException($"Plan is null for ID {item.ServicePlanId}");
+
+            var category = await _categoryRepo.GetByIdAsync(plan.CategoryId, cancellationToken);
+            if (category == null) throw new BadRequestException($"Category is null for ID {plan.CategoryId}");
+            
+            if (category.Slug != "cloud-vps")
             {
-                continue; // Skip non-vps items
+                throw new BadRequestException($"Category slug is {category.Slug} not cloud-vps");
             }
 
             // We should use a unique key for existing check, perhaps add OrderItemId later, 
@@ -89,7 +97,6 @@ public class ProvisionVpsCommandHandler : IRequestHandler<ProvisionVpsCommand, S
                 continue;
             }
 
-            var plan = item.ServicePlan;
             var (cpuCores, memoryBytes, diskGb) = _specParser.Parse(plan);
             var containerName = BuildContainerName(plan.Name, order.UserId);
             var spec = new VpsProvisionSpec(

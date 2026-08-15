@@ -94,10 +94,12 @@ public class VpsProvisioningE2ETests : BaseE2ETest
         var provisionResponse = await _testClient.PostAsJsonAsync("/api/vpsinstances", provisionCommand);
 
         provisionResponse.EnsureSuccessStatusCode();
-        var provisionResult = await provisionResponse.Content.ReadFromJsonAsync<VpsInstanceDto>();
-
-        provisionResult.Should().NotBeNull();
-        provisionResult!.ContainerId.Should().NotBeNullOrEmpty();
+        var provisionResultList = await provisionResponse.Content.ReadFromJsonAsync<System.Collections.Generic.List<CloudServiceStore.Application.DTOs.VpsInstanceDto>>();
+        
+        provisionResultList.Should().NotBeNull();
+        provisionResultList.Should().NotBeEmpty();
+        var provisionResult = provisionResultList![0];
+        provisionResult.ContainerId.Should().NotBeNullOrEmpty();
 
         var connection = new HubConnectionBuilder()
             .WithUrl($"{_testClient.BaseAddress}hubs/vps-terminal", options =>

@@ -23,6 +23,7 @@ public class ProvisionVpsCommandHandlerTests
     private readonly Mock<IRepository<VpsInstance>> _mockRepositoryVpsInstance;
     private readonly Mock<IRepository<OrderRequest>> _mockOrderRepository;
     private readonly Mock<IRepository<ServiceCategory>> _mockCategoryRepository;
+    private readonly Mock<IRepository<ServicePlan>> _mockPlanRepository;
     private readonly Mock<IUnitOfWork> _mockUnitOfWork;
     private readonly Mock<IJobScheduler> _mockJobScheduler;
     private readonly Mock<ICurrentUserService> _mockCurrentUserService;
@@ -34,6 +35,7 @@ public class ProvisionVpsCommandHandlerTests
         _mockRepositoryVpsInstance = new Mock<IRepository<VpsInstance>>();
         _mockOrderRepository = new Mock<IRepository<OrderRequest>>();
         _mockCategoryRepository = new Mock<IRepository<ServiceCategory>>();
+        _mockPlanRepository = new Mock<IRepository<ServicePlan>>();
         _mockUnitOfWork = new Mock<IUnitOfWork>();
         _mockJobScheduler = new Mock<IJobScheduler>();
         _mockCurrentUserService = new Mock<ICurrentUserService>();
@@ -44,6 +46,7 @@ public class ProvisionVpsCommandHandlerTests
             _mockRepositoryVpsInstance.Object,
             _mockOrderRepository.Object,
             _mockCategoryRepository.Object,
+            _mockPlanRepository.Object,
             _mockUnitOfWork.Object,
             _mockJobScheduler.Object,
             _mockCurrentUserService.Object,
@@ -71,6 +74,9 @@ public class ProvisionVpsCommandHandlerTests
         _mockCategoryRepository
             .Setup(x => x.GetByIdAsync(categoryId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(new ServiceCategory { Id = categoryId, Name = "Cloud VPS", Slug = "cloud-vps" });
+        _mockPlanRepository
+            .Setup(x => x.GetByIdAsync(plan.Id, It.IsAny<CancellationToken>(), It.IsAny<System.Linq.Expressions.Expression<Func<ServicePlan, object>>[]>()))
+            .ReturnsAsync(plan);
         _mockRepositoryVpsInstance
             .Setup(x => x.FirstOrDefaultAsync(It.IsAny<System.Linq.Expressions.Expression<Func<VpsInstance, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<System.Linq.Expressions.Expression<Func<VpsInstance, object>>[]>()))
             .ReturnsAsync((VpsInstance?)null);

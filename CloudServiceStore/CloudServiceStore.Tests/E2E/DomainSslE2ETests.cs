@@ -105,16 +105,16 @@ public class DomainSslE2ETests : BaseE2ETest
 
         // 10. SslCertificatesController coverage
         var requestCertCmd = new RequestSslCertificateCommand(registerResult.DomainId, "-----BEGIN CERTIFICATE REQUEST-----...-----END CERTIFICATE REQUEST-----");
-        var reqCertRes = await Client.PostAsJsonAsync("/api/ssl/certificates", requestCertCmd);
+        var reqCertRes = await Client.PostAsJsonAsync("/api/ssl-certificates/certificates", requestCertCmd);
         reqCertRes.EnsureSuccessStatusCode();
-        var certJson = await reqCertRes.Content.ReadFromJsonAsync<System.Text.Json.JsonElement>();
-        // Wait, SslCertificatesController wraps it in { CertificateId = result }
-        var certId = certJson.GetProperty("certificateId").GetGuid();
+        var reqCertJson = await reqCertRes.Content.ReadFromJsonAsync<dynamic>();
+        string certId = reqCertJson?.GetProperty("certificateId").GetString();
 
-        var getCertsRes = await Client.GetAsync("/api/ssl/certificates");
+        // 13. Customer gets all certificates
+        var getCertsRes = await Client.GetAsync("/api/ssl-certificates/certificates");
         getCertsRes.EnsureSuccessStatusCode();
 
-        var getCertIdRes = await Client.GetAsync($"/api/ssl/certificates/{certId}");
+        var getCertIdRes = await Client.GetAsync($"/api/ssl-certificates/certificates/{certId}");
         getCertIdRes.EnsureSuccessStatusCode();
     }
 

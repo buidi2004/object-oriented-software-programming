@@ -59,12 +59,12 @@ public class SystemReportsE2ETests : BaseE2ETest
 
         // 5. Admin Updates System Setting
         var updateSettingCmd = new UpdateSettingCommand("SiteName", "CloudServiceStore v2", "Name of the site");
-        var updateSettingRes = await Client.PutAsJsonAsync("/api/settings/SiteName", updateSettingCmd);
+        var updateSettingRes = await Client.PutAsJsonAsync("/api/system-settings/SiteName", updateSettingCmd);
         updateSettingRes.EnsureSuccessStatusCode();
 
         // 6. Public Views System Setting
         Client.DefaultRequestHeaders.Authorization = null;
-        var getSettingRes = await Client.GetAsync("/api/settings/SiteName");
+        var getSettingRes = await Client.GetAsync("/api/system-settings/SiteName");
         getSettingRes.EnsureSuccessStatusCode();
         var getSettingStr = await getSettingRes.Content.ReadAsStringAsync();
         getSettingStr.Should().Contain("CloudServiceStore v2");

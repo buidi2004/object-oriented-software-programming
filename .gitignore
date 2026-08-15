@@ -30,3 +30,4 @@ CloudServiceStore/report.txt
 CloudServiceStore/migration.sql
 .agnes/cache/
 .DS_Store
+.agents/mcp_config.json
