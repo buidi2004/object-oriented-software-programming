@@ -258,3 +258,16 @@ Nếu người dùng yêu cầu sửa đổi hoặc lấy thông tin:
 - **Moq params:** `IRepository<T>.GetByIdAsync` có tham số `params Expression<Func<T, object>>[]` — khi mock cần dùng `It.IsAny<Expression<Func<T, object>>[]>()`.
 - **API trả về List:** Một số endpoint trả về `List<T>` (ví dụ: `ProvisionVps` trả `List<VpsInstanceDto>`). Khi parse JSON trong E2E test cần `ReadFromJsonAsync<List<T>>()`.
 - **JSON camelCase:** API mặc định serialize JSON theo camelCase. Khi đọc property dùng `GetProperty("certificateId")` chứ không phải `GetProperty("CertificateId")`.
+
+---
+
+## 6. Trạng Thái Kết Nối Frontend - Backend (Full Integration Status)
+
+- **Độ phủ API:** Đã tích hợp và kết nối toàn bộ hệ thống API Backend (56 Controllers, ~199 Endpoints) sang Frontend Next.js 15.
+- **Tự động làm mới Token (JWT Auto-Refresh):** Đã tích hợp Interceptor tại `frontend/src/lib/api.ts` tự động bắt 401 và gọi `POST /api/auth/refresh-token`.
+- **Admin Portal:** Đầy đủ Modal và Form CRUD cho Banners, News, KB, FAQs, Promotions, Categories, Service SEO, Exchange Rates, Settings, Tickets, VPS Instances, Testimonials.
+- **Customer Portal:** Đầy đủ giỏ hàng (+/-), coupon, wishlist, control panel 1-click login, thanh toán ví/VNPay, domain search/registration, SSL certificates, backup/uptime.
+- **Kiểm thử & Biên dịch:**
+  - Frontend Build: `npm run build` thành công 100% (92 routes prerendered).
+  - Backend Build: `dotnet build CloudServiceStore/CloudServiceStore.slnx` thành công 100% (0 errors).
+
