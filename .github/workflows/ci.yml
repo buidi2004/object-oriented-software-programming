@@ -59,8 +59,8 @@ jobs:
   functional-and-regression-tests:
     name: 🛡️ Functional & Regression Tests (E2E)
     needs: integration-tests # Fail-fast: Chỉ chạy nếu integration-tests thành công
-    # Chỉ chạy trên branch main (sau khi merge) hoặc chạy theo lịch (event schedule)
-    if: github.ref == 'refs/heads/main' || github.event_name == 'schedule'
+    # Chỉ chạy trên branch main, develop hoặc chạy theo lịch (event schedule)
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' || github.event_name == 'schedule'
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
