@@ -83,13 +83,20 @@ export default function OrderDetailPage() {
     fetchOrder(token);
   }, [orderId, router]);
 
+  const [backupsList, setBackupsList] = useState<any[]>([]);
+  const [uptimeData, setUptimeData] = useState<any>(null);
+
   const fetchOrder = async (token: string) => {
     try {
-      const response = await fetch(`/api/orders/${orderId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (response.ok) {
-        const data = await response.json();
+      const [orderRes, backupsRes, uptimeRes, cpRes] = await Promise.allSettled([
+        api.get(`/orders/${orderId}`),
+        api.get(`/orders/${orderId}/backups`),
+        api.get(`/orders/${orderId}/uptime`),
+        api.get(`/orders/${orderId}/control-panel`)
+      ]);
+
+      if (orderRes.status === 'fulfilled' && orderRes.value.data) {
+        const data = orderRes.value.data;
         setOrder({
           id: data.id,
           orderDate: data.createdAt,
@@ -100,12 +107,38 @@ export default function OrderDetailPage() {
             title: data.servicePlanName || 'Dịch vụ',
             price: data.totalAmount,
           }],
+          uptime: uptimeRes.status === 'fulfilled' ? uptimeRes.value.data : undefined
         });
+      }
+
+      if (backupsRes.status === 'fulfilled' && Array.isArray(backupsRes.value.data)) {
+        setBackupsList(backupsRes.value.data);
       }
     } catch (error) {
       console.error('Failed to fetch order:', error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleScheduleBackup = async () => {
+    try {
+      await api.post(`/orders/${orderId}/backups/schedule`, {
+        frequency: 'Daily',
+        retentionDays: 7
+      });
+      alert('Đã lên lịch sao lưu tự động thành công!');
+    } catch (err: any) {
+      console.error('Failed to schedule backup', err);
+    }
+  };
+
+  const handleUpdateCpCredentials = async (username: string, passwordHash: string) => {
+    try {
+      await api.put(`/orders/${orderId}/control-panel`, { username, passwordHash });
+      alert('Đã cập nhật thông tin Control Panel!');
+    } catch (err) {
+      console.error(err);
     }
   };
 

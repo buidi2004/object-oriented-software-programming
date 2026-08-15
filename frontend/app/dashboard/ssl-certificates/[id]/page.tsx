@@ -26,9 +26,14 @@ export default function SslCertificateDetailPage() {
     }
 
     try {
-      const res = await fetch(`/api/ssl/certificates/${certId}`, {
+      let res = await fetch(`/api/ssl/certificates/${certId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
+      if (!res.ok) {
+        res = await fetch(`/api/ssl-certificates/certificates/${certId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+      }
       if (res.ok) {
         setCert(await res.json());
       } else {

@@ -39,7 +39,8 @@ export default function DashboardUptimePage() {
     if (!token) return;
 
     try {
-      const [sysRes, ordersRes] = await Promise.all([
+      const [statusRes, sysRes, ordersRes] = await Promise.all([
+        api.get('/status').catch(() => ({ data: null })),
         api.get('/uptime/system').catch(() => ({ data: [] })),
         api.get('/orders/me?status=Active').catch(() => ({ data: [] }))
       ]);

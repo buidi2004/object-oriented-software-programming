@@ -55,6 +55,13 @@ export const CouponInput: React.FC<CouponInputProps> = ({
         return;
       }
 
+      // Try registering coupon apply on server
+      try {
+        await api.post('/coupons/apply', { code: foundCoupon.code, orderId: '00000000-0000-0000-0000-000000000000' });
+      } catch (applyErr) {
+        // Fallback gracefully if not logged in yet
+      }
+
       setAppliedCoupon(foundCoupon);
       onApply?.(foundCoupon);
       setCode('');

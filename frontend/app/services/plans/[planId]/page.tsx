@@ -82,15 +82,26 @@ function PlanDetailInner() {
   const router = useRouter();
   const addItem = useCartStore((state) => state.addItem);
 
+  const [reviews, setReviews] = useState<any[]>([]);
+
   useEffect(() => {
     async function loadPlan() {
       try {
         setIsLoading(true);
-        const res = await api.get(`/service-plans/${planId}`, { params: { currency: 'VND' } });
-        setPlan(mapApiPlan(res.data));
-        const mapped = mapApiPlan(res.data);
-        if (mapped.yearlyPrice > 0) setIsYearly(true);
-        else if (mapped.monthlyPrice > 0) setIsYearly(false);
+        const [res, reviewsRes] = await Promise.allSettled([
+          api.get(`/service-plans/${planId}`, { params: { currency: 'VND' } }),
+          api.get(`/reviews/service-plan/${planId}`)
+        ]);
+
+        if (res.status === 'fulfilled' && res.value.data) {
+          setPlan(mapApiPlan(res.value.data));
+          const mapped = mapApiPlan(res.value.data);
+          if (mapped.yearlyPrice > 0) setIsYearly(true);
+          else if (mapped.monthlyPrice > 0) setIsYearly(false);
+        }
+        if (reviewsRes.status === 'fulfilled' && Array.isArray(reviewsRes.value.data)) {
+          setReviews(reviewsRes.value.data);
+        }
       } catch (err) {
         console.error(err);
         setError('Không tìm thấy thông tin gói dịch vụ.');

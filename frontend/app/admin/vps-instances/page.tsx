@@ -74,6 +74,21 @@ export default function AdminVpsInstancesPage() {
     }
   };
 
+  const handleProvisionVps = async (orderId: string) => {
+    const token = localStorage.getItem('accessToken');
+    try {
+      await fetch('/api/vpsinstances', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ orderId })
+      });
+      fetchInstances(token!);
+      alert('Đã gửi yêu cầu khởi tạo VPS!');
+    } catch (err) {
+      console.error('Failed to provision VPS', err);
+    }
+  };
+
   const filteredInstances = instances.filter((instance) => {
     const matchesSearch =
       instance.containerName.toLowerCase().includes(searchTerm.toLowerCase()) ||

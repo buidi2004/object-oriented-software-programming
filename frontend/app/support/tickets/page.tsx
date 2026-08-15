@@ -22,9 +22,11 @@ export default function TicketsListPage() {
 
   useEffect(() => {
     if (user) {
-      api.get('/tickets/me')
+      api.get('/support-tickets/me')
         .then(res => setTickets(res.data))
-        .catch(err => console.error(err))
+        .catch(() => {
+          api.get('/tickets/me').then(res => setTickets(res.data)).catch(() => {});
+        })
         .finally(() => setLoading(false));
     } else {
       setLoading(false);

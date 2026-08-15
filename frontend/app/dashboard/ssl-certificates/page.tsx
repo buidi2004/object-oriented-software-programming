@@ -21,17 +21,48 @@ export default function SslCertificatesPage() {
         router.push('/login');
         return;
       }
-      const res = await fetch('/api/ssl/certificates', {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setCertificates(data);
+      let data: any[] = [];
+      try {
+        const res = await fetch('/api/ssl', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (res.ok) data = await res.json();
+      } catch {}
+
+      if (!data || data.length === 0) {
+        try {
+          const res2 = await fetch('/api/ssl-certificates/certificates', {
+            headers: { 'Authorization': `Bearer ${token}` }
+          });
+          if (res2.ok) data = await res2.json();
+        } catch {}
       }
+
+      setCertificates(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error('Error fetching SSL certificates', error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleRequestSsl = async (domainName: string) => {
+    const token = localStorage.getItem('accessToken');
+    try {
+      await fetch('/api/ssl', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ domainName })
+      });
+      await fetch('/api/ssl-certificates/certificates', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ domainName })
+      });
+      alert('Đã gửi yêu cầu đăng ký SSL thành công!');
+      fetchCertificates();
+    } catch (err) {
+      console.error(err);
     }
   };
 

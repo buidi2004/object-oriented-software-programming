@@ -56,8 +56,17 @@ export default function DomainSearchPage() {
   const handleBuy = async () => {
     if (!result || !result.isAvailable) return;
     
-    // In a real app, GET /domains/check would also return the pricing and planId
     try {
+      // Register domain intent with backend
+      try {
+        await api.post('/domains', {
+          domainName: result.name,
+          registrationYears: 1
+        });
+      } catch (regErr) {
+        // Fallback to cart if unauthenticated
+      }
+
       await addItem(`domain-${result.name}`, 12, true);
       router.push('/cart');
     } catch (err) {

@@ -98,7 +98,25 @@ export const HostingPlans: React.FC<HostingPlansProps> = ({ onAddToCart, onViewD
                 )}
 
                 <div>
-                  <h3 className="text-2xl font-extrabold tracking-tight">{pkg.name}</h3>
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-2xl font-extrabold tracking-tight">{pkg.name}</h3>
+                    <button
+                      onClick={async () => {
+                        try {
+                          await fetch('/api/wishlist', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('accessToken')}` },
+                            body: JSON.stringify({ servicePlanId: pkg.id })
+                          });
+                          alert('Đã thêm vào danh sách yêu thích!');
+                        } catch {}
+                      }}
+                      className="p-1.5 rounded-full hover:bg-slate-100/10 text-rose-500 transition-colors"
+                      title="Thêm vào yêu thích"
+                    >
+                      ♥
+                    </button>
+                  </div>
                   <p className={`text-xs mt-1 min-h-[32px] ${pkg.isPopular ? 'text-slate-400' : 'text-slate-500'}`}>
                     {pkg.tagline}
                   </p>

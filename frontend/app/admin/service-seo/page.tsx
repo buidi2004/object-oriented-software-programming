@@ -178,6 +178,32 @@ export default function AdminServiceSeoPage() {
     );
   }
 
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [newPlan, setNewPlan] = useState({
+    name: '',
+    categoryId: '00000000-0000-0000-0000-000000000000',
+    cpu: '2 vCPU',
+    ram: '4 GB',
+    ssd: '50 GB',
+    bandwidth: 'Unlimited',
+    isActive: true
+  });
+
+  const handleCreatePlan = async () => {
+    const token = localStorage.getItem('accessToken');
+    try {
+      await fetch('/api/service-plans', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify(newPlan)
+      });
+      setShowCreateModal(false);
+      fetchData(token!);
+    } catch (err) {
+      console.error('Failed to create service plan:', err);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-slate-50">
       <header className="bg-white border-b border-slate-200 sticky top-0 z-50">
@@ -191,6 +217,12 @@ export default function AdminServiceSeoPage() {
               <p className="text-sm text-slate-500">{services.length} dịch vụ</p>
             </div>
           </div>
+          <button
+            onClick={() => setShowCreateModal(true)}
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-semibold transition-colors flex items-center gap-2"
+          >
+            Thêm gói dịch vụ
+          </button>
         </div>
       </header>
 

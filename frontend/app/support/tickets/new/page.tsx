@@ -43,19 +43,33 @@ export default function NewTicketPage() {
     setError(null);
 
     try {
-      // 1. Create ticket
-      const ticketRes = await api.post('/tickets', {
-        subject: formData.subject,
-        priority: parseInt(formData.priority)
-      });
-      const ticketId = ticketRes.data.id;
+      let ticketId: string;
+      try {
+        const ticketRes = await api.post('/support-tickets', {
+          subject: formData.subject,
+          description: formData.message,
+          priority: parseInt(formData.priority)
+        });
+        ticketId = ticketRes.data?.id || ticketRes.data?.ticketId || ticketRes.data;
+      } catch {
+        const ticketRes = await api.post('/tickets', {
+          subject: formData.subject,
+          priority: parseInt(formData.priority)
+        });
+        ticketId = ticketRes.data.id;
+      }
 
-      // 2. Add first message
-      await api.post(`/tickets/${ticketId}/messages`, {
-        message: formData.message
-      });
+      // Add message
+      try {
+        await api.post(`/support-tickets/${ticketId}/messages`, {
+          message: formData.message
+        });
+      } catch {
+        await api.post(`/tickets/${ticketId}/messages`, {
+          message: formData.message
+        });
+      }
 
-      // 3. Redirect to ticket detail
       router.push(`/support/tickets/${ticketId}`);
     } catch (err: any) {
       console.error(err);

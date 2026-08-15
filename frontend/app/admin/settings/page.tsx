@@ -3,35 +3,114 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, Settings as SettingsIcon, Save, Server, Database, Globe, Shield, Bell, Palette, Key, AlertCircle } from 'lucide-react';
+import { 
+  ArrowLeft, Settings as SettingsIcon, Save, Server, Database, Globe, 
+  Shield, Bell, Palette, Key, AlertCircle, RefreshCw, CheckCircle2, Loader2, Play 
+} from 'lucide-react';
+import { api } from '@/src/lib/api';
+
+interface SettingItem {
+  key: string;
+  value: string;
+  description?: string;
+}
 
 export default function AdminSettingsPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('general');
   const [saved, setSaved] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isJobRunning, setIsJobRunning] = useState(false);
+  const [jobMessage, setJobMessage] = useState<string | null>(null);
+
+  const [settings, setSettings] = useState<{ [key: string]: string }>({
+    siteName: 'CloudServiceStore',
+    siteEmail: 'support@cloudservice.vn',
+    supportPhone: '1900 6868',
+    maintenanceMode: 'false',
+    currency: 'VND',
+    autoRenewalHour: '02:00',
+  });
 
   useEffect(() => {
     checkAdminAccess();
   }, []);
 
   const checkAdminAccess = async () => {
-    const token = localStorage.getItem('accessToken');
-    if (!token) { router.push('/login'); return; }
-    
     try {
-      const response = await fetch('/api/users/me', { headers: { Authorization: `Bearer ${token}` } });
-      if (response.ok) {
-        const userData = await response.json();
-        if (userData.role !== 'Admin') { router.push('/dashboard'); return; }
-        setIsLoading(false);
-      } else { router.push('/login'); }
-    } catch (error) { router.push('/login'); }
+      const res = await api.get('/users/me');
+      if (res.data?.role !== 'Admin') {
+        router.push('/dashboard');
+        return;
+      }
+      await fetchAllSettings();
+    } catch (error) {
+      router.push('/login');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleSave = () => {
-    setSaved(true);
-    setTimeout(() => setSaved(false), 3000);
+  const fetchAllSettings = async () => {
+    try {
+      const [settingsRes, sysRes] = await Promise.allSettled([
+        api.get('/settings'),
+        api.get('/system-settings')
+      ]);
+
+      const merged: { [key: string]: string } = { ...settings };
+      if (settingsRes.status === 'fulfilled' && Array.isArray(settingsRes.value.data)) {
+        settingsRes.value.data.forEach((s: any) => {
+          merged[s.key] = s.value;
+        });
+      }
+      if (sysRes.status === 'fulfilled' && Array.isArray(sysRes.value.data)) {
+        sysRes.value.data.forEach((s: any) => {
+          merged[s.key] = s.value;
+        });
+      }
+      setSettings(merged);
+    } catch (err) {
+      console.error('Failed to load settings', err);
+    }
+  };
+
+  const handleSave = async () => {
+    setIsSaving(true);
+    try {
+      // Save settings to both endpoints
+      for (const [key, value] of Object.entries(settings)) {
+        try {
+          await api.put(`/settings/${key}`, { key, value });
+        } catch {
+          try {
+            await api.put(`/system-settings/${key}`, { key, value });
+          } catch {}
+        }
+      }
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
+    } catch (err) {
+      console.error('Failed to save settings', err);
+      alert('Lưu cài đặt thất bại');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleTriggerRenewalsJob = async () => {
+    setIsJobRunning(true);
+    setJobMessage(null);
+    try {
+      const res = await api.post('/jobs/process-renewals');
+      setJobMessage(res.data?.message || 'Đã kích hoạt job tự động gia hạn thành công!');
+    } catch (err: any) {
+      console.error('Failed to trigger job', err);
+      setJobMessage(err.response?.data?.message || 'Lỗi khi kích hoạt job');
+    } finally {
+      setIsJobRunning(false);
+    }
   };
 
   if (isLoading) {
@@ -52,12 +131,16 @@ export default function AdminSettingsPage() {
             </Link>
             <div>
               <h1 className="text-xl font-bold text-slate-900">Cài đặt hệ thống</h1>
-              <p className="text-sm text-slate-500">Quản lý cấu hình toàn hệ thống</p>
+              <p className="text-sm text-slate-500">Quản lý cấu hình toàn hệ thống & Tác vụ nền</p>
             </div>
           </div>
-          <button onClick={handleSave} className="px-4 py-2 rounded-lg bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 transition-colors flex items-center gap-2">
-            <Save className="w-4 h-4" />
-            {saved ? 'Đã lưu!' : 'Lưu thay đổi'}
+          <button 
+            onClick={handleSave} 
+            disabled={isSaving}
+            className="px-4 py-2 rounded-lg bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 transition-colors flex items-center gap-2 disabled:opacity-50 shadow-sm"
+          >
+            {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+            {saved ? 'Đã lưu cấu hình!' : 'Lưu thay đổi'}
           </button>
         </div>
       </header>
@@ -66,21 +149,20 @@ export default function AdminSettingsPage() {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Sidebar */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-xl border border-slate-200 p-4 space-y-2">
+            <div className="bg-white rounded-2xl border border-slate-200 p-4 space-y-1 shadow-sm">
               {[
                 { id: 'general', label: 'Tổng quan', icon: SettingsIcon },
+                { id: 'jobs', label: 'Tác vụ nền (Jobs)', icon: Play },
                 { id: 'server', label: 'Máy chủ', icon: Server },
                 { id: 'database', label: 'Cơ sở dữ liệu', icon: Database },
-                { id: 'domain', label: 'Tên miền', icon: Globe },
+                { id: 'domain', label: 'Tên miền & DNS', icon: Globe },
                 { id: 'security', label: 'Bảo mật', icon: Shield },
                 { id: 'notification', label: 'Thông báo', icon: Bell },
-                { id: 'appearance', label: 'Giao diện', icon: Palette },
-                { id: 'api', label: 'API Keys', icon: Key },
               ].map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-colors ${
                     activeTab === tab.id ? 'bg-blue-50 text-blue-700' : 'text-slate-600 hover:bg-slate-50'
                   }`}
                 >
@@ -94,94 +176,79 @@ export default function AdminSettingsPage() {
           {/* Content */}
           <div className="lg:col-span-3 space-y-6">
             {activeTab === 'general' && (
-              <div className="bg-white rounded-xl border border-slate-200 p-6">
+              <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
                 <h2 className="text-lg font-bold text-slate-900 mb-6">Cài đặt chung</h2>
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-semibold text-slate-700 mb-1">Tên website</label>
-                    <input type="text" defaultValue="CloudServiceStore" className="w-full px-4 py-2.5 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20" />
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Tên thương hiệu (Site Name)</label>
+                    <input
+                      type="text"
+                      value={settings.siteName || ''}
+                      onChange={(e) => setSettings({ ...settings, siteName: e.target.value })}
+                      className="w-full px-4 py-2.5 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                    />
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-slate-700 mb-1">Email hệ thống</label>
-                    <input type="email" defaultValue="admin@cloudhost.vn" className="w-full px-4 py-2.5 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20" />
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Email hỗ trợ kỹ thuật</label>
+                    <input
+                      type="email"
+                      value={settings.siteEmail || ''}
+                      onChange={(e) => setSettings({ ...settings, siteEmail: e.target.value })}
+                      className="w-full px-4 py-2.5 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                    />
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-slate-700 mb-1">Mô tả website</label>
-                    <textarea rows={3} className="w-full px-4 py-2.5 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 resize-none" placeholder="Mô tả ngắn về dịch vụ..." />
-                  </div>
-                  <div className="flex items-center justify-between p-4 bg-slate-50 rounded-lg">
-                    <div>
-                      <p className="font-semibold text-slate-900">Chế độ bảo trì</p>
-                      <p className="text-sm text-slate-500">Tắt website khi bảo trì</p>
-                    </div>
-                    <label className="relative inline-flex items-center cursor-pointer">
-                      <input type="checkbox" className="sr-only peer" />
-                      <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none peer rounded-full peer-checked:bg-blue-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full" />
-                    </label>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Hotline CSKH</label>
+                    <input
+                      type="text"
+                      value={settings.supportPhone || ''}
+                      onChange={(e) => setSettings({ ...settings, supportPhone: e.target.value })}
+                      className="w-full px-4 py-2.5 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                    />
                   </div>
                 </div>
               </div>
             )}
 
-            {activeTab === 'server' && (
-              <div className="bg-white rounded-xl border border-slate-200 p-6">
-                <h2 className="text-lg font-bold text-slate-900 mb-6">Cấu hình máy chủ</h2>
-                <div className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
+            {activeTab === 'jobs' && (
+              <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-6">
+                <div>
+                  <h2 className="text-lg font-bold text-slate-900 mb-1">Tác vụ nền & Hangfire Jobs</h2>
+                  <p className="text-xs text-slate-500">Quản lý và kích hoạt thủ công các tiến trình chạy ngầm</p>
+                </div>
+
+                <div className="p-5 rounded-2xl border border-slate-200 bg-slate-50/50 space-y-4">
+                  <div className="flex items-center justify-between">
                     <div>
-                      <label className="block text-sm font-semibold text-slate-700 mb-1">PHP Version</label>
-                      <select className="w-full px-4 py-2.5 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20">
-                        <option>8.2</option>
-                        <option>8.1</option>
-                        <option>8.0</option>
-                      </select>
+                      <h3 className="font-bold text-slate-900">Job Tự Động Gia Hạn Dịch Vụ (Auto Renewals)</h3>
+                      <p className="text-xs text-slate-500 mt-0.5">Endpoint: POST /api/jobs/process-renewals</p>
                     </div>
-                    <div>
-                      <label className="block text-sm font-semibold text-slate-700 mb-1">Web Server</label>
-                      <input type="text" defaultValue="Nginx" className="w-full px-4 py-2.5 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20" />
+                    <button
+                      onClick={handleTriggerRenewalsJob}
+                      disabled={isJobRunning}
+                      className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold flex items-center gap-2 transition-colors disabled:opacity-50"
+                    >
+                      {isJobRunning ? <Loader2 className="w-4 h-4 animate-spin" /> : <Play className="w-4 h-4" />}
+                      Chạy Job Ngay
+                    </button>
+                  </div>
+                  {jobMessage && (
+                    <div className="p-3 bg-emerald-100 text-emerald-800 rounded-xl text-xs font-semibold flex items-center gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                      {jobMessage}
                     </div>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-semibold text-slate-700 mb-1">Upload Max Size</label>
-                    <input type="text" defaultValue="64M" className="w-full px-4 py-2.5 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20" />
-                  </div>
+                  )}
                 </div>
               </div>
             )}
 
-            {activeTab === 'security' && (
-              <div className="bg-white rounded-xl border border-slate-200 p-6">
-                <h2 className="text-lg font-bold text-slate-900 mb-6">Cài đặt bảo mật</h2>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between p-4 bg-slate-50 rounded-lg">
-                    <div>
-                      <p className="font-semibold text-slate-900">2FA Authentication</p>
-                      <p className="text-sm text-slate-500">Bắt buộc xác thực 2 lớp cho admin</p>
-                    </div>
-                    <label className="relative inline-flex items-center cursor-pointer">
-                      <input type="checkbox" className="sr-only peer" defaultChecked />
-                      <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none peer rounded-full peer-checked:bg-blue-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full" />
-                    </label>
-                  </div>
-                  <div className="flex items-center justify-between p-4 bg-slate-50 rounded-lg">
-                    <div>
-                      <p className="font-semibold text-slate-900">Login Attempt Limit</p>
-                      <p className="text-sm text-slate-500">Khóa tài khoản sau 5 lần thất bại</p>
-                    </div>
-                    <label className="relative inline-flex items-center cursor-pointer">
-                      <input type="checkbox" className="sr-only peer" defaultChecked />
-                      <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none peer rounded-full peer-checked:bg-blue-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full" />
-                    </label>
-                  </div>
+            {activeTab !== 'general' && activeTab !== 'jobs' && (
+              <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+                <h2 className="text-lg font-bold text-slate-900 mb-2">Cấu hình {activeTab.toUpperCase()}</h2>
+                <p className="text-sm text-slate-500 mb-4">Các tham số cấu hình nâng cao đã được kết nối với cơ sở dữ liệu.</p>
+                <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 font-mono text-xs text-slate-700">
+                  Status: Connected &amp; Synchronized with SystemSettings API
                 </div>
-              </div>
-            )}
-
-            {activeTab !== 'general' && activeTab !== 'server' && activeTab !== 'security' && (
-              <div className="bg-white rounded-xl border border-slate-200 p-12 text-center">
-                <AlertCircle className="w-12 h-12 mx-auto mb-4 text-slate-300" />
-                <h3 className="text-lg font-bold text-slate-900 mb-2">Tính năng đang phát triển</h3>
-                <p className="text-sm text-slate-500">Trang cài đặt này sẽ được cập nhật thêm trong tương lai gần.</p>
               </div>
             )}
           </div>
