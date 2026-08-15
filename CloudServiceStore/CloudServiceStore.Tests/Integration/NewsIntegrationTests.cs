@@ -45,7 +45,7 @@ public class NewsIntegrationTests : BaseIntegrationTest, IClassFixture<CustomWeb
         var adminId = Guid.Parse("11111111-1111-1111-1111-111111111111");
         await SeedUserAsync(adminId);
         
-        var article = new NewsArticle { Id = Guid.NewGuid(), Title = "Old Title", Slug = "old-title", Content = "Content", AuthorId = adminId };
+        var article = new NewsArticle("Old Title", "old-title", "Content", adminId);
         await AddEntityAsync(article);
 
         var response = await Client.PatchAsync($"/api/news/{article.Id}/publish", null);
@@ -58,8 +58,8 @@ public class NewsIntegrationTests : BaseIntegrationTest, IClassFixture<CustomWeb
         var adminId = Guid.Parse("11111111-1111-1111-1111-111111111111");
         await SeedUserAsync(adminId);
         
-        var article1 = new NewsArticle { Id = Guid.NewGuid(), Title = "Published News 1", Slug = "pub-news-1", Content = "Test", Status = CloudServiceStore.Domain.Enums.ArticleStatus.Published, AuthorId = adminId };
-        var article2 = new NewsArticle { Id = Guid.NewGuid(), Title = "Draft News", Slug = "draft-news", Content = "Draft", Status = CloudServiceStore.Domain.Enums.ArticleStatus.Draft, AuthorId = adminId };
+        var article1 = new NewsArticle("Published News 1", "pub-news-1", "Test", adminId, status: CloudServiceStore.Domain.Enums.ArticleStatus.Published);
+        var article2 = new NewsArticle("Draft News", "draft-news", "Draft", adminId, status: CloudServiceStore.Domain.Enums.ArticleStatus.Draft);
         
         await AddEntityAsync(article1);
         await AddEntityAsync(article2);
@@ -77,7 +77,7 @@ public class NewsIntegrationTests : BaseIntegrationTest, IClassFixture<CustomWeb
     {
         var adminId = Guid.Parse("11111111-1111-1111-1111-111111111111");
         await SeedUserAsync(adminId);
-        var article = new NewsArticle { Id = Guid.NewGuid(), Title = "Unique Slug", Slug = "unique-slug-article", Content = "Content here", Status = CloudServiceStore.Domain.Enums.ArticleStatus.Published, AuthorId = adminId };
+        var article = new NewsArticle("Unique Slug", "unique-slug-article", "Content here", adminId, status: CloudServiceStore.Domain.Enums.ArticleStatus.Published);
         await AddEntityAsync(article);
 
         var response = await Client.GetAsync($"/api/news/{article.Slug}");
