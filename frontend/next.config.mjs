@@ -11,6 +11,10 @@ const nextConfig = {
         source: '/hubs/:path*',
         destination: `${backendUrl}/hubs/:path*`, // Proxy to Backend SignalR Hubs
       },
+      {
+        source: '/images/:path*',
+        destination: `${backendUrl}/images/:path*`, // Proxy static images to Backend
+      },
     ]
   },
   output: 'standalone',

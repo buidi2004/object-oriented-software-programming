@@ -50,6 +50,29 @@ public class BannersController : ControllerBase
         return NoContent();
     }
 
+    [HttpPost("upload")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> UploadStandalone(Microsoft.AspNetCore.Http.IFormFile file, [FromServices] Microsoft.AspNetCore.Hosting.IWebHostEnvironment env, CancellationToken ct)
+    {
+        if (file == null || file.Length == 0)
+            return BadRequest(new { message = "No file uploaded." });
+
+        var uploadsFolder = System.IO.Path.Combine(env.WebRootPath ?? env.ContentRootPath, "images", "banners");
+        if (!System.IO.Directory.Exists(uploadsFolder))
+            System.IO.Directory.CreateDirectory(uploadsFolder);
+
+        var fileName = $"{System.Guid.NewGuid():N}{System.IO.Path.GetExtension(file.FileName)}";
+        var filePath = System.IO.Path.Combine(uploadsFolder, fileName);
+
+        using (var stream = new System.IO.FileStream(filePath, System.IO.FileMode.Create))
+        {
+            await file.CopyToAsync(stream, ct);
+        }
+
+        var imageUrl = $"/images/banners/{fileName}";
+        return Ok(new { imageUrl });
+    }
+
     [HttpPost("{id:guid}/image")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> UploadImage(Guid id, Microsoft.AspNetCore.Http.IFormFile file, [FromServices] Microsoft.AspNetCore.Hosting.IWebHostEnvironment env, [FromServices] CloudServiceStore.Domain.Interfaces.IRepository<CloudServiceStore.Domain.Entities.Banner> repo, [FromServices] CloudServiceStore.Domain.Interfaces.IUnitOfWork uow, CancellationToken ct)

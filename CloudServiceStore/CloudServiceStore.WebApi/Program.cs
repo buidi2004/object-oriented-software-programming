@@ -125,6 +125,7 @@ if (app.Environment.IsDevelopment())
 app.UseMiddleware<CloudServiceStore.WebApi.Middlewares.ExceptionHandlingMiddleware>();
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 
 app.UseRateLimiter();
 app.UseCors("Frontend");

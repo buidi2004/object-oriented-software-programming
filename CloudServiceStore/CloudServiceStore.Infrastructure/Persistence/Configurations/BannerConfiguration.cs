@@ -10,7 +10,7 @@ public class BannerConfiguration : IEntityTypeConfiguration<Banner>
     {
         builder.ToTable("Banners");
         builder.HasKey(x => x.Id);
-        builder.Property(x => x.ImageUrl).IsRequired().HasMaxLength(500);
+        builder.Property(x => x.ImageUrl).IsRequired();
         builder.Property(x => x.LinkUrl).HasMaxLength(500);
     }
 }

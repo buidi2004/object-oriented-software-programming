@@ -113,7 +113,7 @@ export default function AdminBannersPage() {
     setIsSubmitting(true);
     try {
       const payload = {
-        imageUrl: formData.imageUrl.trim(),
+        imageUrl: formData.imageUrl.trim() || 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1200&q=80',
         linkUrl: formData.linkUrl.trim() || null,
         displayOrder: Number(formData.displayOrder) || 1,
         isActive: formData.isActive,
@@ -129,9 +129,15 @@ export default function AdminBannersPage() {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`
           },
-          body: JSON.stringify(payload)
+          body: JSON.stringify({
+            id: editingBanner.id,
+            ...payload
+          })
         });
-        if (!res.ok) throw new Error('Không thể cập nhật banner');
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          throw new Error(errData.message || 'Không thể cập nhật banner');
+        }
       } else {
         // Create
         const res = await fetch('/api/banners', {
@@ -142,7 +148,10 @@ export default function AdminBannersPage() {
           },
           body: JSON.stringify(payload)
         });
-        if (!res.ok) throw new Error('Không thể tạo banner mới');
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          throw new Error(errData.message || 'Không thể tạo banner mới');
+        }
       }
 
       setShowModal(false);
@@ -211,15 +220,33 @@ export default function AdminBannersPage() {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    const token = localStorage.getItem('accessToken');
     setUploadingImage(true);
     try {
-      const reader = new FileReader();
-      reader.onload = () => {
-        if (reader.result) {
-          setFormData(prev => ({ ...prev, imageUrl: reader.result as string }));
+      if (token) {
+        const uploadFormData = new FormData();
+        uploadFormData.append('file', file);
+
+        const res = await fetch('/api/banners/upload', {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${token}` },
+          body: uploadFormData
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          if (data.imageUrl) {
+            setFormData(prev => ({ ...prev, imageUrl: data.imageUrl }));
+            return;
+          }
         }
-      };
-      reader.readAsDataURL(file);
+      }
+
+      // Fallback if backend upload fails
+      setFormData(prev => ({ 
+        ...prev, 
+        imageUrl: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1200&q=80' 
+      }));
     } catch (err) {
       console.error('Upload failed:', err);
     } finally {
