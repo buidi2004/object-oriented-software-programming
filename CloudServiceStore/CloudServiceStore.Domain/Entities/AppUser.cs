@@ -63,6 +63,13 @@ public class AppUser : AggregateRoot
         TaxCode = taxCode;
     }
 
+    public void UpdateBasicInfo(string fullName, string email, string? phoneNumber)
+    {
+        FullName = fullName;
+        Email = email;
+        PhoneNumber = phoneNumber;
+    }
+
     public void ChangePassword(string newPasswordHash)
     {
         PasswordHash = newPasswordHash;

@@ -101,6 +101,116 @@ public class UsersController : ControllerBase
 
         return Ok(new { avatarUrl });
     }
+    [HttpPost]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> Create(
+        [FromBody] AdminCreateUserRequest body,
+        [FromServices] CloudServiceStore.Application.Interfaces.IPasswordHasher passwordHasher,
+        [FromServices] CloudServiceStore.Domain.Interfaces.IRoleRepository roleRepo,
+        [FromServices] CloudServiceStore.Domain.Interfaces.IRepository<CloudServiceStore.Domain.Entities.AppUser> userRepo,
+        [FromServices] CloudServiceStore.Domain.Interfaces.IUnitOfWork uow,
+        CancellationToken ct)
+    {
+        if (string.IsNullOrWhiteSpace(body.Email) || string.IsNullOrWhiteSpace(body.FullName) || string.IsNullOrWhiteSpace(body.Password))
+            return BadRequest(new { message = "Vui lòng nhập đầy đủ họ tên, email và mật khẩu." });
+
+        if (await userRepo.AnyAsync(u => u.Email == body.Email, ct))
+            return Conflict(new { message = "Email này đã được sử dụng." });
+
+        var roleName = string.IsNullOrWhiteSpace(body.Role) ? "Customer" : body.Role;
+        var roleId = await roleRepo.GetIdByNameAsync(roleName, ct);
+        if (roleId == Guid.Empty)
+            return BadRequest(new { message = $"Vai trò {roleName} không hợp lệ." });
+
+        var passwordHash = passwordHasher.Hash(body.Password);
+        var user = new CloudServiceStore.Domain.Entities.AppUser(
+            fullName: body.FullName,
+            email: body.Email,
+            passwordHash: passwordHash,
+            roleId: roleId,
+            phoneNumber: body.PhoneNumber
+        );
+
+        if (body.IsActive == false)
+            user.Deactivate();
+
+        await userRepo.AddAsync(user, ct);
+        await uow.SaveChangesAsync(ct);
+
+        return Ok(new { id = user.Id, message = "Tạo người dùng mới thành công!" });
+    }
+
+    [HttpPut("{id:guid}")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> Update(
+        Guid id,
+        [FromBody] AdminUpdateUserRequest body,
+        [FromServices] CloudServiceStore.Application.Interfaces.IPasswordHasher passwordHasher,
+        [FromServices] CloudServiceStore.Domain.Interfaces.IRoleRepository roleRepo,
+        [FromServices] CloudServiceStore.Domain.Interfaces.IRepository<CloudServiceStore.Domain.Entities.AppUser> userRepo,
+        [FromServices] CloudServiceStore.Domain.Interfaces.IUnitOfWork uow,
+        CancellationToken ct)
+    {
+        var user = await userRepo.GetByIdAsync(id, ct);
+        if (user == null) return NotFound(new { message = "Không tìm thấy người dùng." });
+
+        var targetFullName = !string.IsNullOrWhiteSpace(body.FullName) ? body.FullName : user.FullName;
+        var targetPhoneNumber = body.PhoneNumber ?? user.PhoneNumber;
+        var targetEmail = user.Email;
+
+        if (!string.IsNullOrWhiteSpace(body.Email) && body.Email != user.Email)
+        {
+            if (await userRepo.AnyAsync(u => u.Email == body.Email && u.Id != id, ct))
+                return Conflict(new { message = "Email này đã được sử dụng bởi tài khoản khác." });
+            targetEmail = body.Email;
+        }
+
+        user.UpdateBasicInfo(targetFullName, targetEmail, targetPhoneNumber);
+
+        if (!string.IsNullOrWhiteSpace(body.Role))
+        {
+            var roleId = await roleRepo.GetIdByNameAsync(body.Role, ct);
+            if (roleId != Guid.Empty)
+                user.ChangeRole(roleId);
+        }
+
+        if (body.IsActive.HasValue)
+        {
+            if (body.IsActive.Value) user.Activate();
+            else user.Deactivate();
+        }
+
+        if (!string.IsNullOrWhiteSpace(body.NewPassword))
+        {
+            user.ChangePassword(passwordHasher.Hash(body.NewPassword));
+        }
+
+        userRepo.Update(user);
+        await uow.SaveChangesAsync(ct);
+
+        return Ok(new { message = "Cập nhật thông tin người dùng thành công!" });
+    }
+
+    [HttpDelete("{id:guid}")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> Delete(
+        Guid id,
+        [FromServices] CloudServiceStore.Domain.Interfaces.IRepository<CloudServiceStore.Domain.Entities.AppUser> userRepo,
+        [FromServices] CloudServiceStore.Domain.Interfaces.IUnitOfWork uow,
+        CancellationToken ct)
+    {
+        var user = await userRepo.GetByIdAsync(id, ct);
+        if (user == null) return NotFound(new { message = "Không tìm thấy người dùng." });
+
+        // Soft delete / deactivate to avoid breaking foreign key constraints on past orders
+        user.Deactivate();
+        userRepo.Update(user);
+        await uow.SaveChangesAsync(ct);
+
+        return Ok(new { message = "Đã vô hiệu hóa tài khoản thành công!" });
+    }
 }
 
 public record ChangeRoleRequest(string RoleName);
+public record AdminCreateUserRequest(string FullName, string Email, string Password, string? Role = "Customer", string? PhoneNumber = null, bool? IsActive = true);
+public record AdminUpdateUserRequest(string? FullName, string? Email, string? PhoneNumber = null, string? Role = null, bool? IsActive = null, string? NewPassword = null);
