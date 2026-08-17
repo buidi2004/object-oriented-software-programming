@@ -24,7 +24,16 @@ public class GetNewsListQueryHandler : IRequestHandler<GetNewsListQuery, IReadOn
             : await _repo.GetAllAsync(ct);
 
         return articles.Select(a => new NewsArticleDto(
-            a.Id, a.Title, a.Slug, a.Status.ToString(), a.AuthorId
+            a.Id, 
+            a.Title, 
+            a.Slug, 
+            a.Status.ToString(), 
+            a.AuthorId,
+            a.ThumbnailUrl,
+            a.Tags,
+            a.ViewCount,
+            a.Content,
+            a.PublishedAt
         )).ToList().AsReadOnly();
     }
 }

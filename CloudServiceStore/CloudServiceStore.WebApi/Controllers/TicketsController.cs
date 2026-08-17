@@ -34,31 +34,40 @@ public class TicketsController : ControllerBase
 
     [HttpPost("{id:guid}/messages")]
     [Authorize]
-    public async Task<IActionResult> AddMessage(Guid id, [FromForm] string message, IFormFile? attachment, [FromServices] IWebHostEnvironment env, CancellationToken ct)
+    public async Task<IActionResult> AddMessage(Guid id, [FromBody] AddTicketMessageRequest dto, CancellationToken ct)
     {
-        string? attachmentUrl = null;
-        if (attachment != null && attachment.Length > 0)
+        if (dto == null || string.IsNullOrWhiteSpace(dto.Message))
+            return BadRequest(new { message = "Nội dung tin nhắn không được để trống." });
+
+        var command = new AddTicketMessageCommand(id, dto.Message, dto.AttachmentUrl);
+        var messageId = await _mediator.Send(command, ct);
+        return Ok(new { id = messageId });
+    }
+
+    [HttpPost("attachments")]
+    [Authorize]
+    public async Task<IActionResult> UploadAttachment(IFormFile file, [FromServices] IWebHostEnvironment env, CancellationToken ct)
+    {
+        if (file == null || file.Length == 0)
+            return BadRequest(new { message = "Không tìm thấy file tải lên." });
+
+        if (file.Length > 5 * 1024 * 1024)
+            return BadRequest(new { message = "Kích thước file không được vượt quá 5MB." });
+
+        var uploadsFolder = Path.Combine(env.WebRootPath ?? env.ContentRootPath, "images", "tickets");
+        if (!Directory.Exists(uploadsFolder))
+            Directory.CreateDirectory(uploadsFolder);
+
+        var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+        var filePath = Path.Combine(uploadsFolder, fileName);
+
+        using (var stream = new FileStream(filePath, FileMode.Create))
         {
-            if (attachment.Length > 5 * 1024 * 1024)
-                return BadRequest(new { message = "Kích thước file không được vượt quá 5MB." });
-
-            var uploadsFolder = Path.Combine(env.WebRootPath ?? env.ContentRootPath, "images", "tickets");
-            if (!Directory.Exists(uploadsFolder))
-                Directory.CreateDirectory(uploadsFolder);
-
-            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(attachment.FileName)}";
-            var filePath = Path.Combine(uploadsFolder, fileName);
-
-            using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                await attachment.CopyToAsync(stream, ct);
-            }
-            attachmentUrl = $"/images/tickets/{fileName}";
+            await file.CopyToAsync(stream, ct);
         }
 
-        var command = new AddTicketMessageCommand(id, message, attachmentUrl);
-        var messageId = await _mediator.Send(command, ct);
-        return CreatedAtAction(null, new { id = messageId });
+        var attachmentUrl = $"/images/tickets/{fileName}";
+        return Ok(new { url = attachmentUrl });
     }
 
     [HttpPatch("{id:guid}/close")]
@@ -102,5 +111,5 @@ public class TicketsController : ControllerBase
     }
 }
 
-public record AddTicketMessageRequest(string Message);
+public record AddTicketMessageRequest(string Message, string? AttachmentUrl = null);
 public record AssignTicketRequest(Guid StaffId);

@@ -35,9 +35,9 @@ public class CreateNewsArticleCommandHandler : IRequestHandler<CreateNewsArticle
             slug: request.Slug,
             content: request.Content,
             authorId: userId,
-            thumbnailUrl: null, // Default
-            tags: null,         // Default
-            status: ArticleStatus.Draft
+            thumbnailUrl: request.ThumbnailUrl,
+            tags: request.Tags,
+            status: request.Status
         );
 
         await _repo.AddAsync(article, ct);

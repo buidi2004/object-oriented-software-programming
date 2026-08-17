@@ -50,7 +50,7 @@ public class NewsController : ControllerBase
     [Authorize(Roles = "Admin,Editor")]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateNewsArticleRequest body, CancellationToken ct)
     {
-        await _mediator.Send(new UpdateNewsArticleCommand(id, body.Title, body.Slug, body.Content), ct);
+        await _mediator.Send(new UpdateNewsArticleCommand(id, body.Title, body.Slug, body.Content, body.ThumbnailUrl, body.Tags, body.Status), ct);
         return NoContent();
     }
 
@@ -63,11 +63,37 @@ public class NewsController : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Editor")]
     public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
     {
         await _mediator.Send(new DeleteNewsArticleCommand(id), ct);
         return NoContent();
+    }
+
+    [HttpPost("upload")]
+    [Authorize(Roles = "Admin,Editor")]
+    public async Task<IActionResult> UploadImageStandalone(Microsoft.AspNetCore.Http.IFormFile file, [FromServices] Microsoft.AspNetCore.Hosting.IWebHostEnvironment env, CancellationToken ct)
+    {
+        if (file == null || file.Length == 0)
+            return BadRequest(new { message = "Không tìm thấy file ảnh tải lên." });
+
+        if (file.Length > 10 * 1024 * 1024)
+            return BadRequest(new { message = "Kích thước ảnh không được vượt quá 10MB." });
+
+        var uploadsFolder = System.IO.Path.Combine(env.WebRootPath ?? env.ContentRootPath, "images", "news");
+        if (!System.IO.Directory.Exists(uploadsFolder))
+            System.IO.Directory.CreateDirectory(uploadsFolder);
+
+        var fileName = $"news_{System.Guid.NewGuid().ToString("N")[..8]}{System.IO.Path.GetExtension(file.FileName)}";
+        var filePath = System.IO.Path.Combine(uploadsFolder, fileName);
+
+        using (var stream = new System.IO.FileStream(filePath, System.IO.FileMode.Create))
+        {
+            await file.CopyToAsync(stream, ct);
+        }
+
+        var imageUrl = $"/images/news/{fileName}";
+        return Ok(new { imageUrl });
     }
 
     [HttpPost("{id:guid}/image")]
@@ -101,4 +127,5 @@ public class NewsController : ControllerBase
     }
 }
 
-public record UpdateNewsArticleRequest(string Title, string Slug, string Content);
+public record UpdateNewsArticleRequest(string Title, string Slug, string Content, string? ThumbnailUrl = null, string? Tags = null, CloudServiceStore.Domain.Enums.ArticleStatus? Status = null);
+

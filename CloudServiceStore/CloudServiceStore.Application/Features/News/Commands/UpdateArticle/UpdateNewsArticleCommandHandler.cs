@@ -31,9 +31,9 @@ public class UpdateNewsArticleCommandHandler : IRequestHandler<UpdateNewsArticle
             title: request.Title,
             slug: request.Slug,
             content: request.Content,
-            thumbnailUrl: article.ThumbnailUrl, // Keep existing if not in request
-            tags: article.Tags,                 // Keep existing if not in request
-            status: article.Status              // Keep existing if not in request
+            thumbnailUrl: request.ThumbnailUrl ?? article.ThumbnailUrl,
+            tags: request.Tags ?? article.Tags,
+            status: request.Status ?? article.Status
         );
 
         _repo.Update(article);

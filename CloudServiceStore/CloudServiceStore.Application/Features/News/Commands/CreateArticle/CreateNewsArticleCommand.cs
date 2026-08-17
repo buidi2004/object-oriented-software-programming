@@ -1,10 +1,18 @@
 using System;
+using CloudServiceStore.Domain.Enums;
 using FluentValidation;
 using MediatR;
 
 namespace CloudServiceStore.Application.Features.News.Commands.CreateArticle;
 
-public record CreateNewsArticleCommand(string Title, string Slug, string Content) : IRequest<Guid>;
+public record CreateNewsArticleCommand(
+    string Title, 
+    string Slug, 
+    string Content, 
+    string? ThumbnailUrl = null, 
+    string? Tags = null, 
+    ArticleStatus Status = ArticleStatus.Draft
+) : IRequest<Guid>;
 
 public class CreateNewsArticleCommandValidator : AbstractValidator<CreateNewsArticleCommand>
 {
@@ -15,3 +23,4 @@ public class CreateNewsArticleCommandValidator : AbstractValidator<CreateNewsArt
         RuleFor(x => x.Content).NotEmpty();
     }
 }
+
