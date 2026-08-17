@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 namespace CloudServiceStore.WebApi.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
 [Route("api/faqs")]
 public class FaqsController : ControllerBase
 {
