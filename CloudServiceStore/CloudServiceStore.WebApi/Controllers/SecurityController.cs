@@ -1,6 +1,11 @@
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using CloudServiceStore.Application.Features.Security.Commands.ChangePassword;
+using CloudServiceStore.Application.Features.Security.Commands.RevokeSession;
+using CloudServiceStore.Application.Features.Security.Queries.GetLoginHistory;
+using CloudServiceStore.Application.Features.Security.Queries.GetMySessions;
 using CloudServiceStore.Application.Features.SecurityAddons.Commands.PurchaseSecurityAddon;
 using CloudServiceStore.Application.Features.SecurityAddons.Commands.RunMalwareScan;
 using CloudServiceStore.Application.Features.SecurityAddons.Queries.GetMySecurityAddons;
@@ -40,5 +45,37 @@ public class SecurityController : ControllerBase
     {
         var scanId = await _mediator.Send(new RunMalwareScanCommand(id), ct);
         return Ok(new { scanId });
+    }
+
+    [HttpGet("login-history")]
+    [Authorize]
+    public async Task<IActionResult> GetLoginHistory(CancellationToken ct)
+    {
+        var result = await _mediator.Send(new GetLoginHistoryQuery(), ct);
+        return Ok(result);
+    }
+
+    [HttpGet("sessions")]
+    [Authorize]
+    public async Task<IActionResult> GetSessions(CancellationToken ct)
+    {
+        var result = await _mediator.Send(new GetMySessionsQuery(), ct);
+        return Ok(result);
+    }
+
+    [HttpDelete("sessions/{id:guid}")]
+    [Authorize]
+    public async Task<IActionResult> RevokeSession(Guid id, CancellationToken ct)
+    {
+        await _mediator.Send(new RevokeSessionCommand(id), ct);
+        return NoContent();
+    }
+
+    [HttpPost("change-password")]
+    [Authorize]
+    public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordCommand command, CancellationToken ct)
+    {
+        await _mediator.Send(command, ct);
+        return NoContent();
     }
 }

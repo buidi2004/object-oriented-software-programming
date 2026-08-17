@@ -28,7 +28,17 @@ public class SystemSettingsController : ControllerBase
     public async Task<IActionResult> GetByKey(string key, CancellationToken ct)
     {
         var result = await _mediator.Send(new GetSettingByKeyQuery(key), ct);
-        if (result == null) return NotFound();
+        if (result == null)
+        {
+            var fallback = key.ToLowerInvariant() switch
+            {
+                "site_name" or "sitename" => "CloudServiceStore",
+                "hotline" => "1900 8888 99",
+                "email" => "support@cloudservicestore.vn",
+                _ => string.Empty
+            };
+            return Ok(new { value = fallback });
+        }
         return Ok(new { value = result });
     }
 
