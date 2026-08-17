@@ -3,16 +3,20 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, Plus, Edit2, Trash2, AlertCircle, CheckCircle, XCircle, Gift } from 'lucide-react';
+import { 
+  ArrowLeft, Plus, Trash2, AlertCircle, CheckCircle2, 
+  Gift, Search, RefreshCw, Copy, Check, Calendar, DollarSign, X
+} from 'lucide-react';
+import { api } from '@/src/lib/api';
 
 interface GiftCard {
   id: string;
   code: string;
-  value: number;
-  status: 'active' | 'used' | 'expired';
-  usedBy?: string;
+  amount: number;
+  remainingAmount: number;
+  isActive: boolean;
+  expiryDate?: string;
   createdAt: string;
-  expiresAt?: string;
 }
 
 export default function AdminGiftCardsPage() {
@@ -21,11 +25,23 @@ export default function AdminGiftCardsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
   const [filter, setFilter] = useState<'all' | 'active' | 'used'>('all');
-  
+  const [searchTerm, setSearchTerm] = useState('');
+  const [copiedCode, setCopiedCode] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   // Form state
-  const [value, setValue] = useState('');
-  const [quantity, setQuantity] = useState('');
-  const [expiryDays, setExpiryDays] = useState('');
+  const [formData, setFormData] = useState({
+    code: '',
+    amount: '100000',
+    expiryDays: '180'
+  });
+
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+
+  const showToast = (message: string, type: 'success' | 'error' = 'success') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3500);
+  };
 
   useEffect(() => {
     checkAdminAccess();
@@ -36,80 +52,98 @@ export default function AdminGiftCardsPage() {
     if (!token) { router.push('/login'); return; }
     
     try {
-      const response = await fetch('/api/users/me', { 
-        headers: { Authorization: `Bearer ${token}` } 
-      });
-      if (response.ok) {
-        const userData = await response.json();
-        if (userData.role !== 'Admin') { router.push('/dashboard'); return; }
-        fetchGiftCards();
-      } else { 
-        router.push('/login'); 
+      const response = await api.get('/users/me');
+      if (response.data?.role !== 'Admin') { 
+        router.push('/dashboard'); 
+        return; 
       }
-    } catch (error) { 
+      fetchGiftCards();
+    } catch { 
       router.push('/login'); 
     }
   };
 
   const fetchGiftCards = async () => {
-    const token = localStorage.getItem('accessToken');
     try {
-      // Note: Current API only has GetBalance and Redeem endpoints
-      // This is a mock for demonstration
-      setTimeout(() => {
-        setGiftCards([
-          {
-            id: '1',
-            code: 'GIFT-2024-001',
-            value: 100000,
-            status: 'active',
-            createdAt: '2024-01-15T10:00:00Z',
-            expiresAt: '2024-12-31T23:59:59Z'
-          },
-          {
-            id: '2',
-            code: 'SUMMER-2024',
-            value: 50000,
-            status: 'used',
-            usedBy: 'user@example.com',
-            createdAt: '2024-06-01T10:00:00Z'
-          }
-        ]);
-        setIsLoading(false);
-      }, 500);
+      setIsLoading(true);
+      const res = await api.get('/gift-cards');
+      if (Array.isArray(res.data)) {
+        setGiftCards(res.data.map((c: any) => ({
+          id: c.id,
+          code: c.code,
+          amount: c.amount || 0,
+          remainingAmount: c.remainingAmount ?? c.amount ?? 0,
+          isActive: c.isActive ?? true,
+          expiryDate: c.expiryDate,
+          createdAt: c.createdAt || new Date().toISOString()
+        })));
+      }
     } catch (error) {
       console.error('Failed to fetch gift cards:', error);
+    } finally {
       setIsLoading(false);
     }
   };
 
-  const handleGenerate = async () => {
-    const token = localStorage.getItem('accessToken');
-    // Mock generation since no batch generation API exists
-    const newCards: GiftCard[] = Array.from({ length: parseInt(quantity) || 1 }, (_, i) => ({
-      id: Date.now().toString() + i,
-      code: `GC-${Date.now()}-${i}`,
-      value: parseFloat(value) || 0,
-      status: 'active',
-      createdAt: new Date().toISOString(),
-      expiresAt: expiryDays ? new Date(Date.now() + parseInt(expiryDays) * 24 * 60 * 60 * 1000).toISOString() : undefined
-    }));
-    
-    setGiftCards(prev => [...newCards, ...prev]);
-    setShowAddModal(false);
-    resetForm();
+  const handleCreate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const amountVal = parseFloat(formData.amount);
+    if (isNaN(amountVal) || amountVal <= 0) {
+      showToast('Vui lòng nhập mệnh giá hợp lệ.', 'error');
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+      const days = parseInt(formData.expiryDays) || 180;
+      const expiryDate = new Date(Date.now() + days * 24 * 60 * 60 * 1000).toISOString();
+
+      await api.post('/gift-cards', {
+        code: formData.code.trim() ? formData.code.trim().toUpperCase() : undefined,
+        amount: amountVal,
+        expiryDate
+      });
+
+      showToast('Tạo thẻ quà tặng mới thành công!');
+      setShowAddModal(false);
+      setFormData({ code: '', amount: '100000', expiryDays: '180' });
+      fetchGiftCards();
+    } catch (err: any) {
+      console.error(err);
+      const msg = err.response?.data?.message || 'Không thể tạo thẻ quà tặng.';
+      showToast(msg, 'error');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  const resetForm = () => {
-    setValue('');
-    setQuantity('');
-    setExpiryDays('');
+  const handleDelete = async (id: string, code: string) => {
+    if (!confirm(`Bạn có chắc chắn muốn hủy kích hoạt thẻ quà tặng "${code}"?`)) return;
+    try {
+      await api.delete(`/gift-cards/${id}`);
+      setGiftCards(prev => prev.map(c => c.id === id ? { ...c, isActive: false } : c));
+      showToast(`Đã vô hiệu hóa thẻ "${code}"!`);
+    } catch (error) {
+      console.error('Failed to delete gift card:', error);
+      showToast('Lỗi khi hủy kích hoạt thẻ', 'error');
+    }
+  };
+
+  const copyToClipboard = (code: string) => {
+    navigator.clipboard.writeText(code);
+    setCopiedCode(code);
+    showToast(`Đã sao chép mã: ${code}`);
+    setTimeout(() => setCopiedCode(null), 2000);
   };
 
   const filteredGiftCards = giftCards.filter(gc => {
-    if (filter === 'active') return gc.status === 'active';
-    if (filter === 'used') return gc.status === 'used';
-    return true;
+    const matchesSearch = gc.code.toLowerCase().includes(searchTerm.toLowerCase());
+    const isExpired = gc.expiryDate ? new Date(gc.expiryDate) < new Date() : false;
+    const isUsed = gc.remainingAmount <= 0;
+
+    if (filter === 'active') return matchesSearch && gc.isActive && !isExpired && !isUsed;
+    if (filter === 'used') return matchesSearch && (isUsed || !gc.isActive || isExpired);
+    return matchesSearch;
   });
 
   if (isLoading) {
@@ -122,205 +156,247 @@ export default function AdminGiftCardsPage() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <header className="bg-white border-b border-slate-200 sticky top-0 z-50">
+      {/* Toast */}
+      {toast && (
+        <div className={`fixed bottom-5 right-5 z-50 px-5 py-3 rounded-xl shadow-xl text-white font-semibold text-sm flex items-center gap-2.5 animate-in slide-in-from-bottom-5 ${
+          toast.type === 'success' ? 'bg-emerald-600' : 'bg-red-600'
+        }`}>
+          {toast.type === 'success' ? <CheckCircle2 className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />}
+          {toast.message}
+        </div>
+      )}
+
+      {/* Header */}
+      <header className="bg-white border-b border-slate-200 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Link href="/admin" className="p-2 rounded-lg hover:bg-slate-100 transition-colors">
               <ArrowLeft className="w-5 h-5 text-slate-600" />
             </Link>
             <div>
-              <h1 className="text-xl font-bold text-slate-900">Quản lý Gift Card</h1>
-              <p className="text-sm text-slate-500">{giftCards.length} gift cards</p>
+              <h1 className="text-xl font-bold text-slate-900">Quản lý Thẻ Quà Tặng (Gift Cards)</h1>
+              <p className="text-xs text-slate-500">{giftCards.length} thẻ quà tặng trong hệ thống</p>
             </div>
           </div>
-          <button 
-            onClick={() => setShowAddModal(true)}
-            className="px-4 py-2 rounded-lg bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 transition-colors flex items-center gap-2"
-          >
-            <Plus className="w-4 h-4" />
-            Tạo gift card
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={fetchGiftCards}
+              className="p-2 text-slate-500 hover:bg-slate-100 rounded-xl transition-colors"
+              title="Tải lại danh sách"
+            >
+              <RefreshCw className="w-5 h-5" />
+            </button>
+            <button 
+              onClick={() => setShowAddModal(true)}
+              className="px-4 py-2 rounded-xl bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 transition-colors flex items-center gap-2 shadow-sm"
+            >
+              <Plus className="w-4 h-4" />
+              Tạo Thẻ Mới
+            </button>
+          </div>
         </div>
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          <div className="bg-white rounded-xl p-4 border border-slate-200">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-emerald-100 flex items-center justify-center">
-                <CheckCircle className="w-5 h-5 text-emerald-600" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-slate-900">{giftCards.filter(g => g.status === 'active').length}</p>
-                <p className="text-xs text-slate-500">Đang hoạt động</p>
-              </div>
-            </div>
-          </div>
-          
-          <div className="bg-white rounded-xl p-4 border border-slate-200">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center">
-                <Gift className="w-5 h-5 text-slate-600" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-slate-900">{giftCards.filter(g => g.status === 'used').length}</p>
-                <p className="text-xs text-slate-500">Đã sử dụng</p>
-              </div>
-            </div>
+        {/* Filters */}
+        <div className="flex flex-col sm:flex-row gap-4 mb-6 items-center justify-between">
+          <div className="relative w-full sm:max-w-md">
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <input
+              type="text"
+              placeholder="Tìm kiếm theo mã thẻ quà tặng..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-10 pr-4 py-2.5 bg-white rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 shadow-sm font-mono"
+            />
           </div>
 
-          <div className="bg-white rounded-xl p-4 border border-slate-200">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
-                <Gift className="w-5 h-5 text-blue-600" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-slate-900">
-                  {giftCards.reduce((sum, g) => sum + (g.status === 'used' ? g.value : 0), 0).toLocaleString()}₫
-                </p>
-                <p className="text-xs text-slate-500">Tổng giá trị đã dùng</p>
-              </div>
-            </div>
+          <div className="flex gap-2 w-full sm:w-auto">
+            {[
+              { id: 'all', label: 'Tất cả' },
+              { id: 'active', label: 'Còn hiệu lực' },
+              { id: 'used', label: 'Đã dùng / Hết hạn' }
+            ].map(f => (
+              <button
+                key={f.id}
+                onClick={() => setFilter(f.id as any)}
+                className={`px-4 py-2 rounded-xl text-xs font-semibold transition-colors ${
+                  filter === f.id
+                    ? 'bg-blue-600 text-white shadow-sm'
+                    : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
+                }`}
+              >
+                {f.label}
+              </button>
+            ))}
           </div>
         </div>
 
-        {/* Filter Tabs */}
-        <div className="flex gap-2 mb-6">
-          {[
-            { key: 'all', label: 'Tất cả' },
-            { key: 'active', label: 'Đang hoạt động' },
-            { key: 'used', label: 'Đã sử dụng' },
-          ].map((tab) => (
-            <button
-              key={tab.key}
-              onClick={() => setFilter(tab.key as any)}
-              className={`px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${
-                filter === tab.key
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
+        {/* Gift Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {filteredGiftCards.map((card) => {
+            const isExpired = card.expiryDate ? new Date(card.expiryDate) < new Date() : false;
+            const isUsed = card.remainingAmount <= 0;
+            const isAvailable = card.isActive && !isExpired && !isUsed;
 
-        {/* Gift Cards List */}
-        <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-          <table className="w-full">
-            <thead className="bg-slate-50 border-b border-slate-200">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Mã</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Giá trị</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Trạng thái</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Ngày tạo</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Hạn sử dụng</th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase">Thao tác</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-200">
-              {filteredGiftCards.map((gc) => (
-                <tr key={gc.id} className="hover:bg-slate-50 transition-colors">
-                  <td className="px-6 py-4">
-                    <span className="font-mono font-semibold text-slate-900">{gc.code}</span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className="font-bold text-emerald-600">{gc.value.toLocaleString()}₫</span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold ${
-                      gc.status === 'active' ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-500'
-                    }`}>
-                      {gc.status === 'active' ? <CheckCircle className="w-3 h-3" /> : <XCircle className="w-3 h-3" />}
-                      {gc.status === 'active' ? 'Hoạt động' : 'Đã dùng'}
-                    </span>
-                    {gc.usedBy && (
-                      <p className="text-xs text-slate-400 mt-1">by: {gc.usedBy}</p>
-                    )}
-                  </td>
-                  <td className="px-6 py-4 text-sm text-slate-500">
-                    {new Date(gc.createdAt).toLocaleDateString('vi-VN')}
-                  </td>
-                  <td className="px-6 py-4 text-sm text-slate-500">
-                    {gc.expiresAt ? new Date(gc.expiresAt).toLocaleDateString('vi-VN') : 'Không giới hạn'}
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    <button className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+            return (
+              <div 
+                key={card.id} 
+                className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden flex flex-col justify-between"
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
+                        <Gift className="w-4 h-4" />
+                      </div>
+                      <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold ${
+                        isAvailable 
+                          ? 'bg-emerald-100 text-emerald-700' 
+                          : 'bg-slate-100 text-slate-600'
+                      }`}>
+                        {isAvailable ? 'Có thể sử dụng' : isUsed ? 'Đã sử dụng hết' : !card.isActive ? 'Đã vô hiệu hóa' : 'Đã hết hạn'}
+                      </span>
+                    </div>
+
+                    <button
+                      onClick={() => handleDelete(card.id, card.code)}
+                      className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+                      title="Vô hiệu hóa thẻ"
+                    >
                       <Trash2 className="w-4 h-4" />
                     </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                  </div>
 
-          {filteredGiftCards.length === 0 && (
-            <div className="text-center py-12">
-              <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-300" />
-              <p className="font-medium text-slate-500">Không có gift card nào</p>
-            </div>
-          )}
+                  {/* Code Box */}
+                  <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 mb-4 flex items-center justify-between">
+                    <span className="font-mono font-bold text-slate-900 text-sm tracking-wider">
+                      {card.code}
+                    </span>
+                    <button
+                      onClick={() => copyToClipboard(card.code)}
+                      className="p-1.5 text-slate-500 hover:text-blue-600 hover:bg-white rounded-lg transition-colors"
+                      title="Sao chép mã"
+                    >
+                      {copiedCode === card.code ? (
+                        <Check className="w-4 h-4 text-emerald-600" />
+                      ) : (
+                        <Copy className="w-4 h-4" />
+                      )}
+                    </button>
+                  </div>
+
+                  {/* Values */}
+                  <div className="space-y-1.5 text-xs text-slate-600 mb-4">
+                    <div className="flex justify-between">
+                      <span className="text-slate-400">Mệnh giá ban đầu:</span>
+                      <span className="font-bold text-slate-900">{card.amount.toLocaleString('vi-VN')} đ</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-slate-400">Số dư còn lại:</span>
+                      <span className="font-bold text-blue-600">{card.remainingAmount.toLocaleString('vi-VN')} đ</span>
+                    </div>
+                    {card.expiryDate && (
+                      <div className="flex justify-between">
+                        <span className="text-slate-400">Hạn sử dụng:</span>
+                        <span>{new Date(card.expiryDate).toLocaleDateString('vi-VN')}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div className="pt-3 border-t border-slate-100 text-xs text-slate-400 flex items-center justify-between">
+                  <span>Tạo ngày {new Date(card.createdAt).toLocaleDateString('vi-VN')}</span>
+                </div>
+              </div>
+            );
+          })}
         </div>
+
+        {filteredGiftCards.length === 0 && (
+          <div className="text-center py-16 bg-white rounded-2xl border border-slate-200 text-slate-500">
+            <Gift className="w-12 h-12 mx-auto mb-3 text-slate-300" />
+            <p className="font-bold text-slate-700">Không tìm thấy thẻ quà tặng nào</p>
+            <p className="text-xs text-slate-400 mt-1">Bấm "Tạo Thẻ Mới" để phát hành mã thẻ</p>
+          </div>
+        )}
       </main>
 
       {/* Add Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl w-full max-w-md p-6">
-            <h2 className="text-lg font-bold text-slate-900 mb-4">Tạo gift card mới</h2>
-            
-            <div className="space-y-4">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl">
+            <div className="flex items-center justify-between mb-6">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Giá trị (₫)</label>
-                <input 
-                  type="number"
-                  value={value}
-                  onChange={(e) => setValue(e.target.value)}
-                  placeholder="VD: 100000"
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                />
+                <h3 className="text-xl font-bold text-slate-900">Phát Hành Thẻ Quà Tặng Mới</h3>
+                <p className="text-xs text-slate-500 mt-0.5">Tạo mã nạp tiền trực tiếp vào tài khoản</p>
               </div>
-
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Số lượng</label>
-                <input 
-                  type="number"
-                  value={quantity}
-                  onChange={(e) => setQuantity(e.target.value)}
-                  placeholder="VD: 10"
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
-                  Hạn sử dụng (ngày, để trống = không hết hạn)
-                </label>
-                <input 
-                  type="number"
-                  value={expiryDays}
-                  onChange={(e) => setExpiryDays(e.target.value)}
-                  placeholder="VD: 365"
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                />
-              </div>
-            </div>
-
-            <div className="flex gap-3 mt-6">
-              <button 
-                onClick={() => { setShowAddModal(false); resetForm(); }}
-                className="flex-1 py-2 rounded-lg bg-slate-100 text-slate-700 font-semibold hover:bg-slate-200 transition-colors"
-              >
-                Hủy
-              </button>
-              <button 
-                onClick={handleGenerate}
-                className="flex-1 py-2 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors"
-              >
-                Tạo gift card
+              <button onClick={() => setShowAddModal(false)} className="p-2 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100">
+                <X className="w-5 h-5" />
               </button>
             </div>
+
+            <form onSubmit={handleCreate} className="space-y-4">
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Mã thẻ quà tặng (tùy chọn)</label>
+                <input
+                  type="text"
+                  placeholder="Để trống để hệ thống tự sinh mã tự động"
+                  value={formData.code}
+                  onChange={(e) => setFormData({ ...formData, code: e.target.value.toUpperCase() })}
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500/20 uppercase"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Mệnh giá (VNĐ)</label>
+                <div className="relative">
+                  <input
+                    type="number"
+                    required
+                    min={10000}
+                    step={10000}
+                    placeholder="100000"
+                    value={formData.amount}
+                    onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
+                    className="w-full pl-4 pr-12 py-2.5 rounded-xl border border-slate-200 text-sm font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                  />
+                  <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">
+                    VNĐ
+                  </span>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Thời hạn hiệu lực (Số ngày)</label>
+                <input
+                  type="number"
+                  required
+                  min={1}
+                  placeholder="180"
+                  value={formData.expiryDays}
+                  onChange={(e) => setFormData({ ...formData, expiryDays: e.target.value })}
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                />
+              </div>
+
+              <div className="flex gap-3 pt-4 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setShowAddModal(false)}
+                  className="flex-1 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm transition-colors"
+                >
+                  Hủy bỏ
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="flex-1 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-md transition-colors disabled:opacity-50"
+                >
+                  {isSubmitting ? 'Đang tạo...' : 'Tạo Thẻ Quà Tặng'}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

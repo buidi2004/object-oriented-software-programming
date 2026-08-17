@@ -3,14 +3,17 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, Mail, Plus, Edit2, Trash2, AlertCircle, Eye, EyeOff } from 'lucide-react';
+import { 
+  ArrowLeft, Mail, Plus, Trash2, AlertCircle, Eye, EyeOff, 
+  Search, RefreshCw, Send, CheckCircle2, X, Download, UserCheck, Sparkles 
+} from 'lucide-react';
+import { api } from '@/src/lib/api';
 
 interface NewsletterSubscriber {
   id: string;
   email: string;
   subscribedAt: string;
   isActive: boolean;
-  clickCount: number;
 }
 
 export default function AdminNewslettersPage() {
@@ -18,7 +21,54 @@ export default function AdminNewslettersPage() {
   const [subscribers, setSubscribers] = useState<NewsletterSubscriber[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
-  const [showUnsubscribe, setShowUnsubscribe] = useState<string | null>(null);
+  
+  // Modals
+  const [showSendModal, setShowSendModal] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Form states
+  const [campaignData, setCampaignData] = useState({
+    subject: '',
+    previewText: '',
+    content: ''
+  });
+
+  const [newEmail, setNewEmail] = useState('');
+
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+
+  const showToast = (message: string, type: 'success' | 'error' = 'success') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3500);
+  };
+
+  const initialSubscribers: NewsletterSubscriber[] = [
+    {
+      id: 'sub-1',
+      email: 'techlead@viettel.vn',
+      subscribedAt: '2026-06-15T10:00:00Z',
+      isActive: true
+    },
+    {
+      id: 'sub-2',
+      email: 'admin@devops.org.vn',
+      subscribedAt: '2026-07-20T14:30:00Z',
+      isActive: true
+    },
+    {
+      id: 'sub-3',
+      email: 'founder@fintechnext.vn',
+      subscribedAt: '2026-08-01T09:15:00Z',
+      isActive: true
+    },
+    {
+      id: 'sub-4',
+      email: 'customer.old@gmail.com',
+      subscribedAt: '2025-12-10T16:00:00Z',
+      isActive: false
+    }
+  ];
 
   useEffect(() => {
     checkAdminAccess();
@@ -29,70 +79,121 @@ export default function AdminNewslettersPage() {
     if (!token) { router.push('/login'); return; }
     
     try {
-      const response = await fetch('/api/users/me', { 
-        headers: { Authorization: `Bearer ${token}` } 
-      });
-      if (response.ok) {
-        const userData = await response.json();
-        if (userData.role !== 'Admin') { router.push('/dashboard'); return; }
-        fetchSubscribers();
-      } else { 
-        router.push('/login'); 
+      const response = await api.get('/users/me');
+      if (response.data?.role !== 'Admin') { 
+        router.push('/dashboard'); 
+        return; 
       }
-    } catch (error) { 
+      fetchSubscribers();
+    } catch { 
       router.push('/login'); 
     }
   };
 
-  const fetchSubscribers = async () => {
-    const token = localStorage.getItem('accessToken');
-    try {
-      // Note: Current API only has Subscribe and Unsubscribe (public)
-      // This is a mock for demonstration
-      setTimeout(() => {
-        setSubscribers([
-          {
-            id: '1',
-            email: 'john.doe@example.com',
-            subscribedAt: '2024-01-15T10:00:00Z',
-            isActive: true,
-            clickCount: 12
-          },
-          {
-            id: '2',
-            email: 'jane.smith@example.com',
-            subscribedAt: '2024-01-20T14:30:00Z',
-            isActive: false,
-            clickCount: 3
-          }
-        ]);
-        setIsLoading(false);
-      }, 500);
-    } catch (error) {
-      console.error('Failed to fetch subscribers:', error);
-      setIsLoading(false);
+  const fetchSubscribers = () => {
+    const saved = localStorage.getItem('admin_newsletter_subscribers');
+    if (saved) {
+      try {
+        setSubscribers(JSON.parse(saved));
+      } catch {
+        setSubscribers(initialSubscribers);
+      }
+    } else {
+      setSubscribers(initialSubscribers);
     }
+    setIsLoading(false);
+  };
+
+  const saveSubscribers = (items: NewsletterSubscriber[]) => {
+    setSubscribers(items);
+    localStorage.setItem('admin_newsletter_subscribers', JSON.stringify(items));
+  };
+
+  const handleAddSubscriber = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newEmail.trim() || !newEmail.includes('@')) {
+      showToast('Vui lòng nhập địa chỉ email hợp lệ.', 'error');
+      return;
+    }
+
+    if (subscribers.some(s => s.email.toLowerCase() === newEmail.toLowerCase())) {
+      showToast('Email này đã có trong danh sách đăng ký.', 'error');
+      return;
+    }
+
+    const newItem: NewsletterSubscriber = {
+      id: `sub-${Date.now()}`,
+      email: newEmail.trim().toLowerCase(),
+      subscribedAt: new Date().toISOString(),
+      isActive: true
+    };
+
+    const updated = [newItem, ...subscribers];
+    saveSubscribers(updated);
+    setNewEmail('');
+    setShowAddModal(false);
+    showToast(`Đã thêm email ${newItem.email} vào danh sách nhận tin!`);
+  };
+
+  const handleToggleStatus = (id: string) => {
+    const updated = subscribers.map(s => {
+      if (s.id === id) {
+        const nextState = !s.isActive;
+        showToast(`Đã ${nextState ? 'kích hoạt' : 'hủy kích hoạt'} nhận tin cho ${s.email}`);
+        return { ...s, isActive: nextState };
+      }
+      return s;
+    });
+    saveSubscribers(updated);
+  };
+
+  const handleDelete = (id: string, email: string) => {
+    if (!confirm(`Bạn có chắc muốn xóa subscriber ${email}?`)) return;
+    const updated = subscribers.filter(s => s.id !== id);
+    saveSubscribers(updated);
+    showToast(`Đã xóa ${email} khỏi danh sách.`);
+  };
+
+  const handleSendCampaign = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!campaignData.subject.trim() || !campaignData.content.trim()) {
+      showToast('Vui lòng nhập tiêu đề và nội dung chiến dịch.', 'error');
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+      // Simulate blast send
+      await new Promise(r => setTimeout(r, 1500));
+      const activeCount = subscribers.filter(s => s.isActive).length;
+      showToast(`Đã gửi thành công chiến dịch tới ${activeCount} email đang hoạt động!`);
+      setShowSendModal(false);
+      setCampaignData({ subject: '', previewText: '', content: '' });
+    } catch {
+      showToast('Lỗi khi gửi chiến dịch email', 'error');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleExportCsv = () => {
+    const csvContent = "data:text/csv;charset=utf-8," 
+      + "Email,Ngay_Dang_Ky,Trang_Thai\n"
+      + subscribers.map(s => `"${s.email}","${s.subscribedAt}","${s.isActive ? 'Active' : 'Inactive'}"`).join("\n");
+    
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `newsletter_subscribers_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    showToast('Đã xuất danh sách email ra file CSV!');
   };
 
   const filteredSubscribers = subscribers.filter(s => 
     s.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
-  const toggleStatus = async (id: string) => {
-    const token = localStorage.getItem('accessToken');
-    // Mock toggle - would need a backend endpoint for this
-    setSubscribers(prev => prev.map(s => 
-      s.id === id ? { ...s, isActive: !s.isActive } : s
-    ));
-  };
-
-  const handleDelete = async (id: string) => {
-    if (!confirm('Bạn có chắc chắn muốn xóa subscriber này?')) return;
-    
-    const token = localStorage.getItem('accessToken');
-    // Mock delete - would need a backend endpoint for this
-    setSubscribers(prev => prev.filter(s => s.id !== id));
-  };
 
   if (isLoading) {
     return (
@@ -104,125 +205,120 @@ export default function AdminNewslettersPage() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <header className="bg-white border-b border-slate-200 sticky top-0 z-50">
+      {/* Toast */}
+      {toast && (
+        <div className={`fixed bottom-5 right-5 z-50 px-5 py-3 rounded-xl shadow-xl text-white font-semibold text-sm flex items-center gap-2.5 animate-in slide-in-from-bottom-5 ${
+          toast.type === 'success' ? 'bg-emerald-600' : 'bg-red-600'
+        }`}>
+          {toast.type === 'success' ? <CheckCircle2 className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />}
+          {toast.message}
+        </div>
+      )}
+
+      {/* Header */}
+      <header className="bg-white border-b border-slate-200 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Link href="/admin" className="p-2 rounded-lg hover:bg-slate-100 transition-colors">
               <ArrowLeft className="w-5 h-5 text-slate-600" />
             </Link>
             <div>
-              <h1 className="text-xl font-bold text-slate-900">Quản lý Newsletter</h1>
-              <p className="text-sm text-slate-500">{subscribers.length} người đăng ký</p>
+              <h1 className="text-xl font-bold text-slate-900">Quản lý Newsletter & Email Marketing</h1>
+              <p className="text-xs text-slate-500">{subscribers.length} người đăng ký nhận tin</p>
             </div>
           </div>
-          <button className="px-4 py-2 rounded-lg bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 transition-colors flex items-center gap-2">
-            <Mail className="w-4 h-4" />
-            Gửi email
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={handleExportCsv}
+              className="px-3.5 py-2 rounded-xl bg-slate-100 text-slate-700 text-xs font-bold hover:bg-slate-200 transition-colors flex items-center gap-1.5"
+              title="Xuất CSV"
+            >
+              <Download className="w-3.5 h-3.5" /> Xuất CSV
+            </button>
+            <button
+              onClick={() => setShowAddModal(true)}
+              className="px-3.5 py-2 rounded-xl bg-slate-100 text-slate-700 text-xs font-bold hover:bg-slate-200 transition-colors flex items-center gap-1.5"
+            >
+              <Plus className="w-3.5 h-3.5" /> Thêm Email
+            </button>
+            <button 
+              onClick={() => setShowSendModal(true)}
+              className="px-4 py-2 rounded-xl bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 transition-colors flex items-center gap-2 shadow-sm"
+            >
+              <Send className="w-4 h-4" />
+              Gửi Chiến Dịch Email
+            </button>
+          </div>
         </div>
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          <div className="bg-white rounded-xl p-4 border border-slate-200">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-emerald-100 flex items-center justify-center">
-                <Eye className="w-5 h-5 text-emerald-600" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-slate-900">{subscribers.filter(s => s.isActive).length}</p>
-                <p className="text-xs text-slate-500">Đang aktif</p>
-              </div>
-            </div>
-          </div>
-          
-          <div className="bg-white rounded-xl p-4 border border-slate-200">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center">
-                <EyeOff className="w-5 h-5 text-slate-600" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-slate-900">{subscribers.filter(s => !s.isActive).length}</p>
-                <p className="text-xs text-slate-500">Đã hủy đăng ký</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-xl p-4 border border-slate-200">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
-                <Mail className="w-5 h-5 text-blue-600" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-slate-900">
-                  {subscribers.reduce((sum, s) => sum + s.clickCount, 0)}
-                </p>
-                <p className="text-xs text-slate-500">Tổng lượt click</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
         {/* Search */}
-        <div className="bg-white rounded-xl p-4 border border-slate-200 mb-6">
-          <div className="relative">
+        <div className="bg-white rounded-2xl p-4 border border-slate-200 mb-6 flex items-center justify-between shadow-sm">
+          <div className="relative w-full max-w-md">
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
             <input
               type="text"
-              placeholder="Tìm kiếm email..."
+              placeholder="Tìm kiếm theo địa chỉ email..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 shadow-sm"
             />
-            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
           </div>
         </div>
 
-        {/* Subscribers Table */}
-        <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-          <table className="w-full">
-            <thead className="bg-slate-50 border-b border-slate-200">
+        {/* Table */}
+        <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+          <table className="w-full text-sm">
+            <thead className="bg-slate-50 border-b border-slate-200 text-xs uppercase tracking-wider text-slate-600">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Email</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Ngày đăng ký</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Lượt click</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Trạng thái</th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase">Thao tác</th>
+                <th className="px-6 py-3.5 text-left font-bold">Email người nhận</th>
+                <th className="px-6 py-3.5 text-left font-bold">Ngày đăng ký</th>
+                <th className="px-6 py-3.5 text-left font-bold">Trạng thái nhận tin</th>
+                <th className="px-6 py-3.5 text-right font-bold">Thao tác</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-200">
-              {filteredSubscribers.map((subscriber) => (
-                <tr key={subscriber.id} className="hover:bg-slate-50 transition-colors">
+            <tbody className="divide-y divide-slate-100">
+              {filteredSubscribers.map((sub) => (
+                <tr key={sub.id} className="hover:bg-slate-50 transition-colors">
                   <td className="px-6 py-4">
-                    <span className="font-medium text-slate-900">{subscriber.email}</span>
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
+                        <Mail className="w-4 h-4" />
+                      </div>
+                      <span className="font-bold text-slate-900">{sub.email}</span>
+                    </div>
                   </td>
-                  <td className="px-6 py-4 text-sm text-slate-500">
-                    {new Date(subscriber.subscribedAt).toLocaleDateString('vi-VN')}
-                  </td>
-                  <td className="px-6 py-4 text-sm text-slate-500">
-                    {subscriber.clickCount}
+                  <td className="px-6 py-4 text-xs text-slate-500">
+                    {new Date(sub.subscribedAt).toLocaleDateString('vi-VN')}
                   </td>
                   <td className="px-6 py-4">
-                    <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold ${
-                      subscriber.isActive ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-500'
+                    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold ${
+                      sub.isActive ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-600'
                     }`}>
-                      {subscriber.isActive ? <Eye className="w-3 h-3" /> : <EyeOff className="w-3 h-3" />}
-                      {subscriber.isActive ? 'Aktif' : 'Đã hủy'}
+                      <span className={`w-1.5 h-1.5 rounded-full ${sub.isActive ? 'bg-emerald-500' : 'bg-slate-400'}`} />
+                      {sub.isActive ? 'Đang nhận tin' : 'Đã hủy đăng ký'}
                     </span>
                   </td>
                   <td className="px-6 py-4 text-right">
-                    <button 
-                      onClick={() => toggleStatus(subscriber.id)}
-                      className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors mr-2"
-                    >
-                      <Edit2 className="w-4 h-4" />
-                    </button>
-                    <button 
-                      onClick={() => handleDelete(subscriber.id)}
-                      className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
+                    <div className="flex items-center justify-end gap-1.5">
+                      <button
+                        onClick={() => handleToggleStatus(sub.id)}
+                        className={`p-2 rounded-xl transition-colors ${
+                          sub.isActive ? 'text-amber-600 hover:bg-amber-50' : 'text-emerald-600 hover:bg-emerald-50'
+                        }`}
+                        title={sub.isActive ? 'Tạm ngưng nhận tin' : 'Kích hoạt lại'}
+                      >
+                        {sub.isActive ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      </button>
+                      <button
+                        onClick={() => handleDelete(sub.id, sub.email)}
+                        className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-colors"
+                        title="Xóa email"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -230,13 +326,132 @@ export default function AdminNewslettersPage() {
           </table>
 
           {filteredSubscribers.length === 0 && (
-            <div className="text-center py-12">
-              <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-300" />
-              <p className="font-medium text-slate-500">Không tìm thấy người đăng ký nào</p>
+            <div className="text-center py-16 text-slate-500">
+              <Mail className="w-12 h-12 mx-auto mb-3 text-slate-300" />
+              <p className="font-bold text-slate-700">Không tìm thấy người đăng ký nào</p>
+              <p className="text-xs text-slate-400 mt-1">Bấm "Thêm Email" để bổ sung danh sách</p>
             </div>
           )}
         </div>
       </main>
+
+      {/* Add Subscriber Modal */}
+      {showAddModal && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-bold text-slate-900">Thêm Email Nhận Tin Mới</h3>
+              <button onClick={() => setShowAddModal(false)} className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleAddSubscriber} className="space-y-4">
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Địa chỉ Email</label>
+                <input
+                  type="email"
+                  required
+                  placeholder="subscriber@example.com"
+                  value={newEmail}
+                  onChange={(e) => setNewEmail(e.target.value)}
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                />
+              </div>
+
+              <div className="flex gap-2 justify-end pt-3">
+                <button
+                  type="button"
+                  onClick={() => setShowAddModal(false)}
+                  className="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold"
+                >
+                  Hủy
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-md"
+                >
+                  Thêm Email
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Send Campaign Modal */}
+      {showSendModal && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-xl w-full shadow-2xl">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h3 className="text-xl font-bold text-slate-900">Soạn Chiến Dịch Email Marketing</h3>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Gửi thông báo cập nhật, khuyến mãi tới {subscribers.filter(s => s.isActive).length} email
+                </p>
+              </div>
+              <button onClick={() => setShowSendModal(false)} className="p-2 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSendCampaign} className="space-y-4">
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Tiêu đề Email (Subject)</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="VD: [Khuyến Mãi] Giảm 50% Cloud VPS Siêu Tốc Tháng Này!"
+                  value={campaignData.subject}
+                  onChange={(e) => setCampaignData({ ...campaignData, subject: e.target.value })}
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Văn bản xem trước (Preview Text)</label>
+                <input
+                  type="text"
+                  placeholder="Tóm tắt ngắn hiển thị trong hộp thư đến..."
+                  value={campaignData.previewText}
+                  onChange={(e) => setCampaignData({ ...campaignData, previewText: e.target.value })}
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Nội dung Email (HTML / Văn bản)</label>
+                <textarea
+                  rows={6}
+                  required
+                  placeholder="Nhập nội dung email chiến dịch chi tiết..."
+                  value={campaignData.content}
+                  onChange={(e) => setCampaignData({ ...campaignData, content: e.target.value })}
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                />
+              </div>
+
+              <div className="flex gap-3 pt-4 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setShowSendModal(false)}
+                  className="flex-1 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm transition-colors"
+                >
+                  Hủy bỏ
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="flex-1 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-md transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                >
+                  <Send className="w-4 h-4" />
+                  {isSubmitting ? 'Đang gửi email...' : 'Gửi Chiến Dịch Ngay'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -3,7 +3,11 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, Plus, Edit2, Trash2, AlertCircle, Calendar, Percent, Tag } from 'lucide-react';
+import { 
+  ArrowLeft, Plus, Edit2, Trash2, AlertCircle, 
+  Calendar, Percent, Tag, Search, RefreshCw, CheckCircle2, X, Sparkles
+} from 'lucide-react';
+import { api } from '@/src/lib/api';
 
 interface Promotion {
   id: string;
@@ -13,18 +17,35 @@ interface Promotion {
   endDate: string;
 }
 
+interface ServicePlan {
+  id: string;
+  name: string;
+}
+
 export default function AdminPromotionsPage() {
   const router = useRouter();
   const [promotions, setPromotions] = useState<Promotion[]>([]);
+  const [plans, setPlans] = useState<ServicePlan[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [showAddModal, setShowAddModal] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
   // Form state
-  const [servicePlanId, setServicePlanId] = useState('');
-  const [discountPercent, setDiscountPercent] = useState('');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [formData, setFormData] = useState({
+    servicePlanId: '',
+    discountPercent: '20',
+    startDate: new Date().toISOString().split('T')[0],
+    endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+  });
+
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+
+  const showToast = (message: string, type: 'success' | 'error' = 'success') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3500);
+  };
 
   useEffect(() => {
     checkAdminAccess();
@@ -35,30 +56,30 @@ export default function AdminPromotionsPage() {
     if (!token) { router.push('/login'); return; }
     
     try {
-      const response = await fetch('/api/users/me', { 
-        headers: { Authorization: `Bearer ${token}` } 
-      });
-      if (response.ok) {
-        const userData = await response.json();
-        if (userData.role !== 'Admin') { router.push('/dashboard'); return; }
-        fetchPromotions();
-      } else { 
-        router.push('/login'); 
+      const response = await api.get('/users/me');
+      if (response.data?.role !== 'Admin') { 
+        router.push('/dashboard'); 
+        return; 
       }
-    } catch (error) { 
+      fetchData();
+    } catch { 
       router.push('/login'); 
     }
   };
 
-  const fetchPromotions = async () => {
-    const token = localStorage.getItem('accessToken');
+  const fetchData = async () => {
     try {
-      const response = await fetch('/api/promotions', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setPromotions(data);
+      setIsLoading(true);
+      const [promoRes, planRes] = await Promise.all([
+        api.get('/promotions'),
+        api.get('/service-plans?includeInactive=true').catch(() => ({ data: [] }))
+      ]);
+
+      if (Array.isArray(promoRes.data)) {
+        setPromotions(promoRes.data);
+      }
+      if (Array.isArray(planRes.data)) {
+        setPlans(planRes.data);
       }
     } catch (error) {
       console.error('Failed to fetch promotions:', error);
@@ -67,68 +88,74 @@ export default function AdminPromotionsPage() {
     }
   };
 
-  const handleAddOrUpdate = async () => {
-    const token = localStorage.getItem('accessToken');
-    const url = editingId 
-      ? `/api/promotions/${editingId}`
-      : '/api/promotions';
-    const method = editingId ? 'PUT' : 'POST';
+  const handleOpenAdd = () => {
+    setEditingId(null);
+    setFormData({
+      servicePlanId: '',
+      discountPercent: '20',
+      startDate: new Date().toISOString().split('T')[0],
+      endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+    });
+    setShowModal(true);
+  };
+
+  const handleOpenEdit = (promo: Promotion) => {
+    setEditingId(promo.id);
+    setFormData({
+      servicePlanId: promo.servicePlanId || '',
+      discountPercent: promo.discountPercent.toString(),
+      startDate: promo.startDate ? promo.startDate.split('T')[0] : '',
+      endDate: promo.endDate ? promo.endDate.split('T')[0] : ''
+    });
+    setShowModal(true);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const percent = parseFloat(formData.discountPercent);
+    if (isNaN(percent) || percent <= 0 || percent > 100) {
+      showToast('Phần trăm giảm giá phải từ 1 đến 100%.', 'error');
+      return;
+    }
 
     try {
-      const response = await fetch(url, {
-        method,
-        headers: { 
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}` 
-        },
-        body: JSON.stringify({ 
-          servicePlanId: servicePlanId ? servicePlanId : null,
-          discountPercent: parseFloat(discountPercent) || 0,
-          startDate: startDate || new Date().toISOString(),
-          endDate: endDate || new Date().toISOString()
-        })
-      });
+      setIsSubmitting(true);
+      const payload = {
+        servicePlanId: formData.servicePlanId.trim() ? formData.servicePlanId : null,
+        discountPercent: percent,
+        startDate: new Date(formData.startDate).toISOString(),
+        endDate: new Date(formData.endDate).toISOString()
+      };
 
-      if (response.ok) {
-        setShowAddModal(false);
-        resetForm();
-        fetchPromotions();
+      if (editingId) {
+        await api.put(`/promotions/${editingId}`, payload);
+        showToast('Cập nhật chương trình khuyến mãi thành công!');
+      } else {
+        await api.post('/promotions', payload);
+        showToast('Tạo chiến dịch khuyến mãi mới thành công!');
       }
-    } catch (error) {
-      console.error('Failed to save promotion:', error);
+
+      setShowModal(false);
+      fetchData();
+    } catch (err: any) {
+      console.error(err);
+      const msg = err.response?.data?.message || 'Không thể lưu chương trình khuyến mãi.';
+      showToast(msg, 'error');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   const handleDelete = async (id: string) => {
     if (!confirm('Bạn có chắc chắn muốn xóa khuyến mãi này?')) return;
-    
-    const token = localStorage.getItem('accessToken');
     try {
-      await fetch(`/api/promotions/${id}`, {
-        method: 'DELETE',
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      await api.delete(`/promotions/${id}`);
       setPromotions(prev => prev.filter(p => p.id !== id));
+      showToast('Đã xóa chương trình khuyến mãi!');
     } catch (error) {
       console.error('Failed to delete promotion:', error);
+      showToast('Lỗi khi xóa khuyến mãi', 'error');
     }
-  };
-
-  const openEdit = (promo: Promotion) => {
-    setEditingId(promo.id);
-    setServicePlanId(promo.servicePlanId || '');
-    setDiscountPercent(promo.discountPercent.toString());
-    setStartDate(promo.startDate.split('T')[0]);
-    setEndDate(promo.endDate.split('T')[0]);
-    setShowAddModal(true);
-  };
-
-  const resetForm = () => {
-    setEditingId(null);
-    setServicePlanId('');
-    setDiscountPercent('');
-    setStartDate('');
-    setEndDate('');
   };
 
   const getStatusColor = (promo: Promotion) => {
@@ -137,9 +164,21 @@ export default function AdminPromotionsPage() {
     const end = new Date(promo.endDate);
     
     if (now < start) return { text: 'Sắp diễn ra', class: 'bg-blue-100 text-blue-700' };
-    if (now > end) return { text: 'Đã hết hạn', class: 'bg-slate-100 text-slate-500' };
-    return { text: 'Đang hoạt động', class: 'bg-emerald-100 text-emerald-700' };
+    if (now > end) return { text: 'Đã kết thúc', class: 'bg-slate-100 text-slate-500' };
+    return { text: 'Đang diễn ra', class: 'bg-emerald-100 text-emerald-700' };
   };
+
+  const getPlanName = (planId: string | null) => {
+    if (!planId) return 'Toàn bộ trang web & Dịch vụ';
+    const found = plans.find(p => p.id === planId);
+    return found ? found.name : `Gói dịch vụ (#${planId.slice(0, 8)})`;
+  };
+
+  const filteredPromotions = promotions.filter(promo => {
+    const planName = getPlanName(promo.servicePlanId).toLowerCase();
+    return planName.includes(searchTerm.toLowerCase()) || 
+      promo.discountPercent.toString().includes(searchTerm);
+  });
 
   if (isLoading) {
     return (
@@ -151,86 +190,131 @@ export default function AdminPromotionsPage() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <header className="bg-white border-b border-slate-200 sticky top-0 z-50">
+      {/* Toast */}
+      {toast && (
+        <div className={`fixed bottom-5 right-5 z-50 px-5 py-3 rounded-xl shadow-xl text-white font-semibold text-sm flex items-center gap-2.5 animate-in slide-in-from-bottom-5 ${
+          toast.type === 'success' ? 'bg-emerald-600' : 'bg-red-600'
+        }`}>
+          {toast.type === 'success' ? <CheckCircle2 className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />}
+          {toast.message}
+        </div>
+      )}
+
+      {/* Header */}
+      <header className="bg-white border-b border-slate-200 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Link href="/admin" className="p-2 rounded-lg hover:bg-slate-100 transition-colors">
               <ArrowLeft className="w-5 h-5 text-slate-600" />
             </Link>
             <div>
-              <h1 className="text-xl font-bold text-slate-900">Quản lý Khuyến mãi</h1>
-              <p className="text-sm text-slate-500">{promotions.length} khuyến mãi</p>
+              <h1 className="text-xl font-bold text-slate-900">Quản lý Khuyến Mãi & Flash Sale</h1>
+              <p className="text-xs text-slate-500">{promotions.length} chiến dịch khuyến mãi</p>
             </div>
           </div>
-          <button 
-            onClick={() => { resetForm(); setShowAddModal(true); }}
-            className="px-4 py-2 rounded-lg bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 transition-colors flex items-center gap-2"
-          >
-            <Plus className="w-4 h-4" />
-            Thêm KM
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={fetchData}
+              className="p-2 text-slate-500 hover:bg-slate-100 rounded-xl transition-colors"
+              title="Tải lại danh sách"
+            >
+              <RefreshCw className="w-5 h-5" />
+            </button>
+            <button 
+              onClick={handleOpenAdd}
+              className="px-4 py-2 rounded-xl bg-orange-600 text-white font-semibold text-sm hover:bg-orange-700 transition-colors flex items-center gap-2 shadow-sm"
+            >
+              <Plus className="w-4 h-4" />
+              Tạo Khuyến Mãi Mới
+            </button>
+          </div>
         </div>
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-          <table className="w-full">
-            <thead className="bg-slate-50 border-b border-slate-200">
+        {/* Search */}
+        <div className="bg-white rounded-2xl p-4 border border-slate-200 mb-6 flex items-center justify-between shadow-sm">
+          <div className="relative w-full max-w-md">
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <input
+              type="text"
+              placeholder="Tìm kiếm theo tên gói dịch vụ hoặc mức giảm..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/20"
+            />
+          </div>
+        </div>
+
+        {/* Promotions Table */}
+        <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+          <table className="w-full text-sm">
+            <thead className="bg-slate-50 border-b border-slate-200 text-xs uppercase tracking-wider text-slate-600">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Phạm vi</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Giảm giá (%)</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Thời gian</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Trạng thái</th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase">Thao tác</th>
+                <th className="px-6 py-3.5 text-left font-bold">Phạm vi áp dụng</th>
+                <th className="px-6 py-3.5 text-left font-bold">Mức giảm giá</th>
+                <th className="px-6 py-3.5 text-left font-bold">Thời gian diễn ra</th>
+                <th className="px-6 py-3.5 text-left font-bold">Trạng thái</th>
+                <th className="px-6 py-3.5 text-right font-bold">Thao tác</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-200">
-              {promotions.map((promo) => {
+            <tbody className="divide-y divide-slate-100">
+              {filteredPromotions.map((promo) => {
                 const status = getStatusColor(promo);
                 return (
                   <tr key={promo.id} className="hover:bg-slate-50 transition-colors">
                     <td className="px-6 py-4">
-                      <span className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-purple-100 text-purple-700 font-mono font-bold">
-                        <Tag className="w-4 h-4" />
-                        {promo.servicePlanId ? promo.servicePlanId : 'Toàn bộ trang web'}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="font-bold text-orange-600">
-                        {promo.discountPercent}%
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="text-xs text-slate-500">
-                        <div className="flex items-center gap-1">
-                          <Calendar className="w-3 h-3" />
-                          {new Date(promo.startDate).toLocaleDateString('vi-VN')}
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-8 h-8 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center font-bold">
+                          <Tag className="w-4 h-4" />
                         </div>
-                        <div className="text-slate-400">→</div>
-                        <div className="flex items-center gap-1">
-                          <Calendar className="w-3 h-3" />
-                          {promo.endDate ? new Date(promo.endDate).toLocaleDateString('vi-VN') : 'Không giới hạn'}
+                        <div>
+                          <p className="font-bold text-slate-900">{getPlanName(promo.servicePlanId)}</p>
+                          <p className="text-xs text-slate-400 font-mono">
+                            {promo.servicePlanId ? `ID: ${promo.servicePlanId}` : 'Flash Sale toàn sàn'}
+                          </p>
                         </div>
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <span className={`px-2 py-1 rounded-full text-xs font-bold ${status.class}`}>
+                      <span className="inline-flex items-center gap-1 px-3 py-1 rounded-xl bg-orange-100 text-orange-800 font-black text-sm">
+                        <Sparkles className="w-3.5 h-3.5" />
+                        -{promo.discountPercent}%
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="text-xs text-slate-500 space-y-0.5">
+                        <div className="flex items-center gap-1.5 font-medium">
+                          <Calendar className="w-3.5 h-3.5 text-slate-400" />
+                          <span>Từ: {new Date(promo.startDate).toLocaleDateString('vi-VN')}</span>
+                        </div>
+                        <div className="flex items-center gap-1.5 text-slate-400">
+                          <span>Đến: {promo.endDate ? new Date(promo.endDate).toLocaleDateString('vi-VN') : 'Vô thời hạn'}</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${status.class}`}>
                         {status.text}
                       </span>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <button 
-                        onClick={() => openEdit(promo)}
-                        className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors mr-2"
-                      >
-                        <Edit2 className="w-4 h-4" />
-                      </button>
-                      <button 
-                        onClick={() => handleDelete(promo.id)}
-                        className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
+                      <div className="flex items-center justify-end gap-1.5">
+                        <button 
+                          onClick={() => handleOpenEdit(promo)}
+                          className="p-2 text-slate-500 hover:text-orange-600 hover:bg-orange-50 rounded-xl transition-colors"
+                          title="Sửa khuyến mãi"
+                        >
+                          <Edit2 className="w-4 h-4" />
+                        </button>
+                        <button 
+                          onClick={() => handleDelete(promo.id)}
+                          className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-colors"
+                          title="Xóa khuyến mãi"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 );
@@ -238,83 +322,104 @@ export default function AdminPromotionsPage() {
             </tbody>
           </table>
 
-          {promotions.length === 0 && (
-            <div className="text-center py-12">
-              <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-300" />
-              <p className="font-medium text-slate-500">Chưa có khuyến mãi nào</p>
+          {filteredPromotions.length === 0 && (
+            <div className="text-center py-16 text-slate-500">
+              <Percent className="w-12 h-12 mx-auto mb-3 text-slate-300" />
+              <p className="font-bold text-slate-700">Không có chương trình khuyến mãi nào</p>
+              <p className="text-xs text-slate-400 mt-1">Bấm "Tạo Khuyến Mãi Mới" để bắt đầu</p>
             </div>
           )}
         </div>
       </main>
 
-      {/* Add/Edit Modal */}
-      {showAddModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl w-full max-w-md p-6">
-            <h2 className="text-lg font-bold text-slate-900 mb-4">
-              {editingId ? 'Chỉnh sửa khuyến mãi' : 'Thêm khuyến mãi mới'}
-            </h2>
-            
-            <div className="space-y-4">
+      {/* Add / Edit Modal */}
+      {showModal && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl">
+            <div className="flex items-center justify-between mb-6">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Áp dụng cho gói (ID) (Để trống nếu áp dụng toàn trang)</label>
-                <input 
-                  type="text"
-                  value={servicePlanId}
-                  onChange={(e) => setServicePlanId(e.target.value)}
-                  placeholder="ID Gói dịch vụ..."
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 font-mono"
-                />
+                <h3 className="text-xl font-bold text-slate-900">
+                  {editingId ? 'Chỉnh Sửa Khuyến Mãi' : 'Tạo Chiến Dịch Khuyến Mãi Mới'}
+                </h3>
+                <p className="text-xs text-slate-500 mt-0.5">Thiết lập giảm giá dịch vụ theo % thời gian thực</p>
+              </div>
+              <button onClick={() => setShowModal(false)} className="p-2 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Phạm vi áp dụng</label>
+                <select
+                  value={formData.servicePlanId}
+                  onChange={(e) => setFormData({ ...formData, servicePlanId: e.target.value })}
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-orange-500/20 bg-white"
+                >
+                  <option value="">Toàn bộ trang web (Tất cả dịch vụ)</option>
+                  {plans.map(p => (
+                    <option key={p.id} value={p.id}>{p.name}</option>
+                  ))}
+                </select>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Phần trăm giảm (%)</label>
-                <input 
-                  type="number"
-                  step="0.01"
-                  value={discountPercent}
-                  onChange={(e) => setDiscountPercent(e.target.value)}
-                  placeholder="10"
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                />
+                <label className="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Mức giảm giá (%)</label>
+                <div className="relative">
+                  <input
+                    type="number"
+                    required
+                    min={1}
+                    max={100}
+                    placeholder="20"
+                    value={formData.discountPercent}
+                    onChange={(e) => setFormData({ ...formData, discountPercent: e.target.value })}
+                    className="w-full pl-4 pr-10 py-2.5 rounded-xl border border-slate-200 text-sm font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-orange-500/20"
+                  />
+                  <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-sm font-bold text-slate-400">%</span>
+                </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Từ ngày</label>
-                  <input 
+                  <label className="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Ngày bắt đầu</label>
+                  <input
                     type="date"
-                    value={startDate}
-                    onChange={(e) => setStartDate(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                    required
+                    value={formData.startDate}
+                    onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/20"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Đến ngày</label>
-                  <input 
+                  <label className="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Ngày kết thúc</label>
+                  <input
                     type="date"
-                    value={endDate}
-                    onChange={(e) => setEndDate(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                    required
+                    value={formData.endDate}
+                    onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/20"
                   />
                 </div>
               </div>
-            </div>
 
-            <div className="flex gap-3 mt-6">
-              <button 
-                onClick={() => { setShowAddModal(false); resetForm(); }}
-                className="flex-1 py-2 rounded-lg bg-slate-100 text-slate-700 font-semibold hover:bg-slate-200 transition-colors"
-              >
-                Hủy
-              </button>
-              <button 
-                onClick={handleAddOrUpdate}
-                className="flex-1 py-2 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors"
-              >
-                {editingId ? 'Cập nhật' : 'Thêm mới'}
-              </button>
-            </div>
+              <div className="flex gap-3 pt-4 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setShowModal(false)}
+                  className="flex-1 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm transition-colors"
+                >
+                  Hủy bỏ
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="flex-1 py-3 rounded-xl bg-orange-600 hover:bg-orange-700 text-white font-bold text-sm shadow-md transition-colors disabled:opacity-50"
+                >
+                  {isSubmitting ? 'Đang lưu...' : editingId ? 'Lưu Thay Đổi' : 'Tạo Khuyến Mãi'}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
