@@ -8,7 +8,7 @@ import {
   DollarSign, TrendingUp, AlertCircle, Package, Settings, 
   FileText, Tag, Image, HelpCircle, CreditCard, Shield, ArrowUp, ArrowDown, 
   ShieldAlert, Clock, Bell, Globe, Building2, Download, Star, RefreshCw, Send,
-  Cpu, FileSpreadsheet, Search, Activity
+  Cpu, FileSpreadsheet, Search, Activity, Award, Share2, ShieldCheck, Database
 } from 'lucide-react';
 
 interface AdminModuleItem {
@@ -114,6 +114,8 @@ export default function AdminDashboardPage() {
         { href: '/admin/tickets', label: 'Ticket Queue', desc: 'Xử lý yêu cầu hỗ trợ kỹ thuật khách hàng', icon: MessageSquare, count: stats?.openTickets, color: 'amber' },
         { href: '/admin/live-chat', label: 'Live Chat Support', desc: 'Nhắn tin trực tiếp với khách qua WebSocket', icon: Send, color: 'emerald' },
         { href: '/admin/refund-requests', label: 'Yêu Cầu Hoàn Tiền', desc: 'Xét duyệt hoàn tiền ví / ngân hàng', icon: CreditCard, count: stats?.pendingRefunds, color: 'rose' },
+        { href: '/admin/loyalty', label: 'Điểm Thưởng (Loyalty)', desc: 'Tích điểm thành viên & điều chỉnh điểm', icon: Award, color: 'amber' },
+        { href: '/admin/referrals', label: 'Giới Thiệu (Referrals)', desc: 'Quản lý mã mời & hoa hồng chi trả', icon: Share2, color: 'emerald' },
         { href: '/admin/organizations', label: 'Tổ Chức B2B', desc: 'Quản lý tài khoản doanh nghiệp đa thành viên', icon: Building2, color: 'purple' },
         { href: '/admin/affiliate-applications', label: 'Duyệt Đối Tác Affiliate', desc: 'Xét duyệt hồ sơ cộng tác viên tiếp thị', icon: Users, color: 'indigo' },
         { href: '/admin/abandoned-carts', label: 'Giỏ Hàng Bỏ Quên', desc: 'Remarketing và nhắc nhở thanh toán', icon: ShoppingCart, color: 'pink' },
@@ -123,6 +125,8 @@ export default function AdminDashboardPage() {
       category: '2. Sản Phẩm, Bảng Giá & Khuyến Mãi',
       items: [
         { href: '/admin/service-plans', label: 'Gói Dịch Vụ', desc: 'Cấu hình giá VPS, Hosting, Dedicated', icon: Package, color: 'indigo' },
+        { href: '/admin/dedicated-servers', label: 'Máy Chủ Vật Lý Riêng', desc: 'Quản lý phần cứng Dedicated & Rack', icon: Server, color: 'purple' },
+        { href: '/admin/domains', label: 'Tên Miền & DNS', desc: 'Quản lý tên miền, Auth Code & Transfer', icon: Globe, color: 'blue' },
         { href: '/admin/categories', label: 'Danh Mục Sản Phẩm', desc: 'Quản lý danh mục & phân loại dịch vụ', icon: Package, color: 'blue' },
         { href: '/admin/coupons', label: 'Mã Giảm Giá (Coupons)', desc: 'Tạo mã voucher % hoặc số tiền cố định', icon: Tag, color: 'rose' },
         { href: '/admin/promotions', label: 'Chương Trình Sale', desc: 'Thiết lập flash sale & đợt khuyến mãi', icon: Tag, color: 'pink' },
@@ -150,6 +154,8 @@ export default function AdminDashboardPage() {
       items: [
         { href: '/admin/revenue', label: 'Báo Cáo Doanh Thu', desc: 'Biểu đồ tăng trưởng và cơ cấu doanh thu', icon: TrendingUp, color: 'cyan' },
         { href: '/admin/exports', label: 'Trung Tâm Xuất Dữ Liệu', desc: 'Xuất file CSV/JSON đơn hàng và khách hàng', icon: Download, color: 'emerald' },
+        { href: '/admin/backups', label: 'Sao Lưu Toàn Hệ Thống', desc: 'Quản lý Snapshot & Storage Backup S3', icon: Database, color: 'teal' },
+        { href: '/admin/ssl-certificates', label: 'Chứng Chỉ Bảo Mật SSL', desc: 'Theo dõi thời hạn và gia hạn HTTPS', icon: ShieldCheck, color: 'emerald' },
         { href: '/admin/uptime', label: 'Giám Sát Uptime Server', desc: 'Tình trạng hoạt động của các cụm máy chủ', icon: Activity, color: 'cyan' },
         { href: '/admin/jobs', label: 'Tác Vụ Nền (Cron Jobs)', desc: 'Kích hoạt gia hạn tự động & dọn dẹp cache', icon: Clock, color: 'indigo' },
         { href: '/admin/audit-logs', label: 'Audit Logs', desc: 'Nhật ký truy vết hành động của Admin/Staff', icon: ShieldAlert, color: 'fuchsia' },
@@ -236,7 +242,7 @@ export default function AdminDashboardPage() {
         {/* Search Modules Bar */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
           <div>
-            <h2 className="text-base font-black text-slate-900">Toàn Bộ 33 Phân Hệ Quản Trị</h2>
+            <h2 className="text-base font-black text-slate-900">Toàn Bộ 39 Phân Hệ Quản Trị Enterprise</h2>
             <p className="text-xs text-slate-500">Truy cập nhanh mọi tính năng và cấu hình của hệ thống Cloud.</p>
           </div>
           <div className="relative w-full sm:w-80">
