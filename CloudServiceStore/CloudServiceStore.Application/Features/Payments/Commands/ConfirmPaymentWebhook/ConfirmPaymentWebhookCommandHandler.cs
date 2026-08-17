@@ -42,6 +42,14 @@ public class ConfirmPaymentWebhookCommandHandler : IRequestHandler<ConfirmPaymen
             p.IdempotencyKey.Contains(cleanKey) ||
             (parsedGuid != Guid.Empty && p.OrderId == parsedGuid), ct);
 
+        // Also check if cleanKey is a short prefix (e.g. 8 chars of OrderId)
+        if (payment == null && cleanKey.Length >= 6)
+        {
+            var prefix = cleanKey.ToLowerInvariant();
+            var allPayments = await _paymentRepo.GetAllAsync(ct);
+            payment = allPayments.FirstOrDefault(p => p.OrderId.ToString("N").StartsWith(prefix) || p.IdempotencyKey.ToLowerInvariant().Contains(prefix));
+        }
+
         if (payment == null && parsedGuid != Guid.Empty)
         {
             var directOrder = await _orderRepo.GetByIdAsync(parsedGuid, ct);

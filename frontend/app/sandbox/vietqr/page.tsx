@@ -48,18 +48,24 @@ function VietQRSandboxContent() {
 
   const currentBankObj = VIETNAMESE_BANKS.find(b => b.code === selectedBank) || VIETNAMESE_BANKS[0];
 
+  // Clean short alphanumeric transfer content conforming strictly to NAPAS 24/7 VietQR EMVCo spec (tag 62.08)
+  const rawClean = orderId.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+  const shortOrderCode = rawClean.length > 10 ? rawClean.slice(0, 8) : (rawClean || 'TEST');
+  const cleanContent = `PAY${shortOrderCode}`;
+
   const bankInfo = {
     bankName: currentBankObj.name,
     bankCode: selectedBank,
+    bankBin: currentBankObj.bin,
     accountNumber: customAccNumber,
     accountName: customAccName,
     amount: amount,
-    content: `PAY_${orderId}`,
+    content: cleanContent,
   };
 
-  // QR Code URL via VietQR standard image API
+  // QR Code URL via official VietQR NAPAS standard image API (using Bank BIN for 100% banking app recognition)
   const encodedName = encodeURIComponent(customAccName.toUpperCase());
-  const qrImageUrl = `https://img.vietqr.io/image/${selectedBank}-${customAccNumber}-compact2.png?amount=${amount}&addInfo=PAY_${orderId}&accountName=${encodedName}`;
+  const qrImageUrl = `https://img.vietqr.io/image/${currentBankObj.bin}-${customAccNumber}-compact2.png?amount=${Math.round(amount)}&addInfo=${cleanContent}&accountName=${encodedName}`;
 
   // Fetch configured system settings if available
   useEffect(() => {
@@ -249,9 +255,18 @@ function VietQRSandboxContent() {
             <div className="bg-white p-3 rounded-2xl shadow-md border border-slate-200 relative group mb-4">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
+                key={qrImageUrl}
                 src={qrImageUrl}
-                alt="VietQR MB Bank Payment"
-                className="w-56 h-56 object-contain rounded-lg"
+                alt={`VietQR ${bankInfo.bankName} Payment`}
+                className="w-60 h-60 object-contain rounded-lg transition-all"
+                onError={(e) => {
+                  // Fallback to SePay Direct QR link if img.vietqr.io has rate limit
+                  const target = e.currentTarget;
+                  const sepayFallback = `https://qr.sepay.vn/img?acc=${customAccNumber}&bank=${selectedBank}&amount=${Math.round(amount)}&des=${cleanContent}&template=compact`;
+                  if (target.src !== sepayFallback) {
+                    target.src = sepayFallback;
+                  }
+                }}
               />
               <div className="absolute inset-0 bg-blue-600/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
                 <span className="text-xs font-bold bg-white text-blue-700 px-3 py-1.5 rounded-full shadow">
@@ -265,12 +280,12 @@ function VietQRSandboxContent() {
               Mở App Ngân hàng bất kỳ để quét mã
             </p>
             <p className="text-[11px] text-slate-400">
-              Hỗ trợ hơn 40 ngân hàng & ví điện tử (VNPAY, ViettelMoney...)
+              Chuẩn NAPAS 24/7 (MB, VCB, TCB, VPB, VietinBank...)
             </p>
 
-            <div className="mt-4 pt-4 border-t border-slate-200 w-full flex items-center justify-center gap-2 text-xs font-bold text-blue-600">
+            <div className="mt-3 pt-3 border-t border-slate-200 w-full flex items-center justify-center gap-2 text-xs font-bold text-blue-600">
               <span className="w-2 h-2 rounded-full bg-blue-600 animate-ping" />
-              Đang lắng nghe chuyển khoản...
+              Đang lắng nghe chuyển khoản tự động...
             </div>
           </div>
 

@@ -35,7 +35,9 @@ public class CreatePaymentCommandHandler : IRequestHandler<CreatePaymentCommand,
         if (order.Status != OrderStatus.Pending)
             throw new ConflictException("Trạng thái đơn hàng không hợp lệ để thanh toán.");
 
-        var idempotencyKey = $"PAY_{order.Id}_{DateTime.UtcNow.Ticks}";
+        var orderCode = order.Id.ToString("N")[..8].ToUpper();
+        var transferContent = $"PAY{orderCode}";
+        var idempotencyKey = $"PAY_{order.Id}";
         
         var payment = new Payment(
             order.Id,
@@ -48,10 +50,10 @@ public class CreatePaymentCommandHandler : IRequestHandler<CreatePaymentCommand,
         await _uow.SaveChangesAsync(ct);
 
         // VietQR payment dynamic configuration
-        var bankId = "MB";
+        var bankId = "970422"; // MB Bank BIN default
         var accountNo = "0987654321";
         var accountName = "CLOUD SERVICE STORE";
-        var template = "compact";
+        var template = "compact2";
 
         if (_settingRepo != null)
         {
@@ -69,6 +71,6 @@ public class CreatePaymentCommandHandler : IRequestHandler<CreatePaymentCommand,
         }
 
         var encodedName = Uri.EscapeDataString(accountName);
-        return $"https://img.vietqr.io/image/{bankId}-{accountNo}-{template}.png?amount={order.TotalAmount:0}&addInfo={idempotencyKey}&accountName={encodedName}";
+        return $"https://img.vietqr.io/image/{bankId}-{accountNo}-{template}.png?amount={order.TotalAmount:0}&addInfo={transferContent}&accountName={encodedName}";
     }
 }
