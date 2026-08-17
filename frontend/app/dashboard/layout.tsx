@@ -27,6 +27,13 @@ interface DashboardLayoutProps {
 const menuItems = [
   { name: 'Tổng quan', href: '/dashboard', icon: LayoutDashboard },
   { name: 'Quản lý VPS', href: '/dashboard/vps-instances', icon: Server },
+  { name: 'Email Doanh nghiệp', href: '/dashboard/email-hosting', icon: Server },
+  { name: 'Cloud CDN', href: '/dashboard/cdn', icon: Activity },
+  { name: 'Databases', href: '/dashboard/databases', icon: Server },
+  { name: 'Object Storage S3', href: '/dashboard/storage', icon: Globe },
+  { name: 'Game Servers', href: '/dashboard/game-servers', icon: Monitor },
+  { name: 'Static Sites', href: '/dashboard/static-sites', icon: Globe },
+  { name: 'Website Builder', href: '/dashboard/website-builder', icon: LayoutDashboard },
   { name: 'Đơn hàng', href: '/dashboard/orders', icon: ShoppingCart },
   { name: 'Hỗ trợ', href: '/dashboard/tickets', icon: Shield },
   { name: 'Tên miền', href: '/domains', icon: Globe },

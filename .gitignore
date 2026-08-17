@@ -31,3 +31,8 @@ CloudServiceStore/migration.sql
 .agnes/cache/
 .DS_Store
 .agents/mcp_config.json
+
+chrome/
+playwright-report/
+test-results/
+
