@@ -56,27 +56,60 @@ export default function AdminOrganizationsPage() {
   ];
 
   useEffect(() => {
-    setOrgs(mockOrgs);
+    fetchOrgs();
   }, []);
 
-  const handleCreate = (e: React.FormEvent) => {
+  const fetchOrgs = async () => {
+    try {
+      const res = await api.get('/organizations');
+      if (Array.isArray(res.data) && res.data.length > 0) {
+        setOrgs(res.data);
+      } else {
+        setOrgs(mockOrgs);
+      }
+    } catch (err) {
+      console.error('Failed to fetch orgs:', err);
+      setOrgs(mockOrgs);
+    }
+  };
+
+  const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newOrgName || !newOwnerEmail) return;
 
-    const newOrg: OrgItem = {
-      id: `org-${Date.now()}`,
-      name: newOrgName,
-      ownerEmail: newOwnerEmail,
-      memberCount: 1,
-      activeServices: 0,
-      tier: 'Standard',
-      createdAt: new Date().toISOString(),
-    };
+    try {
+      const res = await api.post('/organizations', {
+        name: newOrgName,
+        ownerEmail: newOwnerEmail,
+        tier: 'Standard'
+      });
+      const created = res.data || {
+        id: `org-${Date.now()}`,
+        name: newOrgName,
+        ownerEmail: newOwnerEmail,
+        memberCount: 1,
+        activeServices: 0,
+        tier: 'Standard',
+        createdAt: new Date().toISOString(),
+      };
+      setOrgs([created, ...orgs]);
+      setIsCreating(false);
+      setNewOrgName('');
+      setNewOwnerEmail('');
+    } catch (err) {
+      console.error(err);
+      alert('Không thể tạo tổ chức mới.');
+    }
+  };
 
-    setOrgs([newOrg, ...orgs]);
-    setIsCreating(false);
-    setNewOrgName('');
-    setNewOwnerEmail('');
+  const handleDelete = async (id: string) => {
+    if (!confirm('Bạn có chắc chắn muốn xóa tổ chức này?')) return;
+    try {
+      await api.delete(`/organizations/${id}`);
+      setOrgs(prev => prev.filter(o => o.id !== id));
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const filtered = orgs.filter(o => 
