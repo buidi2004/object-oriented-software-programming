@@ -47,6 +47,12 @@ public class KnowledgeBaseController : ControllerBase
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Create([FromBody] CreateKbArticleCommand command)
     {
+        if (command.AuthorId == Guid.Empty)
+        {
+            var userIdStr = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            var authorId = Guid.TryParse(userIdStr, out var parsed) ? parsed : Guid.NewGuid();
+            command = command with { AuthorId = authorId };
+        }
         var id = await _mediator.Send(command);
         return Ok(new { Id = id });
     }

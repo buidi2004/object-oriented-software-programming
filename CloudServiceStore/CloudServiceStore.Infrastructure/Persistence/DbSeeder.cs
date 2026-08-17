@@ -198,38 +198,56 @@ public static class DbSeeder
 
                 await context.PlanPrices.AddRangeAsync(prices);
                 await context.SaveChangesAsync();
-                
+            }
+
+            if (!context.Roles.Any())
+            {
                 logger.LogInformation("Seeding Roles and Permissions...");
-                if (!context.Roles.Any())
+                var adminRole = new Role { Id = Guid.NewGuid(), Name = "Admin" };
+                var editorRole = new Role { Id = Guid.NewGuid(), Name = "Editor" };
+                var customerRole = new Role { Id = Guid.NewGuid(), Name = "Customer" };
+                await context.Roles.AddRangeAsync(adminRole, editorRole, customerRole);
+
+                var permissions = new[]
                 {
-                    var adminRole = new Role { Id = Guid.NewGuid(), Name = "Admin" };
-                    var editorRole = new Role { Id = Guid.NewGuid(), Name = "Editor" };
-                    var customerRole = new Role { Id = Guid.NewGuid(), Name = "Customer" };
-                    await context.Roles.AddRangeAsync(adminRole, editorRole, customerRole);
+                    new Permission { Id = Guid.NewGuid(), Code = "manage_users", Name = "Quản lý Người dùng" },
+                    new Permission { Id = Guid.NewGuid(), Code = "manage_roles", Name = "Quản lý Phân quyền" },
+                    new Permission { Id = Guid.NewGuid(), Code = "manage_orders", Name = "Quản lý Đơn hàng" },
+                    new Permission { Id = Guid.NewGuid(), Code = "manage_services", Name = "Quản lý Dịch vụ" },
+                    new Permission { Id = Guid.NewGuid(), Code = "manage_billing", Name = "Quản lý Thanh toán" },
+                    new Permission { Id = Guid.NewGuid(), Code = "manage_tickets", Name = "Hỗ trợ (Tickets)" },
+                    new Permission { Id = Guid.NewGuid(), Code = "manage_content", Name = "Quản lý Nội dung (Blog/FAQ)" }
+                };
+                await context.Permissions.AddRangeAsync(permissions);
 
-                    var permissions = new[]
-                    {
-                        new Permission { Id = Guid.NewGuid(), Code = "manage_users", Name = "Quản lý Người dùng" },
-                        new Permission { Id = Guid.NewGuid(), Code = "manage_roles", Name = "Quản lý Phân quyền" },
-                        new Permission { Id = Guid.NewGuid(), Code = "manage_orders", Name = "Quản lý Đơn hàng" },
-                        new Permission { Id = Guid.NewGuid(), Code = "manage_services", Name = "Quản lý Dịch vụ" },
-                        new Permission { Id = Guid.NewGuid(), Code = "manage_billing", Name = "Quản lý Thanh toán" },
-                        new Permission { Id = Guid.NewGuid(), Code = "manage_tickets", Name = "Hỗ trợ (Tickets)" },
-                        new Permission { Id = Guid.NewGuid(), Code = "manage_content", Name = "Quản lý Nội dung (Blog/FAQ)" }
-                    };
-                    await context.Permissions.AddRangeAsync(permissions);
+                foreach (var p in permissions)
+                {
+                    await context.RolePermissions.AddAsync(new RolePermission { RoleId = adminRole.Id, PermissionId = p.Id });
+                }
+                
+                await context.SaveChangesAsync();
+            }
 
-                    // Assign all permissions to Admin
-                    foreach (var p in permissions)
-                    {
-                        await context.RolePermissions.AddAsync(new RolePermission { RoleId = adminRole.Id, PermissionId = p.Id });
-                    }
-                    
+            if (!context.AppUsers.Any(u => u.Email == "admin@system.local"))
+            {
+                logger.LogInformation("Seeding default Administrator user...");
+                var adminRole = await context.Roles.FirstOrDefaultAsync(r => r.Name == "Admin");
+                if (adminRole != null)
+                {
+                    var passwordHash = BCrypt.Net.BCrypt.HashPassword("AdminPassword123!");
+                    var adminUser = new AppUser(
+                        "System Administrator",
+                        "admin@system.local",
+                        passwordHash,
+                        adminRole.Id,
+                        "0901234567"
+                    );
+                    await context.AppUsers.AddAsync(adminUser);
                     await context.SaveChangesAsync();
                 }
-
-                logger.LogInformation("Database seeding completed.");
             }
+
+            logger.LogInformation("Database seeding completed.");
         }
         catch (Exception ex)
         {
