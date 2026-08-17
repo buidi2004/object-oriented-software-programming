@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, Star, AlertCircle, CheckCircle, XCircle, Users } from 'lucide-react';
+import { api } from '@/src/lib/api';
 
 interface Testimonial {
   id: string;
@@ -79,6 +80,29 @@ export default function AdminTestimonialsPage() {
       </div>
     );
   }
+
+  const handleToggleFeatured = async (id: string, currentStatus: boolean) => {
+    try {
+      await api.post('/testimonials/feature', {
+        reviewId: id,
+        isFeatured: !currentStatus
+      });
+      setTestimonials(prev => prev.map(t => t.id === id ? { ...t, isFeatured: !currentStatus } : t));
+    } catch (err) {
+      console.error('Failed to toggle featured:', err);
+      alert('Không thể thay đổi trạng thái hiển thị.');
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm('Bạn có chắc muốn xóa đánh giá này?')) return;
+    try {
+      await api.delete(`/reviews/${id}`);
+      setTestimonials(prev => prev.filter(t => t.id !== id));
+    } catch (err) {
+      console.error('Failed to delete testimonial:', err);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -174,17 +198,33 @@ export default function AdminTestimonialsPage() {
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  {testimonial.isFeatured ? (
-                    <span className="px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold flex items-center gap-1">
-                      <CheckCircle className="w-3 h-3" />
-                      Đang hiển thị
-                    </span>
-                  ) : (
-                    <span className="px-3 py-1 rounded-full bg-slate-100 text-slate-500 text-xs font-bold flex items-center gap-1">
-                      <XCircle className="w-3 h-3" />
-                      Chưa hiển thị
-                    </span>
-                  )}
+                  <button
+                    onClick={() => handleToggleFeatured(testimonial.id, testimonial.isFeatured)}
+                    className={`px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 transition-colors ${
+                      testimonial.isFeatured
+                        ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200'
+                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                    }`}
+                  >
+                    {testimonial.isFeatured ? (
+                      <>
+                        <CheckCircle className="w-3 h-3" />
+                        Đang hiển thị
+                      </>
+                    ) : (
+                      <>
+                        <XCircle className="w-3 h-3" />
+                        Chưa hiển thị
+                      </>
+                    )}
+                  </button>
+                  <button
+                    onClick={() => handleDelete(testimonial.id)}
+                    className="p-1 text-slate-400 hover:text-red-600 rounded"
+                    title="Xóa đánh giá"
+                  >
+                    <XCircle className="w-4 h-4" />
+                  </button>
                 </div>
               </div>
 
