@@ -11,7 +11,7 @@ public record CreateServicePlanCommand(
     string? Ram, 
     string? Ssd, 
     string? Bandwidth, 
-    bool IsActive) : IRequest<Guid>;
+    bool IsActive = true) : IRequest<Guid>;
 
 public class CreateServicePlanCommandValidator : AbstractValidator<CreateServicePlanCommand>
 {
