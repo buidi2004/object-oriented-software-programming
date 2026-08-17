@@ -29,18 +29,23 @@ public class AddPlanPriceCommandValidator : AbstractValidator<AddPlanPriceComman
 
 public class AddPlanPriceCommandHandler : IRequestHandler<AddPlanPriceCommand, Guid>
 {
-    private readonly IRepository<ServicePlan> _repository;
+    private readonly IRepository<ServicePlan> _planRepository;
+    private readonly IRepository<PlanPrice> _priceRepository;
     private readonly IUnitOfWork _unitOfWork;
 
-    public AddPlanPriceCommandHandler(IRepository<ServicePlan> repository, IUnitOfWork unitOfWork)
+    public AddPlanPriceCommandHandler(
+        IRepository<ServicePlan> planRepository,
+        IRepository<PlanPrice> priceRepository,
+        IUnitOfWork unitOfWork)
     {
-        _repository = repository;
+        _planRepository = planRepository;
+        _priceRepository = priceRepository;
         _unitOfWork = unitOfWork;
     }
 
     public async Task<Guid> Handle(AddPlanPriceCommand request, CancellationToken cancellationToken)
     {
-        var plan = await _repository.GetByIdAsync(request.ServicePlanId, cancellationToken, p => p.Prices);
+        var plan = await _planRepository.GetByIdAsync(request.ServicePlanId, cancellationToken);
         if (plan == null)
             throw new NotFoundException(nameof(ServicePlan), request.ServicePlanId);
 
@@ -54,8 +59,7 @@ public class AddPlanPriceCommandHandler : IRequestHandler<AddPlanPriceCommand, G
             EffectiveFrom = request.EffectiveFrom
         };
 
-        plan.AddPrice(price);
-        _repository.Update(plan);
+        await _priceRepository.AddAsync(price, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return price.Id;
