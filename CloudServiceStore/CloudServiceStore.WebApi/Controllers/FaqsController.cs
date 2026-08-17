@@ -12,6 +12,7 @@ namespace CloudServiceStore.WebApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Route("api/faqs")]
 public class FaqsController : ControllerBase
 {
     private readonly IMediator _mediator;

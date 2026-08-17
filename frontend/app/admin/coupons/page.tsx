@@ -107,11 +107,44 @@ export default function AdminCouponsPage() {
   };
 
   const handleDeleteCoupon = async (id: string) => {
-    setCoupons(prev => prev.filter(c => c.id !== id));
+    if (!confirm('Bạn có chắc chắn muốn xóa mã giảm giá này?')) return;
+    const token = localStorage.getItem('accessToken');
+    try {
+      const res = await fetch(`/api/coupons/${id}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.ok) {
+        setCoupons(prev => prev.filter(c => c.id !== id));
+      } else {
+        alert('Xóa mã giảm giá thất bại');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Lỗi kết nối khi xóa');
+    }
   };
 
   const toggleStatus = async (id: string) => {
-    setCoupons(prev => prev.map(c => c.id === id ? { ...c, isActive: !c.isActive } : c));
+    const token = localStorage.getItem('accessToken');
+    const coupon = coupons.find(c => c.id === id);
+    if (!coupon) return;
+    try {
+      const newStatus = !coupon.isActive;
+      const res = await fetch(`/api/coupons/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ isActive: newStatus })
+      });
+      if (res.ok) {
+        setCoupons(prev => prev.map(c => c.id === id ? { ...c, isActive: newStatus } : c));
+      }
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   if (isLoading) {

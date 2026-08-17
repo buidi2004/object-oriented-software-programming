@@ -49,4 +49,43 @@ public class CouponsController : ControllerBase
         var success = await _mediator.Send(command, ct);
         return Ok(new { success });
     }
+
+    [HttpPut("{id:guid}")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> Update(
+        Guid id,
+        [FromBody] UpdateCouponDto dto,
+        [FromServices] CloudServiceStore.Domain.Interfaces.IRepository<CloudServiceStore.Domain.Entities.Coupon> repo,
+        [FromServices] CloudServiceStore.Domain.Interfaces.IUnitOfWork uow,
+        CancellationToken ct)
+    {
+        var coupon = await repo.GetByIdAsync(id, ct);
+        if (coupon == null) return NotFound();
+
+        coupon.UpdateDetails(dto.DiscountPercent, dto.MaxUsage, dto.ExpiryDate, dto.IsActive);
+
+        repo.Update(coupon);
+        await uow.SaveChangesAsync(ct);
+        return NoContent();
+    }
+
+    [HttpDelete("{id:guid}")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> Delete(
+        Guid id,
+        [FromServices] CloudServiceStore.Domain.Interfaces.IRepository<CloudServiceStore.Domain.Entities.Coupon> repo,
+        [FromServices] CloudServiceStore.Domain.Interfaces.IUnitOfWork uow,
+        CancellationToken ct)
+    {
+        var coupon = await repo.GetByIdAsync(id, ct);
+        if (coupon == null) return NotFound();
+
+        coupon.Deactivate();
+        repo.Update(coupon);
+        await uow.SaveChangesAsync(ct);
+        return NoContent();
+    }
 }
+
+public record UpdateCouponDto(decimal? DiscountPercent, int? MaxUsage, DateTime? ExpiryDate, bool? IsActive);
+

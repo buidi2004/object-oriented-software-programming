@@ -39,4 +39,31 @@ public class BlogCommentsController : ControllerBase
         var result = await _mediator.Send(new GetCommentsByArticleQuery(articleId), ct);
         return Ok(result);
     }
+
+    [HttpGet("comments")]
+    [Authorize(Roles = "Admin,Editor")]
+    public async Task<IActionResult> GetAll(
+        [FromServices] CloudServiceStore.Domain.Interfaces.IRepository<CloudServiceStore.Domain.Entities.ArticleComment> repo,
+        CancellationToken ct)
+    {
+        var comments = await repo.GetAllAsync(ct);
+        return Ok(comments);
+    }
+
+    [HttpPut("comments/{id:guid}/approve")]
+    [Authorize(Roles = "Admin,Editor")]
+    public async Task<IActionResult> Approve(
+        Guid id,
+        [FromServices] CloudServiceStore.Domain.Interfaces.IRepository<CloudServiceStore.Domain.Entities.ArticleComment> repo,
+        [FromServices] CloudServiceStore.Domain.Interfaces.IUnitOfWork uow,
+        CancellationToken ct)
+    {
+        var comment = await repo.GetByIdAsync(id, ct);
+        if (comment == null) return NotFound();
+
+        comment.IsApproved = true;
+        repo.Update(comment);
+        await uow.SaveChangesAsync(ct);
+        return NoContent();
+    }
 }

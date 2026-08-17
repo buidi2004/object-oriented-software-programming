@@ -62,4 +62,21 @@ public class ReviewsController : ControllerBase
         var result = await _mediator.Send(command, ct);
         return Ok(new { success = result });
     }
+
+    [HttpDelete("{id:guid}")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> Delete(
+        Guid id,
+        [FromServices] CloudServiceStore.Domain.Interfaces.IRepository<CloudServiceStore.Domain.Entities.Review> repo,
+        [FromServices] CloudServiceStore.Domain.Interfaces.IUnitOfWork uow,
+        CancellationToken ct)
+    {
+        var review = await repo.GetByIdAsync(id, ct);
+        if (review == null) return NotFound();
+
+        review.IsApproved = false;
+        repo.Update(review);
+        await uow.SaveChangesAsync(ct);
+        return NoContent();
+    }
 }

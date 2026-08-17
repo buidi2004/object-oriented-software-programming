@@ -38,4 +38,12 @@ public class Coupon : AggregateRoot
     {
         IsActive = false;
     }
+
+    public void UpdateDetails(decimal? discountPercent, int? maxUsage, DateTime? expiryDate, bool? isActive)
+    {
+        if (discountPercent.HasValue) DiscountPercent = discountPercent.Value;
+        if (maxUsage.HasValue) MaxUsage = maxUsage.Value;
+        if (expiryDate.HasValue) ExpiryDate = expiryDate.Value;
+        if (isActive.HasValue) IsActive = isActive.Value;
+    }
 }

@@ -15,6 +15,8 @@ namespace CloudServiceStore.WebApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Route("api/knowledge-base")]
+[Route("api/knowledgebase")]
 public class KnowledgeBaseController : ControllerBase
 {
     private readonly IMediator _mediator;

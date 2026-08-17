@@ -2,9 +2,10 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { 
   MessageSquare, Trash2, Shield, RefreshCw, CheckCircle2, 
-  AlertCircle, ArrowLeft, Search, User, Clock 
+  AlertCircle, ArrowLeft, Search, User, Clock, Check
 } from 'lucide-react';
 import { api } from '@/src/lib/api';
 
@@ -15,152 +16,185 @@ interface CommentItem {
   authorEmail: string;
   content: string;
   createdAt: string;
-  status: 'Approved' | 'Pending' | 'Spam';
+  isApproved: boolean;
 }
 
 export default function AdminBlogCommentsPage() {
+  const router = useRouter();
   const [comments, setComments] = useState<CommentItem[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [success, setSuccess] = useState('');
 
-  // Sample data fallback
-  const mockComments: CommentItem[] = [
-    {
-      id: 'c-1',
-      articleId: 'art-1',
-      authorName: 'Nguyễn Văn Hùng',
-      authorEmail: 'hung.nguyen@company.vn',
-      content: 'Bài viết rất chi tiết và hữu ích về cách tối ưu Nginx Reverse Proxy cho VPS NVMe!',
-      createdAt: '2026-08-17T10:30:00Z',
-      status: 'Approved',
-    },
-    {
-      id: 'c-2',
-      articleId: 'art-2',
-      authorName: 'Crypto Promo Bot',
-      authorEmail: 'bot998@freemail.ru',
-      content: 'Click here to get 1000% ROI in 24 hours on bitcoin cloud mining!',
-      createdAt: '2026-08-17T14:15:00Z',
-      status: 'Spam',
-    },
-    {
-      id: 'c-3',
-      articleId: 'art-3',
-      authorName: 'Trần Thị Mai',
-      authorEmail: 'mai.tran@startup.io',
-      content: 'Cho mình hỏi nếu nâng cấp từ gói VPS Basic lên Pro thì có bị gián đoạn dịch vụ không ạ?',
-      createdAt: '2026-08-17T16:45:00Z',
-      status: 'Approved',
-    },
-  ];
-
   useEffect(() => {
-    setComments(mockComments);
+    checkAdminAccess();
   }, []);
 
-  const handleDelete = async (id: string) => {
+  const checkAdminAccess = async () => {
+    const token = localStorage.getItem('accessToken');
+    if (!token) { router.push('/login'); return; }
+    
     try {
-      await api.delete(`/comments/${id}`).catch(() => {});
-      setComments(comments.filter(c => c.id !== id));
-      setSuccess('Đã xóa bình luận thành công!');
-      setTimeout(() => setSuccess(''), 3000);
+      const response = await api.get('/users/me');
+      if (response.data?.role !== 'Admin' && response.data?.role !== 'Editor') {
+        router.push('/dashboard');
+        return;
+      }
+      fetchComments();
     } catch {
-      setComments(comments.filter(c => c.id !== id));
-      setSuccess('Đã xóa bình luận thành công!');
-      setTimeout(() => setSuccess(''), 3000);
+      router.push('/login');
     }
   };
 
-  const filtered = comments.filter(c => 
-    c.authorName.toLowerCase().includes(search.toLowerCase()) || 
-    c.content.toLowerCase().includes(search.toLowerCase())
+  const fetchComments = async () => {
+    try {
+      setLoading(true);
+      const res = await api.get('/comments');
+      setComments(Array.isArray(res.data) ? res.data : []);
+    } catch (err) {
+      console.error('Failed to fetch comments:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleApprove = async (id: string) => {
+    try {
+      await api.put(`/comments/${id}/approve`);
+      setComments(prev => prev.map(c => c.id === id ? { ...c, isApproved: true } : c));
+      setSuccess('Đã duyệt bình luận thành công!');
+      setTimeout(() => setSuccess(''), 3000);
+    } catch (err) {
+      console.error(err);
+      alert('Không thể duyệt bình luận.');
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm('Bạn có chắc chắn muốn xóa bình luận này?')) return;
+    try {
+      await api.delete(`/comments/${id}`);
+      setComments(prev => prev.filter(c => c.id !== id));
+      setSuccess('Đã xóa bình luận thành công!');
+      setTimeout(() => setSuccess(''), 3000);
+    } catch (err) {
+      console.error(err);
+      alert('Xóa bình luận thất bại.');
+    }
+  };
+
+  const filteredComments = comments.filter(c => 
+    (c.authorName && c.authorName.toLowerCase().includes(search.toLowerCase())) ||
+    (c.content && c.content.toLowerCase().includes(search.toLowerCase())) ||
+    (c.authorEmail && c.authorEmail.toLowerCase().includes(search.toLowerCase()))
   );
 
   return (
-    <div className="min-h-screen bg-slate-50 py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-6xl mx-auto">
-        {/* Navigation */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
-          <div>
-            <Link href="/admin" className="text-xs font-bold text-slate-500 hover:text-blue-600 flex items-center gap-1 mb-2">
-              <ArrowLeft className="w-3.5 h-3.5" /> Quay lại Admin Panel
+    <div className="min-h-screen bg-slate-50">
+      <header className="bg-white border-b border-slate-200 sticky top-0 z-40">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <Link href="/admin" className="p-2 rounded-lg hover:bg-slate-100 transition-colors">
+              <ArrowLeft className="w-5 h-5 text-slate-600" />
             </Link>
-            <h1 className="text-2xl font-black text-slate-900 flex items-center gap-2.5">
-              <MessageSquare className="w-6 h-6 text-sky-600" /> Kiểm Duyệt Bình Luận Bài Viết
-            </h1>
-            <p className="text-xs text-slate-500 mt-0.5">
-              Quản lý và kiểm duyệt bình luận của độc giả trên Blog &amp; Tin tức công nghệ.
-            </p>
+            <div>
+              <h1 className="text-xl font-bold text-slate-900">Quản lý Bình luận Tin tức</h1>
+              <p className="text-sm text-slate-500">{comments.length} bình luận trên hệ thống</p>
+            </div>
           </div>
+          <button 
+            onClick={fetchComments}
+            className="px-4 py-2 rounded-lg bg-slate-100 text-slate-700 font-semibold text-sm hover:bg-slate-200 transition-colors flex items-center gap-2"
+          >
+            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+            Làm mới
+          </button>
+        </div>
+      </header>
 
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        {success && (
+          <div className="mb-4 p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm flex items-center gap-2">
+            <CheckCircle2 className="w-5 h-5 text-emerald-600" />
+            {success}
+          </div>
+        )}
+
+        <div className="bg-white rounded-xl p-4 border border-slate-200 mb-6">
           <div className="relative">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
             <input
               type="text"
-              placeholder="Tìm kiếm nội dung / tác giả..."
+              placeholder="Tìm kiếm theo người đăng, email, nội dung bình luận..."
               value={search}
-              onChange={e => setSearch(e.target.value)}
-              className="pl-9 pr-4 py-2 rounded-xl bg-white border border-slate-200 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500 shadow-sm"
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
             />
           </div>
         </div>
 
-        {success && (
-          <div className="mb-6 p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-emerald-600" /> {success}
-          </div>
-        )}
-
-        {/* Comments Table */}
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 text-slate-500 font-extrabold uppercase tracking-wider border-b border-slate-100">
-                <tr>
-                  <th className="px-6 py-4">Tác Giả</th>
-                  <th className="px-6 py-4">Nội Dung Bình Luận</th>
-                  <th className="px-6 py-4">Trạng Thái</th>
-                  <th className="px-6 py-4">Thời Gian</th>
-                  <th className="px-6 py-4 text-right">Hành Động</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {filtered.map((c) => (
-                  <tr key={c.id} className="hover:bg-slate-50/60 transition-colors">
-                    <td className="px-6 py-4 font-bold text-slate-900">
-                      <div>{c.authorName}</div>
-                      <div className="text-[11px] text-slate-400 font-normal">{c.authorEmail}</div>
-                    </td>
-                    <td className="px-6 py-4 text-slate-700 max-w-md leading-relaxed">
-                      {c.content}
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className={`px-2.5 py-1 rounded-full font-bold text-[10px] ${
-                        c.status === 'Spam' ? 'bg-rose-50 text-rose-600' : 'bg-emerald-50 text-emerald-600'
-                      }`}>
-                        {c.status}
+        <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
+          <div className="divide-y divide-slate-100">
+            {filteredComments.map((comment) => (
+              <div key={comment.id} className="p-5 hover:bg-slate-50 transition-colors">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="space-y-1.5 flex-1">
+                    <div className="flex items-center gap-3">
+                      <span className="font-semibold text-slate-900 flex items-center gap-1.5">
+                        <User className="w-4 h-4 text-slate-400" />
+                        {comment.authorName || 'Ẩn danh'}
                       </span>
-                    </td>
-                    <td className="px-6 py-4 text-slate-400 font-mono text-[11px]">
-                      {new Date(c.createdAt).toLocaleDateString('vi-VN')}
-                    </td>
-                    <td className="px-6 py-4 text-right">
+                      {comment.authorEmail && (
+                        <span className="text-xs text-slate-500 font-mono">
+                          ({comment.authorEmail})
+                        </span>
+                      )}
+                      <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold ${comment.isApproved ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>
+                        {comment.isApproved ? 'Đã duyệt' : 'Chờ duyệt'}
+                      </span>
+                      <span className="text-xs text-slate-400 flex items-center gap-1">
+                        <Clock className="w-3.5 h-3.5" />
+                        {new Date(comment.createdAt).toLocaleString('vi-VN')}
+                      </span>
+                    </div>
+
+                    <p className="text-slate-700 text-sm leading-relaxed bg-slate-50/80 p-3 rounded-xl border border-slate-100">
+                      {comment.content}
+                    </p>
+                  </div>
+
+                  <div className="flex items-center gap-2 shrink-0">
+                    {!comment.isApproved && (
                       <button
-                        onClick={() => handleDelete(c.id)}
-                        className="p-2 rounded-xl bg-slate-100 hover:bg-rose-50 text-slate-600 hover:text-rose-600 transition-colors"
-                        title="Xóa bình luận"
+                        onClick={() => handleApprove(comment.id)}
+                        className="p-2 text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors flex items-center gap-1 text-xs font-semibold"
+                        title="Duyệt bình luận"
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <Check className="w-4 h-4" />
+                        Duyệt
                       </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                    )}
+                    <button
+                      onClick={() => handleDelete(comment.id)}
+                      className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                      title="Xóa bình luận"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
+
+          {filteredComments.length === 0 && (
+            <div className="text-center py-12 text-slate-500">
+              <MessageSquare className="w-12 h-12 mx-auto mb-3 text-slate-300" />
+              <p className="font-medium">Chưa có bình luận nào</p>
+            </div>
+          )}
         </div>
-      </div>
+      </main>
     </div>
   );
 }

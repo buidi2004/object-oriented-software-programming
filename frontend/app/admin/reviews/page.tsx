@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { api } from '@/src/lib/api';
-import { Star, CheckCircle2, MessageSquare, AlertCircle } from 'lucide-react';
+import Link from 'next/link';
+import { Star, CheckCircle2, MessageSquare, AlertCircle, ArrowLeft, Trash2 } from 'lucide-react';
 
 interface ReviewDto {
   id: string;
@@ -62,15 +63,31 @@ export default function AdminReviewsPage() {
     }
   };
 
+  const handleDelete = async (id: string) => {
+    if (!confirm('Bạn có chắc chắn muốn xóa đánh giá này?')) return;
+    try {
+      await api.delete(`/reviews/${id}`);
+      setReviews(prev => prev.filter(r => r.id !== id));
+    } catch (err) {
+      console.error(err);
+      alert('Không thể xóa đánh giá.');
+    }
+  };
+
   return (
     <div className="p-8 max-w-7xl mx-auto">
       <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
-            <MessageSquare className="w-8 h-8 text-indigo-600" />
-            Đánh Giá Khách Hàng (Reviews)
-          </h1>
-          <p className="text-gray-500 mt-2">Duyệt và chọn các đánh giá nổi bật để đưa lên trang chủ.</p>
+        <div className="flex items-center gap-4">
+          <Link href="/admin" className="p-2 rounded-lg hover:bg-slate-100 transition-colors border border-slate-200">
+            <ArrowLeft className="w-5 h-5 text-slate-600" />
+          </Link>
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
+              <MessageSquare className="w-8 h-8 text-indigo-600" />
+              Đánh Giá Khách Hàng (Reviews)
+            </h1>
+            <p className="text-gray-500 mt-2">Duyệt và chọn các đánh giá nổi bật để đưa lên trang chủ.</p>
+          </div>
         </div>
       </div>
 
@@ -159,6 +176,14 @@ export default function AdminReviewsPage() {
                           {review.isFeatured ? 'Gỡ khỏi Trang chủ' : 'Đưa lên Trang chủ'}
                         </button>
                       )}
+
+                      <button
+                        onClick={() => handleDelete(review.id)}
+                        className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors flex items-center justify-center"
+                        title="Xóa đánh giá"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
                     </div>
                   </td>
                 </tr>
