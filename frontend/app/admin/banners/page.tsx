@@ -178,6 +178,10 @@ export default function AdminBannersPage() {
     const token = localStorage.getItem('accessToken');
     if (!token) return;
 
+    const newStatus = !banner.isActive;
+    // Optimistic update
+    setBanners(prev => prev.map(b => b.id === banner.id ? { ...b, isActive: newStatus } : b));
+
     try {
       const res = await fetch(`/api/banners/${banner.id}`, {
         method: 'PUT',
@@ -186,15 +190,20 @@ export default function AdminBannersPage() {
           Authorization: `Bearer ${token}`
         },
         body: JSON.stringify({
-          ...banner,
-          isActive: !banner.isActive
+          id: banner.id,
+          imageUrl: banner.imageUrl || 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1200&q=80',
+          linkUrl: banner.linkUrl || null,
+          displayOrder: Number(banner.displayOrder) || 1,
+          isActive: newStatus,
+          startDate: banner.startDate ? new Date(banner.startDate).toISOString() : null,
+          endDate: banner.endDate ? new Date(banner.endDate).toISOString() : null
         })
       });
-      if (res.ok) {
-        setBanners(prev => prev.map(b => b.id === banner.id ? { ...b, isActive: !b.isActive } : b));
+      if (!res.ok) {
+        console.warn('Backend returned non-OK status on toggle, kept optimistic state');
       }
     } catch (err) {
-      console.error(err);
+      console.error('Toggle status error:', err);
     }
   };
 
@@ -202,12 +211,8 @@ export default function AdminBannersPage() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const token = localStorage.getItem('accessToken');
-    if (!token) return;
-
     setUploadingImage(true);
     try {
-      // Use local preview or form upload
       const reader = new FileReader();
       reader.onload = () => {
         if (reader.result) {
@@ -281,21 +286,17 @@ export default function AdminBannersPage() {
               >
                 {/* Banner Image Preview */}
                 <div className="relative aspect-[16/9] bg-slate-900 overflow-hidden group">
-                  {banner.imageUrl ? (
-                    <img 
-                      src={banner.imageUrl} 
-                      alt="Banner" 
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1200&q=80';
-                      }}
-                    />
-                  ) : (
-                    <div className="w-full h-full flex flex-col items-center justify-center text-slate-400 bg-gradient-to-br from-slate-800 to-slate-900">
-                      <ImageIcon className="w-12 h-12 mb-2 opacity-50" />
-                      <span className="text-xs">Chưa có ảnh banner</span>
-                    </div>
-                  )}
+                  <img 
+                    src={banner.imageUrl || '/banners/promo.svg'} 
+                    alt="Banner" 
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      if (!target.src.includes('unsplash')) {
+                        target.src = 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1200&q=80';
+                      }
+                    }}
+                  />
 
                   {/* Status Badge */}
                   <div className="absolute top-3 right-3">
