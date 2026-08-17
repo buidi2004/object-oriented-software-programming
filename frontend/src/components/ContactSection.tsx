@@ -1,16 +1,71 @@
 'use client';
 
-import React, { useState } from 'react';
-import { Phone, Mail, MapPin, ChevronDown, Send, MessageSquare, HelpCircle, CheckCircle2 } from 'lucide-react';
-import { FAQS } from '../data/mockData';
+import React, { useState, useEffect } from 'react';
+import { Phone, Mail, MapPin, ChevronDown, Send, MessageSquare, HelpCircle, CheckCircle2, Loader2 } from 'lucide-react';
+import { api } from '../lib/api';
+
+interface FaqItem {
+  id?: string;
+  question: string;
+  answer: string;
+}
+
+const FALLBACK_FAQS: FaqItem[] = [
+  {
+    question: 'Thời gian khởi tạo Cloud VPS mất bao lâu?',
+    answer: 'Sau khi thanh toán thành công, hệ thống tự động khởi tạo và gửi thông tin đăng nhập Root qua Email chỉ trong vòng 30 - 60 giây.'
+  },
+  {
+    question: 'CloudHost VN có hỗ trợ chuyển dữ liệu miễn phí từ nhà cung cấp khác không?',
+    answer: 'Có, đội ngũ kỹ thuật viên của chúng tôi hỗ trợ chuyển dữ liệu (Website, Database, Cấu hình) hoàn toàn miễn phí và đảm bảo không gián đoạn dịch vụ.'
+  },
+  {
+    question: 'Tôi có thể nâng cấp gói dịch vụ khi nhu cầu tăng lên không?',
+    answer: 'Bạn có thể nâng cấp CPU, RAM, Ổ cứng SSD NVMe bất kỳ lúc nào trực tiếp trên bảng điều khiển mà không làm thay đổi địa chỉ IP.'
+  },
+  {
+    question: 'Chính sách hoàn tiền của CloudHost VN như thế nào?',
+    answer: 'Chúng tôi cam kết hoàn tiền 100% trong vòng 30 ngày nếu quý khách không hài lòng về chất lượng dịch vụ Cloud VPS và Hosting.'
+  }
+];
 
 export const ContactSection: React.FC = () => {
+  const [faqs, setFaqs] = useState<FaqItem[]>(FALLBACK_FAQS);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [message, setMessage] = useState('');
+  const [contactInfo, setContactInfo] = useState({
+    address: 'Tầng 12, Tòa nhà HITC, 239 Xuân Thủy, Cầu Giấy, Hà Nội',
+    hotline: '1900 6888 - (024) 7300 8888',
+    email: 'support@cloudhost.vn / sales@cloudhost.vn',
+  });
+
+  useEffect(() => {
+    // Fetch FAQs from API
+    api.get<any[]>('/faqs')
+      .then(res => {
+        if (res.data && Array.isArray(res.data) && res.data.length > 0) {
+          setFaqs(res.data.map(f => ({
+            id: f.id,
+            question: f.question || f.q,
+            answer: f.answer || f.a,
+          })).slice(0, 5));
+        }
+      })
+      .catch(() => {});
+
+    // Fetch system settings if available
+    api.get<{ value?: string }>('/system-settings/hotline')
+      .then(res => {
+        if (res.data?.value) {
+          setContactInfo(prev => ({ ...prev, hotline: res.data.value! }));
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const handleContactSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,27 +91,27 @@ export const ContactSection: React.FC = () => {
               Hỏi Đáp Dịch Vụ
             </div>
             <h2 className="text-3xl font-black text-slate-900 tracking-tight">
-              Câu Hỏi Thường Gặp Về Cloud & Hosting
+              Câu Hỏi Thường Gặp Về Cloud &amp; Hosting
             </h2>
           </div>
 
           <div className="max-w-3xl mx-auto space-y-3">
-            {FAQS.map((faq, idx) => (
+            {faqs.map((faq, idx) => (
               <div
-                key={idx}
+                key={faq.id || idx}
                 className="bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-xs transition-all"
               >
                 <button
                   onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
                   className="w-full p-5 text-left flex justify-between items-center gap-4 font-bold text-slate-900 text-base hover:text-blue-600 transition-colors cursor-pointer"
                 >
-                  <span>{faq.q}</span>
+                  <span>{faq.question}</span>
                   <ChevronDown className={`w-5 h-5 shrink-0 text-slate-400 transition-transform ${openFaq === idx ? 'rotate-180 text-blue-600' : ''}`} />
                 </button>
 
                 {openFaq === idx && (
                   <div className="px-5 pb-5 text-sm text-slate-600 font-medium leading-relaxed border-t border-slate-100 pt-3 animate-in fade-in duration-200">
-                    {faq.a}
+                    {faq.answer}
                   </div>
                 )}
               </div>
@@ -90,7 +145,7 @@ export const ContactSection: React.FC = () => {
                 <div>
                   <div className="text-xs font-bold text-slate-400 uppercase">Trụ sở chính</div>
                   <div className="text-sm font-bold text-slate-900 mt-0.5">
-                    Tầng 12, Tòa nhà HITC, 239 Xuân Thủy, Cầu Giấy, Hà Nội
+                    {contactInfo.address}
                   </div>
                 </div>
               </div>
@@ -102,7 +157,7 @@ export const ContactSection: React.FC = () => {
                 <div>
                   <div className="text-xs font-bold text-slate-400 uppercase">Hotline 24/7</div>
                   <div className="text-sm font-bold text-slate-900 mt-0.5">
-                    1900 6888 - (024) 7300 8888
+                    {contactInfo.hotline}
                   </div>
                 </div>
               </div>
@@ -114,7 +169,7 @@ export const ContactSection: React.FC = () => {
                 <div>
                   <div className="text-xs font-bold text-slate-400 uppercase">Email Kỹ Thuật</div>
                   <div className="text-sm font-bold text-slate-900 mt-0.5">
-                    support@cloudhost.vn / sales@cloudhost.vn
+                    {contactInfo.email}
                   </div>
                 </div>
               </div>
@@ -139,60 +194,58 @@ export const ContactSection: React.FC = () => {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1">Họ tên:</label>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Họ &amp; Tên</label>
                     <input
                       type="text"
                       required
                       value={name}
-                      onChange={(e) => setName(e.target.value)}
+                      onChange={e => setName(e.target.value)}
                       placeholder="Nguyễn Văn A"
-                      className="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                      className="w-full px-4 py-3 rounded-xl bg-white border border-slate-200 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
-
                   <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1">Số điện thoại:</label>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Số Điện Thoại</label>
                     <input
                       type="tel"
                       required
                       value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      placeholder="0988 123 456"
-                      className="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                      onChange={e => setPhone(e.target.value)}
+                      placeholder="0912 345 678"
+                      className="w-full px-4 py-3 rounded-xl bg-white border border-slate-200 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Email liên hệ:</label>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Email Doanh Nghiệp</label>
                   <input
                     type="email"
                     required
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="email@company.vn"
-                    className="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                    onChange={e => setEmail(e.target.value)}
+                    placeholder="contact@company.com"
+                    className="w-full px-4 py-3 rounded-xl bg-white border border-slate-200 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Nội dung tư vấn:</label>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Nhu Cầu Hạ Tầng</label>
                   <textarea
                     rows={3}
                     required
                     value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    placeholder="Mô tả nhu cầu máy chủ, số lượng người dùng đồng thời, hệ thống dự kiến triển khai..."
-                    className="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                    onChange={e => setMessage(e.target.value)}
+                    placeholder="Mô tả cấu hình VPS / Số lượng Website / Yêu cầu chịu tải..."
+                    className="w-full px-4 py-3 rounded-xl bg-white border border-slate-200 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
                   />
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full py-3.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-xs shadow-md transition-all flex items-center justify-center gap-2"
                 >
-                  <Send className="w-4 h-4" />
-                  <span>Gửi Yêu Cầu Tư Vấn</span>
+                  <Send className="w-4 h-4" /> Gửi Yêu Cầu Tư Vấn Ngay
                 </button>
               </form>
             )}

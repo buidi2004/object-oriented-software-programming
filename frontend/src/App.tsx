@@ -4,10 +4,13 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
+import { BannerSlider } from './components/BannerSlider';
 import { DomainSearch } from './components/DomainSearch';
 import { VpsCalculator } from './components/VpsCalculator';
 import { HostingPlans } from './components/HostingPlans';
 import { InfrastructureFeatures } from './components/InfrastructureFeatures';
+import { HomeTestimonials } from './components/HomeTestimonials';
+import { HomeLatestNews } from './components/HomeLatestNews';
 import { ContactSection } from './components/ContactSection';
 import { Footer } from './components/Footer';
 import { CartDrawer } from './components/CartDrawer';
@@ -44,10 +47,13 @@ export default function App() {
         onStartClick={() => handleTabChange('vps')}
         onPriceClick={() => handleTabChange('vps')}
       />
+      <BannerSlider />
       <DomainSearch onAddToCart={() => router.push('/services/ten-mien')} />
       <VpsCalculator onAddToCart={() => router.push('/services/cloud-vps')} onViewDetails={handleViewServiceDetails} />
       <HostingPlans onAddToCart={() => router.push('/services/web-hosting')} onViewDetails={handleViewServiceDetails} />
       <InfrastructureFeatures />
+      <HomeTestimonials />
+      <HomeLatestNews />
       <ContactSection />
     </>
   );
