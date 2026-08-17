@@ -22,17 +22,68 @@ function VietQRSandboxContent() {
   const [isLoading, setIsLoading] = useState(false);
   const [status, setStatus] = useState<'pending' | 'success' | 'failed'>('pending');
   const [message, setMessage] = useState('');
+  
+  // Real Bank Configuration for testing with actual Banking Apps
+  const [showConfig, setShowConfig] = useState(false);
+  const [selectedBank, setSelectedBank] = useState('MB');
+  const [customAccNumber, setCustomAccNumber] = useState('0987654321');
+  const [customAccName, setCustomAccName] = useState('CLOUD SERVICE STORE');
+
+  const VIETNAMESE_BANKS = [
+    { code: 'MB', name: 'MB Bank (Quân Đội)', bin: '970422' },
+    { code: 'VCB', name: 'Vietcombank (Ngoại Thương)', bin: '970436' },
+    { code: 'TCB', name: 'Techcombank (Kỹ Thương)', bin: '970407' },
+    { code: 'ICB', name: 'VietinBank (Công Thương)', bin: '970415' },
+    { code: 'BIDV', name: 'BIDV (Đầu Tư & Phát Triển)', bin: '970418' },
+    { code: 'ACB', name: 'ACB (Á Châu)', bin: '970416' },
+    { code: 'TPB', name: 'TPBank (Tiên Phong)', bin: '970423' },
+    { code: 'VPB', name: 'VPBank (Việt Nam Thịnh Vượng)', bin: '970432' },
+    { code: 'STB', name: 'Sacombank (Sài Gòn Thương Tín)', bin: '970403' },
+    { code: 'VIB', name: 'VIB (Quốc Tế)', bin: '970441' },
+    { code: 'SHB', name: 'SHB (Sài Gòn - Hà Nội)', bin: '970443' },
+    { code: 'MSB', name: 'MSB (Hàng Hải)', bin: '970426' },
+    { code: 'TIMO', name: 'Timo by BVBank', bin: '963388' },
+    { code: 'CAKE', name: 'Cake by VPBank', bin: '546034' },
+  ];
+
+  const currentBankObj = VIETNAMESE_BANKS.find(b => b.code === selectedBank) || VIETNAMESE_BANKS[0];
 
   const bankInfo = {
-    bankName: 'Ngân hàng Quân Đội (MB Bank)',
-    accountNumber: '0987654321',
-    accountName: 'CLOUD SERVICE STORE',
+    bankName: currentBankObj.name,
+    bankCode: selectedBank,
+    accountNumber: customAccNumber,
+    accountName: customAccName,
     amount: amount,
     content: `PAY_${orderId}`,
   };
 
   // QR Code URL via VietQR standard image API
-  const qrImageUrl = `https://img.vietqr.io/image/MB-0987654321-compact2.png?amount=${amount}&addInfo=PAY_${orderId}&accountName=CLOUD%20SERVICE%20STORE`;
+  const encodedName = encodeURIComponent(customAccName.toUpperCase());
+  const qrImageUrl = `https://img.vietqr.io/image/${selectedBank}-${customAccNumber}-compact2.png?amount=${amount}&addInfo=PAY_${orderId}&accountName=${encodedName}`;
+
+  // Fetch configured system settings if available
+  useEffect(() => {
+    fetch('http://localhost:5053/api/system-settings/vietqr_account_no')
+      .then(res => res.ok ? res.json() : null)
+      .then(data => {
+        if (data?.value && data.value.trim() !== '') setCustomAccNumber(data.value.trim());
+      })
+      .catch(() => null);
+
+    fetch('http://localhost:5053/api/system-settings/vietqr_bank_id')
+      .then(res => res.ok ? res.json() : null)
+      .then(data => {
+        if (data?.value && data.value.trim() !== '') setSelectedBank(data.value.trim().toUpperCase());
+      })
+      .catch(() => null);
+
+    fetch('http://localhost:5053/api/system-settings/vietqr_account_name')
+      .then(res => res.ok ? res.json() : null)
+      .then(data => {
+        if (data?.value && data.value.trim() !== '') setCustomAccName(data.value.trim().toUpperCase());
+      })
+      .catch(() => null);
+  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -225,6 +276,73 @@ function VietQRSandboxContent() {
 
           {/* Right: Transfer Information & 1-Click Copy */}
           <div className="lg:col-span-7 space-y-4">
+            {/* Notice / Real Banking App Notice & Config Accordion */}
+            <div className="bg-blue-50/80 border border-blue-200 rounded-2xl p-4 text-xs text-blue-900 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="font-bold flex items-center gap-1.5 text-blue-800">
+                  <Sparkles className="w-4 h-4 text-blue-600" />
+                  Bạn muốn quét bằng App Ngân Hàng Thật trên điện thoại?
+                </span>
+                <button
+                  onClick={() => setShowConfig(!showConfig)}
+                  className="px-2.5 py-1 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-[11px] transition-colors"
+                >
+                  {showConfig ? 'Đóng cấu hình' : '⚙️ Đổi sang STK Thật'}
+                </button>
+              </div>
+
+              {showConfig ? (
+                <div className="pt-2 border-t border-blue-200/80 space-y-3 mt-2">
+                  <p className="text-[11px] text-blue-700">
+                    💡 <em>App ngân hàng thật sẽ kiểm tra qua Napas 24/7. Nhập STK & Ngân hàng thật của bạn bên dưới để quét thử thành công 100%:</em>
+                  </p>
+                  
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <div>
+                      <label className="block text-[11px] font-semibold text-slate-700 mb-1">Chọn Ngân Hàng</label>
+                      <select 
+                        value={selectedBank}
+                        onChange={(e) => setSelectedBank(e.target.value)}
+                        className="w-full px-2.5 py-1.5 rounded-lg border border-blue-300 bg-white text-slate-900 text-xs font-semibold focus:outline-none focus:border-blue-600"
+                      >
+                        {VIETNAMESE_BANKS.map((b) => (
+                          <option key={b.code} value={b.code}>
+                            {b.name} ({b.code})
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] font-semibold text-slate-700 mb-1">Số Tài Khoản Nhận Thật</label>
+                      <input 
+                        type="text"
+                        value={customAccNumber}
+                        onChange={(e) => setCustomAccNumber(e.target.value.trim())}
+                        placeholder="Nhập STK của bạn..."
+                        className="w-full px-2.5 py-1.5 rounded-lg border border-blue-300 bg-white text-slate-900 text-xs font-mono font-bold focus:outline-none focus:border-blue-600"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-semibold text-slate-700 mb-1">Tên Chủ Tài Khoản (In Hoa Không Dấu)</label>
+                    <input 
+                      type="text"
+                      value={customAccName}
+                      onChange={(e) => setCustomAccName(e.target.value.toUpperCase())}
+                      placeholder="NGUYEN VAN A"
+                      className="w-full px-2.5 py-1.5 rounded-lg border border-blue-300 bg-white text-slate-900 text-xs font-bold focus:outline-none focus:border-blue-600"
+                    />
+                  </div>
+                </div>
+              ) : (
+                <p className="text-[11px] text-blue-700/90 leading-relaxed">
+                  Mặc định đang dùng STK demo <code>0987654321</code> (MB Bank). Nếu quét bằng App ngân hàng thật sẽ báo <em>"Tài khoản thụ hưởng không tồn tại"</em> do Napas chặn data ảo. Nhấn <strong>"⚙️ Đổi sang STK Thật"</strong> để điền STK thật của bạn và quét ngay!
+                </p>
+              )}
+            </div>
+
             <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-3">
               <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">
                 Thông Tin Chuyển Khoản Thủ Công

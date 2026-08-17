@@ -14,9 +14,19 @@ public class CreatePaymentCommandHandler : IRequestHandler<CreatePaymentCommand,
     private readonly IUnitOfWork _uow;
     private readonly IRepository<OrderRequest> _orderRepo;
     private readonly IRepository<Payment> _paymentRepo;
+    private readonly IRepository<SystemSetting>? _settingRepo;
 
-    public CreatePaymentCommandHandler(IUnitOfWork uow, IRepository<OrderRequest> orderRepo, IRepository<Payment> paymentRepo)
-    { _uow = uow; _orderRepo = orderRepo; _paymentRepo = paymentRepo; }
+    public CreatePaymentCommandHandler(
+        IUnitOfWork uow, 
+        IRepository<OrderRequest> orderRepo, 
+        IRepository<Payment> paymentRepo,
+        IRepository<SystemSetting>? settingRepo = null)
+    { 
+        _uow = uow; 
+        _orderRepo = orderRepo; 
+        _paymentRepo = paymentRepo; 
+        _settingRepo = settingRepo;
+    }
 
     public async Task<string> Handle(CreatePaymentCommand request, CancellationToken ct)
     {
@@ -37,7 +47,28 @@ public class CreatePaymentCommandHandler : IRequestHandler<CreatePaymentCommand,
         await _paymentRepo.AddAsync(payment, ct);
         await _uow.SaveChangesAsync(ct);
 
-        // VietQR payment image URL with MB Bank
-        return $"https://img.vietqr.io/image/MB-0987654321-compact.png?amount={order.TotalAmount:0}&addInfo={idempotencyKey}&accountName=CLOUD%20SERVICE%20STORE";
+        // VietQR payment dynamic configuration
+        var bankId = "MB";
+        var accountNo = "0987654321";
+        var accountName = "CLOUD SERVICE STORE";
+        var template = "compact";
+
+        if (_settingRepo != null)
+        {
+            var sBank = await _settingRepo.FirstOrDefaultAsync(s => s.Key == "vietqr_bank_id" || s.Key == "bank_id", ct);
+            if (!string.IsNullOrWhiteSpace(sBank?.Value)) bankId = sBank.Value.Trim();
+
+            var sAcc = await _settingRepo.FirstOrDefaultAsync(s => s.Key == "vietqr_account_no" || s.Key == "bank_account_no" || s.Key == "account_number", ct);
+            if (!string.IsNullOrWhiteSpace(sAcc?.Value)) accountNo = sAcc.Value.Trim();
+
+            var sName = await _settingRepo.FirstOrDefaultAsync(s => s.Key == "vietqr_account_name" || s.Key == "bank_account_name" || s.Key == "account_name", ct);
+            if (!string.IsNullOrWhiteSpace(sName?.Value)) accountName = sName.Value.Trim();
+
+            var sTpl = await _settingRepo.FirstOrDefaultAsync(s => s.Key == "vietqr_template", ct);
+            if (!string.IsNullOrWhiteSpace(sTpl?.Value)) template = sTpl.Value.Trim();
+        }
+
+        var encodedName = Uri.EscapeDataString(accountName);
+        return $"https://img.vietqr.io/image/{bankId}-{accountNo}-{template}.png?amount={order.TotalAmount:0}&addInfo={idempotencyKey}&accountName={encodedName}";
     }
 }
