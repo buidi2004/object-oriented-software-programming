@@ -55,35 +55,17 @@ export default function AdminCategoriesPage() {
     finally { setIsLoading(false); }
   };
 
-  const [editingCategory, setEditingCategory] = useState<Category | null>(null);
-
-  const handleOpenEdit = (category: Category) => {
-    setEditingCategory(category);
-    setNewCategory({ name: category.name, slug: category.slug, description: category.description });
-    setShowAddModal(true);
-  };
-
-  const handleSaveCategory = async () => {
+  const handleCreateCategory = async () => {
     const token = localStorage.getItem('accessToken');
     try {
-      if (editingCategory) {
-        await fetch(`/api/categories/${editingCategory.id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-          body: JSON.stringify({ id: editingCategory.id, ...newCategory }),
-        });
-      } else {
-        await fetch('/api/categories', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-          body: JSON.stringify(newCategory),
-        });
-      }
+      await fetch('/api/categories', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify(newCategory),
+      });
       setShowAddModal(false);
-      setEditingCategory(null);
-      setNewCategory({ name: '', slug: '', description: '' });
       fetchCategories(token!);
-    } catch (error) { console.error('Failed to save category:', error); }
+    } catch (error) { console.error('Failed to create category:', error); }
   };
 
   const handleDeleteCategory = async (id: string) => {
@@ -155,11 +137,7 @@ export default function AdminCategoriesPage() {
                     <td className="py-3 px-4 text-slate-600">{new Date(category.createdAt).toLocaleDateString('vi-VN')}</td>
                     <td className="py-3 px-4 text-right">
                       <div className="flex items-center justify-end gap-2">
-                        <button 
-                          onClick={() => handleOpenEdit(category)}
-                          className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                          title="Sửa danh mục"
-                        >
+                        <button className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
                           <Edit2 className="w-4 h-4" />
                         </button>
                         <button onClick={() => handleDeleteCategory(category.id)} className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">
@@ -182,13 +160,11 @@ export default function AdminCategoriesPage() {
         </div>
       </main>
 
-      {/* Add / Edit Modal */}
+      {/* Add Modal */}
       {showAddModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl p-6 max-w-md w-full">
-            <h3 className="text-lg font-bold text-slate-900 mb-4">
-              {editingCategory ? 'Chỉnh sửa danh mục' : 'Thêm danh mục mới'}
-            </h3>
+            <h3 className="text-lg font-bold text-slate-900 mb-4">Thêm danh mục mới</h3>
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-semibold text-slate-700 mb-1">Tên danh mục</label>
@@ -222,10 +198,10 @@ export default function AdminCategoriesPage() {
               </div>
             </div>
             <div className="flex gap-3 mt-6">
-              <button onClick={handleSaveCategory} className="flex-1 py-2.5 rounded-lg bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 transition-colors">
+              <button onClick={handleCreateCategory} className="flex-1 py-2.5 rounded-lg bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 transition-colors">
                 Lưu
               </button>
-              <button onClick={() => { setShowAddModal(false); setEditingCategory(null); }} className="flex-1 py-2.5 rounded-lg bg-slate-100 text-slate-700 font-semibold text-sm hover:bg-slate-200 transition-colors">
+              <button onClick={() => setShowAddModal(false)} className="flex-1 py-2.5 rounded-lg bg-slate-100 text-slate-700 font-semibold text-sm hover:bg-slate-200 transition-colors">
                 Hủy
               </button>
             </div>

@@ -22,12 +22,9 @@ export default function NewTicketPage() {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-slate-50">
-        <Header />
-        <div className="flex flex-col items-center justify-center h-[60vh]">
-          <AlertCircle className="w-12 h-12 text-slate-400 mb-4" />
-          <h2 className="text-xl font-bold mb-2">Vui lòng đăng nhập</h2>
-        </div>
+      <div className="flex flex-col items-center justify-center h-[60vh]">
+        <AlertCircle className="w-12 h-12 text-slate-400 mb-4" />
+        <h2 className="text-xl font-bold mb-2">Vui lòng đăng nhập</h2>
       </div>
     );
   }
@@ -43,33 +40,19 @@ export default function NewTicketPage() {
     setError(null);
 
     try {
-      let ticketId: string;
-      try {
-        const ticketRes = await api.post('/support-tickets', {
-          subject: formData.subject,
-          description: formData.message,
-          priority: parseInt(formData.priority)
-        });
-        ticketId = ticketRes.data?.id || ticketRes.data?.ticketId || ticketRes.data;
-      } catch {
-        const ticketRes = await api.post('/tickets', {
-          subject: formData.subject,
-          priority: parseInt(formData.priority)
-        });
-        ticketId = ticketRes.data.id;
-      }
+      // 1. Create ticket
+      const ticketRes = await api.post('/tickets', {
+        subject: formData.subject,
+        priority: parseInt(formData.priority)
+      });
+      const ticketId = ticketRes.data.id;
 
-      // Add message
-      try {
-        await api.post(`/support-tickets/${ticketId}/messages`, {
-          message: formData.message
-        });
-      } catch {
-        await api.post(`/tickets/${ticketId}/messages`, {
-          message: formData.message
-        });
-      }
+      // 2. Add first message
+      await api.post(`/tickets/${ticketId}/messages`, {
+        message: formData.message
+      });
 
+      // 3. Redirect to ticket detail
       router.push(`/support/tickets/${ticketId}`);
     } catch (err: any) {
       console.error(err);
@@ -79,10 +62,8 @@ export default function NewTicketPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <Header />
-      <div className="py-8">
-        <div className="max-w-3xl mx-auto px-4">
+    <div className="py-8">
+      <div className="max-w-3xl mx-auto px-4">
           <Link href="/support/tickets" className="inline-flex items-center gap-2 text-slate-600 hover:text-slate-900 mb-6 font-medium">
             <ArrowLeft className="w-4 h-4" /> Quay lại
           </Link>
@@ -159,6 +140,5 @@ export default function NewTicketPage() {
           </div>
         </div>
       </div>
-    </div>
   );
 }

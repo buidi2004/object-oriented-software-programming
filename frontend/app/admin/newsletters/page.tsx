@@ -86,19 +86,12 @@ export default function AdminNewslettersPage() {
     ));
   };
 
-  const handleDelete = async (subscriber: NewsletterSubscriber) => {
-    if (!confirm(`Bạn có chắc chắn muốn hủy đăng ký cho ${subscriber.email}?`)) return;
+  const handleDelete = async (id: string) => {
+    if (!confirm('Bạn có chắc chắn muốn xóa subscriber này?')) return;
     
-    try {
-      await fetch('/api/newsletter/unsubscribe', {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: subscriber.email })
-      });
-      setSubscribers(prev => prev.filter(s => s.id !== subscriber.id));
-    } catch (error) {
-      console.error('Failed to unsubscribe', error);
-    }
+    const token = localStorage.getItem('accessToken');
+    // Mock delete - would need a backend endpoint for this
+    setSubscribers(prev => prev.filter(s => s.id !== id));
   };
 
   if (isLoading) {
@@ -225,9 +218,8 @@ export default function AdminNewslettersPage() {
                       <Edit2 className="w-4 h-4" />
                     </button>
                     <button 
-                      onClick={() => handleDelete(subscriber)}
+                      onClick={() => handleDelete(subscriber.id)}
                       className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                      title="Hủy đăng ký"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>

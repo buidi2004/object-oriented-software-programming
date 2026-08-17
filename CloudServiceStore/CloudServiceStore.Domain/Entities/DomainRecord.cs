@@ -12,6 +12,7 @@ public class DomainRecord : AggregateRoot
     public DateTime ExpiryDate { get; set; }
     public bool AutoRenew { get; set; }
     public DomainStatus Status { get; set; }
+    public bool IsPrivacyProtected { get; set; }
     
     public AppUser User { get; set; } = null!;
     public OrderRequest OrderRequest { get; set; } = null!;

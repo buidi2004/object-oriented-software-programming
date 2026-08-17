@@ -3,6 +3,7 @@ import "./globals.css";
 
 import { LiveChatWidget } from '@/components/LiveChatWidget';
 import { GlobalUI } from '@/src/components/GlobalUI';
+import { AppShell } from '@/src/components/AppShell';
 
 export const metadata: Metadata = {
   title: "CloudHost VN - Cloud VPS & Hosting Việt Nam",
@@ -17,7 +18,9 @@ export default function RootLayout({
   return (
     <html lang="vi">
       <body className="antialiased bg-slate-50">
-        {children}
+        <AppShell>
+          {children}
+        </AppShell>
         <LiveChatWidget />
         <GlobalUI />
       </body>

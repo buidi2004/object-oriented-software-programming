@@ -63,20 +63,6 @@ export default function AdminTestimonialsPage() {
     }
   };
 
-  const handleToggleFeatured = async (reviewId: string, isFeatured: boolean) => {
-    const token = localStorage.getItem('accessToken');
-    try {
-      await fetch('/api/testimonials/feature', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ reviewId, isFeatured })
-      });
-      fetchTestimonials();
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
   const filteredTestimonials = testimonials.filter(t => {
     if (filter === 'featured') return t.isFeatured;
     if (filter === 'not-featured') return !t.isFeatured;
@@ -188,27 +174,17 @@ export default function AdminTestimonialsPage() {
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => handleToggleFeatured(testimonial.id, !testimonial.isFeatured)}
-                    className={`px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 transition-colors ${
-                      testimonial.isFeatured
-                        ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200'
-                        : 'bg-slate-100 text-slate-500 hover:bg-slate-200'
-                    }`}
-                    title="Bấm để bật/tắt nổi bật"
-                  >
-                    {testimonial.isFeatured ? (
-                      <>
-                        <CheckCircle className="w-3 h-3" />
-                        Đang hiển thị
-                      </>
-                    ) : (
-                      <>
-                        <XCircle className="w-3 h-3" />
-                        Chưa hiển thị
-                      </>
-                    )}
-                  </button>
+                  {testimonial.isFeatured ? (
+                    <span className="px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold flex items-center gap-1">
+                      <CheckCircle className="w-3 h-3" />
+                      Đang hiển thị
+                    </span>
+                  ) : (
+                    <span className="px-3 py-1 rounded-full bg-slate-100 text-slate-500 text-xs font-bold flex items-center gap-1">
+                      <XCircle className="w-3 h-3" />
+                      Chưa hiển thị
+                    </span>
+                  )}
                 </div>
               </div>
 

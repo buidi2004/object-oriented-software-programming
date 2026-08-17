@@ -9,14 +9,24 @@ namespace CloudServiceStore.Tests.DomainTests.Entities;
 public class SupportTicketTests
 {
     [Fact]
-    public void Constructor_ShouldInitializeCorrectly()
+    public void AddMessage_WithAttachment_ShouldAddMessage()
     {
         // Arrange
-        // TODO: var entity = new SupportTicket();
+        var customerId = Guid.NewGuid();
+        var ticket = new SupportTicket(customerId, "Test Ticket", TicketPriority.High);
+        
+        var senderId = Guid.NewGuid();
+        var message = "Test Message";
+        var attachmentUrl = "/images/tickets/test.png";
 
         // Act
+        ticket.AddMessage(senderId, message, attachmentUrl);
 
         // Assert
-        Assert.True(true);
+        ticket.Messages.Should().HaveCount(1);
+        var addedMessage = System.Linq.Enumerable.First(ticket.Messages);
+        addedMessage.Message.Should().Be(message);
+        addedMessage.SenderId.Should().Be(senderId);
+        addedMessage.AttachmentUrl.Should().Be(attachmentUrl);
     }
 }

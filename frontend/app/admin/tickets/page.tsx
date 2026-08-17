@@ -60,22 +60,13 @@ export default function AdminTicketsPage() {
 
   const fetchTickets = async (token: string) => {
     try {
-      let data: any[] = [];
-      try {
-        const response = await fetch('/api/support-tickets', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        if (response.ok) data = await response.json();
-      } catch {}
-
-      if (!data || data.length === 0) {
-        const res2 = await fetch('/api/tickets/queue', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        if (res2.ok) data = await res2.json();
+      const response = await fetch('/api/tickets/queue', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setTickets(data);
       }
-
-      setTickets(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error('Failed to fetch tickets:', error);
     } finally {
@@ -86,36 +77,19 @@ export default function AdminTicketsPage() {
   const handleAssignTicket = async (ticketId: string, staffId: string) => {
     const token = localStorage.getItem('accessToken');
     try {
-      await fetch(`/api/support-tickets/${ticketId}/assign`, {
+      const response = await fetch(`/api/tickets/${ticketId}/assign`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ assignedToAdminId: staffId }),
-      });
-      await fetch(`/api/tickets/${ticketId}/assign`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        headers: { 
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}` 
+        },
         body: JSON.stringify({ staffId }),
       });
-      fetchTickets(token!);
+      if (response.ok) {
+        fetchTickets(token!);
+      }
     } catch (error) {
       console.error('Failed to assign ticket:', error);
-    }
-  };
-
-  const handleCloseTicket = async (ticketId: string) => {
-    const token = localStorage.getItem('accessToken');
-    try {
-      await fetch(`/api/support-tickets/${ticketId}/close`, {
-        method: 'PATCH',
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      await fetch(`/api/tickets/${ticketId}/close`, {
-        method: 'POST',
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      fetchTickets(token!);
-    } catch (err) {
-      console.error(err);
     }
   };
 

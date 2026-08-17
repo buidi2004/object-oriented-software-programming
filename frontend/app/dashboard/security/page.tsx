@@ -9,16 +9,7 @@ interface SessionDto {
   expiresAt: string;
   isRevoked: boolean;
 }
-
-interface LoginHistoryDto {
-  id: string;
-  ipAddress: string;
-  userAgent: string;
-  isSuccess: boolean;
-  loginAt: string;
-}
 import { api } from '@/src/lib/api';
-import { History } from 'lucide-react';
 
 export default function SecurityPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -29,12 +20,9 @@ export default function SecurityPage() {
   const [showConfirm, setShowConfirm] = useState(false);
   const [sessions, setSessions] = useState<SessionDto[]>([]);
   const [isSessionsLoading, setIsSessionsLoading] = useState(true);
-  const [loginHistory, setLoginHistory] = useState<LoginHistoryDto[]>([]);
-  const [isHistoryLoading, setIsHistoryLoading] = useState(true);
 
   useEffect(() => {
     fetchSessions();
-    fetchLoginHistory();
   }, []);
 
   const fetchSessions = async () => {
@@ -46,18 +34,6 @@ export default function SecurityPage() {
       console.error('Failed to load sessions', err);
     } finally {
       setIsSessionsLoading(false);
-    }
-  };
-
-  const fetchLoginHistory = async () => {
-    setIsHistoryLoading(true);
-    try {
-      const res = await api.get('/security/login-history');
-      setLoginHistory(res.data || []);
-    } catch (err) {
-      console.error('Failed to load login history', err);
-    } finally {
-      setIsHistoryLoading(false);
     }
   };
 
@@ -136,7 +112,7 @@ export default function SecurityPage() {
       <div>
         <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Bảo Mật Tài Khoản</h1>
         <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-          Quản lý mật khẩu, các phiên hoạt động và lịch sử đăng nhập thiết bị.
+          Quản lý mật khẩu và các thiết lập bảo mật 2 lớp.
         </p>
       </div>
 
@@ -248,54 +224,6 @@ export default function SecurityPage() {
               </button>
             </div>
           </form>
-
-          {/* Login History Table */}
-          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
-            <div className="p-6 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-slate-900 dark:text-white flex items-center gap-2">
-                <History className="w-5 h-5 text-blue-500" />
-                Lịch Sử Đăng Nhập Gần Đây
-              </h2>
-            </div>
-            <div className="overflow-x-auto">
-              {isHistoryLoading ? (
-                <div className="p-6 flex justify-center"><Loader2 className="w-6 h-6 animate-spin text-slate-400" /></div>
-              ) : loginHistory.length === 0 ? (
-                <div className="p-6 text-center text-sm text-slate-500">Chưa có bản ghi lịch sử đăng nhập.</div>
-              ) : (
-                <table className="w-full text-sm text-left">
-                  <thead className="bg-slate-50 dark:bg-slate-800/50 text-slate-500 font-medium text-xs">
-                    <tr>
-                      <th className="px-6 py-3">Địa chỉ IP</th>
-                      <th className="px-6 py-3">Trình duyệt / Thiết bị</th>
-                      <th className="px-6 py-3">Trạng thái</th>
-                      <th className="px-6 py-3">Thời gian</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                    {loginHistory.slice(0, 10).map((hist) => (
-                      <tr key={hist.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30">
-                        <td className="px-6 py-3.5 font-mono text-slate-900 dark:text-white text-xs">{hist.ipAddress || '127.0.0.1'}</td>
-                        <td className="px-6 py-3.5 text-slate-600 dark:text-slate-300 max-w-xs truncate text-xs" title={hist.userAgent}>
-                          {hist.userAgent?.slice(0, 40) || 'Web Browser'}...
-                        </td>
-                        <td className="px-6 py-3.5">
-                          <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
-                            hist.isSuccess ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400' : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
-                          }`}>
-                            {hist.isSuccess ? 'Thành công' : 'Thất bại'}
-                          </span>
-                        </td>
-                        <td className="px-6 py-3.5 text-slate-500 text-xs">
-                          {new Date(hist.loginAt).toLocaleString('vi-VN')}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              )}
-            </div>
-          </div>
         </div>
 
         {/* Info Sidebar */}

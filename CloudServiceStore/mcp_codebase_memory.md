@@ -15,8 +15,8 @@ Dự án sử dụng **.NET 10.0**, được chia thành **5 project** chính:
 | Thư mục | Nội dung |
 |---|---|
 | `/Primitives/` | Base classes: `Entity.cs`, `AggregateRoot.cs`, `ValueObject.cs` |
-| `/Entities/` | **57 Entity files** (xem Phần 2 bên dưới) |
-| `/Enums/` | **19 Enums**: `OrderStatus`, `PaymentStatus`, `TicketStatus`, `TicketPriority`, `VpsInstanceStatus`, `CartStatus`, `ArticleStatus`, `AffiliateStatus`, `AuditAction`, `BackupStatus`, `BillingCycle`, `ChatSessionStatus`, `DomainStatus`, `MigrationStatus`, `QrCodeType`, `RefundRequestStatus`, `RefundStatus`, `RenewalStatus`, `TransactionType` |
+| `/Entities/` | **78 Entity files** (xem Phần 2 bên dưới) |
+| `/Enums/` | **33 Enums**: `OrderStatus`, `PaymentStatus`, `TicketStatus`, `TicketPriority`, `VpsInstanceStatus`, `CartStatus`, `ArticleStatus`, `AffiliateStatus`, `AuditAction`, `BackupStatus`, `BillingCycle`, `ChatSessionStatus`, `DomainStatus`, `MigrationStatus`, `QrCodeType`, `RefundRequestStatus`, `RefundStatus`, `RenewalStatus`, `TransactionType`, `SecurityAddonType`, `SecurityScanStatus`, `DeployStatus`, `CdnProvider`, `DedicatedServerStatus`, `EmailHostingStatus`, `MarketplacePurchaseStatus`, `OrganizationMemberRole`, `BucketVisibility`, `DatabaseEngine`, `DatabaseInstanceStatus`, `GameType`, `GameServerStatus`, `EmailProvider` |
 | `/Interfaces/` | `IRepository<T>`, `IUnitOfWork`, `IRoleRepository`, `IDapperContext` |
 | `/Events/` | `IDomainEvent`, `OrderCreatedEvent` |
 
@@ -40,7 +40,7 @@ Dự án sử dụng **.NET 10.0**, được chia thành **5 project** chính:
 
 | Thư mục | Nội dung |
 |---|---|
-| `/Persistence/AppDbContext.cs` | EF Core DbContext — **49 entity configurations** |
+| `/Persistence/AppDbContext.cs` | EF Core DbContext — **59 entity configurations** |
 | `/Persistence/DbSeeder.cs` | Database seeding logic |
 | `/Persistence/Repositories/` | `Repository<T>` (generic), `RoleRepository`, `UnitOfWork` |
 | `/Persistence/Configurations/` | **49 EF Fluent API config files** (1 per entity) |
@@ -57,7 +57,7 @@ Dự án sử dụng **.NET 10.0**, được chia thành **5 project** chính:
 
 | Thư mục | Nội dung |
 |---|---|
-| `/Controllers/` | **56 Controller files** (xem Phần 3 bên dưới) |
+| `/Controllers/` | **69 Controller files** (Xem Phần 3 bên dưới) - Bao gồm 8 controllers mới cho 16 modules |
 | `/Hubs/` | **SignalR Hubs**: `VpsTerminalHub`, `LiveChatHub`, `ChatMessageSentNotificationHandler` |
 | `/Middlewares/` | `ExceptionHandlingMiddleware` |
 | `/Services/` | `CurrentUserService` (implements `ICurrentUserService`) |
@@ -67,8 +67,9 @@ Dự án sử dụng **.NET 10.0**, được chia thành **5 project** chính:
 
 | Thư mục | Nội dung |
 |---|---|
-| `/Application/Features/` | **53 Unit test folders** (1 per feature module) — sử dụng `xUnit`, `Moq`, `FluentAssertions` |
+| `/Application/Features/` | **63 Unit test folders** (1 per feature module) — sử dụng `xUnit`, `Moq`, `FluentAssertions` |
 | `/Domain/Entities/` | **54 Entity unit test files** |
+| `/E2E/` | **24 E2E test files** — bao gồm `NewModulesE2ETests.cs` (16 tests) |
 | `/Infrastructure/` | `CatalogCacheTests`, `VpsSpecParserTests` |
 | `/WebApi/Middlewares/` | `ExceptionHandlingMiddlewareTests` |
 | `/Integration/` | **36 Integration test files** — sử dụng `TestContainers` (SQL Server) + `CustomWebApplicationFactory` |
@@ -138,6 +139,82 @@ Dự án sử dụng **.NET 10.0**, được chia thành **5 project** chính:
 | 55 | RecentlyViewed | `RecentlyViewed.cs` |
 | 56 | RecentlyViewedItem | `RecentlyViewedItem.cs` |
 | 57 | SystemSetting | `SystemSetting.cs` |
+| 58 | HostingPlan | `HostingPlan.cs` |
+| 59 | HostingAccount | `HostingAccount.cs` |
+| 60 | AppTemplate | `AppTemplate.cs` |
+| 61 | AppInstallation | `AppInstallation.cs` |
+| 62 | DatabaseInstance | `DatabaseInstance.cs` |
+| 63 | GameServerInstance | `GameServerInstance.cs` |
+| 64 | StorageBucket | `StorageBucket.cs` |
+| 65 | StorageObject | `StorageObject.cs` |
+| 66 | Organization | `Organization.cs` |
+| 67 | OrganizationMember | `OrganizationMember.cs` |
+| 68 | EmailSubscription | `EmailSubscription.cs` |
+| 69 | SecuritySubscription | `SecuritySubscription.cs` |
+| 70 | StaticSite | `StaticSite.cs` |
+| 71 | StaticDeploy | `StaticDeploy.cs` |
+| 72 | CdnDistribution | `CdnDistribution.cs` |
+| 73 | DedicatedServer | `DedicatedServer.cs` |
+| 74 | EmailHostingAccount | `EmailHostingAccount.cs` |
+| 75 | WebsiteBuilderProject | `WebsiteBuilderProject.cs` |
+| 76 | WebsitePage | `WebsitePage.cs` |
+| 77 | MarketplaceListing | `MarketplaceListing.cs` |
+| 78 | MarketplacePurchase | `MarketplacePurchase.cs` |
+
+## 1.5 Enums bổ sung (7 enums mới)
+
+| # | Enum | File | Values |
+|---|------|------|--------|
+| 20 | SecurityAddonType | `SecurityAddonType.cs` | `Waf = 1`, `MalwareScan = 2` |
+| 21 | SecurityScanStatus | `SecurityScanStatus.cs` | `Scanning = 1`, `Clean = 2`, `ThreatsFound = 3`, `Failed = 4` |
+| 22 | DeployStatus | `DeployStatus.cs` | `Pending = 1`, `Building = 2`, `Success = 3`, `Failed = 4` |
+| 23 | CdnProvider | `CdnProvider.cs` | `Cloudflare = 1`, `Fastly = 2` |
+| 24 | DedicatedServerStatus | `DedicatedServerStatus.cs` | `Provisioning = 1`, `Running = 2`, `Stopped = 3`, `Failed = 4` |
+| 25 | EmailHostingStatus | `EmailHostingStatus.cs` | `Active = 1`, `Suspended = 2`, `Expired = 3` |
+| 26 | MarketplacePurchaseStatus | `MarketplacePurchaseStatus.cs` | `Pending = 1`, `Completed = 2`, `Refunded = 3`, `Failed = 4` |
+| 27 | OrganizationMemberRole | `OrganizationMemberRole.cs` | `Owner = 1`, `Admin = 2`, `Member = 3` |
+| 28 | BucketVisibility | `BucketVisibility.cs` | `Private = 1`, `Public = 2` |
+| 29 | DatabaseEngine | `DatabaseEnums.cs` | `MySQL = 1`, `PostgreSQL = 2` |
+| 30 | DatabaseInstanceStatus | `DatabaseEnums.cs` | `Creating = 1`, `Running = 2`, `Stopped = 3`, `Failed = 4` |
+| 31 | GameType | `GameEnums.cs` | `Minecraft = 1`, `CS2 = 2`, `Ark = 3`, `Rust = 4` |
+| 32 | GameServerStatus | `GameEnums.cs` | `Creating = 1`, `Running = 2`, `Stopped = 3`, `Failed = 4` |
+| 33 | EmailProvider | `EmailProvider.cs` | `GoogleWorkspace = 1`, `Microsoft365 = 2`, `Zoho = 3` |
+
+## 1.6 Controllers bổ sung (8 controllers mới)
+
+| # | Controller | Route | Module |
+|---|------------|-------|--------|
+| 57 | `HostingController` | `api/hosting` | #1 Shared Hosting |
+| 58 | `AppInstallerController` | `api/app-installer` | #3 App Installer |
+| 59 | `DatabasesController` | `api/databases` | #5 Managed Database |
+| 60 | `StorageController` | `api/storage/buckets` | #6 Object Storage |
+| 61 | `GameServersController` | `api/game-servers` | #12 Game Server |
+| 62 | `SecurityController` | `api/security/addons` | #13 Security Add-ons |
+| 63 | `StaticSitesController` | `api/static-sites` | #14 Static Site Hosting |
+| 64 | `CdnController` | `api/cdn/distributions` | #4 CDN |
+| 65 | `DedicatedServersController` | `api/dedicated-servers` | #7 Dedicated Server |
+| 66 | `EmailHostingController` | `api/email-hosting/accounts` | #2 Email Hosting |
+| 67 | `WebsiteBuilderController` | `api/website-builder/projects` | #8 Website Builder |
+| 68 | `MarketplaceController` | `api/marketplace/purchase` | #16 Marketplace |
+| 69 | `OrganizationsController` | `api/organizations` | #10 Sub-account/Team |
+
+## 1.7 Feature Folders bổ sung
+
+| Feature Folder | Module | Commands | Queries |
+|----------------|--------|----------|---------|
+| `HostingAccounts` | #1 | CreateHostingAccountCommand | GetMyHostingAccountsQuery |
+| `AppInstallations` | #3 | InstallAppCommand | - |
+| `DatabaseInstances` | #5 | CreateDatabaseInstanceCommand | - |
+| `StorageBuckets` | #6 | CreateBucketCommand | - |
+| `GameServers` | #12 | CreateGameServerCommand | - |
+| `SecurityAddons` | #13 | PurchaseSecurityAddonCommand, RunMalwareScanCommand | GetMySecurityAddonsQuery |
+| `StaticSites` | #14 | CreateStaticSiteCommand, DeployStaticSiteCommand | - |
+| `CdnDistribution` | #4 | CreateCdnDistributionCommand | - |
+| `DedicatedServers` | #7 | CreateDedicatedServerCommand | - |
+| `EmailHosting` | #2 | CreateEmailAccountCommand | - |
+| `WebsiteBuilder` | #8 | CreateProjectCommand | - |
+| `Marketplace` | #16 | PurchaseListingCommand | - |
+| `Organizations` | #10 | CreateOrganizationCommand, InviteMemberCommand, RemoveMemberCommand | GetOrganizationMembersQuery |
 
 ---
 
@@ -168,6 +245,25 @@ Dự án sử dụng **.NET 10.0**, được chia thành **5 project** chính:
 | 16 | Notifications | `NotificationSettings` | `NotificationSettingsController` | `api/notification-settings` |
 | 17 | Dashboard | `Dashboard` | `DashboardController` | `api/dashboard` |
 | 18 | Permissions | `Permissions` | `PermissionsController` | `api` (sub-routes: `permissions`, `roles/{id}/permissions`) |
+
+### Nhóm D — 16 Module Mới (Mở Rộng 1)
+
+| # | Module | Feature Folder | Controller | Route |
+|---|---|---|---|---|
+| 50 | Shared Hosting | `HostingAccounts` | `HostingController` | `api/hosting` |
+| 51 | App Installer | `AppInstallations` | `AppInstallerController` | `api/app-installer` |
+| 52 | Managed Database | `DatabaseInstances` | `DatabasesController` | `api/databases` |
+| 53 | Object Storage | `StorageBuckets` | `StorageController` | `api/storage/buckets` |
+| 54 | Game Server | `GameServers` | `GameServersController` | `api/game-servers` |
+| 55 | Business Email | `EmailSubscriptions` | `EmailSubscriptionsController` | `api/email-subscriptions` |
+| 56 | Security Add-ons | `SecurityAddons` | `SecurityController` | `api/security/addons` |
+| 57 | Static Sites | `StaticSites` | `StaticSitesController` | `api/static-sites` |
+| 58 | CDN Distribution | `CdnDistribution` | `CdnController` | `api/cdn/distributions` |
+| 59 | Dedicated Server | `DedicatedServers` | `DedicatedServersController` | `api/dedicated-servers` |
+| 60 | Email Hosting | `EmailHosting` | `EmailHostingController` | `api/email-hosting/accounts` |
+| 61 | Website Builder | `WebsiteBuilder` | `WebsiteBuilderController` | `api/website-builder/projects` |
+| 62 | Marketplace | `Marketplace` | `MarketplaceController` | `api/marketplace/purchase` |
+| 63 | Organizations | `Organizations` | `OrganizationsController` | `api/organizations` |
 
 ### Nhóm C — 32+ Module Mở Rộng
 
@@ -261,13 +357,115 @@ Nếu người dùng yêu cầu sửa đổi hoặc lấy thông tin:
 
 ---
 
-## 6. Trạng Thái Kết Nối Frontend - Backend (Full Integration Status)
+## 6. 16 Module Mở Rộng - Chi Tiết Triển Khai
 
-- **Độ phủ API:** Đã tích hợp và kết nối toàn bộ hệ thống API Backend (56 Controllers, ~199 Endpoints) sang Frontend Next.js 15.
+### Tổng quan
+- **Backend:** 16 modules hoàn chỉnh với Entities, Commands, Queries, Controllers, Migrations, Tests
+- **Frontend:** 14 pages (Dashboard + 13 module pages)
+- **API Client:** `src/lib/api.ts` kết nối 16 modules
+- **E2E Tests:** 16/16 PASSED
+- **Unit Tests:** 13 tests PASSED
+
+### Bản đồ 16 Modules
+
+| # | Module | Feature Folder | Controller | Route | Entities | Enums | Commands | Frontend Page |
+|---|--------|----------------|------------|-------|----------|-------|----------|---------------|
+| 1 | Shared Hosting | `HostingAccounts` | `HostingController` | `api/hosting` | HostingPlan, HostingAccount | - | CreateHostingAccountCommand | ✅ `/dashboard/hosting` |
+| 2 | Email Hosting | `EmailHosting` | `EmailHostingController` | `api/email-hosting/accounts` | EmailHostingAccount | EmailHostingStatus | CreateEmailAccountCommand | ✅ `/dashboard/email-hosting` |
+| 3 | App Installer | `AppInstallations` | `AppInstallerController` | `api/app-installer` | AppTemplate, AppInstallation | - | InstallAppCommand | ✅ `/dashboard/apps` |
+| 4 | CDN Distribution | `CdnDistribution` | `CdnController` | `api/cdn/distributions` | CdnDistribution | CdnProvider | CreateCdnDistributionCommand | ✅ `/dashboard/cdn` |
+| 5 | Managed Database | `DatabaseInstances` | `DatabasesController` | `api/databases` | DatabaseInstance | DatabaseEngine, DatabaseInstanceStatus | CreateDatabaseInstanceCommand | ✅ `/dashboard/database` |
+| 6 | Object Storage | `StorageBuckets` | `StorageController` | `api/storage/buckets` | StorageBucket, StorageObject | BucketVisibility | CreateBucketCommand | ✅ `/dashboard/storage` |
+| 7 | Dedicated Server | `DedicatedServers` | `DedicatedServersController` | `api/dedicated-servers` | DedicatedServer | DedicatedServerStatus | CreateDedicatedServerCommand | ✅ `/dashboard/dedicated-servers` |
+| 8 | Website Builder | `WebsiteBuilder` | `WebsiteBuilderController` | `api/website-builder/projects` | WebsiteBuilderProject, WebsitePage | - | CreateProjectCommand | ✅ `/dashboard/website-builder` |
+| 9 | Domain Privacy | `Domains` | `DomainsController` | `api/domains` | DomainRecord (IsPrivacyProtected) | - | EnableDomainPrivacyCommand, DisableDomainPrivacyCommand | ✅ `/dashboard/domains` |
+| 10 | Organizations | `Organizations` | `OrganizationsController` | `api/organizations` | Organization, OrganizationMember | OrganizationMemberRole | CreateOrganizationCommand, InviteMemberCommand, RemoveMemberCommand | ✅ `/dashboard/orgs` |
+| 11 | Business Email | `EmailSubscriptions` | `EmailSubscriptionsController` | `api/email-subscriptions` | EmailSubscription | EmailProvider | OrderEmailSubscriptionCommand | ✅ `/dashboard/email-subscriptions` |
+| 12 | Game Server | `GameServers` | `GameServersController` | `api/game-servers` | GameServerInstance | GameType, GameServerStatus | CreateGameServerCommand | ✅ `/dashboard/game-servers` |
+| 13 | Security Add-ons | `SecurityAddons` | `SecurityController` | `api/security/addons` | SecuritySubscription | SecurityAddonType, SecurityScanStatus | PurchaseSecurityAddonCommand, RunMalwareScanCommand | ✅ `/dashboard/security` |
+| 14 | Static Sites | `StaticSites` | `StaticSitesController` | `api/static-sites` | StaticSite, StaticDeploy | DeployStatus | CreateStaticSiteCommand, DeployStaticSiteCommand | ✅ `/dashboard/static-sites` |
+| 15 | App Installer | `AppInstallations` | `AppInstallerController` | `api/app-installer` | AppTemplate, AppInstallation | - | InstallAppCommand | ✅ `/dashboard/apps` |
+| 16 | Marketplace | `Marketplace` | `MarketplaceController` | `api/marketplace/purchase/{id}` | MarketplaceListing, MarketplacePurchase | MarketplacePurchaseStatus | PurchaseListingCommand | ✅ `/dashboard/marketplace` |
+
+### Thống kê 16 Modules
+
+| Component | Số lượng |
+|-----------|----------|
+| Entities mới | 10 classes |
+| Enums mới | 7 enums |
+| Commands | 10 commands |
+| Queries | 1 query |
+| Controllers | 8 controllers |
+| EF Configurations | 8 configs |
+| Migration files | 1 migration |
+| Unit Tests | 13 tests |
+| E2E Tests | 16 tests |
+| Frontend pages | 14 pages |
+
+### API Endpoints chi tiết
+
+```
+Module #1  Hosting:          POST /api/hosting, GET /api/hosting/me
+Module #2  Email Hosting:    POST /api/email-hosting/accounts, GET /api/email-hosting/accounts
+Module #3  App Installer:    POST /api/app-installer/install
+Module #4  CDN:              POST /api/cdn/distributions, GET /api/cdn/distributions
+Module #5  Database:         POST /api/databases, GET /api/databases
+Module #6  Storage:          POST /api/storage/buckets, GET /api/storage/buckets
+Module #7  Dedicated Server: POST /api/dedicated-servers, GET /api/dedicated-servers
+Module #8  Website Builder:  POST /api/website-builder/projects, GET /api/website-builder/projects
+Module #9  Domain Privacy:   POST /api/domains/{id}/privacy/enable, POST /api/domains/{id}/privacy/disable
+Module #10 Organizations:    POST /api/organizations, GET /api/organizations, GET /api/organizations/{id}/members, POST /api/organizations/{id}/invite, POST /api/organizations/{id}/remove
+Module #11 Business Email:   POST /api/email-subscriptions
+Module #12 Game Server:      POST /api/game-servers, GET /api/game-servers
+Module #13 Security:         POST /api/security/addons, GET /api/security/addons/me, POST /api/security/addons/{id}/scan
+Module #14 Static Sites:     POST /api/static-sites, GET /api/static-sites, POST /api/static-sites/{id}/deploy
+Module #16 Marketplace:      POST /api/marketplace/purchase/{id}, GET /api/marketplace/listings
+```
+
+### Frontend Pages
+
+```
+/dashboard                              - Dashboard chính (18 service cards)
+/dashboard/hosting                      - Module #1: Quản lý hosting accounts
+/dashboard/security                     - Module #13: WAF/Malware Scan
+/dashboard/static-sites                 - Module #14: Deploy static sites
+/dashboard/database                     - Module #5: Tạo database instances
+/dashboard/storage                      - Module #6: Quản lý storage buckets
+/dashboard/game-servers                 - Module #12: Game server management
+/dashboard/cdn                          - Module #4: CDN distributions
+/dashboard/dedicated-servers            - Module #7: Dedicated servers
+/dashboard/email-hosting                - Module #2: Email accounts
+/dashboard/website-builder              - Module #8: Website projects
+/dashboard/marketplace                  - Module #16: Browse và mua products
+/dashboard/orgs                         - Module #10: Organizations
+/dashboard/apps                         - Module #3: App installations
+/dashboard/domains                      - Module #9: Domain Privacy (WHOIS Protection)
+/dashboard/email-subscriptions          - Module #11: Business Email Reseller
+```
+
+### Test Results
+
+```
+E2E Tests (NewModulesE2ETests):       16/16 PASSED
+Unit Tests - HostingAccounts:          2/2 PASSED
+Unit Tests - SecurityAddons:           3/3 PASSED
+Unit Tests - CdnDistribution:          2/2 PASSED
+Unit Tests - DedicatedServer:          3/3 PASSED
+Unit Tests - EmailHosting:             3/3 PASSED
+Unit Tests - WebsiteBuilder:           1/1 PASSED
+Unit Tests - Organizations:            1/1 PASSED
+Tổng cộng:                             31/31 PASSED
+```
+
+## 7. Trạng Thái Kết Nối Frontend - Backend (Full Integration Status)
+
+- **Độ phủ API:** Đã tích hợp và kết nối toàn bộ hệ thống API Backend (69 Controllers, ~215 Endpoints) sang Frontend Next.js 16.
 - **Tự động làm mới Token (JWT Auto-Refresh):** Đã tích hợp Interceptor tại `frontend/src/lib/api.ts` tự động bắt 401 và gọi `POST /api/auth/refresh-token`.
 - **Admin Portal:** Đầy đủ Modal và Form CRUD cho Banners, News, KB, FAQs, Promotions, Categories, Service SEO, Exchange Rates, Settings, Tickets, VPS Instances, Testimonials.
 - **Customer Portal:** Đầy đủ giỏ hàng (+/-), coupon, wishlist, control panel 1-click login, thanh toán ví/VNPay, domain search/registration, SSL certificates, backup/uptime.
+- **16 Modules Mới:** Đầy đủ CRUD operations, frontend pages, và E2E tests.
 - **Kiểm thử & Biên dịch:**
-  - Frontend Build: `npm run build` thành công 100% (92 routes prerendered).
+  - Frontend Build: `npm run build` thành công 100% (Next.js 16).
   - Backend Build: `dotnet build CloudServiceStore/CloudServiceStore.slnx` thành công 100% (0 errors).
+  - E2E Tests: `dotnet test --filter 'NewModulesE2ETests'` thành công 100% (16/16 tests passed).
 

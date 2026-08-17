@@ -29,7 +29,7 @@ public class CreatePaymentCommandHandler : IRequestHandler<CreatePaymentCommand,
         
         var payment = new Payment(
             order.Id,
-            "VNPay",
+            "VietQR",
             idempotencyKey,
             order.TotalAmount
         );
@@ -37,7 +37,7 @@ public class CreatePaymentCommandHandler : IRequestHandler<CreatePaymentCommand,
         await _paymentRepo.AddAsync(payment, ct);
         await _uow.SaveChangesAsync(ct);
 
-        // Sandbox payment URL
-        return $"/sandbox/vnpay?key={idempotencyKey}&amount={order.TotalAmount}";
+        // VietQR payment image URL with MB Bank
+        return $"https://img.vietqr.io/image/MB-0987654321-compact.png?amount={order.TotalAmount:0}&addInfo={idempotencyKey}&accountName=CLOUD%20SERVICE%20STORE";
     }
 }

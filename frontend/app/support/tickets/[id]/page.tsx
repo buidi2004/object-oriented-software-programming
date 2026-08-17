@@ -66,39 +66,30 @@ export default function TicketDetailPage() {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-slate-50">
-        <Header />
-        <div className="flex flex-col items-center justify-center h-[60vh]">
-          <AlertCircle className="w-12 h-12 text-slate-400 mb-4" />
-          <h2 className="text-xl font-bold mb-2">Vui lòng đăng nhập</h2>
-        </div>
+      <div className="flex flex-col items-center justify-center h-[60vh]">
+        <AlertCircle className="w-12 h-12 text-slate-400 mb-4" />
+        <h2 className="text-xl font-bold mb-2">Vui lòng đăng nhập</h2>
       </div>
     );
   }
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-50">
-        <Header />
-        <div className="flex justify-center h-[60vh] items-center">
-          <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
-        </div>
+      <div className="flex justify-center h-[60vh] items-center">
+        <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
       </div>
     );
   }
 
   if (error || !ticket) {
     return (
-      <div className="min-h-screen bg-slate-50">
-        <Header />
-        <div className="flex flex-col items-center justify-center h-[60vh]">
-          <AlertCircle className="w-12 h-12 text-red-400 mb-4" />
-          <h2 className="text-xl font-bold mb-2">Đã có lỗi</h2>
-          <p className="text-slate-500 mb-6">{error}</p>
-          <Link href="/support/tickets" className="px-6 py-2 bg-slate-200 hover:bg-slate-300 rounded-lg font-bold transition-colors">
-            Quay lại danh sách
-          </Link>
-        </div>
+      <div className="flex flex-col items-center justify-center h-[60vh]">
+        <AlertCircle className="w-12 h-12 text-red-400 mb-4" />
+        <h2 className="text-xl font-bold mb-2">Đã có lỗi</h2>
+        <p className="text-slate-500 mb-6">{error}</p>
+        <Link href="/support/tickets" className="px-6 py-2 bg-slate-200 hover:bg-slate-300 rounded-lg font-bold transition-colors">
+          Quay lại danh sách
+        </Link>
       </div>
     );
   }
@@ -146,10 +137,8 @@ export default function TicketDetailPage() {
   const isClosed = ticket.status.toLowerCase() === 'closed';
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col h-screen">
-      <Header />
-      
-      <div className="flex-1 flex flex-col max-w-4xl mx-auto w-full px-4 py-6 max-h-[calc(100vh-80px)]">
+    <div className="py-6">
+      <div className="max-w-4xl mx-auto w-full px-4">
         {/* Top Navigation */}
         <div className="flex items-center justify-between mb-4 shrink-0">
           <Link href="/support/tickets" className="inline-flex items-center gap-2 text-slate-600 hover:text-slate-900 font-medium">

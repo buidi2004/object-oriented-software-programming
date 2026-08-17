@@ -20,6 +20,7 @@ public class AppUser : AggregateRoot
     public Guid RoleId { get; internal set; }
     public bool IsActive { get; internal set; }
     public DateTime CreatedAt { get; internal set; }
+    public string? AvatarUrl { get; internal set; }
     
     public Role Role { get; internal set; } = null!;
 
@@ -80,5 +81,10 @@ public class AppUser : AggregateRoot
     public void Activate()
     {
         IsActive = true;
+    }
+
+    public void UpdateAvatarUrl(string avatarUrl)
+    {
+        AvatarUrl = avatarUrl;
     }
 }

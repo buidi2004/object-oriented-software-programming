@@ -18,6 +18,7 @@ public class ServicePlan : AggregateRoot
     public string? MetaDescription { get; internal set; }
     public string? Keywords { get; internal set; }
     public string? OpenGraphImage { get; internal set; }
+    public string? ImageUrl { get; internal set; }
 
     public ServiceCategory Category { get; internal set; } = null!;
     
@@ -45,13 +46,22 @@ public class ServicePlan : AggregateRoot
         IsActive = true;
     }
 
-    public void UpdateDetails(string name, string? cpu, string? ram, string? ssd, string? bandwidth)
+    public void UpdateDetails(string name, string? cpu, string? ram, string? ssd, string? bandwidth, string? imageUrl = null)
     {
         Name = name;
         Cpu = cpu;
         Ram = ram;
         Ssd = ssd;
         Bandwidth = bandwidth;
+        if (imageUrl != null)
+        {
+            ImageUrl = imageUrl;
+        }
+    }
+
+    public void UpdateImageUrl(string imageUrl)
+    {
+        ImageUrl = imageUrl;
     }
 
     public void UpdateSeo(string? metaTitle, string? metaDescription, string? keywords, string? openGraphImage)
@@ -60,6 +70,11 @@ public class ServicePlan : AggregateRoot
         MetaDescription = metaDescription;
         Keywords = keywords;
         OpenGraphImage = openGraphImage;
+    }
+
+    public void UpdateOpenGraphImage(string url)
+    {
+        OpenGraphImage = url;
     }
 
     public void AddPrice(PlanPrice price)

@@ -4,11 +4,9 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Heart, ShoppingCart, Trash2, Server, Globe, ShieldCheck } from 'lucide-react';
-import { useCartStore } from '@/src/store/useCartStore';
 
 interface WishlistItem {
   id: string;
-  servicePlanId?: string;
   type: 'vps' | 'hosting' | 'domain';
   title: string;
   description: string;
@@ -20,7 +18,6 @@ export default function WishlistPage() {
   const router = useRouter();
   const [items, setItems] = useState<WishlistItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const addItem = useCartStore((state) => state.addItem);
 
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
@@ -60,14 +57,9 @@ export default function WishlistPage() {
     }
   };
 
-  const addToCart = async (item: WishlistItem) => {
-    try {
-      await addItem(item.servicePlanId || item.id, 1, true);
-      router.push('/cart');
-    } catch (error) {
-      console.error('Failed to add to cart:', error);
-      alert('Không thể thêm vào giỏ hàng. Vui lòng thử lại.');
-    }
+  const addToCart = (item: WishlistItem) => {
+    // TODO: Implement add to cart logic
+    console.log('Adding to cart:', item);
   };
 
   if (isLoading) {

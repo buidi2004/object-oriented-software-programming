@@ -4,15 +4,25 @@ using CloudServiceStore.Application.Features.Newsletters.Commands.SubscribeNewsl
 using CloudServiceStore.Application.Features.Newsletters.Commands.UnsubscribeNewsletter;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CloudServiceStore.WebApi.Controllers;
 
 [ApiController]
 [Route("api/newsletter")]
+[Route("api/newsletters")]
 public class NewsletterController : ControllerBase
 {
     private readonly IMediator _mediator;
     public NewsletterController(IMediator mediator) => _mediator = mediator;
+
+    [HttpGet]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> GetAll([FromServices] CloudServiceStore.Domain.Interfaces.IRepository<CloudServiceStore.Domain.Entities.NewsletterSubscriber> repo, CancellationToken ct)
+    {
+        var list = await repo.GetAllAsync();
+        return Ok(list);
+    }
 
     [HttpPost("subscribe")]
     public async Task<IActionResult> Subscribe([FromBody] SubscribeNewsletterCommand command, CancellationToken ct)

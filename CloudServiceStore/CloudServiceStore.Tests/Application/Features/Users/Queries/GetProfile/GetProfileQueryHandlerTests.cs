@@ -18,20 +18,22 @@ public class GetProfileQueryHandlerTests
 {
     private readonly Mock<IRepository<AppUser>> _mockRepositoryAppUser;
     private readonly Mock<ICurrentUserService> _mockCurrentUserService;
+    private readonly Mock<IUnitOfWork> _mockUnitOfWork;
     private readonly GetProfileQueryHandler _handler;
 
     public GetProfileQueryHandlerTests()
     {
         _mockRepositoryAppUser = new Mock<IRepository<AppUser>>();
         _mockCurrentUserService = new Mock<ICurrentUserService>();
-        _handler = new GetProfileQueryHandler(_mockRepositoryAppUser.Object, _mockCurrentUserService.Object);
+        _mockUnitOfWork = new Mock<IUnitOfWork>();
+        _handler = new GetProfileQueryHandler(_mockRepositoryAppUser.Object, _mockCurrentUserService.Object, _mockUnitOfWork.Object);
     }
 
     [Fact]
     public async Task Handle_ShouldExecuteSuccessfully_WhenRequestIsValid()
     {
         // Arrange
-        // var request = new GetProfileQuery();
+        var request = new GetProfileQuery();
         var cancellationToken = new CancellationToken();
 
         // Act

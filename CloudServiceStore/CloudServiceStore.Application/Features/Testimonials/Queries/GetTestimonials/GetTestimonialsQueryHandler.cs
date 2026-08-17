@@ -20,7 +20,11 @@ public class GetTestimonialsQueryHandler : IRequestHandler<GetTestimonialsQuery,
 
     public async Task<IReadOnlyList<TestimonialDto>> Handle(GetTestimonialsQuery request, CancellationToken cancellationToken)
     {
-        var reviews = await _repo.WhereAsync(r => r.IsFeatured && r.IsApproved, cancellationToken);
+        var reviews = request.FeaturedOnly 
+            ? await _repo.WhereAsync(r => r.IsFeatured && r.IsApproved, cancellationToken)
+            : await _repo.WhereAsync(r => r.IsApproved, cancellationToken);
+
+        reviews = reviews.OrderByDescending(r => r.CreatedAt).ToList();
         
         return reviews.Select(r => new TestimonialDto
         {
@@ -29,7 +33,8 @@ public class GetTestimonialsQueryHandler : IRequestHandler<GetTestimonialsQuery,
             ReviewerName = r.User?.FullName ?? "Unknown", // Assuming user is included in query via EF or eager loading. 
             Rating = r.Rating,
             Comment = r.Comment,
+            IsFeatured = r.IsFeatured,
             CreatedAt = r.CreatedAt
-        }).OrderByDescending(x => x.CreatedAt).ToList();
+        }).ToList();
     }
 }

@@ -32,6 +32,11 @@ public class JwtTokenGenerator : ITokenGenerator
             new Claim("role", roleName)
         };
 
+        if (roleName == "Admin" || roleName == "Editor" || roleName == "Staff")
+        {
+            claims.Add(new Claim(ClaimTypes.Role, "Customer"));
+        }
+
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Secret));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 

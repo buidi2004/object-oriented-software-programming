@@ -9,18 +9,20 @@ public class TicketMessage : AggregateRoot
     public Guid SenderId { get; internal set; }
     public string Message { get; internal set; } = null!;
     public DateTime CreatedAt { get; internal set; }
+    public string? AttachmentUrl { get; internal set; }
     
     public SupportTicket Ticket { get; internal set; } = null!;
     public AppUser Sender { get; internal set; } = null!;
 
     internal TicketMessage() { }
 
-    internal TicketMessage(Guid ticketId, Guid senderId, string message)
+    internal TicketMessage(Guid ticketId, Guid senderId, string message, string? attachmentUrl = null)
     {
         Id = Guid.NewGuid();
         TicketId = ticketId;
         SenderId = senderId;
         Message = message;
+        AttachmentUrl = attachmentUrl;
         CreatedAt = DateTime.UtcNow;
     }
 }

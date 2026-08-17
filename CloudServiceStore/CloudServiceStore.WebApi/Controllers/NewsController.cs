@@ -69,6 +69,36 @@ public class NewsController : ControllerBase
         await _mediator.Send(new DeleteNewsArticleCommand(id), ct);
         return NoContent();
     }
+
+    [HttpPost("{id:guid}/image")]
+    [Authorize(Roles = "Admin,Editor")]
+    public async Task<IActionResult> UploadImage(Guid id, Microsoft.AspNetCore.Http.IFormFile file, [FromServices] Microsoft.AspNetCore.Hosting.IWebHostEnvironment env, [FromServices] CloudServiceStore.Domain.Interfaces.IRepository<CloudServiceStore.Domain.Entities.NewsArticle> repo, [FromServices] CloudServiceStore.Domain.Interfaces.IUnitOfWork uow, CancellationToken ct)
+    {
+        if (file == null || file.Length == 0)
+            return BadRequest(new { message = "No file uploaded." });
+
+        var article = await repo.GetByIdAsync(id, ct);
+        if (article == null) return NotFound();
+
+        var uploadsFolder = System.IO.Path.Combine(env.WebRootPath ?? env.ContentRootPath, "images", "news");
+        if (!System.IO.Directory.Exists(uploadsFolder))
+            System.IO.Directory.CreateDirectory(uploadsFolder);
+
+        var fileName = $"{id}_{System.Guid.NewGuid().ToString("N")[..8]}{System.IO.Path.GetExtension(file.FileName)}";
+        var filePath = System.IO.Path.Combine(uploadsFolder, fileName);
+
+        using (var stream = new System.IO.FileStream(filePath, System.IO.FileMode.Create))
+        {
+            await file.CopyToAsync(stream, ct);
+        }
+
+        var imageUrl = $"/images/news/{fileName}";
+        article.UpdateThumbnailUrl(imageUrl);
+        repo.Update(article);
+        await uow.SaveChangesAsync(ct);
+
+        return Ok(new { imageUrl });
+    }
 }
 
 public record UpdateNewsArticleRequest(string Title, string Slug, string Content);

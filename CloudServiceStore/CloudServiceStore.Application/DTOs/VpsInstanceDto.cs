@@ -17,7 +17,8 @@ public record VpsInstanceDto(
     string PlanName,
     string? CustomerEmail,
     DateTime CreatedAt,
-    DateTime ExpiresAt);
+    DateTime ExpiresAt,
+    DateTime LastActiveAt);
 
 public static class VpsInstanceMapper
 {
@@ -35,7 +36,8 @@ public static class VpsInstanceMapper
             instance.PlanName,
             customerEmail ?? instance.User?.Email,
             instance.CreatedAt,
-            instance.ExpiresAt);
+            instance.ExpiresAt,
+            instance.LastActiveAt);
 
     public static string StatusToString(VpsInstanceStatus status) => status switch
     {

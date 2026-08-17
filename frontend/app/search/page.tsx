@@ -43,7 +43,7 @@ export default function GlobalSearchPage() {
 
     const fetchSearch = async () => {
       try {
-        const response = await api.get(`/global-search?q=${encodeURIComponent(query)}`);
+        const response = await api.get(`/search?q=${encodeURIComponent(query)}`);
         if (response.data && Array.isArray(response.data)) {
           const mappedResults: SearchResult[] = response.data.map((item: any) => ({
             type: item.type === 'Article' ? 'article' : item.type === 'ServicePlan' ? 'service' : 'vps',

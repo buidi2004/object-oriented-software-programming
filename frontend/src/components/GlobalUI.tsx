@@ -20,7 +20,10 @@ export const GlobalUI = () => {
     ui.setAuthModal(false, 'login');
   };
 
-  const handleAuthSuccess = () => {
+  const handleAuthSuccess = async () => {
+    // Synchronize guest cart items immediately to backend
+    await cart.syncGuestCart();
+
     const redirect = ui.authRedirect;
     ui.setAuthRedirect(null);
     ui.setAuthModal(false, 'login');
@@ -29,7 +32,6 @@ export const GlobalUI = () => {
       router.push(redirect);
       return;
     }
-    ui.setIsDashboardOpen(true);
   };
 
   return (

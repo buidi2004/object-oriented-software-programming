@@ -13,6 +13,7 @@ namespace CloudServiceStore.WebApi.Controllers;
 
 [ApiController]
 [Route("api/chats")]
+[Route("api/live-chats")]
 [Authorize]
 public class LiveChatsController : ControllerBase
 {
@@ -48,6 +49,7 @@ public class LiveChatsController : ControllerBase
     }
 
     [HttpGet("active")]
+    [HttpGet("admin/active")]
     [Authorize] // Can add Role check here if needed (e.g. Admin or Editor)
     public async Task<IActionResult> GetActiveSessions(CancellationToken ct)
     {

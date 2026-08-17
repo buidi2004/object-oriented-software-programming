@@ -78,6 +78,88 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.ToTable("ApiKeys");
                 });
 
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.AppInstallation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ContainerId")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("HostingAccountId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("InstallUrl")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("TemplateId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("HostingAccountId");
+
+                    b.HasIndex("TemplateId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AppInstallations");
+                });
+
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.AppTemplate", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("DockerImage")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsFree")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AppTemplates");
+                });
+
             modelBuilder.Entity("CloudServiceStore.Domain.Entities.AppUser", b =>
                 {
                     b.Property<Guid>("Id")
@@ -85,6 +167,9 @@ namespace CloudServiceStore.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("AddressLine")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AvatarUrl")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("City")
@@ -149,9 +234,6 @@ namespace CloudServiceStore.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ArticleId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -159,12 +241,18 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("IsApproved")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("NewsArticleId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ArticleId");
+                    b.HasIndex("NewsArticleId");
 
                     b.HasIndex("UserId");
 
@@ -344,6 +432,47 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.ToTable("CartReminders");
                 });
 
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.CdnDistribution", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("CachePurged")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("CachedRequests")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Cname")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("HttpsEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("OriginUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("TotalBandwidthBytes")
+                        .HasColumnType("bigint");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CdnDistributions");
+                });
+
             modelBuilder.Entity("CloudServiceStore.Domain.Entities.ChatMessage", b =>
                 {
                     b.Property<Guid>("Id")
@@ -355,7 +484,8 @@ namespace CloudServiceStore.Infrastructure.Migrations
 
                     b.Property<string>("Message")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
 
                     b.Property<Guid>("SenderId")
                         .HasColumnType("uniqueidentifier");
@@ -369,7 +499,7 @@ namespace CloudServiceStore.Infrastructure.Migrations
 
                     b.HasIndex("SessionId");
 
-                    b.ToTable("ChatMessages");
+                    b.ToTable("ChatMessages", (string)null);
                 });
 
             modelBuilder.Entity("CloudServiceStore.Domain.Entities.ChatSession", b =>
@@ -392,7 +522,7 @@ namespace CloudServiceStore.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ChatSessions");
+                    b.ToTable("ChatSessions", (string)null);
                 });
 
             modelBuilder.Entity("CloudServiceStore.Domain.Entities.ControlPanelCredential", b =>
@@ -459,6 +589,101 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.ToTable("Coupons");
                 });
 
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.DatabaseInstance", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ConnectionString")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Engine")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int>("Port")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Version")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("DatabaseInstances");
+                });
+
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.DedicatedServer", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CpuModel")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("DiskBytes")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("OsImage")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("ProvisionedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("RamGb")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("RemoteAccessEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ServerName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<long>("Status")
+                        .HasColumnType("bigint");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DedicatedServers");
+                });
+
             modelBuilder.Entity("CloudServiceStore.Domain.Entities.DnsRecord", b =>
                 {
                     b.Property<Guid>("Id")
@@ -505,6 +730,9 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.Property<DateTime>("ExpiryDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("IsPrivacyProtected")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -526,6 +754,46 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("DomainRecords");
+                });
+
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.EmailHostingAccount", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Domain")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("HasCustomDomain")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("MailboxSizeMb")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MaxMailboxes")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("EmailHostingAccounts");
                 });
 
             modelBuilder.Entity("CloudServiceStore.Domain.Entities.ExchangeRate", b =>
@@ -587,6 +855,50 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.ToTable("Faqs", (string)null);
                 });
 
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.GameServerInstance", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ContainerId")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("GameType")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Port")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ServerName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("GameServerInstances");
+                });
+
             modelBuilder.Entity("CloudServiceStore.Domain.Entities.GiftCard", b =>
                 {
                     b.Property<Guid>("Id")
@@ -616,6 +928,88 @@ namespace CloudServiceStore.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("GiftCards", (string)null);
+                });
+
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.HostingAccount", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ContainerId")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("ControlPanelUrl")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("DiskUsedGb")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("PlanId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PlanId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("HostingAccounts");
+                });
+
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.HostingPlan", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("BandwidthGb")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<int>("DiskGb")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsFeatured")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("MaxUsers")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("HostingPlans");
                 });
 
             modelBuilder.Entity("CloudServiceStore.Domain.Entities.Invoice", b =>
@@ -777,6 +1171,84 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.ToTable("LoyaltyTransactions", (string)null);
                 });
 
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.MarketplaceListing", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Downloads")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("PreviewImage")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("SellerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MarketplaceListings");
+                });
+
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.MarketplacePurchase", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BuyerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("DownloadUrl")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<Guid>("ListingId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("PaymentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("PurchasedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long>("Status")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MarketplacePurchases");
+                });
+
             modelBuilder.Entity("CloudServiceStore.Domain.Entities.MigrationRequest", b =>
                 {
                     b.Property<Guid>("Id")
@@ -822,6 +1294,9 @@ namespace CloudServiceStore.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("PublishedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Slug")
                         .IsRequired()
                         .HasMaxLength(256)
@@ -830,9 +1305,23 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
+                    b.Property<string>("Tags")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("ThumbnailUrl")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<int>("ViewCount")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
 
                     b.HasKey("Id");
 
@@ -841,7 +1330,7 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.HasIndex("Slug")
                         .IsUnique();
 
-                    b.ToTable("NewsArticles");
+                    b.ToTable("NewsArticles", (string)null);
                 });
 
             modelBuilder.Entity("CloudServiceStore.Domain.Entities.NewsletterSubscriber", b =>
@@ -1324,7 +1813,8 @@ namespace CloudServiceStore.Infrastructure.Migrations
 
                     b.HasIndex("PermissionId");
 
-                    b.HasIndex("RoleId");
+                    b.HasIndex("RoleId", "PermissionId")
+                        .IsUnique();
 
                     b.ToTable("RolePermissions");
                 });
@@ -1359,6 +1849,36 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("SavedPaymentMethods", (string)null);
+                });
+
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.SecuritySubscription", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<long>("AddonType")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("SubscribedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("TargetResourceId")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId", "TargetResourceId", "AddonType");
+
+                    b.ToTable("SecuritySubscriptions");
                 });
 
             modelBuilder.Entity("CloudServiceStore.Domain.Entities.ServiceCategory", b =>
@@ -1397,6 +1917,9 @@ namespace CloudServiceStore.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Cpu")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsActive")
@@ -1493,6 +2016,148 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.ToTable("SslCertificates");
                 });
 
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.StaticDeploy", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("FinishedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("GitCommitHash")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.Property<DateTime>("StartedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("StaticSiteId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<long>("Status")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StaticSiteId");
+
+                    b.ToTable("StaticDeploys");
+                });
+
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.StaticSite", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("BuildCommand")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CustomDomain")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DeployUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("OutputDirectory")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("SourceSizeBytes")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("TotalDeploys")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("StaticSites");
+                });
+
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.StorageBucket", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<long>("SizeBytes")
+                        .HasColumnType("bigint");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Visibility")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("StorageBucket");
+                });
+
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.StorageObject", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BucketId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<long>("SizeBytes")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("UploadedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BucketId");
+
+                    b.ToTable("StorageObject");
+                });
+
             modelBuilder.Entity("CloudServiceStore.Domain.Entities.SupportTicket", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1535,13 +2200,16 @@ namespace CloudServiceStore.Infrastructure.Migrations
 
                     b.Property<string>("Key")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Value")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Key")
+                        .IsUnique();
 
                     b.ToTable("SystemSettings");
                 });
@@ -1551,6 +2219,9 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AttachmentUrl")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -1713,6 +2384,72 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.ToTable("WalletTransactions");
                 });
 
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.WebsiteBuilderProject", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsPublished")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LiveUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime?>("PublishedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("TemplateId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("WebsiteBuilderProjects");
+                });
+
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.WebsitePage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ContentJson")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(max)")
+                        .HasDefaultValue("{}");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PageName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("WebsitePages");
+                });
+
             modelBuilder.Entity("CloudServiceStore.Domain.Entities.WishlistItem", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1749,6 +2486,33 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.AppInstallation", b =>
+                {
+                    b.HasOne("CloudServiceStore.Domain.Entities.HostingAccount", "HostingAccount")
+                        .WithMany()
+                        .HasForeignKey("HostingAccountId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("CloudServiceStore.Domain.Entities.AppTemplate", "Template")
+                        .WithMany()
+                        .HasForeignKey("TemplateId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("CloudServiceStore.Domain.Entities.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("HostingAccount");
+
+                    b.Navigation("Template");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("CloudServiceStore.Domain.Entities.AppUser", b =>
                 {
                     b.HasOne("CloudServiceStore.Domain.Entities.Role", "Role")
@@ -1764,7 +2528,7 @@ namespace CloudServiceStore.Infrastructure.Migrations
                 {
                     b.HasOne("CloudServiceStore.Domain.Entities.NewsArticle", "Article")
                         .WithMany()
-                        .HasForeignKey("ArticleId")
+                        .HasForeignKey("NewsArticleId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -1879,6 +2643,17 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.DatabaseInstance", b =>
+                {
+                    b.HasOne("CloudServiceStore.Domain.Entities.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("CloudServiceStore.Domain.Entities.DnsRecord", b =>
                 {
                     b.HasOne("CloudServiceStore.Domain.Entities.DomainRecord", "Domain")
@@ -1905,6 +2680,36 @@ namespace CloudServiceStore.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("OrderRequest");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.GameServerInstance", b =>
+                {
+                    b.HasOne("CloudServiceStore.Domain.Entities.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.HostingAccount", b =>
+                {
+                    b.HasOne("CloudServiceStore.Domain.Entities.HostingPlan", "Plan")
+                        .WithMany()
+                        .HasForeignKey("PlanId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("CloudServiceStore.Domain.Entities.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Plan");
 
                     b.Navigation("User");
                 });
@@ -2203,6 +3008,37 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.Navigation("Domain");
                 });
 
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.StaticDeploy", b =>
+                {
+                    b.HasOne("CloudServiceStore.Domain.Entities.StaticSite", null)
+                        .WithMany("Deploys")
+                        .HasForeignKey("StaticSiteId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.StorageBucket", b =>
+                {
+                    b.HasOne("CloudServiceStore.Domain.Entities.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.StorageObject", b =>
+                {
+                    b.HasOne("CloudServiceStore.Domain.Entities.StorageBucket", "Bucket")
+                        .WithMany()
+                        .HasForeignKey("BucketId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Bucket");
+                });
+
             modelBuilder.Entity("CloudServiceStore.Domain.Entities.SupportTicket", b =>
                 {
                     b.HasOne("CloudServiceStore.Domain.Entities.AppUser", "AssignedStaff")
@@ -2270,6 +3106,15 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.WebsitePage", b =>
+                {
+                    b.HasOne("CloudServiceStore.Domain.Entities.WebsiteBuilderProject", null)
+                        .WithMany("Pages")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("CloudServiceStore.Domain.Entities.WishlistItem", b =>
                 {
                     b.HasOne("CloudServiceStore.Domain.Entities.ServicePlan", "ServicePlan")
@@ -2317,9 +3162,19 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.Navigation("Reviews");
                 });
 
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.StaticSite", b =>
+                {
+                    b.Navigation("Deploys");
+                });
+
             modelBuilder.Entity("CloudServiceStore.Domain.Entities.SupportTicket", b =>
                 {
                     b.Navigation("Messages");
+                });
+
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.WebsiteBuilderProject", b =>
+                {
+                    b.Navigation("Pages");
                 });
 #pragma warning restore 612, 618
         }

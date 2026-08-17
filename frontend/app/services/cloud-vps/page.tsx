@@ -23,8 +23,7 @@ export default function CloudVpsPage() {
   const pageContent = SERVICE_PAGE_CONTENT.vps;
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <Header />
+    <div>
 
       {/* Hero */}
       <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-950 to-indigo-950 text-white py-20 sm:py-28">

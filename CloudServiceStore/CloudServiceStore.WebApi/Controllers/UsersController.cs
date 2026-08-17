@@ -4,12 +4,16 @@ using System.Threading.Tasks;
 using CloudServiceStore.Application.Features.Users.Commands.ChangeRole;
 using CloudServiceStore.Application.Features.Users.Commands.LockUser;
 using CloudServiceStore.Application.Features.Users.Commands.UpdateProfile;
+using CloudServiceStore.Application.Features.Users.Commands.UploadAvatar;
 using CloudServiceStore.Application.Features.Users.Queries.GetProfile;
 using CloudServiceStore.Application.Features.Users.Queries.GetUsers;
 using CloudServiceStore.Application.Features.Users.Queries.GetUserById;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Hosting;
+using System.IO;
 
 namespace CloudServiceStore.WebApi.Controllers;
 
@@ -66,6 +70,36 @@ public class UsersController : ControllerBase
     {
         await _mediator.Send(command, ct);
         return NoContent();
+    }
+
+    [HttpPost("me/avatar")]
+    [Authorize]
+    public async Task<IActionResult> UploadAvatar(IFormFile file, [FromServices] IWebHostEnvironment env, CancellationToken ct)
+    {
+        if (file == null || file.Length == 0)
+            return BadRequest(new { message = "Không có file được chọn." });
+
+        if (file.Length > 2 * 1024 * 1024)
+            return BadRequest(new { message = "Kích thước ảnh không được vượt quá 2MB." });
+
+        var uploadsFolder = Path.Combine(env.WebRootPath ?? env.ContentRootPath, "images", "avatars");
+        if (!Directory.Exists(uploadsFolder))
+        {
+            Directory.CreateDirectory(uploadsFolder);
+        }
+
+        var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+        var filePath = Path.Combine(uploadsFolder, fileName);
+
+        using (var stream = new FileStream(filePath, FileMode.Create))
+        {
+            await file.CopyToAsync(stream, ct);
+        }
+
+        var avatarUrl = $"/images/avatars/{fileName}";
+        await _mediator.Send(new UploadAvatarCommand(avatarUrl), ct);
+
+        return Ok(new { avatarUrl });
     }
 }
 

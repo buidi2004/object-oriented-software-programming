@@ -4,4 +4,7 @@ using MediatR;
 
 namespace CloudServiceStore.Application.Features.Testimonials.Queries.GetTestimonials;
 
-public class GetTestimonialsQuery : IRequest<IReadOnlyList<TestimonialDto>> { }
+public class GetTestimonialsQuery : IRequest<IReadOnlyList<TestimonialDto>> 
+{ 
+    public bool FeaturedOnly { get; set; } = true;
+}

@@ -18,9 +18,9 @@ public class TestimonialsController : ControllerBase
 
     [HttpGet]
     [AllowAnonymous]
-    public async Task<IActionResult> GetAll(CancellationToken ct)
+    public async Task<IActionResult> GetAll([FromQuery] bool featuredOnly, CancellationToken ct)
     {
-        var result = await _mediator.Send(new GetTestimonialsQuery(), ct);
+        var result = await _mediator.Send(new GetTestimonialsQuery { FeaturedOnly = featuredOnly }, ct);
         return Ok(result);
     }
 

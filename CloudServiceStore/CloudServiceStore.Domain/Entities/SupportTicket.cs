@@ -40,12 +40,12 @@ public class SupportTicket : AggregateRoot
         Status = TicketStatus.InProgress;
     }
 
-    public void AddMessage(Guid senderId, string messageContent)
+    public void AddMessage(Guid senderId, string messageContent, string? attachmentUrl = null)
     {
         if (Status == TicketStatus.Closed)
             throw new InvalidOperationException("Không thể trả lời ticket đã đóng.");
 
-        var message = new TicketMessage(Id, senderId, messageContent);
+        var message = new TicketMessage(Id, senderId, messageContent, attachmentUrl);
         _messages.Add(message);
     }
 

@@ -36,7 +36,7 @@ public class AddTicketMessageCommandHandler : IRequestHandler<AddTicketMessageCo
         var ticket = await _ticketRepo.GetByIdAsync(request.TicketId, ct)
             ?? throw new NotFoundException($"Ticket {request.TicketId} không tồn tại.");
 
-        ticket.AddMessage(userId, request.Message); // Domain logic throws if closed
+        ticket.AddMessage(userId, request.Message, request.AttachmentUrl); // Domain logic throws if closed
         
         var message = ticket.Messages.Last();
         await _messageRepo.AddAsync(message, ct);

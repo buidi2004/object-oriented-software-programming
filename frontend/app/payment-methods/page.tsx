@@ -59,26 +59,6 @@ export default function PaymentMethodsPage() {
     }
   };
 
-  const saveMethod = async (provider: string, maskedAccount: string) => {
-    const token = localStorage.getItem('accessToken');
-    try {
-      await fetch('/api/payment-methods', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        body: JSON.stringify({
-          paymentType: 'CreditCard',
-          provider,
-          maskedAccount,
-          isDefault: methods.length === 0
-        })
-      });
-      fetchPaymentMethods(token!);
-      setShowAddForm(false);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
   const setDefault = async (methodId: string) => {
     // TODO: Implement set default logic
     console.log('Setting default:', methodId);

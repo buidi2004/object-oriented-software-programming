@@ -6,6 +6,7 @@ using CloudServiceStore.Application.Features.ServicePlans.Commands.UpdateSeo;
 using CloudServiceStore.Application.Features.ServicePlans.Queries.GetServicePlanById;
 using CloudServiceStore.Application.Features.ServicePlans.Queries.GetServicePlanSeo;
 using CloudServiceStore.Application.Features.ServicePlans.Queries.GetServicePlansWithCurrency;
+using CloudServiceStore.Application.Features.ServicePlans.Queries.GetAllServicePlansAdmin;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -36,6 +37,15 @@ public class ServicePlansController : ControllerBase
         return Ok(prices);
     }
 
+    /// <summary>GET /api/service-plans/admin — Admin: get all plans</summary>
+    [HttpGet("admin")]
+    [Authorize(Roles = "Admin,Editor")]
+    public async Task<IActionResult> GetAllAdmin(CancellationToken ct)
+    {
+        var plans = await _mediator.Send(new GetAllServicePlansAdminQuery(), ct);
+        return Ok(plans);
+    }
+
     /// <summary>GET /api/service-plans/{id} — Public: full service plan detail</summary>
     [HttpGet("{id:guid}")]
     [AllowAnonymous]
@@ -63,5 +73,69 @@ public class ServicePlansController : ControllerBase
             return BadRequest("ID mismatch");
         await _mediator.Send(command, ct);
         return Ok();
+    }
+
+    [HttpPost("{id:guid}/og-image")]
+    [Authorize(Roles = "Admin,Editor")]
+    public async Task<IActionResult> UploadOgImage(Guid id, Microsoft.AspNetCore.Http.IFormFile file, [FromServices] Microsoft.AspNetCore.Hosting.IWebHostEnvironment env, [FromServices] CloudServiceStore.Domain.Interfaces.IRepository<CloudServiceStore.Domain.Entities.ServicePlan> repo, [FromServices] CloudServiceStore.Domain.Interfaces.IUnitOfWork uow, CancellationToken ct)
+    {
+        if (file == null || file.Length == 0)
+            return BadRequest(new { message = "Không có file được chọn." });
+
+        if (file.Length > 2 * 1024 * 1024)
+            return BadRequest(new { message = "Kích thước ảnh không được vượt quá 2MB." });
+
+        var plan = await repo.GetByIdAsync(id, ct);
+        if (plan == null) return NotFound(new { message = "Gói dịch vụ không tồn tại." });
+
+        var uploadsFolder = System.IO.Path.Combine(env.WebRootPath ?? env.ContentRootPath, "images", "products", "og");
+        if (!System.IO.Directory.Exists(uploadsFolder)) System.IO.Directory.CreateDirectory(uploadsFolder);
+
+        var fileName = $"{Guid.NewGuid()}{System.IO.Path.GetExtension(file.FileName)}";
+        var filePath = System.IO.Path.Combine(uploadsFolder, fileName);
+
+        using (var stream = new System.IO.FileStream(filePath, System.IO.FileMode.Create))
+        {
+            await file.CopyToAsync(stream, ct);
+        }
+
+        var imageUrl = $"/images/products/og/{fileName}";
+        plan.UpdateOpenGraphImage(imageUrl);
+        repo.Update(plan);
+        await uow.SaveChangesAsync(ct);
+
+        return Ok(new { openGraphImage = imageUrl });
+    }
+
+    [HttpPost("{id:guid}/image")]
+    [Authorize(Roles = "Admin,Editor")]
+    public async Task<IActionResult> UploadImage(Guid id, Microsoft.AspNetCore.Http.IFormFile file, [FromServices] Microsoft.AspNetCore.Hosting.IWebHostEnvironment env, [FromServices] CloudServiceStore.Domain.Interfaces.IRepository<CloudServiceStore.Domain.Entities.ServicePlan> repo, [FromServices] CloudServiceStore.Domain.Interfaces.IUnitOfWork uow, CancellationToken ct)
+    {
+        if (file == null || file.Length == 0)
+            return BadRequest(new { message = "Không có file được chọn." });
+
+        if (file.Length > 2 * 1024 * 1024)
+            return BadRequest(new { message = "Kích thước ảnh không được vượt quá 2MB." });
+
+        var plan = await repo.GetByIdAsync(id, ct);
+        if (plan == null) return NotFound(new { message = "Gói dịch vụ không tồn tại." });
+
+        var uploadsFolder = System.IO.Path.Combine(env.WebRootPath ?? env.ContentRootPath, "images", "products");
+        if (!System.IO.Directory.Exists(uploadsFolder)) System.IO.Directory.CreateDirectory(uploadsFolder);
+
+        var fileName = $"{Guid.NewGuid()}{System.IO.Path.GetExtension(file.FileName)}";
+        var filePath = System.IO.Path.Combine(uploadsFolder, fileName);
+
+        using (var stream = new System.IO.FileStream(filePath, System.IO.FileMode.Create))
+        {
+            await file.CopyToAsync(stream, ct);
+        }
+
+        var imageUrl = $"/images/products/{fileName}";
+        plan.UpdateImageUrl(imageUrl);
+        repo.Update(plan);
+        await uow.SaveChangesAsync(ct);
+
+        return Ok(new { imageUrl });
     }
 }

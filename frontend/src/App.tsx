@@ -39,26 +39,16 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] text-slate-900 font-sans antialiased selection:bg-blue-500 selection:text-white relative">
-      <Header
-        cartCount={cartItemsCount}
-        onOpenCart={() => setIsCartOpen(true)}
-        onOpenDashboard={() => setIsDashboardOpen(true)}
+    <>
+      <Hero
+        onStartClick={() => handleTabChange('vps')}
+        onPriceClick={() => handleTabChange('vps')}
       />
-
-      <main>
-        <Hero
-          onStartClick={() => handleTabChange('vps')}
-          onPriceClick={() => handleTabChange('vps')}
-        />
-        <DomainSearch onAddToCart={() => router.push('/services/ten-mien')} />
-        <VpsCalculator onAddToCart={() => router.push('/services/cloud-vps')} onViewDetails={handleViewServiceDetails} />
-        <HostingPlans onAddToCart={() => router.push('/services/web-hosting')} onViewDetails={handleViewServiceDetails} />
-        <InfrastructureFeatures />
-        <ContactSection />
-      </main>
-
-      <Footer />
-    </div>
+      <DomainSearch onAddToCart={() => router.push('/services/ten-mien')} />
+      <VpsCalculator onAddToCart={() => router.push('/services/cloud-vps')} onViewDetails={handleViewServiceDetails} />
+      <HostingPlans onAddToCart={() => router.push('/services/web-hosting')} onViewDetails={handleViewServiceDetails} />
+      <InfrastructureFeatures />
+      <ContactSection />
+    </>
   );
 }

@@ -52,24 +52,12 @@ export function LiveChatWidget() {
   }, []);
 
   const fetchMessages = useCallback(async (sid: string, authToken: string) => {
-    try {
-      const res = await fetch(`/api/chats/${sid}/messages`, {
-        headers: { Authorization: `Bearer ${authToken}` },
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setMessages(Array.isArray(data) ? data : []);
-        return;
-      }
-    } catch {}
-
-    try {
-      const fallbackRes = await fetch(`/api/livechat/sessions/${sid}/messages`);
-      if (fallbackRes.ok) {
-        const data = await fallbackRes.json();
-        setMessages(Array.isArray(data) ? data : []);
-      }
-    } catch {}
+    const res = await fetch(`/api/chats/${sid}/messages`, {
+      headers: { Authorization: `Bearer ${authToken}` },
+    });
+    if (!res.ok) return;
+    const data = await res.json();
+    setMessages(Array.isArray(data) ? data : []);
   }, []);
 
   // Load existing session when widget opens
@@ -82,15 +70,8 @@ export function LiveChatWidget() {
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
         if (data?.id) setSessionId(data.id);
-        else {
-          fetch('/api/livechat/sessions', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ customerName: 'User' })
-          }).then(r => r.ok ? r.json() : null).then(s => { if (s?.sessionId) setSessionId(s.sessionId); });
-        }
       })
-      .catch(() => {});
+      .catch((err) => console.error('Error fetching active session:', err));
   }, [isOpen, token, sessionId]);
 
   // Load messages when session is known
@@ -175,16 +156,12 @@ export function LiveChatWidget() {
         body: JSON.stringify(msgToSend),
       });
       if (!res.ok) {
-        // Try fallback endpoint
-        await fetch('/api/livechat/messages', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ sessionId: currentSessionId, content: msgToSend, sender: 'Customer' })
-        });
+        setSendError('Không thể gửi tin nhắn. Vui lòng thử lại.');
+        setInputValue(msgToSend);
+        return;
       }
       await fetchMessages(currentSessionId!, token);
-    } catch (err) {
-      console.error(err);
+    } catch {
       setSendError('Không thể gửi tin nhắn. Vui lòng thử lại.');
       setInputValue(msgToSend);
     }

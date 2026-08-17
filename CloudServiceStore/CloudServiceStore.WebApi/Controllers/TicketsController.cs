@@ -11,6 +11,9 @@ using CloudServiceStore.Application.Features.Tickets.Queries.GetTicketById;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Hosting;
+using System.IO;
 
 namespace CloudServiceStore.WebApi.Controllers;
 
@@ -31,9 +34,29 @@ public class TicketsController : ControllerBase
 
     [HttpPost("{id:guid}/messages")]
     [Authorize]
-    public async Task<IActionResult> AddMessage(Guid id, [FromBody] AddTicketMessageRequest body, CancellationToken ct)
+    public async Task<IActionResult> AddMessage(Guid id, [FromForm] string message, IFormFile? attachment, [FromServices] IWebHostEnvironment env, CancellationToken ct)
     {
-        var command = new AddTicketMessageCommand(id, body.Message);
+        string? attachmentUrl = null;
+        if (attachment != null && attachment.Length > 0)
+        {
+            if (attachment.Length > 5 * 1024 * 1024)
+                return BadRequest(new { message = "Kích thước file không được vượt quá 5MB." });
+
+            var uploadsFolder = Path.Combine(env.WebRootPath ?? env.ContentRootPath, "images", "tickets");
+            if (!Directory.Exists(uploadsFolder))
+                Directory.CreateDirectory(uploadsFolder);
+
+            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(attachment.FileName)}";
+            var filePath = Path.Combine(uploadsFolder, fileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await attachment.CopyToAsync(stream, ct);
+            }
+            attachmentUrl = $"/images/tickets/{fileName}";
+        }
+
+        var command = new AddTicketMessageCommand(id, message, attachmentUrl);
         var messageId = await _mediator.Send(command, ct);
         return CreatedAtAction(null, new { id = messageId });
     }

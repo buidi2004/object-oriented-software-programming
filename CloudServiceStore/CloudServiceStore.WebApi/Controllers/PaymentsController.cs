@@ -48,4 +48,78 @@ public class PaymentsController : ControllerBase
         await _mediator.Send(command, ct);
         return Ok(new { message = "Webhook processed" });
     }
+
+    [HttpPost("webhook/sepay")]
+    public async Task<IActionResult> SePayWebhook([FromBody] CloudServiceStore.Application.DTOs.SePayWebhookPayload payload, [FromServices] Microsoft.Extensions.Configuration.IConfiguration config, CancellationToken ct)
+    {
+        // 1. Verify API Key
+        var expectedApiKey = config["SePay:ApiKey"];
+        var authHeader = Request.Headers["Authorization"].ToString();
+        
+        if (string.IsNullOrEmpty(authHeader) || !authHeader.Equals($"Apikey {expectedApiKey}", StringComparison.OrdinalIgnoreCase))
+        {
+            return Unauthorized(new { message = "Invalid API Key" });
+        }
+
+        // 2. Ignore outgoing transfers
+        if (payload.TransferType != "in")
+        {
+            return Ok(new { message = "Ignored outgoing transfer" });
+        }
+
+        // 3. Extract Payment Code or Order ID from Content
+        // Assuming the customer writes "PAY_..." or just the Order Guid in the bank transfer content
+        var match = System.Text.RegularExpressions.Regex.Match(payload.Content, @"(?i)(PAY_[a-zA-Z0-9_-]+|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})");
+        var idempotencyKey = match.Success ? match.Value : payload.Content.Trim();
+
+        var command = new ConfirmPaymentWebhookCommand(idempotencyKey, payload.TransferAmount);
+        await _mediator.Send(command, ct);
+
+        return Ok(new { success = true, message = "SePay Webhook processed" });
+    }
+
+    [HttpPost("sandbox/simulate-sepay")]
+    [AllowAnonymous]
+    public async Task<IActionResult> SimulateSePay([FromBody] SimulateSePayRequest request, CancellationToken ct)
+    {
+        var command = new ConfirmPaymentWebhookCommand(request.IdempotencyKey, request.Amount);
+        await _mediator.Send(command, ct);
+        return Ok(new { success = true, message = "Sandbox SePay payment simulated successfully!" });
+    }
+
+    [HttpPost("webhook/momo")]
+    [AllowAnonymous]
+    public async Task<IActionResult> MomoWebhook([FromBody] MomoWebhookPayload payload, CancellationToken ct)
+    {
+        if (payload.ResultCode != 0)
+        {
+            return Ok(new { message = $"MoMo payment not successful. Code: {payload.ResultCode}", resultCode = payload.ResultCode });
+        }
+
+        var match = System.Text.RegularExpressions.Regex.Match(payload.OrderId, @"(?i)(PAY_[a-zA-Z0-9_-]+|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})");
+        var idempotencyKey = match.Success ? match.Value : payload.OrderId.Trim();
+
+        var command = new ConfirmPaymentWebhookCommand(idempotencyKey, payload.Amount);
+        await _mediator.Send(command, ct);
+
+        return Ok(new { message = "MoMo Webhook processed", resultCode = 0 });
+    }
+}
+
+public class SimulateSePayRequest
+{
+    public string IdempotencyKey { get; set; } = string.Empty;
+    public decimal Amount { get; set; }
+}
+
+public class MomoWebhookPayload
+{
+    public string PartnerCode { get; set; } = "MOMO";
+    public string OrderId { get; set; } = string.Empty;
+    public string RequestId { get; set; } = string.Empty;
+    public decimal Amount { get; set; }
+    public string OrderInfo { get; set; } = string.Empty;
+    public int ResultCode { get; set; }
+    public string Message { get; set; } = string.Empty;
+    public string TransId { get; set; } = string.Empty;
 }

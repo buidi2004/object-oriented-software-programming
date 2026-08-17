@@ -9,5 +9,6 @@ public class TestimonialDto
     public string ReviewerName { get; set; } = null!;
     public int Rating { get; set; }
     public string Comment { get; set; } = null!;
+    public bool IsFeatured { get; set; }
     public DateTime CreatedAt { get; set; }
 }

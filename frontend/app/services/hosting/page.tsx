@@ -15,8 +15,7 @@ export default function HostingPage() {
   const pageContent = SERVICE_PAGE_CONTENT.hosting;
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <Header />
+    <div>
 
       {/* Hero */}
       <section className="relative overflow-hidden bg-gradient-to-br from-indigo-950 via-purple-950 to-slate-900 text-white py-20 sm:py-28">

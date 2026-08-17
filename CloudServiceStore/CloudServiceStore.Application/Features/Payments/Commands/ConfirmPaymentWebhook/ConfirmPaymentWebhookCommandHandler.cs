@@ -20,7 +20,39 @@ public class ConfirmPaymentWebhookCommandHandler : IRequestHandler<ConfirmPaymen
 
     public async Task Handle(ConfirmPaymentWebhookCommand request, CancellationToken ct)
     {
-        var payment = await _paymentRepo.FirstOrDefaultAsync(p => p.IdempotencyKey == request.IdempotencyKey, ct);
+        var rawKey = request.IdempotencyKey ?? string.Empty;
+        var cleanKey = rawKey.StartsWith("PAY_", StringComparison.OrdinalIgnoreCase) 
+            ? rawKey.Substring(4) 
+            : rawKey;
+
+        var guidMatch = System.Text.RegularExpressions.Regex.Match(rawKey, @"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+        Guid parsedGuid = Guid.Empty;
+        if (guidMatch.Success)
+        {
+            Guid.TryParse(guidMatch.Value, out parsedGuid);
+        }
+        else
+        {
+            Guid.TryParse(cleanKey, out parsedGuid);
+        }
+
+        var payment = await _paymentRepo.FirstOrDefaultAsync(p => 
+            p.IdempotencyKey == rawKey || 
+            p.IdempotencyKey.Contains(rawKey) ||
+            p.IdempotencyKey.Contains(cleanKey) ||
+            (parsedGuid != Guid.Empty && p.OrderId == parsedGuid), ct);
+
+        if (payment == null && parsedGuid != Guid.Empty)
+        {
+            var directOrder = await _orderRepo.GetByIdAsync(parsedGuid, ct);
+            if (directOrder != null && directOrder.Status == OrderStatus.Pending)
+            {
+                payment = new Domain.Entities.Payment(directOrder.Id, "VietQR", rawKey, directOrder.TotalAmount);
+                await _paymentRepo.AddAsync(payment, ct);
+                await _uow.SaveChangesAsync(ct);
+            }
+        }
+
         if (payment == null) return; // Unknown payment, ignore (Idempotent)
 
         if (payment.Status == PaymentStatus.Confirmed)

@@ -27,9 +27,7 @@ export default function PublicKnowledgeBasePage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <Header />
-      <div className="py-8">
+    <div className="py-8">
         <div className="max-w-4xl mx-auto px-4">
         <h1 className="text-3xl font-black text-slate-900 mb-2">Trung tâm trợ giúp</h1>
         <p className="text-slate-500 mb-8">Hướng dẫn và tài liệu kỹ thuật</p>
@@ -64,8 +62,7 @@ export default function PublicKnowledgeBasePage() {
 
         {!isLoading && articles.length === 0 && !error && (
           <p className="text-center text-slate-500 py-12">Chưa có bài viết nào.</p>
-          )}
-        </div>
+        )}
       </div>
     </div>
   );

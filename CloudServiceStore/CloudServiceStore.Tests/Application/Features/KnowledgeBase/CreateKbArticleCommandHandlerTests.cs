@@ -7,6 +7,7 @@ using Xunit;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using CloudServiceStore.Application.Interfaces;
 
 namespace CloudServiceStore.Tests.Application.Features.KnowledgeBase;
 
@@ -14,13 +15,15 @@ public class CreateKbArticleCommandHandlerTests
 {
     private readonly Mock<IRepository<KnowledgeBaseArticle>> _kbRepositoryMock;
     private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+    private readonly Mock<ICurrentUserService> _currentUserServiceMock;
     private readonly CreateKbArticleCommandHandler _handler;
 
     public CreateKbArticleCommandHandlerTests()
     {
         _kbRepositoryMock = new Mock<IRepository<KnowledgeBaseArticle>>();
         _unitOfWorkMock = new Mock<IUnitOfWork>();
-        _handler = new CreateKbArticleCommandHandler(_kbRepositoryMock.Object, _unitOfWorkMock.Object);
+        _currentUserServiceMock = new Mock<ICurrentUserService>();
+        _handler = new CreateKbArticleCommandHandler(_kbRepositoryMock.Object, _unitOfWorkMock.Object, _currentUserServiceMock.Object);
     }
 
     [Fact]

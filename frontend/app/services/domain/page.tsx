@@ -56,8 +56,7 @@ export default function DomainPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <Header />
+    <div>
 
       {/* Hero with Search */}
       <section className="relative overflow-hidden bg-gradient-to-br from-cyan-950 via-teal-950 to-slate-900 text-white py-20 sm:py-28">

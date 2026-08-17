@@ -58,4 +58,9 @@ public class NewsArticle : AggregateRoot
     {
         ViewCount++;
     }
+
+    public void UpdateThumbnailUrl(string url)
+    {
+        ThumbnailUrl = url;
+    }
 }

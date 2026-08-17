@@ -29,7 +29,7 @@ public class CartsController : ControllerBase
 
     [HttpPost("items")]
     [Authorize(Roles = "Customer")]
-    public async Task<IActionResult> AddItem(AddToCartCommand command, CancellationToken ct)
+    public async Task<IActionResult> AddItem([FromBody] AddToCartCommand command, CancellationToken ct)
     {
         var id = await _mediator.Send(command, ct);
         return Ok(new { id });

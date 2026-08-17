@@ -78,7 +78,30 @@ public class AppDbContext : DbContext
     public DbSet<RolePermission> RolePermissions => Set<RolePermission>();
     public DbSet<RecentlyViewedItem> RecentlyViewedItems => Set<RecentlyViewedItem>();
     public DbSet<SystemSetting> SystemSettings => Set<SystemSetting>();
+    public DbSet<HostingPlan> HostingPlans => Set<HostingPlan>();
+    public DbSet<HostingAccount> HostingAccounts => Set<HostingAccount>();
+    public DbSet<AppTemplate> AppTemplates => Set<AppTemplate>();
+    public DbSet<AppInstallation> AppInstallations => Set<AppInstallation>();
+    public DbSet<DatabaseInstance> DatabaseInstances => Set<DatabaseInstance>();
+    public DbSet<GameServerInstance> GameServerInstances => Set<GameServerInstance>();
     public DbSet<PasswordResetToken> PasswordResetTokens => Set<PasswordResetToken>();
+    // Module #13: Security Add-ons
+    public DbSet<SecuritySubscription> SecuritySubscriptions => Set<SecuritySubscription>();
+    // Module #14: Static Site Hosting
+    public DbSet<StaticSite> StaticSites => Set<StaticSite>();
+    public DbSet<StaticDeploy> StaticDeploys => Set<StaticDeploy>();
+    // Module #4: CDN
+    public DbSet<CdnDistribution> CdnDistributions => Set<CdnDistribution>();
+    // Module #7: Dedicated Server
+    public DbSet<DedicatedServer> DedicatedServers => Set<DedicatedServer>();
+    // Module #2: Email Hosting
+    public DbSet<EmailHostingAccount> EmailHostingAccounts => Set<EmailHostingAccount>();
+    // Module #8: Website Builder
+    public DbSet<WebsiteBuilderProject> WebsiteBuilderProjects => Set<WebsiteBuilderProject>();
+    public DbSet<WebsitePage> WebsitePages => Set<WebsitePage>();
+    // Module #16: Marketplace
+    public DbSet<MarketplaceListing> MarketplaceListings => Set<MarketplaceListing>();
+    public DbSet<MarketplacePurchase> MarketplacePurchases => Set<MarketplacePurchase>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

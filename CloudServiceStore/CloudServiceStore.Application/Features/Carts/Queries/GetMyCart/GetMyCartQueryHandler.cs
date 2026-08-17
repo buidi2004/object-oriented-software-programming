@@ -30,7 +30,7 @@ public class GetMyCartQueryHandler : IRequestHandler<GetMyCartQuery, CartDto>
     {
         var userId = _currentUser.UserId ?? throw new UnauthorizedException("Người dùng chưa đăng nhập");
 
-        var cart = await _cartRepo.FirstOrDefaultAsync(c => c.UserId == userId && c.Status == CloudServiceStore.Domain.Enums.CartStatus.Active, ct);
+        var cart = await _cartRepo.FirstOrDefaultAsync(c => c.UserId == userId, ct);
 
         if (cart == null)
         {
@@ -51,7 +51,7 @@ public class GetMyCartQueryHandler : IRequestHandler<GetMyCartQuery, CartDto>
                     ELSE 'vps'
                 END as Type,
                 sp.Name as Title,
-                COALESCE('CPU: ' + sp.Cpu + ' Core - RAM: ' + sp.Ram + ' - SSD: ' + sp.Ssd, 'Cấu hình tiêu chuẩn') as Details,
+                COALESCE(CONCAT('CPU: ', sp.Cpu, ' Core - RAM: ', sp.Ram, ' - SSD: ', sp.Ssd), 'Cấu hình tiêu chuẩn') as Details,
                 COALESCE(pp.Price, 0) as Price,
                 CASE 
                     WHEN ci.BillingCycle = 1 THEN N'1 tháng' 

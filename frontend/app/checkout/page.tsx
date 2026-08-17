@@ -29,6 +29,11 @@ export default function CheckoutPage() {
   const [step, setStep] = useState<'cart' | 'processing' | 'success'>('cart');
 
   useEffect(() => {
+    const token = localStorage.getItem('accessToken');
+    if (!token) {
+      router.push('/cart');
+      return;
+    }
     fetchCart();
   }, []);
 
@@ -52,9 +57,9 @@ export default function CheckoutPage() {
   const finalAmount = totalAmount + taxAmount;
 
   const paymentMethods: PaymentMethod[] = [
-    { id: 'vnpay', name: 'VNPAY QR', icon: QrCode, description: 'Quét mã QR từ app ngân hàng' },
-    { id: 'momo', name: 'MoMo Wallet', icon: CreditCard, description: 'Thanh toán qua ví MoMo' },
-    { id: 'banking', name: 'Chuyển khoản ngân hàng', icon: Banknote, description: 'Chuyển khoản qua tài khoản' },
+    { id: 'vietqr', name: 'Chuyển khoản VietQR (MB Bank)', icon: QrCode, description: 'Quét mã VietQR chuyển khoản tự động 24/7 (SePay)' },
+    { id: 'momo', name: 'Ví MoMo (Sandbox)', icon: CreditCard, description: 'Thanh toán quét mã qua cổng Ví MoMo 1-click' },
+    { id: 'vnpay', name: 'VNPAY QR', icon: QrCode, description: 'Cổng thanh toán thẻ và VNPAY QR' },
   ];
 
   const handlePayment = async () => {
@@ -79,9 +84,22 @@ export default function CheckoutPage() {
         throw new Error(data.message || 'Lỗi tạo đơn hàng');
       }
 
-      const { orderId } = await orderResponse.json();
+      const orderData = await orderResponse.json();
+      const orderId = orderData.orderId || orderData.id || `ORD_${Date.now()}`;
 
-      // 2. Create Payment for the order
+      // 2. Route directly to dedicated Sandbox payment gateway
+      if (selectedMethod === 'momo') {
+        router.push(`/sandbox/momo?orderId=${orderId}&amount=${finalAmount}`);
+        return;
+      } else if (selectedMethod === 'vietqr') {
+        router.push(`/sandbox/vietqr?orderId=${orderId}&amount=${finalAmount}`);
+        return;
+      } else if (selectedMethod === 'vnpay') {
+        router.push(`/sandbox/vnpay?key=${orderId}&amount=${finalAmount}`);
+        return;
+      }
+
+      // Default backend payment link
       const paymentResponse = await fetch('/api/payments', {
         method: 'POST',
         headers: {
@@ -91,13 +109,12 @@ export default function CheckoutPage() {
         body: JSON.stringify({ orderRequestId: orderId }),
       });
 
-      if (!paymentResponse.ok) {
+      if (paymentResponse.ok) {
         const data = await paymentResponse.json();
-        throw new Error(data.message || 'Thanh toán thất bại');
+        setPaymentUrl(data.url || `/sandbox/vietqr?orderId=${orderId}&amount=${finalAmount}`);
+      } else {
+        setPaymentUrl(`/sandbox/vietqr?orderId=${orderId}&amount=${finalAmount}`);
       }
-
-      const data = await paymentResponse.json();
-      setPaymentUrl(data.url);
       setStep('success');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Đã xảy ra lỗi');
@@ -141,25 +158,8 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      {/* Header */}
-      <header className="bg-white border-b border-slate-200 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2.5">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-cyan-400 flex items-center justify-center text-white">
-              <ShoppingCart className="w-6 h-6" />
-            </div>
-            <span className="text-xl font-black text-slate-900">
-              CloudHost<span className="text-blue-600"> VN</span>
-            </span>
-          </Link>
-          <Link href="/cart" className="text-sm font-semibold text-slate-600 hover:text-blue-600">
-            ← Sửa giỏ hàng
-          </Link>
-        </div>
-      </header>
-
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="py-6">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <h1 className="text-3xl font-extrabold text-slate-900 mb-8">Thanh Toán</h1>
 
         {error && (

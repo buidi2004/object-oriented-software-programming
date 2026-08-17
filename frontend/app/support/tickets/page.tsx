@@ -22,11 +22,9 @@ export default function TicketsListPage() {
 
   useEffect(() => {
     if (user) {
-      api.get('/support-tickets/me')
+      api.get('/tickets/me')
         .then(res => setTickets(res.data))
-        .catch(() => {
-          api.get('/tickets/me').then(res => setTickets(res.data)).catch(() => {});
-        })
+        .catch(err => console.error(err))
         .finally(() => setLoading(false));
     } else {
       setLoading(false);
@@ -35,13 +33,10 @@ export default function TicketsListPage() {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-slate-50">
-        <Header />
-        <div className="flex flex-col items-center justify-center h-[60vh]">
-          <AlertCircle className="w-12 h-12 text-slate-400 mb-4" />
-          <h2 className="text-xl font-bold mb-2">Vui lòng đăng nhập</h2>
-          <p className="text-slate-500 mb-4">Bạn cần đăng nhập để xem các yêu cầu hỗ trợ.</p>
-        </div>
+      <div className="flex flex-col items-center justify-center h-[60vh]">
+        <AlertCircle className="w-12 h-12 text-slate-400 mb-4" />
+        <h2 className="text-xl font-bold mb-2">Vui lòng đăng nhập</h2>
+        <p className="text-slate-500 mb-4">Bạn cần đăng nhập để xem các yêu cầu hỗ trợ.</p>
       </div>
     );
   }
@@ -66,9 +61,7 @@ export default function TicketsListPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <Header />
-      <div className="py-8">
+    <div className="py-8">
         <div className="max-w-4xl mx-auto px-4">
           <div className="flex items-center justify-between mb-8">
             <div>
@@ -131,6 +124,5 @@ export default function TicketsListPage() {
           )}
         </div>
       </div>
-    </div>
   );
 }

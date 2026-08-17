@@ -1,184 +1,180 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ShoppingCart, Trash2, ArrowRight, ShieldCheck, Clock, Plus, Minus } from 'lucide-react';
+import { 
+  ShoppingCart, Trash2, ArrowRight, ShieldCheck, Clock, 
+  LogIn, UserCheck, AlertTriangle, Sparkles, CheckCircle2 
+} from 'lucide-react';
 import { CouponInput, useCoupon } from '@/components/CouponInput';
-
-interface CartItem {
-  id: string;
-  type: 'vps' | 'hosting' | 'domain';
-  title: string;
-  details: string;
-  price: number;
-  quantity?: number;
-  billingCycle: string;
-}
+import { useCartStore } from '@/src/store/useCartStore';
+import { useUIStore } from '@/src/store/useUIStore';
+import { useAuthStore } from '@/src/store/useAuthStore';
 
 export default function CartPage() {
   const router = useRouter();
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const { items: cartItems, isLoading, fetchCart, removeItem } = useCartStore();
+  const { setAuthModal, setAuthRedirect } = useUIStore();
+  const { user } = useAuthStore();
+  const [hasToken, setHasToken] = useState<boolean>(false);
   const { discount, applyCoupon, removeCoupon } = useCoupon();
 
   useEffect(() => {
     fetchCart();
-  }, []);
+    const token = localStorage.getItem('accessToken');
+    setHasToken(!!token || !!user);
+  }, [user]);
 
-  const fetchCart = async () => {
-    try {
-      const token = localStorage.getItem('accessToken');
-      const response = await fetch('/api/carts/me', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        setCartItems(data.items || []);
-      }
-    } catch (error) {
-      console.error('Failed to fetch cart:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const isLoggedIn = hasToken || !!user;
 
-  const updateQuantity = async (itemId: string, newQuantity: number) => {
-    if (newQuantity <= 0) {
-      await removeItem(itemId);
-      return;
-    }
-    try {
-      const token = localStorage.getItem('accessToken');
-      await fetch(`/api/carts/items/${itemId}`, {
-        method: 'PUT',
-        headers: { 
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}` 
-        },
-        body: JSON.stringify({ quantity: newQuantity }),
-      });
-      fetchCart();
-    } catch (error) {
-      console.error('Failed to update item quantity:', error);
-    }
-  };
-
-  const removeItem = async (itemId: string) => {
-    try {
-      const token = localStorage.getItem('accessToken');
-      await fetch(`/api/carts/items/${itemId}`, {
-        method: 'DELETE',
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      fetchCart();
-    } catch (error) {
-      console.error('Failed to remove item:', error);
-    }
-  };
-
-  const subtotal = cartItems.reduce((acc, item) => acc + item.price, 0);
-  const discountAmount = Math.round(subtotal * discount / 100);
+  const subtotal = cartItems.reduce((acc, item) => acc + (item.price * (item.quantity || 1)), 0);
+  const discountAmount = Math.round((subtotal * discount) / 100);
   const tax = Math.round((subtotal - discountAmount) * 0.08);
   const total = subtotal - discountAmount + tax;
 
+  const handleOpenAuth = (mode: 'login' | 'register') => {
+    setAuthRedirect('/cart');
+    setAuthModal(true, mode);
+  };
+
   const handleCheckout = () => {
+    const token = localStorage.getItem('accessToken');
+    if (!token && !user) {
+      setAuthRedirect('/checkout');
+      setAuthModal(true, 'login');
+      return;
+    }
     router.push('/checkout');
   };
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
+      <div className="py-24 flex flex-col items-center justify-center">
+        <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-4" />
+        <p className="text-slate-500 font-medium text-sm">Đang tải giỏ hàng...</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 py-8">
+    <div className="py-8 bg-slate-50 min-h-[calc(100vh-200px)]">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="mb-8">
-          <Link href="/services" className="text-sm text-blue-600 hover:text-blue-700 mb-4 inline-block">
-            ← Tiếp tục mua sắm
+        
+        {/* Breadcrumb & Title */}
+        <div className="mb-6">
+          <Link href="/services" className="text-sm font-semibold text-blue-600 hover:text-blue-700 mb-2 inline-flex items-center gap-1">
+            ← Tiếp tục khám phá dịch vụ
           </Link>
-          <h1 className="text-3xl font-black text-slate-900">Giỏ hàng của bạn</h1>
-          <p className="text-slate-500 mt-1">{cartItems.length} sản phẩm trong giỏ hàng</p>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h1 className="text-3xl font-black text-slate-900 tracking-tight">Giỏ hàng của bạn</h1>
+              <p className="text-slate-500 text-sm mt-0.5">
+                {cartItems.length > 0 ? `${cartItems.length} dịch vụ đang chờ thanh toán` : 'Giỏ hàng đang trống'}
+              </p>
+            </div>
+            {isLoggedIn && (
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-700 text-xs font-semibold">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                Đã đăng nhập tài khoản CloudHost
+              </div>
+            )}
+          </div>
         </div>
 
+        {/* Guest Reminder Banner (When not logged in) */}
+        {!isLoggedIn && cartItems.length > 0 && (
+          <div className="mb-8 p-5 bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 rounded-2xl border border-blue-800 text-white shadow-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div className="flex items-start gap-3.5">
+              <div className="p-2.5 bg-blue-600/30 border border-blue-500/40 rounded-xl text-cyan-300 shrink-0">
+                <LogIn className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-white flex items-center gap-2">
+                  Bạn đang đặt hàng với tư cách Khách
+                  <span className="text-[11px] font-bold px-2 py-0.5 bg-amber-500/20 text-amber-300 border border-amber-500/30 rounded-full">
+                    Chưa đăng nhập
+                  </span>
+                </h3>
+                <p className="text-xs text-blue-200 mt-1 max-w-xl leading-relaxed">
+                  Đăng nhập hoặc đăng ký để hệ thống tự động lưu giỏ hàng của bạn, áp dụng chiết khấu thành viên và kích hoạt dịch vụ Cloud VPS / Hosting tức thì sau khi thanh toán.
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2.5 w-full md:w-auto shrink-0">
+              <button
+                onClick={() => handleOpenAuth('login')}
+                className="flex-1 md:flex-initial px-4 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs rounded-xl shadow transition-all flex items-center justify-center gap-1.5"
+              >
+                <LogIn className="w-4 h-4" /> Đăng Nhập
+              </button>
+              <button
+                onClick={() => handleOpenAuth('register')}
+                className="flex-1 md:flex-initial px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-xl border border-slate-700 transition-all"
+              >
+                Đăng Ký
+              </button>
+            </div>
+          </div>
+        )}
+
         {cartItems.length === 0 ? (
-          <div className="text-center py-16 bg-white rounded-2xl border border-slate-200">
-            <ShoppingCart className="w-16 h-16 mx-auto text-slate-300 mb-4" />
-            <h2 className="text-xl font-bold text-slate-900 mb-2">Giỏ hàng trống</h2>
-            <p className="text-slate-500 mb-6">Hãy thêm sản phẩm vào giỏ hàng để tiếp tục</p>
+          <div className="text-center py-20 bg-white rounded-3xl border border-slate-200 shadow-sm">
+            <div className="w-20 h-20 rounded-2xl bg-blue-50 text-blue-500 flex items-center justify-center mx-auto mb-4">
+              <ShoppingCart className="w-10 h-10" />
+            </div>
+            <h2 className="text-2xl font-black text-slate-900 mb-2">Giỏ hàng của bạn đang trống</h2>
+            <p className="text-slate-500 text-sm max-w-md mx-auto mb-6">
+              Bạn chưa có dịch vụ nào trong giỏ. Hãy khám phá các gói Cloud VPS thế hệ mới hoặc NVMe Hosting hiệu năng cao của chúng tôi.
+            </p>
             <Link
               href="/services"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-colors"
+              className="inline-flex items-center gap-2 px-8 py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg shadow-blue-500/25 transition-all text-sm"
             >
-              Khám phá dịch vụ
+              Khám Phá Bảng Giá Dịch Vụ
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Cart Items */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            {/* Cart Items List */}
             <div className="lg:col-span-2 space-y-4">
               {cartItems.map((item) => (
-                <div key={item.id} className="bg-white rounded-2xl p-6 border border-slate-200">
+                <div key={item.id} className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm hover:shadow transition-all">
                   <div className="flex items-start gap-4">
-                    <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold text-xl shrink-0">
-                      {item.title[0]}
+                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-600 via-indigo-600 to-cyan-500 flex items-center justify-center text-white font-black text-xl shadow-md shrink-0">
+                      {(item.title || item.name || 'C')[0]?.toUpperCase()}
                     </div>
                     
                     <div className="flex-1">
-                      <div className="flex items-start justify-between">
+                      <div className="flex items-start justify-between gap-4">
                         <div>
-                          <div className="flex items-center gap-2 mb-1">
-                            <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${
-                              item.type === 'vps' ? 'bg-blue-100 text-blue-700' :
+                          <div className="flex items-center gap-2 mb-1.5">
+                            <span className={`text-[11px] font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-wider ${
                               item.type === 'hosting' ? 'bg-indigo-100 text-indigo-700' :
-                              'bg-cyan-100 text-cyan-700'
+                              item.type === 'domain' ? 'bg-cyan-100 text-cyan-700' :
+                              'bg-blue-100 text-blue-700'
                             }`}>
-                              {item.type === 'vps' ? 'Cloud VPS' : item.type === 'hosting' ? 'Web Hosting' : 'Tên miền'}
+                              {item.type === 'hosting' ? 'Web Hosting' : item.type === 'domain' ? 'Tên Miền' : 'Cloud VPS'}
                             </span>
                           </div>
-                          <h3 className="text-lg font-bold text-slate-900">{item.title}</h3>
-                          <p className="text-sm text-slate-500 mt-1">{item.details}</p>
-                          <p className="text-xs text-slate-400 mt-2">Chu kỳ thanh toán: <span className="font-semibold text-slate-600">{item.billingCycle}</span></p>
+                          <h3 className="text-base font-bold text-slate-900">{item.title || item.name}</h3>
+                          <p className="text-xs text-slate-500 mt-1">{item.details || 'Cấu hình tiêu chuẩn'}</p>
+                          <p className="text-xs text-slate-400 mt-1">
+                            Chu kỳ: <span className="font-semibold text-slate-700">{item.billingCycle} tháng</span>
+                          </p>
                         </div>
 
-                        <div className="text-right flex flex-col items-end gap-3">
+                        <div className="text-right flex flex-col items-end gap-3 shrink-0">
                           <button
                             onClick={() => removeItem(item.id)}
-                            className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
-                            title="Xóa khỏi giỏ"
+                            className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-colors"
+                            title="Xóa dịch vụ"
                           >
-                            <Trash2 className="w-5 h-5" />
+                            <Trash2 className="w-4 h-4" />
                           </button>
-                          
-                          {/* Quantity Controls */}
-                          <div className="flex items-center gap-2 border border-slate-200 rounded-lg p-1">
-                            <button
-                              onClick={() => updateQuantity(item.id, (item.quantity || 1) - 1)}
-                              className="w-6 h-6 flex items-center justify-center rounded hover:bg-slate-100 text-slate-600 transition-colors"
-                              title="Giảm số lượng"
-                            >
-                              <Minus className="w-3.5 h-3.5" />
-                            </button>
-                            <span className="w-6 text-center text-xs font-bold text-slate-900">
-                              {item.quantity || 1}
-                            </span>
-                            <button
-                              onClick={() => updateQuantity(item.id, (item.quantity || 1) + 1)}
-                              className="w-6 h-6 flex items-center justify-center rounded hover:bg-slate-100 text-slate-600 transition-colors"
-                              title="Tăng số lượng"
-                            >
-                              <Plus className="w-3.5 h-3.5" />
-                            </button>
-                          </div>
-
-                          <div className="text-xl font-black text-slate-900">
+                          <div className="text-lg font-black text-blue-600">
                             {item.price.toLocaleString('vi-VN')} đ
                           </div>
                         </div>
@@ -189,10 +185,12 @@ export default function CartPage() {
               ))}
             </div>
 
-            {/* Order Summary */}
+            {/* Order Summary Sidebar */}
             <div className="lg:col-span-1">
-              <div className="bg-white rounded-2xl p-6 border border-slate-200 sticky top-24">
-                <h2 className="text-lg font-bold text-slate-900 mb-4">Tổng cộng</h2>
+              <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-md sticky top-24">
+                <h2 className="text-lg font-black text-slate-900 mb-4 pb-3 border-b border-slate-100">
+                  Tóm Tắt Đơn Hàng
+                </h2>
                 
                 {/* Coupon Input */}
                 <div className="mb-6 pb-4 border-b border-slate-100">
@@ -203,52 +201,64 @@ export default function CartPage() {
                   />
                 </div>
 
+                {/* Price Breakdown */}
                 <div className="space-y-3 mb-6">
                   <div className="flex justify-between text-sm">
-                    <span className="text-slate-600">Tạm tính</span>
-                    <span className="font-semibold text-slate-900">{subtotal.toLocaleString('vi-VN')} đ</span>
+                    <span className="text-slate-500">Tạm tính:</span>
+                    <span className="font-semibold text-slate-800">{subtotal.toLocaleString('vi-VN')} đ</span>
                   </div>
                   
                   {discount > 0 && (
                     <div className="flex justify-between text-sm">
-                      <span className="text-emerald-600">Giảm giá</span>
-                      <span className="font-semibold text-emerald-600">-{discountAmount.toLocaleString('vi-VN')} đ</span>
+                      <span className="text-emerald-600 font-medium">Mã giảm giá ({discount}%):</span>
+                      <span className="font-bold text-emerald-600">-{discountAmount.toLocaleString('vi-VN')} đ</span>
                     </div>
                   )}
                   
                   <div className="flex justify-between text-sm">
-                    <span className="text-slate-600">Thuế (8%)</span>
-                    <span className="font-semibold text-slate-900">{tax.toLocaleString('vi-VN')} đ</span>
+                    <span className="text-slate-500">Thuế GTGT (VAT 8%):</span>
+                    <span className="font-semibold text-slate-800">{tax.toLocaleString('vi-VN')} đ</span>
                   </div>
                   
-                  <div className="border-t border-slate-200 pt-3 flex justify-between">
-                    <span className="font-bold text-slate-900">Tổng thanh toán</span>
-                    <span className="text-2xl font-black text-blue-600">
+                  <div className="border-t border-slate-200 pt-4 flex items-baseline justify-between">
+                    <span className="font-bold text-slate-900 text-base">Tổng thanh toán:</span>
+                    <span className="text-2xl font-black text-blue-600 tracking-tight">
                       {total.toLocaleString('vi-VN')} đ
                     </span>
                   </div>
                 </div>
 
+                {/* Checkout Button */}
                 <button
                   onClick={handleCheckout}
-                  className="w-full py-4 rounded-xl bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 text-white font-bold text-base shadow-lg shadow-blue-500/25 hover:shadow-xl transition-all flex items-center justify-center gap-2"
+                  className="w-full py-4 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white font-extrabold text-base shadow-xl shadow-blue-500/25 hover:shadow-blue-500/40 transition-all flex items-center justify-center gap-2 group cursor-pointer"
                 >
-                  Tiến Hành Thanh Toán
-                  <ArrowRight className="w-5 h-5" />
+                  <span>{isLoggedIn ? 'Tiến Hành Thanh Toán' : 'Đăng Nhập Để Thanh Toán'}</span>
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </button>
 
-                <div className="mt-6 space-y-3">
-                  <div className="flex items-center gap-2 text-xs text-slate-500">
-                    <ShieldCheck className="w-4 h-4 text-emerald-500" />
-                    <span>Thanh toán an toàn qua VNPAY / MoMo</span>
+                {!isLoggedIn && (
+                  <p className="text-[11px] text-amber-600 text-center mt-2.5 font-medium flex items-center justify-center gap-1">
+                    <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
+                    Giỏ hàng sẽ được tự động lưu sau khi đăng nhập
+                  </p>
+                )}
+
+                {/* Security badges */}
+                <div className="mt-6 pt-4 border-t border-slate-100 space-y-2.5">
+                  <div className="flex items-center gap-2 text-xs text-slate-500 font-medium">
+                    <ShieldCheck className="w-4 h-4 text-emerald-500 shrink-0" />
+                    <span>Bảo mật chuẩn mã hóa SSL 256-bit</span>
                   </div>
-                  <div className="flex items-center gap-2 text-xs text-slate-500">
-                    <Clock className="w-4 h-4 text-blue-500" />
-                    <span>Kích hoạt tự động sau 30 giây</span>
+                  <div className="flex items-center gap-2 text-xs text-slate-500 font-medium">
+                    <Clock className="w-4 h-4 text-blue-500 shrink-0" />
+                    <span>Kích hoạt Cloud tự động trong 30 giây</span>
                   </div>
                 </div>
+
               </div>
             </div>
+
           </div>
         )}
       </div>

@@ -9,14 +9,17 @@ namespace CloudServiceStore.Tests.DomainTests.Entities;
 public class ServicePlanTests
 {
     [Fact]
-    public void Constructor_ShouldInitializeCorrectly()
+    public void UpdateOpenGraphImage_ShouldUpdateProperty()
     {
         // Arrange
-        // TODO: var entity = new ServicePlan();
+        var categoryId = Guid.NewGuid();
+        var plan = new ServicePlan(categoryId, "Test Plan", "2 vCPU", "4 GB", "50 GB", "Unmetered", "qrcode");
+        var imageUrl = "/images/products/og/test.png";
 
         // Act
+        plan.UpdateOpenGraphImage(imageUrl);
 
         // Assert
-        Assert.True(true);
+        plan.OpenGraphImage.Should().Be(imageUrl);
     }
 }

@@ -17,19 +17,24 @@ namespace CloudServiceStore.Tests.Application.Features.ControlPanels.Queries.Get
 public class GetControlPanelCredentialsQueryHandlerTests
 {
     private readonly Mock<IRepository<ControlPanelCredential>> _mockRepositoryControlPanelCredential;
+    private readonly Mock<IRepository<OrderRequest>> _mockOrderRepo;
+    private readonly Mock<ICurrentUserService> _mockCurrentUser;
     private readonly GetControlPanelCredentialsQueryHandler _handler;
 
     public GetControlPanelCredentialsQueryHandlerTests()
     {
         _mockRepositoryControlPanelCredential = new Mock<IRepository<ControlPanelCredential>>();
-        _handler = new GetControlPanelCredentialsQueryHandler(_mockRepositoryControlPanelCredential.Object);
+        _mockOrderRepo = new Mock<IRepository<OrderRequest>>();
+        _mockCurrentUser = new Mock<ICurrentUserService>();
+        _handler = new GetControlPanelCredentialsQueryHandler(_mockRepositoryControlPanelCredential.Object, _mockOrderRepo.Object, _mockCurrentUser.Object);
     }
 
     [Fact]
     public async Task Handle_ShouldExecuteSuccessfully_WhenRequestIsValid()
     {
         // Arrange
-        // var request = new GetControlPanelCredentialsQuery();
+        var orderId = Guid.NewGuid();
+        var request = new GetControlPanelCredentialsQuery(orderId);
         var cancellationToken = new CancellationToken();
 
         // Act

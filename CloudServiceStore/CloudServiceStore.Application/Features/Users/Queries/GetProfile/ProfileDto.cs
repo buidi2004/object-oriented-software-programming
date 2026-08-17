@@ -15,5 +15,6 @@ public record ProfileDto(
     string? AddressLine,
     string? CompanyName,
     string? TaxCode,
-    DateTime CreatedAt
+    DateTime CreatedAt,
+    string Role = "Customer"
 );

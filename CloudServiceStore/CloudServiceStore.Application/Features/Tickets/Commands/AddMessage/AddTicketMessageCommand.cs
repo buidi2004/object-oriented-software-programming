@@ -4,7 +4,7 @@ using FluentValidation;
 
 namespace CloudServiceStore.Application.Features.Tickets.Commands.AddMessage;
 
-public record AddTicketMessageCommand(Guid TicketId, string Message) : IRequest<Guid>;
+public record AddTicketMessageCommand(Guid TicketId, string Message, string? AttachmentUrl = null) : IRequest<Guid>;
 
 public class AddTicketMessageCommandValidator : AbstractValidator<AddTicketMessageCommand>
 {
