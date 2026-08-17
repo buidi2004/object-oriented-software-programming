@@ -26,7 +26,7 @@ public class BannersController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Editor")]
     public async Task<IActionResult> Create([FromBody] CreateBannerCommand command, CancellationToken ct)
     {
         var id = await _mediator.Send(command, ct);
@@ -34,7 +34,7 @@ public class BannersController : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Editor")]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateBannerCommand command, CancellationToken ct)
     {
         command.Id = id;
@@ -43,7 +43,7 @@ public class BannersController : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Editor")]
     public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
     {
         await _mediator.Send(new DeleteBannerCommand(id), ct);
@@ -51,7 +51,7 @@ public class BannersController : ControllerBase
     }
 
     [HttpPost("upload")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Editor")]
     public async Task<IActionResult> UploadStandalone(Microsoft.AspNetCore.Http.IFormFile file, [FromServices] Microsoft.AspNetCore.Hosting.IWebHostEnvironment env, CancellationToken ct)
     {
         if (file == null || file.Length == 0)
