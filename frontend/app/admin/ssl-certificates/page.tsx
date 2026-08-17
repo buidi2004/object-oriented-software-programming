@@ -4,7 +4,8 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { 
   ShieldCheck, RefreshCw, AlertTriangle, ArrowLeft, Search, 
-  CheckCircle2, AlertCircle, Lock, Calendar, ExternalLink 
+  CheckCircle2, AlertCircle, Lock, Calendar, ExternalLink,
+  Plus, Download, Trash2, X, FileCode, Shield, Check
 } from 'lucide-react';
 import { api } from '@/src/lib/api';
 
@@ -24,9 +25,27 @@ export default function AdminSslCertificatesPage() {
   const [certs, setCerts] = useState<SslAdminItem[]>([]);
   const [search, setSearch] = useState('');
   const [renewingId, setRenewingId] = useState<string | null>(null);
-  const [success, setSuccess] = useState('');
+  const [filter, setFilter] = useState<'all' | 'Active' | 'Expiring Soon' | 'Expired'>('all');
+  
+  // Modals
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [viewingCertFiles, setViewingCertFiles] = useState<SslAdminItem | null>(null);
 
-  const mockCerts: SslAdminItem[] = [
+  const [formData, setFormData] = useState({
+    domainName: '',
+    ownerEmail: '',
+    issuer: "Let's Encrypt" as const,
+    autoRenew: true
+  });
+
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+
+  const showToast = (message: string, type: 'success' | 'error' = 'success') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3500);
+  };
+
+  const initialCerts: SslAdminItem[] = [
     {
       id: 'ssl-1',
       domainName: '*.cloudhost.vn',
@@ -63,32 +82,108 @@ export default function AdminSslCertificatesPage() {
   ];
 
   useEffect(() => {
-    setCerts(mockCerts);
+    const saved = localStorage.getItem('admin_ssl_certs_list');
+    if (saved) {
+      try {
+        setCerts(JSON.parse(saved));
+      } catch {
+        setCerts(initialCerts);
+      }
+    } else {
+      setCerts(initialCerts);
+    }
   }, []);
 
-  const handleRenewCert = (id: string) => {
+  const saveCerts = (items: SslAdminItem[]) => {
+    setCerts(items);
+    localStorage.setItem('admin_ssl_certs_list', JSON.stringify(items));
+  };
+
+  const handleCreateCert = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formData.domainName.trim() || !formData.ownerEmail.trim()) {
+      showToast('Vui lòng nhập tên miền và email chủ sở hữu.', 'error');
+      return;
+    }
+
+    const durationDays = formData.issuer === "Let's Encrypt" ? 90 : 365;
+    const now = new Date();
+    const expiry = new Date(now.getTime() + durationDays * 86400000).toISOString();
+
+    const newCert: SslAdminItem = {
+      id: `ssl-${Date.now()}`,
+      domainName: formData.domainName.trim().toLowerCase(),
+      ownerEmail: formData.ownerEmail.trim().toLowerCase(),
+      issuer: formData.issuer,
+      issuedDate: new Date().toISOString(),
+      expiryDate: expiry,
+      autoRenew: formData.autoRenew,
+      daysRemaining: durationDays,
+      status: 'Active'
+    };
+
+    const updated = [newCert, ...certs];
+    saveCerts(updated);
+    setShowAddModal(false);
+    showToast(`Đã cấp phát chứng chỉ SSL cho ${newCert.domainName} thành công!`);
+  };
+
+  const handleRenewCert = (id: string, domain: string) => {
     setRenewingId(id);
     setTimeout(() => {
-      setCerts(certs.map(c => c.id === id ? {
+      const updated = certs.map(c => c.id === id ? {
         ...c,
-        daysRemaining: 90,
-        status: 'Active',
-        expiryDate: new Date(Date.now() + 90 * 86400000).toISOString()
-      } : c));
+        daysRemaining: c.issuer === "Let's Encrypt" ? 90 : 365,
+        status: 'Active' as const,
+        expiryDate: new Date(Date.now() + (c.issuer === "Let's Encrypt" ? 90 : 365) * 86400000).toISOString()
+      } : c);
+      saveCerts(updated);
       setRenewingId(null);
-      setSuccess('Đã gia hạn chứng chỉ SSL thành công!');
-      setTimeout(() => setSuccess(''), 3000);
+      showToast(`Đã gia hạn chứng chỉ SSL cho ${domain} thành công!`);
     }, 1200);
   };
 
-  const filtered = certs.filter(c => 
-    c.domainName.toLowerCase().includes(search.toLowerCase()) || 
-    c.ownerEmail.toLowerCase().includes(search.toLowerCase()) ||
-    c.issuer.toLowerCase().includes(search.toLowerCase())
-  );
+  const handleDownloadFiles = (cert: SslAdminItem) => {
+    const zipContent = `-----BEGIN CERTIFICATE-----\nMIIEczCCA1ugAwIBAgIBADANBgkqhkiG9w0BAQsFADBCMQswCQYDVQQGEwJVUzET\nMBEGA1UEChMKRXhhbXBsZSBDQTEeMBwGA1UEAxMVZXhhbXBsZSByb290IGNhIDIw\n...\n-----END CERTIFICATE-----\n\nDomain: ${cert.domainName}\nIssuer: ${cert.issuer}\nIssued: ${cert.issuedDate}\nExpires: ${cert.expiryDate}`;
+    const blob = new Blob([zipContent], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${cert.domainName.replace('*', 'wildcard')}_ssl_bundle.crt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast(`Đã tải bộ cài chứng chỉ SSL cho ${cert.domainName}!`);
+  };
+
+  const handleRevoke = (id: string, domain: string) => {
+    if (!confirm(`Bạn có chắc muốn thu hồi chứng chỉ SSL của ${domain}?`)) return;
+    const updated = certs.filter(c => c.id !== id);
+    saveCerts(updated);
+    showToast(`Đã thu hồi chứng chỉ SSL của ${domain}!`);
+  };
+
+  const filtered = certs.filter(c => {
+    const matchesSearch = c.domainName.toLowerCase().includes(search.toLowerCase()) || 
+      c.ownerEmail.toLowerCase().includes(search.toLowerCase()) ||
+      c.issuer.toLowerCase().includes(search.toLowerCase());
+    if (filter === 'all') return matchesSearch;
+    return matchesSearch && c.status === filter;
+  });
 
   return (
     <div className="min-h-screen bg-slate-50 py-8 px-4 sm:px-6 lg:px-8">
+      {/* Toast */}
+      {toast && (
+        <div className={`fixed bottom-5 right-5 z-50 px-5 py-3 rounded-xl shadow-xl text-white font-semibold text-sm flex items-center gap-2.5 animate-in slide-in-from-bottom-5 ${
+          toast.type === 'success' ? 'bg-emerald-600' : 'bg-red-600'
+        }`}>
+          {toast.type === 'success' ? <CheckCircle2 className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />}
+          {toast.message}
+        </div>
+      )}
+
       <div className="max-w-6xl mx-auto">
         {/* Navigation */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
@@ -97,83 +192,125 @@ export default function AdminSslCertificatesPage() {
               <ArrowLeft className="w-3.5 h-3.5" /> Quay lại Admin Panel
             </Link>
             <h1 className="text-2xl font-black text-slate-900 flex items-center gap-2.5">
-              <ShieldCheck className="w-6 h-6 text-emerald-600" /> Quản Lý Chứng Chỉ SSL (Certificates)
+              <ShieldCheck className="w-6 h-6 text-emerald-600" /> Quản Lý Chứng Chỉ SSL (HTTPS Certificates)
             </h1>
             <p className="text-xs text-slate-500 mt-0.5">
               Theo dõi thời hạn chứng chỉ bảo mật HTTPS, nhà phát hành và kích hoạt gia hạn tức thì.
             </p>
           </div>
 
-          <div className="relative">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-            <input
-              type="text"
-              placeholder="Tìm tên miền / email / CA..."
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              className="pl-9 pr-4 py-2 rounded-xl bg-white border border-slate-200 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm"
-            />
+          <div className="flex items-center gap-3">
+            <div className="relative">
+              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                placeholder="Tìm tên miền / email / CA..."
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                className="pl-10 pr-4 py-2.5 rounded-xl bg-white border border-slate-200 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm w-60"
+              />
+            </div>
+            <button
+              onClick={() => {
+                setFormData({ domainName: '', ownerEmail: '', issuer: "Let's Encrypt", autoRenew: true });
+                setShowAddModal(true);
+              }}
+              className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition-colors flex items-center gap-1.5 shadow-sm"
+            >
+              <Plus className="w-4 h-4" /> Cấp Mới SSL
+            </button>
           </div>
         </div>
 
-        {success && (
-          <div className="mb-6 p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-emerald-600" /> {success}
-          </div>
-        )}
+        {/* Filter Tabs */}
+        <div className="flex gap-2 mb-6">
+          {[
+            { id: 'all', label: 'Tất cả' },
+            { id: 'Active', label: 'Đang hoạt động' },
+            { id: 'Expiring Soon', label: 'Sắp hết hạn' },
+            { id: 'Expired', label: 'Đã hết hạn' }
+          ].map(tab => (
+            <button
+              key={tab.id}
+              onClick={() => setFilter(tab.id as any)}
+              className={`px-4 py-2 rounded-xl text-xs font-semibold transition-colors ${
+                filter === tab.id
+                  ? 'bg-emerald-600 text-white shadow-sm'
+                  : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200'
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
 
-        {/* Certificates Table */}
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        {/* SSL Cards & Table */}
+        <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden mb-8">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
               <thead className="bg-slate-50 text-slate-500 font-extrabold uppercase tracking-wider border-b border-slate-100">
                 <tr>
-                  <th className="px-6 py-4">Tên Miền (Common Name)</th>
+                  <th className="px-6 py-4">Tên Miền Bảo Mật</th>
+                  <th className="px-6 py-4">Nhà Phát Hành (CA)</th>
                   <th className="px-6 py-4">Chủ Sở Hữu</th>
-                  <th className="px-6 py-4">Tổ Chức Cấp (CA)</th>
                   <th className="px-6 py-4">Thời Hạn Còn Lại</th>
                   <th className="px-6 py-4">Trạng Thái</th>
                   <th className="px-6 py-4 text-right">Thao Tác</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
-                {filtered.map((c) => (
-                  <tr key={c.id} className="hover:bg-slate-50/60 transition-colors">
-                    <td className="px-6 py-4 font-black text-slate-900 text-sm">
+                {filtered.map((cert) => (
+                  <tr key={cert.id} className="hover:bg-slate-50/60 transition-colors">
+                    <td className="px-6 py-4 font-bold text-slate-900">
                       <div className="flex items-center gap-2">
-                        <Lock className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                        {c.domainName}
+                        <Lock className="w-4 h-4 text-emerald-600" />
+                        <span className="font-mono">{cert.domainName}</span>
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-slate-600 font-medium">
-                      {c.ownerEmail}
-                    </td>
-                    <td className="px-6 py-4 font-semibold text-slate-700">
-                      {c.issuer}
-                    </td>
-                    <td className="px-6 py-4 font-mono font-bold text-slate-800">
-                      <span className={c.daysRemaining <= 15 ? 'text-amber-600 font-black' : ''}>
-                        {c.daysRemaining} ngày
+                    <td className="px-6 py-4 font-semibold text-slate-700">{cert.issuer}</td>
+                    <td className="px-6 py-4 text-slate-500 font-mono">{cert.ownerEmail}</td>
+                    <td className="px-6 py-4">
+                      <span className={`font-black ${
+                        cert.daysRemaining <= 30 ? 'text-amber-600' : 'text-slate-800'
+                      }`}>
+                        {cert.daysRemaining} ngày
                       </span>
+                      <span className="block text-[10px] text-slate-400">Hết hạn: {new Date(cert.expiryDate).toLocaleDateString('vi-VN')}</span>
                     </td>
                     <td className="px-6 py-4">
-                      <span className={`px-2.5 py-1 rounded-full text-[10px] font-extrabold flex items-center gap-1 w-fit ${
-                        c.status === 'Active' ? 'bg-emerald-50 text-emerald-700' :
-                        c.status === 'Expiring Soon' ? 'bg-amber-50 text-amber-700' : 'bg-rose-50 text-rose-700'
+                      <span className={`px-2.5 py-1 rounded-full font-bold text-[10px] uppercase tracking-wider ${
+                        cert.status === 'Active' ? 'bg-emerald-100 text-emerald-800' :
+                        cert.status === 'Expiring Soon' ? 'bg-amber-100 text-amber-800' : 'bg-rose-100 text-rose-800'
                       }`}>
-                        {c.status === 'Expiring Soon' ? <AlertTriangle className="w-3 h-3 text-amber-600" /> : <CheckCircle2 className="w-3 h-3 text-emerald-600" />}
-                        {c.status}
+                        {cert.status === 'Active' ? 'Hoạt Động' : cert.status === 'Expiring Soon' ? 'Sắp Hết Hạn' : 'Đã Hết Hạn'}
                       </span>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <button
-                        onClick={() => handleRenewCert(c.id)}
-                        disabled={renewingId === c.id}
-                        className="px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold text-xs transition-colors inline-flex items-center gap-1 disabled:opacity-50"
-                      >
-                        <RefreshCw className={`w-3.5 h-3.5 ${renewingId === c.id ? 'animate-spin' : ''}`} />
-                        Gia Hạn
-                      </button>
+                      <div className="flex items-center justify-end gap-1.5">
+                        <button
+                          onClick={() => handleRenewCert(cert.id, cert.domainName)}
+                          disabled={renewingId === cert.id}
+                          className="px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold text-xs transition-colors flex items-center gap-1 disabled:opacity-50"
+                          title="Gia hạn SSL"
+                        >
+                          <RefreshCw className={`w-3.5 h-3.5 ${renewingId === cert.id ? 'animate-spin' : ''}`} />
+                          Gia Hạn
+                        </button>
+                        <button
+                          onClick={() => handleDownloadFiles(cert)}
+                          className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                          title="Tải bộ cài Certificate (.crt)"
+                        >
+                          <Download className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          onClick={() => handleRevoke(cert.id, cert.domainName)}
+                          className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+                          title="Thu hồi chứng chỉ"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -181,6 +318,87 @@ export default function AdminSslCertificatesPage() {
             </table>
           </div>
         </div>
+
+        {/* Add Modal */}
+        {showAddModal && (
+          <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full border border-slate-200 shadow-2xl">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-base font-black text-slate-900">Yêu Cầu Cấp Chứng Chỉ SSL Mới</h3>
+                <button onClick={() => setShowAddModal(false)} className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100">
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              <form onSubmit={handleCreateCert} className="space-y-3">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Tên Miền Cần Bảo Mật</label>
+                  <input
+                    type="text"
+                    required
+                    value={formData.domainName}
+                    onChange={e => setFormData({ ...formData, domainName: e.target.value })}
+                    placeholder="*.example.vn hoặc secure.example.com"
+                    className="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500 outline-none font-mono"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Email Chủ Sở Hữu</label>
+                  <input
+                    type="email"
+                    required
+                    value={formData.ownerEmail}
+                    onChange={e => setFormData({ ...formData, ownerEmail: e.target.value })}
+                    placeholder="admin@example.com"
+                    className="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500 outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Nhà Phát Hành (Certificate Authority)</label>
+                  <select
+                    value={formData.issuer}
+                    onChange={e => setFormData({ ...formData, issuer: e.target.value as any })}
+                    className="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500 outline-none bg-white"
+                  >
+                    <option value="Let's Encrypt">Let's Encrypt (Miễn phí 90 ngày / Tự động gia hạn)</option>
+                    <option value="Sectigo PositiveSSL">Sectigo PositiveSSL (Bảo hiểm $10,000 / 1 Năm)</option>
+                    <option value="DigiCert Wildcard">DigiCert Wildcard SAN (Doanh nghiệp lớn / 1 Năm)</option>
+                  </select>
+                </div>
+
+                <div className="pt-2">
+                  <label className="flex items-center gap-2 text-xs font-bold text-slate-700 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={formData.autoRenew}
+                      onChange={e => setFormData({ ...formData, autoRenew: e.target.checked })}
+                      className="rounded text-emerald-600 focus:ring-emerald-500"
+                    />
+                    Tự động gia hạn khi còn dưới 30 ngày
+                  </label>
+                </div>
+
+                <div className="flex gap-2 justify-end pt-4 border-t border-slate-100">
+                  <button
+                    type="button"
+                    onClick={() => setShowAddModal(false)}
+                    className="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold"
+                  >
+                    Hủy
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-md"
+                  >
+                    Cấp Chứng Chỉ
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

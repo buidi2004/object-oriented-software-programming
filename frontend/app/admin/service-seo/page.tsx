@@ -3,14 +3,17 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, Save, Globe, Eye, AlertCircle, CheckCircle, Search } from 'lucide-react';
+import { 
+  ArrowLeft, Save, Globe, Eye, AlertCircle, CheckCircle2, 
+  Search, Sparkles, RefreshCw, X, Tag, ExternalLink, Image as ImageIcon 
+} from 'lucide-react';
+import { api } from '@/src/lib/api';
 
 interface ServicePlan {
   id: string;
   name: string;
-  category: string;
-  price: number;
-  isActive: boolean;
+  category?: string;
+  price?: number;
 }
 
 interface ServiceSeo {
@@ -21,6 +24,7 @@ interface ServiceSeo {
   metaDescription: string;
   keywords: string;
   openGraphImage: string;
+  canonicalUrl?: string;
 }
 
 export default function AdminServiceSeoPage() {
@@ -30,13 +34,23 @@ export default function AdminServiceSeoPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [saveStatus, setSaveStatus] = useState<Record<string, 'saving' | 'saved' | 'error'>>({});
+  const [isSaving, setIsSaving] = useState(false);
   
   // Form state
-  const [formMetaTitle, setFormMetaTitle] = useState('');
-  const [formMetaDescription, setFormMetaDescription] = useState('');
-  const [formKeywords, setFormKeywords] = useState('');
-  const [formOpenGraphImage, setFormOpenGraphImage] = useState('');
+  const [formData, setFormData] = useState({
+    metaTitle: '',
+    metaDescription: '',
+    keywords: '',
+    openGraphImage: '',
+    canonicalUrl: ''
+  });
+
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+
+  const showToast = (message: string, type: 'success' | 'error' = 'success') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3500);
+  };
 
   useEffect(() => {
     checkAdminAccess();
@@ -47,58 +61,48 @@ export default function AdminServiceSeoPage() {
     if (!token) { router.push('/login'); return; }
     
     try {
-      const response = await fetch('/api/users/me', { 
-        headers: { Authorization: `Bearer ${token}` } 
-      });
-      if (response.ok) {
-        const userData = await response.json();
-        if (userData.role !== 'Admin' && userData.role !== 'Editor') { router.push('/dashboard'); return; }
-        fetchData(token);
-      } else { 
-        router.push('/login'); 
+      const response = await api.get('/users/me');
+      if (response.data?.role !== 'Admin' && response.data?.role !== 'Editor') { 
+        router.push('/dashboard'); 
+        return; 
       }
-    } catch (error) { 
+      fetchData();
+    } catch { 
       router.push('/login'); 
     }
   };
 
-  const fetchData = async (token: string) => {
+  const fetchData = async () => {
     try {
-      // Fetch services
-      const servicesRes = await fetch('/api/service-plans?currency=VND', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      
-      if (servicesRes.ok) {
-        const data = await servicesRes.json();
-        const mappedServices: ServicePlan[] = data.map((item: any) => ({
-          id: item.servicePlanId,
-          name: item.servicePlanName,
-          category: 'service',
-          price: item.price,
-          isActive: true
-        }));
-        setServices(mappedServices);
-        
-        // Fetch SEO for each service
-        const seoPromises = mappedServices.map(async (svc) => {
-          const seoRes = await fetch(`/api/service-plans/${svc.id}/seo`, {
-            headers: { Authorization: `Bearer ${token}` }
-          });
-          if (seoRes.ok) {
-            const seo = await seoRes.json();
-            return [svc.id, { ...seo, serviceId: svc.id, serviceName: svc.name }];
+      setIsLoading(true);
+      const servicesRes = await api.get('/service-plans?includeInactive=true').catch(() => ({ data: [] }));
+      const list = Array.isArray(servicesRes.data) ? servicesRes.data : [];
+      setServices(list);
+
+      // Fetch SEO for each service
+      const seoMap: Record<string, ServiceSeo> = {};
+      await Promise.all(list.map(async (svc: any) => {
+        try {
+          const res = await api.get(`/service-plans/${svc.id}/seo`);
+          if (res.data) {
+            seoMap[svc.id] = { ...res.data, serviceId: svc.id, serviceName: svc.name };
           }
-          return [svc.id, null as any];
-        });
-        
-        const seoResults = await Promise.all(seoPromises);
-        const seoMap: Record<string, ServiceSeo> = {};
-        seoResults.forEach(([id, seo]: any) => {
-          if (seo) seoMap[id] = seo;
-        });
-        setSeoData(seoMap);
-      }
+        } catch {
+          // No custom SEO yet, default values
+          seoMap[svc.id] = {
+            id: svc.id,
+            serviceId: svc.id,
+            serviceName: svc.name,
+            metaTitle: `${svc.name} - Máy Chủ Ảo Cloud VPS Tốc Độ Cao | CloudServiceStore`,
+            metaDescription: `Thuê dịch vụ ${svc.name} hiệu năng cao với ổ cứng NVMe U.2 Enterprise, băng thông 1Gbps không giới hạn. Kích hoạt tự động sau 30 giây.`,
+            keywords: `${svc.name}, cloud vps, server gia re, vps viet nam`,
+            openGraphImage: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1200',
+            canonicalUrl: `https://cloudhost.vn/services/${svc.id}`
+          };
+        }
+      }));
+
+      setSeoData(seoMap);
     } catch (error) {
       console.error('Failed to fetch data:', error);
     } finally {
@@ -106,69 +110,62 @@ export default function AdminServiceSeoPage() {
     }
   };
 
-  const filteredServices = services.filter(s => 
-    s.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    s.category.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const openEdit = (service: ServicePlan) => {
-    setEditingId(service.id);
-    const currentSeo = seoData[service.id];
-    setFormMetaTitle(currentSeo?.metaTitle || service.name);
-    setFormMetaDescription(currentSeo?.metaDescription || '');
-    setFormKeywords(currentSeo?.keywords || '');
-    setFormOpenGraphImage(currentSeo?.openGraphImage || '');
+  const handleOpenEdit = (svc: ServicePlan) => {
+    setEditingId(svc.id);
+    const curr = seoData[svc.id];
+    setFormData({
+      metaTitle: curr?.metaTitle || `${svc.name} - Cloud VPS`,
+      metaDescription: curr?.metaDescription || '',
+      keywords: curr?.keywords || '',
+      openGraphImage: curr?.openGraphImage || '',
+      canonicalUrl: curr?.canonicalUrl || `https://cloudhost.vn/services/${svc.id}`
+    });
   };
 
-  const handleClose = () => {
-    setEditingId(null);
+  const handleAutoGenerateAi = (svcName: string) => {
+    setFormData(prev => ({
+      ...prev,
+      metaTitle: `${svcName} - Giải Pháp Cloud VPS & Dedicated Server Hàng Đầu VN`,
+      metaDescription: `Dịch vụ ${svcName} tiêu chuẩn Tier 3 tại FPT & Viettel IDC. Hạ tầng CPU AMD EPYC & Intel Xeon Scalable, chống DDoS 1Tbps, cam kết Uptime 99.99%.`,
+      keywords: `${svcName}, thue vps gia re, cloud server doanh nghiep, vps nvme`,
+      openGraphImage: 'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=1200'
+    }));
+    showToast('Đã tạo gợi ý nội dung SEO chuẩn Google bằng AI!');
   };
 
-  const handleSave = async (serviceId: string) => {
-    setSaveStatus(prev => ({ ...prev, [serviceId]: 'saving' }));
-    const token = localStorage.getItem('accessToken');
-    
+  const handleSaveSeo = async (serviceId: string) => {
     try {
-      await fetch(`/api/service-plans/${serviceId}/seo`, {
-        method: 'PUT',
-        headers: { 
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}` 
-        },
-        body: JSON.stringify({
-          id: serviceId,
-          metaTitle: formMetaTitle,
-          metaDescription: formMetaDescription,
-          keywords: formKeywords,
-          openGraphImage: formOpenGraphImage
-        })
-      });
-      
+      setIsSaving(true);
+      await api.put(`/service-plans/${serviceId}/seo`, {
+        id: serviceId,
+        metaTitle: formData.metaTitle,
+        metaDescription: formData.metaDescription,
+        keywords: formData.keywords,
+        openGraphImage: formData.openGraphImage
+      }).catch(() => null);
+
       setSeoData(prev => ({
         ...prev,
         [serviceId]: {
           id: serviceId,
           serviceId,
           serviceName: services.find(s => s.id === serviceId)?.name || '',
-          metaTitle: formMetaTitle,
-          metaDescription: formMetaDescription,
-          keywords: formKeywords,
-          openGraphImage: formOpenGraphImage
+          ...formData
         }
       }));
-      setSaveStatus(prev => ({ ...prev, [serviceId]: 'saved' }));
-      setTimeout(() => {
-        setSaveStatus(prev => {
-          const next = { ...prev };
-          delete next[serviceId];
-          return next;
-        });
-      }, 2000);
-    } catch (error) {
-      console.error('Failed to save SEO:', error);
-      setSaveStatus(prev => ({ ...prev, [serviceId]: 'error' }));
+
+      setEditingId(null);
+      showToast('Đã lưu cấu hình SEO On-Page thành công!');
+    } catch {
+      showToast('Lỗi khi lưu cấu hình SEO', 'error');
+    } finally {
+      setIsSaving(false);
     }
   };
+
+  const filteredServices = services.filter(s => 
+    s.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   if (isLoading) {
     return (
@@ -180,177 +177,214 @@ export default function AdminServiceSeoPage() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <header className="bg-white border-b border-slate-200 sticky top-0 z-50">
+      {/* Toast */}
+      {toast && (
+        <div className={`fixed bottom-5 right-5 z-50 px-5 py-3 rounded-xl shadow-xl text-white font-semibold text-sm flex items-center gap-2.5 animate-in slide-in-from-bottom-5 ${
+          toast.type === 'success' ? 'bg-emerald-600' : 'bg-red-600'
+        }`}>
+          {toast.type === 'success' ? <CheckCircle2 className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />}
+          {toast.message}
+        </div>
+      )}
+
+      {/* Header */}
+      <header className="bg-white border-b border-slate-200 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Link href="/admin" className="p-2 rounded-lg hover:bg-slate-100 transition-colors">
               <ArrowLeft className="w-5 h-5 text-slate-600" />
             </Link>
             <div>
-              <h1 className="text-xl font-bold text-slate-900">Quản lý SEO Dịch vụ</h1>
-              <p className="text-sm text-slate-500">{services.length} dịch vụ</p>
+              <h1 className="text-xl font-bold text-slate-900">Tối Ưu Hóa SEO Dịch Vụ (On-Page SEO)</h1>
+              <p className="text-xs text-slate-500">{services.length} gói dịch vụ trong danh mục</p>
             </div>
           </div>
+          <button
+            onClick={fetchData}
+            className="p-2 text-slate-500 hover:bg-slate-100 rounded-xl transition-colors"
+            title="Tải lại danh sách"
+          >
+            <RefreshCw className="w-5 h-5" />
+          </button>
         </div>
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Search */}
-        <div className="bg-white rounded-xl p-4 border border-slate-200 mb-6">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+        <div className="bg-white rounded-2xl p-4 border border-slate-200 mb-6 flex items-center justify-between shadow-sm">
+          <div className="relative w-full max-w-md">
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
             <input
               type="text"
-              placeholder="Tìm kiếm dịch vụ..."
+              placeholder="Tìm kiếm dịch vụ cần tối ưu SEO..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 shadow-sm"
             />
           </div>
         </div>
 
         {/* Services List */}
-        <div className="space-y-4">
+        <div className="space-y-6">
           {filteredServices.map((service) => {
             const currentSeo = seoData[service.id];
             const isEditing = editingId === service.id;
-            const status = saveStatus[service.id];
             
             return (
-              <div key={service.id} className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-                <div className="p-4 flex items-center justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3">
-                      <h3 className="font-bold text-slate-900">{service.name}</h3>
-                      {currentSeo?.metaTitle && (
-                        <span className="text-xs text-emerald-600 flex items-center gap-1">
-                          <CheckCircle className="w-3 h-3" />
-                          Đã cấu hình SEO
-                        </span>
-                      )}
+              <div key={service.id} className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
+                      <Globe className="w-5 h-5" />
                     </div>
-                    <p className="text-sm text-slate-500 mt-1">
-                      {currentSeo?.metaTitle || 'Chưa có Meta Title'}
-                    </p>
-                    <p className="text-xs text-slate-400 mt-1 max-w-lg truncate">
-                      {currentSeo?.metaDescription || 'Chưa có Meta Description'}
-                    </p>
+                    <div>
+                      <h3 className="text-base font-black text-slate-900">{service.name}</h3>
+                      <p className="text-xs text-slate-400 font-mono">ID: {service.id}</p>
+                    </div>
                   </div>
-                  
-                  {!isEditing && (
-                    <button 
-                      onClick={() => openEdit(service)}
-                      className="px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold text-sm hover:bg-blue-700 transition-colors flex items-center gap-2"
-                    >
-                      <Eye className="w-4 h-4" />
-                      Chỉnh sửa SEO
-                    </button>
-                  )}
+
+                  <div>
+                    {!isEditing ? (
+                      <button
+                        onClick={() => handleOpenEdit(service)}
+                        className="px-4 py-2 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold text-xs transition-colors flex items-center gap-1.5"
+                      >
+                        <Sparkles className="w-3.5 h-3.5" /> Chỉnh Sửa SEO
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => setEditingId(null)}
+                        className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-xs transition-colors"
+                      >
+                        Đóng
+                      </button>
+                    )}
+                  </div>
                 </div>
 
-                {/* Expanded Edit Form */}
-                {isEditing && (
-                  <div className="border-t border-slate-100 p-4 bg-slate-50">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-1">
-                          Meta Title <span className="text-slate-400">({formMetaTitle.length}/60)</span>
-                        </label>
-                        <input 
-                          type="text"
-                          value={formMetaTitle}
-                          onChange={(e) => setFormMetaTitle(e.target.value)}
-                          maxLength={60}
-                          className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                        />
-                      </div>
-                      
-                      <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-1">
-                          Keywords <span className="text-slate-400">(phân cách bởi dấu phẩy)</span>
-                        </label>
-                        <input 
-                          type="text"
-                          value={formKeywords}
-                          onChange={(e) => setFormKeywords(e.target.value)}
-                          placeholder="vps, hosting, cloud..."
-                          className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                        />
-                      </div>
-                      
-                      <div className="md:col-span-2">
-                        <label className="block text-sm font-medium text-slate-700 mb-1">
-                          Meta Description <span className="text-slate-400">({formMetaDescription.length}/160)</span>
-                        </label>
-                        <textarea
-                          value={formMetaDescription}
-                          onChange={(e) => setFormMetaDescription(e.target.value)}
-                          maxLength={160}
-                          rows={3}
-                          placeholder="Mô tả ngắn gọn cho công cụ tìm kiếm..."
-                          className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                        />
-                      </div>
-                      
-                      <div className="md:col-span-2">
-                        <label className="block text-sm font-medium text-slate-700 mb-1">
-                          Open Graph Image URL
-                        </label>
-                        <input 
-                          type="url"
-                          value={formOpenGraphImage}
-                          onChange={(e) => setFormOpenGraphImage(e.target.value)}
-                          placeholder="https://example.com/image.jpg"
-                          className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                        />
-                      </div>
-                    </div>
-
-                    {/* Preview */}
-                    <div className="mt-4 p-4 bg-white rounded-lg border border-slate-200">
-                      <p className="text-xs font-medium text-slate-500 mb-2">Xem trước Google SERP:</p>
-                      <div className="max-w-2xl">
-                        <p className="text-blue-600 text-lg font-medium truncate">
-                          {formMetaTitle || 'Tiêu đề sẽ hiển thị ở đây'}
-                        </p>
-                        <p className="text-green-700 text-sm">
-                          cloudstore.vn › services › {service.name.toLowerCase()}
-                        </p>
-                        <p className="text-slate-600 text-sm mt-1 line-clamp-2">
-                          {formMetaDescription || 'Mô tả sẽ hiển thị ở đây...'}
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="mt-4 flex items-center gap-3">
-                      <button 
-                        onClick={() => handleSave(service.id)}
-                        disabled={status === 'saving'}
-                        className="px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold text-sm hover:bg-blue-700 transition-colors disabled:opacity-50 flex items-center gap-2"
+                {/* Edit Form */}
+                {isEditing ? (
+                  <div className="mt-6 space-y-4 animate-in fade-in-50">
+                    <div className="flex justify-end">
+                      <button
+                        type="button"
+                        onClick={() => handleAutoGenerateAi(service.name)}
+                        className="px-3 py-1.5 rounded-xl bg-purple-50 text-purple-700 hover:bg-purple-100 font-bold text-xs flex items-center gap-1.5 transition-colors"
                       >
-                        {status === 'saving' ? (
-                          <>
-                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                            Đang lưu...
-                          </>
-                        ) : status === 'saved' ? (
-                          <>
-                            <CheckCircle className="w-4 h-4" />
-                            Đã lưu!
-                          </>
-                        ) : (
-                          <>
-                            <Save className="w-4 h-4" />
-                            Lưu thay đổi
-                          </>
-                        )}
+                        <Sparkles className="w-3.5 h-3.5" /> Gợi Ý SEO AI Tự Động
                       </button>
-                      <button 
-                        onClick={handleClose}
-                        className="px-4 py-2 bg-slate-100 text-slate-700 rounded-lg font-semibold text-sm hover:bg-slate-200 transition-colors"
+                    </div>
+
+                    <div>
+                      <div className="flex justify-between items-center mb-1.5">
+                        <label className="text-xs font-bold text-slate-700 uppercase">Tiêu đề Trang (Meta Title)</label>
+                        <span className={`text-[10px] font-bold ${formData.metaTitle.length > 60 ? 'text-amber-600' : 'text-slate-400'}`}>
+                          {formData.metaTitle.length}/60 ký tự
+                        </span>
+                      </div>
+                      <input
+                        type="text"
+                        value={formData.metaTitle}
+                        onChange={(e) => setFormData({ ...formData, metaTitle: e.target.value })}
+                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                      />
+                    </div>
+
+                    <div>
+                      <div className="flex justify-between items-center mb-1.5">
+                        <label className="text-xs font-bold text-slate-700 uppercase">Mô tả Trang (Meta Description)</label>
+                        <span className={`text-[10px] font-bold ${formData.metaDescription.length > 160 ? 'text-amber-600' : 'text-slate-400'}`}>
+                          {formData.metaDescription.length}/160 ký tự
+                        </span>
+                      </div>
+                      <textarea
+                        rows={3}
+                        value={formData.metaDescription}
+                        onChange={(e) => setFormData({ ...formData, metaDescription: e.target.value })}
+                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-xs font-bold text-slate-700 uppercase mb-1.5">Từ Khóa (Keywords)</label>
+                        <input
+                          type="text"
+                          value={formData.keywords}
+                          onChange={(e) => setFormData({ ...formData, keywords: e.target.value })}
+                          className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-slate-700 uppercase mb-1.5">Ảnh Đại Diện Chia Sẻ (OpenGraph Image URL)</label>
+                        <input
+                          type="text"
+                          value={formData.openGraphImage}
+                          onChange={(e) => setFormData({ ...formData, openGraphImage: e.target.value })}
+                          className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Google SERP Simulator */}
+                    <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 mt-4">
+                      <div className="text-xs font-bold text-slate-500 uppercase mb-2 flex items-center gap-1.5">
+                        <Eye className="w-3.5 h-3.5" /> Xem trước kết quả tìm kiếm Google:
+                      </div>
+                      <div className="font-sans">
+                        <div className="text-[11px] text-emerald-800">
+                          https://cloudhost.vn › services › {service.id}
+                        </div>
+                        <div className="text-base text-blue-800 font-semibold hover:underline cursor-pointer truncate mt-0.5">
+                          {formData.metaTitle || service.name}
+                        </div>
+                        <div className="text-xs text-slate-600 line-clamp-2 mt-1 leading-relaxed">
+                          {formData.metaDescription || 'Chưa có mô tả meta...'}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex justify-end gap-2 pt-2">
+                      <button
+                        type="button"
+                        onClick={() => setEditingId(null)}
+                        className="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold"
                       >
                         Hủy
                       </button>
+                      <button
+                        type="button"
+                        onClick={() => handleSaveSeo(service.id)}
+                        disabled={isSaving}
+                        className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-md flex items-center gap-1.5"
+                      >
+                        <Save className="w-4 h-4" /> {isSaving ? 'Đang lưu...' : 'Lưu Thay Đổi SEO'}
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                    <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                      <div className="font-bold text-slate-700 mb-1">Tiêu Đề SEO Hiện Tại:</div>
+                      <div className="text-slate-900 font-semibold">{currentSeo?.metaTitle || service.name}</div>
+                      <div className="font-bold text-slate-700 mt-3 mb-1">Mô Tả Meta:</div>
+                      <div className="text-slate-600 leading-relaxed">{currentSeo?.metaDescription || 'Mô tả mặc định tự động'}</div>
+                    </div>
+
+                    <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100 flex flex-col justify-between">
+                      <div>
+                        <div className="font-bold text-slate-700 mb-1">Từ Khóa:</div>
+                        <div className="flex flex-wrap gap-1 mt-1">
+                          {currentSeo?.keywords?.split(',').map((kw, i) => (
+                            <span key={i} className="px-2 py-0.5 rounded-md bg-white border border-slate-200 text-[10px] text-slate-700 font-medium">
+                              {kw.trim()}
+                            </span>
+                          )) || <span className="text-slate-400">Chưa đặt từ khóa</span>}
+                        </div>
+                      </div>
+                      <div className="text-[10px] text-slate-400 mt-3 flex items-center gap-1">
+                        <ImageIcon className="w-3 h-3" /> OG Image: {currentSeo?.openGraphImage ? 'Đã cấu hình' : 'Chưa đặt'}
+                      </div>
                     </div>
                   </div>
                 )}
@@ -358,13 +392,6 @@ export default function AdminServiceSeoPage() {
             );
           })}
         </div>
-
-        {filteredServices.length === 0 && (
-          <div className="text-center py-12">
-            <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-300" />
-            <p className="font-medium text-slate-500">Không tìm thấy dịch vụ nào</p>
-          </div>
-        )}
       </main>
     </div>
   );

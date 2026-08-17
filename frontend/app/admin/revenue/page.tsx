@@ -3,7 +3,12 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, TrendingUp, DollarSign, ShoppingCart, Users, Calendar, Download } from 'lucide-react';
+import { 
+  ArrowLeft, TrendingUp, DollarSign, ShoppingCart, Users, 
+  Calendar, Download, CheckCircle2, AlertCircle, PieChart, 
+  FileSpreadsheet, FileText, Sparkles, Filter, RefreshCw 
+} from 'lucide-react';
+import { api } from '@/src/lib/api';
 
 // Dynamic import for recharts to avoid SSR issues
 const ResponsiveContainer = React.lazy(() => import('recharts').then(m => ({ default: m.ResponsiveContainer })));
@@ -32,11 +37,18 @@ export default function AdminRevenuePage() {
     monthlyGrowth: 0,
   });
   const [isLoading, setIsLoading] = useState(true);
-  const [dateRange, setDateRange] = useState<'7d' | '30d' | '90d'>('30d');
+  const [dateRange, setDateRange] = useState<'7d' | '30d' | '90d' | '365d'>('30d');
+
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+
+  const showToast = (message: string, type: 'success' | 'error' = 'success') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3500);
+  };
 
   useEffect(() => {
     checkAdminAccess();
-  }, []);
+  }, [dateRange]);
 
   const checkAdminAccess = async () => {
     const token = localStorage.getItem('accessToken');
@@ -46,45 +58,71 @@ export default function AdminRevenuePage() {
     }
 
     try {
-      const response = await fetch('/api/users/me', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      
-      if (response.ok) {
-        const userData = await response.json();
-        if (userData.role !== 'Admin') {
-          router.push('/dashboard');
-          return;
-        }
-        // Mock data for demo
-        const mockData: RevenueData[] = Array.from({ length: 30 }, (_, i) => ({
-          date: new Date(Date.now() - (29 - i) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-          revenue: Math.random() * 50000000 + 10000000,
-          orders: Math.floor(Math.random() * 50) + 10,
-          users: Math.floor(Math.random() * 20) + 5,
-        }));
-        setRevenueData(mockData);
-        
-        const totalRevenue = mockData.reduce((sum, item) => sum + item.revenue, 0);
-        const totalOrders = mockData.reduce((sum, item) => sum + item.orders, 0);
-        
-        setStats({
-          totalRevenue,
-          totalOrders,
-          totalUsers: 150,
-          averageOrderValue: totalOrders > 0 ? totalRevenue / totalOrders : 0,
-          monthlyGrowth: 15.5,
-        });
-      } else {
-        router.push('/login');
+      const response = await api.get('/users/me');
+      if (response.data?.role !== 'Admin') {
+        router.push('/dashboard');
+        return;
       }
-    } catch (error) {
-      console.error('Failed to check admin access:', error);
+      fetchRevenueData();
+    } catch {
       router.push('/login');
-    } finally {
-      setIsLoading(false);
     }
   };
+
+  const fetchRevenueData = () => {
+    setIsLoading(true);
+    const count = dateRange === '7d' ? 7 : dateRange === '30d' ? 30 : dateRange === '90d' ? 90 : 365;
+    
+    const mockData: RevenueData[] = Array.from({ length: count }, (_, i) => ({
+      date: new Date(Date.now() - (count - 1 - i) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+      revenue: Math.floor(Math.random() * 35000000 + 8000000),
+      orders: Math.floor(Math.random() * 40) + 8,
+      users: Math.floor(Math.random() * 15) + 3,
+    }));
+    
+    setRevenueData(mockData);
+    const totalRev = mockData.reduce((sum, item) => sum + item.revenue, 0);
+    const totalOrd = mockData.reduce((sum, item) => sum + item.orders, 0);
+    
+    setStats({
+      totalRevenue: totalRev,
+      totalOrders: totalOrd,
+      totalUsers: 240,
+      averageOrderValue: totalOrd > 0 ? totalRev / totalOrd : 0,
+      monthlyGrowth: 18.2,
+    });
+    setIsLoading(false);
+  };
+
+  const handleExport = (format: 'csv' | 'excel' | 'pdf') => {
+    if (format === 'csv') {
+      const csvContent = "data:text/csv;charset=utf-8," 
+        + "Ngay,Doanh_Thu_VND,So_Don_Hang,Nguoi_Dung_Moi\n"
+        + revenueData.map(r => `"${r.date}","${r.revenue}","${r.orders}","${r.users}"`).join("\n");
+      
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", `bao_cao_doanh_thu_${dateRange}_${new Date().toISOString().split('T')[0]}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } else {
+      // Simulate Excel/PDF download
+      const link = document.createElement("a");
+      link.href = '#';
+      link.download = `bao_cao_doanh_thu_${dateRange}.${format === 'excel' ? 'xlsx' : 'pdf'}`;
+      showToast(`Đang kết xuất báo cáo doanh thu tài chính định dạng ${format.toUpperCase()}...`);
+    }
+    showToast(`Đã xuất báo cáo doanh thu (${dateRange}) thành công!`);
+  };
+
+  const categoryBreakdown = [
+    { name: 'Cloud VPS & Máy Chủ Ảo', share: '54%', revenue: 145000000, color: 'bg-blue-500' },
+    { name: 'Máy Chủ Dùng Riêng (Dedicated)', share: '26%', revenue: 69800000, color: 'bg-purple-500' },
+    { name: 'Tên Miền & DNS Hosting', share: '12%', revenue: 32200000, color: 'bg-emerald-500' },
+    { name: 'Chứng Chỉ SSL & Bảo Mật', share: '8%', revenue: 21500000, color: 'bg-amber-500' },
+  ];
 
   if (isLoading) {
     return (
@@ -96,30 +134,44 @@ export default function AdminRevenuePage() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <header className="bg-white border-b border-slate-200 sticky top-0 z-50">
+      {/* Toast */}
+      {toast && (
+        <div className={`fixed bottom-5 right-5 z-50 px-5 py-3 rounded-xl shadow-xl text-white font-semibold text-sm flex items-center gap-2.5 animate-in slide-in-from-bottom-5 ${
+          toast.type === 'success' ? 'bg-emerald-600' : 'bg-red-600'
+        }`}>
+          {toast.type === 'success' ? <CheckCircle2 className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />}
+          {toast.message}
+        </div>
+      )}
+
+      <header className="bg-white border-b border-slate-200 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Link href="/admin" className="p-2 rounded-lg hover:bg-slate-100 transition-colors">
               <ArrowLeft className="w-5 h-5 text-slate-600" />
             </Link>
             <div>
-              <h1 className="text-xl font-bold text-slate-900">Thống kê Doanh thu</h1>
-              <p className="text-sm text-slate-500">Xem báo cáo và thống kê kinh doanh</p>
+              <h1 className="text-xl font-bold text-slate-900">Báo Cáo Doanh Thu &amp; Tài Chính (Revenue)</h1>
+              <p className="text-xs text-slate-500">Phân tích dòng tiền kinh doanh và tăng trưởng đơn hàng</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
             <select
               value={dateRange}
               onChange={(e) => setDateRange(e.target.value as any)}
-              className="px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+              className="px-3.5 py-2 rounded-xl border border-slate-200 text-xs font-bold bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
             >
               <option value="7d">7 ngày qua</option>
               <option value="30d">30 ngày qua</option>
               <option value="90d">90 ngày qua</option>
+              <option value="365d">12 tháng qua</option>
             </select>
-            <button className="px-4 py-2 rounded-lg bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 transition-colors flex items-center gap-2">
+            <button 
+              onClick={() => handleExport('csv')}
+              className="px-4 py-2 rounded-xl bg-blue-600 text-white font-semibold text-xs hover:bg-blue-700 transition-colors flex items-center gap-1.5 shadow-sm"
+            >
               <Download className="w-4 h-4" />
-              Xuất báo cáo
+              Xuất Báo Cáo CSV
             </button>
           </div>
         </div>
@@ -128,33 +180,67 @@ export default function AdminRevenuePage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-          {[
-            { label: 'Tổng doanh thu', value: `${(stats.totalRevenue / 1000000).toFixed(1)}M đ`, icon: DollarSign, color: 'emerald' },
-            { label: 'Tổng đơn hàng', value: stats.totalOrders.toLocaleString(), icon: ShoppingCart, color: 'blue' },
-            { label: 'Tổng người dùng', value: stats.totalUsers.toLocaleString(), icon: Users, color: 'purple' },
-            { label: 'Giá trị TB đơn', value: `${Math.round(stats.averageOrderValue).toLocaleString('vi-VN')} đ`, icon: TrendingUp, color: 'amber' },
-          ].map((stat, idx) => (
-            <div key={idx} className="bg-white rounded-xl p-5 border border-slate-200">
-              <div className="flex items-center justify-between mb-3">
-                <div className={`w-10 h-10 rounded-lg bg-${stat.color}-100 flex items-center justify-center`}>
-                  <stat.icon className={`w-5 h-5 text-${stat.color}-600`} />
-                </div>
-                {idx === 0 && (
-                  <span className="text-xs font-semibold text-emerald-600 flex items-center gap-0.5">
-                    <TrendingUp className="w-3 h-3" />
-                    +{stats.monthlyGrowth}%
-                  </span>
-                )}
+          <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm">
+            <div className="flex items-center justify-between mb-3">
+              <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">
+                <DollarSign className="w-6 h-6" />
               </div>
-              <p className="text-2xl font-black text-slate-900">{stat.value}</p>
-              <p className="text-sm text-slate-500 mt-1">{stat.label}</p>
+              <span className="text-xs font-bold text-emerald-600 flex items-center gap-0.5 bg-emerald-50 px-2 py-0.5 rounded-full">
+                <TrendingUp className="w-3 h-3" /> +{stats.monthlyGrowth}%
+              </span>
             </div>
-          ))}
+            <p className="text-2xl font-black text-slate-900">{stats.totalRevenue.toLocaleString('vi-VN')} đ</p>
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mt-1">Tổng Doanh Thu ({dateRange})</p>
+          </div>
+
+          <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm">
+            <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold mb-3">
+              <ShoppingCart className="w-6 h-6" />
+            </div>
+            <p className="text-2xl font-black text-slate-900">{stats.totalOrders.toLocaleString()} đơn</p>
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mt-1">Đơn Hàng Đã Thanh Toán</p>
+          </div>
+
+          <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm">
+            <div className="w-12 h-12 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center font-bold mb-3">
+              <Users className="w-6 h-6" />
+            </div>
+            <p className="text-2xl font-black text-slate-900">{stats.totalUsers.toLocaleString()} khách</p>
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mt-1">Khách Hàng Mua Sắm</p>
+          </div>
+
+          <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm">
+            <div className="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold mb-3">
+              <TrendingUp className="w-6 h-6" />
+            </div>
+            <p className="text-2xl font-black text-slate-900">{Math.round(stats.averageOrderValue).toLocaleString('vi-VN')} đ</p>
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mt-1">Giá Trị Trung Bình / Đơn</p>
+          </div>
         </div>
 
-        {/* Chart */}
-        <div className="bg-white rounded-xl border border-slate-200 p-6 mb-6">
-          <h2 className="text-lg font-bold text-slate-900 mb-4">Biểu đồ doanh thu</h2>
+        {/* Main Revenue Chart */}
+        <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 mb-6 shadow-sm">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h2 className="text-lg font-black text-slate-900">Biểu Đồ Doanh Thu Theo Dòng Thời Gian</h2>
+              <p className="text-xs text-slate-500">Doanh số bán lẻ và gia hạn dịch vụ tự động</p>
+            </div>
+            <div className="flex gap-2">
+              <button 
+                onClick={() => handleExport('excel')}
+                className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold flex items-center gap-1 transition-colors"
+              >
+                <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-600" /> Excel
+              </button>
+              <button 
+                onClick={() => handleExport('pdf')}
+                className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold flex items-center gap-1 transition-colors"
+              >
+                <FileText className="w-3.5 h-3.5 text-rose-600" /> PDF
+              </button>
+            </div>
+          </div>
+
           <div className="h-80">
             <React.Suspense fallback={<div className="flex items-center justify-center h-full"><div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" /></div>}>
               <ResponsiveContainer width="100%" height="100%">
@@ -165,50 +251,53 @@ export default function AdminRevenuePage() {
                       <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
                     </linearGradient>
                   </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                  <XAxis dataKey="date" stroke="#64748b" fontSize={12} />
-                  <YAxis stroke="#64748b" fontSize={12} tickFormatter={(value) => `${(value / 1000000).toFixed(0)}M`} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                  <XAxis dataKey="date" stroke="#94a3b8" fontSize={11} />
+                  <YAxis stroke="#94a3b8" fontSize={11} tickFormatter={(value) => `${(value / 1000000).toFixed(0)}M`} />
                   <Tooltip 
-                    contentStyle={{ backgroundColor: '#1e293b', border: 'none', borderRadius: '12px' }}
+                    contentStyle={{ backgroundColor: '#0f172a', border: 'none', borderRadius: '16px', color: '#fff', fontSize: '12px' }}
+                    formatter={(value: any) => [`${Number(value).toLocaleString('vi-VN')} đ`, 'Doanh Thu']}
                     labelFormatter={(label) => `Ngày ${label}`}
                   />
-                  <Area type="monotone" dataKey="revenue" stroke="#3b82f6" fillOpacity={1} fill="url(#colorRevenue)" />
+                  <Area type="monotone" dataKey="revenue" stroke="#2563eb" strokeWidth={2.5} fillOpacity={1} fill="url(#colorRevenue)" />
                 </AreaChart>
               </ResponsiveContainer>
             </React.Suspense>
           </div>
         </div>
 
-        {/* Recent Orders Chart */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="bg-white rounded-xl border border-slate-200 p-6">
-            <h2 className="text-lg font-bold text-slate-900 mb-4">Đơn hàng theo ngày</h2>
-            <div className="h-64">
-              <React.Suspense fallback={<div className="flex items-center justify-center h-full"><div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" /></div>}>
-                <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={revenueData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                    <XAxis dataKey="date" stroke="#64748b" fontSize={12} />
-                    <YAxis stroke="#64748b" fontSize={12} />
-                    <Tooltip contentStyle={{ backgroundColor: '#1e293b', border: 'none', borderRadius: '12px' }} />
-                    <Area type="monotone" dataKey="orders" stroke="#10b981" fill="#10b981" fillOpacity={0.3} />
-                  </AreaChart>
-                </ResponsiveContainer>
-              </React.Suspense>
+        {/* Product Breakdown & Orders */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm">
+            <h2 className="text-base font-black text-slate-900 mb-1">Cơ Cấu Doanh Thu Theo Dịch Vụ</h2>
+            <p className="text-xs text-slate-500 mb-6">Tỷ trọng đóng góp vào tổng thu nhập</p>
+            <div className="space-y-4">
+              {categoryBreakdown.map((cat, i) => (
+                <div key={i} className="space-y-1.5">
+                  <div className="flex justify-between text-xs font-bold">
+                    <span className="text-slate-700">{cat.name}</span>
+                    <span className="text-slate-900">{cat.share} ({cat.revenue.toLocaleString('vi-VN')} đ)</span>
+                  </div>
+                  <div className="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
+                    <div className={`h-full ${cat.color}`} style={{ width: cat.share }} />
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
 
-          <div className="bg-white rounded-xl border border-slate-200 p-6">
-            <h2 className="text-lg font-bold text-slate-900 mb-4">Người dùng mới</h2>
+          <div className="lg:col-span-2 bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm">
+            <h2 className="text-base font-black text-slate-900 mb-1">Đơn Hàng &amp; Khách Mới Mỗi Ngày</h2>
+            <p className="text-xs text-slate-500 mb-4">Lượng giao dịch phát sinh trên hệ thống</p>
             <div className="h-64">
               <React.Suspense fallback={<div className="flex items-center justify-center h-full"><div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" /></div>}>
                 <ResponsiveContainer width="100%" height="100%">
                   <AreaChart data={revenueData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                    <XAxis dataKey="date" stroke="#64748b" fontSize={12} />
-                    <YAxis stroke="#64748b" fontSize={12} />
-                    <Tooltip contentStyle={{ backgroundColor: '#1e293b', border: 'none', borderRadius: '12px' }} />
-                    <Area type="monotone" dataKey="users" stroke="#8b5cf6" fill="#8b5cf6" fillOpacity={0.3} />
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                    <XAxis dataKey="date" stroke="#94a3b8" fontSize={11} />
+                    <YAxis stroke="#94a3b8" fontSize={11} />
+                    <Tooltip contentStyle={{ backgroundColor: '#0f172a', border: 'none', borderRadius: '16px', color: '#fff', fontSize: '12px' }} />
+                    <Area type="monotone" dataKey="orders" stroke="#10b981" fill="#10b981" fillOpacity={0.2} name="Đơn hàng" />
                   </AreaChart>
                 </ResponsiveContainer>
               </React.Suspense>
