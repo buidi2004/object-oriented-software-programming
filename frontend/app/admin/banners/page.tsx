@@ -1,25 +1,41 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, Plus, Edit2, Trash2, Image as ImageIcon, AlertCircle } from 'lucide-react';
+import { 
+  ArrowLeft, Plus, Edit2, Trash2, Image as ImageIcon, 
+  AlertCircle, Upload, CheckCircle2, X, ExternalLink, Eye, EyeOff, Loader2 
+} from 'lucide-react';
 
 interface Banner {
   id: string;
-  title: string;
-  image: string;
-  link: string;
-  position: 'hero' | 'homepage' | 'sidebar';
+  imageUrl: string;
+  linkUrl?: string;
+  displayOrder: number;
   isActive: boolean;
-  createdAt: string;
+  startDate?: string;
+  endDate?: string;
 }
 
 export default function AdminBannersPage() {
   const router = useRouter();
   const [banners, setBanners] = useState<Banner[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [showAddModal, setShowAddModal] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [editingBanner, setEditingBanner] = useState<Banner | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const [formData, setFormData] = useState({
+    imageUrl: '',
+    linkUrl: '',
+    displayOrder: 1,
+    isActive: true,
+    startDate: '',
+    endDate: ''
+  });
 
   useEffect(() => {
     checkAdminAccess();
@@ -33,17 +49,177 @@ export default function AdminBannersPage() {
       const response = await fetch('/api/users/me', { headers: { Authorization: `Bearer ${token}` } });
       if (response.ok) {
         const userData = await response.json();
-        if (userData.role !== 'Admin') { router.push('/dashboard'); return; }
-        setBanners([
-          { id: '1', title: 'Banner khuyến mãi', image: '', link: '/', position: 'hero', isActive: true, createdAt: '2024-01-01' }
-        ]);
-        setIsLoading(false);
-      } else { router.push('/login'); }
-    } catch (error) { router.push('/login'); }
+        if (userData.role !== 'Admin' && userData.role !== 'Editor') { 
+          router.push('/dashboard'); 
+          return; 
+        }
+        fetchBanners(token);
+      } else { 
+        router.push('/login'); 
+      }
+    } catch (error) { 
+      router.push('/login'); 
+    }
+  };
+
+  const fetchBanners = async (token?: string) => {
+    const authToken = token || localStorage.getItem('accessToken');
+    try {
+      const res = await fetch('/api/banners', { 
+        headers: { Authorization: `Bearer ${authToken}` } 
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setBanners(Array.isArray(data) ? data : []);
+      }
+    } catch (err) {
+      console.error('Failed to load banners:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleOpenAdd = () => {
+    setEditingBanner(null);
+    setFormData({
+      imageUrl: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1200&q=80',
+      linkUrl: '/services/cloud-vps',
+      displayOrder: banners.length + 1,
+      isActive: true,
+      startDate: new Date().toISOString().split('T')[0],
+      endDate: new Date(Date.now() + 90 * 86400000).toISOString().split('T')[0]
+    });
+    setShowModal(true);
+  };
+
+  const handleOpenEdit = (banner: Banner) => {
+    setEditingBanner(banner);
+    setFormData({
+      imageUrl: banner.imageUrl || '',
+      linkUrl: banner.linkUrl || '',
+      displayOrder: banner.displayOrder || 1,
+      isActive: banner.isActive,
+      startDate: banner.startDate ? new Date(banner.startDate).toISOString().split('T')[0] : '',
+      endDate: banner.endDate ? new Date(banner.endDate).toISOString().split('T')[0] : ''
+    });
+    setShowModal(true);
+  };
+
+  const handleSaveBanner = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const token = localStorage.getItem('accessToken');
+    if (!token) return;
+
+    setIsSubmitting(true);
+    try {
+      const payload = {
+        imageUrl: formData.imageUrl.trim(),
+        linkUrl: formData.linkUrl.trim() || null,
+        displayOrder: Number(formData.displayOrder) || 1,
+        isActive: formData.isActive,
+        startDate: formData.startDate ? new Date(formData.startDate).toISOString() : null,
+        endDate: formData.endDate ? new Date(formData.endDate).toISOString() : null
+      };
+
+      if (editingBanner) {
+        // Update
+        const res = await fetch(`/api/banners/${editingBanner.id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify(payload)
+        });
+        if (!res.ok) throw new Error('Không thể cập nhật banner');
+      } else {
+        // Create
+        const res = await fetch('/api/banners', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify(payload)
+        });
+        if (!res.ok) throw new Error('Không thể tạo banner mới');
+      }
+
+      setShowModal(false);
+      await fetchBanners(token);
+    } catch (err: any) {
+      alert(err.message || 'Đã có lỗi xảy ra');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleDeleteBanner = async (id: string) => {
-    setBanners(prev => prev.filter(b => b.id !== id));
+    if (!confirm('Bạn có chắc chắn muốn xóa banner này?')) return;
+    const token = localStorage.getItem('accessToken');
+    if (!token) return;
+
+    try {
+      const res = await fetch(`/api/banners/${id}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.ok || res.status === 204) {
+        setBanners(prev => prev.filter(b => b.id !== id));
+      } else {
+        alert('Xóa thất bại');
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const toggleStatus = async (banner: Banner) => {
+    const token = localStorage.getItem('accessToken');
+    if (!token) return;
+
+    try {
+      const res = await fetch(`/api/banners/${banner.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          ...banner,
+          isActive: !banner.isActive
+        })
+      });
+      if (res.ok) {
+        setBanners(prev => prev.map(b => b.id === banner.id ? { ...b, isActive: !b.isActive } : b));
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const token = localStorage.getItem('accessToken');
+    if (!token) return;
+
+    setUploadingImage(true);
+    try {
+      // Use local preview or form upload
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (reader.result) {
+          setFormData(prev => ({ ...prev, imageUrl: reader.result as string }));
+        }
+      };
+      reader.readAsDataURL(file);
+    } catch (err) {
+      console.error('Upload failed:', err);
+    } finally {
+      setUploadingImage(false);
+    }
   };
 
   if (isLoading) {
@@ -56,59 +232,299 @@ export default function AdminBannersPage() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <header className="bg-white border-b border-slate-200 sticky top-0 z-50">
+      {/* Header */}
+      <header className="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link href="/admin" className="p-2 rounded-lg hover:bg-slate-100 transition-colors">
+            <Link href="/admin" className="p-2 rounded-xl hover:bg-slate-100 transition-colors">
               <ArrowLeft className="w-5 h-5 text-slate-600" />
             </Link>
             <div>
-              <h1 className="text-xl font-bold text-slate-900">Quản lý Banner</h1>
-              <p className="text-sm text-slate-500">{banners.length} banners</p>
+              <h1 className="text-xl font-bold text-slate-900">Quản Lý Banner Quảng Cáo</h1>
+              <p className="text-xs text-slate-500">{banners.length} banner đang được quản lý</p>
             </div>
           </div>
-          <button onClick={() => setShowAddModal(true)} className="px-4 py-2 rounded-lg bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 transition-colors flex items-center gap-2">
+          <button 
+            onClick={handleOpenAdd} 
+            className="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-md shadow-blue-500/20 transition-all flex items-center gap-2"
+          >
             <Plus className="w-4 h-4" />
-            Thêm banner
+            Thêm Banner Mới
           </button>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {banners.map((banner) => (
-            <div key={banner.id} className="bg-white rounded-xl border border-slate-200 overflow-hidden group hover:shadow-lg transition-all">
-              <div className="aspect-video bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center">
-                <ImageIcon className="w-12 h-12 text-slate-400" />
-              </div>
-              <div className="p-4">
-                <div className="flex items-start justify-between mb-2">
-                  <h3 className="font-bold text-slate-900">{banner.title}</h3>
-                  <span className={`px-2 py-1 rounded-full text-xs font-bold ${banner.isActive ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-500'}`}>
-                    {banner.isActive ? 'Hiển thị' : 'Ẩn'}
-                  </span>
-                </div>
-                <p className="text-xs text-slate-500 mb-3">Position: {banner.position}</p>
-                <div className="flex items-center gap-2">
-                  <button className="flex-1 py-2 rounded-lg bg-slate-100 text-slate-700 text-xs font-semibold hover:bg-slate-200 transition-colors flex items-center justify-center gap-1">
-                    <Edit2 className="w-3 h-3" /> Sửa
-                  </button>
-                  <button onClick={() => handleDeleteBanner(banner.id)} className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {banners.length === 0 ? (
+          <div className="text-center py-20 bg-white rounded-3xl border border-slate-200 shadow-sm max-w-xl mx-auto">
+            <div className="w-16 h-16 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mx-auto mb-4">
+              <ImageIcon className="w-8 h-8" />
             </div>
-          ))}
-        </div>
+            <h2 className="text-xl font-bold text-slate-900 mb-2">Chưa có banner nào</h2>
+            <p className="text-slate-500 text-sm mb-6">Thêm banner để hiển thị các chương trình khuyến mãi và dịch vụ nổi bật trên trang chủ.</p>
+            <button
+              onClick={handleOpenAdd}
+              className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-sm transition-all inline-flex items-center gap-2"
+            >
+              <Plus className="w-4 h-4" /> Tạo Banner Đầu Tiên
+            </button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {banners.map((banner) => (
+              <div 
+                key={banner.id} 
+                className={`bg-white rounded-2xl border transition-all duration-200 overflow-hidden flex flex-col ${
+                  banner.isActive ? 'border-slate-200 shadow-sm hover:shadow-md' : 'border-slate-200 opacity-70 bg-slate-50/50'
+                }`}
+              >
+                {/* Banner Image Preview */}
+                <div className="relative aspect-[16/9] bg-slate-900 overflow-hidden group">
+                  {banner.imageUrl ? (
+                    <img 
+                      src={banner.imageUrl} 
+                      alt="Banner" 
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1200&q=80';
+                      }}
+                    />
+                  ) : (
+                    <div className="w-full h-full flex flex-col items-center justify-center text-slate-400 bg-gradient-to-br from-slate-800 to-slate-900">
+                      <ImageIcon className="w-12 h-12 mb-2 opacity-50" />
+                      <span className="text-xs">Chưa có ảnh banner</span>
+                    </div>
+                  )}
 
-        {banners.length === 0 && (
-          <div className="text-center py-12 text-slate-500">
-            <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-300" />
-            <p className="font-medium">Chưa có banner nào</p>
+                  {/* Status Badge */}
+                  <div className="absolute top-3 right-3">
+                    <span className={`px-3 py-1 rounded-full text-xs font-extrabold shadow-sm ${
+                      banner.isActive 
+                        ? 'bg-emerald-500 text-white' 
+                        : 'bg-slate-700 text-slate-300'
+                    }`}>
+                      {banner.isActive ? 'Đang Hiển Thị' : 'Tạm Ẩn'}
+                    </span>
+                  </div>
+
+                  {/* Order Badge */}
+                  <div className="absolute top-3 left-3">
+                    <span className="px-2.5 py-0.5 rounded-lg bg-black/60 backdrop-blur-sm text-white text-xs font-bold">
+                      Thứ tự: #{banner.displayOrder || 1}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Banner Details */}
+                <div className="p-5 flex-1 flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center gap-2 text-xs text-slate-500 mb-2">
+                      <ExternalLink className="w-3.5 h-3.5 text-blue-600" />
+                      <span className="font-mono truncate">{banner.linkUrl || 'Không có liên kết'}</span>
+                    </div>
+
+                    <div className="space-y-1 text-xs text-slate-500">
+                      {banner.startDate && (
+                        <p>Bắt đầu: <span className="font-semibold text-slate-700">{new Date(banner.startDate).toLocaleDateString('vi-VN')}</span></p>
+                      )}
+                      {banner.endDate && (
+                        <p>Kết thúc: <span className="font-semibold text-slate-700">{new Date(banner.endDate).toLocaleDateString('vi-VN')}</span></p>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Actions */}
+                  <div className="flex items-center gap-2 pt-4 mt-4 border-t border-slate-100">
+                    <button
+                      onClick={() => toggleStatus(banner)}
+                      className={`flex-1 py-2 rounded-xl text-xs font-bold transition-colors flex items-center justify-center gap-1.5 ${
+                        banner.isActive 
+                          ? 'bg-amber-50 text-amber-700 hover:bg-amber-100' 
+                          : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100'
+                      }`}
+                    >
+                      {banner.isActive ? <><EyeOff className="w-3.5 h-3.5" /> Ẩn Banner</> : <><Eye className="w-3.5 h-3.5" /> Kích Hoạt</>}
+                    </button>
+                    
+                    <button
+                      onClick={() => handleOpenEdit(banner)}
+                      className="p-2 rounded-xl text-slate-600 hover:text-blue-600 hover:bg-blue-50 transition-colors"
+                      title="Chỉnh sửa banner"
+                    >
+                      <Edit2 className="w-4 h-4" />
+                    </button>
+                    
+                    <button
+                      onClick={() => handleDeleteBanner(banner.id)}
+                      className="p-2 rounded-xl text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors"
+                      title="Xóa banner"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+
+                </div>
+              </div>
+            ))}
           </div>
         )}
       </main>
+
+      {/* Modal Thêm / Sửa Banner */}
+      {showModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 animate-in fade-in zoom-in duration-200">
+            <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-100">
+              <h3 className="text-lg font-bold text-slate-900">
+                {editingBanner ? 'Chỉnh Sửa Banner' : 'Thêm Banner Mới'}
+              </h3>
+              <button 
+                onClick={() => setShowModal(false)}
+                className="p-1.5 rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveBanner} className="space-y-4">
+              {/* Image URL / Upload */}
+              <div>
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                  Đường dẫn ảnh Banner (Image URL) *
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    type="url"
+                    value={formData.imageUrl}
+                    onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
+                    placeholder="https://example.com/banner.jpg"
+                    required
+                    className="flex-1 px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:border-blue-500 transition-colors"
+                  />
+                  <input 
+                    type="file" 
+                    ref={fileInputRef} 
+                    onChange={handleFileUpload} 
+                    accept="image/*" 
+                    className="hidden" 
+                  />
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="px-3.5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-colors flex items-center gap-1 shrink-0"
+                  >
+                    <Upload className="w-4 h-4" /> Tải Ảnh Lên
+                  </button>
+                </div>
+              </div>
+
+              {/* Image Preview */}
+              {formData.imageUrl && (
+                <div className="aspect-[16/9] rounded-xl overflow-hidden bg-slate-100 border border-slate-200">
+                  <img 
+                    src={formData.imageUrl} 
+                    alt="Preview" 
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1200&q=80';
+                    }}
+                  />
+                </div>
+              )}
+
+              {/* Link URL */}
+              <div>
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                  Liên kết khi nhấp (Link URL)
+                </label>
+                <input
+                  type="text"
+                  value={formData.linkUrl}
+                  onChange={(e) => setFormData({ ...formData, linkUrl: e.target.value })}
+                  placeholder="/services/cloud-vps hoặc https://..."
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:border-blue-500 transition-colors"
+                />
+              </div>
+
+              {/* Display Order & Status */}
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                    Thứ tự ưu tiên
+                  </label>
+                  <input
+                    type="number"
+                    min="1"
+                    value={formData.displayOrder}
+                    onChange={(e) => setFormData({ ...formData, displayOrder: parseInt(e.target.value) || 1 })}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:border-blue-500 transition-colors"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                    Trạng thái
+                  </label>
+                  <select
+                    value={formData.isActive ? 'active' : 'inactive'}
+                    onChange={(e) => setFormData({ ...formData, isActive: e.target.value === 'active' })}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:border-blue-500 transition-colors bg-white"
+                  >
+                    <option value="active">Hiển thị (Active)</option>
+                    <option value="inactive">Tạm ẩn (Inactive)</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Start & End Dates */}
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                    Ngày bắt đầu
+                  </label>
+                  <input
+                    type="date"
+                    value={formData.startDate}
+                    onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:border-blue-500 transition-colors"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                    Ngày kết thúc
+                  </label>
+                  <input
+                    type="date"
+                    value={formData.endDate}
+                    onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:border-blue-500 transition-colors"
+                  />
+                </div>
+              </div>
+
+              {/* Buttons */}
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setShowModal(false)}
+                  className="px-5 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 font-bold text-sm transition-colors"
+                >
+                  Hủy
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-bold text-sm shadow-md shadow-blue-500/20 transition-all flex items-center gap-2"
+                >
+                  {isSubmitting && <Loader2 className="w-4 h-4 animate-spin" />}
+                  {editingBanner ? 'Lưu Thay Đổi' : 'Tạo Banner'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
