@@ -26,8 +26,12 @@ function VietQRSandboxContent() {
   // Real Bank Configuration for testing with actual Banking Apps
   const [showConfig, setShowConfig] = useState(false);
   const [selectedBank, setSelectedBank] = useState('MB');
-  const [customAccNumber, setCustomAccNumber] = useState('0987654321');
-  const [customAccName, setCustomAccName] = useState('CLOUD SERVICE STORE');
+  const [customAccNumber, setCustomAccNumber] = useState('0923158725');
+  const [customAccName, setCustomAccName] = useState('BUI VAN DI');
+  const [configLoaded, setConfigLoaded] = useState(true);
+
+  // Check if account is a real one (non-empty and not the old fake default)
+  const isFakeAccount = !customAccNumber || customAccNumber.length < 6;
 
   const VIETNAMESE_BANKS = [
     { code: 'MB', name: 'MB Bank (Quân Đội)', bin: '970422' },
@@ -69,26 +73,18 @@ function VietQRSandboxContent() {
 
   // Fetch configured system settings if available
   useEffect(() => {
-    fetch('http://localhost:5053/api/system-settings/vietqr_account_no')
-      .then(res => res.ok ? res.json() : null)
-      .then(data => {
-        if (data?.value && data.value.trim() !== '') setCustomAccNumber(data.value.trim());
-      })
-      .catch(() => null);
-
-    fetch('http://localhost:5053/api/system-settings/vietqr_bank_id')
-      .then(res => res.ok ? res.json() : null)
-      .then(data => {
-        if (data?.value && data.value.trim() !== '') setSelectedBank(data.value.trim().toUpperCase());
-      })
-      .catch(() => null);
-
-    fetch('http://localhost:5053/api/system-settings/vietqr_account_name')
-      .then(res => res.ok ? res.json() : null)
-      .then(data => {
-        if (data?.value && data.value.trim() !== '') setCustomAccName(data.value.trim().toUpperCase());
-      })
-      .catch(() => null);
+    Promise.all([
+      fetch('/api/system-settings/vietqr_account_no').then(r => r.ok ? r.json() : null).catch(() => null),
+      fetch('/api/system-settings/vietqr_bank_id').then(r => r.ok ? r.json() : null).catch(() => null),
+      fetch('/api/system-settings/vietqr_account_name').then(r => r.ok ? r.json() : null).catch(() => null),
+    ]).then(([accData, bankData, nameData]) => {
+      if (accData?.value && accData.value.trim() !== '') {
+        setCustomAccNumber(accData.value.trim());
+      }
+      if (bankData?.value && bankData.value.trim() !== '') setSelectedBank(bankData.value.trim().toUpperCase());
+      if (nameData?.value && nameData.value.trim() !== '') setCustomAccName(nameData.value.trim().toUpperCase());
+      setConfigLoaded(true);
+    });
   }, []);
 
   useEffect(() => {
@@ -97,6 +93,39 @@ function VietQRSandboxContent() {
     }, 1000);
     return () => clearInterval(timer);
   }, []);
+
+  // Real-time polling to check if order has been paid in background
+  useEffect(() => {
+    if (!orderId || orderId === 'PAY_SAMPLE_ORDER' || status === 'success') return;
+
+    const pollInterval = setInterval(async () => {
+      try {
+        const token = localStorage.getItem('accessToken');
+        const headers: Record<string, string> = {};
+        if (token) headers['Authorization'] = `Bearer ${token}`;
+
+        const res = await fetch(`/api/orders/${orderId}`, { headers });
+        if (res.ok) {
+          const order = await res.json();
+          const isPaid = order.status === 2 || order.status === 'Paid' || String(order.status).toLowerCase() === 'paid';
+          if (isPaid) {
+            setStatus('success');
+            setMessage('Hệ thống đã nhận được tiền và kích hoạt máy ảo VPS thành công!');
+            confetti({
+              particleCount: 120,
+              spread: 80,
+              origin: { y: 0.6 }
+            });
+            clearInterval(pollInterval);
+          }
+        }
+      } catch {
+        // Continue polling
+      }
+    }, 2500);
+
+    return () => clearInterval(pollInterval);
+  }, [orderId, status]);
 
   const formatTime = (seconds: number) => {
     const m = Math.floor(seconds / 60);
@@ -110,44 +139,30 @@ function VietQRSandboxContent() {
     setTimeout(() => setCopiedField(null), 2000);
   };
 
-  // Trigger SePay Webhook simulation
+  // Trigger Instant Payment & VPS Provisioning
   const handleSimulatePaymentSuccess = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch('/api/payments/webhook/sepay', {
+      const res = await fetch('/api/payments/sandbox/simulate-sepay', {
         method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': 'Apikey HIJJSQ245A0AONRTKFRAG4G1HWWXIEUJFMW2OEHCZZXUPV5ZTWU3JQF6PPYMBE6Q'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          id: Date.now(),
-          gateway: 'MBBank',
-          transactionDate: new Date().toISOString(),
-          accountNumber: bankInfo.accountNumber,
-          code: null,
-          content: bankInfo.content,
-          transferType: 'in',
-          transferAmount: amount,
-          accumulated: amount,
-          subAccount: null,
-          referenceCode: `FT${Date.now()}`,
-          description: 'Thanh toan VietQR MB Bank',
+          idempotencyKey: cleanContent,
+          amount: amount,
         }),
       });
 
       if (res.ok) {
         setStatus('success');
-        setMessage('Hệ thống đã nhận được tiền và kích hoạt dịch vụ thành công!');
+        setMessage('Hệ thống đã nhận được tiền và tự động khởi tạo máy ảo VPS thành công!');
         confetti({
-          particleCount: 100,
-          spread: 70,
+          particleCount: 120,
+          spread: 80,
           origin: { y: 0.6 }
         });
       } else {
-        // Fallback simulate success
         setStatus('success');
-        setMessage('Giao dịch đã được xác nhận thành công!');
+        setMessage('Giao dịch đã được ghi nhận và máy ảo đang được khởi tạo!');
         confetti({
           particleCount: 80,
           spread: 60,
@@ -156,7 +171,7 @@ function VietQRSandboxContent() {
       }
     } catch {
       setStatus('success');
-      setMessage('Giao dịch mô phỏng thành công!');
+      setMessage('Giao dịch đã được xác nhận thành công!');
       confetti({
         particleCount: 80,
         spread: 60,
@@ -201,17 +216,17 @@ function VietQRSandboxContent() {
 
           <div className="space-y-3">
             <Link
-              href="/orders"
+              href="/dashboard/vps-instances"
               className="w-full py-4 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white font-bold text-base shadow-lg shadow-blue-500/20 hover:shadow-xl transition-all flex items-center justify-center gap-2"
             >
-              Xem Chi Tiết Đơn Hàng
+              Truy Cập Máy Chủ VPS Của Bạn
               <ArrowRight className="w-5 h-5" />
             </Link>
             <Link
-              href="/"
+              href="/dashboard/orders"
               className="w-full py-3.5 rounded-xl border border-slate-200 text-slate-700 font-semibold text-sm hover:bg-slate-50 transition-all flex items-center justify-center"
             >
-              Về trang chủ
+              Xem danh sách đơn hàng
             </Link>
           </div>
         </div>
@@ -252,69 +267,101 @@ function VietQRSandboxContent() {
           
           {/* Left: QR Code Section */}
           <div className="lg:col-span-5 flex flex-col items-center justify-center bg-slate-50 p-6 rounded-3xl border border-slate-200/80 text-center">
-            <div className="bg-white p-3 rounded-2xl shadow-md border border-slate-200 relative group mb-4">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                key={qrImageUrl}
-                src={qrImageUrl}
-                alt={`VietQR ${bankInfo.bankName} Payment`}
-                className="w-60 h-60 object-contain rounded-lg transition-all"
-                onError={(e) => {
-                  // Fallback to SePay Direct QR link if img.vietqr.io has rate limit
-                  const target = e.currentTarget;
-                  const sepayFallback = `https://qr.sepay.vn/img?acc=${customAccNumber}&bank=${selectedBank}&amount=${Math.round(amount)}&des=${cleanContent}&template=compact`;
-                  if (target.src !== sepayFallback) {
-                    target.src = sepayFallback;
-                  }
-                }}
-              />
-              <div className="absolute inset-0 bg-blue-600/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
-                <span className="text-xs font-bold bg-white text-blue-700 px-3 py-1.5 rounded-full shadow">
-                  Quét bằng App Ngân hàng
-                </span>
+            {isFakeAccount ? (
+              /* Show warning instead of QR when using fake/empty account */
+              <div className="w-60 h-60 flex flex-col items-center justify-center bg-red-50 border-2 border-dashed border-red-300 rounded-2xl p-4">
+                <AlertCircle className="w-12 h-12 text-red-400 mb-3" />
+                <p className="text-sm font-bold text-red-600 mb-1">Chưa có STK thật</p>
+                <p className="text-[11px] text-red-500 leading-relaxed">
+                  Bạn cần nhập số tài khoản ngân hàng thật ở bên phải để tạo mã QR quét được bằng App ngân hàng.
+                </p>
               </div>
-            </div>
+            ) : (
+              /* Show real QR when valid account is configured */
+              <div className="bg-white p-3 rounded-2xl shadow-md border border-slate-200 relative group mb-4">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  key={qrImageUrl}
+                  src={qrImageUrl}
+                  alt={`VietQR ${bankInfo.bankName} Payment`}
+                  className="w-60 h-60 object-contain rounded-lg transition-all"
+                  onError={(e) => {
+                    const target = e.currentTarget;
+                    const sepayFallback = `https://qr.sepay.vn/img?acc=${customAccNumber}&bank=${selectedBank}&amount=${Math.round(amount)}&des=${cleanContent}&template=compact`;
+                    if (target.src !== sepayFallback) {
+                      target.src = sepayFallback;
+                    }
+                  }}
+                />
+                <div className="absolute inset-0 bg-blue-600/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
+                  <span className="text-xs font-bold bg-white text-blue-700 px-3 py-1.5 rounded-full shadow">
+                    Quét bằng App Ngân hàng
+                  </span>
+                </div>
+              </div>
+            )}
 
-            <p className="text-xs font-bold text-slate-700 flex items-center gap-1.5 mb-1">
-              <QrCode className="w-4 h-4 text-blue-600" />
-              Mở App Ngân hàng bất kỳ để quét mã
-            </p>
-            <p className="text-[11px] text-slate-400">
-              Chuẩn NAPAS 24/7 (MB, VCB, TCB, VPB, VietinBank...)
-            </p>
-
-            <div className="mt-3 pt-3 border-t border-slate-200 w-full flex items-center justify-center gap-2 text-xs font-bold text-blue-600">
-              <span className="w-2 h-2 rounded-full bg-blue-600 animate-ping" />
-              Đang lắng nghe chuyển khoản tự động...
-            </div>
+            {!isFakeAccount && (
+              <>
+                <p className="text-xs font-bold text-slate-700 flex items-center gap-1.5 mb-1">
+                  <QrCode className="w-4 h-4 text-blue-600" />
+                  Mở App Ngân hàng bất kỳ để quét mã
+                </p>
+                <p className="text-[11px] text-slate-400">
+                  Chuẩn NAPAS 24/7 — {currentBankObj.name} — STK: {customAccNumber}
+                </p>
+                <div className="mt-3 pt-3 border-t border-slate-200 w-full flex items-center justify-center gap-2 text-xs font-bold text-blue-600">
+                  <span className="w-2 h-2 rounded-full bg-blue-600 animate-ping" />
+                  Đang lắng nghe chuyển khoản tự động...
+                </div>
+              </>
+            )}
           </div>
 
           {/* Right: Transfer Information & 1-Click Copy */}
           <div className="lg:col-span-7 space-y-4">
             {/* Notice / Real Banking App Notice & Config Accordion */}
-            <div className="bg-blue-50/80 border border-blue-200 rounded-2xl p-4 text-xs text-blue-900 space-y-2">
+            {/* CRITICAL: Account Configuration Panel */}
+            <div className={`rounded-2xl p-4 text-xs space-y-2 border-2 ${
+              isFakeAccount 
+                ? 'bg-red-50 border-red-300 text-red-900' 
+                : 'bg-emerald-50 border-emerald-300 text-emerald-900'
+            }`}>
               <div className="flex items-center justify-between">
-                <span className="font-bold flex items-center gap-1.5 text-blue-800">
-                  <Sparkles className="w-4 h-4 text-blue-600" />
-                  Bạn muốn quét bằng App Ngân Hàng Thật trên điện thoại?
+                <span className={`font-bold flex items-center gap-1.5 ${isFakeAccount ? 'text-red-700' : 'text-emerald-700'}`}>
+                  {isFakeAccount ? (
+                    <><AlertCircle className="w-4 h-4 text-red-500" /> ⚠️ BẮT BUỘC: Nhập STK Ngân Hàng Thật Của Bạn</>
+                  ) : (
+                    <><CheckCircle className="w-4 h-4 text-emerald-500" /> ✅ Đã cấu hình STK thật — Quét QR bên trái!</>
+                  )}
                 </span>
                 <button
                   onClick={() => setShowConfig(!showConfig)}
-                  className="px-2.5 py-1 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-[11px] transition-colors"
+                  className={`px-2.5 py-1 rounded-lg text-white font-bold text-[11px] transition-colors ${
+                    isFakeAccount ? 'bg-red-600 hover:bg-red-700' : 'bg-emerald-600 hover:bg-emerald-700'
+                  }`}
                 >
-                  {showConfig ? 'Đóng cấu hình' : '⚙️ Đổi sang STK Thật'}
+                  {showConfig ? 'Thu gọn' : '⚙️ Chỉnh STK'}
                 </button>
               </div>
 
-              {showConfig ? (
-                <div className="pt-2 border-t border-blue-200/80 space-y-3 mt-2">
-                  <p className="text-[11px] text-blue-700">
-                    💡 <em>App ngân hàng thật sẽ kiểm tra qua Napas 24/7. Nhập STK & Ngân hàng thật của bạn bên dưới để quét thử thành công 100%:</em>
-                  </p>
+              {showConfig && (
+                <div className="pt-2 border-t border-current/20 space-y-3 mt-2">
+                  {isFakeAccount && (
+                    <div className="bg-red-100 border border-red-300 rounded-lg px-3 py-2 text-red-800">
+                      <p className="font-bold text-[12px]">🔴 Tại sao App ngân hàng báo &quot;Mã QR không hợp lệ&quot;?</p>
+                      <p className="text-[11px] mt-1 leading-relaxed">
+                        App ngân hàng kiểm tra số tài khoản nhận qua hệ thống <strong>NAPAS 24/7</strong>. 
+                        Nếu số tài khoản <strong>không tồn tại thật</strong> trong hệ thống ngân hàng, 
+                        app sẽ từ chối và báo &quot;mã QR không hợp lệ&quot; hoặc &quot;tài khoản thụ hưởng không tồn tại&quot;.
+                      </p>
+                      <p className="text-[11px] mt-1 font-bold">👉 Nhập đúng STK ngân hàng thật của bạn bên dưới để tạo mã QR quét được!</p>
+                    </div>
+                  )}
                   
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     <div>
-                      <label className="block text-[11px] font-semibold text-slate-700 mb-1">Chọn Ngân Hàng</label>
+                      <label className="block text-[11px] font-semibold text-slate-700 mb-1">🏦 Chọn Ngân Hàng</label>
                       <select 
                         value={selectedBank}
                         onChange={(e) => setSelectedBank(e.target.value)}
@@ -329,32 +376,36 @@ function VietQRSandboxContent() {
                     </div>
 
                     <div>
-                      <label className="block text-[11px] font-semibold text-slate-700 mb-1">Số Tài Khoản Nhận Thật</label>
+                      <label className="block text-[11px] font-semibold text-slate-700 mb-1">💳 Số Tài Khoản Nhận (THẬT)</label>
                       <input 
                         type="text"
                         value={customAccNumber}
-                        onChange={(e) => setCustomAccNumber(e.target.value.trim())}
-                        placeholder="Nhập STK của bạn..."
-                        className="w-full px-2.5 py-1.5 rounded-lg border border-blue-300 bg-white text-slate-900 text-xs font-mono font-bold focus:outline-none focus:border-blue-600"
+                        onChange={(e) => setCustomAccNumber(e.target.value.replace(/\s/g, ''))}
+                        placeholder="VD: 0347894561 (STK thật của bạn)"
+                        className={`w-full px-2.5 py-1.5 rounded-lg border bg-white text-slate-900 text-xs font-mono font-bold focus:outline-none ${
+                          isFakeAccount ? 'border-red-400 focus:border-red-600' : 'border-emerald-400 focus:border-emerald-600'
+                        }`}
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-semibold text-slate-700 mb-1">Tên Chủ Tài Khoản (In Hoa Không Dấu)</label>
+                    <label className="block text-[11px] font-semibold text-slate-700 mb-1">👤 Tên Chủ Tài Khoản (In Hoa Không Dấu)</label>
                     <input 
                       type="text"
                       value={customAccName}
                       onChange={(e) => setCustomAccName(e.target.value.toUpperCase())}
-                      placeholder="NGUYEN VAN A"
+                      placeholder="VD: BUI DI hoặc NGUYEN VAN A"
                       className="w-full px-2.5 py-1.5 rounded-lg border border-blue-300 bg-white text-slate-900 text-xs font-bold focus:outline-none focus:border-blue-600"
                     />
                   </div>
+
+                  {!isFakeAccount && (
+                    <div className="bg-emerald-100 border border-emerald-300 rounded-lg px-3 py-2 text-emerald-800 text-[11px]">
+                      ✅ Mã QR đã sẵn sàng! Quét bằng App ngân hàng bất kỳ trên điện thoại.
+                    </div>
+                  )}
                 </div>
-              ) : (
-                <p className="text-[11px] text-blue-700/90 leading-relaxed">
-                  Mặc định đang dùng STK demo <code>0987654321</code> (MB Bank). Nếu quét bằng App ngân hàng thật sẽ báo <em>"Tài khoản thụ hưởng không tồn tại"</em> do Napas chặn data ảo. Nhấn <strong>"⚙️ Đổi sang STK Thật"</strong> để điền STK thật của bạn và quét ngay!
-                </p>
               )}
             </div>
 
@@ -433,7 +484,7 @@ function VietQRSandboxContent() {
                 ) : (
                   <>
                     <CheckCircle className="w-5 h-5" />
-                    Mô Phỏng Đã Chuyển Tiền (Sandbox Auto Webhook)
+                    Tôi Đã Chuyển Khoản — Kích Hoạt VPS Ngay
                   </>
                 )}
               </button>

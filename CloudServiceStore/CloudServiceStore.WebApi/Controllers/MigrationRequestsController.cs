@@ -54,8 +54,12 @@ public class MigrationRequestsController : ControllerBase
     [HttpPatch("{id:guid}/status")]
     public async Task<IActionResult> UpdateStatus(Guid id, [FromBody] UpdateMigrationStatusCommand command, CancellationToken ct)
     {
-        if (id != command.Id) return BadRequest("Mismatched Id");
-        var result = await _mediator.Send(command, ct);
+        var cmd = (command.Id == Guid.Empty || command.Id == id) ? command with { Id = id } : command;
+        if (id != cmd.Id)
+        {
+            throw new CloudServiceStore.Application.Exceptions.BadRequestException("Mismatched Id");
+        }
+        var result = await _mediator.Send(cmd, ct);
         return Ok(new { success = result });
     }
 }

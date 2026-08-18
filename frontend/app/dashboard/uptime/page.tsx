@@ -142,8 +142,8 @@ export default function DashboardUptimePage() {
 
       {/* Uptime Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {uptimeData.map((data, idx) => (
-          <div key={idx} className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+        {uptimeData.map((data) => (
+          <div key={`uptime-${data.period}`} className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
             <p className="text-sm text-slate-500 mb-2">{data.period}</p>
             <p className={`text-3xl font-black ${getUptimeColor(data.uptime)}`}>
               {data.uptime.toFixed(1)}%

@@ -125,7 +125,19 @@ if (app.Environment.IsDevelopment())
 app.UseMiddleware<CloudServiceStore.WebApi.Middlewares.ExceptionHandlingMiddleware>();
 
 app.UseHttpsRedirection();
+
+var imagesDirectory = System.IO.Path.Combine(app.Environment.ContentRootPath, "images");
+if (!System.IO.Directory.Exists(imagesDirectory))
+{
+    System.IO.Directory.CreateDirectory(imagesDirectory);
+}
+
 app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(imagesDirectory),
+    RequestPath = "/images"
+});
 
 app.UseRateLimiter();
 app.UseCors("Frontend");

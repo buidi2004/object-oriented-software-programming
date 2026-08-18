@@ -34,7 +34,7 @@ export default function CustomerDomainsDashboardPage() {
     setLoading(true);
     try {
       const token = localStorage.getItem('accessToken');
-      const res = await fetch('http://localhost:5053/api/domains/my', {
+      const res = await fetch('/api/domains/me', {
         headers: token ? { Authorization: `Bearer ${token}` } : {}
       });
       if (res.ok) {

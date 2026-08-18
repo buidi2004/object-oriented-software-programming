@@ -29,8 +29,7 @@ public class GetVpsInstancesQueryHandler : IRequestHandler<GetVpsInstancesQuery,
 
     public async Task<IEnumerable<VpsInstanceDto>> Handle(GetVpsInstancesQuery request, CancellationToken cancellationToken)
     {
-        var allInstances = await _repository.GetAllAsync(cancellationToken);
-        IEnumerable<VpsInstance> instances;
+        IReadOnlyList<VpsInstance> instances;
 
         if (request.AdminAll)
         {
@@ -39,7 +38,8 @@ public class GetVpsInstancesQueryHandler : IRequestHandler<GetVpsInstancesQuery,
                 throw new UnauthorizedException("Chỉ admin mới xem được toàn bộ VPS.");
             }
 
-            instances = allInstances.OrderByDescending(x => x.CreatedAt);
+            var all = await _repository.GetAllAsync(cancellationToken);
+            instances = all.OrderByDescending(x => x.CreatedAt).ToList();
         }
         else
         {
@@ -48,14 +48,13 @@ public class GetVpsInstancesQueryHandler : IRequestHandler<GetVpsInstancesQuery,
                 return Enumerable.Empty<VpsInstanceDto>();
             }
 
-            instances = allInstances
-                .Where(x => x.UserId == _currentUserService.UserId.Value)
-                .OrderByDescending(x => x.CreatedAt);
+            var userVps = await _repository.WhereAsync(x => x.UserId == _currentUserService.UserId.Value, cancellationToken);
+            instances = userVps.OrderByDescending(x => x.CreatedAt).ToList();
         }
 
         var userIds = instances.Select(x => x.UserId).Distinct().ToList();
-        var users = await _userRepository.GetAllAsync(cancellationToken);
-        var userMap = users.Where(u => userIds.Contains(u.Id)).ToDictionary(u => u.Id, u => u.Email);
+        var users = await _userRepository.WhereAsync(u => userIds.Contains(u.Id), cancellationToken);
+        var userMap = users.ToDictionary(u => u.Id, u => u.Email);
 
         return instances
             .Select(instance => VpsInstanceMapper.ToDto(

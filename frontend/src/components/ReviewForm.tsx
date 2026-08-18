@@ -23,9 +23,9 @@ export default function ReviewForm({ orderId }: ReviewFormProps) {
     setIsSubmitting(true);
     try {
       await api.post('/reviews', {
-        serviceId: orderId, // Or the actual service ID linked to the order
+        servicePlanId: orderId,
         rating,
-        content
+        comment: content || 'Dịch vụ rất tốt.'
       });
       setIsSubmitted(true);
     } catch (error) {

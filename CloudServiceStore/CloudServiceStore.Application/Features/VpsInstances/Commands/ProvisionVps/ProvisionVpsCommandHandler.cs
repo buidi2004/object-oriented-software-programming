@@ -97,6 +97,15 @@ public class ProvisionVpsCommandHandler : IRequestHandler<ProvisionVpsCommand, S
                 continue;
             }
 
+            var activeVpsList = await _vpsRepo.WhereAsync(
+                v => v.UserId == order.UserId && v.Status != VpsInstanceStatus.Terminated,
+                cancellationToken);
+
+            if (activeVpsList.Count >= 10)
+            {
+                throw new BadRequestException("Bạn đã đạt giới hạn tối đa 10 máy chủ Cloud VPS hoạt động cùng lúc.");
+            }
+
             var (cpuCores, memoryBytes, diskGb) = _specParser.Parse(plan);
             var containerName = BuildContainerName(plan.Name, order.UserId);
             var spec = new VpsProvisionSpec(

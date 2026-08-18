@@ -105,13 +105,14 @@ export default function AdminNewsPage() {
 
   const handleOpenEditModal = (item: NewsItem) => {
     setEditingId(item.id);
+    const isPub = String(item.status).toLowerCase() === 'published' || item.status === '1' || (item as any).status === 1;
     setFormData({
-      title: item.title,
-      slug: item.slug,
+      title: item.title || '',
+      slug: item.slug || '',
       content: item.content || '',
       thumbnailUrl: item.thumbnailUrl || '',
       tags: item.tags || '',
-      status: item.status.toLowerCase() === 'published' ? 1 : 0
+      status: isPub ? 1 : 0
     });
     setShowModal(true);
   };
@@ -208,13 +209,18 @@ export default function AdminNewsPage() {
     }
   };
 
+  const isItemPublished = (itemStatus: any) => {
+    const s = String(itemStatus || '').toLowerCase();
+    return s === 'published' || s === '1';
+  };
+
   const filteredNews = news.filter(n => {
-    const matchesSearch = n.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    const matchesSearch = (n.title || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
       (n.tags && n.tags.toLowerCase().includes(searchTerm.toLowerCase())) ||
-      n.slug.toLowerCase().includes(searchTerm.toLowerCase());
+      (n.slug || '').toLowerCase().includes(searchTerm.toLowerCase());
     
-    if (statusFilter === 'published') return matchesSearch && n.status.toLowerCase() === 'published';
-    if (statusFilter === 'draft') return matchesSearch && n.status.toLowerCase() === 'draft';
+    if (statusFilter === 'published') return matchesSearch && isItemPublished(n.status);
+    if (statusFilter === 'draft') return matchesSearch && !isItemPublished(n.status);
     return matchesSearch;
   });
 
@@ -310,7 +316,14 @@ export default function AdminNewsPage() {
               {/* Thumbnail */}
               <div className="h-44 bg-slate-100 relative overflow-hidden border-b border-slate-100 flex items-center justify-center">
                 {item.thumbnailUrl ? (
-                  <img src={item.thumbnailUrl} alt={item.title} className="w-full h-full object-cover" />
+                  <img 
+                    src={item.thumbnailUrl} 
+                    alt={item.title} 
+                    className="w-full h-full object-cover" 
+                    onError={(e) => {
+                      (e.currentTarget as HTMLElement).style.display = 'none';
+                    }}
+                  />
                 ) : (
                   <div className="flex flex-col items-center gap-2 text-slate-400">
                     <ImageIcon className="w-8 h-8 opacity-40" />
@@ -318,9 +331,9 @@ export default function AdminNewsPage() {
                   </div>
                 )}
                 <span className={`absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-bold shadow-sm backdrop-blur-md ${
-                  item.status.toLowerCase() === 'published' ? 'bg-emerald-500 text-white' : 'bg-amber-500 text-white'
+                  isItemPublished(item.status) ? 'bg-emerald-500 text-white' : 'bg-amber-500 text-white'
                 }`}>
-                  {item.status.toLowerCase() === 'published' ? 'Đã xuất bản' : 'Bản nháp'}
+                  {isItemPublished(item.status) ? 'Đã xuất bản' : 'Bản nháp'}
                 </span>
               </div>
 
@@ -347,7 +360,7 @@ export default function AdminNewsPage() {
                 </p>
                 
                 <div className="mt-auto pt-4 border-t border-slate-100 flex items-center gap-2">
-                  {item.status.toLowerCase() !== 'published' ? (
+                  {!isItemPublished(item.status) ? (
                     <button 
                       onClick={() => handleTogglePublish(item)}
                       className="flex-1 py-2 rounded-xl bg-emerald-50 text-emerald-700 hover:bg-emerald-100 text-xs font-bold transition-colors flex items-center justify-center gap-1.5"
@@ -482,7 +495,14 @@ export default function AdminNewsPage() {
                 </div>
                 {formData.thumbnailUrl && (
                   <div className="mt-2 relative w-full h-32 rounded-xl overflow-hidden border border-slate-200">
-                    <img src={formData.thumbnailUrl} alt="Preview" className="w-full h-full object-cover" />
+                    <img 
+                      src={formData.thumbnailUrl} 
+                      alt="Preview" 
+                      className="w-full h-full object-cover" 
+                      onError={(e) => {
+                        (e.currentTarget as HTMLElement).style.display = 'none';
+                      }}
+                    />
                   </div>
                 )}
               </div>

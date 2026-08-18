@@ -80,6 +80,19 @@ export default function AdminFAQsPage() {
 
   const handleCreateFaq = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!newFaq.question.trim()) {
+      alert('Vui lòng nhập câu hỏi.');
+      return;
+    }
+    if (newFaq.answer.trim().length < 10) {
+      alert('Câu trả lời phải có độ dài tối thiểu 10 ký tự.');
+      return;
+    }
+    if (!newFaq.categoryTag.trim()) {
+      alert('Vui lòng nhập danh mục cho câu hỏi.');
+      return;
+    }
+
     setIsSubmitting(true);
     const token = localStorage.getItem('accessToken');
     try {
@@ -97,11 +110,15 @@ export default function AdminFAQsPage() {
         setNewFaq({ question: '', answer: '', categoryTag: 'General', displayOrder: 1 });
         await fetchFaqs(token!);
       } else {
-        alert('Failed to create FAQ');
+        const errData = await response.json().catch(() => null);
+        const errorMsg = errData?.errors
+          ? Object.values(errData.errors).flat().join('\n')
+          : (errData?.detail || errData?.title || 'Không thể tạo câu hỏi FAQ');
+        alert(errorMsg);
       }
     } catch (error) {
       console.error('Error creating FAQ:', error);
-      alert('An error occurred');
+      alert('Đã có lỗi xảy ra khi kết nối máy chủ.');
     } finally {
       setIsSubmitting(false);
     }
@@ -233,14 +250,17 @@ export default function AdminFAQsPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Câu trả lời</label>
+                <label className="block text-sm font-medium text-slate-700 mb-1">
+                  Câu trả lời <span className="text-xs text-slate-400 font-normal">(tối thiểu 10 ký tự)</span>
+                </label>
                 <textarea
                   required
+                  minLength={10}
                   value={newFaq.answer}
                   onChange={e => setNewFaq({...newFaq, answer: e.target.value})}
                   rows={4}
                   className="w-full px-4 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
-                  placeholder="Nhập câu trả lời..."
+                  placeholder="Nhập câu trả lời chi tiết (tối thiểu 10 ký tự)..."
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -54,11 +54,65 @@ namespace CloudServiceStore.Infrastructure.Migrations
                 principalTable: "Carts",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddColumn<int>(
+                name: "CpuCores",
+                table: "VpsInstances",
+                type: "int",
+                nullable: false,
+                defaultValue: 1);
+
+            migrationBuilder.AddColumn<int>(
+                name: "RamMb",
+                table: "VpsInstances",
+                type: "int",
+                nullable: false,
+                defaultValue: 1024);
+
+            migrationBuilder.AddColumn<int>(
+                name: "DiskGb",
+                table: "VpsInstances",
+                type: "int",
+                nullable: true);
+
+            migrationBuilder.AddColumn<Guid>(
+                name: "PlanId",
+                table: "VpsInstances",
+                type: "uniqueidentifier",
+                nullable: false,
+                defaultValue: Guid.Empty);
+
+            migrationBuilder.AddColumn<string>(
+                name: "PlanName",
+                table: "VpsInstances",
+                type: "nvarchar(max)",
+                nullable: false,
+                defaultValue: "");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropColumn(
+                name: "CpuCores",
+                table: "VpsInstances");
+
+            migrationBuilder.DropColumn(
+                name: "RamMb",
+                table: "VpsInstances");
+
+            migrationBuilder.DropColumn(
+                name: "DiskGb",
+                table: "VpsInstances");
+
+            migrationBuilder.DropColumn(
+                name: "PlanId",
+                table: "VpsInstances");
+
+            migrationBuilder.DropColumn(
+                name: "PlanName",
+                table: "VpsInstances");
+
             migrationBuilder.DropForeignKey(
                 name: "FK_CartItems_Carts_CartId",
                 table: "CartItems");

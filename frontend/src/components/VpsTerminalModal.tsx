@@ -37,29 +37,48 @@ export default function VpsTerminalModal({ isOpen, onClose, vpsInstanceId }: Vps
     term.loadAddon(fitAddon);
     
     term.open(terminalRef.current);
-    fitAddon.fit();
+
+    const safeFit = () => {
+      try {
+        if (terminalRef.current && terminalRef.current.clientWidth > 0 && terminalRef.current.clientHeight > 0) {
+          fitAddon.fit();
+        }
+      } catch (e) {
+        // Safe ignore initial render measurement race
+      }
+    };
+
+    const fitTimer = setTimeout(safeFit, 60);
     xtermRef.current = term;
 
     // Connect to SignalR
-    const token = localStorage.getItem('accessToken');
+    const token = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
     const connection = new signalR.HubConnectionBuilder()
       .withUrl(process.env.NEXT_PUBLIC_API_URL ? `${process.env.NEXT_PUBLIC_API_URL}/hubs/vps-terminal` : '/hubs/vps-terminal', {
         accessTokenFactory: () => token || ''
       })
-      .withAutomaticReconnect()
+      .configureLogging(signalR.LogLevel.None)
+      .withAutomaticReconnect([0, 1000, 3000, 5000])
       .build();
 
     connectionRef.current = connection;
+    const isConnectedRef = { current: false };
 
     term.writeln('\x1b[33mConnecting to VPS...\x1b[0m');
 
     connection.start()
       .then(() => {
+        isConnectedRef.current = true;
         setIsConnected(true);
         term.writeln('\x1b[32mConnected successfully.\x1b[0m');
         term.write('root@vps:~# ');
+        safeFit();
+        term.focus();
       })
-      .catch(err => {
+      .catch((err: any) => {
+        if (err?.name === 'AbortError' || err?.message?.includes('stopped during negotiation')) {
+          return;
+        }
         console.error('SignalR Connection Error: ', err);
         setError('Failed to connect to terminal server.');
         term.writeln('\x1b[31mFailed to connect to VPS.\x1b[0m');
@@ -75,7 +94,7 @@ export default function VpsTerminalModal({ isOpen, onClose, vpsInstanceId }: Vps
     let currentInput = '';
     
     term.onData(data => {
-      if (!isConnected) return;
+      if (!isConnectedRef.current && connection.state !== signalR.HubConnectionState.Connected) return;
       
       const char = data;
       // Handle enter
@@ -85,32 +104,38 @@ export default function VpsTerminalModal({ isOpen, onClose, vpsInstanceId }: Vps
           connection.invoke('SendCommand', vpsInstanceId, currentInput).catch(err => {
             console.error('Failed to send command:', err);
             term.writeln('\r\n\x1b[31mError sending command\x1b[0m');
+            term.write('root@vps:~# ');
           });
         } else {
           term.write('root@vps:~# ');
         }
         currentInput = '';
-      } else if (char === '\x7F') {
+      } else if (char === '\x7F' || char === '\b') {
         // Backspace
         if (currentInput.length > 0) {
           term.write('\b \b');
           currentInput = currentInput.slice(0, -1);
         }
-      } else {
+      } else if (char >= ' ' || char === '\t') {
         term.write(char);
         currentInput += char;
       }
     });
 
-    const handleResize = () => fitAddon.fit();
+    const handleResize = () => safeFit();
     window.addEventListener('resize', handleResize);
 
     return () => {
+      clearTimeout(fitTimer);
       window.removeEventListener('resize', handleResize);
-      if (connection.state === signalR.HubConnectionState.Connected) {
-        connection.stop();
+      if (connection.state !== signalR.HubConnectionState.Disconnected) {
+        connection.stop().catch(() => {});
       }
-      term.dispose();
+      try {
+        term.dispose();
+      } catch (e) {}
+      xtermRef.current = null;
+      connectionRef.current = null;
     };
   }, [isOpen, vpsInstanceId]);
 

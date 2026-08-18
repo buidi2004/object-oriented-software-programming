@@ -46,7 +46,10 @@ export default function AdminRevenuePage() {
     setTimeout(() => setToast(null), 3500);
   };
 
+  const [mounted, setMounted] = useState(false);
+
   useEffect(() => {
+    setMounted(true);
     checkAdminAccess();
   }, [dateRange]);
 
@@ -69,29 +72,63 @@ export default function AdminRevenuePage() {
     }
   };
 
-  const fetchRevenueData = () => {
+  const fetchRevenueData = async () => {
     setIsLoading(true);
-    const count = dateRange === '7d' ? 7 : dateRange === '30d' ? 30 : dateRange === '90d' ? 90 : 365;
-    
-    const mockData: RevenueData[] = Array.from({ length: count }, (_, i) => ({
-      date: new Date(Date.now() - (count - 1 - i) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-      revenue: Math.floor(Math.random() * 35000000 + 8000000),
-      orders: Math.floor(Math.random() * 40) + 8,
-      users: Math.floor(Math.random() * 15) + 3,
-    }));
-    
-    setRevenueData(mockData);
-    const totalRev = mockData.reduce((sum, item) => sum + item.revenue, 0);
-    const totalOrd = mockData.reduce((sum, item) => sum + item.orders, 0);
-    
-    setStats({
-      totalRevenue: totalRev,
-      totalOrders: totalOrd,
-      totalUsers: 240,
-      averageOrderValue: totalOrd > 0 ? totalRev / totalOrd : 0,
-      monthlyGrowth: 18.2,
-    });
-    setIsLoading(false);
+    try {
+      const days = dateRange === '7d' ? 7 : dateRange === '30d' ? 30 : dateRange === '90d' ? 90 : 365;
+      const endDate = new Date().toISOString();
+      const startDate = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString();
+
+      const [revRes, ordersRes, usersRes] = await Promise.all([
+        api.get(`/dashboard/revenue-stats?startDate=${startDate}&endDate=${endDate}`).catch(() => null),
+        api.get('/orders').catch(() => null),
+        api.get('/users').catch(() => null)
+      ]);
+
+      const paidOrders = Array.isArray(ordersRes?.data) ? ordersRes.data.filter((o: any) => o.status === 'Paid' || o.status === 1) : [];
+      const totalRev = revRes?.data?.totalRevenue ?? paidOrders.reduce((sum: number, o: any) => sum + (o.totalAmount || 0), 0);
+      const totalOrd = revRes?.data?.totalOrders ?? paidOrders.length;
+      const totalUsers = Array.isArray(usersRes?.data) ? usersRes.data.length : 1;
+
+      // Group real orders by day
+      const daysMap: Record<string, { revenue: number; orders: number; users: number }> = {};
+      for (let i = days - 1; i >= 0; i--) {
+        const d = new Date(Date.now() - i * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+        daysMap[d] = { revenue: 0, orders: 0, users: 0 };
+      }
+
+      if (Array.isArray(ordersRes?.data)) {
+        for (const ord of ordersRes.data) {
+          const dateStr = (ord.createdAt || '').split('T')[0];
+          if (daysMap[dateStr]) {
+            daysMap[dateStr].orders += 1;
+            if (ord.status === 'Paid' || ord.status === 1) {
+              daysMap[dateStr].revenue += ord.totalAmount || 0;
+            }
+          }
+        }
+      }
+
+      const formattedData: RevenueData[] = Object.entries(daysMap).map(([date, val]) => ({
+        date,
+        revenue: val.revenue,
+        orders: val.orders,
+        users: val.users
+      }));
+
+      setRevenueData(formattedData);
+      setStats({
+        totalRevenue: totalRev,
+        totalOrders: totalOrd,
+        totalUsers: totalUsers,
+        averageOrderValue: totalOrd > 0 ? totalRev / totalOrd : 0,
+        monthlyGrowth: 0,
+      });
+    } catch (err) {
+      console.error('Failed to load revenue data:', err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleExport = (format: 'csv' | 'excel' | 'pdf') => {
@@ -241,28 +278,32 @@ export default function AdminRevenuePage() {
             </div>
           </div>
 
-          <div className="h-80">
-            <React.Suspense fallback={<div className="flex items-center justify-center h-full"><div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" /></div>}>
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={revenueData}>
-                  <defs>
-                    <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.8}/>
-                      <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
-                  <XAxis dataKey="date" stroke="#94a3b8" fontSize={11} />
-                  <YAxis stroke="#94a3b8" fontSize={11} tickFormatter={(value) => `${(value / 1000000).toFixed(0)}M`} />
-                  <Tooltip 
-                    contentStyle={{ backgroundColor: '#0f172a', border: 'none', borderRadius: '16px', color: '#fff', fontSize: '12px' }}
-                    formatter={(value: any) => [`${Number(value).toLocaleString('vi-VN')} đ`, 'Doanh Thu']}
-                    labelFormatter={(label) => `Ngày ${label}`}
-                  />
-                  <Area type="monotone" dataKey="revenue" stroke="#2563eb" strokeWidth={2.5} fillOpacity={1} fill="url(#colorRevenue)" />
-                </AreaChart>
-              </ResponsiveContainer>
-            </React.Suspense>
+          <div className="h-80 w-full min-w-0">
+            {mounted ? (
+              <React.Suspense fallback={<div className="flex items-center justify-center h-full"><div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" /></div>}>
+                <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={300}>
+                  <AreaChart data={revenueData}>
+                    <defs>
+                      <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.8}/>
+                        <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                    <XAxis dataKey="date" stroke="#94a3b8" fontSize={11} />
+                    <YAxis stroke="#94a3b8" fontSize={11} tickFormatter={(value) => `${(value / 1000000).toFixed(0)}M`} />
+                    <Tooltip 
+                      contentStyle={{ backgroundColor: '#0f172a', border: 'none', borderRadius: '16px', color: '#fff', fontSize: '12px' }}
+                      formatter={(value: any) => [`${Number(value).toLocaleString('vi-VN')} đ`, 'Doanh Thu']}
+                      labelFormatter={(label) => `Ngày ${label}`}
+                    />
+                    <Area type="monotone" dataKey="revenue" stroke="#2563eb" strokeWidth={2.5} fillOpacity={1} fill="url(#colorRevenue)" />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </React.Suspense>
+            ) : (
+              <div className="flex items-center justify-center h-full"><div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" /></div>
+            )}
           </div>
         </div>
 
@@ -289,18 +330,22 @@ export default function AdminRevenuePage() {
           <div className="lg:col-span-2 bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm">
             <h2 className="text-base font-black text-slate-900 mb-1">Đơn Hàng &amp; Khách Mới Mỗi Ngày</h2>
             <p className="text-xs text-slate-500 mb-4">Lượng giao dịch phát sinh trên hệ thống</p>
-            <div className="h-64">
-              <React.Suspense fallback={<div className="flex items-center justify-center h-full"><div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" /></div>}>
-                <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={revenueData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
-                    <XAxis dataKey="date" stroke="#94a3b8" fontSize={11} />
-                    <YAxis stroke="#94a3b8" fontSize={11} />
-                    <Tooltip contentStyle={{ backgroundColor: '#0f172a', border: 'none', borderRadius: '16px', color: '#fff', fontSize: '12px' }} />
-                    <Area type="monotone" dataKey="orders" stroke="#10b981" fill="#10b981" fillOpacity={0.2} name="Đơn hàng" />
-                  </AreaChart>
-                </ResponsiveContainer>
-              </React.Suspense>
+            <div className="h-64 w-full min-w-0">
+              {mounted ? (
+                <React.Suspense fallback={<div className="flex items-center justify-center h-full"><div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" /></div>}>
+                  <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={240}>
+                    <AreaChart data={revenueData}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                      <XAxis dataKey="date" stroke="#94a3b8" fontSize={11} />
+                      <YAxis stroke="#94a3b8" fontSize={11} />
+                      <Tooltip contentStyle={{ backgroundColor: '#0f172a', border: 'none', borderRadius: '16px', color: '#fff', fontSize: '12px' }} />
+                      <Area type="monotone" dataKey="orders" stroke="#10b981" fill="#10b981" fillOpacity={0.2} name="Đơn hàng" />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </React.Suspense>
+              ) : (
+                <div className="flex items-center justify-center h-full"><div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" /></div>
+              )}
             </div>
           </div>
         </div>

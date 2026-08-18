@@ -21,7 +21,7 @@ export default function SslCertificatesPage() {
         router.push('/login');
         return;
       }
-      const res = await fetch('/api/ssl/certificates', {
+      const res = await fetch('/api/ssl', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (res.ok) {

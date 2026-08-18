@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -429,7 +429,7 @@ namespace CloudServiceStore.Infrastructure.Migrations
                         column: x => x.SenderId,
                         principalTable: "AppUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_TicketMessages_SupportTickets_TicketId",
                         column: x => x.TicketId,

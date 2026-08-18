@@ -27,9 +27,9 @@ public static class DbSeeder
                 {
                     try
                     {
-                        logger.LogInformation("Attempting to connect to database (attempt {Attempt}/{Max})...", i + 1, maxRetries);
-                        await context.Database.EnsureCreatedAsync();
-                        logger.LogInformation("Database connection established and schema ensured.");
+                        logger.LogInformation("Attempting to migrate database (attempt {Attempt}/{Max})...", i + 1, maxRetries);
+                        await context.Database.MigrateAsync();
+                        logger.LogInformation("Database connection established and migrations applied.");
                         break;
                     }
                     catch (Exception ex) when (i < maxRetries - 1)
@@ -238,6 +238,24 @@ public static class DbSeeder
                     var adminUser = new AppUser(
                         "System Administrator",
                         "admin@system.local",
+                        passwordHash,
+                        adminRole.Id,
+                        "0901234567"
+                    );
+                    await context.AppUsers.AddAsync(adminUser);
+                    await context.SaveChangesAsync();
+                }
+            }
+
+            if (!context.AppUsers.Any(u => u.Email == "admin@cloudservicestore.com"))
+            {
+                var adminRole = await context.Roles.FirstOrDefaultAsync(r => r.Name == "Admin");
+                if (adminRole != null)
+                {
+                    var passwordHash = BCrypt.Net.BCrypt.HashPassword("Admin@123");
+                    var adminUser = new AppUser(
+                        "Cloud Administrator",
+                        "admin@cloudservicestore.com",
                         passwordHash,
                         adminRole.Id,
                         "0901234567"

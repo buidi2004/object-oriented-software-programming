@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowRight, Gauge, ShieldCheck, Headset, Sparkles, CheckCircle2, Cloud } from 'lucide-react';
 
 interface HeroProps {
@@ -9,6 +9,18 @@ interface HeroProps {
 }
 
 export const Hero: React.FC<HeroProps> = ({ onStartClick, onPriceClick }) => {
+  const [heroImage, setHeroImage] = useState('https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1200&q=80');
+
+  useEffect(() => {
+    fetch('/api/banners')
+      .then(res => res.ok ? res.json() : [])
+      .then((data: any[]) => {
+        if (Array.isArray(data) && data.length > 0 && data[0].imageUrl) {
+          setHeroImage(data[0].imageUrl);
+        }
+      })
+      .catch(() => {});
+  }, []);
   return (
     <section id="hero-section" className="relative pt-8 pb-16 lg:pt-14 lg:pb-24 overflow-hidden select-none">
       
@@ -101,7 +113,7 @@ export const Hero: React.FC<HeroProps> = ({ onStartClick, onPriceClick }) => {
             <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-white/80 bg-slate-900 group">
               
               <img
-                src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1200&q=80"
+                src={heroImage}
                 alt="CloudHost VN Datacenter Server Room"
                 className="w-full h-[380px] sm:h-[440px] object-cover group-hover:scale-105 transition-transform duration-700"
                 referrerPolicy="no-referrer"

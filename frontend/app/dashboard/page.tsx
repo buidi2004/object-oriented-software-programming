@@ -134,8 +134,8 @@ export default function DashboardPage() {
           { label: 'Tên miền', value: stats?.openTickets || 0, icon: Globe, colorKey: 'cyan' },
           { label: 'Điểm thưởng', value: stats?.loyaltyPoints || 0, icon: ShieldCheck, colorKey: 'purple' },
           { label: 'Hóa đơn tháng', value: stats?.monthlySpend ? `${(stats.monthlySpend / 1000).toFixed(0)}K` : '0đ', icon: TrendingUp, colorKey: 'rose' },
-        ].map((stat, idx) => (
-          <div key={idx} className="bg-white rounded-2xl p-4 border border-slate-200 hover:border-blue-200 transition-colors">
+        ].map((stat) => (
+          <div key={`stat-${stat.label}`} className="bg-white rounded-2xl p-4 border border-slate-200 hover:border-blue-200 transition-colors">
             <stat.icon className={`w-6 h-6 ${colorClasses[stat.colorKey]} mb-2`} />
             <p className="text-2xl font-black text-slate-900">{stat.value}</p>
             <p className="text-xs text-slate-500 font-medium">{stat.label}</p>
@@ -157,9 +157,9 @@ export default function DashboardPage() {
           { title: 'Lịch sử thanh toán', desc: 'Xem giao dịch ví', href: '/dashboard/payments', icon: CreditCard, colorKey: 'emerald' },
           { title: 'Hóa đơn', desc: 'Tải xuống hóa đơn', href: '/dashboard/invoices', icon: FileText, colorKey: 'sky' },
           { title: 'Thông báo', desc: 'Cài đặt thông báo', href: '/dashboard/notifications', icon: Activity, colorKey: 'amber' },
-        ].map((action, idx) => (
+        ].map((action) => (
           <Link
-            key={idx}
+            key={`action-${action.href}`}
             href={action.href}
             className="bg-white rounded-2xl p-6 border border-slate-200 hover:border-blue-200 hover:shadow-lg transition-all group"
           >

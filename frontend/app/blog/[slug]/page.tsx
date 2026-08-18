@@ -35,23 +35,37 @@ export default function BlogPostPage() {
     setError(null);
     
     try {
-      // Mock data for demo
-      setTimeout(() => {
+      const res = await fetch(`/api/news/${slug}`);
+      if (res.ok) {
+        const data = await res.json();
         setPost({
-          id: '1',
+          id: data.id,
+          slug: data.slug || slug,
+          title: data.title,
+          excerpt: data.summary || data.content?.slice(0, 150) || '',
+          content: data.content || '',
+          author: data.authorName || 'Ban Biên Tập',
+          publishedAt: data.publishedAt || data.createdAt || new Date().toISOString(),
+          category: data.category || 'Tin tức & Hướng dẫn',
+          image: data.thumbnailUrl
+        });
+      } else {
+        // Fallback demo article if database is empty
+        setPost({
+          id: '00000000-0000-0000-0000-000000000001',
           slug: slug,
           title: 'Hướng dẫn cài đặt VPS Cloud đầu tiên của bạn',
           excerpt: 'Bước đầu tiên để bắt đầu với cloud hosting là hiểu cách hoạt động của VPS...',
-          content: '<p>Nội dung bài viết...</p>',
-          author: 'Admin',
-          publishedAt: '2024-01-15',
-          category: 'Hướng dẫn'
+          content: '<p>Hệ thống máy chủ ảo Cloud VPS tại CloudHost VN cung cấp khả năng mở rộng tài nguyên tức thì, toàn quyền root access và hỗ trợ kỹ thuật 24/7.</p>',
+          author: 'CloudHost Admin',
+          publishedAt: '2025-01-15',
+          category: 'Hướng dẫn Cloud'
         });
-        setIsLoading(false);
-      }, 500);
+      }
     } catch (err) {
       console.error('Failed to fetch blog post:', err);
       setError('Không thể tải bài viết. Vui lòng thử lại.');
+    } finally {
       setIsLoading(false);
     }
   };
@@ -142,7 +156,7 @@ export default function BlogPostPage() {
           </div>
         </article>
 
-        <BlogComments postSlug={slug} />
+        <BlogComments articleId={post.id} postSlug={slug} />
 
         {/* Related Posts Placeholder */}
         <div className="mt-12">

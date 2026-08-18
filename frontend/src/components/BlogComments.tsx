@@ -11,44 +11,46 @@ interface Comment {
   createdAt: string;
 }
 
-// Generate a consistent dummy GUID from slug for testing
-const getArticleGuid = (slug: string) => {
-  return '00000000-0000-0000-0000-000000000001'; // Mock ID for now
-};
-
-export const BlogComments: React.FC<{ postSlug: string }> = ({ postSlug }) => {
+export const BlogComments: React.FC<{ articleId?: string; postSlug?: string }> = ({ articleId, postSlug }) => {
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState('');
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
   const fetchComments = () => {
+    if (!articleId) {
+      setLoading(false);
+      return;
+    }
     setLoading(true);
-    api.get(`/articles/${getArticleGuid(postSlug)}/comments`)
-      .then(res => setComments(res.data))
+    api.get(`/articles/${articleId}/comments`)
+      .then(res => setComments(Array.isArray(res.data) ? res.data.filter((c: any) => c.isApproved !== false) : []))
       .catch(err => console.error("Error fetching comments:", err))
       .finally(() => setLoading(false));
   };
 
   useEffect(() => {
     fetchComments();
-  }, [postSlug]);
+  }, [articleId, postSlug]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newComment.trim()) return;
+    if (!newComment.trim() || !articleId) return;
 
     setSubmitting(true);
+    setSuccessMsg(null);
     try {
       await api.post('/comments', {
-        articleId: getArticleGuid(postSlug),
+        articleId,
         content: newComment
       });
       setNewComment('');
-      fetchComments(); // Refresh list
+      setSuccessMsg('Bình luận của bạn đã được gửi và đang chờ Admin duyệt.');
+      fetchComments();
     } catch (err: any) {
       console.error("Error posting comment:", err);
-      alert(err.response?.data?.message || 'Lỗi khi gửi bình luận. Bạn cần đăng nhập.');
+      alert(err.response?.data?.message || 'Vui lòng đăng nhập để gửi bình luận.');
     } finally {
       setSubmitting(false);
     }
@@ -94,6 +96,13 @@ export const BlogComments: React.FC<{ postSlug: string }> = ({ postSlug }) => {
           ))
         )}
       </div>
+
+      {successMsg && (
+        <div className="mb-6 p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold flex items-center gap-2">
+          <span>✓</span>
+          <span>{successMsg}</span>
+        </div>
+      )}
 
       <form onSubmit={handleSubmit} className="flex gap-4">
         <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 shrink-0">

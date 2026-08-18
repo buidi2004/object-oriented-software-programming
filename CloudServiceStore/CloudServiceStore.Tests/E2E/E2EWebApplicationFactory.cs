@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Respawn;
 using Testcontainers.MsSql;
 using Xunit;
+using Moq;
 
 namespace CloudServiceStore.Tests.E2E;
 
@@ -54,6 +55,17 @@ public class E2EWebApplicationFactory : WebApplicationFactory<Program>, IAsyncLi
                        .ConfigureWarnings(w => w.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
             });
 
+            var vpsDescriptor = services.SingleOrDefault(d => d.ServiceType == typeof(CloudServiceStore.Application.Interfaces.IVpsProvisioningService));
+            if (vpsDescriptor != null)
+            {
+                services.Remove(vpsDescriptor);
+            }
+            var mockVps = new Moq.Mock<CloudServiceStore.Application.Interfaces.IVpsProvisioningService>();
+            mockVps.Setup(x => x.IsAvailableAsync(Moq.It.IsAny<System.Threading.CancellationToken>())).ReturnsAsync(true);
+            mockVps.Setup(x => x.ProvisionAsync(Moq.It.IsAny<CloudServiceStore.Application.Models.VpsProvisionSpec>(), Moq.It.IsAny<System.Threading.CancellationToken>()))
+                   .ReturnsAsync(new CloudServiceStore.Application.Models.ProvisionResult(true, "mock-container-id", "mock-container-name", null));
+            services.AddSingleton(mockVps.Object);
+
             // We do NOT add the TestAuthHandler here because E2E tests need real JWT auth.
         });
     }
@@ -64,7 +76,7 @@ public class E2EWebApplicationFactory : WebApplicationFactory<Program>, IAsyncLi
 
         using var scope = Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        await db.Database.EnsureCreatedAsync();
+        await db.Database.MigrateAsync();
 
         if (!await db.Roles.AnyAsync())
         {
@@ -87,7 +99,7 @@ public class E2EWebApplicationFactory : WebApplicationFactory<Program>, IAsyncLi
         {
             DbAdapter = DbAdapter.SqlServer,
             SchemasToInclude = new[] { "dbo" },
-            TablesToIgnore = new Respawn.Graph.Table[] { "Roles", "Permissions", "RolePermissions" }
+            TablesToIgnore = new Respawn.Graph.Table[] { "Roles", "Permissions", "RolePermissions", "__EFMigrationsHistory" }
         });
     }
 

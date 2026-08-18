@@ -423,10 +423,10 @@ export default function AdminBannersPage() {
                 </label>
                 <div className="flex gap-2">
                   <input
-                    type="url"
+                    type="text"
                     value={formData.imageUrl}
                     onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
-                    placeholder="https://example.com/banner.jpg"
+                    placeholder="https://example.com/banner.jpg hoặc /images/banners/..."
                     required
                     className="flex-1 px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:border-blue-500 transition-colors"
                   />

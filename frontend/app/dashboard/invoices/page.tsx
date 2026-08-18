@@ -101,8 +101,8 @@ export default function InvoicesPage() {
           { label: 'Đã thanh toán', count: invoices.filter(i => i.status === 'paid').length, icon: DollarSign, colorKey: 'emerald' },
           { label: 'Chờ thanh toán', count: invoices.filter(i => i.status === 'pending').length, icon: Calendar, colorKey: 'amber' },
           { label: 'Tổng hóa đơn', count: invoices.length, icon: FileText, colorKey: 'blue' },
-        ].map((stat, idx) => (
-          <div key={idx} className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+        ].map((stat) => (
+          <div key={`invoice-stat-${stat.label}`} className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
             <div className="flex items-center gap-4">
               <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${colorMap[stat.colorKey]}`}>
                 <stat.icon className="w-6 h-6" />

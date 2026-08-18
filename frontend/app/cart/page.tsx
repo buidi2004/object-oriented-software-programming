@@ -38,13 +38,16 @@ export default function CartPage() {
     setAuthModal(true, mode);
   };
 
-  const handleCheckout = () => {
+  const handleCheckout = async () => {
     const token = localStorage.getItem('accessToken');
     if (!token && !user) {
       setAuthRedirect('/checkout');
       setAuthModal(true, 'login');
       return;
     }
+    try {
+      await useCartStore.getState().syncGuestCart();
+    } catch {}
     router.push('/checkout');
   };
 

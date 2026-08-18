@@ -48,6 +48,7 @@ export default function VpsInstancesPage() {
   const [command, setCommand] = useState('');
   const [isExecRunning, setIsExecRunning] = useState(false);
   const [hubConnection, setHubConnection] = useState<signalR.HubConnection | null>(null);
+  const connectionRef = useRef<signalR.HubConnection | null>(null);
   const [isTerminalConnected, setIsTerminalConnected] = useState(false);
   const consoleRef = useRef<HTMLDivElement>(null);
   const [isFullTerminalOpen, setIsFullTerminalOpen] = useState(false);
@@ -65,15 +66,16 @@ export default function VpsInstancesPage() {
   }, [consoleOutput]);
 
   useEffect(() => {
-    if (selected) {
+    if (selected?.containerId) {
       setupTerminal(selected.containerId);
     }
     return () => {
-      if (hubConnection) {
-        hubConnection.stop();
+      if (connectionRef.current) {
+        connectionRef.current.stop().catch(() => {});
+        connectionRef.current = null;
       }
     };
-  }, [selected]);
+  }, [selected?.containerId]);
 
   const fetchInstances = async () => {
     setIsLoading(true);
@@ -101,9 +103,11 @@ export default function VpsInstancesPage() {
   };
 
   const setupTerminal = (containerId: string) => {
-    if (hubConnection) {
-      hubConnection.stop();
+    if (connectionRef.current) {
+      connectionRef.current.stop().catch(() => {});
+      connectionRef.current = null;
     }
+
     setConsoleOutput([`Connecting to terminal for ${containerId.substring(0, 12)}...`]);
     setIsTerminalConnected(false);
 
@@ -112,6 +116,7 @@ export default function VpsInstancesPage() {
       .withUrl(process.env.NEXT_PUBLIC_API_URL ? `${process.env.NEXT_PUBLIC_API_URL}/hubs/vps-terminal` : '/hubs/vps-terminal', {
         accessTokenFactory: () => token || ''
       })
+      .configureLogging(signalR.LogLevel.None)
       .withAutomaticReconnect()
       .build();
 
@@ -123,28 +128,33 @@ export default function VpsInstancesPage() {
     connection.start()
       .then(() => {
         setIsTerminalConnected(true);
-        setConsoleOutput(prev => [...prev, '\x1b[32mConnected successfully.\x1b[0m']);
+        setConsoleOutput(prev => [...prev, '✓ Connected successfully.']);
       })
-      .catch(err => {
-        console.error('SignalR Connection Error: ', err);
-        setConsoleOutput(prev => [...prev, '\x1b[31mFailed to connect to VPS terminal.\x1b[0m']);
+      .catch((err: any) => {
+        if (err?.name === 'AbortError' || err?.message?.includes('stopped during negotiation')) {
+          // Clean unmount during negotiation, ignore
+          return;
+        }
+        setConsoleOutput(prev => [...prev, '✗ Failed to connect to VPS terminal.']);
       });
 
+    connectionRef.current = connection;
     setHubConnection(connection);
   };
 
   const handleExecCommand = async () => {
-    if (!command.trim() || !selected?.containerId || !hubConnection || !isTerminalConnected) return;
+    const activeConn = connectionRef.current || hubConnection;
+    if (!command.trim() || !selected?.containerId || !activeConn || !isTerminalConnected) return;
     setIsExecRunning(true);
     const cmd = command.trim();
     setConsoleOutput(prev => [...prev, `root@vps:~# ${cmd}`]);
     setCommand('');
 
     try {
-      await hubConnection.invoke('SendCommand', selected.containerId, cmd);
+      await activeConn.invoke('SendCommand', selected.containerId, cmd);
     } catch (err) {
       console.error('Failed to send command:', err);
-      setConsoleOutput(prev => [...prev, `\x1b[31mError: Failed to execute command\x1b[0m`]);
+      setConsoleOutput(prev => [...prev, `✗ Error: Failed to execute command`]);
       setIsExecRunning(false);
     }
   };
@@ -166,17 +176,33 @@ export default function VpsInstancesPage() {
     }
   };
 
+  const [actionLoading, setActionLoading] = useState<'start' | 'stop' | 'restart' | null>(null);
+
   const handleAction = async (action: 'start' | 'stop' | 'restart') => {
-    if (!selected) return;
-    setIsLoading(true);
+    if (!selected || actionLoading) return;
+    setActionLoading(action);
+
+    // Optimistic UI update: instantly update status in real-time without spinning or freezing the page
+    const previousStatus = selected.status;
+    const nextStatus = action === 'stop' ? 'Stopped' : 'Running';
+
+    setSelected(prev => prev ? { ...prev, status: nextStatus } : null);
+    setInstances(prev => prev.map(item => item.id === selected.id ? { ...item, status: nextStatus } : item));
+
     try {
       await api.post(`/vpsinstances/${selected.id}/${action}`);
-      await fetchInstances();
+      const res = await api.get('/vpsinstances');
+      setInstances(res.data);
+      const updated = res.data.find((v: VpsInstance) => v.id === selected.id);
+      if (updated) setSelected(updated);
     } catch (err) {
       console.error(`Failed to ${action} VPS:`, err);
+      // Revert optimistic update on failure
+      setSelected(prev => prev ? { ...prev, status: previousStatus } : null);
+      setInstances(prev => prev.map(item => item.id === selected.id ? { ...item, status: previousStatus } : item));
       alert(`Lỗi khi ${action} VPS.`);
     } finally {
-      setIsLoading(false);
+      setActionLoading(null);
     }
   };
 
@@ -317,31 +343,64 @@ export default function VpsInstancesPage() {
                   {selected.status === 'Running' ? (
                     <button 
                       onClick={() => handleAction('stop')}
-                      className="flex items-center gap-2 px-4 py-2.5 bg-red-50 text-red-700 rounded-xl font-semibold text-sm hover:bg-red-100 transition-colors"
+                      disabled={actionLoading !== null}
+                      className="flex items-center gap-2 px-4 py-2.5 bg-red-50 text-red-700 rounded-xl font-semibold text-sm hover:bg-red-100 disabled:opacity-60 transition-colors"
                     >
-                      <Square className="w-4 h-4" /> Stop
+                      {actionLoading === 'stop' ? (
+                        <>
+                          <Loader2 className="w-4 h-4 animate-spin text-red-600" />
+                          <span>Đang dừng...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Square className="w-4 h-4" />
+                          <span>Stop</span>
+                        </>
+                      )}
                     </button>
                   ) : (
                     <button 
                       onClick={() => handleAction('start')}
-                      className="flex items-center gap-2 px-4 py-2.5 bg-emerald-50 text-emerald-700 rounded-xl font-semibold text-sm hover:bg-emerald-100 transition-colors"
+                      disabled={actionLoading !== null}
+                      className="flex items-center gap-2 px-4 py-2.5 bg-emerald-50 text-emerald-700 rounded-xl font-semibold text-sm hover:bg-emerald-100 disabled:opacity-60 transition-colors"
                     >
-                      <Play className="w-4 h-4" /> Start
+                      {actionLoading === 'start' ? (
+                        <>
+                          <Loader2 className="w-4 h-4 animate-spin text-emerald-600" />
+                          <span>Đang khởi động...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Play className="w-4 h-4" />
+                          <span>Start</span>
+                        </>
+                      )}
                     </button>
                   )}
                   <button 
                     onClick={() => handleAction('restart')}
-                    disabled={selected.status !== 'Running'}
+                    disabled={selected.status !== 'Running' || actionLoading !== null}
                     className="flex items-center gap-2 px-4 py-2.5 bg-amber-50 text-amber-700 rounded-xl font-semibold text-sm hover:bg-amber-100 disabled:opacity-50 transition-colors"
                   >
-                    <RefreshCw className="w-4 h-4" /> Restart
+                    {actionLoading === 'restart' ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin text-amber-600" />
+                        <span>Đang khởi động lại...</span>
+                      </>
+                    ) : (
+                      <>
+                        <RefreshCw className="w-4 h-4" />
+                        <span>Restart</span>
+                      </>
+                    )}
                   </button>
                   <button
                     onClick={() => setIsFullTerminalOpen(true)}
                     disabled={selected.status !== 'Running'}
                     className="flex items-center gap-2 px-4 py-2.5 bg-blue-600 text-white rounded-xl font-semibold text-sm hover:bg-blue-700 disabled:opacity-50 transition-colors"
                   >
-                    <Terminal className="w-4 h-4" /> Full Web Terminal
+                    <Terminal className="w-4 h-4" />
+                    <span>Full Web Terminal</span>
                   </button>
                   <Link
                     href={`/dashboard/vps-instances/${selected.id}`}
@@ -377,12 +436,29 @@ export default function VpsInstancesPage() {
                     )}
                   </div>
                 </div>
-                <div ref={consoleRef} className="p-4 font-mono text-sm text-green-400 max-h-[280px] overflow-y-auto min-h-[160px]" id="console-output">
-                  {consoleOutput.map((line, i) => (
-                    <pre key={i} className={`whitespace-pre-wrap ${line.startsWith('root@') ? 'text-cyan-400' : line.includes('Error:') || line.includes('Failed') ? 'text-red-400' : 'text-green-300'}`}>
-                      {line}
-                    </pre>
-                  ))}
+                <div ref={consoleRef} className="p-4 font-mono text-xs sm:text-sm text-green-400 max-h-[280px] overflow-y-auto min-h-[160px] space-y-0.5" id="console-output">
+                  {consoleOutput.map((rawLine, i) => {
+                    const cleanLine = rawLine.replace(/\x1b\[[0-9;]*m/g, '');
+                    const isPrompt = cleanLine.startsWith('root@');
+                    const isError = cleanLine.includes('Error:') || cleanLine.includes('Failed') || cleanLine.startsWith('✗');
+                    const isSuccess = cleanLine.startsWith('✓') || cleanLine.includes('successfully');
+                    return (
+                      <pre
+                        key={`console-line-${i}`}
+                        className={`whitespace-pre-wrap font-mono ${
+                          isPrompt
+                            ? 'text-cyan-400 font-bold'
+                            : isError
+                            ? 'text-red-400 font-medium'
+                            : isSuccess
+                            ? 'text-emerald-400 font-semibold'
+                            : 'text-green-300'
+                        }`}
+                      >
+                        {cleanLine}
+                      </pre>
+                    );
+                  })}
                 </div>
                 <div className="border-t border-slate-700 flex items-center px-4 py-2 gap-2">
                   <span className="text-cyan-400 text-sm font-mono shrink-0">$</span>
@@ -404,7 +480,7 @@ export default function VpsInstancesPage() {
         </div>
       )}
 
-      {selected && (
+      {selected && isFullTerminalOpen && (
         <VpsTerminalModal
           isOpen={isFullTerminalOpen}
           onClose={() => setIsFullTerminalOpen(false)}

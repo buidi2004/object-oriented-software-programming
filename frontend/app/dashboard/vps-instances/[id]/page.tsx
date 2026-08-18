@@ -43,6 +43,36 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
     }
   };
 
+  const [actionLoading, setActionLoading] = useState<'start' | 'stop' | 'restart' | null>(null);
+
+  const handleAction = async (action: 'start' | 'stop' | 'restart') => {
+    if (!vps || actionLoading) return;
+    setActionLoading(action);
+
+    const prevStatus = vps.status;
+    const nextStatus = action === 'stop' ? 'Stopped' : 'Running';
+
+    setVps((prev: any) => prev ? { ...prev, status: nextStatus } : null);
+
+    try {
+      const token = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
+      const res = await fetch(`/api/vpsinstances/${resolvedParams.id}/${action}`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (!res.ok) {
+        throw new Error(`Failed to ${action}`);
+      }
+      fetchVpsDetail();
+    } catch (error) {
+      console.error(`Error during ${action}:`, error);
+      setVps((prev: any) => prev ? { ...prev, status: prevStatus } : null);
+      alert(`Không thể ${action === 'start' ? 'khởi động' : action === 'stop' ? 'dừng' : 'khởi động lại'} VPS.`);
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
   const handleTerminate = async () => {
     if (!confirm('Bạn có chắc chắn muốn xóa (terminate) VPS này? Mọi dữ liệu sẽ bị xóa vĩnh viễn!')) return;
     
@@ -109,14 +139,34 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
               >
                 <Terminal className="w-5 h-5" /> Web Terminal
               </button>
-              <button className="bg-white border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 p-2.5 rounded-xl transition-all" title="Khởi động">
-                <Play className="w-5 h-5" />
-              </button>
-              <button className="bg-white border border-slate-200 hover:border-amber-500 hover:bg-amber-50 text-slate-700 hover:text-amber-700 p-2.5 rounded-xl transition-all" title="Khởi động lại">
-                <RefreshCw className="w-5 h-5" />
-              </button>
-              <button className="bg-white border border-slate-200 hover:border-rose-500 hover:bg-rose-50 text-slate-700 hover:text-rose-700 p-2.5 rounded-xl transition-all" title="Dừng">
-                <Square className="w-5 h-5 fill-current" />
+
+              {isRunning ? (
+                <button 
+                  onClick={() => handleAction('stop')}
+                  disabled={actionLoading !== null}
+                  className="bg-white border border-slate-200 hover:border-rose-500 hover:bg-rose-50 text-slate-700 hover:text-rose-700 p-2.5 rounded-xl transition-all disabled:opacity-50" 
+                  title="Dừng VPS"
+                >
+                  <Square className="w-5 h-5 fill-current text-rose-600" />
+                </button>
+              ) : (
+                <button 
+                  onClick={() => handleAction('start')}
+                  disabled={actionLoading !== null}
+                  className="bg-white border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 p-2.5 rounded-xl transition-all disabled:opacity-50" 
+                  title="Khởi động VPS"
+                >
+                  <Play className="w-5 h-5 fill-current text-emerald-600" />
+                </button>
+              )}
+
+              <button 
+                onClick={() => handleAction('restart')}
+                disabled={!isRunning || actionLoading !== null}
+                className="bg-white border border-slate-200 hover:border-amber-500 hover:bg-amber-50 text-slate-700 hover:text-amber-700 p-2.5 rounded-xl transition-all disabled:opacity-50" 
+                title="Khởi động lại VPS"
+              >
+                <RefreshCw className={`w-5 h-5 text-amber-600 ${actionLoading === 'restart' ? 'animate-spin' : ''}`} />
               </button>
             </div>
           </div>

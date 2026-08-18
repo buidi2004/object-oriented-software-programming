@@ -33,7 +33,7 @@ export default function App() {
     } else if (tab === 'domain') {
       document.getElementById('domain-search-section')?.scrollIntoView({ behavior: 'smooth' });
     } else if (tab === 'contact') {
-      document.getElementById('contact-section')?.scrollIntoView({ behavior: 'smooth' });
+      (document.getElementById('contact') || document.getElementById('contact-section'))?.scrollIntoView({ behavior: 'smooth' });
     }
   };
 

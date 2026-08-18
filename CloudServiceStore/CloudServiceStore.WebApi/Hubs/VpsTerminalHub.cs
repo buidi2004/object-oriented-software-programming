@@ -58,7 +58,10 @@ public class VpsTerminalHub : Hub
             }
 
             var instances = await _vpsRepo.GetAllAsync(Context.ConnectionAborted);
-            var instance = instances.FirstOrDefault(x => x.ContainerId == containerId);
+            var instance = instances.FirstOrDefault(x => 
+                !string.IsNullOrEmpty(x.ContainerId) && 
+                (x.ContainerId == containerId || x.ContainerId.StartsWith(containerId) || containerId.StartsWith(x.ContainerId) || (Guid.TryParse(containerId, out var gId) && x.Id == gId)));
+
             if (instance == null)
             {
                 await Clients.Caller.SendAsync("ReceiveOutput", "Error: VPS instance not found.");
@@ -77,9 +80,16 @@ public class VpsTerminalHub : Hub
                 return;
             }
 
-            _logger.LogInformation("Executing command on {ContainerId}", containerId);
-            var result = await _provisioningService.ExecCommandAsync(containerId, command, Context.ConnectionAborted);
-            await Clients.Caller.SendAsync("ReceiveOutput", result);
+            _logger.LogInformation("Executing command on {ContainerId}", instance.ContainerId);
+            var result = await _provisioningService.ExecCommandAsync(instance.ContainerId, command, Context.ConnectionAborted);
+            if (!string.IsNullOrEmpty(result))
+            {
+                await Clients.Caller.SendAsync("ReceiveOutput", result);
+            }
+            else
+            {
+                await Clients.Caller.SendAsync("ReceiveOutput", "\r\n");
+            }
         }
         catch (Exception ex)
         {

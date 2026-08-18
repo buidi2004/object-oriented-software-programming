@@ -169,6 +169,7 @@ export default function AdminSettingsPage() {
             <div className="bg-white rounded-2xl border border-slate-200 p-3 space-y-1.5 shadow-sm">
               {[
                 { id: 'general', label: 'Cài đặt Chung', icon: SettingsIcon },
+                { id: 'payment', label: 'Cổng Thanh Toán', icon: Database },
                 { id: 'server', label: 'Hạ Tầng & Máy Chủ', icon: Server },
                 { id: 'security', label: 'Bảo Mật & 2FA', icon: Shield },
                 { id: 'email', label: 'Email & SMTP', icon: Bell },
@@ -249,6 +250,74 @@ export default function AdminSettingsPage() {
                       />
                       <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600" />
                     </label>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'payment' && (
+              <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+                <h2 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
+                  <Database className="w-5 h-5 text-blue-600" /> Cấu Hình Cổng Thanh Toán VietQR (SePay)
+                </h2>
+                
+                <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6">
+                  <p className="text-sm font-semibold text-blue-900">🔔 Kết nối với tài khoản SePay của bạn</p>
+                  <p className="text-xs text-blue-700 mt-1 leading-relaxed">
+                    Đảm bảo bạn đã thêm tài khoản ngân hàng thật trên <strong>my.sepay.vn</strong>. 
+                    Sau đó, điền đúng Số tài khoản và Mã ngân hàng đó vào đây để hệ thống tạo mã QR chính xác. 
+                    Nếu điền sai, khi quét mã bằng điện thoại sẽ báo lỗi "Mã QR không hợp lệ".
+                  </p>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Ngân Hàng Nhận (Mã BIN/Tên viết tắt)</label>
+                      <input 
+                        type="text" 
+                        value={settings.vietqr_bank_id || ''} 
+                        onChange={(e) => handleValueChange('vietqr_bank_id', e.target.value.toUpperCase())}
+                        placeholder="VD: MB hoặc 970422, VCB hoặc 970436"
+                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20" 
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Số Tài Khoản Nhận (Thật)</label>
+                      <input 
+                        type="text" 
+                        value={settings.vietqr_account_no || ''} 
+                        onChange={(e) => handleValueChange('vietqr_account_no', e.target.value.replace(/\s/g, ''))}
+                        placeholder="VD: 0347894561"
+                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm font-mono font-bold focus:outline-none focus:ring-2 focus:ring-blue-500/20" 
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Tên Chủ Tài Khoản (In Hoa Không Dấu)</label>
+                    <input 
+                      type="text" 
+                      value={settings.vietqr_account_name || ''} 
+                      onChange={(e) => handleValueChange('vietqr_account_name', e.target.value.toUpperCase())}
+                      placeholder="VD: NGUYEN VAN A"
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-blue-500/20" 
+                    />
+                  </div>
+                  <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100 mt-6">
+                    <div>
+                      <p className="font-semibold text-slate-900">Mẫu QR (Template)</p>
+                      <p className="text-xs text-slate-500 mt-0.5">compact, compact2, print, hoặc qr_only</p>
+                    </div>
+                    <select
+                      value={settings.vietqr_template || 'compact2'}
+                      onChange={(e) => handleValueChange('vietqr_template', e.target.value)}
+                      className="px-4 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                    >
+                      <option value="compact2">Compact 2 (Đẹp nhất)</option>
+                      <option value="compact">Compact 1</option>
+                      <option value="qr_only">QR Only (Không viền)</option>
+                      <option value="print">Print (In ấn)</option>
+                    </select>
                   </div>
                 </div>
               </div>

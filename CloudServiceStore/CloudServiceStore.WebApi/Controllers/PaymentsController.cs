@@ -68,8 +68,8 @@ public class PaymentsController : ControllerBase
         }
 
         // 3. Extract Payment Code or Order ID from Content
-        // Assuming the customer writes "PAY_..." or just the Order Guid in the bank transfer content
-        var match = System.Text.RegularExpressions.Regex.Match(payload.Content, @"(?i)(PAY_[a-zA-Z0-9_-]+|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})");
+        // Assuming the customer writes "PAY..." or just the Order Guid in the bank transfer content
+        var match = System.Text.RegularExpressions.Regex.Match(payload.Content, @"(?i)(PAY[a-zA-Z0-9_-]+|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})");
         var idempotencyKey = match.Success ? match.Value : payload.Content.Trim();
 
         var command = new ConfirmPaymentWebhookCommand(idempotencyKey, payload.TransferAmount);

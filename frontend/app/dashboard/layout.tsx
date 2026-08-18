@@ -10,7 +10,9 @@ import {
   Activity, Clock, TrendingUp, ArrowLeft, LogOut, User,
   FileText, LayoutDashboard, Wallet as WalletIcon,
   ChevronDown, Menu, X, Monitor, RefreshCw, History,
-  Repeat, Shield, AlertCircle, Loader2
+  Repeat, Shield, AlertCircle, Loader2, Cpu, Mail,
+  Database, HardDrive, Layers, Palette, Gift, RotateCcw,
+  Building2, KeyRound, Key, Star, Bell, ArrowRightLeft
 } from 'lucide-react';
 
 interface UserInfo {
@@ -24,28 +26,68 @@ interface DashboardLayoutProps {
   children: React.ReactNode;
 }
 
-const menuItems = [
-  { name: 'Tổng quan', href: '/dashboard', icon: LayoutDashboard },
-  { name: 'Quản lý VPS', href: '/dashboard/vps-instances', icon: Server },
-  { name: 'Email Doanh nghiệp', href: '/dashboard/email-hosting', icon: Server },
-  { name: 'Cloud CDN', href: '/dashboard/cdn', icon: Activity },
-  { name: 'Databases', href: '/dashboard/databases', icon: Server },
-  { name: 'Object Storage S3', href: '/dashboard/storage', icon: Globe },
-  { name: 'Game Servers', href: '/dashboard/game-servers', icon: Monitor },
-  { name: 'Static Sites', href: '/dashboard/static-sites', icon: Globe },
-  { name: 'Website Builder', href: '/dashboard/website-builder', icon: LayoutDashboard },
-  { name: 'Đơn hàng', href: '/dashboard/orders', icon: ShoppingCart },
-  { name: 'Hỗ trợ', href: '/dashboard/tickets', icon: Shield },
-  { name: 'Tên miền', href: '/domains', icon: Globe },
-  { name: 'SSL', href: '/dashboard/ssl-certificates', icon: ShieldCheck },
-  { name: 'Hóa đơn', href: '/dashboard/invoices', icon: FileText },
-  { name: 'Thanh toán', href: '/dashboard/payments', icon: CreditCard },
-  { name: 'Tài khoản', href: '/dashboard/profile', icon: User },
-  { name: 'Tự động gia hạn', href: '/dashboard/auto-renew', icon: Repeat },
-  { name: 'Backup VPS', href: '/dashboard/vps-backups', icon: RefreshCw },
-  { name: 'Lịch sử xem', href: '/dashboard/recently-viewed', icon: History },
-  { name: 'Tình trạng hệ thống', href: '/dashboard/uptime', icon: Activity },
-  { name: 'Thông báo', href: '/dashboard/notifications', icon: Shield },
+interface MenuGroup {
+  title: string;
+  items: {
+    id: string;
+    name: string;
+    href: string;
+    icon: React.ComponentType<{ className?: string }>;
+  }[];
+}
+
+const menuGroups: MenuGroup[] = [
+  {
+    title: 'Hạ Tầng & Dịch Vụ Cloud',
+    items: [
+      { id: 'overview', name: 'Tổng quan', href: '/dashboard', icon: LayoutDashboard },
+      { id: 'vps-instances', name: 'Quản lý VPS', href: '/dashboard/vps-instances', icon: Server },
+      { id: 'dedicated-servers', name: 'Máy chủ riêng', href: '/dashboard/dedicated-servers', icon: Cpu },
+      { id: 'hosting', name: 'Web Hosting', href: '/dashboard/hosting', icon: Globe },
+      { id: 'email-hosting', name: 'Email Doanh nghiệp', href: '/dashboard/email-hosting', icon: Mail },
+      { id: 'cdn', name: 'Cloud CDN', href: '/dashboard/cdn', icon: Activity },
+      { id: 'databases', name: 'Databases', href: '/dashboard/databases', icon: Database },
+      { id: 'storage', name: 'Object Storage S3', href: '/dashboard/storage', icon: HardDrive },
+      { id: 'game-servers', name: 'Game Servers', href: '/dashboard/game-servers', icon: Monitor },
+      { id: 'static-sites', name: 'Static Sites', href: '/dashboard/static-sites', icon: Layers },
+      { id: 'website-builder', name: 'Website Builder', href: '/dashboard/website-builder', icon: Palette },
+      { id: 'vps-backups', name: 'Backup VPS', href: '/dashboard/vps-backups', icon: RefreshCw },
+    ]
+  },
+  {
+    title: 'Tên Miền & Mạng Lưới',
+    items: [
+      { id: 'domains', name: 'Tên miền', href: '/dashboard/domains', icon: Globe },
+      { id: 'ssl-certificates', name: 'Chứng chỉ SSL', href: '/dashboard/ssl-certificates', icon: ShieldCheck },
+      { id: 'uptime', name: 'Tình trạng Uptime', href: '/dashboard/uptime', icon: Activity },
+      { id: 'migrations', name: 'Di dời Website', href: '/dashboard/migrations', icon: ArrowRightLeft },
+    ]
+  },
+  {
+    title: 'Tài Chính & Đơn Hàng',
+    items: [
+      { id: 'orders', name: 'Đơn hàng', href: '/dashboard/orders', icon: ShoppingCart },
+      { id: 'invoices', name: 'Hóa đơn', href: '/dashboard/invoices', icon: FileText },
+      { id: 'payments', name: 'Ví tiền & Nạp tiền', href: '/dashboard/payments', icon: CreditCard },
+      { id: 'refund-requests', name: 'Yêu cầu hoàn tiền', href: '/dashboard/refund-requests', icon: RotateCcw },
+      { id: 'auto-renew', name: 'Tự động gia hạn', href: '/dashboard/auto-renew', icon: Repeat },
+      { id: 'gift-cards', name: 'Thẻ quà tặng', href: '/dashboard/gift-cards', icon: Gift },
+    ]
+  },
+  {
+    title: 'Tài Khoản & Mở Rộng',
+    items: [
+      { id: 'tickets', name: 'Hỗ trợ kỹ thuật', href: '/dashboard/tickets', icon: Shield },
+      { id: 'profile', name: 'Hồ sơ tài khoản', href: '/dashboard/profile', icon: User },
+      { id: 'orgs', name: 'Tổ chức B2B', href: '/dashboard/orgs', icon: Building2 },
+      { id: 'security', name: 'Bảo mật & Phiên', href: '/dashboard/security', icon: KeyRound },
+      { id: 'api-keys', name: 'API Keys', href: '/dashboard/api-keys', icon: Key },
+      { id: 'affiliates', name: 'Tiếp thị Affiliate', href: '/dashboard/affiliates', icon: TrendingUp },
+      { id: 'reviews', name: 'Đánh giá của tôi', href: '/dashboard/reviews', icon: Star },
+      { id: 'recently-viewed', name: 'Lịch sử xem', href: '/dashboard/recently-viewed', icon: History },
+      { id: 'notifications', name: 'Cài đặt thông báo', href: '/dashboard/notifications', icon: Bell },
+    ]
+  }
 ];
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
@@ -55,16 +97,22 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { toast, showToast, hideToast } = useToast();
+  const { toast, hideToast } = useToast();
 
   useEffect(() => {
+    const token = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
+    if (token) {
+      setIsAuthenticated(true);
+      setIsLoading(false);
+    } else {
+      setIsAuthenticated(false);
+      setIsLoading(false);
+    }
     checkAuth();
-  }, []);
+  }, [pathname]);
 
   const checkAuth = async () => {
-    const token = localStorage.getItem('accessToken');
-    
-    // Nếu không có token, chỉ set isAuthenticated = false, KHÔNG redirect ngay
+    const token = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
     if (!token) {
       setIsAuthenticated(false);
       setIsLoading(false);
@@ -77,10 +125,8 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       });
       
       if (!response.ok) {
-        // Token invalid, clear và redirect
         localStorage.removeItem('accessToken');
         setIsAuthenticated(false);
-        setIsLoading(false);
         router.push(getAuthModalUrl('login', pathname));
         return;
       }
@@ -90,95 +136,43 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       setIsAuthenticated(true);
     } catch (error) {
       console.error('Auth check failed:', error);
-      setIsAuthenticated(false);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('accessToken');
-    setUser(null);
-    setIsAuthenticated(false);
-    router.push(getAuthModalUrl('login', '/'));
-  };
-
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+      <div className="min-h-[70vh] bg-slate-50 flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-slate-500 text-sm">Đang tải...</p>
+          <p className="text-slate-500 text-sm font-semibold">Đang tải bảng điều khiển...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      {/* Header */}
-      <header className="bg-white border-b border-slate-200 sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          {/* Logo + mobile toggle */}
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 rounded-lg hover:bg-slate-100 transition-colors"
-            >
-              {mobileMenuOpen ? <X className="w-5 h-5 text-slate-600" /> : <Menu className="w-5 h-5 text-slate-600" />}
-            </button>
-            <Link href="/" className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-cyan-400 flex items-center justify-center text-white">
-                <Server className="w-4 h-4" />
-              </div>
-              <span className="text-lg font-black text-slate-900 hidden sm:block">
-                CloudHost<span className="text-blue-600"> VN</span>
-              </span>
-            </Link>
-          </div>
-
-          {/* User info + logout */}
-          {isAuthenticated && user ? (
-            <div className="flex items-center gap-3">
-              <div className="hidden sm:flex items-center gap-2 text-sm text-slate-600">
-                <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-xs">
-                  {user.fullName?.[0]?.toUpperCase()}
-                </div>
-                <span className="font-medium">{user.fullName}</span>
-              </div>
-              <button
-                onClick={handleLogout}
-                className="p-2 rounded-lg hover:bg-red-50 text-slate-400 hover:text-red-500 transition-colors"
-                title="Đăng xuất"
-              >
-                <LogOut className="w-4 h-4" />
-              </button>
-            </div>
-          ) : (
-            <div className="flex items-center gap-2">
-              <Link
-                href={getAuthModalUrl('login', pathname)}
-                className="px-4 py-2 text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors"
-              >
-                Đăng nhập
-              </Link>
-              <Link
-                href={getAuthModalUrl('register', pathname)}
-                className="px-4 py-2 text-sm font-bold text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
-              >
-                Đăng ký
-              </Link>
-            </div>
-          )}
-        </div>
-      </header>
+    <div className="w-full bg-slate-50">
+      {/* Mobile Sidebar Toggle Button */}
+      <div className="lg:hidden max-w-7xl mx-auto px-4 pt-4 flex items-center justify-between">
+        <button
+          type="button"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          className="px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-slate-700 font-bold text-xs flex items-center gap-2 shadow-xs"
+        >
+          {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+          <span>Menu Dashboard</span>
+        </button>
+      </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="flex gap-6">
-          {/* Sidebar - Only show when authenticated */}
+        <div className="flex gap-6 items-start">
+          
+          {/* Sidebar */}
           {isAuthenticated && (
             <aside className={`
-              fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-slate-200 transform transition-transform duration-200 lg:relative lg:translate-x-0 lg:w-56 shrink-0
+              fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-slate-200 transform transition-transform duration-200 lg:relative lg:translate-x-0 lg:w-60 shrink-0 lg:z-10 rounded-2xl lg:shadow-xs
               ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
             `}>
               {/* Overlay for mobile */}
@@ -189,38 +183,46 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 />
               )}
 
-              <div className="h-full overflow-y-auto p-4">
-                <nav className="space-y-1">
-                  {menuItems.map((item) => {
-                    const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
-                    return (
-                      <Link
-                        key={item.href}
-                        href={item.href}
-                        onClick={() => setMobileMenuOpen(false)}
-                        className={`
-                          flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all
-                          ${isActive
-                            ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20'
-                            : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-                          }
-                        `}
-                      >
-                        <item.icon className="w-4 h-4 shrink-0" />
-                        {item.name}
-                      </Link>
-                    );
-                  })}
-                </nav>
+              <div className="h-full max-h-[calc(100vh-6rem)] overflow-y-auto p-3.5 space-y-4">
+                {menuGroups.map((group, gIdx) => (
+                  <div key={group.title} className={gIdx > 0 ? 'pt-3 border-t border-slate-100' : ''}>
+                    <div className="text-[10px] font-black text-slate-400 uppercase tracking-wider px-3 pb-2">
+                      {group.title}
+                    </div>
 
-                <div className="mt-8 pt-4 border-t border-slate-100">
+                    <nav className="space-y-0.5">
+                      {group.items.map((item) => {
+                        const isActive = pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(item.href + '/'));
+                        return (
+                          <Link
+                            key={item.id}
+                            href={item.href}
+                            onClick={() => setMobileMenuOpen(false)}
+                            className={`
+                              flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold transition-all
+                              ${isActive
+                                ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20 font-black'
+                                : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                              }
+                            `}
+                          >
+                            <item.icon className="w-3.5 h-3.5 shrink-0" />
+                            <span className="truncate">{item.name}</span>
+                          </Link>
+                        );
+                      })}
+                    </nav>
+                  </div>
+                ))}
+
+                <div className="pt-3 border-t border-slate-100">
                   <Link
                     href="/services"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all"
+                    className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold text-blue-600 bg-blue-50/70 hover:bg-blue-100/70 transition-all"
                   >
-                    <Server className="w-4 h-4 shrink-0" />
-                    Dịch vụ
+                    <Server className="w-3.5 h-3.5 shrink-0" />
+                    <span>Mua thêm dịch vụ →</span>
                   </Link>
                 </div>
               </div>
@@ -231,23 +233,23 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           <main className="flex-1 min-w-0">
             {/* Auth Warning Banner */}
             {!isAuthenticated && (
-              <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl flex items-start gap-3">
+              <div className="mb-6 p-5 bg-amber-50 border border-amber-200 rounded-2xl flex items-start gap-3">
                 <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
                 <div>
-                  <p className="font-semibold text-amber-900">Cần đăng nhập để truy cập dashboard</p>
-                  <p className="text-sm text-amber-700 mt-1">
-                    Bạn cần đăng nhập để xem thông tin cá nhân, hóa đơn và quản lý dịch vụ.
+                  <p className="font-bold text-amber-900 text-sm">Cần đăng nhập để truy cập Bảng Điều Khiển</p>
+                  <p className="text-xs text-amber-700 mt-1">
+                    Bạn cần đăng nhập để xem thông tin cá nhân, quản trị VPS, hóa đơn và đơn hàng.
                   </p>
                   <div className="flex gap-2 mt-3">
                     <Link
                       href={getAuthModalUrl('login', pathname)}
-                      className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors"
+                      className="px-4 py-2 bg-blue-600 text-white rounded-xl text-xs font-bold hover:bg-blue-700 transition-colors"
                     >
                       Đăng nhập ngay
                     </Link>
                     <Link
                       href={getAuthModalUrl('register', pathname)}
-                      className="px-4 py-2 bg-white border border-slate-200 text-slate-700 rounded-lg text-sm font-semibold hover:bg-slate-50 transition-colors"
+                      className="px-4 py-2 bg-white border border-slate-200 text-slate-700 rounded-xl text-xs font-bold hover:bg-slate-50 transition-colors"
                     >
                       Tạo tài khoản
                     </Link>

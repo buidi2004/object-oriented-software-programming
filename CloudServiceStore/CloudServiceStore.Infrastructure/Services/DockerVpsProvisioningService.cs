@@ -13,21 +13,29 @@ namespace CloudServiceStore.Infrastructure.Services;
 
 public class DockerVpsProvisioningService : IVpsProvisioningService
 {
-    private readonly IDockerClient _dockerClient;
+    private readonly IDockerClient? _dockerClient;
     private readonly ILogger<DockerVpsProvisioningService> _logger;
 
     public DockerVpsProvisioningService(ILogger<DockerVpsProvisioningService> logger)
     {
         _logger = logger;
-        var dockerUri = Environment.OSVersion.Platform == PlatformID.Win32NT
-            ? "npipe://./pipe/docker_engine"
-            : "unix:///var/run/docker.sock";
+        try
+        {
+            var dockerUri = Environment.OSVersion.Platform == PlatformID.Win32NT
+                ? "npipe://./pipe/docker_engine"
+                : "unix:///var/run/docker.sock";
 
-        _dockerClient = new DockerClientConfiguration(new Uri(dockerUri)).CreateClient();
+            _dockerClient = new DockerClientConfiguration(new Uri(dockerUri)).CreateClient();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Failed to initialize DockerClient");
+        }
     }
 
     public async Task<bool> IsAvailableAsync(CancellationToken ct)
     {
+        if (_dockerClient == null) return false;
         try
         {
             await _dockerClient.System.PingAsync(ct);
@@ -42,6 +50,11 @@ public class DockerVpsProvisioningService : IVpsProvisioningService
 
     public async Task<ProvisionResult> ProvisionAsync(VpsProvisionSpec spec, CancellationToken ct)
     {
+        if (_dockerClient == null)
+        {
+            return new ProvisionResult(false, string.Empty, string.Empty, "Docker client is not available");
+        }
+
         _logger.LogInformation(
             "Provisioning VPS {ContainerName} with {CpuCores} cores and {MemoryBytes} bytes RAM",
             spec.ContainerName,
@@ -61,7 +74,8 @@ public class DockerVpsProvisioningService : IVpsProvisioningService
                     Memory = Math.Min(spec.MemoryBytes, 200 * 1024 * 1024L), // Capped at 200MB for demo
                     NanoCPUs = spec.CpuCores * 1_000_000_000L,
                     PidsLimit = Math.Max(100, spec.CpuCores * 100),
-                    NetworkMode = "bridge"
+                    NetworkMode = "bridge",
+                    RestartPolicy = new RestartPolicy { Name = RestartPolicyKind.UnlessStopped }
                 },
                 Tty = true,
                 AttachStdin = true,
@@ -183,7 +197,7 @@ public class DockerVpsProvisioningService : IVpsProvisioningService
     {
         try
         {
-            await _dockerClient.Containers.StopContainerAsync(containerId, new ContainerStopParameters { WaitBeforeKillSeconds = 5 }, ct);
+            await _dockerClient.Containers.StopContainerAsync(containerId, new ContainerStopParameters { WaitBeforeKillSeconds = 1 }, ct);
         }
         catch (Exception ex)
         {
@@ -195,7 +209,7 @@ public class DockerVpsProvisioningService : IVpsProvisioningService
     {
         try
         {
-            await _dockerClient.Containers.RestartContainerAsync(containerId, new ContainerRestartParameters { WaitBeforeKillSeconds = 5 }, ct);
+            await _dockerClient.Containers.RestartContainerAsync(containerId, new ContainerRestartParameters { WaitBeforeKillSeconds = 1 }, ct);
         }
         catch (Exception ex)
         {
@@ -205,6 +219,8 @@ public class DockerVpsProvisioningService : IVpsProvisioningService
 
     private async Task EnsureImageExistsAsync(string imageName, CancellationToken ct)
     {
+        if (_dockerClient == null) return;
+
         var images = await _dockerClient.Images.ListImagesAsync(new ImagesListParameters
         {
             Filters = new Dictionary<string, IDictionary<string, bool>>

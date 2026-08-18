@@ -127,6 +127,7 @@ export const Footer: React.FC = () => {
           <div>
             <h4 className="text-sm font-extrabold text-white uppercase tracking-wider mb-4">Hỗ Trợ &amp; Tin Tức</h4>
             <ul className="space-y-2 text-xs text-slate-400 font-medium">
+              <li><Link href="/contact" className="hover:text-cyan-400 transition-colors font-semibold text-slate-300">Liên Hệ &amp; Tư Vấn 24/7</Link></li>
               <li><Link href="/knowledge-base" className="hover:text-cyan-400 transition-colors">Knowledge Base</Link></li>
               <li><Link href="/faqs" className="hover:text-cyan-400 transition-colors">Câu Hỏi FAQ</Link></li>
               <li><Link href="/news" className="hover:text-cyan-400 transition-colors">Blog &amp; Tin Tức</Link></li>

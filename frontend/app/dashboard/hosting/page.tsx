@@ -37,7 +37,7 @@ export default function HostingManagementPage() {
     setLoading(true);
     try {
       const token = localStorage.getItem('accessToken');
-      const res = await fetch('http://localhost:5053/api/hosting/me', {
+      const res = await fetch('/api/hosting/me', {
         headers: token ? { Authorization: `Bearer ${token}` } : {}
       });
       if (res.ok) {

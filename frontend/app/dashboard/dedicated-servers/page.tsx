@@ -35,7 +35,7 @@ export default function CustomerDedicatedServersPage() {
     setLoading(true);
     try {
       const token = localStorage.getItem('accessToken');
-      const res = await fetch('http://localhost:5053/api/dedicated-servers', {
+      const res = await fetch('/api/dedicated-servers', {
         headers: token ? { Authorization: `Bearer ${token}` } : {}
       });
       if (res.ok) {

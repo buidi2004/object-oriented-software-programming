@@ -15,12 +15,34 @@ function MomoSandboxContent() {
 
   const orderId = searchParams.get('orderId') || 'PAY_SAMPLE_ORDER';
   const amountStr = searchParams.get('amount') || '500000';
-  const amount = parseFloat(amountStr) || 500000;
+  const initialAmount = parseFloat(amountStr) || 500000;
+  const [amount, setAmount] = useState(initialAmount);
 
   const [isLoading, setIsLoading] = useState(false);
   const [status, setStatus] = useState<'pending' | 'success' | 'failed'>('pending');
   const [message, setMessage] = useState('');
   const [timeLeft, setTimeLeft] = useState(600); // 10 minutes
+
+  useEffect(() => {
+    if (orderId && orderId !== 'PAY_SAMPLE_ORDER') {
+      const token = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
+      if (token) {
+        fetch('/api/orders/me', {
+          headers: { Authorization: `Bearer ${token}` }
+        })
+          .then(r => r.json())
+          .then((orders: any[]) => {
+            if (Array.isArray(orders)) {
+              const matched = orders.find(o => o.id === orderId);
+              if (matched && matched.totalAmount) {
+                setAmount(matched.totalAmount);
+              }
+            }
+          })
+          .catch(() => {});
+      }
+    }
+  }, [orderId]);
 
   useEffect(() => {
     const timer = setInterval(() => {

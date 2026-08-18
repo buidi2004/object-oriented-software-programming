@@ -162,33 +162,43 @@ export const useCartStore = create<CartState>((set, get) => ({
   },
 
   syncGuestCart: async () => {
-    const guestItems = getLocalGuestCart();
-    if (guestItems.length === 0) {
-      await get().fetchCart();
-      return;
-    }
-
     const token = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
     if (!token) return;
 
-    // Send all guest items to backend
-    for (const item of guestItems) {
-      try {
-        await api.post('/carts/items', {
-          servicePlanId: item.servicePlanId,
-          quantity: item.quantity || 1,
-          billingCycle: typeof item.billingCycle === 'number' ? item.billingCycle : 1,
-          autoRenew: true
-        });
-      } catch (err) {
-        console.warn('Could not sync guest item', item, err);
+    const guestItems = getLocalGuestCart();
+    const currentMemoryItems = get().items.filter(it => it.id.startsWith('guest_') || it.id.startsWith('local_'));
+    
+    // Combine unique items to sync
+    const allPending = [...guestItems];
+    for (const memItem of currentMemoryItems) {
+      if (!allPending.some(g => g.servicePlanId === memItem.servicePlanId)) {
+        allPending.push(memItem);
       }
     }
 
-    // Clear local guest cart and refresh from DB
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem(GUEST_CART_KEY);
+    if (allPending.length > 0) {
+      for (const item of allPending) {
+        const cycleNumber = typeof item.billingCycle === 'number' 
+          ? item.billingCycle 
+          : (String(item.billingCycle).toLowerCase() === 'yearly' || String(item.billingCycle) === '2' ? 2 : 1);
+
+        try {
+          await api.post('/carts/items', {
+            servicePlanId: item.servicePlanId,
+            quantity: item.quantity || 1,
+            billingCycle: cycleNumber,
+            autoRenew: true
+          });
+        } catch (err) {
+          console.warn('Could not sync item to server cart', item, err);
+        }
+      }
+
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem(GUEST_CART_KEY);
+      }
     }
+
     await get().fetchCart();
   }
 }));

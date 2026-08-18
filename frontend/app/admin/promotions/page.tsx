@@ -20,6 +20,8 @@ interface Promotion {
 interface ServicePlan {
   id: string;
   name: string;
+  servicePlanId?: string;
+  servicePlanName?: string;
 }
 
 export default function AdminPromotionsPage() {
@@ -72,14 +74,27 @@ export default function AdminPromotionsPage() {
       setIsLoading(true);
       const [promoRes, planRes] = await Promise.all([
         api.get('/promotions'),
-        api.get('/service-plans?includeInactive=true').catch(() => ({ data: [] }))
+        api.get('/service-plans/admin').catch(() => api.get('/service-plans?includeInactive=true')).catch(() => ({ data: [] }))
       ]);
 
       if (Array.isArray(promoRes.data)) {
         setPromotions(promoRes.data);
       }
       if (Array.isArray(planRes.data)) {
-        setPlans(planRes.data);
+        // Deduplicate and normalize
+        const seen = new Set<string>();
+        const uniquePlans: any[] = [];
+        for (const item of planRes.data) {
+          const id = item.id || item.servicePlanId;
+          if (id && !seen.has(id)) {
+            seen.add(id);
+            uniquePlans.push({
+              id,
+              name: item.name || item.servicePlanName || id
+            });
+          }
+        }
+        setPlans(uniquePlans);
       }
     } catch (error) {
       console.error('Failed to fetch promotions:', error);
@@ -357,9 +372,10 @@ export default function AdminPromotionsPage() {
                   className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-orange-500/20 bg-white"
                 >
                   <option value="">Toàn bộ trang web (Tất cả dịch vụ)</option>
-                  {plans.map(p => (
-                    <option key={p.id} value={p.id}>{p.name}</option>
-                  ))}
+                  {plans.map((p, idx) => {
+                    const id = p.id || p.servicePlanId || `plan-${idx}`;
+                    return <option key={id} value={id}>{p.name || p.servicePlanName || id}</option>;
+                  })}
                 </select>
               </div>
 

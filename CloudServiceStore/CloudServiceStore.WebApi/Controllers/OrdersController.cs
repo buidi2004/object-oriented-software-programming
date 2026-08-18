@@ -26,7 +26,7 @@ public class OrdersController : ControllerBase
     public OrdersController(IMediator mediator) => _mediator = mediator;
 
     [HttpPost("checkout")]
-    [Authorize(Roles = "Customer")]
+    [Authorize]
     public async Task<IActionResult> Checkout([FromBody] CheckoutCommand command, CancellationToken ct)
     {
         var orderId = await _mediator.Send(command, ct);
@@ -42,7 +42,7 @@ public class OrdersController : ControllerBase
     }
 
     [HttpGet("me")]
-    [Authorize(Roles = "Customer")]
+    [Authorize]
     public async Task<IActionResult> GetMyOrders([FromQuery] string? status, CancellationToken ct)
     {
         var orders = await _mediator.Send(new GetMyOrdersQuery(status), ct);

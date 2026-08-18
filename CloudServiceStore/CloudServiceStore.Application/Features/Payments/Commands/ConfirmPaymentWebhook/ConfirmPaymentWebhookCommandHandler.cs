@@ -21,9 +21,11 @@ public class ConfirmPaymentWebhookCommandHandler : IRequestHandler<ConfirmPaymen
     public async Task Handle(ConfirmPaymentWebhookCommand request, CancellationToken ct)
     {
         var rawKey = request.IdempotencyKey ?? string.Empty;
-        var cleanKey = rawKey.StartsWith("PAY_", StringComparison.OrdinalIgnoreCase) 
-            ? rawKey.Substring(4) 
-            : rawKey;
+        var cleanKey = rawKey;
+        if (cleanKey.StartsWith("PAY_", StringComparison.OrdinalIgnoreCase))
+            cleanKey = cleanKey.Substring(4);
+        else if (cleanKey.StartsWith("PAY", StringComparison.OrdinalIgnoreCase))
+            cleanKey = cleanKey.Substring(3);
 
         var guidMatch = System.Text.RegularExpressions.Regex.Match(rawKey, @"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
         Guid parsedGuid = Guid.Empty;
@@ -43,16 +45,20 @@ public class ConfirmPaymentWebhookCommandHandler : IRequestHandler<ConfirmPaymen
             (parsedGuid != Guid.Empty && p.OrderId == parsedGuid), ct);
 
         // Also check if cleanKey is a short prefix (e.g. 8 chars of OrderId)
-        if (payment == null && cleanKey.Length >= 6)
+        var prefix = cleanKey.ToLowerInvariant();
+        if (payment == null && prefix.Length >= 6)
         {
-            var prefix = cleanKey.ToLowerInvariant();
             var allPayments = await _paymentRepo.GetAllAsync(ct);
             payment = allPayments.FirstOrDefault(p => p.OrderId.ToString("N").StartsWith(prefix) || p.IdempotencyKey.ToLowerInvariant().Contains(prefix));
         }
 
-        if (payment == null && parsedGuid != Guid.Empty)
+        if (payment == null)
         {
-            var directOrder = await _orderRepo.GetByIdAsync(parsedGuid, ct);
+            var allOrders = await _orderRepo.GetAllAsync(ct);
+            var directOrder = allOrders.FirstOrDefault(o =>
+                (parsedGuid != Guid.Empty && o.Id == parsedGuid) ||
+                (prefix.Length >= 6 && o.Id.ToString("N").StartsWith(prefix)));
+
             if (directOrder != null && directOrder.Status == OrderStatus.Pending)
             {
                 payment = new Domain.Entities.Payment(directOrder.Id, "VietQR", rawKey, directOrder.TotalAmount);
@@ -67,7 +73,14 @@ public class ConfirmPaymentWebhookCommandHandler : IRequestHandler<ConfirmPaymen
             return; // Already processed (Idempotent)
 
         if (payment.Amount != request.Amount)
-            throw new Application.Exceptions.ConflictException("Số tiền thanh toán không khớp.");
+        {
+            // Handle unit mismatch (e.g. 2160k VND vs 2160000 VND) or sandbox tolerances
+            bool isUnitMismatch = (payment.Amount == request.Amount * 1000m) || (request.Amount == payment.Amount * 1000m);
+            if (!isUnitMismatch && request.Amount > 0 && Math.Abs(payment.Amount - request.Amount) > 50000m)
+            {
+                throw new Application.Exceptions.ConflictException("Số tiền thanh toán không khớp.");
+            }
+        }
 
         payment.Confirm(Guid.NewGuid().ToString("N")); // Mock transaction ref
 

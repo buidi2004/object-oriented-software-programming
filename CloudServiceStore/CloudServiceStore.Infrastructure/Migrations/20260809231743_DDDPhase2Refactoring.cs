@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -11,9 +11,9 @@ namespace CloudServiceStore.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropIndex(
-                name: "IX_PlanPrices_ServicePlanId",
-                table: "PlanPrices");
+            // migrationBuilder.DropIndex(
+            //     name: "IX_PlanPrices_ServicePlanId",
+            //     table: "PlanPrices");
 
             migrationBuilder.AddColumn<DateTime>(
                 name: "CreatedAt",

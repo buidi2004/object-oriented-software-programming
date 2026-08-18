@@ -117,8 +117,8 @@ export default function PaymentsPage() {
           { label: 'Tổng nạp', value: transactions.filter(t => t.type === 'topup').reduce((sum, t) => sum + t.amount, 0), icon: ArrowUpRight, colorKey: 'emerald' },
           { label: 'Tổng tiêu', value: transactions.filter(t => t.type === 'payment').reduce((sum, t) => sum + t.amount, 0), icon: ArrowDownLeft, colorKey: 'red' },
           { label: 'Hoàn trả', value: transactions.filter(t => t.type === 'refund').reduce((sum, t) => sum + t.amount, 0), icon: DollarSign, colorKey: 'blue' },
-        ].map((stat, idx) => (
-          <div key={idx} className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+        ].map((stat) => (
+          <div key={`payment-stat-${stat.label}`} className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
             <div className="flex items-center gap-4">
               <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${colorMap[stat.colorKey]}`}>
                 <stat.icon className="w-6 h-6" />

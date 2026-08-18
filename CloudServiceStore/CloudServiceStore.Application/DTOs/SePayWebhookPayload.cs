@@ -12,7 +12,7 @@ public class SePayWebhookPayload
     public string Gateway { get; set; } = string.Empty;
 
     [JsonPropertyName("transactionDate")]
-    public DateTime? TransactionDate { get; set; }
+    public string? TransactionDate { get; set; }
 
     [JsonPropertyName("accountNumber")]
     public string? AccountNumber { get; set; }

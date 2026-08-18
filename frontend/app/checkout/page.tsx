@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ShoppingCart, CreditCard, QrCode, Banknote, CheckCircle, Loader2, AlertCircle } from 'lucide-react';
+import { ShoppingCart, CreditCard, QrCode, Banknote, CheckCircle, Loader2, AlertCircle, ArrowRight } from 'lucide-react';
+import { useCartStore } from '@/src/store/useCartStore';
 
 interface CartItem {
   id: string;
@@ -22,19 +23,25 @@ interface PaymentMethod {
 export default function CheckoutPage() {
   const router = useRouter();
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
-  const [selectedMethod, setSelectedMethod] = useState<string>('vnpay');
-  const [isLoading, setIsLoading] = useState(false);
+  const [selectedMethod, setSelectedMethod] = useState<string>('vietqr');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [paymentUrl, setPaymentUrl] = useState<string>('');
   const [error, setError] = useState<string>('');
   const [step, setStep] = useState<'cart' | 'processing' | 'success'>('cart');
 
   useEffect(() => {
-    const token = localStorage.getItem('accessToken');
-    if (!token) {
-      router.push('/cart');
-      return;
-    }
-    fetchCart();
+    const init = async () => {
+      const token = localStorage.getItem('accessToken');
+      if (!token) {
+        router.push('/cart');
+        return;
+      }
+      try {
+        await useCartStore.getState().syncGuestCart();
+      } catch {}
+      await fetchCart();
+    };
+    init();
   }, []);
 
   const fetchCart = async () => {
@@ -149,8 +156,31 @@ export default function CheckoutPage() {
             Thanh Toán Ngay
           </a>
           
-          <Link href="/orders" className="text-sm text-slate-500 hover:text-blue-600">
+          <Link href="/dashboard/orders" className="text-sm text-slate-500 hover:text-blue-600">
             Xem đơn hàng của tôi →
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  if (cartItems.length === 0) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center py-12 px-4">
+        <div className="max-w-md w-full bg-white rounded-3xl p-8 shadow-xl border border-slate-100 text-center">
+          <div className="w-16 h-16 rounded-full bg-blue-50 flex items-center justify-center mx-auto mb-4 text-blue-600">
+            <ShoppingCart className="w-8 h-8" />
+          </div>
+          <h1 className="text-2xl font-black text-slate-900 mb-2">Giỏ Hàng Trống</h1>
+          <p className="text-slate-500 mb-6 text-sm">
+            Bạn chưa có gói dịch vụ nào trong giỏ hàng để thanh toán.
+          </p>
+          <Link
+            href="/services/cloud-vps"
+            className="w-full py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 text-white font-bold text-sm shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2"
+          >
+            Khám phá gói Cloud VPS
+            <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
       </div>

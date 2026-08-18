@@ -1,7 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
-import { Cloud, Server, Globe, Shield, ShoppingCart, Menu, X, Cpu, ChevronDown, LogOut, Wallet } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { 
+  Cloud, Server, Globe, Shield, ShoppingCart, Menu, X, Cpu, ChevronDown, LogOut, Wallet,
+  Gamepad2, Mail, Database, HardDrive, ShieldCheck, Zap, Layers, Palette, ShoppingBag, Activity, ArrowRight, Compass
+} from 'lucide-react';
 import { useAuthStore } from '../store/useAuthStore';
 import { useUIStore } from '../store/useUIStore';
 import { useCartStore } from '../store/useCartStore';
@@ -46,57 +49,51 @@ export const Header: React.FC<HeaderProps> = ({
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [servicesDropdownOpen, setServicesDropdownOpen] = useState(false);
-  const [currencyDropdownOpen, setCurrencyDropdownOpen] = useState(false);
-  const [currency, setCurrency] = useState<string>('VND');
-  const [rates, setRates] = useState<any[]>([]);
-  const [walletBalance, setWalletBalance] = useState(0);
-  const { user, logout } = useAuthStore();
+  const { user, setUser, logout, token } = useAuthStore();
+  const walletBalance = user?.walletBalance ?? 0;
 
-  React.useEffect(() => {
-    // Lấy tỷ giá từ Backend
-    api.get('/exchange-rates')
-      .then(res => setRates(res.data))
-      .catch(e => console.warn('Failed to load exchange rates', e));
-  }, []);
-
-  React.useEffect(() => {
-    if (user) {
-      api.get('/wallet/me').then(res => {
-        setWalletBalance(res.data.balance);
-      }).catch(e => console.warn('Failed to load wallet', e));
+  useEffect(() => {
+    const savedToken = token || (typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null);
+    if (savedToken && !user) {
+      api.get('/users/me')
+        .then(res => {
+          if (res.data) {
+            setUser({
+              id: res.data.id,
+              email: res.data.email,
+              fullName: res.data.fullName || res.data.email,
+              role: res.data.role || res.data.roleName || (res.data.roles && res.data.roles[0]),
+              walletBalance: res.data.walletBalance ?? 0
+            });
+          }
+        })
+        .catch(() => {});
     }
-  }, [user]);
+  }, [token, user, setUser]);
 
   const navLinkBase =
-    'whitespace-nowrap shrink-0 px-3 py-2 rounded-full text-sm font-semibold transition-all inline-flex items-center';
+    'px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center shrink-0';
+  const isServicesActive = pathname.startsWith('/services') || servicesDropdownOpen;
+  const isHomeActive = pathname === '/' && !servicesDropdownOpen;
 
   const navItems = [
     { id: 'home', label: 'Trang chủ', href: '/' },
     { id: 'services', label: 'Tất cả dịch vụ', href: '/services' },
-    { id: 'vps', label: 'Máy chủ Cloud', href: '/services/cloud-vps' },
-    { id: 'hosting', label: 'Hosting', href: '/services/hosting' },
-    { id: 'domain', label: 'Tên miền', href: '/services/domain' },
-    { id: 'library', label: 'Thư viện', href: '/knowledge-base' },
-    { id: 'contact', label: 'Liên hệ', href: '/#contact' },
+    { id: 'knowledge', label: 'Thư viện', href: '/knowledge-base' },
+    { id: 'contact', label: 'Liên hệ', href: '/contact' },
   ];
 
-  const isServicesActive = pathname.startsWith('/services');
-
   return (
-    <header id="header" className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-100 shadow-sm transition-all">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 lg:h-[4.5rem] flex items-center gap-3 min-w-0">
-
-        {/* Logo */}
-        <Link
-          href="/"
-          className="flex items-center gap-2 shrink-0 min-w-0"
-        >
-          <div className="w-9 h-9 lg:w-10 lg:h-10 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-cyan-400 flex items-center justify-center text-white shadow-md shadow-blue-500/20 group-hover:scale-105 transition-transform">
-            <Cloud className="w-5 h-5 lg:w-6 lg:h-6 stroke-[2.2]" />
+    <header className="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-md border-b border-slate-100 shadow-xs">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+        {/* Brand */}
+        <Link href="/" className="flex items-center gap-2.5 shrink-0 group">
+          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-blue-500 flex items-center justify-center text-white shadow-md shadow-blue-500/20 group-hover:scale-105 transition-transform">
+            <Cloud className="w-5 h-5" />
           </div>
-          <div className="flex flex-col min-w-0">
-            <span className="text-lg sm:text-xl lg:text-2xl font-black tracking-tight text-slate-900 leading-none whitespace-nowrap">
-              CloudHost<span className="text-blue-600"> VN</span>
+          <div className="flex flex-col">
+            <span className="text-base font-black tracking-tight text-slate-900 leading-tight">
+              CloudHost <span className="text-blue-600">VN</span>
             </span>
             <span className="text-[10px] font-semibold text-slate-400 tracking-wider uppercase mt-0.5 hidden md:block whitespace-nowrap">
               Enterprise Cloud
@@ -104,19 +101,19 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
         </Link>
 
-        {/* Desktop nav — 4 mục cố định; dịch vụ chi tiết nằm trong dropdown */}
-        <nav className="hidden lg:flex flex-1 items-center justify-center gap-1 min-w-0">
+        {/* Desktop nav */}
+        <nav className="hidden lg:flex flex-1 items-center justify-center gap-1.5 min-w-0">
           <Link
             href="/"
             className={`${navLinkBase} relative ${
-              pathname === '/'
-                ? 'text-blue-600 bg-blue-50/80'
+              isHomeActive
+                ? 'text-blue-600 bg-blue-50/80 font-black'
                 : 'text-slate-700 hover:text-blue-600 hover:bg-slate-50'
             }`}
           >
             Trang chủ
-            {pathname === '/' && (
-              <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-5 h-0.5 bg-blue-600 rounded-full" />
+            {isHomeActive && (
+              <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-4 h-0.5 bg-blue-600 rounded-full" />
             )}
           </Link>
 
@@ -131,8 +128,8 @@ export const Header: React.FC<HeaderProps> = ({
               aria-expanded={servicesDropdownOpen}
               aria-haspopup="true"
               className={`${navLinkBase} gap-1 ${
-                servicesDropdownOpen || isServicesActive
-                  ? 'text-blue-600 bg-blue-50/80'
+                servicesDropdownOpen || pathname.startsWith('/services')
+                  ? 'text-blue-600 bg-blue-50/80 font-black'
                   : 'text-slate-700 hover:text-blue-600 hover:bg-slate-50'
               }`}
             >
@@ -141,194 +138,190 @@ export const Header: React.FC<HeaderProps> = ({
             </button>
 
             {servicesDropdownOpen && (
-              <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 w-[720px] max-w-[95vw] z-50">
-                <div className="bg-white rounded-3xl shadow-2xl border border-slate-100 p-6 animate-in fade-in slide-in-from-top-2 duration-200 grid grid-cols-3 gap-6">
+              <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 w-[760px] max-w-[95vw] z-50">
+                <div className="bg-white rounded-3xl shadow-2xl shadow-slate-900/10 border border-slate-100 p-7 animate-in fade-in slide-in-from-top-2 duration-200 grid grid-cols-3 gap-6">
                   {/* Column 1: Hạ tầng & Máy chủ */}
-                  <div>
-                    <h4 className="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 mb-3 flex items-center gap-1.5">
+                  <div className="flex flex-col justify-between">
+                    <h4 className="text-[11px] font-black uppercase tracking-wider text-slate-500 mb-3.5 flex items-center gap-2">
                       <Server className="w-3.5 h-3.5 text-blue-600" /> Hạ Tầng &amp; Máy Chủ
                     </h4>
-                    <div className="space-y-1">
+                    <div className="space-y-1.5 flex-1 flex flex-col justify-between">
                       <Link
                         href="/services/cloud-vps"
                         onClick={() => setServicesDropdownOpen(false)}
-                        className="flex items-start gap-2.5 p-2 rounded-xl hover:bg-blue-50/70 transition-all group"
+                        className="flex items-start gap-3 p-2.5 rounded-2xl hover:bg-blue-50/70 transition-all group"
                       >
-                        <div className="p-1.5 rounded-lg bg-blue-100 text-blue-600 shrink-0 group-hover:scale-105 transition-transform">
+                        <div className="w-9 h-9 rounded-xl bg-blue-100/70 text-blue-600 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
                           <Server className="w-4 h-4" />
                         </div>
                         <div>
-                          <div className="text-xs font-bold text-slate-900 group-hover:text-blue-600">Cloud VPS NVMe</div>
-                          <div className="text-[11px] text-slate-500">Máy chủ ảo hiệu năng cao</div>
+                          <div className="text-xs font-bold text-slate-900 group-hover:text-blue-600 transition-colors">Cloud VPS NVMe</div>
+                          <div className="text-[11px] font-medium text-slate-500 mt-0.5">Máy chủ ảo hiệu năng cao</div>
                         </div>
                       </Link>
 
                       <Link
                         href="/services/dedicated-server"
                         onClick={() => setServicesDropdownOpen(false)}
-                        className="flex items-start gap-2.5 p-2 rounded-xl hover:bg-indigo-50/70 transition-all group"
+                        className="flex items-start gap-3 p-2.5 rounded-2xl hover:bg-indigo-50/70 transition-all group"
                       >
-                        <div className="p-1.5 rounded-lg bg-indigo-100 text-indigo-600 shrink-0 group-hover:scale-105 transition-transform">
+                        <div className="w-9 h-9 rounded-xl bg-indigo-100/70 text-indigo-600 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
                           <Cpu className="w-4 h-4" />
                         </div>
                         <div>
-                          <div className="text-xs font-bold text-slate-900 group-hover:text-indigo-600">Dedicated Server</div>
-                          <div className="text-[11px] text-slate-500">Máy chủ vật lý riêng</div>
+                          <div className="text-xs font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">Dedicated Server</div>
+                          <div className="text-[11px] font-medium text-slate-500 mt-0.5">Máy chủ vật lý riêng biệt</div>
                         </div>
                       </Link>
 
                       <Link
                         href="/services/game-servers"
                         onClick={() => setServicesDropdownOpen(false)}
-                        className="flex items-start gap-2.5 p-2 rounded-xl hover:bg-purple-50/70 transition-all group"
+                        className="flex items-start gap-3 p-2.5 rounded-2xl hover:bg-purple-50/70 transition-all group"
                       >
-                        <div className="p-1.5 rounded-lg bg-purple-100 text-purple-600 shrink-0 group-hover:scale-105 transition-transform">
-                          <Server className="w-4 h-4" />
+                        <div className="w-9 h-9 rounded-xl bg-purple-100/70 text-purple-600 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                          <Gamepad2 className="w-4 h-4" />
                         </div>
                         <div>
-                          <div className="text-xs font-bold text-slate-900 group-hover:text-purple-600">Game Servers</div>
-                          <div className="text-[11px] text-slate-500">Minecraft, CS:GO, Rust</div>
+                          <div className="text-xs font-bold text-slate-900 group-hover:text-purple-600 transition-colors">Game Servers</div>
+                          <div className="text-[11px] font-medium text-slate-500 mt-0.5">Minecraft, CS:GO, Rust</div>
                         </div>
                       </Link>
                     </div>
                   </div>
 
-                  {/* Column 2: Web & Tên miền */}
-                  <div>
-                    <h4 className="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 mb-3 flex items-center gap-1.5">
-                      <Globe className="w-3.5 h-3.5 text-cyan-600" /> Web &amp; Tên Miền
+                  {/* Column 2: Web & Bảo mật */}
+                  <div className="flex flex-col justify-between">
+                    <h4 className="text-[11px] font-black uppercase tracking-wider text-slate-500 mb-3.5 flex items-center gap-2">
+                      <Globe className="w-3.5 h-3.5 text-cyan-600" /> Web &amp; Bảo Mật
                     </h4>
-                    <div className="space-y-1">
+                    <div className="space-y-1.5 flex-1 flex flex-col justify-between">
                       <Link
                         href="/services/hosting"
                         onClick={() => setServicesDropdownOpen(false)}
-                        className="flex items-start gap-2.5 p-2 rounded-xl hover:bg-cyan-50/70 transition-all group"
+                        className="flex items-start gap-3 p-2.5 rounded-2xl hover:bg-cyan-50/70 transition-all group"
                       >
-                        <div className="p-1.5 rounded-lg bg-cyan-100 text-cyan-600 shrink-0 group-hover:scale-105 transition-transform">
+                        <div className="w-9 h-9 rounded-xl bg-cyan-100/70 text-cyan-600 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
                           <Globe className="w-4 h-4" />
                         </div>
                         <div>
-                          <div className="text-xs font-bold text-slate-900 group-hover:text-cyan-600">NVMe Web Hosting</div>
-                          <div className="text-[11px] text-slate-500">LiteSpeed + LSCache</div>
+                          <div className="text-xs font-bold text-slate-900 group-hover:text-cyan-600 transition-colors">NVMe Web Hosting</div>
+                          <div className="text-[11px] font-medium text-slate-500 mt-0.5">LiteSpeed + LSCache tốc độ</div>
                         </div>
                       </Link>
 
                       <Link
                         href="/services/domain"
                         onClick={() => setServicesDropdownOpen(false)}
-                        className="flex items-start gap-2.5 p-2 rounded-xl hover:bg-emerald-50/70 transition-all group"
+                        className="flex items-start gap-3 p-2.5 rounded-2xl hover:bg-emerald-50/70 transition-all group"
                       >
-                        <div className="p-1.5 rounded-lg bg-emerald-100 text-emerald-600 shrink-0 group-hover:scale-105 transition-transform">
-                          <Globe className="w-4 h-4" />
+                        <div className="w-9 h-9 rounded-xl bg-emerald-100/70 text-emerald-600 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                          <Compass className="w-4 h-4" />
                         </div>
                         <div>
-                          <div className="text-xs font-bold text-slate-900 group-hover:text-emerald-600">Đăng Ký Tên Miền</div>
-                          <div className="text-[11px] text-slate-500">.VN, .COM, .AI, .IO</div>
+                          <div className="text-xs font-bold text-slate-900 group-hover:text-emerald-600 transition-colors">Đăng Ký Tên Miền</div>
+                          <div className="text-[11px] font-medium text-slate-500 mt-0.5">.VN, .COM, .AI, .IO giá tốt</div>
                         </div>
                       </Link>
 
                       <Link
                         href="/services/ssl-certificates"
                         onClick={() => setServicesDropdownOpen(false)}
-                        className="flex items-start gap-2.5 p-2 rounded-xl hover:bg-amber-50/70 transition-all group"
+                        className="flex items-start gap-3 p-2.5 rounded-2xl hover:bg-amber-50/70 transition-all group"
                       >
-                        <div className="p-1.5 rounded-lg bg-amber-100 text-amber-600 shrink-0 group-hover:scale-105 transition-transform">
-                          <Shield className="w-4 h-4" />
+                        <div className="w-9 h-9 rounded-xl bg-amber-100/70 text-amber-600 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                          <ShieldCheck className="w-4 h-4" />
                         </div>
                         <div>
-                          <div className="text-xs font-bold text-slate-900 group-hover:text-amber-600">Chứng Chỉ SSL</div>
-                          <div className="text-[11px] text-slate-500">Bảo mật mã hóa DV/EV</div>
+                          <div className="text-xs font-bold text-slate-900 group-hover:text-amber-600 transition-colors">Chứng Chỉ SSL</div>
+                          <div className="text-[11px] font-medium text-slate-500 mt-0.5">Bảo mật mã hóa DV/EV</div>
                         </div>
                       </Link>
                     </div>
                   </div>
 
-                  {/* Column 3: Dữ liệu & Ứng dụng */}
-                  <div>
-                    <h4 className="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 mb-3 flex items-center gap-1.5">
-                      <Cloud className="w-3.5 h-3.5 text-indigo-600" /> Dữ Liệu &amp; Giải Pháp
+                  {/* Column 3: Dữ liệu & Giải pháp */}
+                  <div className="flex flex-col justify-between">
+                    <h4 className="text-[11px] font-black uppercase tracking-wider text-slate-500 mb-3.5 flex items-center gap-2">
+                      <Database className="w-3.5 h-3.5 text-indigo-600" /> Dữ Liệu &amp; Giải Pháp
                     </h4>
-                    <div className="space-y-1">
+                    <div className="space-y-1.5 flex-1 flex flex-col justify-between">
                       <Link
                         href="/services/email-hosting"
                         onClick={() => setServicesDropdownOpen(false)}
-                        className="flex items-start gap-2.5 p-2 rounded-xl hover:bg-rose-50/70 transition-all group"
+                        className="flex items-start gap-3 p-2.5 rounded-2xl hover:bg-rose-50/70 transition-all group"
                       >
-                        <div className="p-1.5 rounded-lg bg-rose-100 text-rose-600 shrink-0 group-hover:scale-105 transition-transform">
-                          <Cloud className="w-4 h-4" />
+                        <div className="w-9 h-9 rounded-xl bg-rose-100/70 text-rose-600 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                          <Mail className="w-4 h-4" />
                         </div>
                         <div>
-                          <div className="text-xs font-bold text-slate-900 group-hover:text-rose-600">Email Doanh Nghiệp</div>
-                          <div className="text-[11px] text-slate-500">Hòm thư bảo mật riêng</div>
-                        </div>
-                      </Link>
-
-                      <Link
-                        href="/services/cdn"
-                        onClick={() => setServicesDropdownOpen(false)}
-                        className="flex items-start gap-2.5 p-2 rounded-xl hover:bg-amber-50/70 transition-all group"
-                      >
-                        <div className="p-1.5 rounded-lg bg-amber-100 text-amber-600 shrink-0 group-hover:scale-105 transition-transform">
-                          <Cloud className="w-4 h-4" />
-                        </div>
-                        <div>
-                          <div className="text-xs font-bold text-slate-900 group-hover:text-amber-600">Cloud CDN</div>
-                          <div className="text-[11px] text-slate-500">Tăng tốc mạng toàn cầu</div>
-                        </div>
-                      </Link>
-
-                      <Link
-                        href="/services/databases"
-                        onClick={() => setServicesDropdownOpen(false)}
-                        className="flex items-start gap-2.5 p-2 rounded-xl hover:bg-teal-50/70 transition-all group"
-                      >
-                        <div className="p-1.5 rounded-lg bg-teal-100 text-teal-600 shrink-0 group-hover:scale-105 transition-transform">
-                          <Server className="w-4 h-4" />
-                        </div>
-                        <div>
-                          <div className="text-xs font-bold text-slate-900 group-hover:text-teal-600">Managed Databases</div>
-                          <div className="text-[11px] text-slate-500">MySQL, PostgreSQL, Redis</div>
+                          <div className="text-xs font-bold text-slate-900 group-hover:text-rose-600 transition-colors">Email Doanh Nghiệp</div>
+                          <div className="text-[11px] font-medium text-slate-500 mt-0.5">Hòm thư bảo mật theo tên miền</div>
                         </div>
                       </Link>
 
                       <Link
                         href="/services/storage"
                         onClick={() => setServicesDropdownOpen(false)}
-                        className="flex items-start gap-2.5 p-2 rounded-xl hover:bg-blue-50/70 transition-all group"
+                        className="flex items-start gap-3 p-2.5 rounded-2xl hover:bg-blue-50/70 transition-all group"
                       >
-                        <div className="p-1.5 rounded-lg bg-blue-100 text-blue-600 shrink-0 group-hover:scale-105 transition-transform">
-                          <Cloud className="w-4 h-4" />
+                        <div className="w-9 h-9 rounded-xl bg-blue-100/70 text-blue-600 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                          <HardDrive className="w-4 h-4" />
                         </div>
                         <div>
-                          <div className="text-xs font-bold text-slate-900 group-hover:text-blue-600">Object Storage (S3)</div>
-                          <div className="text-[11px] text-slate-500">Lưu trữ đám mây chuẩn S3</div>
+                          <div className="text-xs font-bold text-slate-900 group-hover:text-blue-600 transition-colors">Object Storage (S3)</div>
+                          <div className="text-[11px] font-medium text-slate-500 mt-0.5">Lưu trữ đám mây chuẩn S3</div>
+                        </div>
+                      </Link>
+
+                      <Link
+                        href="/services/databases"
+                        onClick={() => setServicesDropdownOpen(false)}
+                        className="flex items-start gap-3 p-2.5 rounded-2xl hover:bg-teal-50/70 transition-all group"
+                      >
+                        <div className="w-9 h-9 rounded-xl bg-teal-100/70 text-teal-600 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                          <Database className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <div className="text-xs font-bold text-slate-900 group-hover:text-teal-600 transition-colors">Managed Databases</div>
+                          <div className="text-[11px] font-medium text-slate-500 mt-0.5">MySQL, PostgreSQL, Redis</div>
                         </div>
                       </Link>
                     </div>
                   </div>
 
                   {/* Footer of Mega Menu */}
-                  <div className="col-span-3 pt-3 border-t border-slate-100 flex items-center justify-between">
-                    <div className="flex items-center gap-4 text-xs font-semibold text-slate-500">
-                      <Link href="/apps" onClick={() => setServicesDropdownOpen(false)} className="hover:text-blue-600 transition-colors">
-                        🚀 1-Click Apps
+                  <div className="col-span-3 mt-4 pt-4 border-t border-slate-100 flex items-center justify-between">
+                    <div className="flex items-center gap-5 text-xs font-bold text-slate-600">
+                      <Link href="/apps" onClick={() => setServicesDropdownOpen(false)} className="flex items-center gap-1.5 hover:text-blue-600 transition-colors">
+                        <Zap className="w-4 h-4 text-amber-500" />
+                        <span>1-Click Apps</span>
                       </Link>
-                      <Link href="/services/static-sites" onClick={() => setServicesDropdownOpen(false)} className="hover:text-blue-600 transition-colors">
-                        🌐 Static Sites
+                      <Link href="/services/cdn" onClick={() => setServicesDropdownOpen(false)} className="flex items-center gap-1.5 hover:text-blue-600 transition-colors">
+                        <Activity className="w-4 h-4 text-cyan-500" />
+                        <span>Cloud CDN</span>
                       </Link>
-                      <Link href="/services/website-builder" onClick={() => setServicesDropdownOpen(false)} className="hover:text-blue-600 transition-colors">
-                        🎨 Website Builder
+                      <Link href="/services/static-sites" onClick={() => setServicesDropdownOpen(false)} className="flex items-center gap-1.5 hover:text-blue-600 transition-colors">
+                        <Layers className="w-4 h-4 text-indigo-500" />
+                        <span>Static Sites</span>
                       </Link>
-                      <Link href="/marketplace" onClick={() => setServicesDropdownOpen(false)} className="hover:text-blue-600 transition-colors">
-                        🛍️ Marketplace
+                      <Link href="/services/website-builder" onClick={() => setServicesDropdownOpen(false)} className="flex items-center gap-1.5 hover:text-blue-600 transition-colors">
+                        <Palette className="w-4 h-4 text-pink-500" />
+                        <span>Website Builder</span>
+                      </Link>
+                      <Link href="/marketplace" onClick={() => setServicesDropdownOpen(false)} className="flex items-center gap-1.5 hover:text-blue-600 transition-colors">
+                        <ShoppingBag className="w-4 h-4 text-emerald-500" />
+                        <span>Marketplace</span>
                       </Link>
                     </div>
+
                     <Link
                       href="/services"
                       onClick={() => setServicesDropdownOpen(false)}
-                      className="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1"
+                      className="text-xs font-extrabold text-blue-600 hover:text-blue-700 flex items-center gap-1.5 group shrink-0"
                     >
-                      Khám phá tất cả 12+ dịch vụ →
+                      <span>Khám phá 12+ dịch vụ</span>
+                      <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
                     </Link>
                   </div>
                 </div>
@@ -347,37 +340,30 @@ export const Header: React.FC<HeaderProps> = ({
             Thư viện
           </Link>
 
-          <a
-            href="/#contact"
+          <Link
+            href="/contact"
             className={`${navLinkBase} ${
-              pathname === '/#contact'
+              pathname === '/contact'
                 ? 'text-blue-600 bg-blue-50/80'
                 : 'text-slate-700 hover:text-blue-600 hover:bg-slate-50'
             }`}
           >
             Liên hệ
-          </a>
-
-          <Link
-            href="/admin"
-            className={`${navLinkBase} text-indigo-600 bg-indigo-50/80 hover:bg-indigo-100 font-bold gap-1`}
-          >
-            <Shield className="w-4 h-4 text-indigo-600" />
-            Admin Panel
           </Link>
+
+          {user && (user.role === 'Admin' || user.role === 'Editor') && (
+            <Link
+              href="/admin"
+              className={`${navLinkBase} text-indigo-600 bg-indigo-50/80 hover:bg-indigo-100 font-bold gap-1`}
+            >
+              <Shield className="w-4 h-4 text-indigo-600" />
+              Admin Panel
+            </Link>
+          )}
         </nav>
 
         {/* Actions — luôn icon-first, không chiếm width cố định lớn */}
         <div className="flex items-center justify-end gap-0.5 sm:gap-1.5 shrink-0 ml-auto lg:ml-0">
-          {/* Nút Mở Bảng Điều Khiển Cloud Nhanh */}
-          <button
-            onClick={handleOpenDashboard}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-blue-50 to-indigo-50 hover:from-blue-100 hover:to-indigo-100 text-blue-700 font-bold text-xs transition-all border border-blue-200 shadow-sm shrink-0"
-            title="Bảng Điều Khiển Quản Lý Cloud"
-          >
-            <Cpu className="w-4 h-4 text-blue-600" />
-            <span className="hidden md:inline">Quản lý Cloud</span>
-          </button>
 
           <button
             onClick={handleOpenCart}
@@ -416,12 +402,13 @@ export const Header: React.FC<HeaderProps> = ({
                 </span>
               </button>
 
-              <div
-                className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold shrink-0"
-                title={user.fullName}
+              <Link
+                href="/dashboard"
+                className="w-8 h-8 rounded-full bg-blue-100 hover:bg-blue-200 flex items-center justify-center text-blue-600 font-bold shrink-0 transition-colors shadow-xs"
+                title={`Bảng điều khiển - ${user.fullName}`}
               >
                 {user.fullName.charAt(0).toUpperCase()}
-              </div>
+              </Link>
 
               <button
                 onClick={logout}
@@ -477,36 +464,59 @@ export const Header: React.FC<HeaderProps> = ({
           ))}
 
           <div className="pt-3 mt-2 border-t border-slate-100 flex flex-col gap-2">
-            <button
-              onClick={() => {
-                handleOpenDashboard();
-                setMobileMenuOpen(false);
-              }}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-100 text-slate-800 font-bold text-sm whitespace-nowrap"
-            >
-              <Cpu className="w-4 h-4 text-blue-600" />
-              Quản lý Cloud
-            </button>
             {user ? (
-              <button
-                onClick={() => {
-                  logout();
-                  setMobileMenuOpen(false);
-                }}
-                className="w-full text-center px-4 py-2.5 text-sm font-bold text-rose-500 hover:bg-rose-50 rounded-xl"
-              >
-                Đăng xuất
-              </button>
+              <>
+                <Link
+                  href="/dashboard"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-blue-50 text-blue-600 font-bold text-sm"
+                >
+                  <Cloud className="w-4 h-4" />
+                  Bảng điều khiển ({user.fullName})
+                </Link>
+
+                {(user.role === 'Admin' || user.role === 'Editor') && (
+                  <Link
+                    href="/admin"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-50 text-indigo-700 font-bold text-sm"
+                  >
+                    <Shield className="w-4 h-4" />
+                    Admin Panel
+                  </Link>
+                )}
+
+                <button
+                  onClick={() => {
+                    logout();
+                    setMobileMenuOpen(false);
+                  }}
+                  className="w-full text-center px-4 py-2.5 text-sm font-bold text-rose-500 hover:bg-rose-50 rounded-xl"
+                >
+                  Đăng xuất
+                </button>
+              </>
             ) : (
-              <button
-                onClick={() => {
-                  handleOpenAuth('login');
-                  setMobileMenuOpen(false);
-                }}
-                className="w-full text-center px-4 py-2.5 text-sm font-bold text-slate-700 hover:bg-slate-100 rounded-xl"
-              >
-                Đăng nhập
-              </button>
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  onClick={() => {
+                    handleOpenAuth('login');
+                    setMobileMenuOpen(false);
+                  }}
+                  className="w-full text-center px-4 py-2.5 text-sm font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl"
+                >
+                  Đăng nhập
+                </button>
+                <button
+                  onClick={() => {
+                    handleOpenAuth('register');
+                    setMobileMenuOpen(false);
+                  }}
+                  className="w-full text-center px-4 py-2.5 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl"
+                >
+                  Đăng ký
+                </button>
+              </div>
             )}
           </div>
         </div>

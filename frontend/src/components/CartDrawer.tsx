@@ -23,6 +23,7 @@ import {
   suggestTopUpAmount,
 } from '../lib/checkoutErrors';
 import { requestAuth } from '../lib/authNavigation';
+import { useCartStore } from '../store/useCartStore';
 
 interface CartDrawerProps {
   isOpen: boolean;
@@ -81,51 +82,21 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
     setCheckoutNotice(null);
     setIsCheckingOut(true);
 
+    const token = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
+    if (!token) {
+      onClose();
+      requestAuth('login', '/checkout');
+      setIsCheckingOut(false);
+      return;
+    }
+
     try {
-      const res = await api.post('/orders/checkout', { couponCode: null });
-      const orderId = res.data.orderId as string;
-
-      try {
-        await api.post('/wallet/pay', { orderId });
-      } catch (payError) {
-        if (isInsufficientWalletBalance(payError)) {
-          let balance = 0;
-          try {
-            const walletRes = await api.get('/wallet/me');
-            balance = walletRes.data.balance ?? 0;
-          } catch {
-            balance = 0;
-          }
-
-          setCheckoutNotice({
-            kind: 'insufficient_balance',
-            balance,
-            required: totalAmount,
-            orderId,
-          });
-          return;
-        }
-
-        setCheckoutNotice({
-          kind: 'error',
-          message: getApiErrorMessage(payError, 'Thanh toán ví thất bại'),
-        });
-        return;
-      }
-
-      setIsCheckedOut(true);
-      confetti({
-        particleCount: 100,
-        spread: 70,
-        origin: { y: 0.6 },
-      });
+      // Synchronize any guest items to server cart first
+      await useCartStore.getState().syncGuestCart();
+      onClose();
+      router.push('/checkout');
     } catch (e) {
-      const message = getApiErrorMessage(e, 'Không thể tạo đơn hàng');
-      if (isAxiosUnauthorized(e)) {
-        onClose();
-        requestAuth('login', window.location.pathname);
-        return;
-      }
+      const message = getApiErrorMessage(e, 'Không thể chuyển đến trang thanh toán');
       setCheckoutNotice({ kind: 'error', message });
     } finally {
       setIsCheckingOut(false);
@@ -315,24 +286,35 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               <button
                 onClick={handleCheckout}
                 disabled={isCheckingOut}
-                className="w-full py-4 rounded-2xl bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white font-extrabold text-base shadow-xl shadow-blue-500/25 flex items-center justify-center gap-2 cursor-pointer transition-all disabled:opacity-70 disabled:cursor-not-allowed"
+                className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white font-extrabold text-sm shadow-xl shadow-blue-500/25 flex items-center justify-center gap-2 cursor-pointer transition-all disabled:opacity-70 disabled:cursor-not-allowed"
               >
                 {isCheckingOut ? (
                   <>
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                    Đang xử lý...
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Đang chuyển hướng...
                   </>
                 ) : (
                   <>
-                    <CreditCard className="w-5 h-5" />
-                    <span>{insufficientNotice ? 'Thử thanh toán lại' : 'Thanh Toán Ngay'}</span>
+                    <CreditCard className="w-4 h-4" />
+                    <span>Tiến Hành Thanh Toán</span>
                   </>
                 )}
               </button>
 
-              <div className="flex items-center justify-center gap-1.5 text-[11px] text-slate-400">
+              <button
+                onClick={() => {
+                  onClose();
+                  router.push('/cart');
+                }}
+                className="w-full py-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-xs transition-colors flex items-center justify-center gap-1.5"
+              >
+                <ShoppingBag className="w-3.5 h-3.5" />
+                <span>Xem Giỏ Hàng Chi Tiết</span>
+              </button>
+
+              <div className="flex items-center justify-center gap-1.5 text-[11px] text-slate-400 pt-1">
                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
-                Thanh toán qua số dư ví CloudHost VN
+                Hỗ trợ thanh toán VietQR, MoMo, VNPAY &amp; Số Dư Ví
               </div>
             </div>
           )}
