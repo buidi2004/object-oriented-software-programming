@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using CloudServiceStore.Application.Features.Marketplace.Commands.PurchaseListing;
 using CloudServiceStore.Application.Features.Marketplace.Queries.GetAllMarketplacePurchases;
+using CloudServiceStore.Application.Features.Marketplace.Queries.GetAllMarketplaceListings;
 using CloudServiceStore.Domain.Entities;
 using CloudServiceStore.Domain.Interfaces;
 using MediatR;
@@ -29,7 +30,8 @@ public class MarketplaceController : ControllerBase
     [Authorize(Roles = "Customer")]
     public async Task<IActionResult> GetListings(CancellationToken ct)
     {
-        return Ok(new List<object>());
+        var result = await _mediator.Send(new GetAllMarketplaceListingsQuery(), ct);
+        return Ok(result);
     }
 
     [HttpPost("purchase/{id:guid}")]

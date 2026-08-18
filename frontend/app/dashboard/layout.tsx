@@ -12,7 +12,7 @@ import {
   ChevronDown, Menu, X, Monitor, RefreshCw, History,
   Repeat, Shield, AlertCircle, Loader2, Cpu, Mail,
   Database, HardDrive, Layers, Palette, Gift, RotateCcw,
-  Building2, KeyRound, Key, Star, Bell, ArrowRightLeft
+  Building2, KeyRound, Key, Star, Bell, ArrowRightLeft, Package, ShoppingBag
 } from 'lucide-react';
 
 interface UserInfo {
@@ -49,6 +49,8 @@ const menuGroups: MenuGroup[] = [
       { id: 'databases', name: 'Databases', href: '/dashboard/databases', icon: Database },
       { id: 'storage', name: 'Object Storage S3', href: '/dashboard/storage', icon: HardDrive },
       { id: 'game-servers', name: 'Game Servers', href: '/dashboard/game-servers', icon: Monitor },
+      { id: 'apps', name: 'App Installer', href: '/dashboard/apps', icon: Package },
+      { id: 'marketplace', name: 'Marketplace', href: '/dashboard/marketplace', icon: ShoppingBag },
       { id: 'static-sites', name: 'Static Sites', href: '/dashboard/static-sites', icon: Layers },
       { id: 'website-builder', name: 'Website Builder', href: '/dashboard/website-builder', icon: Palette },
       { id: 'vps-backups', name: 'Backup VPS', href: '/dashboard/vps-backups', icon: RefreshCw },
