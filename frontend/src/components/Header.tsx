@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Cloud, Server, Globe, Shield, ShoppingCart, Menu, X, Cpu, ChevronDown, LogOut, Wallet,
-  Gamepad2, Mail, Database, HardDrive, ShieldCheck, Zap, Layers, Palette, ShoppingBag, Activity, ArrowRight, Compass
+  Gamepad2, Mail, Database, HardDrive, ShieldCheck, Zap, Layers, Palette, ShoppingBag, Activity, ArrowRight, Compass,
+  LifeBuoy, Megaphone, BookOpen, DownloadCloud, ActivitySquare
 } from 'lucide-react';
 import { useAuthStore } from '../store/useAuthStore';
 import { useUIStore } from '../store/useUIStore';
@@ -49,6 +50,7 @@ export const Header: React.FC<HeaderProps> = ({
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [servicesDropdownOpen, setServicesDropdownOpen] = useState(false);
+  const [supportDropdownOpen, setSupportDropdownOpen] = useState(false);
   const { user, setUser, logout, token } = useAuthStore();
   const walletBalance = user?.walletBalance ?? 0;
 
@@ -329,16 +331,97 @@ export const Header: React.FC<HeaderProps> = ({
             )}
           </div>
 
-          <Link
-            href="/knowledge-base"
-            className={`${navLinkBase} ${
-              pathname.startsWith('/knowledge-base')
-                ? 'text-blue-600 bg-blue-50/80'
-                : 'text-slate-700 hover:text-blue-600 hover:bg-slate-50'
-            }`}
+          <div
+            className="relative shrink-0"
+            onMouseEnter={() => setSupportDropdownOpen(true)}
+            onMouseLeave={() => setSupportDropdownOpen(false)}
           >
-            Thư viện
-          </Link>
+            <button
+              type="button"
+              onClick={() => setSupportDropdownOpen(open => !open)}
+              aria-expanded={supportDropdownOpen}
+              aria-haspopup="true"
+              className={`${navLinkBase} gap-1 ${
+                supportDropdownOpen || pathname.startsWith('/support') || pathname.startsWith('/news') || pathname.startsWith('/knowledge-base') || pathname.startsWith('/resources') || pathname.startsWith('/status')
+                  ? 'text-blue-600 bg-blue-50/80 font-black'
+                  : 'text-slate-700 hover:text-blue-600 hover:bg-slate-50'
+              }`}
+            >
+              Hỗ trợ
+              <ChevronDown className={`w-4 h-4 shrink-0 transition-transform ${supportDropdownOpen ? 'rotate-180 text-blue-600' : ''}`} />
+            </button>
+
+            {supportDropdownOpen && (
+              <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 w-[280px] z-50">
+                <div className="bg-white rounded-2xl shadow-xl border border-slate-100 p-2 animate-in fade-in slide-in-from-top-2 duration-200 flex flex-col gap-1">
+                  <Link
+                    href="/support/tickets"
+                    onClick={() => setSupportDropdownOpen(false)}
+                    className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-blue-50/70 transition-colors group"
+                  >
+                    <div className="w-8 h-8 rounded-lg bg-blue-100/70 text-blue-600 flex items-center justify-center shrink-0">
+                      <LifeBuoy className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <div className="text-sm font-bold text-slate-700 group-hover:text-blue-600">Yêu cầu hỗ trợ</div>
+                    </div>
+                  </Link>
+
+                  <Link
+                    href="/news"
+                    onClick={() => setSupportDropdownOpen(false)}
+                    className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-amber-50/70 transition-colors group"
+                  >
+                    <div className="w-8 h-8 rounded-lg bg-amber-100/70 text-amber-600 flex items-center justify-center shrink-0">
+                      <Megaphone className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <div className="text-sm font-bold text-slate-700 group-hover:text-amber-600">Thông báo</div>
+                    </div>
+                  </Link>
+
+                  <Link
+                    href="/knowledge-base"
+                    onClick={() => setSupportDropdownOpen(false)}
+                    className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-indigo-50/70 transition-colors group"
+                  >
+                    <div className="w-8 h-8 rounded-lg bg-indigo-100/70 text-indigo-600 flex items-center justify-center shrink-0">
+                      <BookOpen className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <div className="text-sm font-bold text-slate-700 group-hover:text-indigo-600">Cơ sở kiến thức</div>
+                    </div>
+                  </Link>
+
+                  <Link
+                    href="/resources"
+                    onClick={() => setSupportDropdownOpen(false)}
+                    className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-emerald-50/70 transition-colors group"
+                  >
+                    <div className="w-8 h-8 rounded-lg bg-emerald-100/70 text-emerald-600 flex items-center justify-center shrink-0">
+                      <DownloadCloud className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <div className="text-sm font-bold text-slate-700 group-hover:text-emerald-600">Tài nguyên</div>
+                    </div>
+                  </Link>
+
+                  <Link
+                    href="/status"
+                    onClick={() => setSupportDropdownOpen(false)}
+                    className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-teal-50/70 transition-colors group"
+                  >
+                    <div className="w-8 h-8 rounded-lg bg-teal-100/70 text-teal-600 flex items-center justify-center shrink-0">
+                      <ActivitySquare className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <div className="text-sm font-bold text-slate-700 group-hover:text-teal-600">Trạng thái mạng</div>
+                    </div>
+                  </Link>
+                </div>
+              </div>
+            )}
+          </div>
 
           <Link
             href="/contact"

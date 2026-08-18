@@ -13,7 +13,7 @@ import { api } from '@/src/lib/api';
 interface DashboardStats {
   totalOrders: number;
   activeServices: number;
-  walletBalance: number;
+  invoicesCount: number;
   loyaltyPoints: number;
   openTickets: number;
   monthlySpend: number;
@@ -63,18 +63,22 @@ export default function DashboardPage() {
 
   const fetchDashboardData = async () => {
     try {
-      const [dashboardRes, userRes] = await Promise.all([
+      const [dashboardRes, userRes, invoicesRes] = await Promise.all([
         api.get('/dashboard/me').catch(() => null),
         api.get('/users/me').catch(() => null),
+        api.get('/invoices?status=pending').catch(() => ({ data: [] })),
       ]);
 
       if (dashboardRes && dashboardRes.data) {
-        setStats(dashboardRes.data);
+        setStats({
+          ...dashboardRes.data,
+          invoicesCount: invoicesRes.data?.length || 0
+        });
       } else {
         setStats({
           totalOrders: 0,
           activeServices: 0,
-          walletBalance: 0,
+          invoicesCount: invoicesRes.data?.length || 0,
           loyaltyPoints: 0,
           openTickets: 0,
           monthlySpend: 0,
@@ -130,8 +134,7 @@ export default function DashboardPage() {
         {[
           { label: 'Đơn hàng', value: stats?.totalOrders || 0, icon: ShoppingCart, colorKey: 'blue' },
           { label: 'Dịch vụ đang chạy', value: stats?.activeServices || 0, icon: Server, colorKey: 'emerald' },
-          { label: 'Số dư ví', value: stats?.walletBalance ? `${(stats.walletBalance / 1000).toFixed(0)}K` : '0đ', icon: CreditCard, colorKey: 'amber' },
-          { label: 'Tên miền', value: stats?.openTickets || 0, icon: Globe, colorKey: 'cyan' },
+          { label: 'Hóa đơn chờ', value: stats?.invoicesCount || 0, icon: FileText, colorKey: 'rose' },
           { label: 'Điểm thưởng', value: stats?.loyaltyPoints || 0, icon: ShieldCheck, colorKey: 'purple' },
           { label: 'Hóa đơn tháng', value: stats?.monthlySpend ? `${(stats.monthlySpend / 1000).toFixed(0)}K` : '0đ', icon: TrendingUp, colorKey: 'rose' },
         ].map((stat) => (
@@ -148,13 +151,10 @@ export default function DashboardPage() {
         {[
           { title: 'Quản lý VPS', desc: 'Máy chủ đám mây của bạn', href: '/dashboard/vps-instances', icon: Server, colorKey: 'blue' },
           { title: 'Quản lý SSL', desc: 'Chứng chỉ bảo mật', href: '/dashboard/ssl-certificates', icon: ShieldCheck, colorKey: 'emerald' },
-          { title: 'Quản lý đơn hàng', desc: 'Xem lịch sử và trạng thái', href: '/orders', icon: ShoppingCart, colorKey: 'amber' },
-          { title: 'Ví tiền', desc: 'Nạp tiền và xem giao dịch', href: '/wallet', icon: CreditCard, colorKey: 'rose' },
-          { title: 'Hỗ trợ', desc: 'Tạo ticket hoặc xem lịch sử', href: '/tickets', icon: Activity, colorKey: 'indigo' },
+          { title: 'Hỗ trợ kỹ thuật', desc: 'Gửi yêu cầu hoặc theo dõi ticket', href: '/dashboard/tickets', icon: Activity, colorKey: 'blue' },
           { title: 'Tên miền', desc: 'Quản lý DNS', href: '/domains', icon: Globe, colorKey: 'cyan' },
           { title: 'Tự động gia hạn', desc: 'Quản lý gia hạn tự động', href: '/dashboard/auto-renew', icon: Clock, colorKey: 'violet' },
           { title: 'Backup VPS', desc: 'Sao lưu và khôi phục', href: '/dashboard/vps-backups', icon: Clock, colorKey: 'teal' },
-          { title: 'Lịch sử thanh toán', desc: 'Xem giao dịch ví', href: '/dashboard/payments', icon: CreditCard, colorKey: 'emerald' },
           { title: 'Hóa đơn', desc: 'Tải xuống hóa đơn', href: '/dashboard/invoices', icon: FileText, colorKey: 'sky' },
           { title: 'Thông báo', desc: 'Cài đặt thông báo', href: '/dashboard/notifications', icon: Activity, colorKey: 'amber' },
         ].map((action) => (

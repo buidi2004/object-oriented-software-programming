@@ -6,7 +6,7 @@ import { api } from '@/src/lib/api';
 
 interface Transaction {
   id: string;
-  type: 'topup' | 'payment' | 'refund';
+  type: 'payment' | 'refund';
   amount: number;
   status: 'completed' | 'pending' | 'failed';
   description: string;
@@ -22,7 +22,6 @@ const colorMap: Record<string, string> = {
 
 export default function PaymentsPage() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [balance, setBalance] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -37,29 +36,20 @@ export default function PaymentsPage() {
     if (!token) return;
 
     try {
-      const [walletRes, transactionsRes] = await Promise.all([
-        api.get('/wallet/me'),
-        api.get('/wallet/transactions')
-      ]);
-
-      if (walletRes.data) {
-        setBalance(walletRes.data.balance || 0);
-      }
+      const transactionsRes = await api.get('/orders/me');
 
       if (transactionsRes.data && Array.isArray(transactionsRes.data)) {
-        setTransactions(transactionsRes.data.map((t: { id: string; amount: number; type: string; createdAt: string }) => ({
-          id: t.id,
-          type: t.type === 'TopUp' ? 'topup' : t.type === 'Refund' ? 'refund' : 'payment',
-          amount: Math.abs(Number(t.amount)),
-          status: 'completed' as const,
-          description:
-            t.type === 'TopUp'
-              ? 'Nạp tiền vào ví'
-              : t.type === 'Refund'
-                ? 'Hoàn tiền'
-                : 'Thanh toán đơn hàng',
-          createdAt: t.createdAt,
-        })));
+        const orderTransactions = transactionsRes.data
+          .filter((t: any) => t.status === 'Paid' || t.status === 'Pending')
+          .map((t: any) => ({
+            id: t.id,
+            type: 'payment' as const,
+            amount: t.totalAmount,
+            status: t.status === 'Paid' ? 'completed' as const : 'pending' as const,
+            description: `Thanh toán Đơn hàng ${t.id.substring(0, 8).toUpperCase()}`,
+            createdAt: t.createdAt,
+        }));
+        setTransactions(orderTransactions);
       } else {
         setTransactions([]);
       }
@@ -77,9 +67,9 @@ export default function PaymentsPage() {
 
   const getTransactionIcon = (type: string) => {
     switch (type) {
-      case 'topup': return <ArrowUpRight className="w-5 h-5 text-emerald-600" />;
       case 'refund': return <ArrowDownLeft className="w-5 h-5 text-blue-600" />;
-      default: return <ArrowUpRight className="w-5 h-5 text-red-600" />;
+      case 'payment': return <DollarSign className="w-5 h-5 text-emerald-600" />;
+      default: return <DollarSign className="w-5 h-5 text-emerald-600" />;
     }
   };
 
@@ -93,28 +83,16 @@ export default function PaymentsPage() {
 
   return (
     <div className="space-y-6">
-      {/* Balance Card */}
-      <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-6 text-white">
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-blue-100 text-sm font-medium">Số dư ví</p>
-            <p className="text-4xl font-black mt-1">{formatCurrency(balance)}</p>
-            <p className="text-blue-200 text-sm mt-2">Cập nhật lần cuối: {new Date().toLocaleDateString('vi-VN')}</p>
-          </div>
-          <a
-            href="/wallet"
-            className="px-5 py-3 bg-white/20 hover:bg-white/30 rounded-xl font-semibold transition-colors flex items-center gap-2"
-          >
-            <CreditCard className="w-5 h-5" />
-            Nạp tiền
-          </a>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-black text-slate-900 tracking-tight">Thanh toán & Giao dịch</h1>
+          <p className="text-slate-500 mt-1">Quản lý lịch sử thanh toán đơn hàng của bạn</p>
         </div>
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {[
-          { label: 'Tổng nạp', value: transactions.filter(t => t.type === 'topup').reduce((sum, t) => sum + t.amount, 0), icon: ArrowUpRight, colorKey: 'emerald' },
           { label: 'Tổng tiêu', value: transactions.filter(t => t.type === 'payment').reduce((sum, t) => sum + t.amount, 0), icon: ArrowDownLeft, colorKey: 'red' },
           { label: 'Hoàn trả', value: transactions.filter(t => t.type === 'refund').reduce((sum, t) => sum + t.amount, 0), icon: DollarSign, colorKey: 'blue' },
         ].map((stat) => (
@@ -150,44 +128,40 @@ export default function PaymentsPage() {
         )}
 
         <div className="divide-y divide-slate-100">
-          {transactions.map((transaction) => (
-            <div key={transaction.id} className="px-6 py-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
+          {transactions.map((tx) => (
+            <div key={tx.id} className="px-6 py-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
               <div className="flex items-center gap-4">
                 <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center">
-                  {getTransactionIcon(transaction.type)}
+                  {getTransactionIcon(tx.type)}
                 </div>
                 <div>
-                  <p className="font-semibold text-slate-900">
-                    {transaction.type === 'topup' ? 'Nạp tiền' :
-                     transaction.type === 'refund' ? 'Hoàn tiền' : 'Thanh toán'}
-                  </p>
-                  <div className="flex items-center gap-2 mt-1">
-                    <span className="text-xs text-slate-500 flex items-center gap-1">
+                  <p className="font-semibold text-slate-900">{tx.description}</p>
+                  <span className="text-xs text-slate-500 flex items-center gap-1 mt-1">
                       <Calendar className="w-3 h-3" />
-                      {new Date(transaction.createdAt).toLocaleDateString('vi-VN')}
-                    </span>
-                    <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
-                      transaction.status === 'completed'
-                        ? 'bg-emerald-100 text-emerald-700'
-                        : transaction.status === 'pending'
-                        ? 'bg-amber-100 text-amber-700'
-                        : 'bg-red-100 text-red-700'
-                    }`}>
-                      {transaction.status === 'completed' ? 'Thành công' :
-                       transaction.status === 'pending' ? 'Đang xử lý' : 'Thất bại'}
-                    </span>
-                  </div>
+                      {new Date(tx.createdAt).toLocaleDateString('vi-VN')}
+                  </span>
                 </div>
               </div>
 
-              <div className="text-right">
+              <div className="text-right flex flex-col items-end">
                 <p className={`font-bold ${
-                  transaction.type === 'topup' ? 'text-emerald-600' :
-                  transaction.type === 'refund' ? 'text-blue-600' : 'text-red-600'
+                  tx.type === 'refund' ? 'text-blue-600' : 'text-emerald-600'
                 }`}>
-                  {transaction.type === 'topup' || transaction.type === 'refund' ? '+' : '-'}
-                  {formatCurrency(transaction.amount)}
+                  {tx.type === 'refund' ? '+' : '-'}{formatCurrency(tx.amount)}
                 </p>
+                {tx.status === 'pending' ? (
+                  <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-medium mt-1">
+                    Chờ xử lý
+                  </span>
+                ) : tx.status === 'failed' ? (
+                  <span className="text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded-full font-medium mt-1">
+                    Thất bại
+                  </span>
+                ) : (
+                  <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-medium mt-1">
+                    Thành công
+                  </span>
+                )}
               </div>
             </div>
           ))}

@@ -153,5 +153,20 @@ app.MapControllers();
 app.MapHub<CloudServiceStore.WebApi.Hubs.VpsTerminalHub>("/hubs/vps-terminal");
 app.MapHub<CloudServiceStore.WebApi.Hubs.LiveChatHub>("/hubs/chat");
 
+// Test email endpoint (development only)
+if (app.Environment.IsDevelopment())
+{
+    app.MapGet("/test-email", async (IEmailService emailService, string? to) =>
+    {
+        var toEmail = to ?? "buidi7170@gmail.com";
+        await emailService.SendEmailAsync(
+            toEmail,
+            "🧪 Test Email từ CloudHost VN",
+            "<h2>Xin chào!</h2><p>Nếu bạn đọc được mail này, tích hợp Gmail SMTP đã thành công 🎉</p><p>Gửi lúc: " + DateTime.UtcNow.ToString("HH:mm:ss dd/MM/yyyy") + " UTC</p>"
+        );
+        return Results.Ok(new { success = true, message = $"Email sent to {toEmail}" });
+    });
+}
+
 app.Run();
 public partial class Program { }

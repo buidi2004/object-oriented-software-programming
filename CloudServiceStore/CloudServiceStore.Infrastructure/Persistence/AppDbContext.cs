@@ -73,6 +73,7 @@ public class AppDbContext : DbContext
     public DbSet<CartReminder> CartReminders => Set<CartReminder>();
     public DbSet<ChatMessage> ChatMessages => Set<ChatMessage>();
     public DbSet<ChatSession> ChatSessions => Set<ChatSession>();
+    public DbSet<Resource> Resources => Set<Resource>();
     public DbSet<ControlPanelCredential> ControlPanelCredentials => Set<ControlPanelCredential>();
     public DbSet<Permission> Permissions => Set<Permission>();
     public DbSet<RolePermission> RolePermissions => Set<RolePermission>();

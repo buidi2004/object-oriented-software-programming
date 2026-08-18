@@ -68,7 +68,7 @@ const menuGroups: MenuGroup[] = [
     items: [
       { id: 'orders', name: 'Đơn hàng', href: '/dashboard/orders', icon: ShoppingCart },
       { id: 'invoices', name: 'Hóa đơn', href: '/dashboard/invoices', icon: FileText },
-      { id: 'payments', name: 'Ví tiền & Nạp tiền', href: '/dashboard/payments', icon: CreditCard },
+      { id: 'payments', name: 'Thanh toán & Giao dịch', href: '/dashboard/payments', icon: CreditCard },
       { id: 'refund-requests', name: 'Yêu cầu hoàn tiền', href: '/dashboard/refund-requests', icon: RotateCcw },
       { id: 'auto-renew', name: 'Tự động gia hạn', href: '/dashboard/auto-renew', icon: Repeat },
       { id: 'gift-cards', name: 'Thẻ quà tặng', href: '/dashboard/gift-cards', icon: Gift },

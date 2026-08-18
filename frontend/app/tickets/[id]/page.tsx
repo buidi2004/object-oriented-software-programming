@@ -45,9 +45,16 @@ export default function TicketDetailPage() {
       return;
     }
     fetchTicket(token);
+
+    const intervalId = setInterval(() => {
+      fetchTicket(token, false);
+    }, 5000);
+
+    return () => clearInterval(intervalId);
   }, [ticketId, router]);
 
-  const fetchTicket = async (token: string) => {
+  const fetchTicket = async (token: string, showLoading = true) => {
+    if (showLoading) setIsLoading(true);
     try {
       const response = await fetch(`/api/tickets/${ticketId}`, {
         headers: { Authorization: `Bearer ${token}` },

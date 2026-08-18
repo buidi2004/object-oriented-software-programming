@@ -8,7 +8,7 @@ import {
   DollarSign, TrendingUp, AlertCircle, Package, Settings, 
   FileText, Tag, Image, HelpCircle, CreditCard, Shield, ArrowUp, ArrowDown, 
   ShieldAlert, Clock, Bell, Globe, Building2, Download, Star, RefreshCw, Send,
-  Cpu, FileSpreadsheet, Search, Activity, Award, Share2, ShieldCheck, Database
+  Cpu, FileSpreadsheet, Search, Activity, Award, Share2, ShieldCheck, Database, DownloadCloud, Key
 } from 'lucide-react';
 
 interface AdminModuleItem {
@@ -142,6 +142,7 @@ export default function AdminDashboardPage() {
         { href: '/admin/blog-comments', label: 'Kiểm Duyệt Bình Luận', desc: 'Kiểm duyệt và xóa comment spam', icon: MessageSquare, color: 'sky' },
         { href: '/admin/reviews', label: 'Đánh Giá Khách Hàng', desc: 'Duyệt đánh giá sao và phản hồi dịch vụ', icon: Star, color: 'amber' },
         { href: '/admin/knowledge-base', label: 'Knowledge Base', desc: 'Tài liệu hướng dẫn kỹ thuật chi tiết', icon: FileText, color: 'teal' },
+        { href: '/admin/resources', label: 'Tài Nguyên', desc: 'Quản lý file tải xuống, phần mềm', icon: DownloadCloud, color: 'emerald' },
         { href: '/admin/faqs', label: 'Câu Hỏi FAQ', desc: 'Quản lý các câu hỏi thường gặp', icon: HelpCircle, color: 'violet' },
         { href: '/admin/banners', label: 'Banners Quảng Cáo', desc: 'Quản lý banner trang chủ & landing page', icon: Image, color: 'orange' },
         { href: '/admin/testimonials', label: 'Testimonials Đối Tác', desc: 'Cảm nhận của các doanh nghiệp lớn', icon: FileText, color: 'violet' },
@@ -153,6 +154,8 @@ export default function AdminDashboardPage() {
       category: '4. Báo Cáo, Kỹ Thuật & Hệ Thống',
       items: [
         { href: '/admin/revenue', label: 'Báo Cáo Doanh Thu', desc: 'Biểu đồ tăng trưởng và cơ cấu doanh thu', icon: TrendingUp, color: 'cyan' },
+        { href: '/admin/invoices', label: 'Quản Lý Hóa Đơn', desc: 'Kiểm soát hóa đơn điện tử toàn hệ thống', icon: FileText, color: 'blue' },
+        { href: '/admin/api-keys', label: 'Quản Lý API Keys', desc: 'Giám sát và thu hồi mã kết nối hệ thống', icon: Key, color: 'purple' },
         { href: '/admin/exports', label: 'Trung Tâm Xuất Dữ Liệu', desc: 'Xuất file CSV/JSON đơn hàng và khách hàng', icon: Download, color: 'emerald' },
         { href: '/admin/backups', label: 'Sao Lưu Toàn Hệ Thống', desc: 'Quản lý Snapshot & Storage Backup S3', icon: Database, color: 'teal' },
         { href: '/admin/ssl-certificates', label: 'Chứng Chỉ Bảo Mật SSL', desc: 'Theo dõi thời hạn và gia hạn HTTPS', icon: ShieldCheck, color: 'emerald' },

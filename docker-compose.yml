@@ -12,6 +12,11 @@ services:
       - Vps__DefaultImage=vps-demo-image
       - Cache__Enabled=true
       - Cache__RedisConnectionString=redis:6379
+      - EmailSettings__SmtpHost=smtp.gmail.com
+      - EmailSettings__SmtpPort=587
+      - EmailSettings__SenderEmail=buidi7170@gmail.com
+      - EmailSettings__SenderPassword=acmbfwjvytdzwnys
+      - EmailSettings__SenderName=CloudHost VN
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./CloudServiceStore/images:/app/images
