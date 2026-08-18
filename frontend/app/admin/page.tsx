@@ -8,7 +8,7 @@ import {
   DollarSign, TrendingUp, AlertCircle, Package, Settings, 
   FileText, Tag, Image, HelpCircle, CreditCard, Shield, ArrowUp, ArrowDown, 
   ShieldAlert, Clock, Bell, Globe, Building2, Download, Star, RefreshCw, Send,
-  Cpu, FileSpreadsheet, Search, Activity, Award, Share2, ShieldCheck, Database, DownloadCloud, Key
+  Cpu, FileSpreadsheet, Search, Activity, Award, Share2, ShieldCheck, Database, DownloadCloud, Key, LayoutTemplate, ShoppingBag
 } from 'lucide-react';
 
 interface AdminModuleItem {
@@ -124,15 +124,18 @@ export default function AdminDashboardPage() {
     {
       category: '2. Sản Phẩm, Bảng Giá & Khuyến Mãi',
       items: [
+        { href: '/admin/domains', label: 'Tên Miền (Domains)', desc: 'Đăng ký và cấu hình DNS tên miền', icon: Globe, color: 'blue' },
+        { href: '/admin/dedicated-servers', label: 'Máy Chủ Vật Lý', desc: 'Kiểm soát Dedicated Server', icon: Server, color: 'slate' },
+        { href: '/admin/migrations', label: 'Yêu Cầu Chuyển Đổi', desc: 'Hỗ trợ chuyển dữ liệu lên Cloud', icon: ArrowUp, color: 'fuchsia' },
+        { href: '/admin/security', label: 'Security Add-ons', desc: 'Giám sát dịch vụ bảo mật (WAF, Scan)', icon: ShieldCheck, color: 'emerald' },
+        { href: '/admin/apps', label: 'App Installer', desc: 'Lịch sử cài đặt ứng dụng Web', icon: LayoutTemplate, color: 'indigo' },
+        { href: '/admin/marketplace', label: 'Chợ Ứng Dụng', desc: 'Giao dịch mua bán Plugin & Theme', icon: ShoppingBag, color: 'fuchsia' },
         { href: '/admin/service-plans', label: 'Gói Dịch Vụ', desc: 'Cấu hình giá VPS, Hosting, Dedicated', icon: Package, color: 'indigo' },
-        { href: '/admin/dedicated-servers', label: 'Máy Chủ Vật Lý Riêng', desc: 'Quản lý phần cứng Dedicated & Rack', icon: Server, color: 'purple' },
-        { href: '/admin/domains', label: 'Tên Miền & DNS', desc: 'Quản lý tên miền, Auth Code & Transfer', icon: Globe, color: 'blue' },
         { href: '/admin/categories', label: 'Danh Mục Sản Phẩm', desc: 'Quản lý danh mục & phân loại dịch vụ', icon: Package, color: 'blue' },
         { href: '/admin/coupons', label: 'Mã Giảm Giá (Coupons)', desc: 'Tạo mã voucher % hoặc số tiền cố định', icon: Tag, color: 'rose' },
         { href: '/admin/promotions', label: 'Chương Trình Sale', desc: 'Thiết lập flash sale & đợt khuyến mãi', icon: Tag, color: 'pink' },
         { href: '/admin/gift-cards', label: 'Gift Cards', desc: 'Phát hành thẻ nạp tiền quà tặng', icon: CreditCard, color: 'amber' },
         { href: '/admin/exchange-rates', label: 'Tỷ Giá Ngoại Tệ', desc: 'Cập nhật tỷ giá USD, EUR sang VNĐ', icon: DollarSign, color: 'emerald' },
-        { href: '/admin/migrations', label: 'Yêu Cầu Di Dời Web', desc: 'Tiếp nhận chuyển dữ liệu từ nhà cung cấp khác', icon: RefreshCw, color: 'cyan' },
       ]
     },
     {

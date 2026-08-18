@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using CloudServiceStore.Application.Features.AppInstallations.Commands.InstallApp;
+using CloudServiceStore.Application.Features.AppInstallations.Queries.GetAllAppInstallations;
 using CloudServiceStore.Application.Features.HostingAccounts.Commands.CreateHostingAccount;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -23,5 +24,13 @@ public class AppInstallerController : ControllerBase
     {
         var installationId = await _mediator.Send(command, ct);
         return Ok(new { installationId });
+    }
+
+    [HttpGet("admin")]
+    [Authorize(Roles = "Admin,Editor")]
+    public async Task<IActionResult> GetAllAppInstallationsForAdmin(CancellationToken ct)
+    {
+        var result = await _mediator.Send(new GetAllAppInstallationsQuery(), ct);
+        return Ok(result);
     }
 }
