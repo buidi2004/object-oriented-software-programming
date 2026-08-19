@@ -21,7 +21,6 @@ const nextConfig = {
       },
     ]
   },
-  output: 'standalone',
   devIndicators: {
     buildActivity: false,
   },
