@@ -1,5 +1,6 @@
 using CloudServiceStore.Domain.Enums;
 using CloudServiceStore.Domain.Primitives;
+using System;
 
 namespace CloudServiceStore.Domain.Entities;
 
@@ -11,10 +12,31 @@ public class MarketplaceListing : AggregateRoot
     public decimal Price { get; set; }
     public string Category { get; set; } = string.Empty;
     public string PreviewImage { get; set; } = string.Empty;
-    public bool IsActive { get; set; } = true;
+    public MarketplaceListingStatus Status { get; private set; } = MarketplaceListingStatus.PendingReview;
+    public string IdempotencyKey { get; set; } = string.Empty;
+    public string FailureReason { get; private set; } = string.Empty;
     public int Downloads { get; set; }
     public int Rating { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+    public void MarkAsActive()
+    {
+        if (Status != MarketplaceListingStatus.PendingReview && Status != MarketplaceListingStatus.Suspended)
+            throw new InvalidOperationException($"Không thể duyệt (Active) từ trạng thái {Status}");
+        Status = MarketplaceListingStatus.Active;
+    }
+
+    public void MarkAsSuspended(string reason)
+    {
+        Status = MarketplaceListingStatus.Suspended;
+        FailureReason = reason;
+    }
+
+    public void MarkAsFailed(string reason)
+    {
+        Status = MarketplaceListingStatus.Failed;
+        FailureReason = reason;
+    }
 }
 
 public class MarketplacePurchase : AggregateRoot

@@ -59,6 +59,14 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginResult>
         var role = await _uow.Roles.GetByIdAsync(user.RoleId, ct);
         string roleName = role?.Name ?? "Customer";
 
+        // Check 2FA
+        if (user.IsTwoFactorEnabled)
+        {
+            await LogHistoryAsync(user.Id, request, true, ct);
+            await _uow.SaveChangesAsync(ct);
+            return new LoginResult(string.Empty, string.Empty, true, user.Email);
+        }
+
         var accessToken = _tokenGenerator.GenerateAccessToken(user, roleName);
         var refreshToken = _tokenGenerator.GenerateRefreshToken();
 

@@ -18,7 +18,7 @@ namespace CloudServiceStore.Tests.Application.Features.GameServers.Commands.Crea
             };
 
             server.ContainerId.Should().BeEmpty();
-            server.Status.Should().Be(GameServerStatus.Creating);
+            server.Status.Should().Be(GameServerStatus.Pending);
             server.IsActive.Should().BeTrue();
         }
 

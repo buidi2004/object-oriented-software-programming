@@ -1,4 +1,6 @@
-using CloudServiceStore.Application.Exceptions;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 using CloudServiceStore.Application.Interfaces;
 using CloudServiceStore.Domain.Entities;
 using CloudServiceStore.Domain.Interfaces;
@@ -11,35 +13,59 @@ public class CreateStaticSiteCommandHandler : IRequestHandler<CreateStaticSiteCo
     private readonly IUnitOfWork _uow;
     private readonly IRepository<StaticSite> _repo;
     private readonly ICurrentUserService _currentUser;
+    private readonly IStaticSiteProvisioningService _provisioningService;
 
     public CreateStaticSiteCommandHandler(
         IUnitOfWork uow,
         IRepository<StaticSite> repo,
-        ICurrentUserService currentUser)
+        ICurrentUserService currentUser,
+        IStaticSiteProvisioningService provisioningService)
     {
         _uow = uow;
         _repo = repo;
         _currentUser = currentUser;
+        _provisioningService = provisioningService;
     }
 
     public async Task<Guid> Handle(CreateStaticSiteCommand request, CancellationToken cancellationToken)
     {
-        var userId = _currentUser.UserId ?? throw new UnauthorizedException("Chưa đăng nhập");
+        var userId = _currentUser.UserId.GetValueOrDefault();
 
-        var site = new StaticSite
+        // 1. Idempotency Check
+        var existing = await _repo.FirstOrDefaultAsync(x => x.IdempotencyKey == request.IdempotencyKey, cancellationToken);
+        if (existing != null)
+        {
+            return existing.Id;
+        }
+
+        // 2. Tạo Entity (State: Pending -> Provisioning)
+        var staticSite = new StaticSite
         {
             Id = Guid.NewGuid(),
             UserId = userId,
             Name = request.Name,
-            BuildCommand = request.BuildCommand,
-            OutputDirectory = request.OutputDirectory,
-            IsActive = true,
-            CreatedAt = DateTime.UtcNow
+            IdempotencyKey = request.IdempotencyKey
         };
 
-        await _repo.AddAsync(site, cancellationToken);
+        staticSite.MarkAsProvisioning();
+
+        await _repo.AddAsync(staticSite, cancellationToken);
         await _uow.SaveChangesAsync(cancellationToken);
 
-        return site.Id;
+        // 3. Gọi CI/CD (Provisioning)
+        bool success = await _provisioningService.ProvisionProjectAsync(staticSite, cancellationToken);
+
+        if (success)
+        {
+            staticSite.MarkAsActive();
+        }
+        else
+        {
+            staticSite.MarkAsFailed("Lỗi tạo Project trên CI/CD.");
+        }
+
+        await _uow.SaveChangesAsync(cancellationToken);
+
+        return staticSite.Id;
     }
 }

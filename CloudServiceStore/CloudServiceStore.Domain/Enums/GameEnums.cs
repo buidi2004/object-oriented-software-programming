@@ -12,7 +12,8 @@ public enum GameType
 
 public enum GameServerStatus
 {
-    Creating = 1,
+    Pending = 0,
+    Provisioning = 1,
     Running = 2,
     Stopped = 3,
     Failed = 4

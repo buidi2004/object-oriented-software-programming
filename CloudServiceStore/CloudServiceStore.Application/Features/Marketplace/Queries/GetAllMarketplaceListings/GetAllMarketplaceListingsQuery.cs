@@ -22,6 +22,6 @@ public class GetAllMarketplaceListingsQueryHandler : IRequestHandler<GetAllMarke
     public async Task<IEnumerable<MarketplaceListing>> Handle(GetAllMarketplaceListingsQuery request, CancellationToken cancellationToken)
     {
         var all = await _repo.GetAllAsync(cancellationToken);
-        return all.Where(x => x.IsActive);
+        return all.Where(x => x.Status == CloudServiceStore.Domain.Enums.MarketplaceListingStatus.Active);
     }
 }

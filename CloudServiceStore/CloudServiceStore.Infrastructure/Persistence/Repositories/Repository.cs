@@ -48,9 +48,17 @@ public class Repository<T> : IRepository<T> where T : AggregateRoot
         return await query.FirstOrDefaultAsync(predicate, cancellationToken);
     }
 
-    public async Task<IReadOnlyList<T>> WhereAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<T>> WhereAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default, params Expression<Func<T, object>>[] includes)
     {
-        return await _dbSet.Where(predicate).ToListAsync(cancellationToken);
+        IQueryable<T> query = _dbSet;
+        if (includes != null)
+        {
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+        }
+        return await query.Where(predicate).ToListAsync(cancellationToken);
     }
 
     public async Task<bool> AnyAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)

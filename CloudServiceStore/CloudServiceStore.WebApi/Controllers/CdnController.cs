@@ -1,7 +1,5 @@
-using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
-using CloudServiceStore.Application.Features.CdnDistribution.Commands.CreateCdnDistribution;
+using CloudServiceStore.Application.Features.Cdn.Commands.CreateCdn;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,24 +8,20 @@ namespace CloudServiceStore.WebApi.Controllers;
 
 [ApiController]
 [Route("api/cdn")]
+[Authorize]
 public class CdnController : ControllerBase
 {
     private readonly IMediator _mediator;
 
-    public CdnController(IMediator mediator) => _mediator = mediator;
-
-    [HttpGet("distributions")]
-    [Authorize(Roles = "Customer")]
-    public async Task<IActionResult> GetMyDistributions(CancellationToken ct)
+    public CdnController(IMediator mediator)
     {
-        return Ok(new List<object>());
+        _mediator = mediator;
     }
 
-    [HttpPost("distributions")]
-    [Authorize(Roles = "Customer")]
-    public async Task<IActionResult> CreateDistribution([FromBody] CreateCdnDistributionCommand command, CancellationToken ct)
+    [HttpPost]
+    public async Task<IActionResult> CreateCdn([FromBody] CreateCdnCommand command)
     {
-        var id = await _mediator.Send(command, ct);
-        return Ok(new { id });
+        var distributionId = await _mediator.Send(command);
+        return Ok(new { distributionId });
     }
 }

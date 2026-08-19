@@ -152,6 +152,7 @@ app.UseHangfireDashboard("/hangfire", new DashboardOptions
 app.MapControllers();
 app.MapHub<CloudServiceStore.WebApi.Hubs.VpsTerminalHub>("/hubs/vps-terminal");
 app.MapHub<CloudServiceStore.WebApi.Hubs.LiveChatHub>("/hubs/chat");
+app.MapHub<CloudServiceStore.WebApi.Hubs.ResourceStatusHub>("/hubs/resource-status");
 
 // Test email endpoint (development only)
 if (app.Environment.IsDevelopment())

@@ -53,7 +53,14 @@ public static class DependencyInjection
         }
 
         services.AddSingleton<IVpsSpecParser, VpsSpecParser>();
-        services.AddSingleton<IVpsProvisioningService, DockerVpsProvisioningService>();
+        services.AddScoped<IVpsProvisioningService, DockerVpsProvisioningService>();
+        services.AddScoped<IAcmeProvisioningService, AcmeProvisioningService>();
+        services.AddScoped<IMinioProvisioningService, MinioProvisioningService>();
+        services.AddScoped<IDatabaseProvisioningService, DockerDatabaseProvisioningService>();
+        services.AddScoped<IGameServerProvisioningService, DockerGameServerProvisioningService>();
+        services.AddScoped<IAppInstallerService, DockerAppInstallerService>();
+        services.AddScoped<ICdnProvisioningService, CloudflareCdnProvisioningService>();
+        services.AddScoped<IStaticSiteProvisioningService, MockStaticSiteProvisioningService>();
         services.AddSingleton<IJobScheduler, HangfireJobScheduler>();
         services.AddHostedService<CloudServiceStore.Infrastructure.BackgroundServices.VpsIdleMonitorService>();
         services.AddScoped<ITerminateVpsJob, TerminateVpsJob>();

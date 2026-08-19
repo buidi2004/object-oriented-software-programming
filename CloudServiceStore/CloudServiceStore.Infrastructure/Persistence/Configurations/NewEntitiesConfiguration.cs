@@ -11,7 +11,13 @@ public class StaticSiteConfiguration : IEntityTypeConfiguration<StaticSite>
     {
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Name).IsRequired().HasMaxLength(255);
+        builder.HasIndex(x => x.IdempotencyKey).IsUnique();
         builder.HasMany(s => s.Deploys).WithOne().HasForeignKey(d => d.StaticSiteId);
+
+        builder.HasOne(x => x.User)
+               .WithMany()
+               .HasForeignKey(x => x.UserId)
+               .OnDelete(DeleteBehavior.NoAction);
     }
 }
 
@@ -33,6 +39,7 @@ public class CdnDistributionConfiguration : IEntityTypeConfiguration<CdnDistribu
         builder.HasKey(x => x.Id);
         builder.Property(x => x.OriginUrl).IsRequired();
         builder.Property(x => x.Cname).IsRequired().HasMaxLength(255);
+        builder.HasIndex(x => x.IdempotencyKey).IsUnique();
     }
 }
 
@@ -66,6 +73,8 @@ public class WebsiteBuilderProjectConfiguration : IEntityTypeConfiguration<Websi
     {
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Name).IsRequired().HasMaxLength(255);
+        builder.HasIndex(x => x.IdempotencyKey).IsUnique();
+        builder.Property(x => x.Status).HasConversion<long>();
         builder.HasMany(p => p.Pages).WithOne().HasForeignKey(pg => pg.ProjectId);
     }
 }
@@ -90,6 +99,8 @@ public class MarketplaceListingConfiguration : IEntityTypeConfiguration<Marketpl
         builder.Property(x => x.Description).IsRequired();
         builder.Property(x => x.Price).HasColumnType("decimal(18,2)");
         builder.Property(x => x.Category).IsRequired().HasMaxLength(100);
+        builder.HasIndex(x => x.IdempotencyKey).IsUnique();
+        builder.Property(x => x.Status).HasConversion<long>();
     }
 }
 

@@ -20,6 +20,8 @@ public class AddTicketMessageCommandHandlerTests
     private readonly Mock<IRepository<SupportTicket>> _mockRepositorySupportTicket;
     private readonly Mock<IRepository<TicketMessage>> _mockRepositoryTicketMessage;
     private readonly Mock<ICurrentUserService> _mockCurrentUserService;
+    private readonly Mock<IEmailService> _mockEmailService;
+    private readonly Mock<IRepository<AppUser>> _mockRepositoryAppUser;
     private readonly AddTicketMessageCommandHandler _handler;
 
     public AddTicketMessageCommandHandlerTests()
@@ -28,7 +30,15 @@ public class AddTicketMessageCommandHandlerTests
         _mockRepositorySupportTicket = new Mock<IRepository<SupportTicket>>();
         _mockRepositoryTicketMessage = new Mock<IRepository<TicketMessage>>();
         _mockCurrentUserService = new Mock<ICurrentUserService>();
-        _handler = new AddTicketMessageCommandHandler(_mockUnitOfWork.Object, _mockRepositorySupportTicket.Object, _mockRepositoryTicketMessage.Object, _mockCurrentUserService.Object);
+        _mockEmailService = new Mock<IEmailService>();
+        _mockRepositoryAppUser = new Mock<IRepository<AppUser>>();
+        _handler = new AddTicketMessageCommandHandler(
+            _mockUnitOfWork.Object, 
+            _mockRepositorySupportTicket.Object, 
+            _mockRepositoryTicketMessage.Object, 
+            _mockCurrentUserService.Object,
+            _mockEmailService.Object,
+            _mockRepositoryAppUser.Object);
     }
 
     [Fact]

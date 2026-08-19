@@ -103,6 +103,8 @@ public class AppDbContext : DbContext
     // Module #16: Marketplace
     public DbSet<MarketplaceListing> MarketplaceListings => Set<MarketplaceListing>();
     public DbSet<MarketplacePurchase> MarketplacePurchases => Set<MarketplacePurchase>();
+    public DbSet<ObjectStorageBucket> ObjectStorageBuckets { get; set; } = null!;
+    public DbSet<ManagedDatabaseInstance> ManagedDatabases { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

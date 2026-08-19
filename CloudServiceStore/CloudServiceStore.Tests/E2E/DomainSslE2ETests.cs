@@ -74,11 +74,19 @@ public class DomainSslE2ETests : BaseE2ETest
         myDomainsResult.Should().Contain(domainName);
 
         // 5. Request SSL Certificate
-        var sslCommand = new RequestSslCertificateCommand(registerResult.DomainId, "-----BEGIN CERTIFICATE REQUEST-----...-----END CERTIFICATE REQUEST-----");
+        var idempotencyKey = Guid.NewGuid().ToString();
+        var sslCommand = new RequestSslCertificateCommand(registerResult.DomainId, "-----BEGIN CERTIFICATE REQUEST-----...-----END CERTIFICATE REQUEST-----", idempotencyKey);
         var sslResponse = await Client.PostAsJsonAsync("/api/ssl", sslCommand);
         sslResponse.EnsureSuccessStatusCode();
         var sslResult = await sslResponse.Content.ReadFromJsonAsync<RequestSslResultDto>();
         sslResult!.SslId.Should().NotBeEmpty();
+
+        // 5.1 Test Idempotency
+        var sslCommandDuplicate = new RequestSslCertificateCommand(registerResult.DomainId, "Different CSR", idempotencyKey);
+        var sslResponseDup = await Client.PostAsJsonAsync("/api/ssl", sslCommandDuplicate);
+        sslResponseDup.EnsureSuccessStatusCode();
+        var sslResultDup = await sslResponseDup.Content.ReadFromJsonAsync<RequestSslResultDto>();
+        sslResultDup!.SslId.Should().Be(sslResult.SslId);
 
         // 6. Verify SSL linking
         var mySslsResponse = await Client.GetAsync("/api/ssl");
@@ -104,7 +112,7 @@ public class DomainSslE2ETests : BaseE2ETest
         delDnsRes.EnsureSuccessStatusCode();
 
         // 10. SslCertificatesController coverage
-        var requestCertCmd = new RequestSslCertificateCommand(registerResult.DomainId, "-----BEGIN CERTIFICATE REQUEST-----...-----END CERTIFICATE REQUEST-----");
+        var requestCertCmd = new RequestSslCertificateCommand(registerResult.DomainId, "-----BEGIN CERTIFICATE REQUEST-----...-----END CERTIFICATE REQUEST-----", Guid.NewGuid().ToString());
         var reqCertRes = await Client.PostAsJsonAsync("/api/ssl-certificates/certificates", requestCertCmd);
         reqCertRes.EnsureSuccessStatusCode();
         var reqCertJson = await reqCertRes.Content.ReadFromJsonAsync<dynamic>();
