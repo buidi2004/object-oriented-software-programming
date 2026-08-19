@@ -17,9 +17,9 @@ public class RequestSslCertificateCommandHandlerTests
     private readonly Mock<IRepository<DomainRecord>> _domainRepoMock = new();
     private readonly Mock<IRepository<SslCertificate>> _sslRepoMock = new();
     private readonly Mock<ICurrentUserService> _currentUserMock = new();
-    private readonly Mock<IAcmeProvisioningService> _acmeServiceMock = new();
+    private readonly Mock<IResourceProvisioningQueue> _taskQueueMock = new();
 
-    private RequestSslCertificateCommandHandler CreateHandler() => new(_uowMock.Object, _domainRepoMock.Object, _sslRepoMock.Object, _currentUserMock.Object, _acmeServiceMock.Object);
+    private RequestSslCertificateCommandHandler CreateHandler() => new(_uowMock.Object, _domainRepoMock.Object, _sslRepoMock.Object, _currentUserMock.Object, _taskQueueMock.Object);
 
     [Fact]
     public async Task Handle_DomainNotFound_ThrowsNotFoundException()
@@ -51,13 +51,11 @@ public class RequestSslCertificateCommandHandlerTests
         _domainRepoMock.Setup(r => r.GetByIdAsync(domainId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(new DomainRecord { Id = domainId, UserId = userId });
 
-        _acmeServiceMock.Setup(a => a.IssueCertificateAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new SslResult(true, "CERT", "KEY", DateTime.UtcNow.AddDays(90), ""));
-
         var result = await CreateHandler().Handle(new RequestSslCertificateCommand(domainId, "MY_CSR", Guid.NewGuid().ToString()), CancellationToken.None);
 
         Assert.NotEqual(Guid.Empty, result);
         _sslRepoMock.Verify(r => r.AddAsync(It.Is<SslCertificate>(s => s.DomainId == domainId && s.Csr == "MY_CSR"), It.IsAny<CancellationToken>()), Times.Once);
-        _uowMock.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Exactly(2));
+        _uowMock.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Exactly(1));
+        _taskQueueMock.Verify(q => q.QueueBackgroundWorkItemAsync(It.IsAny<Func<IServiceProvider, CancellationToken, ValueTask>>()), Times.Once);
     }
 }

@@ -7,6 +7,7 @@ using CloudServiceStore.Domain.Entities;
 using CloudServiceStore.Domain.Enums;
 using CloudServiceStore.Domain.Interfaces;
 using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CloudServiceStore.Application.Features.Ssl.Commands.RequestSslCertificate;
 
@@ -16,20 +17,20 @@ public class RequestSslCertificateCommandHandler : IRequestHandler<RequestSslCer
     private readonly IRepository<DomainRecord> _domainRepo;
     private readonly IRepository<SslCertificate> _sslRepo;
     private readonly ICurrentUserService _currentUser;
-    private readonly IAcmeProvisioningService _acmeService;
+    private readonly IResourceProvisioningQueue _taskQueue;
 
     public RequestSslCertificateCommandHandler(
         IUnitOfWork uow, 
         IRepository<DomainRecord> domainRepo, 
         IRepository<SslCertificate> sslRepo, 
         ICurrentUserService currentUser,
-        IAcmeProvisioningService acmeService)
+        IResourceProvisioningQueue taskQueue)
     { 
         _uow = uow; 
         _domainRepo = domainRepo; 
         _sslRepo = sslRepo; 
         _currentUser = currentUser; 
-        _acmeService = acmeService;
+        _taskQueue = taskQueue;
     }
 
     public async Task<Guid> Handle(RequestSslCertificateCommand request, CancellationToken cancellationToken)
@@ -61,20 +62,39 @@ public class RequestSslCertificateCommandHandler : IRequestHandler<RequestSslCer
         await _sslRepo.AddAsync(cert, cancellationToken);
         await _uow.SaveChangesAsync(cancellationToken);
 
-        // Gọi ACME service
-        var acmeResult = await _acmeService.IssueCertificateAsync(domain.Name, request.Csr, cancellationToken);
+        var certId = cert.Id;
+        var domainName = domain.Name;
+        var csr = request.Csr;
 
-        if (acmeResult.IsSuccess)
+        await _taskQueue.QueueBackgroundWorkItemAsync(async (serviceProvider, ct) =>
         {
-            cert.MarkAsIssued(acmeResult.Certificate, acmeResult.PrivateKey, acmeResult.ExpiryDate);
-        }
-        else
-        {
-            cert.MarkAsFailed(acmeResult.ErrorMessage);
-        }
+            await Task.Delay(5000, ct);
 
-        await _uow.SaveChangesAsync(cancellationToken);
+            var scopedRepo = serviceProvider.GetRequiredService<IRepository<SslCertificate>>();
+            var scopedUow = serviceProvider.GetRequiredService<IUnitOfWork>();
+            var scopedProvService = serviceProvider.GetRequiredService<IAcmeProvisioningService>();
+            var scopedNotifier = serviceProvider.GetRequiredService<IResourceStatusNotifier>();
 
-        return cert.Id;
+            var dbCert = await scopedRepo.GetByIdAsync(certId, ct);
+            if (dbCert == null) return;
+
+            var acmeResult = await scopedProvService.IssueCertificateAsync(domainName, csr, ct);
+
+            if (acmeResult.IsSuccess)
+            {
+                dbCert.MarkAsIssued(acmeResult.Certificate, acmeResult.PrivateKey, acmeResult.ExpiryDate);
+            }
+            else
+            {
+                dbCert.MarkAsFailed(acmeResult.ErrorMessage);
+            }
+
+            await scopedUow.SaveChangesAsync(ct);
+
+            var newStatus = acmeResult.IsSuccess ? "Issued" : "Failed";
+            await scopedNotifier.NotifyStatusChangedAsync("SslCertificate", dbCert.Id.ToString(), newStatus);
+        });
+
+        return certId;
     }
 }

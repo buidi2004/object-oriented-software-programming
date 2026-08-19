@@ -18,6 +18,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using StackExchange.Redis;
+using CloudServiceStore.Infrastructure.BackgroundServices;
 
 namespace CloudServiceStore.Infrastructure;
 
@@ -64,6 +65,10 @@ public static class DependencyInjection
         services.AddSingleton<IJobScheduler, HangfireJobScheduler>();
         services.AddHostedService<CloudServiceStore.Infrastructure.BackgroundServices.VpsIdleMonitorService>();
         services.AddScoped<ITerminateVpsJob, TerminateVpsJob>();
+
+        // Background Queue
+        services.AddSingleton<IResourceProvisioningQueue, ResourceProvisioningQueue>();
+        services.AddHostedService<ResourceProvisioningWorker>();
 
         return services;
     }

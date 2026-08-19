@@ -28,6 +28,8 @@ builder.Services.AddSwaggerGen(options =>
     options.CustomSchemaIds(type => type.FullName);
 });
 
+builder.Services.AddTransient<IResourceStatusNotifier, SignalRResourceStatusNotifier>();
+
 builder.Services.AddRateLimiter(options =>
 {
     options.AddFixedWindowLimiter("login", opt =>

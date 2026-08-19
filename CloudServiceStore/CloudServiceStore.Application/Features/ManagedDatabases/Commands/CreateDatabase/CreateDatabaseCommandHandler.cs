@@ -5,26 +5,27 @@ using CloudServiceStore.Application.Interfaces;
 using CloudServiceStore.Domain.Entities;
 using CloudServiceStore.Domain.Interfaces;
 using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CloudServiceStore.Application.Features.ManagedDatabases.Commands.CreateDatabase;
 
 public class CreateDatabaseCommandHandler : IRequestHandler<CreateDatabaseCommand, Guid>
 {
     private readonly IRepository<ManagedDatabaseInstance> _dbRepo;
-    private readonly IDatabaseProvisioningService _dbProvisioningService;
     private readonly IUnitOfWork _uow;
     private readonly ICurrentUserService _currentUser;
+    private readonly IResourceProvisioningQueue _taskQueue;
 
     public CreateDatabaseCommandHandler(
         IRepository<ManagedDatabaseInstance> dbRepo,
-        IDatabaseProvisioningService dbProvisioningService,
         IUnitOfWork uow,
-        ICurrentUserService currentUser)
+        ICurrentUserService currentUser,
+        IResourceProvisioningQueue taskQueue)
     {
         _dbRepo = dbRepo;
-        _dbProvisioningService = dbProvisioningService;
         _uow = uow;
         _currentUser = currentUser;
+        _taskQueue = taskQueue;
     }
 
     public async Task<Guid> Handle(CreateDatabaseCommand request, CancellationToken cancellationToken)
@@ -55,20 +56,38 @@ public class CreateDatabaseCommandHandler : IRequestHandler<CreateDatabaseComman
         await _dbRepo.AddAsync(instance, cancellationToken);
         await _uow.SaveChangesAsync(cancellationToken);
 
-        // Gọi Docker Provisioning Service (Mock)
-        int assignedPort = await _dbProvisioningService.ProvisionDatabaseAsync(instance, cancellationToken);
+        var instanceId = instance.Id;
 
-        if (assignedPort > 0)
+        // Enqueue Provisioning Task
+        await _taskQueue.QueueBackgroundWorkItemAsync(async (serviceProvider, ct) =>
         {
-            instance.MarkAsRunning(assignedPort);
-        }
-        else
-        {
-            instance.MarkAsFailed("Lỗi khi cấp phát Database qua Docker.");
-        }
+            await Task.Delay(5000, ct); // Simulate real-world provisioning delay
 
-        await _uow.SaveChangesAsync(cancellationToken);
+            var scopedRepo = serviceProvider.GetRequiredService<IRepository<ManagedDatabaseInstance>>();
+            var scopedUow = serviceProvider.GetRequiredService<IUnitOfWork>();
+            var scopedProvService = serviceProvider.GetRequiredService<IDatabaseProvisioningService>();
+            var scopedNotifier = serviceProvider.GetRequiredService<IResourceStatusNotifier>();
 
-        return instance.Id;
+            var dbInstance = await scopedRepo.GetByIdAsync(instanceId, ct);
+            if (dbInstance == null) return;
+
+            int assignedPort = await scopedProvService.ProvisionDatabaseAsync(dbInstance, ct);
+
+            if (assignedPort > 0)
+            {
+                dbInstance.MarkAsRunning(assignedPort);
+            }
+            else
+            {
+                dbInstance.MarkAsFailed("Lỗi khi cấp phát Database qua Docker.");
+            }
+
+            await scopedUow.SaveChangesAsync(ct);
+
+            // Notify Frontend via SignalR
+            await scopedNotifier.NotifyStatusChangedAsync("ManagedDatabaseInstance", dbInstance.Id.ToString(), dbInstance.Status.ToString());
+        });
+
+        return instanceId;
     }
 }

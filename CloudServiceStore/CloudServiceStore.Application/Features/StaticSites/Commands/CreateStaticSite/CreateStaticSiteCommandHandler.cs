@@ -5,6 +5,7 @@ using CloudServiceStore.Application.Interfaces;
 using CloudServiceStore.Domain.Entities;
 using CloudServiceStore.Domain.Interfaces;
 using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CloudServiceStore.Application.Features.StaticSites.Commands.CreateStaticSite;
 
@@ -13,18 +14,18 @@ public class CreateStaticSiteCommandHandler : IRequestHandler<CreateStaticSiteCo
     private readonly IUnitOfWork _uow;
     private readonly IRepository<StaticSite> _repo;
     private readonly ICurrentUserService _currentUser;
-    private readonly IStaticSiteProvisioningService _provisioningService;
+    private readonly IResourceProvisioningQueue _taskQueue;
 
     public CreateStaticSiteCommandHandler(
         IUnitOfWork uow,
         IRepository<StaticSite> repo,
         ICurrentUserService currentUser,
-        IStaticSiteProvisioningService provisioningService)
+        IResourceProvisioningQueue taskQueue)
     {
         _uow = uow;
         _repo = repo;
         _currentUser = currentUser;
-        _provisioningService = provisioningService;
+        _taskQueue = taskQueue;
     }
 
     public async Task<Guid> Handle(CreateStaticSiteCommand request, CancellationToken cancellationToken)
@@ -52,20 +53,36 @@ public class CreateStaticSiteCommandHandler : IRequestHandler<CreateStaticSiteCo
         await _repo.AddAsync(staticSite, cancellationToken);
         await _uow.SaveChangesAsync(cancellationToken);
 
-        // 3. Gọi CI/CD (Provisioning)
-        bool success = await _provisioningService.ProvisionProjectAsync(staticSite, cancellationToken);
+        var staticSiteId = staticSite.Id;
 
-        if (success)
+        await _taskQueue.QueueBackgroundWorkItemAsync(async (serviceProvider, ct) =>
         {
-            staticSite.MarkAsActive();
-        }
-        else
-        {
-            staticSite.MarkAsFailed("Lỗi tạo Project trên CI/CD.");
-        }
+            await Task.Delay(5000, ct);
 
-        await _uow.SaveChangesAsync(cancellationToken);
+            var scopedRepo = serviceProvider.GetRequiredService<IRepository<StaticSite>>();
+            var scopedUow = serviceProvider.GetRequiredService<IUnitOfWork>();
+            var scopedProvService = serviceProvider.GetRequiredService<IStaticSiteProvisioningService>();
+            var scopedNotifier = serviceProvider.GetRequiredService<IResourceStatusNotifier>();
 
-        return staticSite.Id;
+            var dbSite = await scopedRepo.GetByIdAsync(staticSiteId, ct);
+            if (dbSite == null) return;
+
+            bool success = await scopedProvService.ProvisionProjectAsync(dbSite, ct);
+
+            if (success)
+            {
+                dbSite.MarkAsActive();
+            }
+            else
+            {
+                dbSite.MarkAsFailed("Lỗi tạo Project trên CI/CD.");
+            }
+
+            await scopedUow.SaveChangesAsync(ct);
+
+            await scopedNotifier.NotifyStatusChangedAsync("StaticSiteProject", dbSite.Id.ToString(), dbSite.Status.ToString());
+        });
+
+        return staticSiteId;
     }
 }

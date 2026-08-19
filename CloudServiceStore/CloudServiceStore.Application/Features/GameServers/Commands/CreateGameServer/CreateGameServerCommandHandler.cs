@@ -3,6 +3,7 @@ using CloudServiceStore.Application.Interfaces;
 using CloudServiceStore.Domain.Entities;
 using CloudServiceStore.Domain.Interfaces;
 using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CloudServiceStore.Application.Features.GameServers.Commands.CreateGameServer;
 
@@ -16,18 +17,18 @@ public class CreateGameServerCommandHandler : IRequestHandler<CreateGameServerCo
     private readonly IUnitOfWork _uow;
     private readonly IRepository<GameServerInstance> _repo;
     private readonly ICurrentUserService _currentUser;
-    private readonly IGameServerProvisioningService _provisioningService;
+    private readonly IResourceProvisioningQueue _taskQueue;
 
     public CreateGameServerCommandHandler(
         IUnitOfWork uow,
         IRepository<GameServerInstance> repo,
         ICurrentUserService currentUser,
-        IGameServerProvisioningService provisioningService)
+        IResourceProvisioningQueue taskQueue)
     {
         _uow = uow;
         _repo = repo;
         _currentUser = currentUser;
-        _provisioningService = provisioningService;
+        _taskQueue = taskQueue;
     }
 
     public async Task<Guid> Handle(CreateGameServerCommand request, CancellationToken cancellationToken)
@@ -55,20 +56,36 @@ public class CreateGameServerCommandHandler : IRequestHandler<CreateGameServerCo
         await _repo.AddAsync(server, cancellationToken);
         await _uow.SaveChangesAsync(cancellationToken);
 
-        // Provisioning
-        int assignedPort = await _provisioningService.ProvisionGameServerAsync(server, cancellationToken);
-        
-        if (assignedPort > 0)
-        {
-            server.MarkAsRunning(assignedPort);
-        }
-        else
-        {
-            server.MarkAsFailed("Lỗi tạo container cho Game Server.");
-        }
+        var serverId = server.Id;
 
-        await _uow.SaveChangesAsync(cancellationToken);
+        await _taskQueue.QueueBackgroundWorkItemAsync(async (serviceProvider, ct) =>
+        {
+            await Task.Delay(5000, ct); // Simulate delay
 
-        return server.Id;
+            var scopedRepo = serviceProvider.GetRequiredService<IRepository<GameServerInstance>>();
+            var scopedUow = serviceProvider.GetRequiredService<IUnitOfWork>();
+            var scopedProvService = serviceProvider.GetRequiredService<IGameServerProvisioningService>();
+            var scopedNotifier = serviceProvider.GetRequiredService<IResourceStatusNotifier>();
+
+            var dbServer = await scopedRepo.GetByIdAsync(serverId, ct);
+            if (dbServer == null) return;
+
+            int assignedPort = await scopedProvService.ProvisionGameServerAsync(dbServer, ct);
+
+            if (assignedPort > 0)
+            {
+                dbServer.MarkAsRunning(assignedPort);
+            }
+            else
+            {
+                dbServer.MarkAsFailed("Lỗi tạo container cho Game Server.");
+            }
+
+            await scopedUow.SaveChangesAsync(ct);
+
+            await scopedNotifier.NotifyStatusChangedAsync("GameServerInstance", dbServer.Id.ToString(), dbServer.Status.ToString());
+        });
+
+        return serverId;
     }
 }

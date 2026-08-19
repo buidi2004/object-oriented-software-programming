@@ -5,26 +5,27 @@ using CloudServiceStore.Application.Interfaces;
 using CloudServiceStore.Domain.Entities;
 using CloudServiceStore.Domain.Interfaces;
 using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CloudServiceStore.Application.Features.ObjectStorage.Commands.CreateBucket;
 
 public class CreateBucketCommandHandler : IRequestHandler<CreateBucketCommand, Guid>
 {
     private readonly IRepository<ObjectStorageBucket> _bucketRepo;
-    private readonly IMinioProvisioningService _minioService;
     private readonly IUnitOfWork _uow;
     private readonly ICurrentUserService _currentUser;
+    private readonly IResourceProvisioningQueue _taskQueue;
 
     public CreateBucketCommandHandler(
         IRepository<ObjectStorageBucket> bucketRepo,
-        IMinioProvisioningService minioService,
         IUnitOfWork uow,
-        ICurrentUserService currentUser)
+        ICurrentUserService currentUser,
+        IResourceProvisioningQueue taskQueue)
     {
         _bucketRepo = bucketRepo;
-        _minioService = minioService;
         _uow = uow;
         _currentUser = currentUser;
+        _taskQueue = taskQueue;
     }
 
     public async Task<Guid> Handle(CreateBucketCommand request, CancellationToken cancellationToken)
@@ -55,20 +56,38 @@ public class CreateBucketCommandHandler : IRequestHandler<CreateBucketCommand, G
         await _bucketRepo.AddAsync(bucket, cancellationToken);
         await _uow.SaveChangesAsync(cancellationToken);
 
-        // Gọi MinIO
-        var minioResult = await _minioService.CreateBucketAsync(bucket.BucketName, bucket.Region, cancellationToken);
+        var bucketId = bucket.Id;
 
-        if (minioResult)
+        // Enqueue Provisioning Task
+        await _taskQueue.QueueBackgroundWorkItemAsync(async (serviceProvider, ct) =>
         {
-            bucket.MarkAsActive();
-        }
-        else
-        {
-            bucket.MarkAsFailed("Failed to create bucket via MinIO API.");
-        }
+            await Task.Delay(5000, ct); // Simulate real-world provisioning delay
 
-        await _uow.SaveChangesAsync(cancellationToken);
+            var scopedRepo = serviceProvider.GetRequiredService<IRepository<ObjectStorageBucket>>();
+            var scopedUow = serviceProvider.GetRequiredService<IUnitOfWork>();
+            var scopedProvService = serviceProvider.GetRequiredService<IMinioProvisioningService>();
+            var scopedNotifier = serviceProvider.GetRequiredService<IResourceStatusNotifier>();
 
-        return bucket.Id;
+            var dbBucket = await scopedRepo.GetByIdAsync(bucketId, ct);
+            if (dbBucket == null) return;
+
+            var minioResult = await scopedProvService.CreateBucketAsync(dbBucket.BucketName, dbBucket.Region, ct);
+
+            if (minioResult)
+            {
+                dbBucket.MarkAsActive();
+            }
+            else
+            {
+                dbBucket.MarkAsFailed("Failed to create bucket via MinIO API.");
+            }
+
+            await scopedUow.SaveChangesAsync(ct);
+
+            // Notify Frontend via SignalR
+            await scopedNotifier.NotifyStatusChangedAsync("ObjectStorageBucket", dbBucket.Id.ToString(), dbBucket.Status.ToString());
+        });
+
+        return bucketId;
     }
 }

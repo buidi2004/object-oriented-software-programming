@@ -6,6 +6,7 @@ using CloudServiceStore.Application.Interfaces;
 using CloudServiceStore.Domain.Entities;
 using CloudServiceStore.Domain.Interfaces;
 using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CloudServiceStore.Application.Features.Cdn.Commands.CreateCdn;
 
@@ -14,18 +15,18 @@ public class CreateCdnCommandHandler : IRequestHandler<CreateCdnCommand, Guid>
     private readonly IUnitOfWork _uow;
     private readonly IRepository<CloudServiceStore.Domain.Entities.CdnDistribution> _repo;
     private readonly ICurrentUserService _currentUser;
-    private readonly ICdnProvisioningService _cdnService;
+    private readonly IResourceProvisioningQueue _taskQueue;
 
     public CreateCdnCommandHandler(
         IUnitOfWork uow,
         IRepository<CloudServiceStore.Domain.Entities.CdnDistribution> repo,
         ICurrentUserService currentUser,
-        ICdnProvisioningService cdnService)
+        IResourceProvisioningQueue taskQueue)
     {
         _uow = uow;
         _repo = repo;
         _currentUser = currentUser;
-        _cdnService = cdnService;
+        _taskQueue = taskQueue;
     }
 
     public async Task<Guid> Handle(CreateCdnCommand request, CancellationToken cancellationToken)
@@ -53,20 +54,36 @@ public class CreateCdnCommandHandler : IRequestHandler<CreateCdnCommand, Guid>
         await _repo.AddAsync(distribution, cancellationToken);
         await _uow.SaveChangesAsync(cancellationToken);
 
-        // 3. Gọi Cloudflare API (Provisioning)
-        string cname = await _cdnService.CreateDistributionAsync(distribution, cancellationToken);
+        var distributionId = distribution.Id;
 
-        if (!string.IsNullOrEmpty(cname))
+        await _taskQueue.QueueBackgroundWorkItemAsync(async (serviceProvider, ct) =>
         {
-            distribution.MarkAsActive(cname);
-        }
-        else
-        {
-            distribution.MarkAsFailed("Lỗi tạo Zone trên Cloudflare API.");
-        }
+            await Task.Delay(5000, ct);
 
-        await _uow.SaveChangesAsync(cancellationToken);
+            var scopedRepo = serviceProvider.GetRequiredService<IRepository<CloudServiceStore.Domain.Entities.CdnDistribution>>();
+            var scopedUow = serviceProvider.GetRequiredService<IUnitOfWork>();
+            var scopedProvService = serviceProvider.GetRequiredService<ICdnProvisioningService>();
+            var scopedNotifier = serviceProvider.GetRequiredService<IResourceStatusNotifier>();
 
-        return distribution.Id;
+            var dbDistribution = await scopedRepo.GetByIdAsync(distributionId, ct);
+            if (dbDistribution == null) return;
+
+            string cname = await scopedProvService.CreateDistributionAsync(dbDistribution, ct);
+
+            if (!string.IsNullOrEmpty(cname))
+            {
+                dbDistribution.MarkAsActive(cname);
+            }
+            else
+            {
+                dbDistribution.MarkAsFailed("Lỗi tạo Zone trên Cloudflare API.");
+            }
+
+            await scopedUow.SaveChangesAsync(ct);
+
+            await scopedNotifier.NotifyStatusChangedAsync("CdnDistribution", dbDistribution.Id.ToString(), dbDistribution.Status.ToString());
+        });
+
+        return distributionId;
     }
 }
