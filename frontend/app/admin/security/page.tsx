@@ -18,7 +18,7 @@ export default function AdminSecurityAddonsPage() {
   const fetchAddons = async () => {
     setIsLoading(true);
     try {
-      const response = await api.get('/security/addons/admin');
+      const response = await api.get('/admin/security');
       setAddons(response.data || []);
     } catch (err) {
       showToast('Lỗi khi tải danh sách Security Addons', 'error');

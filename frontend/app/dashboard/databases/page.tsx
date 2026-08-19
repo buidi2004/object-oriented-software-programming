@@ -8,6 +8,9 @@ import {
 } from 'lucide-react';
 import { api } from '@/src/lib/api';
 import { useAuthStore } from '@/src/store/useAuthStore';
+import { useResourceProvisioning } from '@/src/hooks/useResourceProvisioning';
+import { ProvisioningStatusBadge } from '@/src/components/shared/ProvisioningStatusBadge';
+import { ResourceActionMenu } from '@/src/components/shared/ResourceActionMenu';
 
 interface DatabaseItem {
   id: string;
@@ -178,6 +181,7 @@ export default function DashboardDatabasesPage() {
                       <td className="px-6 py-4 font-bold text-slate-900 flex items-center gap-2">
                         <Database className="w-4 h-4 text-teal-500" />
                         {db.name}
+                        <DatabaseRealtimeBadge db={db} />
                       </td>
                       <td className="px-6 py-4 font-bold text-slate-700 uppercase">
                         {db.engine} {db.version || '8.0'}
@@ -190,7 +194,7 @@ export default function DashboardDatabasesPage() {
                           Đang chạy
                         </span>
                       </td>
-                      <td className="px-6 py-4 text-right">
+                      <td className="px-6 py-4 text-right flex items-center justify-end gap-2">
                         <button
                           onClick={() => copyConnectionString(db)}
                           className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-teal-50 text-slate-700 hover:text-teal-600 font-bold transition-all"
@@ -198,6 +202,7 @@ export default function DashboardDatabasesPage() {
                           <Copy className="w-3.5 h-3.5" />
                           {copiedId === db.id ? 'Đã sao chép!' : 'Copy URI'}
                         </button>
+                        <DatabaseActionMenu db={db} />
                       </td>
                     </tr>
                   ))}
@@ -296,5 +301,59 @@ export default function DashboardDatabasesPage() {
         </div>
       )}
     </div>
+  );
+}
+
+function DatabaseRealtimeBadge({ db }: { db: DatabaseItem }) {
+  const status = useResourceProvisioning('DatabaseInstance', db.id, db.status);
+  
+  // Chỉ hiển thị badge realtime nếu nó khác trạng thái 'Running' bình thường
+  // hoặc luôn hiển thị để thấy nó đang real-time
+  if (status === 'Running' || status === 'Active') return null;
+
+  return <ProvisioningStatusBadge status={status} />;
+}
+
+function DatabaseActionMenu({ db }: { db: DatabaseItem }) {
+  const status = useResourceProvisioning('DatabaseInstance', db.id, db.status);
+
+  const handleSuspend = async () => {
+    try {
+      // Gọi api thật (ví dụ)
+      await api.put(`/databases/${db.id}/suspend`);
+      alert('Đã gửi yêu cầu Suspend');
+    } catch (err) {
+      console.error(err);
+      alert('Lỗi khi Suspend');
+    }
+  };
+
+  const handleResume = async () => {
+    try {
+      await api.put(`/databases/${db.id}/resume`);
+      alert('Đã gửi yêu cầu Resume');
+    } catch (err) {
+      console.error(err);
+      alert('Lỗi khi Resume');
+    }
+  };
+
+  const handleTerminate = async () => {
+    try {
+      await api.delete(`/databases/${db.id}`);
+      alert('Đã xóa Database');
+    } catch (err) {
+      console.error(err);
+      alert('Lỗi khi xóa');
+    }
+  };
+
+  return (
+    <ResourceActionMenu 
+      status={status} 
+      onSuspend={handleSuspend}
+      onResume={handleResume}
+      onTerminate={handleTerminate}
+    />
   );
 }

@@ -29,6 +29,7 @@ interface RevenueData {
 export default function AdminRevenuePage() {
   const router = useRouter();
   const [revenueData, setRevenueData] = useState<RevenueData[]>([]);
+  const [categoryBreakdown, setCategoryBreakdown] = useState<any[]>([]);
   const [stats, setStats] = useState({
     totalRevenue: 0,
     totalOrders: 0,
@@ -79,53 +80,23 @@ export default function AdminRevenuePage() {
       const endDate = new Date().toISOString();
       const startDate = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString();
 
-      const [revRes, ordersRes, usersRes] = await Promise.all([
-        api.get(`/dashboard/revenue-stats?startDate=${startDate}&endDate=${endDate}`).catch(() => null),
-        api.get('/orders').catch(() => null),
-        api.get('/users').catch(() => null)
-      ]);
+      const response = await api.get(`/dashboard/revenue-stats?startDate=${startDate}&endDate=${endDate}`);
+      const data = response.data;
 
-      const paidOrders = Array.isArray(ordersRes?.data) ? ordersRes.data.filter((o: any) => o.status === 'Paid' || o.status === 1) : [];
-      const totalRev = revRes?.data?.totalRevenue ?? paidOrders.reduce((sum: number, o: any) => sum + (o.totalAmount || 0), 0);
-      const totalOrd = revRes?.data?.totalOrders ?? paidOrders.length;
-      const totalUsers = Array.isArray(usersRes?.data) ? usersRes.data.length : 1;
-
-      // Group real orders by day
-      const daysMap: Record<string, { revenue: number; orders: number; users: number }> = {};
-      for (let i = days - 1; i >= 0; i--) {
-        const d = new Date(Date.now() - i * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
-        daysMap[d] = { revenue: 0, orders: 0, users: 0 };
+      if (data) {
+        setRevenueData(data.dailyTrend || []);
+        setCategoryBreakdown(data.categoryBreakdown || []);
+        setStats({
+          totalRevenue: data.totalRevenue || 0,
+          totalOrders: data.totalOrders || 0,
+          totalUsers: data.totalUsers || 0,
+          averageOrderValue: data.averageOrderValue || 0,
+          monthlyGrowth: 0, // Could be calculated comparing to previous period
+        });
       }
-
-      if (Array.isArray(ordersRes?.data)) {
-        for (const ord of ordersRes.data) {
-          const dateStr = (ord.createdAt || '').split('T')[0];
-          if (daysMap[dateStr]) {
-            daysMap[dateStr].orders += 1;
-            if (ord.status === 'Paid' || ord.status === 1) {
-              daysMap[dateStr].revenue += ord.totalAmount || 0;
-            }
-          }
-        }
-      }
-
-      const formattedData: RevenueData[] = Object.entries(daysMap).map(([date, val]) => ({
-        date,
-        revenue: val.revenue,
-        orders: val.orders,
-        users: val.users
-      }));
-
-      setRevenueData(formattedData);
-      setStats({
-        totalRevenue: totalRev,
-        totalOrders: totalOrd,
-        totalUsers: totalUsers,
-        averageOrderValue: totalOrd > 0 ? totalRev / totalOrd : 0,
-        monthlyGrowth: 0,
-      });
     } catch (err) {
       console.error('Failed to load revenue data:', err);
+      showToast('Lỗi khi tải dữ liệu doanh thu', 'error');
     } finally {
       setIsLoading(false);
     }
@@ -154,12 +125,7 @@ export default function AdminRevenuePage() {
     showToast(`Đã xuất báo cáo doanh thu (${dateRange}) thành công!`);
   };
 
-  const categoryBreakdown = [
-    { name: 'Cloud VPS & Máy Chủ Ảo', share: '54%', revenue: 145000000, color: 'bg-blue-500' },
-    { name: 'Máy Chủ Dùng Riêng (Dedicated)', share: '26%', revenue: 69800000, color: 'bg-purple-500' },
-    { name: 'Tên Miền & DNS Hosting', share: '12%', revenue: 32200000, color: 'bg-emerald-500' },
-    { name: 'Chứng Chỉ SSL & Bảo Mật', share: '8%', revenue: 21500000, color: 'bg-amber-500' },
-  ];
+
 
   if (isLoading) {
     return (
@@ -317,10 +283,10 @@ export default function AdminRevenuePage() {
                 <div key={i} className="space-y-1.5">
                   <div className="flex justify-between text-xs font-bold">
                     <span className="text-slate-700">{cat.name}</span>
-                    <span className="text-slate-900">{cat.share} ({cat.revenue.toLocaleString('vi-VN')} đ)</span>
+                    <span className="text-slate-900">{cat.sharePercentage} ({cat.revenue.toLocaleString('vi-VN')} đ)</span>
                   </div>
                   <div className="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
-                    <div className={`h-full ${cat.color}`} style={{ width: cat.share }} />
+                    <div className={`h-full ${cat.color}`} style={{ width: cat.sharePercentage }} />
                   </div>
                 </div>
               ))}

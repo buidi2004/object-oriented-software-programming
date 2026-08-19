@@ -11,6 +11,7 @@ import {
   getProvinceName,
 } from '../lib/locationOptions';
 import { getPasswordStrength } from '../lib/passwordStrength';
+import { GoogleLogin, CredentialResponse } from '@react-oauth/google';
 
 interface AuthModalProps {
   initialMode: 'login' | 'register';
@@ -48,7 +49,8 @@ function PasswordStrengthBar({ password }: { password: string }) {
 }
 
 export const AuthModal: React.FC<AuthModalProps> = ({ initialMode, onClose, onSuccess }) => {
-  const [mode, setMode] = useState<'login' | 'register'>(initialMode);
+  const [mode, setMode] = useState<'login' | 'register' | 'two_factor'>(initialMode);
+  const [otpCode, setOtpCode] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
@@ -99,6 +101,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({ initialMode, onClose, onSu
           deviceInfo: navigator.platform,
         };
         const loginRes = await api.post('/auth/login', loginPayload);
+        if (loginRes.data.requiresTwoFactor) {
+          setMode('two_factor');
+          setIsLoading(false);
+          return;
+        }
         setToken(loginRes.data.accessToken ?? loginRes.data.token);
       } else {
         const loginPayload = {
@@ -109,6 +116,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({ initialMode, onClose, onSu
           deviceInfo: navigator.platform,
         };
         const res = await api.post('/auth/login', loginPayload);
+        if (res.data.requiresTwoFactor) {
+          setMode('two_factor');
+          setIsLoading(false);
+          return;
+        }
         setToken(res.data.accessToken ?? res.data.token);
       }
 
@@ -130,6 +142,56 @@ export const AuthModal: React.FC<AuthModalProps> = ({ initialMode, onClose, onSu
           'Có lỗi xảy ra. Vui lòng thử lại.'
         );
       }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleGoogleSuccess = async (credentialResponse: CredentialResponse) => {
+    setIsLoading(true);
+    setErrorMsg('');
+    try {
+      if (!credentialResponse.credential) {
+        throw new Error('No credential received from Google.');
+      }
+      const res = await api.post('/auth/google-login', { credential: credentialResponse.credential });
+      if (res.data.requiresTwoFactor) {
+        setMode('two_factor');
+        setEmail(res.data.email);
+        setIsLoading(false);
+        return;
+      }
+      setToken(res.data.accessToken ?? res.data.token);
+      
+      const userRes = await api.get('/users/me');
+      setUser(userRes.data);
+
+      onSuccess();
+      onClose();
+    } catch (error: any) {
+      console.error(error);
+      setErrorMsg(error.response?.data?.message || 'Đăng nhập Google thất bại. Vui lòng thử lại.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleVerify2FA = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setErrorMsg('');
+    try {
+      const res = await api.post('/auth/2fa/verify-login', { email, code: otpCode });
+      setToken(res.data.accessToken ?? res.data.token);
+      
+      const userRes = await api.get('/users/me');
+      setUser(userRes.data);
+
+      onSuccess();
+      onClose();
+    } catch (error: any) {
+      console.error(error);
+      setErrorMsg(error.response?.data?.message || 'Mã xác thực không hợp lệ.');
     } finally {
       setIsLoading(false);
     }
@@ -158,19 +220,36 @@ export const AuthModal: React.FC<AuthModalProps> = ({ initialMode, onClose, onSu
               <Cloud className="w-7 h-7" />
             </div>
             <h3 className="text-2xl font-black text-slate-900">
-              {mode === 'login' ? 'Đăng Nhập Tài Khoản' : 'Tạo Tài Khoản CloudHost'}
+              {mode === 'login' ? 'Đăng Nhập Tài Khoản' : mode === 'two_factor' ? 'Xác Thực 2 Bước' : 'Tạo Tài Khoản CloudHost'}
             </h3>
             <p className="text-sm text-slate-500 mt-1.5 max-w-md mx-auto">
               {mode === 'login'
                 ? 'Truy cập Bảng quản lý máy chủ & dịch vụ Cloud'
+                : mode === 'two_factor'
+                ? 'Nhập mã gồm 6 chữ số từ ứng dụng Google Authenticator.'
                 : 'Trải nghiệm hạ tầng Cloud chuẩn Doanh nghiệp'}
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={mode === 'two_factor' ? handleVerify2FA : handleSubmit} className="space-y-5">
             {errorMsg && (
               <div className="bg-red-50 text-red-600 p-3 rounded-xl text-sm text-center border border-red-100">
                 {errorMsg}
+              </div>
+            )}
+
+            {mode === 'two_factor' && (
+              <div>
+                <label className={labelClass}>Mã xác thực 2FA:</label>
+                <input
+                  type="text"
+                  required
+                  maxLength={6}
+                  value={otpCode}
+                  onChange={(e) => setOtpCode(e.target.value)}
+                  placeholder="Ví dụ: 123456"
+                  className="w-full text-center tracking-[0.2em] font-mono text-xl py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all"
+                />
               </div>
             )}
 
@@ -208,9 +287,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({ initialMode, onClose, onSu
               </div>
             )}
 
-            <div className={isRegister ? 'grid grid-cols-1 sm:grid-cols-2 gap-4' : 'space-y-4'}>
-              <div className={isRegister ? 'sm:col-span-2' : undefined}>
-                <label className={labelClass}>Địa chỉ Email:</label>
+            {mode !== 'two_factor' && (
+              <div className={isRegister ? 'grid grid-cols-1 sm:grid-cols-2 gap-4' : 'space-y-4'}>
+                <div className={isRegister ? 'sm:col-span-2' : undefined}>
+                  <label className={labelClass}>Địa chỉ Email:</label>
                 <div className="relative">
                   <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                   <input
@@ -284,6 +364,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ initialMode, onClose, onSu
                 </div>
               )}
             </div>
+            )}
 
             {isRegister && (
               <div className="pt-5 border-t border-slate-100">
@@ -388,9 +469,27 @@ export const AuthModal: React.FC<AuthModalProps> = ({ initialMode, onClose, onSu
               {isLoading ? (
                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
               ) : (
-                <span>{mode === 'login' ? 'Đăng Nhập' : 'Tạo Tài Khoản'}</span>
+                <span>{mode === 'login' ? 'Đăng Nhập' : mode === 'two_factor' ? 'Xác Nhận 2FA' : 'Tạo Tài Khoản'}</span>
               )}
             </button>
+            {mode !== 'two_factor' && (
+              <>
+                <div className="relative flex items-center py-2">
+                  <div className="flex-grow border-t border-slate-200"></div>
+                  <span className="shrink-0 px-4 text-xs font-semibold text-slate-400 uppercase tracking-widest">HOẶC</span>
+                  <div className="flex-grow border-t border-slate-200"></div>
+                </div>
+
+                <div className="flex justify-center">
+                  <GoogleLogin
+                    onSuccess={handleGoogleSuccess}
+                    onError={() => setErrorMsg('Đăng nhập Google không thành công')}
+                    theme="outline"
+                    size="large"
+                  />
+                </div>
+              </>
+            )}
           </form>
 
           <div className="mt-6 text-center text-sm text-slate-500">

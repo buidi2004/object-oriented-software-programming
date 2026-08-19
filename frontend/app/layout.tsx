@@ -4,6 +4,7 @@ import "./globals.css";
 import { LiveChatWidget } from '@/components/LiveChatWidget';
 import { GlobalUI } from '@/src/components/GlobalUI';
 import { AppShell } from '@/src/components/AppShell';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 export const metadata: Metadata = {
   title: "CloudHost VN - Cloud VPS & Hosting Việt Nam",
@@ -18,11 +19,13 @@ export default function RootLayout({
   return (
     <html lang="vi">
       <body className="antialiased bg-slate-50">
-        <AppShell>
-          {children}
-        </AppShell>
-        <LiveChatWidget />
-        <GlobalUI />
+        <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || ''}>
+          <AppShell>
+            {children}
+          </AppShell>
+          <LiveChatWidget />
+          <GlobalUI />
+        </GoogleOAuthProvider>
       </body>
     </html>
   );
