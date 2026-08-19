@@ -8,6 +8,8 @@ import {
 } from 'lucide-react';
 import { api } from '@/src/lib/api';
 import { useAuthStore } from '@/src/store/useAuthStore';
+import { useResourceProvisioning } from '@/src/hooks/useResourceProvisioning';
+import { ProvisioningStatusBadge } from '@/src/components/shared/ProvisioningStatusBadge';
 
 interface StaticSite {
   id: string;
@@ -187,16 +189,11 @@ export default function DashboardStaticSitesPage() {
                       <td className="px-6 py-4 font-bold text-slate-700 uppercase">
                         {s.framework}
                       </td>
-                      <td className="px-6 py-4 text-blue-600 font-mono text-[11px]">
-                        <a href={s.productionUrl || `https://${s.name}.pages.cloudhost.vn`} target="_blank" rel="noreferrer" className="hover:underline flex items-center gap-1">
-                          {s.customDomain || `${s.name}.pages.cloudhost.vn`}
-                          <ExternalLink className="w-3 h-3" />
-                        </a>
+                      <td className="px-6 py-4 font-mono text-[11px]">
+                        <StaticSiteUrlCell site={s} />
                       </td>
                       <td className="px-6 py-4">
-                        <span className="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-600 font-bold text-[10px]">
-                          Ready
-                        </span>
+                        <StaticSiteRealtimeBadge site={s} />
                       </td>
                       <td className="px-6 py-4 text-right">
                         <button
@@ -304,5 +301,41 @@ export default function DashboardStaticSitesPage() {
         </div>
       )}
     </div>
+  );
+}
+
+function StaticSiteRealtimeBadge({ site }: { site: StaticSite }) {
+  const status = useResourceProvisioning('StaticSiteProject', site.id, site.status || 'Provisioning');
+  // Map Provisioning to Deploying
+  const displayStatus = status === 'Provisioning' ? 'Deploying' : status;
+  
+  if (displayStatus === 'Running' || displayStatus === 'Active' || displayStatus === 'Ready') {
+    return (
+      <span className="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-600 font-bold text-[10px]">
+        Ready
+      </span>
+    );
+  }
+  return <ProvisioningStatusBadge status={displayStatus} />;
+}
+
+function StaticSiteUrlCell({ site }: { site: StaticSite }) {
+  const status = useResourceProvisioning('StaticSiteProject', site.id, site.status || 'Provisioning');
+  const isDeploying = status === 'Provisioning' || status === 'Deploying';
+  
+  if (isDeploying) {
+    return (
+      <span className="text-slate-400 flex items-center gap-1 cursor-not-allowed">
+        {site.customDomain || `${site.name}.pages.cloudhost.vn`}
+        <ExternalLink className="w-3 h-3 opacity-50" />
+      </span>
+    );
+  }
+
+  return (
+    <a href={site.productionUrl || `https://${site.name}.pages.cloudhost.vn`} target="_blank" rel="noreferrer" className="text-blue-600 hover:underline flex items-center gap-1">
+      {site.customDomain || `${site.name}.pages.cloudhost.vn`}
+      <ExternalLink className="w-3 h-3" />
+    </a>
   );
 }
