@@ -1,0 +1,42 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Execute SSH Commands on VPS
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT }}
+          script: |
+            # 1. Di chuyển vào thư mục code trên VPS
+            cd /var/www/cloudservicestore
+            
+            # 2. Hủy các thay đổi cục bộ và tải code mới nhất
+            git reset --hard
+            git pull origin main || git pull origin master
+            
+            # 3. Xây dựng (Build) Backend .NET
+            echo "Building Backend..."
+            dotnet build CloudServiceStore/CloudServiceStore.WebApi -c Release
+            
+            # 4. Dừng tiến trình Backend cũ đang chạy (Port 5053 và 7064)
+            echo "Stopping old backend processes..."
+            fuser -k 5053/tcp 7064/tcp 2>/dev/null || true
+            sleep 2
+            
+            # 5. Khởi chạy Backend mới ngầm (chạy background với nohup)
+            echo "Starting new backend process..."
+            nohup dotnet run --project CloudServiceStore/CloudServiceStore.WebApi -c Release > backend_deploy.log 2>&1 &
+            
+            echo "✅ Deploy Backend hoàn tất!"
