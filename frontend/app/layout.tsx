@@ -1,5 +1,12 @@
 import type { Metadata } from "next";
+import { Inter } from 'next/font/google';
 import "./globals.css";
+
+const inter = Inter({
+  subsets: ['latin', 'vietnamese'],
+  display: 'swap',
+  variable: '--font-sans',
+});
 
 import { LiveChatWidget } from '@/components/LiveChatWidget';
 import { GlobalUI } from '@/src/components/GlobalUI';
@@ -17,8 +24,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="vi">
-      <body className="antialiased bg-slate-50">
+    <html lang="vi" className={inter.variable}>
+      <body className="antialiased bg-slate-50 font-sans">
         <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || ''}>
           <AppShell>
             {children}

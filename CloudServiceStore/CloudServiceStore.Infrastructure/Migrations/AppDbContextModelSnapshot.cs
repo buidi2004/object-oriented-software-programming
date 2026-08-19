@@ -183,6 +183,9 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.Property<string>("AddressLine")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("AuthProvider")
+                        .HasColumnType("int");
+
                     b.Property<string>("AvatarUrl")
                         .HasColumnType("nvarchar(max)");
 
@@ -224,6 +227,9 @@ namespace CloudServiceStore.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ProviderId")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("RoleId")
@@ -2473,6 +2479,36 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.ToTable("TicketMessages");
                 });
 
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.TwoFactorBackupCode", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CodeHash")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsUsed")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("UsedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("TwoFactorBackupCodes");
+                });
+
             modelBuilder.Entity("CloudServiceStore.Domain.Entities.UserSession", b =>
                 {
                     b.Property<Guid>("Id")
@@ -3357,6 +3393,17 @@ namespace CloudServiceStore.Infrastructure.Migrations
                     b.Navigation("Sender");
 
                     b.Navigation("Ticket");
+                });
+
+            modelBuilder.Entity("CloudServiceStore.Domain.Entities.TwoFactorBackupCode", b =>
+                {
+                    b.HasOne("CloudServiceStore.Domain.Entities.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("CloudServiceStore.Domain.Entities.UserSession", b =>

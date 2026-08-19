@@ -34,7 +34,7 @@ public class ResourcesController : ControllerBase
 
     [HttpPost]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> Create([FromForm] string title, [FromForm] string description, [FromForm] string category, [FromForm] IFormFile file, CancellationToken ct)
+    public async Task<IActionResult> Create([FromForm] string title, [FromForm] string description, [FromForm] string category, IFormFile file, CancellationToken ct)
     {
         if (file == null || file.Length == 0)
         {

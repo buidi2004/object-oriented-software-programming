@@ -9,6 +9,9 @@ import CategoryPricingGrid from '@/components/CategoryPricingGrid';
 import { Header } from '@/src/components/Header';
 import ServicePageSections from '@/src/components/service-landing/ServicePageSections';
 import { SERVICE_PAGE_CONTENT } from '@/src/data/servicePages';
+import { VpsCalculator } from '@/src/components/VpsCalculator';
+import { useCartStore } from '@/src/store/useCartStore';
+import { useUIStore } from '@/src/store/useUIStore';
 
 const FEATURES = [
   { icon: Cpu, title: 'CPU AMD EPYC', desc: 'Bộ xử lý AMD EPYC thế hệ mới nhất, hiệu năng vượt trội cho mọi workload.' },
@@ -16,11 +19,20 @@ const FEATURES = [
   { icon: Shield, title: 'Anti-DDoS Tích Hợp', desc: 'Hệ thống chống DDoS tự động lên đến 500Gbps, bảo vệ máy chủ 24/7.' },
   { icon: Clock, title: 'Triển Khai 30 Giây', desc: 'Hệ thống tự động hóa 100%, VPS sẵn sàng sử dụng chỉ sau 30 giây.' },
   { icon: Database, title: 'Snapshot & Backup', desc: 'Tạo snapshot nhanh, khôi phục dữ liệu tức thì khi cần thiết.' },
+  { icon: Cloud, title: 'Cam Kết Uptime 99.99%', desc: 'Hạ tầng Cloud dự phòng N+1 cao cấp, đảm bảo website hoạt động liên tục.' },
 ];
 
 export default function CloudVpsPage() {
   const [isYearly, setIsYearly] = useState(true);
   const pageContent = SERVICE_PAGE_CONTENT.vps;
+  const addItem = useCartStore((state) => state.addItem);
+  const setIsCartOpen = useUIStore((state) => state.setIsCartOpen);
+
+  const handleAddToCart = (item: any) => {
+    const cycle = parseInt(item.billingCycle) || 1;
+    addItem(item.id, cycle, true, item);
+    setIsCartOpen(true);
+  };
 
   return (
     <div>
@@ -44,13 +56,13 @@ export default function CloudVpsPage() {
             </div>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight mb-6 leading-tight">
               Máy Chủ Ảo Cloud VPS
-              <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent"> Hiệu Năng Cao</span>
+              <span className="text-blue-400"> Hiệu Năng Cao</span>
             </h1>
             <p className="text-lg text-blue-200 max-w-2xl mb-8">
               Hạ tầng AMD EPYC + NVMe SSD Enterprise. Toàn quyền Root Access, Anti-DDoS tích hợp, triển khai tức thì trong 30 giây.
             </p>
             <div className="flex flex-wrap gap-4">
-              <a href="#pricing" className="px-8 py-4 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold text-base shadow-xl shadow-blue-500/25 hover:shadow-2xl transition-all flex items-center gap-2">
+              <a href="#pricing" className="px-8 py-4 rounded-2xl bg-blue-600 text-white font-bold text-base shadow-xl shadow-blue-500/25 hover:shadow-2xl transition-all flex items-center gap-2 hover:bg-blue-700">
                 <Zap className="w-5 h-5" />
                 Xem Bảng Giá
               </a>
@@ -85,11 +97,16 @@ export default function CloudVpsPage() {
 
       <ServicePageSections content={pageContent} group="pre" />
 
-      {/* Pricing Plans */}
+      {/* Pricing Plans & Calculator */}
       <section id="pricing" className="py-16 bg-slate-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          <div className="mb-16">
+            <VpsCalculator onAddToCart={handleAddToCart} />
+          </div>
+
           <div className="text-center max-w-2xl mx-auto mb-10">
-            <h2 className="text-3xl font-extrabold text-slate-900 mb-3">Bảng Giá Cloud VPS</h2>
+            <h2 className="text-3xl font-extrabold text-slate-900 mb-3">Các Gói Cloud VPS Phổ Biến</h2>
             <p className="text-slate-600 mb-6">Chọn cấu hình phù hợp với nhu cầu của bạn. Nâng cấp bất kỳ lúc nào.</p>
             
             {/* Billing Toggle */}

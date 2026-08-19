@@ -1,4 +1,5 @@
 using CloudServiceStore.Domain.Primitives;
+using CloudServiceStore.Domain.Enums;
 using System;
 
 namespace CloudServiceStore.Domain.Entities;
@@ -24,6 +25,9 @@ public class AppUser : AggregateRoot
     
     public bool IsTwoFactorEnabled { get; private set; } = false;
     public string? TwoFactorSecretKey { get; private set; }
+
+    public AuthProvider AuthProvider { get; set; } = AuthProvider.Local;
+    public string? ProviderId { get; set; }
 
     public Role Role { get; internal set; } = null!;
 

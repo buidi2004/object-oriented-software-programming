@@ -123,8 +123,8 @@ public class AuthController : ControllerBase
         var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (!Guid.TryParse(userIdString, out var userId)) return Unauthorized();
 
-        await _mediator.Send(new EnableTwoFactorCommand(userId, request.SecretKey, request.Code), ct);
-        return Ok(new { message = "Kích hoạt 2FA thành công." });
+        var result = await _mediator.Send(new EnableTwoFactorCommand(userId, request.SecretKey, request.Code), ct);
+        return Ok(new { message = "Kích hoạt 2FA thành công.", backupCodes = result.BackupCodes });
     }
 
     [HttpPost("2fa/verify-login")]
@@ -143,9 +143,27 @@ public class AuthController : ControllerBase
             return BadRequest(new { message = ex.Message });
         }
     }
+
+    [HttpPost("2fa/login-with-recovery-code")]
+    [EnableRateLimiting("login")]
+    public async Task<IActionResult> LoginWithRecoveryCode([FromBody] LoginWithRecoveryCodeRequest request, CancellationToken ct)
+    {
+        try
+        {
+            var deviceInfo = Request.Headers.UserAgent.ToString();
+            var result = await _mediator.Send(new LoginWithRecoveryCodeCommand(request.Email, request.RecoveryCode, deviceInfo), ct);
+            SetRefreshTokenCookie(result.RefreshToken);
+            return Ok(new { accessToken = result.AccessToken, refreshToken = result.RefreshToken });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
 }
 
 public record ForgotPasswordRequest(string Email);
 public record RefreshTokenRequest(string RefreshToken);
 public record EnableTwoFactorRequest(string SecretKey, string Code);
 public record VerifyTwoFactorRequest(string Email, string Code);
+public record LoginWithRecoveryCodeRequest(string Email, string RecoveryCode);

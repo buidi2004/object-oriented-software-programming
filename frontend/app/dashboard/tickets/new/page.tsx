@@ -16,7 +16,7 @@ export default function NewTicketPage() {
 
   const [formData, setFormData] = useState({
     subject: '',
-    priority: '1', // 1 = Normal
+    priority: '2', // 2 = Normal/Medium
     message: ''
   });
 
@@ -106,10 +106,10 @@ export default function NewTicketPage() {
                   onChange={e => setFormData({ ...formData, priority: e.target.value })}
                   className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all bg-white"
                 >
-                  <option value="0">Thấp (Low)</option>
-                  <option value="1">Bình thường (Normal)</option>
-                  <option value="2">Cao (High)</option>
-                  <option value="3">Khẩn cấp (Urgent)</option>
+                  <option value="1">Thấp (Low)</option>
+                  <option value="2">Bình thường (Normal)</option>
+                  <option value="3">Cao (High)</option>
+                  <option value="4">Khẩn cấp (Urgent)</option>
                 </select>
                 <p className="text-xs text-slate-500 mt-1.5">Vui lòng chỉ chọn Khẩn cấp khi dịch vụ bị gián đoạn hoàn toàn.</p>
               </div>

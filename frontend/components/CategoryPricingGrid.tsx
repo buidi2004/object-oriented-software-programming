@@ -32,9 +32,10 @@ export default function CategoryPricingGrid({
   categorySlug,
   isYearly,
   popularIndex = 1,
-  accentClass = 'border-blue-500 shadow-xl shadow-blue-500/10',
+  accentClass = 'border-blue-600 shadow-xl shadow-blue-600/10',
 }: CategoryPricingGridProps) {
   const [plans, setPlans] = useState<CategoryPlanCard[]>([]);
+  const [activeTab, setActiveTab] = useState<'starter' | 'professional' | 'enterprise'>('starter');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -84,30 +85,72 @@ export default function CategoryPricingGrid({
     return <p className="text-center text-slate-500 py-8">Chưa có gói dịch vụ trong danh mục này.</p>;
   }
 
+  // Divide plans into 3 tabs
+  const tabGroups = {
+    starter: plans.slice(0, 3),
+    professional: plans.slice(3, 6),
+    enterprise: plans.slice(6),
+  };
+  const activePlans = tabGroups[activeTab] || plans;
+
   return (
-    <div
-      className={`grid grid-cols-1 gap-8 ${
-        plans.length >= 2 ? 'md:grid-cols-2' : ''
-      } ${plans.length >= 3 ? 'lg:grid-cols-3' : ''}`}
-    >
-      {plans.map((plan, index) => {
-        const monthly = plan.monthlyPrice ?? null;
-        const yearly = plan.yearlyPrice ?? null;
-        const displayPrice = isYearly
-          ? (yearly ?? (monthly != null ? monthly * 12 : 0))
-          : (monthly ?? (yearly != null ? Math.round(yearly / 12) : 0));
-        const isPopular = index === popularIndex;
+    <div className="flex flex-col items-center">
+      {/* Tabs Navigation */}
+      {plans.length > 3 && (
+        <div className="inline-flex bg-slate-100 p-1 rounded-full mb-10 border border-slate-200">
+          <button
+            onClick={() => setActiveTab('starter')}
+            className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all ${
+              activeTab === 'starter' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500 hover:text-slate-900'
+            }`}
+          >
+            Cơ bản
+          </button>
+          <button
+            onClick={() => setActiveTab('professional')}
+            className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all ${
+              activeTab === 'professional' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500 hover:text-slate-900'
+            }`}
+          >
+            Nâng cao
+          </button>
+          <button
+            onClick={() => setActiveTab('enterprise')}
+            className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all ${
+              activeTab === 'enterprise' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500 hover:text-slate-900'
+            }`}
+          >
+            Chuyên nghiệp
+          </button>
+        </div>
+      )}
+
+      <div
+        className={`grid grid-cols-1 gap-8 w-full ${
+          activePlans.length >= 2 ? 'md:grid-cols-2' : ''
+        } ${activePlans.length >= 3 ? 'lg:grid-cols-3' : ''}`}
+      >
+        {activePlans.map((plan, index) => {
+          const monthly = plan.monthlyPrice ?? null;
+          const yearly = plan.yearlyPrice ?? null;
+          const displayPrice = isYearly
+            ? (yearly ?? (monthly != null ? monthly * 12 : 0))
+            : (monthly ?? (yearly != null ? Math.round(yearly / 12) : 0));
+          
+          // Find original index to determine if it's popular
+          const originalIndex = plans.findIndex(p => p.id === plan.id);
+          const isPopular = originalIndex === popularIndex;
         const features = buildFeatures(plan);
 
         return (
           <div
             key={plan.id}
-            className={`bg-white rounded-3xl p-8 border-2 transition-all relative ${
-              isPopular ? `${accentClass} scale-[1.02]` : 'border-slate-200 hover:border-blue-300 hover:shadow-lg'
+            className={`bg-white rounded-3xl p-8 border-2 transition-all relative flex flex-col justify-between ${
+              isPopular ? `${accentClass} scale-105 min-h-[420px] z-10` : 'border-slate-200 hover:border-blue-300 hover:shadow-lg'
             }`}
           >
             {isPopular && (
-              <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-cyan-400 to-blue-500 text-slate-950 text-xs font-black px-4 py-1 rounded-full uppercase">
+              <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-blue-600 text-white text-xs font-black px-4 py-1 rounded-full uppercase">
                 Phổ biến nhất
               </div>
             )}
@@ -166,8 +209,8 @@ export default function CategoryPricingGrid({
               href={`/services/plans/${plan.id}`}
               className={`block w-full py-3.5 rounded-2xl font-bold text-sm text-center transition-all ${
                 isPopular
-                  ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg shadow-blue-500/20'
-                  : 'bg-slate-900 text-white hover:bg-slate-800'
+                  ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg'
+                  : 'bg-slate-900 hover:bg-slate-800 text-white'
               }`}
             >
               Xem chi tiết &amp; Đặt mua
@@ -175,6 +218,7 @@ export default function CategoryPricingGrid({
           </div>
         );
       })}
+      </div>
     </div>
   );
 }

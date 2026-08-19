@@ -15,17 +15,20 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, RegisterR
     private readonly IRepository<AppUser> _userRepo;
     private readonly IRepository<NewsletterSubscriber> _newsletterRepo;
     private readonly IPasswordHasher _hasher;
+    private readonly IEmailService _emailService;
 
     public RegisterCommandHandler(
         IUnitOfWork uow, 
         IRepository<AppUser> userRepo, 
         IRepository<NewsletterSubscriber> newsletterRepo,
-        IPasswordHasher hasher)
+        IPasswordHasher hasher,
+        IEmailService emailService)
     {
         _uow = uow;
         _userRepo = userRepo;
         _newsletterRepo = newsletterRepo;
         _hasher = hasher;
+        _emailService = emailService;
     }
 
     public async Task<RegisterResult> Handle(RegisterCommand request, CancellationToken ct)
@@ -70,6 +73,8 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, RegisterR
         }
 
         await _uow.SaveChangesAsync(ct);
+
+        await _emailService.SendWelcomeEmailAsync(user.Email, user.FullName, ct);
 
         return new RegisterResult(user.Id, user.Email);
     }

@@ -84,7 +84,9 @@ export default function AdminVpsInstancesPage() {
   });
 
   const runningCount = instances.filter((i) => i.status === 'Running').length;
-  const stoppedCount = instances.filter((i) => i.status === 'Terminated' || i.status === 'Failed').length;
+  const stoppedCount = instances.filter((i) =>
+    i.status === 'Stopped' || i.status === 'Terminated' || i.status === 'Failed' || i.status === 'Suspended'
+  ).length;
 
   if (isLoading) {
     return (
@@ -136,10 +138,12 @@ export default function AdminVpsInstancesPage() {
             className="px-3 py-2.5 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
           >
             <option value="all">Tất cả trạng thái</option>
-            <option value="Running">Running</option>
-            <option value="Provisioning">Provisioning</option>
-            <option value="Terminated">Terminated</option>
-            <option value="Failed">Failed</option>
+            <option value="Running">Running — Đang chạy</option>
+            <option value="Provisioning">Provisioning — Đang tạo</option>
+            <option value="Stopped">Stopped — Đã dừng</option>
+            <option value="Suspended">Suspended — Tạm ngừng</option>
+            <option value="Terminated">Terminated — Đã huỷ</option>
+            <option value="Failed">Failed — Lỗi</option>
           </select>
         </div>
 

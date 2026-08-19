@@ -66,9 +66,10 @@ public static class DependencyInjection
         services.AddHostedService<CloudServiceStore.Infrastructure.BackgroundServices.VpsIdleMonitorService>();
         services.AddScoped<ITerminateVpsJob, TerminateVpsJob>();
 
-        // Background Queue
+        // Background Queue & Workers
         services.AddSingleton<IResourceProvisioningQueue, ResourceProvisioningQueue>();
         services.AddHostedService<ResourceProvisioningWorker>();
+        services.AddHostedService<SubscriptionMonitorWorker>();
 
         return services;
     }

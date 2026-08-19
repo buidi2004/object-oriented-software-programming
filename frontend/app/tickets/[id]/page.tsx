@@ -64,7 +64,7 @@ export default function TicketDetailPage() {
         setTicket({
           id: data.id,
           subject: data.subject,
-          category: data.category || 'General',
+          category: data.category || 'Hỗ trợ kỹ thuật',
           status: data.status,
           priority: data.priority,
           createdAt: data.createdAt,
@@ -72,9 +72,9 @@ export default function TicketDetailPage() {
           messages: (data.messages || []).map((m: any) => ({
             id: m.id,
             sender: m.isAgent ? 'agent' : 'customer',
-            senderName: m.senderName,
-            content: m.content,
-            timestamp: m.timestamp,
+            senderName: m.senderName || (m.isAgent ? 'Kỹ thuật viên' : 'Khách hàng'),
+            content: m.content || m.message || '',
+            timestamp: m.timestamp || m.createdAt || new Date().toISOString(),
           })),
         });
       }
@@ -103,7 +103,7 @@ export default function TicketDetailPage() {
       
       if (response.ok) {
         setMessage('');
-        fetchTicket(token!);
+        fetchTicket(token!, false);
       }
     } catch (error) {
       console.error('Failed to send message:', error);
@@ -113,39 +113,34 @@ export default function TicketDetailPage() {
   };
 
   const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'open': return 'bg-emerald-100 text-emerald-700';
-      case 'pending': return 'bg-amber-100 text-amber-700';
-      case 'closed': return 'bg-slate-100 text-slate-700';
-      default: return 'bg-slate-100 text-slate-700';
-    }
+    const s = String(status || '').toLowerCase();
+    if (s === 'open' || s === '1') return 'bg-emerald-100 text-emerald-700';
+    if (s === 'pending' || s === 'inprogress' || s === '2') return 'bg-amber-100 text-amber-700';
+    return 'bg-slate-100 text-slate-700';
   };
 
   const getStatusLabel = (status: string) => {
-    switch (status) {
-      case 'open': return 'Đang mở';
-      case 'pending': return 'Chờ phản hồi';
-      case 'closed': return 'Đã đóng';
-      default: return status;
-    }
+    const s = String(status || '').toLowerCase();
+    if (s === 'open' || s === '1') return 'Đang mở';
+    if (s === 'pending' || s === 'inprogress' || s === '2') return 'Đang xử lý';
+    if (s === 'resolved' || s === '3') return 'Đã giải quyết';
+    return 'Đã đóng';
   };
 
   const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case 'high': return 'bg-red-100 text-red-700';
-      case 'medium': return 'bg-yellow-100 text-yellow-700';
-      case 'low': return 'bg-blue-100 text-blue-700';
-      default: return 'bg-slate-100 text-slate-700';
-    }
+    const p = String(priority || '').toLowerCase();
+    if (p === 'urgent' || p === '4') return 'bg-rose-100 text-rose-700';
+    if (p === 'high' || p === '3') return 'bg-red-100 text-red-700';
+    if (p === 'medium' || p === 'normal' || p === '2') return 'bg-amber-100 text-amber-700';
+    return 'bg-blue-100 text-blue-700';
   };
 
   const getPriorityLabel = (priority: string) => {
-    switch (priority) {
-      case 'high': return 'Cao';
-      case 'medium': return 'Trung bình';
-      case 'low': return 'Thấp';
-      default: return priority;
-    }
+    const p = String(priority || '').toLowerCase();
+    if (p === 'urgent' || p === '4') return 'Khẩn cấp';
+    if (p === 'high' || p === '3') return 'Cao';
+    if (p === 'medium' || p === 'normal' || p === '2') return 'Bình thường';
+    return 'Thấp';
   };
 
   if (isLoading) {
@@ -161,7 +156,7 @@ export default function TicketDetailPage() {
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
         <div className="text-center">
           <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
-          <h2 className="text-xl font-bold text-slate-900 mb-2">Ticket not found</h2>
+          <h2 className="text-xl font-bold text-slate-900 mb-2">Không tìm thấy Ticket</h2>
           <Link href="/dashboard/tickets" className="text-blue-600 hover:underline">
             ← Quay lại danh sách ticket
           </Link>
@@ -175,10 +170,10 @@ export default function TicketDetailPage() {
       {/* Header */}
       <header className="bg-white border-b border-slate-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-          <Link href="/tickets" className="flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-blue-600">
+          <button onClick={() => router.back()} className="flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-blue-600">
             <ArrowLeft className="w-4 h-4" />
-            Quay lại danh sách ticket
-          </Link>
+            Quay lại
+          </button>
           <div className="flex items-center gap-3">
             {ticket.status === 'open' && (
               <button className="px-4 py-2 rounded-xl border border-slate-200 text-slate-600 font-semibold text-sm hover:bg-slate-50 transition-colors">

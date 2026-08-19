@@ -17,11 +17,10 @@ namespace CloudServiceStore.Tests.Integration
         {
             // Arrange
             AuthenticateAdmin();
-            var client = Factory.CreateClient();
             var command = new { OrderId = Guid.NewGuid() };
 
             // Act
-            var response = await client.PutAsJsonAsync("/api/auto-renew/toggle", command);
+            var response = await Client.PutAsJsonAsync("/api/auto-renew/toggle", command);
 
             // Assert
             Assert.Equal(System.Net.HttpStatusCode.NotFound, response.StatusCode);

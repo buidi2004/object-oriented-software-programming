@@ -105,6 +105,7 @@ public class AppDbContext : DbContext
     public DbSet<MarketplacePurchase> MarketplacePurchases => Set<MarketplacePurchase>();
     public DbSet<ObjectStorageBucket> ObjectStorageBuckets { get; set; } = null!;
     public DbSet<ManagedDatabaseInstance> ManagedDatabases { get; set; } = null!;
+    public DbSet<TwoFactorBackupCode> TwoFactorBackupCodes => Set<TwoFactorBackupCode>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -133,6 +134,13 @@ public class AppDbContext : DbContext
         foreach (var entry in ChangeTracker.Entries())
         {
             Console.WriteLine($"[DEBUG EF] ENTITY: {entry.Entity.GetType().Name} - STATE: {entry.State}");
+        }
+
+        Guid? validUserId = null;
+        if (userId.HasValue)
+        {
+            var userExists = AppUsers.Local.Any(u => u.Id == userId.Value) || AppUsers.Any(u => u.Id == userId.Value);
+            if (userExists) validUserId = userId.Value;
         }
 
         foreach (var entry in ChangeTracker.Entries())
@@ -169,7 +177,7 @@ public class AppDbContext : DbContext
                 auditEntries.Add(new AuditLog
                 {
                     Id = Guid.NewGuid(),
-                    UserId = userId,
+                    UserId = validUserId,
                     Action = action,
                     EntityName = entityName,
                     EntityId = entityId,

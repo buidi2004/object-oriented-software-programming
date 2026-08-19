@@ -57,6 +57,12 @@ public class BannersController : ControllerBase
         if (file == null || file.Length == 0)
             return BadRequest(new { message = "No file uploaded." });
 
+        if (file.Length > 5 * 1024 * 1024)
+            return BadRequest(new { message = "File size exceeds 5MB limit." });
+
+        if (!file.ContentType.StartsWith("image/", StringComparison.OrdinalIgnoreCase))
+            return BadRequest(new { message = "File must be an image." });
+
         var uploadsFolder = System.IO.Path.Combine(env.WebRootPath ?? env.ContentRootPath, "images", "banners");
         if (!System.IO.Directory.Exists(uploadsFolder))
             System.IO.Directory.CreateDirectory(uploadsFolder);
@@ -79,6 +85,12 @@ public class BannersController : ControllerBase
     {
         if (file == null || file.Length == 0)
             return BadRequest(new { message = "No file uploaded." });
+
+        if (file.Length > 5 * 1024 * 1024)
+            return BadRequest(new { message = "File size exceeds 5MB limit." });
+
+        if (!file.ContentType.StartsWith("image/", StringComparison.OrdinalIgnoreCase))
+            return BadRequest(new { message = "File must be an image." });
 
         var banner = await repo.GetByIdAsync(id, ct);
         if (banner == null) return NotFound();

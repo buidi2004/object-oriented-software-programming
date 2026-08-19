@@ -70,7 +70,17 @@ public class GoogleLoginCommandHandler : IRequestHandler<GoogleLoginCommand, Log
                 roleId,
                 "", "", "", "", "", "", "", "", ""
             );
+            user.AuthProvider = Domain.Enums.AuthProvider.Google;
+            user.ProviderId = payload.Subject;
             await _userRepo.AddAsync(user, cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+        }
+        else if (user.AuthProvider == Domain.Enums.AuthProvider.Local)
+        {
+            // Optional: Merge account linking if the email exists but was local
+            user.AuthProvider = Domain.Enums.AuthProvider.Google;
+            user.ProviderId = payload.Subject;
+            _userRepo.Update(user);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
 

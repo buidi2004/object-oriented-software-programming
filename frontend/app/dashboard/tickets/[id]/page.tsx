@@ -184,7 +184,7 @@ export default function TicketDetailPage() {
                   <span className="text-xs font-bold text-slate-700">{isMe ? 'Bạn' : (msg.senderName || 'Kỹ thuật viên')}</span>
                   <span className="text-[10px] text-slate-400 font-medium flex items-center gap-1">
                     <Clock className="w-3 h-3" />
-                    {new Date(msg.createdAt).toLocaleString('vi-VN')}
+                    {new Date(msg.createdAt || (msg as any).timestamp || new Date()).toLocaleString('vi-VN')}
                   </span>
                 </div>
                 <div 
@@ -194,7 +194,7 @@ export default function TicketDetailPage() {
                       : 'bg-white border border-slate-200 text-slate-800 rounded-tl-sm shadow-sm'
                   }`}
                 >
-                  <p className="whitespace-pre-wrap text-sm leading-relaxed">{msg.message}</p>
+                  <p className="whitespace-pre-wrap text-sm leading-relaxed">{msg.message || (msg as any).content}</p>
                 </div>
               </div>
             );

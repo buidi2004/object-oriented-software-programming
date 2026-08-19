@@ -46,4 +46,22 @@ public class LoggingEmailService : IEmailService
         _logger.LogInformation("[EMAIL-LOG] Welcome email to {Email}: {FullName}", toEmail, fullName);
         return Task.CompletedTask;
     }
+
+    public Task SendPasswordChangedSecurityAlertAsync(string toEmail, string fullName, CancellationToken cancellationToken = default)
+    {
+        _logger.LogInformation("[EMAIL-LOG] Password changed security alert to {Email}: {FullName}", toEmail, fullName);
+        return Task.CompletedTask;
+    }
+
+    public Task SendVpsProvisionedEmailAsync(string toEmail, string vpsName, string ipAddress, string sshUser, string initialPassword, int sshPort, CancellationToken cancellationToken = default)
+    {
+        _logger.LogInformation("[EMAIL-LOG] VPS Provisioned email to {Email}: VPS {Name}, IP {Ip}:{Port}, User {User}", toEmail, vpsName, ipAddress, sshPort, sshUser);
+        return Task.CompletedTask;
+    }
+
+    public Task SendServiceExpiryReminderEmailAsync(string toEmail, string serviceName, int daysLeft, DateTime expiresAt, CancellationToken cancellationToken = default)
+    {
+        _logger.LogInformation("[EMAIL-LOG] Expiry reminder email to {Email}: Service {Service}, DaysLeft {Days}, ExpiresAt {Date}", toEmail, serviceName, daysLeft, expiresAt);
+        return Task.CompletedTask;
+    }
 }

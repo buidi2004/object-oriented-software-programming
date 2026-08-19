@@ -16,17 +16,20 @@ public class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordCommand,
     private readonly IRepository<AppUser> _userRepo;
     private readonly IUnitOfWork _uow;
     private readonly IPasswordHasher _hasher;
+    private readonly IEmailService _emailService;
 
     public ResetPasswordCommandHandler(
         IRepository<PasswordResetToken> tokenRepo,
         IRepository<AppUser> userRepo,
         IUnitOfWork uow,
-        IPasswordHasher hasher)
+        IPasswordHasher hasher,
+        IEmailService emailService)
     {
         _tokenRepo = tokenRepo;
         _userRepo = userRepo;
         _uow = uow;
         _hasher = hasher;
+        _emailService = emailService;
     }
 
     public async Task<Unit> Handle(ResetPasswordCommand request, CancellationToken cancellationToken)
@@ -46,6 +49,8 @@ public class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordCommand,
         _userRepo.Update(user);
         _tokenRepo.Update(resetToken);
         await _uow.SaveChangesAsync(cancellationToken);
+
+        await _emailService.SendPasswordChangedSecurityAlertAsync(user.Email, user.FullName, cancellationToken);
 
         return Unit.Value;
     }

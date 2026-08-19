@@ -74,29 +74,56 @@ export default function AdminDashboardPage() {
   };
 
   const fetchStats = async (token: string) => {
+    const headers = { Authorization: `Bearer ${token}` };
+    const today = new Date().toISOString().slice(0, 10);
+    const yearStart = `${new Date().getFullYear()}-01-01`;
+
     try {
-      const [usersRes, ordersRes, revenueRes, ticketsRes] = await Promise.all([
-        fetch('/api/users', { headers: { Authorization: `Bearer ${token}` } }),
-        fetch('/api/orders', { headers: { Authorization: `Bearer ${token}` } }),
-        fetch('/api/dashboard/revenue-stats?startDate=2024-01-01&endDate=2024-12-31', {
-          headers: { Authorization: `Bearer ${token}` }
-        }),
-        fetch('/api/tickets/queue', { headers: { Authorization: `Bearer ${token}` } }),
+      // revenue-stats trả về totalRevenue + totalOrders + totalUsers trong 1 request
+      const [revenueRes, ticketsRes, vpsRes, refundsRes] = await Promise.all([
+        fetch(`/api/dashboard/revenue-stats?startDate=${yearStart}&endDate=${today}`, { headers }),
+        fetch('/api/tickets/queue', { headers }),
+        fetch('/api/VpsInstances/admin', { headers }),
+        fetch('/api/refund-requests', { headers }),
       ]);
 
-      if (usersRes.ok) {
-        const usersData = await usersRes.json();
-        setStats({
-          totalUsers: usersData.length || 0,
-          totalOrders: 0,
-          totalRevenue: 0,
-          activeVpsInstances: 0,
-          openTickets: 0,
-          pendingRefunds: 0,
-          monthlyGrowth: 12.5,
-          todayOrders: 0
-        });
+      // Parse revenue-stats (object với totalRevenue, totalOrders, totalUsers)
+      let totalRevenue = 0, totalOrders = 0, totalUsers = 0;
+      if (revenueRes.ok) {
+        const rev = await revenueRes.json();
+        totalRevenue = rev?.totalRevenue ?? 0;
+        totalOrders  = rev?.totalOrders  ?? 0;
+        totalUsers   = rev?.totalUsers   ?? 0;
       }
+
+      // Tickets, VPS, Refunds đều trả về array
+      const getArrayLen = async (res: Response): Promise<number> => {
+        if (!res.ok) return 0;
+        try {
+          const data = await res.json();
+          if (Array.isArray(data)) return data.length;
+          if (typeof data?.totalCount === 'number') return data.totalCount;
+          if (Array.isArray(data?.items)) return data.items.length;
+        } catch {}
+        return 0;
+      };
+
+      const [openTickets, activeVpsInstances, pendingRefunds] = await Promise.all([
+        getArrayLen(ticketsRes),
+        getArrayLen(vpsRes),
+        getArrayLen(refundsRes),
+      ]);
+
+      setStats({
+        totalUsers,
+        totalOrders,
+        totalRevenue,
+        activeVpsInstances,
+        openTickets,
+        pendingRefunds,
+        monthlyGrowth: 12.5,
+        todayOrders: 0,
+      });
     } catch (error) {
       console.error('Failed to fetch stats:', error);
     } finally {

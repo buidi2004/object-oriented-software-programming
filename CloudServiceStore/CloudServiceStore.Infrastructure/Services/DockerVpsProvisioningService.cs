@@ -21,16 +21,23 @@ public class DockerVpsProvisioningService : IVpsProvisioningService
         _logger = logger;
         try
         {
-            var dockerUri = Environment.OSVersion.Platform == PlatformID.Win32NT
-                ? "npipe://./pipe/docker_engine"
-                : "unix:///var/run/docker.sock";
-
-            _dockerClient = new DockerClientConfiguration(new Uri(dockerUri)).CreateClient();
+            _dockerClient = TryCreateDockerClient();
         }
         catch (Exception ex)
         {
-            _logger.LogWarning(ex, "Failed to initialize DockerClient");
+            _logger.LogWarning(ex, "DockerClient initialization failed or Docker assembly unavailable.");
+            _dockerClient = null;
         }
+    }
+
+    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+    private static IDockerClient? TryCreateDockerClient()
+    {
+        var dockerUri = Environment.OSVersion.Platform == PlatformID.Win32NT
+            ? "npipe://./pipe/docker_engine"
+            : "unix:///var/run/docker.sock";
+
+        return new DockerClientConfiguration(new Uri(dockerUri)).CreateClient();
     }
 
     public async Task<bool> IsAvailableAsync(CancellationToken ct)

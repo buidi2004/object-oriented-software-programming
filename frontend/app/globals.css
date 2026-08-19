@@ -20,8 +20,8 @@
     border-radius: 9999px;
     background: linear-gradient(
       to right,
-      var(--vps-range-accent, #2563eb) 0%,
-      var(--vps-range-accent, #2563eb) var(--vps-range-fill, 0%),
+      var(--vps-range-accent, #8c5a3d) 0%,
+      var(--vps-range-accent, #8c5a3d) var(--vps-range-fill, 0%),
       #e2e8f0 var(--vps-range-fill, 0%),
       #e2e8f0 100%
     );
@@ -35,7 +35,7 @@
     margin-top: -0.3125rem;
     border-radius: 9999px;
     border: 2px solid #ffffff;
-    background: var(--vps-range-accent, #2563eb);
+    background: var(--vps-range-accent, #8c5a3d);
     box-shadow: 0 1px 4px rgb(15 23 42 / 0.2);
     cursor: pointer;
   }
@@ -49,7 +49,7 @@
   .vps-tier-range::-moz-range-progress {
     height: 0.625rem;
     border-radius: 9999px;
-    background: var(--vps-range-accent, #2563eb);
+    background: var(--vps-range-accent, #8c5a3d);
   }
 
   .vps-tier-range::-moz-range-thumb {
@@ -57,8 +57,17 @@
     height: 1.25rem;
     border-radius: 9999px;
     border: 2px solid #ffffff;
-    background: var(--vps-range-accent, #2563eb);
+    background: var(--vps-range-accent, #8c5a3d);
     box-shadow: 0 1px 4px rgb(15 23 42 / 0.2);
     cursor: pointer;
+  }
+}
+
+@layer utilities {
+  /* Vô hiệu hóa hiệu ứng chuyển màu (gradient) trên toàn bộ ứng dụng và ép về màu gốc */
+  .bg-gradient-to-t, .bg-gradient-to-tr, .bg-gradient-to-r, .bg-gradient-to-br, 
+  .bg-gradient-to-b, .bg-gradient-to-bl, .bg-gradient-to-l, .bg-gradient-to-tl {
+    background-image: none !important;
+    background-color: theme('colors.blue.600') !important;
   }
 }

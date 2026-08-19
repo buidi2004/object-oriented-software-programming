@@ -13,10 +13,10 @@ import { api } from '@/src/lib/api';
 interface DashboardStats {
   totalOrders: number;
   activeServices: number;
+  totalSpent: number;     // API: totalSpent
+  loyaltyPoints: number; // from /loyalty/me
+  openTickets: number;   // from /tickets/me count
   invoicesCount: number;
-  loyaltyPoints: number;
-  openTickets: number;
-  monthlySpend: number;
 }
 
 const colorClasses: Record<string, string> = {
@@ -63,30 +63,26 @@ export default function DashboardPage() {
 
   const fetchDashboardData = async () => {
     try {
-      const [dashboardRes, userRes, invoicesRes] = await Promise.all([
+      const [dashboardRes, loyaltyRes, ticketsRes] = await Promise.all([
         api.get('/dashboard/me').catch(() => null),
-        api.get('/users/me').catch(() => null),
-        api.get('/invoices?status=pending').catch(() => ({ data: [] })),
+        api.get('/loyalty/me').catch(() => null),
+        api.get('/tickets/me').catch(() => ({ data: [] })),
       ]);
 
-      if (dashboardRes && dashboardRes.data) {
-        setStats({
-          ...dashboardRes.data,
-          invoicesCount: invoicesRes.data?.length || 0
-        });
-      } else {
-        setStats({
-          totalOrders: 0,
-          activeServices: 0,
-          invoicesCount: invoicesRes.data?.length || 0,
-          loyaltyPoints: 0,
-          openTickets: 0,
-          monthlySpend: 0,
-        });
-      }
+      const dash = dashboardRes?.data || {};
+      setStats({
+        totalOrders:   dash.totalOrders   ?? 0,
+        activeServices: dash.activeServices ?? 0,
+        totalSpent:    dash.totalSpent     ?? 0,
+        loyaltyPoints: loyaltyRes?.data?.points ?? 0,
+        openTickets:   Array.isArray(ticketsRes?.data)
+          ? ticketsRes.data.filter((t: any) => t.status !== 'Closed' && t.status !== 'Resolved').length
+          : 0,
+        invoicesCount: 0,
+      });
 
-      if (userRes && userRes.data) {
-        setUser(userRes.data);
+      if (dashboardRes?.data?.user) {
+        setUser(dashboardRes.data.user);
       }
     } catch (err) {
       console.error('Failed to fetch dashboard:', err);
@@ -136,7 +132,7 @@ export default function DashboardPage() {
           { label: 'Dịch vụ đang chạy', value: stats?.activeServices || 0, icon: Server, colorKey: 'emerald' },
           { label: 'Hóa đơn chờ', value: stats?.invoicesCount || 0, icon: FileText, colorKey: 'rose' },
           { label: 'Điểm thưởng', value: stats?.loyaltyPoints || 0, icon: ShieldCheck, colorKey: 'purple' },
-          { label: 'Hóa đơn tháng', value: stats?.monthlySpend ? `${(stats.monthlySpend / 1000).toFixed(0)}K` : '0đ', icon: TrendingUp, colorKey: 'rose' },
+          { label: 'Hóa đơn tháng', value: stats?.totalSpent ? `${(stats.totalSpent / 1000).toFixed(0)}K₫` : '0đ', icon: TrendingUp, colorKey: 'rose' },
         ].map((stat) => (
           <div key={`stat-${stat.label}`} className="bg-white rounded-2xl p-4 border border-slate-200 hover:border-blue-200 transition-colors">
             <stat.icon className={`w-6 h-6 ${colorClasses[stat.colorKey]} mb-2`} />

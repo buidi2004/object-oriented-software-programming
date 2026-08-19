@@ -5,9 +5,9 @@ import React, { useMemo } from 'react';
 type Accent = 'blue' | 'indigo' | 'cyan';
 
 const ACCENT_VARS: Record<Accent, string> = {
-  blue: '#2563eb',
-  indigo: '#4f46e5',
-  cyan: '#0891b2',
+  blue: '#8c5a3d',
+  indigo: '#8c5a3d',
+  cyan: '#8c5a3d',
 };
 
 function resolveTierIndex(tiers: readonly number[], value: number): number {

@@ -159,6 +159,103 @@ public class GmailEmailService : IEmailService
         await SendEmailAsync(toEmail, "🚀 Chào mừng bạn đến với CloudHost VN!", html, cancellationToken);
     }
 
+    public async Task SendPasswordChangedSecurityAlertAsync(string toEmail, string fullName, CancellationToken cancellationToken = default)
+    {
+        var nowStr = DateTime.UtcNow.ToString("HH:mm:ss dd/MM/yyyy") + " (UTC)";
+        var html = WrapInTemplate("Cảnh báo bảo mật", $@"
+            <h2 style='color: #1a1a2e; margin-bottom: 16px;'>🔐 Cảnh báo bảo mật tài khoản</h2>
+            <div style='background: linear-gradient(135deg, #fff3cd, #ffeaa7); border-radius: 12px; padding: 20px; margin: 20px 0;'>
+                <p style='color: #856404; font-size: 15px; margin: 0; line-height: 1.6;'>
+                    Xin chào <strong>{fullName}</strong>,<br>
+                    Mật khẩu tài khoản của bạn tại <strong>CloudHost VN</strong> vừa được thay đổi thành công vào lúc <strong>{nowStr}</strong>.
+                </p>
+            </div>
+            <p style='color: #e74c3c; font-size: 14px; line-height: 1.6; font-weight: 600;'>
+                ⚠️ Nếu bạn không thực hiện thay đổi này, hãy liên hệ ngay với đội ngũ hỗ trợ khẩn cấp của chúng tôi để bảo vệ tài khoản.
+            </p>
+            <div style='text-align: center; margin: 28px 0;'>
+                <a href='http://localhost:3000/contact' 
+                   style='background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); color: white; padding: 14px 40px; 
+                          text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 15px; display: inline-block;
+                          box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);'>
+                    🛡️ Liên hệ hỗ trợ khẩn cấp
+                </a>
+            </div>");
+
+        await SendEmailAsync(toEmail, "🔐 [Cảnh báo] Mật khẩu tài khoản của bạn đã được thay đổi - CloudHost VN", html, cancellationToken);
+    }
+
+    public async Task SendVpsProvisionedEmailAsync(string toEmail, string vpsName, string ipAddress, string sshUser, string initialPassword, int sshPort, CancellationToken cancellationToken = default)
+    {
+        var html = WrapInTemplate("Thông tin máy chủ", $@"
+            <h2 style='color: #1a1a2e; margin-bottom: 16px;'>🖥️ Máy chủ Cloud VPS đã sẵn sàng!</h2>
+            <p style='color: #555; font-size: 15px; line-height: 1.6;'>
+                Dịch vụ <strong>{vpsName}</strong> của bạn đã được khởi tạo và cấu hình hoàn tất. Dưới đây là thông tin đăng nhập:
+            </p>
+            <div style='background: #1e293b; border-radius: 12px; padding: 24px; margin: 20px 0; color: #f8fafc; font-family: monospace;'>
+                <table style='width: 100%; border-collapse: collapse;'>
+                    <tr>
+                        <td style='padding: 6px 0; color: #94a3b8; font-size: 13px;'>Địa chỉ IP:</td>
+                        <td style='padding: 6px 0; text-align: right; font-weight: 700; color: #38bdf8; font-size: 15px;'>{ipAddress}</td>
+                    </tr>
+                    <tr>
+                        <td style='padding: 6px 0; color: #94a3b8; font-size: 13px;'>SSH Port:</td>
+                        <td style='padding: 6px 0; text-align: right; font-weight: 700; color: #38bdf8; font-size: 15px;'>{sshPort}</td>
+                    </tr>
+                    <tr>
+                        <td style='padding: 6px 0; color: #94a3b8; font-size: 13px;'>Tài khoản:</td>
+                        <td style='padding: 6px 0; text-align: right; font-weight: 700; color: #4ade80; font-size: 15px;'>{sshUser}</td>
+                    </tr>
+                    <tr>
+                        <td style='padding: 6px 0; color: #94a3b8; font-size: 13px;'>Mật khẩu khởi tạo:</td>
+                        <td style='padding: 6px 0; text-align: right; font-weight: 700; color: #facc15; font-size: 15px;'>{initialPassword}</td>
+                    </tr>
+                </table>
+                <div style='margin-top: 16px; padding-top: 12px; border-top: 1px solid #334155; font-size: 12px; color: #94a3b8;'>
+                    Lệnh kết nối nhanh: <br>
+                    <code style='color: #38bdf8; font-size: 13px;'>ssh {sshUser}@{ipAddress} -p {sshPort}</code>
+                </div>
+            </div>
+            <p style='color: #e74c3c; font-size: 13px; line-height: 1.5;'>
+                🔒 <em>Vui lòng đổi mật khẩu ngay sau lần đăng nhập đầu tiên để đảm bảo an toàn.</em>
+            </p>
+            <div style='text-align: center; margin: 28px 0;'>
+                <a href='http://localhost:3000/dashboard/vps' 
+                   style='background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%); color: white; padding: 14px 40px; 
+                          text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 15px; display: inline-block;
+                          box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);'>
+                    🚀 Quản lý VPS tại Dashboard
+                </a>
+            </div>");
+
+        await SendEmailAsync(toEmail, $"🖥️ Thông tin bàn giao máy chủ {vpsName} - CloudHost VN", html, cancellationToken);
+    }
+
+    public async Task SendServiceExpiryReminderEmailAsync(string toEmail, string serviceName, int daysLeft, DateTime expiresAt, CancellationToken cancellationToken = default)
+    {
+        var expiresAtStr = expiresAt.ToString("dd/MM/yyyy");
+        var html = WrapInTemplate("Nhắc nhở gia hạn", $@"
+            <h2 style='color: #1a1a2e; margin-bottom: 16px;'>⏰ Dịch vụ của bạn sắp hết hạn</h2>
+            <p style='color: #555; font-size: 15px; line-height: 1.6;'>
+                Dịch vụ <strong>{serviceName}</strong> sẽ hết hạn sau <strong>{daysLeft} ngày</strong> (ngày {expiresAtStr}).
+            </p>
+            <div style='background: linear-gradient(135deg, #fff3cd, #feeaa7); border-radius: 12px; padding: 20px; margin: 20px 0;'>
+                <p style='color: #856404; font-size: 14px; margin: 0; line-height: 1.6;'>
+                    Để tránh gián đoạn dịch vụ và nguy cơ mất dữ liệu, vui lòng gia hạn hoặc nạp tiền vào ví trước ngày hết hạn.
+                </p>
+            </div>
+            <div style='text-align: center; margin: 28px 0;'>
+                <a href='http://localhost:3000/dashboard' 
+                   style='background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 14px 40px; 
+                          text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 15px; display: inline-block;
+                          box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);'>
+                    💳 Gia hạn dịch vụ ngay
+                </a>
+            </div>");
+
+        await SendEmailAsync(toEmail, $"⏰ [Nhắc nhở] Dịch vụ {serviceName} còn {daysLeft} ngày sẽ hết hạn - CloudHost VN", html, cancellationToken);
+    }
+
     private static string WrapInTemplate(string preheader, string bodyContent)
     {
         return $@"

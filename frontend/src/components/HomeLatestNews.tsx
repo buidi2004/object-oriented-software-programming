@@ -53,8 +53,13 @@ export const HomeLatestNews: React.FC = () => {
   const fetchNews = async () => {
     try {
       const res = await api.get<NewsArticleItem[]>('/news?onlyPublished=true');
-      if (res.data && Array.isArray(res.data) && res.data.length > 0) {
-        setArticles(res.data.slice(0, 3));
+      if (res.data && Array.isArray(res.data)) {
+        let fetched = res.data;
+        if (fetched.length < 3) {
+          // Fill the remaining slots with fallbacks to avoid empty grid spaces
+          fetched = [...fetched, ...FALLBACK_ARTICLES.slice(fetched.length, 3)];
+        }
+        setArticles(fetched.slice(0, 3));
       }
     } catch {
       // Keep fallbacks
@@ -71,7 +76,7 @@ export const HomeLatestNews: React.FC = () => {
               Blog &amp; Kiến Thức Công Nghệ
             </div>
             <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-              Tin Tức &amp; <span className="bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent">Cập Nhật Mới Nhất</span>
+              Tin Tức &amp; <span className="text-blue-600">Cập Nhật Mới Nhất</span>
             </h2>
             <p className="text-sm sm:text-base text-slate-600 mt-2 max-w-2xl">
               Khám phá các hướng dẫn kỹ thuật, xu hướng hạ tầng đám mây và thông báo nâng cấp hệ thống định kỳ.
@@ -96,8 +101,8 @@ export const HomeLatestNews: React.FC = () => {
               className="bg-slate-50 rounded-3xl p-6 border border-slate-200/80 hover:border-blue-400 hover:shadow-xl transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1"
             >
               <div>
-                <div className="flex items-center justify-between gap-2 mb-4">
-                  <span className="px-3 py-1 rounded-full bg-white border border-slate-200 text-[11px] font-bold text-slate-700">
+                <div className="flex items-center justify-between gap-2 mb-5">
+                  <span className="px-3 py-1 rounded-full bg-white border border-slate-200 text-xs font-bold text-slate-700">
                     {art.categoryTag || 'Tin Tức'}
                   </span>
                   <span className="text-[11px] font-medium text-slate-400 flex items-center gap-1">

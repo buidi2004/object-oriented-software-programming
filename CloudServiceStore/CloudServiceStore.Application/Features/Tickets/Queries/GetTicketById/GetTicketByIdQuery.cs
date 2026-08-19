@@ -15,7 +15,9 @@ public record TicketMessageDto(
     Guid Id,
     string SenderName,
     string Content,
+    string Message,
     DateTime Timestamp,
+    DateTime CreatedAt,
     bool IsAgent);
 
 public record TicketDetailDto(
@@ -76,6 +78,8 @@ public class GetTicketByIdQueryHandler : IRequestHandler<GetTicketByIdQuery, Tic
                     m.Id,
                     sender?.FullName ?? "Người dùng",
                     m.Message,
+                    m.Message,
+                    m.CreatedAt,
                     m.CreatedAt,
                     isAgent);
             })
