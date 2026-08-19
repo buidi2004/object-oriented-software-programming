@@ -17,12 +17,16 @@ namespace CloudServiceStore.Tests.Application.Features.Tickets.Queries.GetTicket
 public class GetTicketQueueQueryHandlerTests
 {
     private readonly Mock<IRepository<SupportTicket>> _mockRepositorySupportTicket;
+    private readonly Mock<IRepository<TicketMessage>> _mockRepositoryTicketMessage;
+    private readonly Mock<IRepository<AppUser>> _mockRepositoryAppUser;
     private readonly GetTicketQueueQueryHandler _handler;
 
     public GetTicketQueueQueryHandlerTests()
     {
         _mockRepositorySupportTicket = new Mock<IRepository<SupportTicket>>();
-        _handler = new GetTicketQueueQueryHandler(_mockRepositorySupportTicket.Object);
+        _mockRepositoryTicketMessage = new Mock<IRepository<TicketMessage>>();
+        _mockRepositoryAppUser = new Mock<IRepository<AppUser>>();
+        _handler = new GetTicketQueueQueryHandler(_mockRepositorySupportTicket.Object, _mockRepositoryTicketMessage.Object, _mockRepositoryAppUser.Object);
     }
 
     [Fact]
