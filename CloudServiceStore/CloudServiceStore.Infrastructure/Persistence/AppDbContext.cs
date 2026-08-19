@@ -77,6 +77,10 @@ public class AppDbContext : DbContext
     public DbSet<Permission> Permissions => Set<Permission>();
     public DbSet<RolePermission> RolePermissions => Set<RolePermission>();
     public DbSet<RecentlyViewedItem> RecentlyViewedItems => Set<RecentlyViewedItem>();
+    public DbSet<ServiceTagNote> ServiceTagNotes => Set<ServiceTagNote>();
+    public DbSet<FeatureRequest> FeatureRequests => Set<FeatureRequest>();
+    public DbSet<FeatureUpvote> FeatureUpvotes => Set<FeatureUpvote>();
+    public DbSet<DownloadableResource> DownloadableResources => Set<DownloadableResource>();
     public DbSet<SystemSetting> SystemSettings => Set<SystemSetting>();
     public DbSet<HostingPlan> HostingPlans => Set<HostingPlan>();
     public DbSet<HostingAccount> HostingAccounts => Set<HostingAccount>();
