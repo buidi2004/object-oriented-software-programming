@@ -80,6 +80,9 @@ public class ProvisionVpsCommandHandlerTests
         _mockRepositoryVpsInstance
             .Setup(x => x.FirstOrDefaultAsync(It.IsAny<System.Linq.Expressions.Expression<Func<VpsInstance, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<System.Linq.Expressions.Expression<Func<VpsInstance, object>>[]>()))
             .ReturnsAsync((VpsInstance?)null);
+        _mockRepositoryVpsInstance
+            .Setup(x => x.WhereAsync(It.IsAny<System.Linq.Expressions.Expression<Func<VpsInstance, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<System.Linq.Expressions.Expression<Func<VpsInstance, object>>[]>()))
+            .ReturnsAsync(new System.Collections.Generic.List<VpsInstance>());
         _mockVpsProvisioningService
             .Setup(x => x.ProvisionAsync(It.IsAny<VpsProvisionSpec>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new ProvisionResult(true, "container-123", "vps-nano-test", null));

@@ -24,4 +24,10 @@ public class CdnController : ControllerBase
         var distributionId = await _mediator.Send(command);
         return Ok(new { distributionId });
     }
+
+    [HttpGet]
+    public IActionResult GetDistributions()
+    {
+        return Ok(new object[] { });
+    }
 }

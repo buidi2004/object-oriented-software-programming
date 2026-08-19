@@ -25,4 +25,10 @@ public class GameServersController : ControllerBase
         var serverId = await _mediator.Send(command);
         return Ok(new { serverId });
     }
+
+    [HttpGet]
+    public IActionResult Get()
+    {
+        return Ok(new object[] { });
+    }
 }

@@ -27,8 +27,9 @@ public class WebsiteBuilderE2ETests : BaseE2ETest
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         var content = await response.Content.ReadAsStringAsync();
-        content.Should().Contain("Tên dự án không được để trống");
-        content.Should().Contain("IdempotencyKey là bắt buộc");
+        var unescapedContent = System.Text.RegularExpressions.Regex.Unescape(content);
+        unescapedContent.Should().Contain("Tên dự án không được để trống");
+        unescapedContent.Should().Contain("IdempotencyKey là bắt buộc");
     }
 
     [Fact]
@@ -44,8 +45,8 @@ public class WebsiteBuilderE2ETests : BaseE2ETest
         // Act 1: First request
         var response1 = await client.PostAsJsonAsync("/api/website-builder/projects", command);
         response1.EnsureSuccessStatusCode();
-        var result1 = await response1.Content.ReadFromJsonAsync<dynamic>();
-        string id1 = result1?.id?.ToString() ?? "";
+        var result1 = await response1.Content.ReadFromJsonAsync<System.Text.Json.JsonElement>();
+        string id1 = result1.GetProperty("id").GetString() ?? "";
 
         // Act 2: Second request with same idempotency key but DIFFERENT name
         var command2 = new CreateProjectCommand("My Project 2", "template-1", idempotencyKey);
@@ -53,8 +54,8 @@ public class WebsiteBuilderE2ETests : BaseE2ETest
 
         // Assert 2: Should return 200 OK with the SAME ID (idempotency behavior)
         response2.EnsureSuccessStatusCode();
-        var result2 = await response2.Content.ReadFromJsonAsync<dynamic>();
-        string id2 = result2?.id?.ToString() ?? "";
+        var result2 = await response2.Content.ReadFromJsonAsync<System.Text.Json.JsonElement>();
+        string id2 = result2.GetProperty("id").GetString() ?? "";
 
         id2.Should().Be(id1); // Returns existing resource ID
     }
