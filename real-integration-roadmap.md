@@ -122,7 +122,7 @@ Dùng `Polly` (đã phổ biến trong .NET, dễ cài) — áp dụng cho MỌI
 | Module | Route | Hook / Real-time UI | Git Branch | Trạng thái |
 |---|---|---|---|---|
 | Database | `/dashboard/databases` | [x] | `feature/fe-realtime-database` | Hoàn thành |
-| Storage | `/dashboard/storage` | [ ] | `feature/fe-realtime-storage` | Pending |
+| Storage | `/dashboard/storage` | [x] | `feature/fe-realtime-storage` | Hoàn thành |
 | Game Servers | `/dashboard/game-servers` | [ ] | | Pending |
 | CDN | `/dashboard/cdn` | [ ] | | Pending |
 | Static Sites | `/dashboard/static-sites` | [ ] | | Pending |
