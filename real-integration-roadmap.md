@@ -126,4 +126,4 @@ Dùng `Polly` (đã phổ biến trong .NET, dễ cài) — áp dụng cho MỌI
 | Game Servers | `/dashboard/game-servers` | [x] | `feature/fe-realtime-game-servers` | Hoàn thành |
 | CDN | `/dashboard/cdn` | [x] | `feature/fe-realtime-cdn` | Hoàn thành |
 | Static Sites | `/dashboard/static-sites` | [x] | `feature/fe-realtime-static-sites` | Hoàn thành |
-| SSL | `/dashboard/domains` | [ ] | | Pending |
+| SSL | `/dashboard/ssl-certificates` | [x] | `feature/fe-realtime-ssl` | Hoàn thành |
