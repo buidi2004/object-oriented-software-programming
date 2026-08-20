@@ -13,7 +13,7 @@
 | **Database** | Microsoft SQL Server 2022 | `localhost:1433` (Docker) | Lưu trữ dữ liệu chính (`CloudServiceStoreDb`) |
 | **Cache** | Redis 7 Alpine | `localhost:6379` (Docker) | Cache danh mục, phân trang, token blacklist |
 | **VPS Provisioning** | Docker Engine API | `unix:///var/run/docker.sock` | Tự động khởi tạo & quản lý container VPS |
-| **SePay Ngrok Tunnel** | Ngrok CLI | `https://*.ngrok-free.dev` -> `5053` | Nhận Webhook chuyển khoản thật từ MB Bank |
+| **SePay Webhook (Production)** | Nginx Reverse Proxy | `https://buivandihhhh.duckdns.org` -> `5053` | Nhận Webhook chuyển khoản thật từ MB Bank (Production) |
 | **Email SMTP** | Gmail SMTP (MailKit) | `smtp.gmail.com:587` | Gửi email kích hoạt, bàn giao VPS, bảo mật |
 
 ---
@@ -46,12 +46,11 @@ npm run dev
 ```
 - Web App URL: `http://localhost:3000`
 
-### Bước 4: Mở Tunnel Webhook SePay (Ngrok)
-```bash
-# Mở tunnel cho cổng backend 5053 để nhận webhook từ SePay:
-ngrok http 5053 --log=stdout
+### Bước 4: Chạy Môi Trường Production (VPS)
+```text
+Khi hệ thống chạy trên VPS thật, không cần dùng Ngrok để nhận Webhook.
+Tên miền HTTPS (DuckDNS) sẽ trực tiếp nhận tín hiệu từ SePay và chuyển cho Backend!
 ```
-- Xem Dashboard và Public URL tại: `http://localhost:4040`
 
 ---
 
@@ -68,7 +67,7 @@ ngrok http 5053 --log=stdout
 - **Webhook Endpoint:** `/api/payments/webhook/sepay`
 - **Cấu hình trên my.sepay.vn:**
   ```text
-  URL Webhook: https://<ngrok-domain>.ngrok-free.dev/api/payments/webhook/sepay
+  URL Webhook: https://buivandihhhh.duckdns.org/api/payments/webhook/sepay
   Header: Authorization: Apikey HIJJSQ245A0AONRTKFRAG4G1HWWXIEUJFMW2OEHCZZXUPV5ZTWU3JQF6PPYMBE6Q
   ```
 
@@ -118,6 +117,4 @@ fuser -k 5053/tcp 7064/tcp 2>/dev/null || true
 # Tắt Frontend port 3000:
 fuser -k 3000/tcp 2>/dev/null || true
 
-# Tắt Ngrok:
-pkill -f ngrok || true
 ```
