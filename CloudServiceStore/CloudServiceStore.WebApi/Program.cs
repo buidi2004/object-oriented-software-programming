@@ -64,7 +64,8 @@ builder.Services.AddRateLimiter(options =>
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("Frontend", policy =>
-        policy.WithOrigins("https://your-frontend-domain.com", "http://localhost:3000")
+        policy.WithOrigins("https://your-frontend-domain.com", "http://localhost:3000", "https://object-oriented-software-programmin-sable.vercel.app")
+              .SetIsOriginAllowed(origin => new Uri(origin).Host == "localhost" || origin.EndsWith(".vercel.app"))
               .AllowCredentials()
               .AllowAnyHeader()
               .AllowAnyMethod());
