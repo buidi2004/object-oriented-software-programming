@@ -465,22 +465,15 @@ function VietQRSandboxContent() {
               </div>
             </div>
 
-            {/* Simulation Action Button */}
+            {/* Auto-confirm notice */}
             <div className="pt-2 space-y-3">
-              <button
-                onClick={handleSimulatePaymentSuccess}
-                disabled={isLoading}
-                className="w-full py-4 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-base shadow-lg shadow-emerald-600/20 hover:shadow-xl transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-70"
-              >
-                {isLoading ? (
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                ) : (
-                  <>
-                    <CheckCircle className="w-5 h-5" />
-                    Tôi Đã Chuyển Khoản — Kích Hoạt VPS Ngay
-                  </>
-                )}
-              </button>
+              <div className="w-full py-4 rounded-2xl bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 text-center">
+                <p className="text-sm font-bold text-amber-800 flex items-center justify-center gap-2">
+                  <ShieldCheck className="w-5 h-5 text-emerald-500" />
+                  Hệ thống tự động xác nhận khi nhận được tiền
+                </p>
+                <p className="text-xs text-amber-600 mt-1">Sau khi chuyển khoản, VPS sẽ được kích hoạt tự động trong vài giây</p>
+              </div>
 
               <div className="flex items-center justify-between text-xs text-slate-400 px-1">
                 <span className="flex items-center gap-1">

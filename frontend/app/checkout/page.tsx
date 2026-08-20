@@ -65,8 +65,6 @@ export default function CheckoutPage() {
 
   const paymentMethods: PaymentMethod[] = [
     { id: 'vietqr', name: 'Chuyển khoản VietQR (MB Bank)', icon: QrCode, description: 'Quét mã VietQR chuyển khoản tự động 24/7 (SePay)' },
-    { id: 'momo', name: 'Ví MoMo (Sandbox)', icon: CreditCard, description: 'Thanh toán quét mã qua cổng Ví MoMo 1-click' },
-    { id: 'vnpay', name: 'VNPAY QR', icon: QrCode, description: 'Cổng thanh toán thẻ và VNPAY QR' },
   ];
 
   const handlePayment = async () => {
@@ -94,15 +92,9 @@ export default function CheckoutPage() {
       const orderData = await orderResponse.json();
       const orderId = orderData.orderId || orderData.id || `ORD_${Date.now()}`;
 
-      // 2. Route directly to dedicated Sandbox payment gateway
-      if (selectedMethod === 'momo') {
-        router.push(`/sandbox/momo?orderId=${orderId}&amount=${finalAmount}`);
-        return;
-      } else if (selectedMethod === 'vietqr') {
+      // 2. Route to VietQR payment gateway
+      if (selectedMethod === 'vietqr') {
         router.push(`/sandbox/vietqr?orderId=${orderId}&amount=${finalAmount}`);
-        return;
-      } else if (selectedMethod === 'vnpay') {
-        router.push(`/sandbox/vnpay?key=${orderId}&amount=${finalAmount}`);
         return;
       }
 
