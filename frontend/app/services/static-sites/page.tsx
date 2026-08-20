@@ -22,14 +22,13 @@ export default function StaticSitesServicePage() {
       monthlyPrice: 49000,
       yearlyPrice: 39000 * 12,
       sites: '3 Websites tĩnh',
-      bandwidth: '100 GB Băng thông Edge CDN',
+      bandwidth: '100 GB Băng thông',
       features: [
-        'Hỗ trợ Next.js, Vite, React, Astro, HTML/CSS',
-        'Tự động Deploy khi git push (GitHub/GitLab)',
-        'Chứng chỉ SSL tự động miễn phí trọn đời',
-        'Gắn Custom Domain không giới hạn',
-        'Bản xem trước Deploy Preview theo nhánh Git',
-        'Rollback 1-Click về bản trước bất kỳ lúc nào',
+        'Hỗ trợ HTML/CSS/JS thuần',
+        'Upload mã nguồn thủ công qua Dashboard',
+        'Chứng chỉ SSL tự động miễn phí',
+        'Gắn Custom Domain',
+        'Cung cấp môi trường Nginx 64MB RAM',
       ],
       badge: null,
       popular: false,
@@ -41,14 +40,13 @@ export default function StaticSitesServicePage() {
       monthlyPrice: 129000,
       yearlyPrice: 99000 * 12,
       sites: '15 Websites tĩnh',
-      bandwidth: '500 GB Băng thông Edge CDN',
+      bandwidth: '500 GB Băng thông',
       features: [
-        'Mạng phân phối CDN 300+ Edge PoPs toàn cầu',
-        'Serverless Edge Functions (Xử lý backend tại Edge)',
-        'Tối ưu hóa ảnh tự động (Image Optimization)',
-        'Bảo mật chống tấn công DDoS Layer 7',
-        'Phân tích lượt truy cập Web Analytics bảo mật',
-        'Hỗ trợ kỹ thuật 24/7 qua LiveChat & Ticket',
+        'Hỗ trợ HTML/CSS/JS thuần',
+        'Upload mã nguồn thủ công qua Dashboard',
+        'Chứng chỉ SSL tự động miễn phí',
+        'Bảo mật chống tấn công cơ bản',
+        'Hỗ trợ kỹ thuật 24/7',
       ],
       badge: 'Bán chạy nhất',
       popular: true,
@@ -60,14 +58,13 @@ export default function StaticSitesServicePage() {
       monthlyPrice: 349000,
       yearlyPrice: 279000 * 12,
       sites: 'Không giới hạn Website',
-      bandwidth: '2,000 GB Băng thông Edge CDN',
+      bandwidth: '2,000 GB Băng thông',
       features: [
-        'Tốc độ Build song song không giới hạn',
-        'Phân quyền thành viên nhóm theo dự án (RBAC)',
+        'Hỗ trợ HTML/CSS/JS thuần',
+        'Upload mã nguồn thủ công qua Dashboard',
         'Dedicated Anycast IP riêng',
-        'Môi trường Staging & Production riêng biệt',
-        'Cam kết chất lượng dịch vụ SLA 99.99%',
-        'Hỗ trợ VIP 1-1 qua Telegram/Zalo',
+        'Cam kết chất lượng dịch vụ SLA 99.9%',
+        'Hỗ trợ VIP 1-1',
       ],
       badge: 'Agency & Team',
       popular: false,
@@ -105,7 +102,7 @@ export default function StaticSitesServicePage() {
           </h1>
 
           <p className="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto mb-10">
-            Kết nối GitHub, GitLab và tự động deploy chỉ sau một lệnh <code className="px-2 py-0.5 rounded bg-slate-800 text-emerald-300 font-mono text-xs">git push</code>. Phân phối toàn cầu với Edge CDN và chứng chỉ SSL miễn phí.
+            Khởi tạo môi trường Nginx siêu nhẹ trong tích tắc. Chỉ cần upload mã nguồn (HTML/CSS/JS) của bạn lên và website đã sẵn sàng để truy cập với chứng chỉ SSL miễn phí.
           </p>
 
           {/* Billing Switch */}

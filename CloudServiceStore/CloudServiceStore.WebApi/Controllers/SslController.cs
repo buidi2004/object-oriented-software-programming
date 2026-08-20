@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using CloudServiceStore.Application.Features.Ssl.Commands.DownloadPrivateKey;
 using CloudServiceStore.Application.Features.Ssl.Commands.RequestSslCertificate;
 using CloudServiceStore.Application.Features.Ssl.Queries.GetMySslCertificates;
 using CloudServiceStore.Application.Features.Ssl.Queries.GetSslCertificateById;
@@ -12,7 +13,7 @@ namespace CloudServiceStore.WebApi.Controllers;
 
 [ApiController]
 [Route("api/ssl")]
-[Authorize(Roles = "Customer")]
+[Authorize]
 public class SslController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -38,5 +39,13 @@ public class SslController : ControllerBase
     {
         var sslId = await _mediator.Send(command, ct);
         return Ok(new { sslId });
+    }
+
+    [HttpPost("{id:guid}/download-private-key")]
+    public async Task<IActionResult> DownloadPrivateKey(Guid id, CancellationToken ct)
+    {
+        var ip = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "127.0.0.1";
+        var privateKey = await _mediator.Send(new DownloadPrivateKeyCommand(id, ip), ct);
+        return Ok(new { success = true, privateKey });
     }
 }

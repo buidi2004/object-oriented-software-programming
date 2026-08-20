@@ -65,6 +65,14 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IAsyn
             }
             services.AddTransient<CloudServiceStore.Application.Interfaces.IEmailService, CloudServiceStore.Tests.Mocks.MockEmailService>();
 
+            // Remove and mock IAppInstallerService in tests to decouple from testcontainers Docker.DotNet binary difference
+            var appInstallerDescriptors = services.Where(d => d.ServiceType == typeof(CloudServiceStore.Application.Interfaces.IAppInstallerService)).ToList();
+            foreach (var appDesc in appInstallerDescriptors)
+            {
+                services.Remove(appDesc);
+            }
+            services.AddTransient<CloudServiceStore.Application.Interfaces.IAppInstallerService, CloudServiceStore.Tests.Mocks.MockAppInstallerService>();
+
             services.AddDbContext<AppDbContext>(options =>
             {
                 options.UseSqlServer(_dbContainer.GetConnectionString())

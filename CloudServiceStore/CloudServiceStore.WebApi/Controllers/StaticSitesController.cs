@@ -1,7 +1,12 @@
+using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CloudServiceStore.Application.Features.StaticSites.Commands.CreateStaticSite;
 using CloudServiceStore.Application.Features.StaticSites.Commands.DeployStaticSite;
+using CloudServiceStore.Application.Interfaces;
+using CloudServiceStore.Domain.Entities;
+using CloudServiceStore.Domain.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,19 +18,44 @@ namespace CloudServiceStore.WebApi.Controllers;
 public class StaticSitesController : ControllerBase
 {
     private readonly IMediator _mediator;
+    private readonly IRepository<StaticSite> _repo;
+    private readonly ICurrentUserService _currentUser;
 
-    public StaticSitesController(IMediator mediator) => _mediator = mediator;
+    public StaticSitesController(
+        IMediator mediator,
+        IRepository<StaticSite> repo,
+        ICurrentUserService currentUser)
+    {
+        _mediator = mediator;
+        _repo = repo;
+        _currentUser = currentUser;
+    }
 
     [HttpGet]
-    [Authorize(Roles = "Customer")]
+    [Authorize]
     public async Task<IActionResult> GetMySites(CancellationToken ct)
     {
-        // Return empty list for now - get my sites will be implemented via query
-        return Ok(new System.Collections.Generic.List<object>());
+        var userId = _currentUser.UserId;
+        var sites = userId.HasValue
+            ? await _repo.WhereAsync(s => s.UserId == userId.Value, ct)
+            : await _repo.GetAllAsync(ct);
+
+        var result = sites.Select(s => new
+        {
+            id = s.Id,
+            name = s.Name,
+            customDomain = s.CustomDomain,
+            deployUrl = s.DeployUrl,
+            status = s.Status.ToString(),
+            failureReason = s.FailureReason,
+            createdAt = s.CreatedAt
+        }).OrderByDescending(s => s.createdAt);
+
+        return Ok(result);
     }
 
     [HttpPost]
-    [Authorize(Roles = "Customer")]
+    [Authorize]
     public async Task<IActionResult> CreateSite(
         [FromBody] CreateStaticSiteCommand command,
         CancellationToken ct)
@@ -35,7 +65,7 @@ public class StaticSitesController : ControllerBase
     }
 
     [HttpPost("{id:guid}/deploy")]
-    [Authorize(Roles = "Customer")]
+    [Authorize]
     public async Task<IActionResult> Deploy(
         Guid id,
         [FromBody] DeployStaticSiteCommand command,

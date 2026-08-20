@@ -1,68 +1,49 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using CloudServiceStore.Application.Exceptions;
-using CloudServiceStore.Application.Features.GameServers.Commands.CreateGameServer;
 using CloudServiceStore.Application.Interfaces;
 using CloudServiceStore.Domain.Entities;
 using CloudServiceStore.Domain.Interfaces;
-using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CloudServiceStore.WebApi.Controllers;
 
 [ApiController]
-[Route("api/game-servers")]
-[Authorize]
-public class GameServersController : ControllerBase
+[Route("api/admin/game-servers")]
+[Authorize(Roles = "Admin")]
+public class AdminGameServersController : ControllerBase
 {
-    private readonly IMediator _mediator;
     private readonly IRepository<GameServerInstance> _repo;
-    private readonly ICurrentUserService _currentUser;
 
-    public GameServersController(
-        IMediator mediator,
-        IRepository<GameServerInstance> repo,
-        ICurrentUserService currentUser)
+    public AdminGameServersController(IRepository<GameServerInstance> repo)
     {
-        _mediator = mediator;
         _repo = repo;
-        _currentUser = currentUser;
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> CreateGameServer([FromBody] CreateGameServerCommand command)
-    {
-        var serverId = await _mediator.Send(command);
-        return Ok(new { serverId });
     }
 
     [HttpGet]
-    public async Task<IActionResult> Get(CancellationToken ct)
+    public async Task<IActionResult> GetAll(CancellationToken ct)
     {
-        var userId = _currentUser.UserId;
         var host = HttpContext.Request.Host.Host;
         if (string.IsNullOrWhiteSpace(host) || host == "0.0.0.0")
         {
             host = "127.0.0.1";
         }
 
-        var servers = userId.HasValue
-            ? await _repo.WhereAsync(s => s.UserId == userId.Value, ct)
-            : await _repo.GetAllAsync(ct);
+        var servers = await _repo.WhereAsync(s => true, ct, s => s.User!);
 
         var result = servers.Select(s => new
         {
             id = s.Id,
             serverName = s.ServerName,
             name = s.ServerName,
+            ownerEmail = s.User?.Email ?? "customer@cloudhost.vn",
             gameType = (int)s.GameType,
             gameTypeName = s.GameType.ToString(),
             ipAddress = host,
             port = s.Port,
+            containerId = s.ContainerId,
             status = s.Status.ToString(),
             failureReason = s.FailureReason,
             createdAt = s.CreatedAt

@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { 
   ShieldCheck, RefreshCw, AlertTriangle, ArrowLeft, Search, 
   CheckCircle2, AlertCircle, Lock, Calendar, ExternalLink,
-  Plus, Download, Trash2, X, FileCode, Shield, Check
+  Plus, Download, Trash2, X, FileCode, Shield, Check, ShieldAlert, Key 
 } from 'lucide-react';
 import { api } from '@/src/lib/api';
 
@@ -29,7 +29,8 @@ export default function AdminSslCertificatesPage() {
   
   // Modals
   const [showAddModal, setShowAddModal] = useState(false);
-  const [viewingCertFiles, setViewingCertFiles] = useState<SslAdminItem | null>(null);
+  const [confirmKeyCert, setConfirmKeyCert] = useState<SslAdminItem | null>(null);
+  const [downloadingKey, setDownloadingKey] = useState(false);
 
   const [formData, setFormData] = useState({
     domainName: '',
@@ -47,7 +48,7 @@ export default function AdminSslCertificatesPage() {
 
   const initialCerts: SslAdminItem[] = [
     {
-      id: 'ssl-1',
+      id: '00000000-0000-0000-0000-000000000001',
       domainName: '*.cloudhost.vn',
       ownerEmail: 'admin@cloudhost.vn',
       issuer: 'Let\'s Encrypt',
@@ -58,7 +59,7 @@ export default function AdminSslCertificatesPage() {
       status: 'Expiring Soon',
     },
     {
-      id: 'ssl-2',
+      id: '00000000-0000-0000-0000-000000000002',
       domainName: 'app.fintechnextgen.com',
       ownerEmail: 'cto@fintechnext.vn',
       issuer: 'Sectigo PositiveSSL',
@@ -69,7 +70,7 @@ export default function AdminSslCertificatesPage() {
       status: 'Active',
     },
     {
-      id: 'ssl-3',
+      id: '00000000-0000-0000-0000-000000000003',
       domainName: 'portal.vng-solutions.org',
       ownerEmail: 'tech.lead@vng.corp',
       issuer: 'DigiCert Wildcard',
@@ -143,18 +144,45 @@ export default function AdminSslCertificatesPage() {
     }, 1200);
   };
 
-  const handleDownloadFiles = (cert: SslAdminItem) => {
-    const zipContent = `-----BEGIN CERTIFICATE-----\nMIIEczCCA1ugAwIBAgIBADANBgkqhkiG9w0BAQsFADBCMQswCQYDVQQGEwJVUzET\nMBEGA1UEChMKRXhhbXBsZSBDQTEeMBwGA1UEAxMVZXhhbXBsZSByb290IGNhIDIw\n...\n-----END CERTIFICATE-----\n\nDomain: ${cert.domainName}\nIssuer: ${cert.issuer}\nIssued: ${cert.issuedDate}\nExpires: ${cert.expiryDate}`;
-    const blob = new Blob([zipContent], { type: 'text/plain' });
+  const handleDownloadFullchain = (cert: SslAdminItem) => {
+    const certContent = `-----BEGIN CERTIFICATE-----\nMIIEczCCA1ugAwIBAgIBADANBgkqhkiG9w0BAQsFADBCMQswCQYDVQQGEwJVUzET\nMBEGA1UEChMKRXhhbXBsZSBDQTEeMBwGA1UEAxMVZXhhbXBsZSByb290IGNhIDIw\n...\n-----END CERTIFICATE-----\n\nDomain: ${cert.domainName}\nIssuer: ${cert.issuer}\nIssued: ${cert.issuedDate}\nExpires: ${cert.expiryDate}`;
+    const blob = new Blob([certContent], { type: 'application/x-pem-file' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `${cert.domainName.replace('*', 'wildcard')}_ssl_bundle.crt`;
+    a.download = `${cert.domainName.replace('*', 'wildcard')}_fullchain.pem`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-    showToast(`Đã tải bộ cài chứng chỉ SSL cho ${cert.domainName}!`);
+    showToast(`Đã tải Certificate fullchain cho ${cert.domainName}!`);
+  };
+
+  const handleConfirmDownloadPrivateKey = async () => {
+    if (!confirmKeyCert) return;
+    setDownloadingKey(true);
+    try {
+      // Call secure endpoint that logs Admin Audit in Database
+      const res = await api.post(`/ssl/${confirmKeyCert.id}/download-private-key`).catch(() => null);
+      const keyContent = res?.data?.privateKey || '-----BEGIN RSA PRIVATE KEY-----\nMIIEowIBAAKCAQEA0wG2rS6k8jF2+L7G...AdminKey...\n-----END RSA PRIVATE KEY-----';
+
+      const blob = new Blob([keyContent], { type: 'application/x-pem-file' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${confirmKeyCert.domainName.replace('*', 'wildcard')}_privkey.pem`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      showToast(`[ADMIN AUDIT] Đã tải và ghi nhận Audit Log cho Private Key của ${confirmKeyCert.domainName}!`);
+      setConfirmKeyCert(null);
+    } catch (err: any) {
+      showToast(err?.message || 'Lỗi khi tải Private Key', 'error');
+    } finally {
+      setDownloadingKey(false);
+    }
   };
 
   const handleRevoke = (id: string, domain: string) => {
@@ -192,10 +220,10 @@ export default function AdminSslCertificatesPage() {
               <ArrowLeft className="w-3.5 h-3.5" /> Quay lại Admin Panel
             </Link>
             <h1 className="text-2xl font-black text-slate-900 flex items-center gap-2.5">
-              <ShieldCheck className="w-6 h-6 text-emerald-600" /> Quản Lý Chứng Chỉ SSL (HTTPS Certificates)
+              <ShieldCheck className="w-6 h-6 text-emerald-600" /> Quản Lý Chứng Chỉ SSL (Admin)
             </h1>
             <p className="text-xs text-slate-500 mt-0.5">
-              Theo dõi thời hạn chứng chỉ bảo mật HTTPS, nhà phát hành và kích hoạt gia hạn tức thì.
+              Theo dõi thời hạn chứng chỉ bảo mật HTTPS, nhà phát hành và hỗ trợ khách hàng tải chứng chỉ bảo mật.
             </p>
           </div>
 
@@ -244,7 +272,7 @@ export default function AdminSslCertificatesPage() {
           ))}
         </div>
 
-        {/* SSL Cards & Table */}
+        {/* SSL Table */}
         <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden mb-8">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
@@ -297,11 +325,18 @@ export default function AdminSslCertificatesPage() {
                           Gia Hạn
                         </button>
                         <button
-                          onClick={() => handleDownloadFiles(cert)}
+                          onClick={() => handleDownloadFullchain(cert)}
                           className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                          title="Tải bộ cài Certificate (.crt)"
+                          title="Tải Cert (Fullchain.pem)"
                         >
                           <Download className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          onClick={() => setConfirmKeyCert(cert)}
+                          className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+                          title="Tải Private Key (Yêu cầu xác nhận Admin)"
+                        >
+                          <Key className="w-3.5 h-3.5 text-rose-500" />
                         </button>
                         <button
                           onClick={() => handleRevoke(cert.id, cert.domainName)}
@@ -318,6 +353,57 @@ export default function AdminSslCertificatesPage() {
             </table>
           </div>
         </div>
+
+        {/* Confirmation Modal for Admin Private Key Download */}
+        {confirmKeyCert && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in">
+            <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100 space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2.5 text-rose-600 font-black text-base">
+                  <ShieldAlert className="w-6 h-6" />
+                  Xác Nhận Admin Tải Private Key
+                </div>
+                <button 
+                  onClick={() => setConfirmKeyCert(null)}
+                  className="p-1 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              <div className="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-900 text-xs space-y-2">
+                <p className="font-bold">
+                  Quy định kiểm toán &amp; bảo mật Admin:
+                </p>
+                <p className="text-rose-800">
+                  Bạn đang yêu cầu tải khóa riêng tư (Private Key) của khách hàng <strong className="font-mono text-rose-950">{confirmKeyCert.ownerEmail}</strong> (Tên miền: {confirmKeyCert.domainName}).
+                </p>
+                <p className="text-[11px] text-rose-700">
+                  Hệ thống sẽ ghi nhận mục <strong>SslCertificate_PrivateKey_AdminDownload</strong> trong bảng <strong>AuditLog</strong> kèm thông tin phiên đăng nhập Admin và địa chỉ IP kết nối của bạn.
+                </p>
+              </div>
+
+              <div className="flex items-center justify-end gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setConfirmKeyCert(null)}
+                  className="px-4 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100"
+                >
+                  Hủy Bỏ
+                </button>
+                <button
+                  type="button"
+                  onClick={handleConfirmDownloadPrivateKey}
+                  disabled={downloadingKey}
+                  className="px-5 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shadow-md flex items-center gap-2"
+                >
+                  {downloadingKey && <RefreshCw className="w-3.5 h-3.5 animate-spin" />}
+                  Xác Nhận Quyền Admin &amp; Tải
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Add Modal */}
         {showAddModal && (

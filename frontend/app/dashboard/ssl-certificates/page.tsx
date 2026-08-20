@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { 
   ShieldCheck, Shield, ArrowRight, Loader, Download, Copy, Lock, 
-  Info, RefreshCw, AlertTriangle, ArrowLeft 
+  Info, RefreshCw, AlertTriangle, ArrowLeft, AlertCircle, X, ShieldAlert 
 } from 'lucide-react';
 import { api } from '@/src/lib/api';
 import { useAuthStore } from '@/src/store/useAuthStore';
@@ -29,6 +29,8 @@ interface SslCertItem {
 export default function SslCertificatesPage() {
   const [certificates, setCertificates] = useState<SslCertItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [confirmKeyCert, setConfirmKeyCert] = useState<SslCertItem | null>(null);
+  const [downloadingKey, setDownloadingKey] = useState(false);
 
   const fetchCertificates = async () => {
     try {
@@ -45,6 +47,31 @@ export default function SslCertificatesPage() {
   useEffect(() => {
     fetchCertificates();
   }, []);
+
+  const handleDownloadPrivateKey = async () => {
+    if (!confirmKeyCert) return;
+    setDownloadingKey(true);
+    try {
+      // Call secure download endpoint that records Audit Log in Database
+      const res = await api.post(`/ssl/${confirmKeyCert.id}/download-private-key`);
+      const keyContent = res.data?.privateKey || confirmKeyCert.privateKey || '-----BEGIN RSA PRIVATE KEY-----\n...';
+      
+      const domain = confirmKeyCert.domainName || confirmKeyCert.domain?.name || 'certificate';
+      const blob = new Blob([keyContent], { type: 'application/x-pem-file' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${domain}-privkey.pem`;
+      a.click();
+      URL.revokeObjectURL(url);
+
+      setConfirmKeyCert(null);
+    } catch (err: any) {
+      alert(err?.response?.data?.message || 'Lỗi khi tải Private Key');
+    } finally {
+      setDownloadingKey(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-slate-50 py-10 px-4 sm:px-6 lg:px-8">
@@ -100,16 +127,80 @@ export default function SslCertificatesPage() {
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {certificates.map((cert) => (
-              <SslCertificateCard key={cert.id} cert={cert} onRefresh={fetchCertificates} />
+              <SslCertificateCard 
+                key={cert.id} 
+                cert={cert} 
+                onRefresh={fetchCertificates}
+                onRequestDownloadKey={(c) => setConfirmKeyCert(c)}
+              />
             ))}
           </div>
         )}
       </div>
+
+      {/* Confirmation Modal for Private Key Download */}
+      {confirmKeyCert && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in">
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100 space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2.5 text-rose-600 font-black text-base">
+                <ShieldAlert className="w-6 h-6" />
+                Xác Nhận Tải Private Key Bảo Mật
+              </div>
+              <button 
+                onClick={() => setConfirmKeyCert(null)}
+                className="p-1 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-900 text-xs space-y-2">
+              <p className="font-bold">
+                Cảnh báo an toàn thông tin:
+              </p>
+              <p className="text-rose-800">
+                Khóa riêng tư (Private Key) là dữ liệu tối mật dùng để giải mã kết nối HTTPS của tên miền <strong className="font-mono text-rose-950">{confirmKeyCert.domainName || confirmKeyCert.domain?.name}</strong>.
+              </p>
+              <p className="text-[11px] text-rose-700">
+                Hành động này sẽ được ghi nhận vào hệ thống <strong>Audit Log</strong> (thời gian, địa chỉ IP và danh tính tài khoản) vì mục đích tuân thủ bảo mật.
+              </p>
+            </div>
+
+            <div className="flex items-center justify-end gap-3 pt-2">
+              <button
+                type="button"
+                onClick={() => setConfirmKeyCert(null)}
+                className="px-4 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100"
+              >
+                Hủy Bỏ
+              </button>
+              <button
+                type="button"
+                onClick={handleDownloadPrivateKey}
+                disabled={downloadingKey}
+                className="px-5 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shadow-md flex items-center gap-2"
+              >
+                {downloadingKey && <RefreshCw className="w-3.5 h-3.5 animate-spin" />}
+                Xác Nhận &amp; Tải Privkey.pem
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
 
-function SslCertificateCard({ cert, onRefresh }: { cert: SslCertItem; onRefresh: () => void }) {
+function SslCertificateCard({ 
+  cert, 
+  onRefresh,
+  onRequestDownloadKey 
+}: { 
+  cert: SslCertItem; 
+  onRefresh: () => void;
+  onRequestDownloadKey: (c: SslCertItem) => void;
+}) {
   const { status, isProvisioning, isSlow, elapsedSeconds, slowWarningText } = useResourceProvisioningDetails(
     'SslCertificate',
     cert.id,
@@ -195,10 +286,10 @@ function SslCertificateCard({ cert, onRefresh }: { cert: SslCertItem; onRefresh:
                 <Download className="w-3.5 h-3.5" /> Fullchain.pem
               </button>
               <button
-                onClick={() => downloadPem(cert.privateKey || '-----BEGIN RSA PRIVATE KEY-----\n...', `${domainName}-privkey.pem`)}
-                className="flex-1 bg-white border border-slate-200 hover:border-slate-300 text-slate-700 px-3 py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-colors"
+                onClick={() => onRequestDownloadKey(cert)}
+                className="flex-1 bg-white border border-slate-200 hover:border-rose-300 hover:text-rose-600 text-slate-700 px-3 py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-colors"
               >
-                <Download className="w-3.5 h-3.5" /> Privkey.pem
+                <Download className="w-3.5 h-3.5 text-rose-500" /> Privkey.pem
               </button>
             </div>
           </div>

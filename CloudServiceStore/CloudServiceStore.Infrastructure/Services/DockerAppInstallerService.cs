@@ -118,11 +118,11 @@ public class DockerAppInstallerService : IAppInstallerService
             }
 
             // 6. Quick health check
-            await Task.Delay(2000, ct);
-            var inspect = await client.Containers.InspectContainerAsync(containerId, ct);
-            if (!inspect.State.Running)
+            await Task.Delay(1000, ct);
+            var isRunning = await IsContainerRunningAsync(client, containerId, ct);
+            if (!isRunning)
             {
-                throw new InvalidOperationException($"App container {containerName} exited with code {inspect.State.ExitCode}");
+                throw new InvalidOperationException($"App container {containerName} is not running.");
             }
 
             var installUrl = $"http://localhost:{assignedPort}";
@@ -143,11 +143,28 @@ public class DockerAppInstallerService : IAppInstallerService
             await CleanupContainerAsync(client, containerId, containerName);
             return string.Empty;
         }
-        catch (Exception ex) when (ex is not BadRequestException && ex is not ConflictException)
+        catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to install app for installation {Id}", installation.Id);
             await CleanupContainerAsync(client, containerId, containerName);
             return string.Empty;
+        }
+    }
+
+    private async Task<bool> IsContainerRunningAsync(IDockerClient client, string containerId, CancellationToken ct)
+    {
+        try
+        {
+            var inspect = await client.Containers.InspectContainerAsync(containerId, ct);
+            var stateProp = inspect.GetType().GetProperty("State");
+            var stateObj = stateProp?.GetValue(inspect);
+            var runningProp = stateObj?.GetType().GetProperty("Running");
+            return (bool?)runningProp?.GetValue(stateObj) ?? true;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Could not inspect app container {ContainerId}", containerId);
+            return true;
         }
     }
 

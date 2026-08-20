@@ -12,26 +12,23 @@ import { useCartStore } from '@/src/store/useCartStore';
 export default function GameServersServicePage() {
   const router = useRouter();
   const addItem = useCartStore((state) => state.addItem);
-  const [selectedGame, setSelectedGame] = useState<'minecraft' | 'cs2' | 'palworld' | 'rust'>('minecraft');
+  const [selectedGame, setSelectedGame] = useState<'minecraft' | 'cs2' | 'rust'>('minecraft');
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('yearly');
 
   const plans = [
     {
       id: 'game-starter',
       name: 'Game Server Starter',
-      tagline: 'Phù hợp chơi cùng nhóm bạn từ 10 - 20 người',
+      tagline: 'Phù hợp chơi cùng nhóm bạn từ 5 - 10 người',
       monthlyPrice: 149000,
       yearlyPrice: 119000 * 12,
-      cpu: '2 vCPU Ryzen 9 (5.0GHz)',
-      ram: '4 GB DDR5 RAM',
-      storage: '40 GB NVMe Gen4',
+      cpu: '1 vCPU (Shared)',
+      ram: '768 MB RAM',
+      storage: '10 GB NVMe',
       features: [
-        'Tối ưu riêng cho Minecraft, CS2, Terraria',
+        'Tối ưu riêng cho Minecraft',
         'Khởi tạo máy chủ trong 60 giây',
-        'Cài đặt Mod & Plugin 1-Click tự động',
-        'Anti-DDoS Game chuyên sâu lọc gói tin UDP',
-        'Web Terminal & Truy cập FTP toàn quyền',
-        'Sao lưu tự động hàng ngày miễn phí',
+        'Web Terminal cơ bản',
       ],
       badge: null,
       popular: false,
@@ -39,19 +36,16 @@ export default function GameServersServicePage() {
     {
       id: 'game-pro',
       name: 'Game Server Pro',
-      tagline: 'Phổ biến cho Cộng đồng vừa từ 30 - 60 người',
+      tagline: 'Phổ biến cho Cộng đồng nhỏ',
       monthlyPrice: 299000,
       yearlyPrice: 239000 * 12,
-      cpu: '4 vCPU Ryzen 9 (5.0GHz)',
-      ram: '8 GB DDR5 RAM',
-      storage: '80 GB NVMe Gen4',
+      cpu: '1 vCPU Dedicated',
+      ram: '1 GB RAM',
+      storage: '20 GB NVMe',
       features: [
-        'Hỗ trợ Palworld, Rust, ARK, Valheim mượt mà',
-        'Hỗ trợ cài đặt Forge, Fabric, Paper, Spigot',
-        'Băng thông không giới hạn cổng 1Gbps',
-        'Ping cực thấp dưới 10ms tại Việt Nam & SEA',
-        'Hệ thống chống Crash & Tự động Restart',
-        'Đội ngũ Admin hỗ trợ cài đặt Mod 24/7',
+        'Hỗ trợ Minecraft, CS2, Rust',
+        'Khởi tạo máy chủ trong 60 giây',
+        'Băng thông 100Mbps',
       ],
       badge: 'Bán chạy nhất',
       popular: true,
@@ -59,21 +53,18 @@ export default function GameServersServicePage() {
     {
       id: 'game-extreme',
       name: 'Game Server Extreme',
-      tagline: 'Dành cho Máy chủ Cộng đồng lớn & Modpack nặng',
+      tagline: 'Dành cho Máy chủ Mods nhẹ',
       monthlyPrice: 599000,
       yearlyPrice: 479000 * 12,
-      cpu: '8 vCPU Ryzen 9 (5.0GHz)',
-      ram: '16 GB DDR5 RAM',
-      storage: '160 GB NVMe Gen4',
+      cpu: '1 vCPU Dedicated',
+      ram: '1 GB RAM',
+      storage: '40 GB NVMe',
       features: [
-        'Chạy mượt 100+ người chơi đồng thời',
-        'Hỗ trợ các bộ Modpack cực nặng 200+ Mods',
-        'Dedicated IP riêng miễn phí',
-        'Subdomain miễn phí (ví dụ: play.tenmaychu.vn)',
-        'Quyền truy cập Cơ sở dữ liệu MySQL riêng',
-        'Cam kết SLA Uptime 99.99%',
+        'Hỗ trợ Minecraft, CS2, Rust',
+        'Khởi tạo máy chủ trong 60 giây',
+        'Hỗ trợ cài đặt Mod',
       ],
-      badge: 'Cộng đồng lớn',
+      badge: 'Cộng đồng',
       popular: false,
     },
   ];
@@ -135,16 +126,6 @@ export default function GameServersServicePage() {
               🔫 Counter-Strike 2
             </button>
             <button
-              onClick={() => setSelectedGame('palworld')}
-              className={`px-5 py-2.5 rounded-2xl text-xs font-bold transition-all flex items-center gap-2 ${
-                selectedGame === 'palworld'
-                  ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/30'
-                  : 'bg-slate-800/80 text-slate-300 hover:text-white border border-slate-700'
-              }`}
-            >
-              🐾 Palworld
-            </button>
-            <button
               onClick={() => setSelectedGame('rust')}
               className={`px-5 py-2.5 rounded-2xl text-xs font-bold transition-all flex items-center gap-2 ${
                 selectedGame === 'rust'
@@ -152,7 +133,7 @@ export default function GameServersServicePage() {
                   : 'bg-slate-800/80 text-slate-300 hover:text-white border border-slate-700'
               }`}
             >
-              🛡️ Rust &amp; Valheim
+              🛡️ Rust
             </button>
           </div>
 

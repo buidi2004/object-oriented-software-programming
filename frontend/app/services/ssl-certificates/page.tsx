@@ -10,46 +10,18 @@ export default function SslServicePage() {
 
   const sslPlans = [
     {
-      id: 'ssl-dv',
-      name: 'Domain Validation (DV)',
-      description: 'Lý tưởng cho blog và website cá nhân. Xác thực nhanh trong vài phút.',
-      price: 150000,
+      id: 'ssl-letsencrypt-dv',
+      name: 'Let\'s Encrypt SSL (DV)',
+      description: 'Chứng chỉ SSL tự động gia hạn, bảo mật tiêu chuẩn cho mọi website.',
+      price: 0,
       features: [
-        'Mã hóa 256-bit',
-        'Xác thực tên miền (DV)',
-        'Bảo hiểm $10,000',
-        'Cấp phát trong 5 phút',
-        'Hỗ trợ cài đặt miễn phí'
-      ],
-      popular: false
-    },
-    {
-      id: 'ssl-ov',
-      name: 'Organization Validation (OV)',
-      description: 'Phù hợp cho doanh nghiệp vừa và nhỏ, nâng cao mức độ tin cậy.',
-      price: 650000,
-      features: [
-        'Mã hóa 256-bit',
-        'Xác thực doanh nghiệp (OV)',
-        'Hiển thị tên công ty trên chứng chỉ',
-        'Bảo hiểm $50,000',
-        'Kèm Trust Seal'
+        'Mã hóa 256-bit chuẩn quốc tế',
+        'Xác thực tên miền (Domain Validation)',
+        'Cấp phát tự động qua giao thức ACME',
+        'Google Chrome, Firefox tin cậy 100%',
+        'Tự động gia hạn trước khi hết hạn',
       ],
       popular: true
-    },
-    {
-      id: 'ssl-ev',
-      name: 'Extended Validation (EV)',
-      description: 'Bảo mật cao nhất, phù hợp cho ngân hàng và trang thương mại điện tử lớn.',
-      price: 1500000,
-      features: [
-        'Mã hóa 256-bit',
-        'Thanh địa chỉ màu xanh (Green Bar)',
-        'Xác thực pháp nhân nghiêm ngặt',
-        'Bảo hiểm $1,750,000',
-        'Tăng tối đa độ tin cậy'
-      ],
-      popular: false
     }
   ];
 
@@ -86,7 +58,19 @@ export default function SslServicePage() {
       {/* Pricing Section */}
       <section className="py-20 -mt-20 relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="bg-amber-100 border-l-4 border-amber-500 text-amber-800 p-6 rounded-2xl mb-8 shadow-sm text-center md:text-left flex items-start gap-4 mx-auto max-w-3xl">
+            <div className="text-amber-500 hidden md:block">
+              <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+            </div>
+            <div>
+              <p className="font-bold text-lg mb-1">Lưu ý quan trọng trước khi mua</p>
+              <p className="text-sm">Tên miền của bạn phải được trỏ DNS về IP của máy chủ trước khi mua SSL, nếu không quá trình cấp phát sẽ thất bại.</p>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 justify-center">
             {sslPlans.map((plan) => (
               <div 
                 key={plan.id} 
