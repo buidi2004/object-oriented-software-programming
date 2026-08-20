@@ -21,6 +21,8 @@ public class SubscriptionMonitorWorker : BackgroundService
     private readonly IServiceProvider _serviceProvider;
     private readonly ILogger<SubscriptionMonitorWorker> _logger;
 
+    private static readonly System.Collections.Concurrent.ConcurrentDictionary<Guid, DateTime> _sentReminders = new();
+
     public SubscriptionMonitorWorker(
         IServiceProvider serviceProvider,
         ILogger<SubscriptionMonitorWorker> logger)
@@ -44,8 +46,8 @@ public class SubscriptionMonitorWorker : BackgroundService
                 _logger.LogError(ex, "Error occurred executing SubscriptionMonitorWorker.");
             }
 
-            // Check periodically
-            await Task.Delay(TimeSpan.FromMinutes(2), stoppingToken);
+            // Check periodically every 15 minutes
+            await Task.Delay(TimeSpan.FromMinutes(15), stoppingToken);
         }
 
         _logger.LogInformation("SubscriptionMonitorWorker is stopping.");
@@ -69,7 +71,7 @@ public class SubscriptionMonitorWorker : BackgroundService
         // 1. Process VPS Expirations & Warnings
         var allVps = await vpsRepo.GetAllAsync(stoppingToken);
 
-        // Send Expiration Warnings (Expiring within 3 days)
+        // Send Expiration Warnings (Expiring within 3 days) — at most once per 24 hours per VPS
         if (emailService != null && userRepo != null)
         {
             var expiringSoonVps = allVps.Where(v => 
@@ -80,6 +82,13 @@ public class SubscriptionMonitorWorker : BackgroundService
             foreach (var vps in expiringSoonVps)
             {
                 if (stoppingToken.IsCancellationRequested) break;
+                
+                // Do not spam customer if a reminder was already sent in the last 24 hours
+                if (_sentReminders.TryGetValue(vps.Id, out var lastSent) && (now - lastSent).TotalHours < 24)
+                {
+                    continue;
+                }
+
                 var user = await userRepo.GetByIdAsync(vps.UserId, stoppingToken);
                 if (user != null && !string.IsNullOrEmpty(user.Email))
                 {
@@ -90,6 +99,7 @@ public class SubscriptionMonitorWorker : BackgroundService
                         daysLeft, 
                         vps.ExpiresAt, 
                         stoppingToken);
+                    _sentReminders[vps.Id] = now;
                 }
             }
         }

@@ -45,7 +45,14 @@ public class GmailEmailService : IEmailService
         }
         finally
         {
-            await client.DisconnectAsync(true, cancellationToken);
+            if (client.IsConnected)
+            {
+                try
+                {
+                    await client.DisconnectAsync(true, cancellationToken);
+                }
+                catch { }
+            }
         }
     }
 

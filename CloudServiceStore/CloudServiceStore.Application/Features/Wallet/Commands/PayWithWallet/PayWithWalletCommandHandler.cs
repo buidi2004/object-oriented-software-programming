@@ -18,9 +18,23 @@ public class PayWithWalletCommandHandler : IRequestHandler<PayWithWalletCommand,
     private readonly IRepository<WalletTransaction> _transactionRepo;
     private readonly IRepository<OrderRequest> _orderRepo;
     private readonly ICurrentUserService _currentUser;
+    private readonly IMediator _mediator;
 
-    public PayWithWalletCommandHandler(IUnitOfWork uow, IRepository<Domain.Entities.Wallet> walletRepo, IRepository<WalletTransaction> transactionRepo, IRepository<OrderRequest> orderRepo, ICurrentUserService currentUser)
-    { _uow = uow; _walletRepo = walletRepo; _transactionRepo = transactionRepo; _orderRepo = orderRepo; _currentUser = currentUser; }
+    public PayWithWalletCommandHandler(
+        IUnitOfWork uow, 
+        IRepository<Domain.Entities.Wallet> walletRepo, 
+        IRepository<WalletTransaction> transactionRepo, 
+        IRepository<OrderRequest> orderRepo, 
+        ICurrentUserService currentUser,
+        IMediator mediator)
+    { 
+        _uow = uow; 
+        _walletRepo = walletRepo; 
+        _transactionRepo = transactionRepo; 
+        _orderRepo = orderRepo; 
+        _currentUser = currentUser; 
+        _mediator = mediator;
+    }
 
     public async Task<bool> Handle(PayWithWalletCommand request, CancellationToken cancellationToken)
     {
@@ -53,6 +67,10 @@ public class PayWithWalletCommandHandler : IRequestHandler<PayWithWalletCommand,
         {
             throw new ConflictException("Ví đang được giao dịch, vui lòng thử lại.");
         }
+
+        // Publish event to trigger automated email notification and VPS/resource provisioning
+        await _mediator.Publish(new Application.Events.PaymentConfirmedEvent(transaction.Id, order.Id), cancellationToken);
+
         return true;
     }
 }
