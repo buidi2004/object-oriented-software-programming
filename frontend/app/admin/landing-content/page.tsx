@@ -6,10 +6,20 @@ import Link from 'next/link';
 import { 
   ArrowLeft, Save, Plus, Trash2, Edit2, Upload, RefreshCw, 
   CheckCircle2, AlertCircle, LayoutTemplate, Building2, Layers, 
-  ExternalLink, Eye, RotateCcw, Loader2, Sparkles, Image as ImageIcon,
-  ShieldCheck, Phone, Mail, FileText
+  ExternalLink, Eye, EyeOff, RotateCcw, Loader2, Sparkles, Image as ImageIcon,
+  ShieldCheck, Phone, Mail, FileText, Search, X
 } from 'lucide-react';
 import { api } from '@/src/lib/api';
+
+interface Banner {
+  id: string;
+  imageUrl: string;
+  linkUrl?: string;
+  displayOrder: number;
+  isActive: boolean;
+  startDate?: string;
+  endDate?: string;
+}
 
 interface AboutStat {
   title: string;
@@ -49,6 +59,39 @@ interface FooterCompanyData {
   hotline: string;
   support_email: string;
 }
+
+const DEFAULT_BANNERS = [
+  {
+    imageUrl: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop",
+    linkUrl: "/partners",
+    displayOrder: 1,
+    isActive: true
+  },
+  {
+    imageUrl: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=2034&auto=format&fit=crop",
+    linkUrl: "/services/cloud-vps",
+    displayOrder: 2,
+    isActive: true
+  },
+  {
+    imageUrl: "https://images.unsplash.com/photo-1510511459019-5d019702280d?q=80&w=2070&auto=format&fit=crop",
+    linkUrl: "/services/web-hosting",
+    displayOrder: 3,
+    isActive: true
+  },
+  {
+    imageUrl: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop",
+    linkUrl: "/about",
+    displayOrder: 4,
+    isActive: true
+  },
+  {
+    imageUrl: "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=2070&auto=format&fit=crop",
+    linkUrl: "/services/dedicated-server",
+    displayOrder: 5,
+    isActive: true
+  }
+];
 
 const DEFAULT_ABOUT: AboutSectionData = {
   title: 'Về CloudHost VN',
@@ -117,19 +160,37 @@ const DEFAULT_FOOTER: FooterCompanyData = {
 
 export default function AdminLandingContentPage() {
   const router = useRouter();
-  const [activeSection, setActiveSection] = useState<'about' | 'solutions' | 'footer'>('about');
+  const [activeSection, setActiveSection] = useState<'banners' | 'about' | 'solutions' | 'footer'>('banners');
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [savedSuccess, setSavedSuccess] = useState(false);
 
-  // About State
+  // Search Terms
+  const [bannerSearchTerm, setBannerSearchTerm] = useState('');
+  const [solutionSearchTerm, setSolutionSearchTerm] = useState('');
+
+  // 1. Banners State
+  const [banners, setBanners] = useState<Banner[]>([]);
+  const [showBannerModal, setShowBannerModal] = useState(false);
+  const [editingBanner, setEditingBanner] = useState<Banner | null>(null);
+  const [bannerFormData, setBannerFormData] = useState({
+    imageUrl: '',
+    linkUrl: '',
+    displayOrder: 1,
+    isActive: true,
+    startDate: '',
+    endDate: ''
+  });
+  const [uploadingBannerImage, setUploadingBannerImage] = useState(false);
+
+  // 2. About State
   const [aboutData, setAboutData] = useState<AboutSectionData>(DEFAULT_ABOUT);
 
-  // Solutions State
+  // 3. Solutions State
   const [solutionsData, setSolutionsData] = useState<SolutionsSectionData>(DEFAULT_SOLUTIONS);
   const [selectedTabId, setSelectedTabId] = useState<string>('chinh-phu');
 
-  // Footer Company State
+  // 4. Footer Company State
   const [footerData, setFooterData] = useState<FooterCompanyData>(DEFAULT_FOOTER);
 
   // Modal / Editing for Solution Card
@@ -148,6 +209,7 @@ export default function AdminLandingContentPage() {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const cardFileInputRef = useRef<HTMLInputElement>(null);
+  const bannerFileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     checkAdminAccess();
@@ -172,7 +234,13 @@ export default function AdminLandingContentPage() {
   const loadContent = async () => {
     setIsLoading(true);
     try {
-      // Load About Section
+      // 1. Load Banners
+      const bannersRes = await api.get('/banners').catch(() => null);
+      if (bannersRes?.data && Array.isArray(bannersRes.data)) {
+        setBanners(bannersRes.data);
+      }
+
+      // 2. Load About Section
       const aboutRes = await api.get('/system-settings/homepage_about').catch(() => null);
       if (aboutRes?.data?.value) {
         try {
@@ -181,7 +249,7 @@ export default function AdminLandingContentPage() {
         } catch {}
       }
 
-      // Load Solutions Section
+      // 3. Load Solutions Section
       const solRes = await api.get('/system-settings/homepage_solutions').catch(() => null);
       if (solRes?.data?.value) {
         try {
@@ -193,7 +261,7 @@ export default function AdminLandingContentPage() {
         } catch {}
       }
 
-      // Load Footer Company Settings
+      // 4. Load Footer Company Settings
       const [compRes, licRes, respRes, hotRes, mailRes] = await Promise.all([
         api.get('/system-settings/company_name').catch(() => null),
         api.get('/system-settings/business_license').catch(() => null),
@@ -216,6 +284,139 @@ export default function AdminLandingContentPage() {
     }
   };
 
+  // --- BANNER HANDLERS ---
+  const handleOpenAddBanner = () => {
+    setEditingBanner(null);
+    setBannerFormData({
+      imageUrl: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1200&q=80',
+      linkUrl: '/services/cloud-vps',
+      displayOrder: banners.length + 1,
+      isActive: true,
+      startDate: new Date().toISOString().split('T')[0],
+      endDate: new Date(Date.now() + 90 * 86400000).toISOString().split('T')[0]
+    });
+    setShowBannerModal(true);
+  };
+
+  const handleOpenEditBanner = (banner: Banner) => {
+    setEditingBanner(banner);
+    setBannerFormData({
+      imageUrl: banner.imageUrl || '',
+      linkUrl: banner.linkUrl || '',
+      displayOrder: banner.displayOrder || 1,
+      isActive: banner.isActive,
+      startDate: banner.startDate ? new Date(banner.startDate).toISOString().split('T')[0] : '',
+      endDate: banner.endDate ? new Date(banner.endDate).toISOString().split('T')[0] : ''
+    });
+    setShowBannerModal(true);
+  };
+
+  const handleSaveBanner = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSaving(true);
+    try {
+      const payload = {
+        imageUrl: bannerFormData.imageUrl.trim() || 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1200&q=80',
+        linkUrl: bannerFormData.linkUrl.trim() || null,
+        displayOrder: Number(bannerFormData.displayOrder) || 1,
+        isActive: bannerFormData.isActive,
+        startDate: bannerFormData.startDate ? new Date(bannerFormData.startDate).toISOString() : null,
+        endDate: bannerFormData.endDate ? new Date(bannerFormData.endDate).toISOString() : null
+      };
+
+      if (editingBanner) {
+        await api.put(`/banners/${editingBanner.id}`, {
+          id: editingBanner.id,
+          ...payload
+        });
+      } else {
+        await api.post('/banners', payload);
+      }
+
+      setShowBannerModal(false);
+      setSavedSuccess(true);
+      setTimeout(() => setSavedSuccess(false), 3000);
+      const res = await api.get('/banners');
+      if (res.data && Array.isArray(res.data)) setBanners(res.data);
+    } catch (err: any) {
+      console.error(err);
+      alert(err.response?.data?.message || 'Lỗi khi lưu banner.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleDeleteBanner = async (id: string) => {
+    if (!confirm('Bạn có chắc chắn muốn xóa banner này?')) return;
+    try {
+      await api.delete(`/banners/${id}`);
+      setBanners(prev => prev.filter(b => b.id !== id));
+      setSavedSuccess(true);
+      setTimeout(() => setSavedSuccess(false), 3000);
+    } catch (err) {
+      console.error(err);
+      alert('Xóa banner thất bại.');
+    }
+  };
+
+  const handleToggleBannerStatus = async (banner: Banner) => {
+    const newStatus = !banner.isActive;
+    setBanners(prev => prev.map(b => b.id === banner.id ? { ...b, isActive: newStatus } : b));
+    try {
+      await api.put(`/banners/${banner.id}`, {
+        id: banner.id,
+        imageUrl: banner.imageUrl || 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1200&q=80',
+        linkUrl: banner.linkUrl || null,
+        displayOrder: Number(banner.displayOrder) || 1,
+        isActive: newStatus,
+        startDate: banner.startDate ? new Date(banner.startDate).toISOString() : null,
+        endDate: banner.endDate ? new Date(banner.endDate).toISOString() : null
+      });
+    } catch (err) {
+      console.error('Toggle status error:', err);
+    }
+  };
+
+  const handleResetDefaultBanners = async () => {
+    if (!confirm('Khôi phục 5 Banner mẫu chuẩn cho Trang Chủ?')) return;
+    setIsLoading(true);
+    try {
+      for (const t of DEFAULT_BANNERS) {
+        await api.post('/banners', t).catch(() => null);
+      }
+      const res = await api.get('/banners');
+      if (res.data && Array.isArray(res.data)) setBanners(res.data);
+      setSavedSuccess(true);
+      setTimeout(() => setSavedSuccess(false), 3000);
+      alert('Đã khôi phục thành công 5 banner mẫu chuẩn!');
+    } catch (err) {
+      console.error(err);
+      alert('Đã có lỗi khi tạo banner mẫu.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleUploadBannerFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadingBannerImage(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      const res = await api.post('/banners/upload', formData);
+      if (res.data?.imageUrl) {
+        setBannerFormData(prev => ({ ...prev, imageUrl: res.data.imageUrl }));
+      }
+    } catch (err) {
+      console.error('Upload failed:', err);
+      alert('Tải ảnh thất bại. Vui lòng kiểm tra định dạng và dung lượng (<5MB).');
+    } finally {
+      setUploadingBannerImage(false);
+    }
+  };
+
+  // --- ABOUT SECTION HANDLERS ---
   const handleSaveAbout = async () => {
     setIsSaving(true);
     try {
@@ -234,45 +435,6 @@ export default function AdminLandingContentPage() {
     }
   };
 
-  const handleSaveSolutions = async () => {
-    setIsSaving(true);
-    try {
-      await api.put('/system-settings/homepage_solutions', {
-        key: 'homepage_solutions',
-        value: JSON.stringify(solutionsData),
-        description: 'Cấu hình danh mục giải pháp ngành nghề trên trang chủ'
-      });
-      setSavedSuccess(true);
-      setTimeout(() => setSavedSuccess(false), 3000);
-    } catch (err) {
-      console.error(err);
-      alert('Lỗi khi lưu cấu hình Giải pháp');
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
-  const handleSaveFooter = async () => {
-    setIsSaving(true);
-    try {
-      await Promise.all([
-        api.put('/system-settings/company_name', { key: 'company_name', value: footerData.company_name }),
-        api.put('/system-settings/business_license', { key: 'business_license', value: footerData.business_license }),
-        api.put('/system-settings/content_responsible', { key: 'content_responsible', value: footerData.content_responsible }),
-        api.put('/system-settings/hotline', { key: 'hotline', value: footerData.hotline }),
-        api.put('/system-settings/support_email', { key: 'support_email', value: footerData.support_email }),
-      ]);
-      setSavedSuccess(true);
-      setTimeout(() => setSavedSuccess(false), 3000);
-    } catch (err) {
-      console.error(err);
-      alert('Lỗi khi lưu thông tin doanh nghiệp & chân trang');
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
-  // Stat handlers
   const handleStatChange = (index: number, field: 'title' | 'desc', val: string) => {
     setAboutData(prev => {
       const newStats = [...prev.stats];
@@ -295,7 +457,25 @@ export default function AdminLandingContentPage() {
     }));
   };
 
-  // Tab handlers
+  // --- SOLUTIONS SECTION HANDLERS ---
+  const handleSaveSolutions = async () => {
+    setIsSaving(true);
+    try {
+      await api.put('/system-settings/homepage_solutions', {
+        key: 'homepage_solutions',
+        value: JSON.stringify(solutionsData),
+        description: 'Cấu hình danh mục giải pháp ngành nghề trên trang chủ'
+      });
+      setSavedSuccess(true);
+      setTimeout(() => setSavedSuccess(false), 3000);
+    } catch (err) {
+      console.error(err);
+      alert('Lỗi khi lưu cấu hình Giải pháp');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   const handleAddTab = () => {
     if (!newTabLabel.trim()) return;
     const tabId = newTabLabel.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/g, '-');
@@ -321,7 +501,6 @@ export default function AdminLandingContentPage() {
     if (remaining.length > 0) setSelectedTabId(remaining[0].id);
   };
 
-  // Card handlers
   const handleOpenAddCard = () => {
     setCardFormData({
       title: '',
@@ -378,7 +557,28 @@ export default function AdminLandingContentPage() {
     });
   };
 
-  // Upload handlers
+  // --- FOOTER HANDLERS ---
+  const handleSaveFooter = async () => {
+    setIsSaving(true);
+    try {
+      await Promise.all([
+        api.put('/system-settings/company_name', { key: 'company_name', value: footerData.company_name }),
+        api.put('/system-settings/business_license', { key: 'business_license', value: footerData.business_license }),
+        api.put('/system-settings/content_responsible', { key: 'content_responsible', value: footerData.content_responsible }),
+        api.put('/system-settings/hotline', { key: 'hotline', value: footerData.hotline }),
+        api.put('/system-settings/support_email', { key: 'support_email', value: footerData.support_email }),
+      ]);
+      setSavedSuccess(true);
+      setTimeout(() => setSavedSuccess(false), 3000);
+    } catch (err) {
+      console.error(err);
+      alert('Lỗi khi lưu thông tin doanh nghiệp & chân trang');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  // --- UPLOAD HANDLERS ---
   const handleUploadAboutImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -419,7 +619,18 @@ export default function AdminLandingContentPage() {
     );
   }
 
-  const currentTabSolutions = solutionsData.solutions[selectedTabId] || [];
+  // Filtered lists
+  const filteredBanners = banners.filter(b => 
+    (b.linkUrl || '').toLowerCase().includes(bannerSearchTerm.toLowerCase()) ||
+    (b.imageUrl || '').toLowerCase().includes(bannerSearchTerm.toLowerCase()) ||
+    String(b.displayOrder).includes(bannerSearchTerm)
+  );
+
+  const currentTabSolutions = (solutionsData.solutions[selectedTabId] || []).filter(s =>
+    s.title.toLowerCase().includes(solutionSearchTerm.toLowerCase()) ||
+    s.desc.toLowerCase().includes(solutionSearchTerm.toLowerCase()) ||
+    s.link.toLowerCase().includes(solutionSearchTerm.toLowerCase())
+  );
 
   return (
     <div className="min-h-screen bg-slate-50 pb-20">
@@ -431,8 +642,8 @@ export default function AdminLandingContentPage() {
               <ArrowLeft className="w-5 h-5 text-slate-600" />
             </Link>
             <div>
-              <h1 className="text-xl font-bold text-slate-900">Quản Lý Nội Dung Trang Chủ</h1>
-              <p className="text-xs text-slate-500">Tùy biến Về Chúng Tôi, Giải Pháp Ngành Nghề & Thông Tin Chân Trang</p>
+              <h1 className="text-lg sm:text-xl font-bold text-slate-900">Quản Lý Nội Dung Trang Chủ</h1>
+              <p className="text-xs text-slate-500">Banner, Giới Thiệu, Giải Pháp & Thông Tin Chân Trang</p>
             </div>
           </div>
 
@@ -442,18 +653,20 @@ export default function AdminLandingContentPage() {
                 <CheckCircle2 className="w-4 h-4" /> Đã lưu thành công!
               </span>
             )}
-            <button
-              onClick={() => {
-                if (activeSection === 'about') handleSaveAbout();
-                else if (activeSection === 'solutions') handleSaveSolutions();
-                else handleSaveFooter();
-              }}
-              disabled={isSaving}
-              className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-md shadow-blue-500/20 transition-all flex items-center gap-2 disabled:opacity-50"
-            >
-              {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-              Lưu Thay Đổi
-            </button>
+            {activeSection !== 'banners' && (
+              <button
+                onClick={() => {
+                  if (activeSection === 'about') handleSaveAbout();
+                  else if (activeSection === 'solutions') handleSaveSolutions();
+                  else handleSaveFooter();
+                }}
+                disabled={isSaving}
+                className="px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm shadow-md shadow-blue-500/20 transition-all flex items-center gap-2 disabled:opacity-50"
+              >
+                {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                Lưu Thay Đổi
+              </button>
+            )}
           </div>
         </div>
       </header>
@@ -462,41 +675,175 @@ export default function AdminLandingContentPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
         <div className="flex flex-wrap gap-2 p-1.5 bg-slate-200/70 rounded-2xl w-fit mb-6">
           <button
+            onClick={() => setActiveSection('banners')}
+            className={`px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 ${
+              activeSection === 'banners' 
+                ? 'bg-white text-blue-600 shadow-sm' 
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            <ImageIcon className="w-4 h-4" />
+            Khối 1: Banner Trang Chủ ({banners.length})
+          </button>
+          <button
             onClick={() => setActiveSection('about')}
-            className={`px-5 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center gap-2 ${
+            className={`px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 ${
               activeSection === 'about' 
                 ? 'bg-white text-blue-600 shadow-sm' 
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
             <Building2 className="w-4 h-4" />
-            Khối 2: Về CloudHost VN (Ảnh & Số liệu)
+            Khối 2: Về CloudHost VN
           </button>
           <button
             onClick={() => setActiveSection('solutions')}
-            className={`px-5 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center gap-2 ${
+            className={`px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 ${
               activeSection === 'solutions' 
                 ? 'bg-white text-blue-600 shadow-sm' 
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
             <Layers className="w-4 h-4" />
-            Khối 3: Giải Pháp Ngành Nghề (Tabs & Thẻ)
+            Khối 3: Giải Pháp Ngành Nghề
           </button>
           <button
             onClick={() => setActiveSection('footer')}
-            className={`px-5 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center gap-2 ${
+            className={`px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 ${
               activeSection === 'footer' 
                 ? 'bg-white text-blue-600 shadow-sm' 
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
             <ShieldCheck className="w-4 h-4" />
-            Khối 4: Doanh Nghiệp, SĐT & Gmail (Footer)
+            Khối 4: Doanh Nghiệp & Chân Trang
           </button>
         </div>
 
-        {/* SECTION 1: VỀ CLOUDHOST VN */}
+        {/* SECTION 1: BANNER TRANG CHỦ */}
+        {activeSection === 'banners' && (
+          <div className="space-y-6">
+            {/* Action Bar */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-4 sm:p-6 rounded-3xl border border-slate-200 shadow-xs">
+              <div className="relative flex-1 max-w-md">
+                <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                <input
+                  type="text"
+                  value={bannerSearchTerm}
+                  onChange={(e) => setBannerSearchTerm(e.target.value)}
+                  placeholder="Tìm kiếm banner theo liên kết hoặc thứ tự..."
+                  className="w-full pl-10 pr-4 py-2 bg-slate-50 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-blue-500"
+                />
+              </div>
+
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={handleResetDefaultBanners}
+                  className="px-4 py-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-xs sm:text-sm transition-all flex items-center gap-2"
+                  title="Khôi phục 5 banner chuẩn mặc định"
+                >
+                  <RotateCcw className="w-4 h-4 text-slate-500" /> Khôi Phục 5 Mẫu
+                </button>
+                <button
+                  onClick={handleOpenAddBanner}
+                  className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm shadow-md shadow-blue-500/20 transition-all flex items-center gap-2"
+                >
+                  <Plus className="w-4 h-4" /> Thêm Banner
+                </button>
+              </div>
+            </div>
+
+            {/* Banners Grid */}
+            {filteredBanners.length === 0 ? (
+              <div className="text-center py-16 bg-white rounded-3xl border border-slate-200 shadow-sm max-w-md mx-auto">
+                <div className="w-14 h-14 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mx-auto mb-3">
+                  <ImageIcon className="w-7 h-7" />
+                </div>
+                <h3 className="text-base font-bold text-slate-900 mb-1">Không tìm thấy banner</h3>
+                <p className="text-slate-500 text-xs mb-4">Thêm banner mới hoặc khôi phục 5 banner chuẩn.</p>
+                <button
+                  onClick={handleResetDefaultBanners}
+                  className="px-4 py-2 bg-blue-600 text-white text-xs font-bold rounded-xl"
+                >
+                  Khôi Phục 5 Banner Chuẩn
+                </button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredBanners.map((b) => (
+                  <div
+                    key={b.id}
+                    className={`bg-white rounded-2xl border transition-all duration-200 overflow-hidden flex flex-col ${
+                      b.isActive ? 'border-slate-200 shadow-sm hover:shadow-md' : 'border-slate-200 opacity-70 bg-slate-50/50'
+                    }`}
+                  >
+                    {/* Banner Image Preview */}
+                    <div className="relative aspect-[16/9] bg-slate-900 overflow-hidden group">
+                      <img
+                        src={b.imageUrl}
+                        alt="Banner"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1200&q=80';
+                        }}
+                      />
+                      <div className="absolute top-3 right-3">
+                        <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-extrabold shadow-sm ${
+                          b.isActive ? 'bg-emerald-500 text-white' : 'bg-slate-700 text-slate-300'
+                        }`}>
+                          {b.isActive ? 'Đang Hiển Thị' : 'Tạm Ẩn'}
+                        </span>
+                      </div>
+                      <div className="absolute top-3 left-3">
+                        <span className="px-2 py-0.5 rounded-lg bg-black/60 backdrop-blur-sm text-white text-[11px] font-bold">
+                          Thứ tự: #{b.displayOrder}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Banner Details */}
+                    <div className="p-4 flex-1 flex flex-col justify-between">
+                      <div>
+                        <div className="flex items-center gap-2 text-xs text-slate-600 mb-2">
+                          <ExternalLink className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                          <span className="font-mono truncate">{b.linkUrl || 'Không có liên kết'}</span>
+                        </div>
+                      </div>
+
+                      {/* Actions */}
+                      <div className="flex items-center gap-2 pt-3 mt-3 border-t border-slate-100">
+                        <button
+                          onClick={() => handleToggleBannerStatus(b)}
+                          className={`flex-1 py-1.5 rounded-xl text-xs font-bold transition-colors flex items-center justify-center gap-1 ${
+                            b.isActive ? 'bg-amber-50 text-amber-700 hover:bg-amber-100' : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100'
+                          }`}
+                        >
+                          {b.isActive ? <><EyeOff className="w-3 h-3" /> Ẩn</> : <><Eye className="w-3 h-3" /> Bật</>}
+                        </button>
+                        <button
+                          onClick={() => handleOpenEditBanner(b)}
+                          className="p-1.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100"
+                          title="Sửa banner"
+                        >
+                          <Edit2 className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteBanner(b.id)}
+                          className="p-1.5 rounded-xl border border-red-200 text-red-600 hover:bg-red-50"
+                          title="Xóa banner"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* SECTION 2: VỀ CLOUDHOST VN */}
         {activeSection === 'about' && (
           <div className="grid lg:grid-cols-12 gap-8">
             {/* Form Edit Left */}
@@ -648,24 +995,24 @@ export default function AdminLandingContentPage() {
                   <h3 className="text-2xl font-black text-slate-900">{aboutData.title}</h3>
                   <p className="text-xs text-slate-600 leading-relaxed">{aboutData.description}</p>
 
-                  <div className="grid grid-cols-2 gap-3 pt-2">
-                    {aboutData.stats.slice(0, 4).map((st, idx) => (
-                      <div key={idx} className="p-3 bg-slate-50 rounded-xl border border-slate-100">
-                        <div className="text-lg font-black text-blue-600">{st.title}</div>
-                        <div className="text-[11px] text-slate-500 leading-tight mt-1">{st.desc}</div>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="aspect-[4/3] rounded-2xl overflow-hidden bg-slate-100 border border-slate-200 mt-4 shadow-md">
+                  <div className="relative aspect-[16/10] rounded-2xl overflow-hidden bg-slate-100 border border-slate-200 shadow-md">
                     <img
                       src={aboutData.imageUrl}
-                      alt="Data Center"
+                      alt="Preview"
                       className="w-full h-full object-cover"
                       onError={(e) => {
                         (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop';
                       }}
                     />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3 pt-2">
+                    {aboutData.stats.slice(0, 4).map((st, idx) => (
+                      <div key={idx} className="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                        <div className="text-lg font-black text-blue-600">{st.title}</div>
+                        <div className="text-[11px] text-slate-500 leading-tight">{st.desc}</div>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -673,130 +1020,154 @@ export default function AdminLandingContentPage() {
           </div>
         )}
 
-        {/* SECTION 2: GIẢI PHÁP NGÀNH NGHỀ */}
+        {/* SECTION 3: GIẢI PHÁP THEO NGÀNH */}
         {activeSection === 'solutions' && (
-          <div className="space-y-8">
-            {/* Top Bar: Section Title & Reset */}
-            <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm flex flex-wrap items-center justify-between gap-4">
-              <div className="flex-1 min-w-[280px]">
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                  Tiêu Đề Khu Vực Giải Pháp
-                </label>
-                <input
-                  type="text"
-                  value={solutionsData.sectionTitle}
-                  onChange={(e) => setSolutionsData({ ...solutionsData, sectionTitle: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm font-bold focus:outline-none focus:border-blue-500"
-                />
+          <div className="space-y-6">
+            {/* Header & Section Title */}
+            <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
+              <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+                <h3 className="font-bold text-slate-900 text-lg">Tiêu Đề Khối Giải Pháp</h3>
+                <button
+                  onClick={() => {
+                    if (confirm('Khôi phục cấu hình Giải Pháp mặc định?')) {
+                      setSolutionsData(DEFAULT_SOLUTIONS);
+                      setSelectedTabId('chinh-phu');
+                    }
+                  }}
+                  className="text-xs font-bold text-slate-500 hover:text-blue-600 flex items-center gap-1"
+                >
+                  <RotateCcw className="w-3.5 h-3.5" /> Mặc định
+                </button>
               </div>
 
-              <button
-                onClick={() => {
-                  if (confirm('Khôi phục lại toàn bộ danh mục và thẻ giải pháp mẫu chuẩn?')) {
-                    setSolutionsData(DEFAULT_SOLUTIONS);
-                    setSelectedTabId('chinh-phu');
-                  }
-                }}
-                className="px-4 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-100 text-slate-700 font-bold text-xs transition-colors flex items-center gap-1.5"
-              >
-                <RotateCcw className="w-3.5 h-3.5 text-slate-500" /> Khôi Phục Dữ Liệu Mẫu
-              </button>
+              <div className="grid sm:grid-cols-2 gap-4 items-center">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                    Tiêu Đề Khối Lớn
+                  </label>
+                  <input
+                    type="text"
+                    value={solutionsData.sectionTitle}
+                    onChange={(e) => setSolutionsData({ ...solutionsData, sectionTitle: e.target.value })}
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+
+                <div className="relative">
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                    Tìm Kiếm Thẻ Giải Pháp
+                  </label>
+                  <div className="relative">
+                    <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                    <input
+                      type="text"
+                      value={solutionSearchTerm}
+                      onChange={(e) => setSolutionSearchTerm(e.target.value)}
+                      placeholder="Lọc thẻ trong tab này..."
+                      className="w-full pl-9 pr-4 py-2 bg-slate-50 rounded-xl border border-slate-200 text-xs focus:outline-none focus:border-blue-500"
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
 
-            {/* Tabs Management */}
+            {/* Tabs Manager */}
             <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-slate-100">
                 <div>
                   <h3 className="font-bold text-slate-900 text-lg">Danh Sách Tab Ngành Nghề</h3>
-                  <p className="text-xs text-slate-500">Bấm vào tab để xem & chỉnh sửa các thẻ giải pháp bên trong</p>
+                  <p className="text-xs text-slate-500">Bấm vào tab để chỉnh sửa danh sách thẻ giải pháp bên trong</p>
                 </div>
                 <button
                   onClick={() => setIsAddingTab(true)}
-                  className="px-4 py-2 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-600 text-xs font-bold flex items-center gap-1.5 transition-colors"
+                  className="px-3.5 py-2 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-600 text-xs font-bold flex items-center gap-1.5 transition-colors"
                 >
-                  <Plus className="w-4 h-4" /> Thêm Ngành Mới
+                  <Plus className="w-4 h-4" /> Thêm Tab Ngành Mới
                 </button>
               </div>
 
-              {/* Tab Pills */}
-              <div className="flex flex-wrap gap-2 pt-2">
-                {solutionsData.tabs.map((tab) => (
-                  <div
-                    key={tab.id}
-                    className={`group px-4 py-2.5 rounded-2xl border text-sm font-bold transition-all flex items-center gap-2 cursor-pointer ${
-                      selectedTabId === tab.id
-                        ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/20'
-                        : 'bg-slate-50 text-slate-700 border-slate-200 hover:border-blue-300'
-                    }`}
-                    onClick={() => setSelectedTabId(tab.id)}
-                  >
-                    <span>{tab.label}</span>
-                    <span className="text-xs px-1.5 py-0.5 rounded-full bg-black/10">
-                      {(solutionsData.solutions[tab.id] || []).length}
-                    </span>
-                    {solutionsData.tabs.length > 1 && (
+              <div className="flex flex-wrap gap-2">
+                {solutionsData.tabs.map((tab) => {
+                  const isSelected = selectedTabId === tab.id;
+                  const count = (solutionsData.solutions[tab.id] || []).length;
+                  return (
+                    <div
+                      key={tab.id}
+                      className={`flex items-center rounded-2xl border transition-all ${
+                        isSelected 
+                          ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/20' 
+                          : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
+                      }`}
+                    >
                       <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleRemoveTab(tab.id);
-                        }}
-                        className="p-1 rounded-full hover:bg-red-500 hover:text-white transition-colors opacity-0 group-hover:opacity-100"
-                        title="Xóa tab này"
+                        onClick={() => setSelectedTabId(tab.id)}
+                        className="px-4 py-2 text-xs sm:text-sm font-bold flex items-center gap-2"
                       >
-                        <Trash2 className="w-3 h-3" />
+                        {tab.label}
+                        <span className={`px-1.5 py-0.5 rounded-full text-[10px] ${
+                          isSelected ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-600'
+                        }`}>
+                          {count}
+                        </span>
                       </button>
-                    )}
-                  </div>
-                ))}
+                      <button
+                        onClick={() => handleRemoveTab(tab.id)}
+                        className={`p-2 hover:text-red-300 transition-colors ${
+                          isSelected ? 'text-white/70' : 'text-slate-400 hover:text-red-600'
+                        }`}
+                        title="Xóa Tab này"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  );
+                })}
               </div>
             </div>
 
-            {/* Cards for Selected Tab */}
+            {/* Cards List in Selected Tab */}
             <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-6">
               <div className="flex items-center justify-between pb-3 border-b border-slate-100">
                 <div>
                   <h3 className="font-bold text-slate-900 text-lg">
-                    Các Thẻ Giải Pháp Trong Ngành: <span className="text-blue-600">{solutionsData.tabs.find(t => t.id === selectedTabId)?.label}</span>
+                    Thẻ Giải Pháp Cho Ngành: <span className="text-blue-600">{solutionsData.tabs.find(t => t.id === selectedTabId)?.label}</span>
                   </h3>
-                  <p className="text-xs text-slate-500">{currentTabSolutions.length} thẻ đang hiển thị</p>
+                  <p className="text-xs text-slate-500">Mỗi ngành nên có từ 3 đến 6 thẻ giải pháp</p>
                 </div>
                 <button
                   onClick={handleOpenAddCard}
-                  className="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm flex items-center gap-1.5 shadow-md shadow-blue-500/20 transition-all"
+                  className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-bold flex items-center gap-1.5 shadow-md shadow-blue-500/20 transition-all"
                 >
-                  <Plus className="w-4 h-4" /> Thêm Thẻ Giải Pháp
+                  <Plus className="w-4 h-4" /> Thêm Thẻ Mới
                 </button>
               </div>
 
               {currentTabSolutions.length === 0 ? (
-                <div className="text-center py-12 border-2 border-dashed border-slate-200 rounded-3xl">
-                  <Layers className="w-10 h-10 text-slate-300 mx-auto mb-2" />
-                  <p className="text-slate-500 text-sm font-semibold mb-4">Chưa có thẻ giải pháp nào trong ngành này</p>
+                <div className="text-center py-12 border-2 border-dashed border-slate-200 rounded-2xl">
+                  <p className="text-sm text-slate-500 mb-3">Chưa có thẻ giải pháp nào trong ngành này.</p>
                   <button
                     onClick={handleOpenAddCard}
-                    className="px-5 py-2.5 bg-blue-600 text-white font-bold text-xs rounded-xl hover:bg-blue-700 inline-flex items-center gap-1.5"
+                    className="px-4 py-2 bg-blue-50 hover:bg-blue-100 text-blue-600 text-xs font-bold rounded-xl"
                   >
-                    <Plus className="w-4 h-4" /> Thêm Thẻ Đầu Tiên
+                    + Tạo Thẻ Đầu Tiên
                   </button>
                 </div>
               ) : (
-                <div className="grid md:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {currentTabSolutions.map((sol, idx) => (
                     <div
                       key={idx}
-                      className="group relative rounded-2xl overflow-hidden h-80 border border-slate-200 shadow-md bg-slate-900 flex flex-col justify-end"
+                      className="group relative rounded-2xl overflow-hidden border border-slate-200 bg-slate-900 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-end min-h-[260px]"
                     >
+                      {/* Background Image */}
                       <div
                         className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
                         style={{ backgroundImage: `url('${sol.img}')` }}
                       />
-                      <div
-                        className="absolute inset-0"
-                        style={{ background: 'linear-gradient(to top, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.5) 60%, transparent 100%)' }}
-                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent" />
 
-                      {/* Top Action Buttons */}
-                      <div className="absolute top-3 right-3 flex items-center gap-1.5 z-10">
+                      {/* Card Action Buttons */}
+                      <div className="absolute top-3 right-3 flex items-center gap-1.5 z-20">
                         <button
                           onClick={() => handleOpenEditCard(idx)}
                           className="p-2 rounded-xl bg-white/90 text-slate-700 hover:bg-white hover:text-blue-600 backdrop-blur-sm shadow-sm transition-all"
@@ -836,7 +1207,7 @@ export default function AdminLandingContentPage() {
           </div>
         )}
 
-        {/* SECTION 3: THÔNG TIN DOANH NGHIỆP & CHÂN TRANG (FOOTER) */}
+        {/* SECTION 4: THÔNG TIN DOANH NGHIỆP & CHÂN TRANG (FOOTER) */}
         {activeSection === 'footer' && (
           <div className="grid lg:grid-cols-12 gap-8">
             {/* Form Left */}
@@ -961,6 +1332,153 @@ export default function AdminLandingContentPage() {
           </div>
         )}
       </div>
+
+      {/* Modal Thêm / Sửa Banner */}
+      {showBannerModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between pb-3 mb-4 border-b border-slate-100">
+              <h3 className="text-lg font-bold text-slate-900">
+                {editingBanner ? 'Chỉnh Sửa Banner' : 'Thêm Banner Mới'}
+              </h3>
+              <button
+                onClick={() => setShowBannerModal(false)}
+                className="p-1 rounded-lg text-slate-400 hover:text-slate-600"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveBanner} className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                  Hình Ảnh Banner (URL hoặc Tải lên) *
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    required
+                    value={bannerFormData.imageUrl}
+                    onChange={(e) => setBannerFormData({ ...bannerFormData, imageUrl: e.target.value })}
+                    placeholder="https://..."
+                    className="flex-1 px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:border-blue-500"
+                  />
+                  <input
+                    type="file"
+                    ref={bannerFileInputRef}
+                    onChange={handleUploadBannerFile}
+                    accept="image/*"
+                    className="hidden"
+                  />
+                  <button
+                    type="button"
+                    disabled={uploadingBannerImage}
+                    onClick={() => bannerFileInputRef.current?.click()}
+                    className="px-3.5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold flex items-center gap-1 shrink-0 disabled:opacity-50"
+                  >
+                    {uploadingBannerImage ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
+                    Tải Ảnh
+                  </button>
+                </div>
+              </div>
+
+              {bannerFormData.imageUrl && (
+                <div className="aspect-[16/9] rounded-xl overflow-hidden bg-slate-900 border border-slate-200">
+                  <img
+                    src={bannerFormData.imageUrl}
+                    alt="Preview"
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1200&q=80';
+                    }}
+                  />
+                </div>
+              )}
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                  Liên Kết Đích (Link URL)
+                </label>
+                <input
+                  type="text"
+                  value={bannerFormData.linkUrl}
+                  onChange={(e) => setBannerFormData({ ...bannerFormData, linkUrl: e.target.value })}
+                  placeholder="/services/cloud-vps hoặc https://..."
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:border-blue-500"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                    Thứ Tự Hiển Thị
+                  </label>
+                  <input
+                    type="number"
+                    min={1}
+                    value={bannerFormData.displayOrder}
+                    onChange={(e) => setBannerFormData({ ...bannerFormData, displayOrder: Number(e.target.value) })}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:border-blue-500 font-bold"
+                  />
+                </div>
+                <div className="flex items-center pt-6">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={bannerFormData.isActive}
+                      onChange={(e) => setBannerFormData({ ...bannerFormData, isActive: e.target.checked })}
+                      className="w-4 h-4 text-blue-600 rounded"
+                    />
+                    <span className="text-xs font-bold text-slate-700">Kích hoạt hiển thị</span>
+                  </label>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                    Ngày Bắt Đầu
+                  </label>
+                  <input
+                    type="date"
+                    value={bannerFormData.startDate}
+                    onChange={(e) => setBannerFormData({ ...bannerFormData, startDate: e.target.value })}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                    Ngày Kết Thúc
+                  </label>
+                  <input
+                    type="date"
+                    value={bannerFormData.endDate}
+                    onChange={(e) => setBannerFormData({ ...bannerFormData, endDate: e.target.value })}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+              </div>
+
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setShowBannerModal(false)}
+                  className="px-5 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 font-bold text-sm"
+                >
+                  Hủy
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSaving}
+                  className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-md shadow-blue-500/20 disabled:opacity-50"
+                >
+                  {editingBanner ? 'Cập Nhật' : 'Thêm Mới'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       {/* Modal Thêm / Sửa Thẻ Giải Pháp */}
       {isAddingCard && (

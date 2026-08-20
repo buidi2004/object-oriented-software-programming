@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { 
   ArrowLeft, Plus, Edit2, Trash2, Image as ImageIcon, 
-  AlertCircle, Upload, CheckCircle2, X, ExternalLink, Eye, EyeOff, Loader2, RotateCcw 
+  AlertCircle, Upload, CheckCircle2, X, ExternalLink, Eye, EyeOff, Loader2, RotateCcw, Search 
 } from 'lucide-react';
 
 interface Banner {
@@ -21,6 +21,7 @@ interface Banner {
 export default function AdminBannersPage() {
   const router = useRouter();
   const [banners, setBanners] = useState<Banner[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [editingBanner, setEditingBanner] = useState<Banner | null>(null);
@@ -354,7 +355,31 @@ export default function AdminBannersPage() {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+        {/* Search Bar */}
+        {banners.length > 0 && (
+          <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs flex items-center gap-3">
+            <div className="relative flex-1 max-w-md">
+              <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Tìm kiếm banner theo liên kết, URL ảnh hoặc thứ tự..."
+                className="w-full pl-10 pr-4 py-2 bg-slate-50 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-blue-500"
+              />
+            </div>
+            {searchTerm && (
+              <button
+                onClick={() => setSearchTerm('')}
+                className="text-xs text-slate-500 hover:text-slate-700 font-bold"
+              >
+                Xóa tìm kiếm
+              </button>
+            )}
+          </div>
+        )}
+
         {banners.length === 0 ? (
           <div className="text-center py-20 bg-white rounded-3xl border border-slate-200 shadow-sm max-w-xl mx-auto">
             <div className="w-16 h-16 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mx-auto mb-4">
@@ -379,7 +404,13 @@ export default function AdminBannersPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {banners.map((banner) => (
+            {banners
+              .filter(b => 
+                (b.linkUrl || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+                (b.imageUrl || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+                String(b.displayOrder).includes(searchTerm)
+              )
+              .map((banner) => (
               <div 
                 key={banner.id} 
                 className={`bg-white rounded-2xl border transition-all duration-200 overflow-hidden flex flex-col ${
