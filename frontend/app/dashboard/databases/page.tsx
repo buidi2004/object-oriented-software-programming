@@ -4,24 +4,28 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { 
   Database, Plus, Shield, RefreshCw, Copy, CheckCircle2, 
-  AlertCircle, ArrowLeft, Key, Server, Cpu, HardDrive 
+  AlertCircle, ArrowLeft, Key, Server, Cpu, HardDrive, AlertTriangle 
 } from 'lucide-react';
 import { api } from '@/src/lib/api';
 import { useAuthStore } from '@/src/store/useAuthStore';
-import { useResourceProvisioning } from '@/src/hooks/useResourceProvisioning';
+import { useResourceProvisioningDetails } from '@/src/hooks/useResourceProvisioning';
 import { ProvisioningStatusBadge } from '@/src/components/shared/ProvisioningStatusBadge';
 import { ResourceActionMenu } from '@/src/components/shared/ResourceActionMenu';
+import { SensitiveDataField } from '@/src/components/shared/SensitiveDataField';
+import { ResourceFailureAlert } from '@/src/components/shared/ResourceFailureAlert';
 
 interface DatabaseItem {
   id: string;
   name: string;
-  engine: string;
+  engine: string | number;
   version: string;
-  host: string;
-  port: number;
-  username: string;
+  host?: string;
+  port?: number;
+  adminUser?: string;
+  username?: string;
+  adminPassword?: string;
   status: string;
-  storageGB: number;
+  storageGB?: number;
   createdAt: string;
 }
 
@@ -34,12 +38,11 @@ export default function DashboardDatabasesPage() {
 
   // Form states
   const [name, setName] = useState('');
-  const [engine, setEngine] = useState('mysql');
-  const [username, setUsername] = useState('dbadmin');
-  const [password, setPassword] = useState('');
+  const [engine, setEngine] = useState('1'); // 1=Postgres, 2=MySQL, 3=Redis
+  const [adminUser, setAdminUser] = useState('postgres');
+  const [adminPassword, setAdminPassword] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [copiedId, setCopiedId] = useState<string | null>(null);
 
   const fetchDatabases = async () => {
     try {
@@ -64,29 +67,43 @@ export default function DashboardDatabasesPage() {
     setCreating(true);
 
     try {
-      await api.post('/databases', {
+      const idempotencyKey = `db-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
+      const engineNum = parseInt(engine, 10);
+      const version = engineNum === 1 ? '16' : engineNum === 2 ? '8.0' : '7.0';
+
+      const res = await api.post('/managed-databases', {
         name,
-        engine,
-        username,
-        password,
+        engine: engineNum,
+        version,
+        adminUser,
+        adminPassword,
+        idempotencyKey,
       });
-      setSuccess(`Đã tạo thành công cơ sở dữ liệu ${name}!`);
+
+      const newId = res.data?.databaseId || idempotencyKey;
+      
+      // Add optimistic entry in Provisioning state
+      const newDb: DatabaseItem = {
+        id: newId,
+        name,
+        engine: engineNum === 1 ? 'PostgreSQL' : engineNum === 2 ? 'MySQL' : 'Redis',
+        version,
+        adminUser,
+        adminPassword,
+        status: 'Provisioning',
+        createdAt: new Date().toISOString(),
+      };
+
+      setDatabases((prev) => [newDb, ...prev]);
+      setSuccess(`Yêu cầu khởi tạo cơ sở dữ liệu "${name}" đã được tiếp nhận! Hệ thống đang cấp phát container và cấu hình bảo mật...`);
       setIsCreateOpen(false);
       setName('');
-      setPassword('');
-      fetchDatabases();
+      setAdminPassword('');
     } catch (err: any) {
-      setError(err?.response?.data?.message || err.message || 'Lỗi khi tạo database');
+      setError(err?.response?.data?.message || err.message || 'Lỗi khi khởi tạo cơ sở dữ liệu');
     } finally {
       setCreating(false);
     }
-  };
-
-  const copyConnectionString = (db: DatabaseItem) => {
-    const conn = `${db.engine}://${db.username}:****@${db.host || 'db.cloudhost.vn'}:${db.port || 3306}/${db.name}`;
-    navigator.clipboard.writeText(conn);
-    setCopiedId(db.id);
-    setTimeout(() => setCopiedId(null), 3000);
   };
 
   return (
@@ -105,7 +122,7 @@ export default function DashboardDatabasesPage() {
               Quản Lý Managed Databases
             </h1>
             <p className="text-xs sm:text-sm text-slate-500 mt-1">
-              Quản lý cụm cơ sở dữ liệu MySQL, PostgreSQL, Redis tự động sao lưu &amp; phân tán.
+              Khởi tạo cụm cơ sở dữ liệu PostgreSQL, MySQL hoặc Redis trên container chuyên biệt, tự động cấu hình bảo mật và cấp phát port.
             </p>
           </div>
 
@@ -142,7 +159,7 @@ export default function DashboardDatabasesPage() {
             </span>
           </div>
 
-          {loading ? (
+          {loading && databases.length === 0 ? (
             <div className="p-12 text-center text-slate-400 text-sm flex items-center justify-center gap-2">
               <RefreshCw className="w-5 h-5 animate-spin text-teal-600" />
               Đang tải danh sách database...
@@ -154,7 +171,7 @@ export default function DashboardDatabasesPage() {
               </div>
               <h3 className="text-base font-bold text-slate-900 mb-1">Chưa Có Database Instance Nào</h3>
               <p className="text-xs text-slate-500 max-w-sm mx-auto mb-6">
-                Khởi tạo MySQL, PostgreSQL hoặc Redis chỉ với 1 cú nhấp chuột.
+                Khởi tạo PostgreSQL, MySQL hoặc Redis chỉ với 1 cú nhấp chuột trên hạ tầng container tốc độ cao.
               </p>
               <button
                 onClick={() => setIsCreateOpen(true)}
@@ -164,50 +181,10 @@ export default function DashboardDatabasesPage() {
               </button>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50/80 text-slate-500 font-extrabold uppercase tracking-wider border-b border-slate-100">
-                  <tr>
-                    <th className="px-6 py-4">Tên Database</th>
-                    <th className="px-6 py-4">Engine</th>
-                    <th className="px-6 py-4">Host &amp; Port</th>
-                    <th className="px-6 py-4">Trạng Thái</th>
-                    <th className="px-6 py-4 text-right">Thao Tác</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {databases.map((db) => (
-                    <tr key={db.id} className="hover:bg-slate-50/60 transition-colors">
-                      <td className="px-6 py-4 font-bold text-slate-900 flex items-center gap-2">
-                        <Database className="w-4 h-4 text-teal-500" />
-                        {db.name}
-                        <DatabaseRealtimeBadge db={db} />
-                      </td>
-                      <td className="px-6 py-4 font-bold text-slate-700 uppercase">
-                        {db.engine} {db.version || '8.0'}
-                      </td>
-                      <td className="px-6 py-4 text-slate-600 font-mono text-[11px]">
-                        {db.host || 'db.cloudhost.vn'}:{db.port || (db.engine === 'postgres' ? 5432 : 3306)}
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-600 font-bold text-[10px]">
-                          Đang chạy
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-right flex items-center justify-end gap-2">
-                        <button
-                          onClick={() => copyConnectionString(db)}
-                          className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-teal-50 text-slate-700 hover:text-teal-600 font-bold transition-all"
-                        >
-                          <Copy className="w-3.5 h-3.5" />
-                          {copiedId === db.id ? 'Đã sao chép!' : 'Copy URI'}
-                        </button>
-                        <DatabaseActionMenu db={db} />
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <div className="divide-y divide-slate-100">
+              {databases.map((db) => (
+                <DatabaseRowItem key={db.id} db={db} onRefresh={fetchDatabases} />
+              ))}
             </div>
           )}
         </div>
@@ -221,7 +198,7 @@ export default function DashboardDatabasesPage() {
               <Database className="w-5 h-5 text-teal-600" /> Khởi Tạo Managed Database Mới
             </h3>
             <p className="text-xs text-slate-500 mb-6">
-              Chọn engine và thiết lập thông tin đăng nhập database.
+              Chọn engine và thiết lập thông tin đăng nhập ban đầu.
             </p>
 
             {error && (
@@ -235,17 +212,22 @@ export default function DashboardDatabasesPage() {
                 <label className="block text-xs font-bold text-slate-700 mb-1">Loại Database Engine</label>
                 <select
                   value={engine}
-                  onChange={(e) => setEngine(e.target.value)}
+                  onChange={(e) => {
+                    setEngine(e.target.value);
+                    if (e.target.value === '1') setAdminUser('postgres');
+                    else if (e.target.value === '2') setAdminUser('root');
+                    else setAdminUser('default');
+                  }}
                   className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs text-slate-900 outline-none focus:ring-2 focus:ring-teal-500 bg-white font-bold"
                 >
-                  <option value="mysql">MySQL 8.0 (InnoDB)</option>
-                  <option value="postgres">PostgreSQL 16 (Relational)</option>
-                  <option value="redis">Redis 7 (In-Memory Cache)</option>
+                  <option value="1">PostgreSQL 16 (Relational DB)</option>
+                  <option value="2">MySQL 8.0 (InnoDB)</option>
+                  <option value="3">Redis 7 (In-Memory Cache & Key-Value)</option>
                 </select>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Tên Database</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Tên Database Instance</label>
                 <input
                   type="text"
                   required
@@ -261,8 +243,8 @@ export default function DashboardDatabasesPage() {
                 <input
                   type="text"
                   required
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  value={adminUser}
+                  onChange={(e) => setAdminUser(e.target.value)}
                   className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs text-slate-900 outline-none focus:ring-2 focus:ring-teal-500"
                 />
               </div>
@@ -273,8 +255,8 @@ export default function DashboardDatabasesPage() {
                   type="password"
                   required
                   placeholder="Mật khẩu mạnh bảo vệ database"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  value={adminPassword}
+                  onChange={(e) => setAdminPassword(e.target.value)}
                   className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs text-slate-900 outline-none focus:ring-2 focus:ring-teal-500"
                 />
               </div>
@@ -304,56 +286,86 @@ export default function DashboardDatabasesPage() {
   );
 }
 
-function DatabaseRealtimeBadge({ db }: { db: DatabaseItem }) {
-  const status = useResourceProvisioning('DatabaseInstance', db.id, db.status);
-  
-  // Chỉ hiển thị badge realtime nếu nó khác trạng thái 'Running' bình thường
-  // hoặc luôn hiển thị để thấy nó đang real-time
-  if (status === 'Running' || status === 'Active') return null;
+function DatabaseRowItem({ db, onRefresh }: { db: DatabaseItem; onRefresh: () => void }) {
+  const { status, isProvisioning, isSlow, elapsedSeconds, slowWarningText } = useResourceProvisioningDetails(
+    'ManagedDatabaseInstance',
+    db.id,
+    db.status
+  );
 
-  return <ProvisioningStatusBadge status={status} />;
-}
+  const engineName = typeof db.engine === 'number' 
+    ? (db.engine === 1 ? 'PostgreSQL' : db.engine === 2 ? 'MySQL' : 'Redis')
+    : db.engine;
 
-function DatabaseActionMenu({ db }: { db: DatabaseItem }) {
-  const status = useResourceProvisioning('DatabaseInstance', db.id, db.status);
+  const port = db.port || (engineName?.toLowerCase().includes('post') ? 5432 : 3306);
+  const host = db.host || 'localhost';
+  const username = db.adminUser || db.username || 'postgres';
 
-  const handleSuspend = async () => {
-    try {
-      // Gọi api thật (ví dụ)
-      await api.put(`/databases/${db.id}/suspend`);
-      alert('Đã gửi yêu cầu Suspend');
-    } catch (err) {
-      console.error(err);
-      alert('Lỗi khi Suspend');
-    }
-  };
-
-  const handleResume = async () => {
-    try {
-      await api.put(`/databases/${db.id}/resume`);
-      alert('Đã gửi yêu cầu Resume');
-    } catch (err) {
-      console.error(err);
-      alert('Lỗi khi Resume');
-    }
-  };
-
-  const handleTerminate = async () => {
-    try {
-      await api.delete(`/databases/${db.id}`);
-      alert('Đã xóa Database');
-    } catch (err) {
-      console.error(err);
-      alert('Lỗi khi xóa');
-    }
-  };
+  const connectionUri = `${engineName?.toLowerCase()}://${username}:****@${host}:${port}/${db.name}`;
 
   return (
-    <ResourceActionMenu 
-      status={status} 
-      onSuspend={handleSuspend}
-      onResume={handleResume}
-      onTerminate={handleTerminate}
-    />
+    <div className="p-6 hover:bg-slate-50/60 transition-colors space-y-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex items-start sm:items-center gap-3">
+          <div className="w-10 h-10 rounded-2xl bg-teal-100 text-teal-600 flex items-center justify-center flex-shrink-0">
+            <Database className="w-5 h-5" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="font-black text-slate-900 text-sm">{db.name}</span>
+              <span className="text-[10px] uppercase font-extrabold px-2 py-0.5 rounded-md bg-slate-100 text-slate-600">
+                {engineName} {db.version || '16'}
+              </span>
+            </div>
+            <p className="text-xs text-slate-500 font-mono mt-0.5">
+              Host: {host}:{port}
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <ProvisioningStatusBadge status={status} elapsedSeconds={elapsedSeconds} isSlow={isSlow} />
+          {status === 'Running' || status === 'Active' ? (
+            <button
+              onClick={() => {
+                navigator.clipboard.writeText(connectionUri);
+                alert('Đã sao chép URI kết nối!');
+              }}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-teal-50 text-slate-700 hover:text-teal-700 font-bold text-xs transition-colors"
+            >
+              <Copy className="w-3.5 h-3.5" />
+              Copy URI
+            </button>
+          ) : null}
+        </div>
+      </div>
+
+      {/* Sensitive Credentials (hidden by default) */}
+      {(status === 'Running' || status === 'Active') && db.adminPassword && (
+        <div className="flex items-center gap-2 pt-2 border-t border-slate-100">
+          <span className="text-xs text-slate-500 font-medium">Mật khẩu Admin:</span>
+          <SensitiveDataField value={db.adminPassword} label="Admin Pass" />
+        </div>
+      )}
+
+      {/* Slow Warning Banner */}
+      {isSlow && (
+        <div className="p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs flex items-center gap-2">
+          <AlertTriangle className="w-4 h-4 text-amber-600 flex-shrink-0" />
+          <span>{slowWarningText}</span>
+        </div>
+      )}
+
+      {/* Failed State Alert */}
+      {status === 'Failed' && (
+        <ResourceFailureAlert
+          resourceName={`Database ${db.name}`}
+          onRetry={() => {
+            onRefresh();
+          }}
+          supportHref="/dashboard/tickets"
+        />
+      )}
+    </div>
   );
 }

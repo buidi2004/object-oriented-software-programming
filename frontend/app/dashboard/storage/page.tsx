@@ -4,22 +4,25 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { 
   Cloud, Plus, HardDrive, RefreshCw, Key, ExternalLink, 
-  Trash2, Lock, CheckCircle2, AlertCircle, ArrowLeft, Upload 
+  Trash2, Lock, CheckCircle2, AlertCircle, ArrowLeft, Upload, AlertTriangle 
 } from 'lucide-react';
 import { api } from '@/src/lib/api';
 import { useAuthStore } from '@/src/store/useAuthStore';
-import { useResourceProvisioning } from '@/src/hooks/useResourceProvisioning';
+import { useResourceProvisioningDetails } from '@/src/hooks/useResourceProvisioning';
 import { ProvisioningStatusBadge } from '@/src/components/shared/ProvisioningStatusBadge';
-import { ResourceActionMenu } from '@/src/components/shared/ResourceActionMenu';
+import { SensitiveDataField } from '@/src/components/shared/SensitiveDataField';
+import { ResourceFailureAlert } from '@/src/components/shared/ResourceFailureAlert';
 
 interface BucketItem {
   id: string;
   name: string;
   region: string;
-  sizeBytes: number;
-  objectCount: number;
-  isPublic: boolean;
-  status?: string;
+  sizeBytes?: number;
+  objectCount?: number;
+  isPublic?: boolean;
+  accessKey?: string;
+  secretKey?: string;
+  status: string;
   createdAt: string;
 }
 
@@ -32,7 +35,7 @@ export default function DashboardStoragePage() {
 
   // Form states
   const [name, setName] = useState('');
-  const [region, setRegion] = useState('vn-hn-1');
+  const [region, setRegion] = useState('us-east-1');
   const [isPublic, setIsPublic] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -60,17 +63,28 @@ export default function DashboardStoragePage() {
     setCreating(true);
 
     try {
-      await api.post('/storage/buckets', {
-        name: name.toLowerCase().replace(/[^a-z0-9-]/g, '-'),
+      const sanitizedName = name.toLowerCase().replace(/[^a-z0-9-]/g, '-');
+      const res = await api.post('/object-storage/buckets', {
+        name: sanitizedName,
+        region,
+      });
+
+      const newId = res.data?.bucketId || `bucket-${Date.now()}`;
+      const newBucket: BucketItem = {
+        id: newId,
+        name: sanitizedName,
         region,
         isPublic,
-      });
-      setSuccess(`Đã tạo thành công S3 Bucket "${name}"!`);
+        status: 'Provisioning',
+        createdAt: new Date().toISOString(),
+      };
+
+      setBuckets((prev) => [newBucket, ...prev]);
+      setSuccess(`Yêu cầu tạo S3 Bucket "${sanitizedName}" đã được gửi tới cụm MinIO. Hệ thống đang cấp phát phân vùng và thiết lập quyền truy cập...`);
       setIsCreateOpen(false);
       setName('');
-      fetchBuckets();
     } catch (err: any) {
-      setError(err?.response?.data?.message || err.message || 'Lỗi khi tạo Bucket');
+      setError(err?.response?.data?.message || err.message || 'Lỗi khi tạo S3 Bucket');
     } finally {
       setCreating(false);
     }
@@ -92,7 +106,7 @@ export default function DashboardStoragePage() {
               Quản Lý Cloud Object Storage (S3)
             </h1>
             <p className="text-xs sm:text-sm text-slate-500 mt-1">
-              Tạo và quản lý các thùng chứa dữ liệu S3 Buckets, phân quyền truy cập và upload tệp tin.
+              Lưu trữ không giới hạn hình ảnh, video, dữ liệu ứng dụng với chuẩn tương thích AWS S3 REST API trên MinIO Cluster.
             </p>
           </div>
 
@@ -129,7 +143,7 @@ export default function DashboardStoragePage() {
             </span>
           </div>
 
-          {loading ? (
+          {loading && buckets.length === 0 ? (
             <div className="p-12 text-center text-slate-400 text-sm flex items-center justify-center gap-2">
               <RefreshCw className="w-5 h-5 animate-spin text-blue-600" />
               Đang tải danh sách Bucket...
@@ -151,45 +165,10 @@ export default function DashboardStoragePage() {
               </button>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50/80 text-slate-500 font-extrabold uppercase tracking-wider border-b border-slate-100">
-                  <tr>
-                    <th className="px-6 py-4">Tên Bucket</th>
-                    <th className="px-6 py-4">Region</th>
-                    <th className="px-6 py-4">Số Lượng Tệp</th>
-                    <th className="px-6 py-4">Quyền Truy Cập</th>
-                    <th className="px-6 py-4 text-right">S3 Endpoint</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {buckets.map((b) => (
-                    <tr key={b.id} className="hover:bg-slate-50/60 transition-colors">
-                      <td className="px-6 py-4 font-bold text-slate-900 flex items-center gap-2 font-mono">
-                        <HardDrive className="w-4 h-4 text-blue-500" />
-                        {b.name}
-                        <StorageRealtimeBadge bucket={b} />
-                      </td>
-                      <td className="px-6 py-4 text-slate-600 uppercase font-semibold">
-                        {b.region || 'vn-hn-1'}
-                      </td>
-                      <td className="px-6 py-4 text-slate-600">
-                        {b.objectCount || 0} objects
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className={`px-2.5 py-1 rounded-full font-bold text-[10px] ${
-                          b.isPublic ? 'bg-amber-50 text-amber-600' : 'bg-emerald-50 text-emerald-600'
-                        }`}>
-                          {b.isPublic ? 'Public Read' : 'Private (Auth Only)'}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-right">
-                        <StorageEndpointCell bucket={b} />
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <div className="divide-y divide-slate-100">
+              {buckets.map((b) => (
+                <BucketRowItem key={b.id} bucket={b} onRefresh={fetchBuckets} />
+              ))}
             </div>
           )}
         </div>
@@ -203,7 +182,7 @@ export default function DashboardStoragePage() {
               <Cloud className="w-5 h-5 text-blue-600" /> Tạo S3 Bucket Mới
             </h3>
             <p className="text-xs text-slate-500 mb-6">
-              Tên bucket phải là duy nhất, chỉ chứa chữ thường, số và dấu gạch ngang.
+              Tên bucket phải từ 3-63 ký tự, chỉ gồm chữ thường, số và dấu gạch ngang.
             </p>
 
             {error && (
@@ -232,9 +211,8 @@ export default function DashboardStoragePage() {
                   onChange={(e) => setRegion(e.target.value)}
                   className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs text-slate-900 outline-none focus:ring-2 focus:ring-blue-500 bg-white"
                 >
-                  <option value="vn-hn-1">Hà Nội DC (vn-hn-1)</option>
-                  <option value="vn-hcm-1">TP. Hồ Chí Minh DC (vn-hcm-1)</option>
-                  <option value="sg-sin-1">Singapore DC (sg-sin-1)</option>
+                  <option value="us-east-1">Global Standard (us-east-1)</option>
+                  <option value="ap-southeast-1">Vietnam / Singapore (ap-southeast-1)</option>
                 </select>
               </div>
 
@@ -276,51 +254,80 @@ export default function DashboardStoragePage() {
   );
 }
 
-function StorageRealtimeBadge({ bucket }: { bucket: BucketItem }) {
-  const status = useResourceProvisioning('ObjectStorageBucket', bucket.id, bucket.status || 'Provisioning');
-  if (status === 'Running' || status === 'Active') return null;
-  return <ProvisioningStatusBadge status={status} />;
-}
-
-function StorageEndpointCell({ bucket }: { bucket: BucketItem }) {
-  const status = useResourceProvisioning('ObjectStorageBucket', bucket.id, bucket.status || 'Provisioning');
-  
-  const copyEndpoint = () => {
-    const url = `https://s3.cloudhost.vn/${bucket.name}`;
-    navigator.clipboard.writeText(url);
-    alert('Đã copy endpoint!');
-  };
-
-  return (
-    <div className="flex items-center justify-end gap-2">
-      <span className="text-slate-500 font-mono text-[11px]">
-        https://s3.cloudhost.vn/{bucket.name}
-      </span>
-      {status === 'Running' || status === 'Active' ? (
-        <button onClick={copyEndpoint} className="p-1.5 rounded-lg hover:bg-blue-50 text-blue-600 transition-colors" title="Copy Endpoint">
-          <ExternalLink className="w-4 h-4" />
-        </button>
-      ) : null}
-      <StorageActionMenu bucket={bucket} status={status} />
-    </div>
+function BucketRowItem({ bucket, onRefresh }: { bucket: BucketItem; onRefresh: () => void }) {
+  const { status, isProvisioning, isSlow, elapsedSeconds, slowWarningText } = useResourceProvisioningDetails(
+    'ObjectStorageBucket',
+    bucket.id,
+    bucket.status
   );
-}
 
-function StorageActionMenu({ bucket, status }: { bucket: BucketItem, status: string }) {
-  const handleTerminate = async () => {
-    try {
-      await api.delete(`/storage/buckets/${bucket.id}`);
-      alert('Đã xóa Bucket');
-    } catch (err) {
-      console.error(err);
-      alert('Lỗi khi xóa');
-    }
-  };
+  const endpointUrl = `http://localhost:9000/${bucket.name}`;
 
   return (
-    <ResourceActionMenu 
-      status={status}
-      onTerminate={handleTerminate}
-    />
+    <div className="p-6 hover:bg-slate-50/60 transition-colors space-y-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex items-start sm:items-center gap-3">
+          <div className="w-10 h-10 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0">
+            <HardDrive className="w-5 h-5" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="font-mono font-black text-slate-900 text-sm">{bucket.name}</span>
+              <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-md bg-slate-100 text-slate-600">
+                {bucket.region || 'us-east-1'}
+              </span>
+            </div>
+            <p className="text-xs text-slate-500 font-mono mt-0.5">
+              S3 URI: s3://{bucket.name}
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <ProvisioningStatusBadge status={status} elapsedSeconds={elapsedSeconds} isSlow={isSlow} />
+          {status === 'Running' || status === 'Active' ? (
+            <button
+              onClick={() => {
+                navigator.clipboard.writeText(endpointUrl);
+                alert('Đã sao chép S3 Endpoint!');
+              }}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-blue-50 text-slate-700 hover:text-blue-700 font-bold text-xs transition-colors"
+            >
+              <ExternalLink className="w-3.5 h-3.5" />
+              Copy S3 URL
+            </button>
+          ) : null}
+        </div>
+      </div>
+
+      {/* S3 Credentials */}
+      {(status === 'Running' || status === 'Active') && (
+        <div className="flex flex-wrap items-center gap-3 pt-2 border-t border-slate-100 text-xs">
+          <div className="flex items-center gap-2">
+            <span className="text-slate-500 font-medium">Access Key:</span>
+            <SensitiveDataField value={bucket.accessKey || 'minioadmin'} label="Key" />
+          </div>
+        </div>
+      )}
+
+      {/* Slow Warning Banner */}
+      {isSlow && (
+        <div className="p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs flex items-center gap-2">
+          <AlertTriangle className="w-4 h-4 text-amber-600 flex-shrink-0" />
+          <span>{slowWarningText}</span>
+        </div>
+      )}
+
+      {/* Failed State Alert */}
+      {status === 'Failed' && (
+        <ResourceFailureAlert
+          resourceName={`S3 Bucket ${bucket.name}`}
+          onRetry={() => {
+            onRefresh();
+          }}
+          supportHref="/dashboard/tickets"
+        />
+      )}
+    </div>
   );
 }

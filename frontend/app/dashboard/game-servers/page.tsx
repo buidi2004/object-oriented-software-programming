@@ -4,21 +4,23 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { 
   Gamepad2, Plus, Server, RefreshCw, Play, Square, 
-  RotateCcw, Terminal, CheckCircle2, AlertCircle, ArrowLeft 
+  RotateCcw, Terminal, CheckCircle2, AlertCircle, ArrowLeft, AlertTriangle 
 } from 'lucide-react';
 import { api } from '@/src/lib/api';
 import { useAuthStore } from '@/src/store/useAuthStore';
-import { useResourceProvisioning } from '@/src/hooks/useResourceProvisioning';
+import { useResourceProvisioningDetails } from '@/src/hooks/useResourceProvisioning';
 import { ProvisioningStatusBadge } from '@/src/components/shared/ProvisioningStatusBadge';
+import { ResourceFailureAlert } from '@/src/components/shared/ResourceFailureAlert';
 
 interface GameServer {
   id: string;
-  name: string;
-  gameType: string;
-  ipAddress: string;
-  port: number;
-  maxPlayers: number;
-  currentPlayers: number;
+  serverName: string;
+  name?: string;
+  gameType: number | string;
+  ipAddress?: string;
+  port?: number;
+  maxPlayers?: number;
+  currentPlayers?: number;
   status: string;
   createdAt: string;
 }
@@ -31,9 +33,8 @@ export default function DashboardGameServersPage() {
   const [creating, setCreating] = useState(false);
 
   // Form states
-  const [name, setName] = useState('');
-  const [gameType, setGameType] = useState('minecraft');
-  const [maxPlayers, setMaxPlayers] = useState(20);
+  const [serverName, setServerName] = useState('');
+  const [gameType, setGameType] = useState('1'); // 1=Minecraft, 2=CS2, 3=Valheim, 4=Rust
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
@@ -60,25 +61,31 @@ export default function DashboardGameServersPage() {
     setCreating(true);
 
     try {
-      await api.post('/game-servers', {
-        name,
-        gameType,
-        maxPlayers,
+      const gType = parseInt(gameType, 10);
+      const res = await api.post('/game-servers', {
+        serverName,
+        gameType: gType,
       });
-      setSuccess(`Đã tạo thành công máy chủ game "${name}"!`);
+
+      const newId = res.data?.serverId || `game-${Date.now()}`;
+      const newServer: GameServer = {
+        id: newId,
+        serverName,
+        name: serverName,
+        gameType: gType,
+        status: 'Provisioning',
+        createdAt: new Date().toISOString(),
+      };
+
+      setServers((prev) => [newServer, ...prev]);
+      setSuccess(`Đã tiếp nhận yêu cầu khởi tạo máy chủ "${serverName}"! Quá trình tải image và sinh thế giới game thường mất khoảng 30s - 120s...`);
       setIsCreateOpen(false);
-      setName('');
-      fetchServers();
+      setServerName('');
     } catch (err: any) {
       setError(err?.response?.data?.message || err.message || 'Lỗi khi tạo Game Server');
     } finally {
       setCreating(false);
     }
-  };
-
-  const handleAction = (action: string, serverName: string) => {
-    setSuccess(`Đã gửi lệnh ${action} tới máy chủ "${serverName}" thành công!`);
-    setTimeout(() => setSuccess(''), 3000);
   };
 
   return (
@@ -97,7 +104,7 @@ export default function DashboardGameServersPage() {
               Quản Lý Game Servers
             </h1>
             <p className="text-xs sm:text-sm text-slate-500 mt-1">
-              Quản lý máy chủ Minecraft, CS:GO/CS2, Palworld, xem console và số người chơi trực tuyến.
+              Khởi tạo máy chủ Minecraft, Counter-Strike 2, Valheim hoặc Rust với tài nguyên CPU/RAM bảo đảm và lưu trữ dữ liệu bền vững.
             </p>
           </div>
 
@@ -128,13 +135,13 @@ export default function DashboardGameServersPage() {
         {/* Server List */}
         <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
           <div className="p-6 border-b border-slate-100 flex items-center justify-between">
-            <h2 className="text-base font-bold text-slate-900">Danh Sách Game Servers Đang Chạy</h2>
+            <h2 className="text-base font-bold text-slate-900">Danh Sách Game Servers</h2>
             <span className="text-xs font-semibold px-3 py-1 rounded-full bg-slate-100 text-slate-600">
               Tổng số: {servers.length} servers
             </span>
           </div>
 
-          {loading ? (
+          {loading && servers.length === 0 ? (
             <div className="p-12 text-center text-slate-400 text-sm flex items-center justify-center gap-2">
               <RefreshCw className="w-5 h-5 animate-spin text-purple-600" />
               Đang tải danh sách game servers...
@@ -146,7 +153,7 @@ export default function DashboardGameServersPage() {
               </div>
               <h3 className="text-base font-bold text-slate-900 mb-1">Chưa Có Game Server Nào</h3>
               <p className="text-xs text-slate-500 max-w-sm mx-auto mb-6">
-                Khởi tạo máy chủ Minecraft, CS:GO hoặc Palworld để chơi cùng bạn bè ngay hôm nay.
+                Khởi tạo máy chủ Minecraft hoặc CS2 để chơi cùng bạn bè ngay hôm nay.
               </p>
               <button
                 onClick={() => setIsCreateOpen(true)}
@@ -156,44 +163,10 @@ export default function DashboardGameServersPage() {
               </button>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50/80 text-slate-500 font-extrabold uppercase tracking-wider border-b border-slate-100">
-                  <tr>
-                    <th className="px-6 py-4">Tên Server</th>
-                    <th className="px-6 py-4">Game</th>
-                    <th className="px-6 py-4">Địa Chỉ IP &amp; Port</th>
-                    <th className="px-6 py-4">Slots Người Chơi</th>
-                    <th className="px-6 py-4">Trạng Thái</th>
-                    <th className="px-6 py-4 text-right">Điều Khiển</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {servers.map((s) => (
-                    <tr key={s.id} className="hover:bg-slate-50/60 transition-colors">
-                      <td className="px-6 py-4 font-bold text-slate-900 flex items-center gap-2">
-                        <Gamepad2 className="w-4 h-4 text-purple-500" />
-                        {s.name}
-                      </td>
-                      <td className="px-6 py-4 text-slate-700 font-bold uppercase">
-                        {s.gameType}
-                      </td>
-                      <td className="px-6 py-4 text-slate-600 font-mono text-[11px]">
-                        {s.ipAddress || '103.145.2.88'}:{s.port || (s.gameType === 'minecraft' ? 25565 : 27015)}
-                      </td>
-                      <td className="px-6 py-4 text-slate-600 font-semibold">
-                        {s.currentPlayers || 0} / {s.maxPlayers || 32} online
-                      </td>
-                      <td className="px-6 py-4">
-                        <GameServerStatusBadge server={s} />
-                      </td>
-                      <td className="px-6 py-4 text-right">
-                        <GameServerControls server={s} handleAction={handleAction} />
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <div className="divide-y divide-slate-100">
+              {servers.map((s) => (
+                <GameServerRowItem key={s.id} server={s} onRefresh={fetchServers} />
+              ))}
             </div>
           )}
         </div>
@@ -207,7 +180,7 @@ export default function DashboardGameServersPage() {
               <Gamepad2 className="w-5 h-5 text-purple-600" /> Tạo Máy Chủ Game Mới
             </h3>
             <p className="text-xs text-slate-500 mb-6">
-              Chọn tựa game và cấu hình số lượng người chơi tối đa.
+              Chọn tựa game và cấu hình tên máy chủ.
             </p>
 
             {error && (
@@ -224,11 +197,10 @@ export default function DashboardGameServersPage() {
                   onChange={(e) => setGameType(e.target.value)}
                   className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs text-slate-900 outline-none focus:ring-2 focus:ring-purple-500 bg-white font-bold"
                 >
-                  <option value="minecraft">Minecraft (Java / PaperMC)</option>
-                  <option value="cs2">Counter-Strike 2 (Dedicated)</option>
-                  <option value="palworld">Palworld Dedicated Server</option>
-                  <option value="rust">Rust Server</option>
-                  <option value="valheim">Valheim Server</option>
+                  <option value="1">Minecraft (Java / Vanilla)</option>
+                  <option value="2">Counter-Strike 2 (Dedicated)</option>
+                  <option value="3">Valheim Dedicated Server</option>
+                  <option value="4">Rust Dedicated Server</option>
                 </select>
               </div>
 
@@ -237,21 +209,9 @@ export default function DashboardGameServersPage() {
                 <input
                   type="text"
                   required
-                  placeholder="My Survival World / CS2 Team VN"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs text-slate-900 outline-none focus:ring-2 focus:ring-purple-500"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Số Lượng Người Chơi Tối Đa (Slots)</label>
-                <input
-                  type="number"
-                  min={2}
-                  max={128}
-                  value={maxPlayers}
-                  onChange={(e) => setMaxPlayers(Number(e.target.value))}
+                  placeholder="My Survival World / CS2 VN Team"
+                  value={serverName}
+                  onChange={(e) => setServerName(e.target.value)}
                   className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs text-slate-900 outline-none focus:ring-2 focus:ring-purple-500"
                 />
               </div>
@@ -281,34 +241,64 @@ export default function DashboardGameServersPage() {
   );
 }
 
-function GameServerStatusBadge({ server }: { server: GameServer }) {
-  const status = useResourceProvisioning('GameServerInstance', server.id, server.status || 'Provisioning');
-  return <ProvisioningStatusBadge status={status} />;
-}
+function GameServerRowItem({ server, onRefresh }: { server: GameServer; onRefresh: () => void }) {
+  const { status, isProvisioning, isSlow, elapsedSeconds, slowWarningText } = useResourceProvisioningDetails(
+    'GameServerInstance',
+    server.id,
+    server.status
+  );
 
-function GameServerControls({ server, handleAction }: { server: GameServer, handleAction: (a: string, n: string) => void }) {
-  const status = useResourceProvisioning('GameServerInstance', server.id, server.status || 'Provisioning');
-  
-  if (status === 'Provisioning' || status === 'Failed' || status === 'Terminated') {
-    return null;
-  }
+  const displayName = server.serverName || server.name || 'Game Server';
+  const gameTypeName = typeof server.gameType === 'number'
+    ? (server.gameType === 1 ? 'Minecraft' : server.gameType === 2 ? 'CS2' : server.gameType === 3 ? 'Valheim' : 'Rust')
+    : server.gameType;
+
+  const host = server.ipAddress || '127.0.0.1';
+  const port = server.port || 25565;
 
   return (
-    <div className="inline-flex items-center gap-1.5">
-      <button
-        onClick={() => handleAction('Khởi động lại (Restart)', server.name)}
-        className="p-1.5 rounded-lg bg-slate-100 hover:bg-purple-50 text-slate-600 hover:text-purple-600 transition-colors"
-        title="Restart"
-      >
-        <RotateCcw className="w-3.5 h-3.5" />
-      </button>
-      <button
-        onClick={() => handleAction('Dừng (Stop)', server.name)}
-        className="p-1.5 rounded-lg bg-slate-100 hover:bg-rose-50 text-slate-600 hover:text-rose-600 transition-colors"
-        title="Stop"
-      >
-        <Square className="w-3.5 h-3.5" />
-      </button>
+    <div className="p-6 hover:bg-slate-50/60 transition-colors space-y-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex items-start sm:items-center gap-3">
+          <div className="w-10 h-10 rounded-2xl bg-purple-100 text-purple-600 flex items-center justify-center flex-shrink-0">
+            <Gamepad2 className="w-5 h-5" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="font-black text-slate-900 text-sm">{displayName}</span>
+              <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-md bg-purple-50 text-purple-700">
+                {gameTypeName}
+              </span>
+            </div>
+            <p className="text-xs text-slate-500 font-mono mt-0.5">
+              IP & Port: {host}:{port}
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <ProvisioningStatusBadge status={status} elapsedSeconds={elapsedSeconds} isSlow={isSlow} />
+        </div>
+      </div>
+
+      {/* Slow Warning Banner */}
+      {isSlow && (
+        <div className="p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs flex items-center gap-2">
+          <AlertTriangle className="w-4 h-4 text-amber-600 flex-shrink-0" />
+          <span>{slowWarningText}</span>
+        </div>
+      )}
+
+      {/* Failed State Alert */}
+      {status === 'Failed' && (
+        <ResourceFailureAlert
+          resourceName={`Game Server ${displayName}`}
+          onRetry={() => {
+            onRefresh();
+          }}
+          supportHref="/dashboard/tickets"
+        />
+      )}
     </div>
   );
 }

@@ -4,22 +4,25 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { 
   Globe, Plus, GitBranch, RefreshCw, ExternalLink, 
-  Trash2, Play, CheckCircle2, AlertCircle, ArrowLeft, Upload 
+  Trash2, Play, CheckCircle2, AlertCircle, ArrowLeft, Upload, AlertTriangle 
 } from 'lucide-react';
 import { api } from '@/src/lib/api';
 import { useAuthStore } from '@/src/store/useAuthStore';
-import { useResourceProvisioning } from '@/src/hooks/useResourceProvisioning';
+import { useResourceProvisioningDetails } from '@/src/hooks/useResourceProvisioning';
 import { ProvisioningStatusBadge } from '@/src/components/shared/ProvisioningStatusBadge';
+import { ResourceFailureAlert } from '@/src/components/shared/ResourceFailureAlert';
 
 interface StaticSite {
   id: string;
   name: string;
-  framework: string;
-  customDomain: string;
-  gitRepoUrl: string;
-  productionUrl: string;
+  framework?: string;
+  customDomain?: string;
+  gitRepoUrl?: string;
+  productionUrl?: string;
+  port?: number;
   status: string;
-  lastDeployedAt: string;
+  lastDeployedAt?: string;
+  createdAt: string;
 }
 
 export default function DashboardStaticSitesPage() {
@@ -60,36 +63,40 @@ export default function DashboardStaticSitesPage() {
     setCreating(true);
 
     try {
-      await api.post('/static-sites', {
-        name,
-        framework,
-        gitRepoUrl,
+      const sanitizedName = name.toLowerCase().replace(/[^a-z0-9-]/g, '-');
+      const res = await api.post('/static-sites', {
+        name: sanitizedName,
+        buildCommand: 'npm run build',
+        outputDirectory: 'dist',
         customDomain,
       });
-      setSuccess(`Đã tạo thành công dự án Static Site "${name}"!`);
+
+      const siteId = res.data?.id || `site-${Date.now()}`;
+      
+      // Auto trigger deploy
+      await api.post(`/static-sites/${siteId}/deploy`, {
+        gitCommitHash: `initial-commit-${Date.now()}`,
+      });
+
+      const newSite: StaticSite = {
+        id: siteId,
+        name: sanitizedName,
+        framework,
+        customDomain,
+        status: 'Provisioning',
+        createdAt: new Date().toISOString(),
+      };
+
+      setSites((prev) => [newSite, ...prev]);
+      setSuccess(`Dự án "${sanitizedName}" đã được tạo và đang được Docker Nginx biên dịch tự động...`);
       setIsCreateOpen(false);
       setName('');
       setGitRepoUrl('');
       setCustomDomain('');
-      fetchSites();
     } catch (err: any) {
       setError(err?.response?.data?.message || err.message || 'Lỗi khi tạo dự án');
     } finally {
       setCreating(false);
-    }
-  };
-
-  const handleDeploy = async (siteId: string, siteName: string) => {
-    try {
-      await api.post(`/static-sites/${siteId}/deploy`, {
-        commitMessage: 'Deploy from Customer Portal Dashboard',
-      });
-      setSuccess(`Đang triển khai bản build mới cho "${siteName}"...`);
-      setTimeout(() => setSuccess(''), 4000);
-      fetchSites();
-    } catch (err: any) {
-      setSuccess(`Đã kích hoạt Deploy cho "${siteName}" thành công!`);
-      setTimeout(() => setSuccess(''), 4000);
     }
   };
 
@@ -109,7 +116,7 @@ export default function DashboardStaticSitesPage() {
               Quản Lý Jamstack &amp; Static Sites
             </h1>
             <p className="text-xs sm:text-sm text-slate-500 mt-1">
-              Triển khai Next.js, Vite, React, Astro siêu tốc với Edge CDN toàn cầu.
+              Triển khai Next.js, Vite, React, Astro siêu tốc trên container Nginx chuyên biệt với tên miền riêng và chứng chỉ SSL tự động.
             </p>
           </div>
 
@@ -140,13 +147,13 @@ export default function DashboardStaticSitesPage() {
         {/* Sites List */}
         <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
           <div className="p-6 border-b border-slate-100 flex items-center justify-between">
-            <h2 className="text-base font-bold text-slate-900">Danh Sách Website Đã Deploy</h2>
+            <h2 className="text-base font-bold text-slate-900">Danh Sách Website</h2>
             <span className="text-xs font-semibold px-3 py-1 rounded-full bg-slate-100 text-slate-600">
               Tổng số: {sites.length} websites
             </span>
           </div>
 
-          {loading ? (
+          {loading && sites.length === 0 ? (
             <div className="p-12 text-center text-slate-400 text-sm flex items-center justify-center gap-2">
               <RefreshCw className="w-5 h-5 animate-spin text-emerald-600" />
               Đang tải danh sách static sites...
@@ -158,7 +165,7 @@ export default function DashboardStaticSitesPage() {
               </div>
               <h3 className="text-base font-bold text-slate-900 mb-1">Chưa Có Dự Án Web Nào</h3>
               <p className="text-xs text-slate-500 max-w-sm mx-auto mb-6">
-                Kết nối Git Repository và deploy website tĩnh của bạn chỉ trong 30 giây.
+                Triển khai website tĩnh của bạn với tốc độ cao chỉ trong tích tắc.
               </p>
               <button
                 onClick={() => setIsCreateOpen(true)}
@@ -168,45 +175,10 @@ export default function DashboardStaticSitesPage() {
               </button>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50/80 text-slate-500 font-extrabold uppercase tracking-wider border-b border-slate-100">
-                  <tr>
-                    <th className="px-6 py-4">Tên Dự Án</th>
-                    <th className="px-6 py-4">Framework</th>
-                    <th className="px-6 py-4">Địa Chỉ Web</th>
-                    <th className="px-6 py-4">Trạng Thái</th>
-                    <th className="px-6 py-4 text-right">Hành Động</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {sites.map((s) => (
-                    <tr key={s.id} className="hover:bg-slate-50/60 transition-colors">
-                      <td className="px-6 py-4 font-bold text-slate-900 flex items-center gap-2">
-                        <Globe className="w-4 h-4 text-emerald-500" />
-                        {s.name}
-                      </td>
-                      <td className="px-6 py-4 font-bold text-slate-700 uppercase">
-                        {s.framework}
-                      </td>
-                      <td className="px-6 py-4 font-mono text-[11px]">
-                        <StaticSiteUrlCell site={s} />
-                      </td>
-                      <td className="px-6 py-4">
-                        <StaticSiteRealtimeBadge site={s} />
-                      </td>
-                      <td className="px-6 py-4 text-right">
-                        <button
-                          onClick={() => handleDeploy(s.id, s.name)}
-                          className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-emerald-50 text-slate-700 hover:text-emerald-600 font-bold transition-all"
-                        >
-                          <Play className="w-3.5 h-3.5" /> Re-deploy
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <div className="divide-y divide-slate-100">
+              {sites.map((s) => (
+                <StaticSiteRowItem key={s.id} site={s} onRefresh={fetchSites} />
+              ))}
             </div>
           )}
         </div>
@@ -220,7 +192,7 @@ export default function DashboardStaticSitesPage() {
               <Globe className="w-5 h-5 text-emerald-600" /> Tạo Dự Án Static Site Mới
             </h3>
             <p className="text-xs text-slate-500 mb-6">
-              Chọn framework và nhập đường dẫn Git Repository để bắt đầu build.
+              Chọn framework và nhập tên dự án để khởi tạo container web server.
             </p>
 
             {error && (
@@ -249,23 +221,11 @@ export default function DashboardStaticSitesPage() {
                   onChange={(e) => setFramework(e.target.value)}
                   className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs text-slate-900 outline-none focus:ring-2 focus:ring-emerald-500 bg-white font-bold"
                 >
-                  <option value="nextjs">Next.js (SSG/SSR)</option>
+                  <option value="nextjs">Next.js (SSG/Export)</option>
                   <option value="vite">Vite / React SPA</option>
                   <option value="astro">Astro</option>
-                  <option value="vue">Vue / Nuxt Static</option>
                   <option value="html">HTML / CSS / JS Thuần</option>
                 </select>
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Git Repository URL (GitHub/GitLab)</label>
-                <input
-                  type="url"
-                  placeholder="https://github.com/username/my-project"
-                  value={gitRepoUrl}
-                  onChange={(e) => setGitRepoUrl(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs text-slate-900 outline-none focus:ring-2 focus:ring-emerald-500"
-                />
               </div>
 
               <div>
@@ -304,38 +264,86 @@ export default function DashboardStaticSitesPage() {
   );
 }
 
-function StaticSiteRealtimeBadge({ site }: { site: StaticSite }) {
-  const status = useResourceProvisioning('StaticSiteProject', site.id, site.status || 'Provisioning');
-  // Map Provisioning to Deploying
-  const displayStatus = status === 'Provisioning' ? 'Deploying' : status;
-  
-  if (displayStatus === 'Running' || displayStatus === 'Active' || displayStatus === 'Ready') {
-    return (
-      <span className="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-600 font-bold text-[10px]">
-        Ready
-      </span>
-    );
-  }
-  return <ProvisioningStatusBadge status={displayStatus} />;
-}
+function StaticSiteRowItem({ site, onRefresh }: { site: StaticSite; onRefresh: () => void }) {
+  const { status, isProvisioning, isSlow, elapsedSeconds, slowWarningText } = useResourceProvisioningDetails(
+    'StaticSiteProject',
+    site.id,
+    site.status
+  );
 
-function StaticSiteUrlCell({ site }: { site: StaticSite }) {
-  const status = useResourceProvisioning('StaticSiteProject', site.id, site.status || 'Provisioning');
-  const isDeploying = status === 'Provisioning' || status === 'Deploying';
-  
-  if (isDeploying) {
-    return (
-      <span className="text-slate-400 flex items-center gap-1 cursor-not-allowed">
-        {site.customDomain || `${site.name}.pages.cloudhost.vn`}
-        <ExternalLink className="w-3 h-3 opacity-50" />
-      </span>
-    );
-  }
+  const [redeploying, setRedeploying] = useState(false);
+
+  const handleRedeploy = async () => {
+    setRedeploying(true);
+    try {
+      await api.post(`/static-sites/${site.id}/deploy`, {
+        gitCommitHash: `redeploy-${Date.now()}`,
+      });
+      alert('Đã kích hoạt Re-deploy bản build mới!');
+      onRefresh();
+    } catch (err) {
+      console.error(err);
+      alert('Lỗi khi re-deploy');
+    } finally {
+      setRedeploying(false);
+    }
+  };
+
+  const liveUrl = site.customDomain 
+    ? `http://${site.customDomain}` 
+    : (site.port ? `http://localhost:${site.port}` : `http://${site.name}.pages.local`);
 
   return (
-    <a href={site.productionUrl || `https://${site.name}.pages.cloudhost.vn`} target="_blank" rel="noreferrer" className="text-blue-600 hover:underline flex items-center gap-1">
-      {site.customDomain || `${site.name}.pages.cloudhost.vn`}
-      <ExternalLink className="w-3 h-3" />
-    </a>
+    <div className="p-6 hover:bg-slate-50/60 transition-colors space-y-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex items-start sm:items-center gap-3">
+          <div className="w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center flex-shrink-0">
+            <Globe className="w-5 h-5" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="font-black text-slate-900 text-sm">{site.name}</span>
+              <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700">
+                {site.framework || 'HTML/Nginx'}
+              </span>
+            </div>
+            <p className="text-xs text-slate-500 font-mono mt-0.5">
+              URL: <a href={liveUrl} target="_blank" rel="noreferrer" className="text-emerald-600 hover:underline">{liveUrl}</a>
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <ProvisioningStatusBadge status={status} elapsedSeconds={elapsedSeconds} isSlow={isSlow} />
+          {status === 'Running' || status === 'Active' || status === 'Ready' ? (
+            <button
+              onClick={handleRedeploy}
+              disabled={redeploying}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 font-bold text-xs transition-colors disabled:opacity-50"
+            >
+              <Play className={`w-3.5 h-3.5 ${redeploying ? 'animate-spin' : ''}`} />
+              Re-deploy
+            </button>
+          ) : null}
+        </div>
+      </div>
+
+      {/* Slow Warning Banner */}
+      {isSlow && (
+        <div className="p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs flex items-center gap-2">
+          <AlertTriangle className="w-4 h-4 text-amber-600 flex-shrink-0" />
+          <span>{slowWarningText}</span>
+        </div>
+      )}
+
+      {/* Failed State Alert */}
+      {status === 'Failed' && (
+        <ResourceFailureAlert
+          resourceName={`Static Site ${site.name}`}
+          onRetry={handleRedeploy}
+          supportHref="/dashboard/tickets"
+        />
+      )}
+    </div>
   );
 }

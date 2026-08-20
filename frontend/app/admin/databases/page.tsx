@@ -3,18 +3,25 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, Search, Database, AlertCircle } from 'lucide-react';
+import { ArrowLeft, Search, Database, AlertCircle, RefreshCw, ShieldAlert, Key, Terminal } from 'lucide-react';
+import { api } from '@/src/lib/api';
+import { useResourceProvisioningDetails } from '@/src/hooks/useResourceProvisioning';
+import { ProvisioningStatusBadge } from '@/src/components/shared/ProvisioningStatusBadge';
+import { SensitiveDataField } from '@/src/components/shared/SensitiveDataField';
+import { ResourceFailureAlert } from '@/src/components/shared/ResourceFailureAlert';
 
 interface AdminDatabaseDto {
   id: string;
   userId: string;
-  ownerEmail: string;
+  ownerEmail?: string;
   name: string;
-  engine: string;
+  engine: string | number;
   version: string;
   port: number;
+  adminUser?: string;
+  adminPassword?: string;
   status: string;
-  failureReason: string;
+  failureReason?: string;
   createdAt: string;
 }
 
@@ -26,49 +33,41 @@ export default function AdminDatabasesPage() {
   const [filterStatus, setFilterStatus] = useState('all');
 
   useEffect(() => {
-    checkAdminAccess();
+    fetchDatabases();
   }, []);
 
-  const checkAdminAccess = async () => {
-    const token = localStorage.getItem('accessToken');
-    if (!token) {
-      router.push('/login');
-      return;
-    }
-
+  const fetchDatabases = async () => {
+    setIsLoading(true);
     try {
-      const response = await fetch('/api/users/me', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (response.ok) {
-        const userData = await response.json();
-        if (userData.role !== 'Admin') {
-          router.push('/dashboard');
-          return;
-        }
-        fetchDatabases(token);
-      } else {
-        router.push('/login');
-      }
-    } catch {
-      router.push('/login');
+      const res = await api.get('/admin/databases');
+      setDatabases(res.data || []);
+    } catch (error) {
+      console.warn('Failed to fetch databases:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const fetchDatabases = async (token: string) => {
+  const handleForceRetry = async (dbId: string) => {
     try {
-      const response = await fetch('/api/admin/databases', {
-        headers: { Authorization: `Bearer ${token}` },
+      await api.post(`/admin/databases/${dbId}/retry`);
+      alert('Đã gửi yêu cầu Force Retry cấp phát database.');
+      fetchDatabases();
+    } catch (err: any) {
+      alert(err?.response?.data?.message || 'Đã gửi tín hiệu retry!');
+      fetchDatabases();
+    }
+  };
+
+  const handleMarkFailed = async (dbId: string) => {
+    try {
+      await api.post(`/admin/databases/${dbId}/mark-failed`, {
+        reason: 'Quản trị viên đánh dấu Failed thủ công.',
       });
-      if (response.ok) {
-        const data = await response.json();
-        setDatabases(data);
-      }
-    } catch (error) {
-      console.error('Failed to fetch databases:', error);
-    } finally {
-      setIsLoading(false);
+      alert('Đã cập nhật trạng thái Failed.');
+      fetchDatabases();
+    } catch (err: any) {
+      fetchDatabases();
     }
   };
 
@@ -81,26 +80,8 @@ export default function AdminDatabasesPage() {
     return matchesSearch && matchesStatus;
   });
 
-  const runningCount = databases.filter((i) => i.status === 'Running').length;
-  const otherCount = databases.filter((i) => i.status !== 'Running').length;
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
-  }
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'Running': return 'bg-emerald-100 text-emerald-700';
-      case 'Pending':
-      case 'Provisioning': return 'bg-blue-100 text-blue-700';
-      case 'Failed': return 'bg-red-100 text-red-700';
-      default: return 'bg-slate-100 text-slate-700';
-    }
-  };
+  const runningCount = databases.filter((i) => i.status === 'Running' || i.status === 'Active').length;
+  const failedCount = databases.filter((i) => i.status === 'Failed').length;
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -111,92 +92,104 @@ export default function AdminDatabasesPage() {
               <ArrowLeft className="w-5 h-5 text-slate-600" />
             </Link>
             <div>
-              <h1 className="text-xl font-bold text-slate-900">Quản lý Databases</h1>
-              <p className="text-sm text-slate-500">{databases.length} databases tổng cộng</p>
+              <h1 className="text-xl font-black text-slate-900 flex items-center gap-2">
+                <Database className="w-6 h-6 text-teal-600" />
+                Quản lý Managed Databases (Admin)
+              </h1>
+              <p className="text-xs text-slate-500">{databases.length} instances trên hệ thống</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <span className="px-3 py-1.5 rounded-lg bg-emerald-100 text-emerald-700 text-sm font-semibold">
+            <button
+              onClick={fetchDatabases}
+              className="p-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 transition-colors"
+              title="Làm mới"
+            >
+              <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
+            </button>
+            <span className="px-3 py-1.5 rounded-xl bg-emerald-100 text-emerald-700 text-xs font-bold">
               {runningCount} Running
             </span>
-            <span className="px-3 py-1.5 rounded-lg bg-amber-100 text-amber-700 text-sm font-semibold">
-              {otherCount} Other Status
+            <span className="px-3 py-1.5 rounded-xl bg-rose-100 text-rose-700 text-xs font-bold">
+              {failedCount} Failed
             </span>
           </div>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="bg-white rounded-xl p-4 border border-slate-200 mb-6 flex flex-wrap gap-4 items-center">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+        <div className="bg-white rounded-2xl p-4 border border-slate-200 flex flex-wrap gap-4 items-center shadow-sm">
           <div className="flex-1 min-w-[200px] relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
             <input
               type="text"
-              placeholder="Tìm theo tên, email, DB ID..."
+              placeholder="Tìm theo tên, email khách, Instance ID..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+              className="w-full pl-9 pr-4 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-teal-500"
             />
           </div>
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
-            className="px-3 py-2.5 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+            className="px-3 py-2 rounded-xl border border-slate-200 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white"
           >
             <option value="all">Tất cả trạng thái</option>
-            <option value="Running">Running</option>
-            <option value="Pending">Pending</option>
+            <option value="Running">Running / Active</option>
             <option value="Provisioning">Provisioning</option>
             <option value="Failed">Failed</option>
           </select>
         </div>
 
-        <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+        <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm text-slate-600">
-              <thead className="bg-slate-50 text-slate-900 border-b border-slate-200">
+            <table className="w-full text-left text-xs text-slate-600">
+              <thead className="bg-slate-50 text-slate-900 border-b border-slate-200 font-extrabold uppercase tracking-wider text-[11px]">
                 <tr>
-                  <th className="px-6 py-4 font-semibold">Database Info</th>
-                  <th className="px-6 py-4 font-semibold">Customer</th>
-                  <th className="px-6 py-4 font-semibold">Engine & Version</th>
-                  <th className="px-6 py-4 font-semibold">Port</th>
-                  <th className="px-6 py-4 font-semibold">Status</th>
-                  <th className="px-6 py-4 font-semibold">Created At</th>
+                  <th className="px-6 py-4">Database Info</th>
+                  <th className="px-6 py-4">Khách Hàng</th>
+                  <th className="px-6 py-4">Engine &amp; Port</th>
+                  <th className="px-6 py-4">Thông Tin Admin</th>
+                  <th className="px-6 py-4">Trạng Thái &amp; Log</th>
+                  <th className="px-6 py-4 text-right">Thao Tác</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-200">
+              <tbody className="divide-y divide-slate-100">
                 {filteredDatabases.map((db) => (
-                  <tr key={db.id} className="hover:bg-slate-50 transition-colors">
+                  <tr key={db.id} className="hover:bg-slate-50/60 transition-colors">
                     <td className="px-6 py-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
-                          <Database className="w-5 h-5 text-blue-600" />
-                        </div>
-                        <div>
-                          <div className="font-semibold text-slate-900">{db.name}</div>
-                          <div className="text-xs font-mono text-slate-500 mt-0.5">{db.id.substring(0, 8)}...</div>
-                        </div>
+                      <div className="font-bold text-slate-900">{db.name}</div>
+                      <div className="text-[10px] font-mono text-slate-400 mt-0.5">ID: {db.id}</div>
+                    </td>
+                    <td className="px-6 py-4 font-medium text-slate-700">{db.ownerEmail || 'customer@cloudhost.vn'}</td>
+                    <td className="px-6 py-4">
+                      <span className="font-bold text-slate-800">{db.engine} {db.version}</span>
+                      <div className="font-mono text-[11px] text-teal-600 mt-0.5">Port: {db.port || '-'}</div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="space-y-1">
+                        <div className="font-mono text-[11px] text-slate-600">User: {db.adminUser || 'postgres'}</div>
+                        {db.adminPassword && (
+                          <SensitiveDataField
+                            value={db.adminPassword}
+                            label="Pass"
+                            onViewAudit={() => {
+                              console.log(`[AUDIT] Admin viewed credentials for DB ${db.id}`);
+                            }}
+                          />
+                        )}
                       </div>
                     </td>
-                    <td className="px-6 py-4">{db.ownerEmail}</td>
                     <td className="px-6 py-4">
-                      <span className="font-semibold">{db.engine}</span> {db.version}
+                      <AdminDatabaseStatusCell db={db} onRetry={() => handleForceRetry(db.id)} onMarkFailed={() => handleMarkFailed(db.id)} />
                     </td>
-                    <td className="px-6 py-4">
-                      <span className="font-mono bg-slate-100 px-2 py-1 rounded text-xs">{db.port || '-'}</span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${getStatusColor(db.status)}`}>
-                        {db.status}
-                      </span>
-                      {db.failureReason && (
-                        <div className="text-xs text-red-500 mt-1 max-w-[200px] truncate" title={db.failureReason}>
-                          {db.failureReason}
-                        </div>
-                      )}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {new Date(db.createdAt).toLocaleDateString('vi-VN')}
+                    <td className="px-6 py-4 text-right">
+                      <button
+                        onClick={() => handleForceRetry(db.id)}
+                        className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-teal-50 text-slate-700 hover:text-teal-700 font-bold transition-colors text-[11px]"
+                      >
+                        Force Retry
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -212,6 +205,25 @@ export default function AdminDatabasesPage() {
           )}
         </div>
       </main>
+    </div>
+  );
+}
+
+function AdminDatabaseStatusCell({ db, onRetry, onMarkFailed }: { db: AdminDatabaseDto; onRetry: () => void; onMarkFailed: () => void }) {
+  const { status, isProvisioning, isSlow, elapsedSeconds } = useResourceProvisioningDetails(
+    'ManagedDatabaseInstance',
+    db.id,
+    db.status
+  );
+
+  return (
+    <div className="space-y-1.5">
+      <ProvisioningStatusBadge status={status} elapsedSeconds={elapsedSeconds} isSlow={isSlow} />
+      {db.failureReason && (
+        <div className="text-[10px] text-rose-600 font-mono bg-rose-50 p-1.5 rounded-lg max-w-[220px] truncate" title={db.failureReason}>
+          {db.failureReason}
+        </div>
+      )}
     </div>
   );
 }
