@@ -6,7 +6,7 @@ import * as signalR from '@microsoft/signalr';
 import {
   Server, Activity, Cpu, MemoryStick, HardDrive, Terminal,
   Play, Square, RefreshCw, ArrowLeft, Clock, Wifi, WifiOff,
-  Shield, Zap, AlertCircle, CheckCircle2, XCircle, Loader2
+  Shield, Zap, AlertCircle, CheckCircle2, XCircle, Loader2, X
 } from 'lucide-react';
 import { api } from '@/src/lib/api';
 import VpsTerminalModal from '@/src/components/VpsTerminalModal';
@@ -43,6 +43,7 @@ export default function VpsInstancesPage() {
   const [selected, setSelected] = useState<VpsInstance | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [dockerHealth, setDockerHealth] = useState<boolean | null>(null);
+  const [actionToast, setActionToast] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
   
   // Terminal state
   const [consoleOutput, setConsoleOutput] = useState<string[]>([]);
@@ -171,37 +172,68 @@ export default function VpsInstancesPage() {
     switch (status) {
       case 'Running': return { label: 'Đang chạy', color: 'bg-emerald-500', textColor: 'text-emerald-700', bgColor: 'bg-emerald-50', icon: CheckCircle2 };
       case 'Stopped': return { label: 'Đã dừng', color: 'bg-slate-500', textColor: 'text-slate-700', bgColor: 'bg-slate-50', icon: Square };
-      case 'Provisioning': return { label: 'Đang tạo', color: 'bg-blue-500', textColor: 'text-blue-700', bgColor: 'bg-blue-50', icon: Loader2 };
+      case 'Provisioning': return { label: 'Đang khởi tạo', color: 'bg-blue-500', textColor: 'text-blue-700', bgColor: 'bg-blue-50', icon: Loader2 };
       case 'Failed': return { label: 'Lỗi', color: 'bg-red-500', textColor: 'text-red-700', bgColor: 'bg-red-50', icon: XCircle };
+      case 'Terminated': return { label: 'Đã hủy', color: 'bg-red-800', textColor: 'text-red-800', bgColor: 'bg-red-50', icon: XCircle };
       default: return { label: status, color: 'bg-amber-500', textColor: 'text-amber-700', bgColor: 'bg-amber-50', icon: AlertCircle };
     }
+  };
+
+  const showToast = (type: 'success' | 'error', message: string) => {
+    setActionToast({ type, message });
+    setTimeout(() => setActionToast(null), 5000);
+  };
+
+  const actionLabels: Record<string, string> = {
+    start: 'khởi động',
+    stop: 'dừng',
+    restart: 'khởi động lại'
   };
 
   const [actionLoading, setActionLoading] = useState<'start' | 'stop' | 'restart' | null>(null);
 
   const handleAction = async (action: 'start' | 'stop' | 'restart') => {
     if (!selected || actionLoading) return;
-    setActionLoading(action);
 
-    // Optimistic UI update: instantly update status in real-time without spinning or freezing the page
+    // Don't allow actions on terminated VPS
+    if (selected.status === 'Terminated') {
+      showToast('error', 'VPS này đã bị hủy, không thể thực hiện thao tác.');
+      return;
+    }
+
+    setActionLoading(action);
+    setActionToast(null);
+
+    // Optimistic UI: show "Provisioning" state while waiting (backend may re-provision)
     const previousStatus = selected.status;
     const nextStatus = action === 'stop' ? 'Stopped' : 'Running';
 
-    setSelected(prev => prev ? { ...prev, status: nextStatus } : null);
-    setInstances(prev => prev.map(item => item.id === selected.id ? { ...item, status: nextStatus } : item));
+    setSelected(prev => prev ? { ...prev, status: 'Provisioning' } : null);
+    setInstances(prev => prev.map(item => item.id === selected.id ? { ...item, status: 'Provisioning' } : item));
 
     try {
       await api.post(`/vpsinstances/${selected.id}/${action}`);
+      // Refresh to get latest data (may include new containerId from re-provision)
       const res = await api.get('/vpsinstances');
       setInstances(res.data);
       const updated = res.data.find((v: VpsInstance) => v.id === selected.id);
       if (updated) setSelected(updated);
-    } catch (err) {
+      showToast('success', `Đã ${actionLabels[action]} VPS thành công!`);
+    } catch (err: any) {
       console.error(`Failed to ${action} VPS:`, err);
       // Revert optimistic update on failure
       setSelected(prev => prev ? { ...prev, status: previousStatus } : null);
       setInstances(prev => prev.map(item => item.id === selected.id ? { ...item, status: previousStatus } : item));
-      alert(`Lỗi khi ${action} VPS.`);
+
+      // Extract backend error message if available
+      const backendMsg = err?.response?.data?.detail 
+        || err?.response?.data?.message 
+        || err?.response?.data?.title
+        || err?.response?.data;
+      const errorMsg = typeof backendMsg === 'string' && backendMsg.length < 200
+        ? backendMsg
+        : `Không thể ${actionLabels[action]} VPS. Vui lòng thử lại hoặc liên hệ hỗ trợ.`;
+      showToast('error', errorMsg);
     } finally {
       setActionLoading(null);
     }
@@ -217,6 +249,26 @@ export default function VpsInstancesPage() {
 
   return (
     <div className="space-y-6">
+      {/* Toast Notification */}
+      {actionToast && (
+        <div className={`fixed top-4 right-4 z-50 max-w-md px-4 py-3 rounded-xl shadow-lg border flex items-start gap-3 animate-in slide-in-from-top-2 transition-all ${
+          actionToast.type === 'success' 
+            ? 'bg-emerald-50 border-emerald-200 text-emerald-800' 
+            : 'bg-red-50 border-red-200 text-red-800'
+        }`}>
+          {actionToast.type === 'success' 
+            ? <CheckCircle2 className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+            : <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+          }
+          <div className="flex-1">
+            <p className="text-sm font-semibold">{actionToast.type === 'success' ? 'Thành công' : 'Lỗi'}</p>
+            <p className="text-xs mt-0.5 opacity-90">{actionToast.message}</p>
+          </div>
+          <button onClick={() => setActionToast(null)} className="flex-shrink-0 opacity-60 hover:opacity-100">
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      )}
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -341,6 +393,14 @@ export default function VpsInstancesPage() {
                 <h3 className="text-sm font-bold text-slate-900 mb-3 flex items-center gap-2">
                   <Zap className="w-4 h-4 text-amber-500" /> Hành động nhanh
                 </h3>
+                {selected.status === 'Terminated' ? (
+                  <p className="text-sm text-red-600 font-medium">VPS này đã bị hủy. Không thể thực hiện thao tác.</p>
+                ) : selected.status === 'Provisioning' ? (
+                  <div className="flex items-center gap-2 text-sm text-blue-600 font-medium">
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>Đang xử lý...</span>
+                  </div>
+                ) : (
                 <div className="flex flex-wrap gap-2">
                   {selected.status === 'Running' ? (
                     <button 
@@ -411,6 +471,7 @@ export default function VpsInstancesPage() {
                     <Activity className="w-4 h-4" /> Quản lý nâng cao
                   </Link>
                 </div>
+                )}
               </div>
 
               {/* Console */}

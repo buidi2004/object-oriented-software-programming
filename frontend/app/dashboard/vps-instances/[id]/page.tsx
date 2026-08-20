@@ -3,7 +3,10 @@
 import React, { useState, useEffect, use } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Server, Terminal, Play, Square, RefreshCw, ArrowLeft, Cpu, MemoryStick, HardDrive, Shield } from 'lucide-react';
+import { 
+  Server, Terminal, Play, Square, RefreshCw, ArrowLeft, 
+  Cpu, MemoryStick, HardDrive, Shield, CheckCircle2, AlertCircle, X, Loader2 
+} from 'lucide-react';
 import VpsTerminalModal from '@/src/components/VpsTerminalModal';
 import BackupManager from '@/src/components/BackupManager';
 import { getVpsStatusMeta, formatRamMb } from '@/src/utils/vpsStatus';
@@ -12,9 +15,15 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
   const [vps, setVps] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isTerminalOpen, setIsTerminalOpen] = useState(false);
+  const [actionToast, setActionToast] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
   const router = useRouter();
 
   const resolvedParams = use(params);
+
+  const showToast = (type: 'success' | 'error', message: string) => {
+    setActionToast({ type, message });
+    setTimeout(() => setActionToast(null), 5000);
+  };
 
   useEffect(() => {
     fetchVpsDetail();
@@ -45,14 +54,25 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
 
   const [actionLoading, setActionLoading] = useState<'start' | 'stop' | 'restart' | null>(null);
 
+  const actionLabels: Record<string, string> = {
+    start: 'khởi động',
+    stop: 'dừng',
+    restart: 'khởi động lại'
+  };
+
   const handleAction = async (action: 'start' | 'stop' | 'restart') => {
     if (!vps || actionLoading) return;
+
+    if (vps.status === 'Terminated') {
+      showToast('error', 'VPS này đã bị hủy, không thể thao tác.');
+      return;
+    }
+
     setActionLoading(action);
+    setActionToast(null);
 
     const prevStatus = vps.status;
-    const nextStatus = action === 'stop' ? 'Stopped' : 'Running';
-
-    setVps((prev: any) => prev ? { ...prev, status: nextStatus } : null);
+    setVps((prev: any) => prev ? { ...prev, status: 'Provisioning' } : null);
 
     try {
       const token = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
@@ -61,13 +81,16 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (!res.ok) {
-        throw new Error(`Failed to ${action}`);
+        const errData = await res.json().catch(() => null);
+        const errMsg = errData?.detail || errData?.message || errData?.title;
+        throw new Error(errMsg || `Lỗi khi ${actionLabels[action]} VPS`);
       }
-      fetchVpsDetail();
-    } catch (error) {
+      await fetchVpsDetail();
+      showToast('success', `Đã ${actionLabels[action]} VPS thành công!`);
+    } catch (error: any) {
       console.error(`Error during ${action}:`, error);
       setVps((prev: any) => prev ? { ...prev, status: prevStatus } : null);
-      alert(`Không thể ${action === 'start' ? 'khởi động' : action === 'stop' ? 'dừng' : 'khởi động lại'} VPS.`);
+      showToast('error', error.message || `Không thể ${actionLabels[action]} VPS. Vui lòng thử lại.`);
     } finally {
       setActionLoading(null);
     }
@@ -84,19 +107,21 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
       });
       
       if (res.ok) {
-        alert('VPS đã được xóa thành công!');
-        router.push('/dashboard/vps-instances');
+        showToast('success', 'VPS đã được xóa thành công!');
+        setTimeout(() => router.push('/dashboard/vps-instances'), 1000);
       } else {
-        alert('Có lỗi xảy ra khi xóa VPS.');
+        showToast('error', 'Có lỗi xảy ra khi xóa VPS.');
       }
     } catch (error) {
       console.error('Error terminating VPS', error);
-      alert('Có lỗi xảy ra.');
+      showToast('error', 'Có lỗi kết nối khi xóa VPS.');
     }
   };
 
   if (isLoading) {
-    return <div className="min-h-screen bg-slate-50 flex items-center justify-center">Loading...</div>;
+    return <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+      <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+    </div>;
   }
 
   if (!vps) return null;
@@ -106,6 +131,26 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
 
   return (
     <div className="min-h-screen bg-slate-50 py-8">
+      {/* Toast Notification */}
+      {actionToast && (
+        <div className={`fixed top-4 right-4 z-50 max-w-md px-4 py-3 rounded-xl shadow-lg border flex items-start gap-3 animate-in slide-in-from-top-2 transition-all ${
+          actionToast.type === 'success' 
+            ? 'bg-emerald-50 border-emerald-200 text-emerald-800' 
+            : 'bg-red-50 border-red-200 text-red-800'
+        }`}>
+          {actionToast.type === 'success' 
+            ? <CheckCircle2 className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+            : <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+          }
+          <div className="flex-1">
+            <p className="text-sm font-semibold">{actionToast.type === 'success' ? 'Thành công' : 'Lỗi'}</p>
+            <p className="text-xs mt-0.5 opacity-90">{actionToast.message}</p>
+          </div>
+          <button onClick={() => setActionToast(null)} className="flex-shrink-0 opacity-60 hover:opacity-100">
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      )}
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <div className="mb-6">
