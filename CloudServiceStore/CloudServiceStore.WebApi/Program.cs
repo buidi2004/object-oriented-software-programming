@@ -90,6 +90,7 @@ builder.Services.AddHangfireServer();
 
 // SignalR
 builder.Services.AddSignalR();
+builder.Services.AddHealthChecks();
 
 // JWT Bearer Configuration
 var jwtSettings = builder.Configuration.GetSection(JwtSettings.SectionName).Get<JwtSettings>();
@@ -169,6 +170,7 @@ app.MapControllers();
 app.MapHub<CloudServiceStore.WebApi.Hubs.VpsTerminalHub>("/hubs/vps-terminal");
 app.MapHub<CloudServiceStore.WebApi.Hubs.LiveChatHub>("/hubs/chat");
 app.MapHub<CloudServiceStore.WebApi.Hubs.ResourceStatusHub>("/hubs/resource-status");
+app.MapHealthChecks("/health");
 
 // Test email endpoint (development only)
 if (app.Environment.IsDevelopment())

@@ -1,0 +1,62 @@
+name: CI Develop
+
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - develop
+
+concurrency:
+  group: ci-develop-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x' # Sửa thành phiên bản .NET bạn đang dùng
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore dependencies (WebApi)
+        run: dotnet restore CloudServiceStore/CloudServiceStore.WebApi/CloudServiceStore.WebApi.csproj
+
+      - name: Restore dependencies (Tests)
+        run: dotnet restore CloudServiceStore/CloudServiceStore.Tests/CloudServiceStore.Tests.csproj
+
+      - name: Build
+        run: dotnet build CloudServiceStore/CloudServiceStore.WebApi/CloudServiceStore.WebApi.csproj --configuration Release --no-restore
+
+      - name: Test
+        run: >
+          dotnet test CloudServiceStore/CloudServiceStore.Tests/CloudServiceStore.Tests.csproj
+          --configuration Release
+          --verbosity normal
+          --logger "trx;LogFileName=test-results.trx"
+
+      - name: Publish test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: '**/test-results.trx'
+          retention-days: 7

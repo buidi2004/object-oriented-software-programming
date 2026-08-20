@@ -1,0 +1,75 @@
+name: Deploy Container to VPS
+
+on:
+  push:
+    branches:
+      - main # Chỉ deploy khi code được push/merge vào main
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore
+        run: dotnet restore CloudServiceStore/CloudServiceStore.WebApi/CloudServiceStore.WebApi.csproj
+
+      - name: Build
+        run: dotnet build CloudServiceStore/CloudServiceStore.WebApi/CloudServiceStore.WebApi.csproj --configuration Release --no-restore
+
+      - name: Test
+        run: dotnet test CloudServiceStore/CloudServiceStore.Tests/CloudServiceStore.Tests.csproj --configuration Release --verbosity normal
+
+  deploy:
+    needs: test # Chỉ deploy nếu build & test ở trên pass
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment:
+      name: production # Cấu hình trong Settings > Environments để bật required reviewers nếu muốn
+      url: https://your-domain.example.com
+    steps:
+      - name: Execute SSH Commands on VPS
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT }}
+          script: |
+            set -e
+            echo "1. Di chuyển vào thư mục dự án..."
+            cd /var/www/cloudservicestore
+
+            echo "2. Kéo code mới nhất từ nhánh main..."
+            git fetch origin main
+            git reset --hard origin/main
+
+            echo "3. Build lại Image và khởi chạy Container Backend bằng Docker Compose..."
+            docker compose up -d --build webapi
+
+            echo "4. Dọn dẹp các image cũ không còn sử dụng..."
+            docker image prune -f
+
+            echo "5. Kiểm tra health sau khi deploy..."
+            sleep 5
+            curl -f http://localhost:5053/health || (echo "❌ Health check thất bại, container có thể chưa chạy đúng" && exit 1)
+
+            echo "✅ Triển khai Backend Container lên VPS thành công!"
+
+      - name: Notify on failure
+        if: failure()
+        run: echo "❌ Deploy thất bại — kiểm tra log container/VPS. (Có thể tích hợp Slack/Telegram/Discord webhook ở đây)"

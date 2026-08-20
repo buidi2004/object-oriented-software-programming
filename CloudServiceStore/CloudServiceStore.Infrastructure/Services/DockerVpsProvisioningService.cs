@@ -197,6 +197,7 @@ public class DockerVpsProvisioningService : IVpsProvisioningService
         catch (Exception ex)
         {
             _logger.LogWarning(ex, "Error starting container {ContainerId}", containerId);
+            throw; // Re-throw so caller can trigger re-provision fallback
         }
     }
 
@@ -209,6 +210,7 @@ public class DockerVpsProvisioningService : IVpsProvisioningService
         catch (Exception ex)
         {
             _logger.LogWarning(ex, "Error stopping container {ContainerId}", containerId);
+            throw; // Re-throw so caller can handle appropriately
         }
     }
 
@@ -221,6 +223,7 @@ public class DockerVpsProvisioningService : IVpsProvisioningService
         catch (Exception ex)
         {
             _logger.LogWarning(ex, "Error restarting container {ContainerId}", containerId);
+            throw; // Re-throw so caller can trigger re-provision fallback
         }
     }
 
