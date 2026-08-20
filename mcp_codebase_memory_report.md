@@ -1,0 +1,344 @@
+# Báo Cáo Cập Nhật MCP Codebase Memory
+
+## Tổng Quan Dự Án
+**CloudServiceStore** là nền tảng thương mại dịch vụ đám mây toàn diện được phát triển với:
+- **Backend**: .NET 8 (ASP.NET Core) theo kiến trúc Clean Architecture / DDD
+- **Frontend**: Next.js 15 (App Router, TypeScript)
+- **Database**: PostgreSQL 16 + Dapper ORM
+- **Cache**: Redis
+- **Realtime**: SignalR
+- **Jobs/Queue**: Hangfire
+- **Auth**: JWT Bearer + BCrypt
+- **Testing**: xUnit, Playwright, Stryker (mutation testing)
+- **Deployment**: Docker Compose
+
+## Cấu Trúc Codebase
+
+### Backend (.NET 8 - Clean Architecture)
+```
+CloudServiceStore/
+├── CloudServiceStore.Domain/           # Core business logic
+│   ├── Entities/                       # 40+ aggregate roots
+│   ├── Enums/                          # Domain enums
+│   ├── Events/                         # Domain events (IDomainEvent)
+│   ├── Interfaces/                     # Repository interfaces
+│   └── Primitives/                     # Entity, AggregateRoot, ValueObject
+│
+├── CloudServiceStore.Application/      # Use cases & DTOs
+│   ├── Features/                       # CQRS commands/queries (50+ folders)
+│   ├── DTOs/                           # Data transfer objects
+│   ├── Events/                         # Application events
+│   ├── Interfaces/                     # Service interfaces
+│   ├── Behaviors/                      # MediatR pipeline behaviors
+│   ├── Caching/                        # Redis cache implementation
+│   └── Configuration/                  # App settings
+│
+├── CloudServiceStore.Infrastructure/   # External concerns
+│   ├── Persistence/                    # EF Core, Dapper, Repositories
+│   ├── Services/                       # External service implementations
+│   ├── BackgroundServices/             # Hosted services (Hangfire workers)
+│   ├── Jobs/                           # Scheduled tasks
+│   ├── Security/                       # Auth, hashing, JWT
+│   └── Migrations/                     # EF Core migrations (20+ files)
+│
+├── CloudServiceStore.WebApi/           # API layer
+│   ├── Controllers/                    # REST controllers (50+)
+│   ├── Hubs/                           # SignalR hubs
+│   ├── Middlewares/                    # Exception handling
+│   └── Services/                       # Web-specific services
+│
+└── CloudServiceStore.Tests/            # Testing layer
+    ├── E2E/                            # End-to-end tests
+    ├── Integration/                    # Integration tests
+    ├── Application/                    # Unit tests for application
+    └── Infrastructure/                 # Unit tests for infrastructure
+```
+
+### Frontend (Next.js 15)
+```
+frontend/
+├── app/                                # App Router pages
+│   ├── admin/                          # Admin dashboard (30+ modules)
+│   ├── dashboard/                      # Customer dashboard
+│   ├── services/                       # Service catalog
+│   ├── cart/                           # Shopping cart
+│   ├── checkout/                       # Checkout flow
+│   ├── support/                        # Support center
+│   └── ...                             # Other customer pages
+│
+├── src/
+│   ├── components/                     # React components
+│   ├── hooks/                          # Custom React hooks
+│   ├── lib/                            # Utilities & API client
+│   ├── store/                          # Zustand stores
+│   └── types/                          # TypeScript types
+│
+└── tests/                              # Playwright E2E tests
+    ├── e2e/                            # End-to-end test specs (30+)
+    └── integration/                    # Integration tests
+```
+
+## Các Module Chính
+
+### 1. Quản lý Dịch vụ & Đơn hàng
+- **ServicePlan**: Quản lý tất cả dịch vụ hosting/VPS/cloud
+- **OrderRequest/OrderItem**: Xử lý đơn hàng
+- **Cart/CartItem**: Giỏ hàng
+- **Payment/Invoice**: Thanh toán & hóa đơn
+- **Coupon/GiftCard**: Khuyến mãi & mã quà tặng
+
+### 2. Dịch vụ Đám mây (Provisioning)
+- **VpsInstance**: Máy chủ ảo (Docker-based provisioning)
+- **GameServerInstance**: Máy chủ game
+- **AppInstallation**: Cài đặt ứng dụng sẵn
+- **CdnDistribution**: CDN configuration
+- **StaticSite**: Hosting website tĩnh
+- **ObjectStorageBucket**: Lưu trữ S3-compatible
+- **ManagedDatabaseInstance**: Database managed service
+- **SslCertificate**: Quản lý SSL certificates
+- **DomainRecord**: Quản lý DNS/domains
+
+### 3. Tài khoản & Bảo mật Người dùng
+- **AppUser**: Tài khoản khách hàng
+- **Role/Permission**: RBAC system
+- **ApiKey**: API authentication
+- **TwoFactorBackupCode**: 2FA backup codes
+- **PasswordResetToken**: Reset password flow
+- **LoginHistory**: Audit login attempts
+
+### 4. Cộng đồng & Nội dung
+- **NewsArticle/Blog**: Bài viết tin tức
+- **KnowledgeBaseArticle**: Tài liệu hướng dẫn
+- **FaqItem**: Câu hỏi thường gặp
+- **Review/Testimonial**: Đánh giá & testimonial
+- **Banner**: Marketing banners
+- **ArticleComment**: Bình luận bài viết
+
+### 5. Hỗ trợ & Tương tác
+- **SupportTicket/TicketMessage**: Hệ thống ticket hỗ trợ
+- **ChatSession/ChatMessage**: Live chat realtime
+- **NotificationSetting**: Cài đặt thông báo
+- **AuditLog**: Nhật ký hoạt động admin
+
+### 6. Chương trình Khách hàng
+- **Wallet/WalletTransaction**: Ví điện tử
+- **LoyaltyPoint/LoyaltyTransaction**: Điểm thưởng
+- **ReferralCode/ReferralReward**: Chương trình giới thiệu
+- **AffiliateApplication**: Chương trình affiliate
+
+### 7. Quản trị Hệ thống
+- **SystemSetting**: Cài đặt toàn hệ thống
+- **ExchangeRate**: Tỷ giá tiền tệ
+- **RenewalJob/BackupJob**: Tự động gia hạn & backup
+- **RecentlyViewed**: Lịch sử duyệt web
+- **WishlistItem**: Danh sách mong muốn
+
+## Kiến Trúc API
+
+### Pattern RESTful
+```
+/api/{module}              → GET (list), POST (create)
+/api/{module}/{id}         → GET (detail), PUT (update), DELETE
+/api/{module}/{id}/action  → POST (action endpoints)
+```
+
+### Application Layer (CQRS + MediatR)
+- **Commands**: Write operations (Create, Update, Delete)
+- **Queries**: Read operations (List, Get, Search)
+- **Pipeline Behaviors**: Validation, Logging, Caching, Performance
+- **FluentValidation**: Request validators cho mỗi use case
+
+### Domain Layer (DDD)
+- **Aggregates**: Mỗi entity là aggregate root
+- **Domain Events**: Events fired khi state changes
+- **Value Objects**: Immutable objects (Money, Address, VpsSpec)
+- **Repository Pattern**: `IRepository<T>` + `IUnitOfWork`
+
+## Service Provisioning Flow
+
+```
+1. Customer đặt hàng
+   ↓
+2. OrderCreatedEvent được publish
+   ↓
+3. ResourceProvisioningWorker nhận job từ queue
+   ↓
+4. Specific provisioning service xử lý:
+   - DockerVpsProvisioningService → VPS instances
+   - DockerGameServerProvisioningService → Game servers
+   - DockerAppInstallerService → App marketplace
+   - CloudflareCdnProvisioningService → CDN
+   - MinioProvisioningService → Object storage
+   - MockStaticSiteProvisioningService → Static sites
+   - AcmeProvisioningService → SSL certificates
+   ↓
+5. Status update qua SignalR đến customer
+   ↓
+6. Cleanup jobs xử lý expired/terminated resources
+```
+
+## Background Jobs & Workers
+
+### Hangfire Jobs
+- `SubscriptionMonitorWorker`: Giám sát subscription sắp hết hạn
+- `VpsIdleMonitorService`: Tự động stop VPS idle
+- `SslRenewalJob`: Tự động gia hạn SSL
+- Cleanup jobs cho từng resource type
+
+### Resource Provisioning Queue
+- Priority-based job processing
+- Idempotency keys để tránh duplicate provisioning
+- Real-time status notification qua SignalR
+
+## Frontend Architecture
+
+### Pages & Routes
+| Route | Mô tả |
+|-------|-------|
+| `/` | Homepage (Hero, categories, news) |
+| `/services/*` | Service catalog & details |
+| `/cart` | Shopping cart |
+| `/checkout` | Checkout flow |
+| `/dashboard/*` | Customer dashboard |
+| `/admin/*` | Admin panel (30+ modules) |
+| `/login`, `/register` | Authentication |
+| `/support/tickets` | Support center |
+| `/marketplace` | Marketplace listings |
+| `/gift-cards` | Gift card purchase |
+| `/loyalty` | Loyalty program |
+| `/wallet` | Wallet management |
+
+### Key Components
+- `AuthModal.tsx`: Login/register modal
+- `CartDrawer.tsx`: Slide-out shopping cart
+- `LiveChatWidget.tsx`: Live chat support widget
+- `VpsCalculator.tsx`: VPS pricing calculator
+- `VpsTerminalModal.tsx`: Web terminal (WebSocket)
+- `NotificationBell.tsx`: Realtime notifications
+- `GlobalSearch.tsx`: Full-text search
+- `BannerSlider.tsx`: Marketing banner carousel
+- `CategoryPricingGrid.tsx`: Service plan comparison
+
+### State Management
+- **Zustand**: Global state (useAuthStore, useCartStore)
+- **React Query**: Server state caching
+- **WebSocket**: Realtime updates (SignalR client)
+
+## Testing Strategy
+
+### Unit Tests
+- Domain logic validation
+- Value object behavior
+- Service layer unit tests
+
+### Integration Tests
+- HTTP endpoint testing
+- Database operations
+- External service mocking
+
+### E2E Tests (Playwright)
+- Full user journey flows
+- Cross-module integration
+- UI state verification
+- 30+ test specifications
+
+### Mutation Testing
+- Stryker configured for code coverage quality
+- Mutation score tracking
+
+## Docker Deployment
+
+```yaml
+services:
+  postgres:
+    image: postgres:16
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+  
+  redis:
+    image: redis:alpine
+  
+  api:
+    build: .
+    ports:
+      - "5000:80"
+    depends_on:
+      - postgres
+      - redis
+  
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+```
+
+## MCP Prompt Context Guidelines
+
+Khi làm việc với codebase này, cần tham khảo:
+
+1. **Module Mapping**: 
+   - Module name → Controller → Application Feature → Domain Entity
+   - Luôn track relationship giữa các layer
+
+2. **Dependency Injection**:
+   - Check `DependencyInjection.cs` trong mỗi project
+   - Registration patterns: Transient, Scoped, Singleton
+
+3. **Controller Patterns**:
+   - Controllers trong `WebApi/Controllers/` mirror Feature folders
+   - Theo dõi naming convention: `{Entity}Controller.cs`
+
+4. **Test Organization**:
+   - Tests trong `CloudServiceStore.Tests/` follows same naming
+   - E2E, Integration, Unit tests được tổ chức rõ ràng
+
+5. **Frontend-Backend Mapping**:
+   - Frontend pages trong `frontend/app/` follow route structure
+   - API client trong `src/lib/api.ts`
+   - Types generated từ OpenAPI/Swagger
+
+## Recent Updates & Changes
+
+### Backend Updates
+- [ ] Added new entities và relations
+- [ ] Updated provisioning services
+- [ ] Enhanced security (2FA, API keys)
+- [ ] Improved caching strategy
+- [ ] Added new background jobs
+
+### Frontend Updates
+- [ ] Updated page routes và navigation
+- [ ] Enhanced dashboard UI
+- [ ] Added new widgets và components
+- [ ] Improved responsive design
+- [ ] Updated API client integration
+
+### Infrastructure Updates
+- [ ] Database migration scripts
+- [ ] Docker Compose configurations
+- [ ] Environment variables setup
+- [ ] Monitoring & logging improvements
+
+## Recommendations
+
+1. **Code Review Process**:
+   - Luôn review cả 3 layers: Domain, Application, Infrastructure
+   - Check test coverage trước khi merge
+
+2. **Documentation**:
+   - Update API docs sau mỗi change
+   - Document new entities và relationships
+
+3. **Testing**:
+   - Viết tests cho new features
+   - Update existing tests khi refactor
+
+4. **Performance**:
+   - Monitor Redis cache hit rates
+   - Optimize database queries
+   - Profile background jobs
+
+---
+
+*Báo cáo được tạo tự động từ codebase analysis*
+*Last updated: 2026-08-21*

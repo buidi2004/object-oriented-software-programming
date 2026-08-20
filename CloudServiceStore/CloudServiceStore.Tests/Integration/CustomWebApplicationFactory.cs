@@ -57,10 +57,11 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IAsyn
                 services.Remove(hostedService);
             }
             
-            var emailServiceDescriptor = services.SingleOrDefault(d => d.ServiceType == typeof(CloudServiceStore.Application.Interfaces.IEmailService));
-            if (emailServiceDescriptor != null)
+            // Remove ALL registered IEmailService
+            var emailServiceDescriptors = services.Where(d => d.ServiceType == typeof(CloudServiceStore.Application.Interfaces.IEmailService)).ToList();
+            foreach (var descriptor in emailServiceDescriptors)
             {
-                services.Remove(emailServiceDescriptor);
+                services.Remove(descriptor);
             }
             services.AddTransient<CloudServiceStore.Application.Interfaces.IEmailService, CloudServiceStore.Tests.Mocks.MockEmailService>();
 
