@@ -1,5 +1,6 @@
 services:
   webapi:
+    image: ghcr.io/buidi2004/cloudservicestore-webapi:latest
     build:
       context: ./CloudServiceStore
       dockerfile: Dockerfile
