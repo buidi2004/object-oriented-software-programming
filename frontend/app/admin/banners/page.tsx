@@ -297,16 +297,16 @@ export default function AdminBannersPage() {
             setFormData(prev => ({ ...prev, imageUrl: data.imageUrl }));
             return;
           }
+        } else {
+          const errData = await res.json().catch(() => ({}));
+          throw new Error(errData.message || 'Lỗi từ máy chủ khi tải ảnh');
         }
+      } else {
+        throw new Error('Chưa đăng nhập hoặc phiên đã hết hạn');
       }
-
-      // Fallback if backend upload fails
-      setFormData(prev => ({ 
-        ...prev, 
-        imageUrl: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1200&q=80' 
-      }));
-    } catch (err) {
+    } catch (err: any) {
       console.error('Upload failed:', err);
+      alert('Tải ảnh thất bại: ' + (err.message || 'Lỗi không xác định'));
     } finally {
       setUploadingImage(false);
     }
