@@ -409,6 +409,31 @@ public static class DbSeeder
                 await context.SaveChangesAsync();
             }
 
+            // Seed company info and legal footer settings if missing
+            var companySettings = new[]
+            {
+                new { Key = "company_name", Value = "Công ty Cổ phần Công nghệ Hạ Tầng Số Việt Nam, trực thuộc Tập đoàn Công nghệ Việt Nam.", Desc = "Tên cơ quan chủ quản / Doanh nghiệp" },
+                new { Key = "business_license", Value = "0500589150 do Ban Quản lý các Khu công nghệ cao và Khu công nghiệp - UBND thành phố Hà Nội cấp lần đầu ngày 11/04/2008, sửa đổi lần thứ 13 ngày 10/06/2026.", Desc = "Mã số doanh nghiệp và giấy phép thành lập" },
+                new { Key = "content_responsible", Value = "Ông Lê Bá Tân.", Desc = "Người chịu trách nhiệm nội dung" },
+                new { Key = "hotline", Value = "1900 6888", Desc = "Hotline chăm sóc khách hàng 24/7" },
+                new { Key = "support_email", Value = "support@cloudhost.vn", Desc = "Email hỗ trợ CSKH" }
+            };
+
+            foreach (var cs in companySettings)
+            {
+                if (!context.SystemSettings.Any(s => s.Key == cs.Key))
+                {
+                    await context.SystemSettings.AddAsync(new SystemSetting
+                    {
+                        Id = Guid.NewGuid(),
+                        Key = cs.Key,
+                        Value = cs.Value,
+                        Description = cs.Desc
+                    });
+                }
+            }
+            await context.SaveChangesAsync();
+
             logger.LogInformation("Database seeding completed.");
         }
         catch (Exception ex)

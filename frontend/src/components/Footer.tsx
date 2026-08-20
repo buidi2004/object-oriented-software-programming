@@ -12,23 +12,33 @@ export const Footer: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [brandInfo, setBrandInfo] = useState({
     name: 'CloudHost VN',
-    company: 'Công ty Cổ phần Công nghệ Hạ Tầng Số Việt Nam',
+    company: 'Công ty Cổ phần Công nghệ Hạ Tầng Số Việt Nam, trực thuộc Tập đoàn Công nghệ Việt Nam.',
+    businessLicense: '0500589150 do Ban Quản lý các Khu công nghệ cao và Khu công nghiệp - UBND thành phố Hà Nội cấp lần đầu ngày 11/04/2008, sửa đổi lần thứ 13 ngày 10/06/2026.',
+    contentResponsible: 'Ông Lê Bá Tân.',
     hotline: '1900 6888',
     email: 'support@cloudhost.vn',
   });
 
   useEffect(() => {
     // Fetch dynamic system settings
-    api.get<{ value?: string }>('/system-settings/site_name')
-      .then(res => {
-        if (res.data?.value) setBrandInfo(prev => ({ ...prev, name: res.data.value! }));
-      })
+    api.get<{ value?: string }>('/system-settings/company_name')
+      .then(res => { if (res.data?.value) setBrandInfo(prev => ({ ...prev, company: res.data.value! })); })
+      .catch(() => {});
+
+    api.get<{ value?: string }>('/system-settings/business_license')
+      .then(res => { if (res.data?.value) setBrandInfo(prev => ({ ...prev, businessLicense: res.data.value! })); })
+      .catch(() => {});
+
+    api.get<{ value?: string }>('/system-settings/content_responsible')
+      .then(res => { if (res.data?.value) setBrandInfo(prev => ({ ...prev, contentResponsible: res.data.value! })); })
       .catch(() => {});
 
     api.get<{ value?: string }>('/system-settings/hotline')
-      .then(res => {
-        if (res.data?.value) setBrandInfo(prev => ({ ...prev, hotline: res.data.value! }));
-      })
+      .then(res => { if (res.data?.value) setBrandInfo(prev => ({ ...prev, hotline: res.data.value! })); })
+      .catch(() => {});
+
+    api.get<{ value?: string }>('/system-settings/support_email')
+      .then(res => { if (res.data?.value) setBrandInfo(prev => ({ ...prev, email: res.data.value! })); })
       .catch(() => {});
   }, []);
 
@@ -112,13 +122,13 @@ export const Footer: React.FC = () => {
                 />
               </div>
               <p className="text-[13px] text-slate-700 leading-relaxed">
-                Cơ quan chủ quản: <strong>{brandInfo.company}</strong>, trực thuộc Tập đoàn Công nghệ Việt Nam.
+                Cơ quan chủ quản: <strong>{brandInfo.company}</strong>
               </p>
               <p className="text-[13px] text-slate-700 leading-relaxed">
-                Mã số doanh nghiệp: 0500589150 do Ban Quản lý các Khu công nghệ cao và Khu công nghiệp - UBND thành phố Hà Nội cấp lần đầu ngày 11/04/2008, sửa đổi lần thứ 13 ngày 10/06/2026.
+                Mã số doanh nghiệp: {brandInfo.businessLicense}
               </p>
               <p className="text-[13px] text-slate-700 leading-relaxed">
-                Chịu trách nhiệm nội dung: Ông Lê Bá Tân.
+                Chịu trách nhiệm nội dung: {brandInfo.contentResponsible}
               </p>
               
               <div className="pt-2 text-[14px] text-slate-700">

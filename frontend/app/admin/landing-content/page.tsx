@@ -6,7 +6,8 @@ import Link from 'next/link';
 import { 
   ArrowLeft, Save, Plus, Trash2, Edit2, Upload, RefreshCw, 
   CheckCircle2, AlertCircle, LayoutTemplate, Building2, Layers, 
-  ExternalLink, Eye, RotateCcw, Loader2, Sparkles, Image as ImageIcon
+  ExternalLink, Eye, RotateCcw, Loader2, Sparkles, Image as ImageIcon,
+  ShieldCheck, Phone, Mail, FileText
 } from 'lucide-react';
 import { api } from '@/src/lib/api';
 
@@ -39,6 +40,14 @@ interface SolutionsSectionData {
   sectionTitle: string;
   tabs: IndustryTab[];
   solutions: Record<string, SolutionCard[]>;
+}
+
+interface FooterCompanyData {
+  company_name: string;
+  business_license: string;
+  content_responsible: string;
+  hotline: string;
+  support_email: string;
 }
 
 const DEFAULT_ABOUT: AboutSectionData = {
@@ -98,9 +107,17 @@ const DEFAULT_SOLUTIONS: SolutionsSectionData = {
   }
 };
 
+const DEFAULT_FOOTER: FooterCompanyData = {
+  company_name: 'Công ty Cổ phần Công nghệ Hạ Tầng Số Việt Nam, trực thuộc Tập đoàn Công nghệ Việt Nam.',
+  business_license: '0500589150 do Ban Quản lý các Khu công nghệ cao và Khu công nghiệp - UBND thành phố Hà Nội cấp lần đầu ngày 11/04/2008, sửa đổi lần thứ 13 ngày 10/06/2026.',
+  content_responsible: 'Ông Lê Bá Tân.',
+  hotline: '1900 6888',
+  support_email: 'support@cloudhost.vn'
+};
+
 export default function AdminLandingContentPage() {
   const router = useRouter();
-  const [activeSection, setActiveSection] = useState<'about' | 'solutions'>('about');
+  const [activeSection, setActiveSection] = useState<'about' | 'solutions' | 'footer'>('about');
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [savedSuccess, setSavedSuccess] = useState(false);
@@ -111,6 +128,9 @@ export default function AdminLandingContentPage() {
   // Solutions State
   const [solutionsData, setSolutionsData] = useState<SolutionsSectionData>(DEFAULT_SOLUTIONS);
   const [selectedTabId, setSelectedTabId] = useState<string>('chinh-phu');
+
+  // Footer Company State
+  const [footerData, setFooterData] = useState<FooterCompanyData>(DEFAULT_FOOTER);
 
   // Modal / Editing for Solution Card
   const [editingCardIndex, setEditingCardIndex] = useState<number | null>(null);
@@ -172,6 +192,23 @@ export default function AdminLandingContentPage() {
           }
         } catch {}
       }
+
+      // Load Footer Company Settings
+      const [compRes, licRes, respRes, hotRes, mailRes] = await Promise.all([
+        api.get('/system-settings/company_name').catch(() => null),
+        api.get('/system-settings/business_license').catch(() => null),
+        api.get('/system-settings/content_responsible').catch(() => null),
+        api.get('/system-settings/hotline').catch(() => null),
+        api.get('/system-settings/support_email').catch(() => null),
+      ]);
+
+      setFooterData(prev => ({
+        company_name: compRes?.data?.value || prev.company_name,
+        business_license: licRes?.data?.value || prev.business_license,
+        content_responsible: respRes?.data?.value || prev.content_responsible,
+        hotline: hotRes?.data?.value || prev.hotline,
+        support_email: mailRes?.data?.value || prev.support_email,
+      }));
     } catch (err) {
       console.error('Error loading landing content:', err);
     } finally {
@@ -210,6 +247,26 @@ export default function AdminLandingContentPage() {
     } catch (err) {
       console.error(err);
       alert('Lỗi khi lưu cấu hình Giải pháp');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleSaveFooter = async () => {
+    setIsSaving(true);
+    try {
+      await Promise.all([
+        api.put('/system-settings/company_name', { key: 'company_name', value: footerData.company_name }),
+        api.put('/system-settings/business_license', { key: 'business_license', value: footerData.business_license }),
+        api.put('/system-settings/content_responsible', { key: 'content_responsible', value: footerData.content_responsible }),
+        api.put('/system-settings/hotline', { key: 'hotline', value: footerData.hotline }),
+        api.put('/system-settings/support_email', { key: 'support_email', value: footerData.support_email }),
+      ]);
+      setSavedSuccess(true);
+      setTimeout(() => setSavedSuccess(false), 3000);
+    } catch (err) {
+      console.error(err);
+      alert('Lỗi khi lưu thông tin doanh nghiệp & chân trang');
     } finally {
       setIsSaving(false);
     }
@@ -375,7 +432,7 @@ export default function AdminLandingContentPage() {
             </Link>
             <div>
               <h1 className="text-xl font-bold text-slate-900">Quản Lý Nội Dung Trang Chủ</h1>
-              <p className="text-xs text-slate-500">Tùy biến mục Về Chúng Tôi & Giải Pháp Ngành Nghề</p>
+              <p className="text-xs text-slate-500">Tùy biến Về Chúng Tôi, Giải Pháp Ngành Nghề & Thông Tin Chân Trang</p>
             </div>
           </div>
 
@@ -386,7 +443,11 @@ export default function AdminLandingContentPage() {
               </span>
             )}
             <button
-              onClick={activeSection === 'about' ? handleSaveAbout : handleSaveSolutions}
+              onClick={() => {
+                if (activeSection === 'about') handleSaveAbout();
+                else if (activeSection === 'solutions') handleSaveSolutions();
+                else handleSaveFooter();
+              }}
               disabled={isSaving}
               className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-md shadow-blue-500/20 transition-all flex items-center gap-2 disabled:opacity-50"
             >
@@ -399,10 +460,10 @@ export default function AdminLandingContentPage() {
 
       {/* Main Navigation Tabs */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
-        <div className="flex gap-2 p-1.5 bg-slate-200/70 rounded-2xl w-fit mb-6">
+        <div className="flex flex-wrap gap-2 p-1.5 bg-slate-200/70 rounded-2xl w-fit mb-6">
           <button
             onClick={() => setActiveSection('about')}
-            className={`px-6 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center gap-2 ${
+            className={`px-5 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center gap-2 ${
               activeSection === 'about' 
                 ? 'bg-white text-blue-600 shadow-sm' 
                 : 'text-slate-600 hover:text-slate-900'
@@ -413,7 +474,7 @@ export default function AdminLandingContentPage() {
           </button>
           <button
             onClick={() => setActiveSection('solutions')}
-            className={`px-6 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center gap-2 ${
+            className={`px-5 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center gap-2 ${
               activeSection === 'solutions' 
                 ? 'bg-white text-blue-600 shadow-sm' 
                 : 'text-slate-600 hover:text-slate-900'
@@ -421,6 +482,17 @@ export default function AdminLandingContentPage() {
           >
             <Layers className="w-4 h-4" />
             Khối 3: Giải Pháp Ngành Nghề (Tabs & Thẻ)
+          </button>
+          <button
+            onClick={() => setActiveSection('footer')}
+            className={`px-5 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center gap-2 ${
+              activeSection === 'footer' 
+                ? 'bg-white text-blue-600 shadow-sm' 
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            <ShieldCheck className="w-4 h-4" />
+            Khối 4: Doanh Nghiệp, SĐT & Gmail (Footer)
           </button>
         </div>
 
@@ -763,6 +835,131 @@ export default function AdminLandingContentPage() {
             </div>
           </div>
         )}
+
+        {/* SECTION 3: THÔNG TIN DOANH NGHIỆP & CHÂN TRANG (FOOTER) */}
+        {activeSection === 'footer' && (
+          <div className="grid lg:grid-cols-12 gap-8">
+            {/* Form Left */}
+            <div className="lg:col-span-7 space-y-6">
+              <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
+                <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+                  <div>
+                    <h3 className="font-bold text-slate-900 text-lg">Thông Tin Pháp Lý & Liên Hệ Chân Trang</h3>
+                    <p className="text-xs text-slate-500">Hiển thị ở góc trái phần Chân trang (Footer) toàn hệ thống</p>
+                  </div>
+                  <button
+                    onClick={() => {
+                      if (confirm('Khôi phục thông tin pháp lý mặc định?')) {
+                        setFooterData(DEFAULT_FOOTER);
+                      }
+                    }}
+                    className="text-xs font-bold text-slate-500 hover:text-blue-600 flex items-center gap-1"
+                  >
+                    <RotateCcw className="w-3.5 h-3.5" /> Mặc định
+                  </button>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                    Cơ Quan Chủ Quản / Tên Doanh Nghiệp *
+                  </label>
+                  <textarea
+                    rows={2}
+                    value={footerData.company_name}
+                    onChange={(e) => setFooterData({ ...footerData, company_name: e.target.value })}
+                    placeholder="Công ty Cổ phần Công nghệ Hạ Tầng Số Việt Nam, trực thuộc Tập đoàn Công nghệ Việt Nam."
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                    Mã Số Doanh Nghiệp & Giấy Phép Hoạt Động *
+                  </label>
+                  <textarea
+                    rows={3}
+                    value={footerData.business_license}
+                    onChange={(e) => setFooterData({ ...footerData, business_license: e.target.value })}
+                    placeholder="0500589150 do Ban Quản lý các Khu công nghệ cao..."
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                    Chịu Trách Nhiệm Nội Dung *
+                  </label>
+                  <input
+                    type="text"
+                    value={footerData.content_responsible}
+                    onChange={(e) => setFooterData({ ...footerData, content_responsible: e.target.value })}
+                    placeholder="Ông Lê Bá Tân."
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                      Hotline (Số Điện Thoại) *
+                    </label>
+                    <input
+                      type="text"
+                      value={footerData.hotline}
+                      onChange={(e) => setFooterData({ ...footerData, hotline: e.target.value })}
+                      placeholder="1900 6888"
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm font-bold text-red-600 focus:outline-none focus:border-blue-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                      Email Hỗ Trợ (Gmail) *
+                    </label>
+                    <input
+                      type="email"
+                      value={footerData.support_email}
+                      onChange={(e) => setFooterData({ ...footerData, support_email: e.target.value })}
+                      placeholder="support@cloudhost.vn"
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm font-bold text-blue-600 focus:outline-none focus:border-blue-500"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Preview Right */}
+            <div className="lg:col-span-5">
+              <div className="sticky top-24 bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
+                <div className="flex items-center justify-between pb-2 border-b border-slate-100">
+                  <span className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+                    <Eye className="w-4 h-4 text-blue-600" /> Xem Trước Ở Chân Trang (Footer)
+                  </span>
+                  <span className="text-xs text-slate-400">Chân trang</span>
+                </div>
+
+                <div className="bg-[#f8f8f8] p-5 rounded-2xl border border-slate-200 space-y-3">
+                  <div className="font-bold text-sm text-slate-900 flex items-center gap-2">
+                    <div className="w-3 h-3 rounded-full bg-red-600" /> CloudHost VN
+                  </div>
+                  <p className="text-[13px] text-slate-700 leading-relaxed">
+                    Cơ quan chủ quản: <strong>{footerData.company_name}</strong>
+                  </p>
+                  <p className="text-[13px] text-slate-700 leading-relaxed">
+                    Mã số doanh nghiệp: {footerData.business_license}
+                  </p>
+                  <p className="text-[13px] text-slate-700 leading-relaxed">
+                    Chịu trách nhiệm nội dung: {footerData.content_responsible}
+                  </p>
+                  <div className="pt-2 text-[14px] text-slate-700 border-t border-slate-200">
+                    <div>Hotline: <strong className="text-red-600">{footerData.hotline}</strong></div>
+                    <div>Email: <span className="text-red-600 font-semibold">{footerData.support_email}</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Modal Thêm / Sửa Thẻ Giải Pháp */}
@@ -839,7 +1036,7 @@ export default function AdminLandingContentPage() {
                     alt="Preview"
                     className="w-full h-full object-cover"
                     onError={(e) => {
-                      (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=2034&auto=format&fit=crop';
+                      (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=2034&auto=format&fit=crop';
                     }}
                   />
                 </div>

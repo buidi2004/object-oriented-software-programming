@@ -19,9 +19,12 @@ interface SystemSetting {
 export default function AdminSettingsPage() {
   const router = useRouter();
   const [settings, setSettings] = useState<Record<string, string>>({
-    site_name: 'CloudServiceStore',
+    site_name: 'CloudHost VN',
     support_email: 'support@cloudhost.vn',
-    hotline: '1900 6868',
+    hotline: '1900 6888',
+    company_name: 'Công ty Cổ phần Công nghệ Hạ Tầng Số Việt Nam, trực thuộc Tập đoàn Công nghệ Việt Nam.',
+    business_license: '0500589150 do Ban Quản lý các Khu công nghệ cao và Khu công nghiệp - UBND thành phố Hà Nội cấp lần đầu ngày 11/04/2008, sửa đổi lần thứ 13 ngày 10/06/2026.',
+    content_responsible: 'Ông Lê Bá Tân.',
     maintenance_mode: 'false',
     default_currency: 'VND',
     max_upload_size: '64MB',
@@ -211,7 +214,8 @@ export default function AdminSettingsPage() {
                         type="text" 
                         value={settings.hotline || ''} 
                         onChange={(e) => handleValueChange('hotline', e.target.value)}
-                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20" 
+                        placeholder="1900 6888"
+                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 font-semibold text-red-600" 
                       />
                     </div>
                     <div>
@@ -220,6 +224,44 @@ export default function AdminSettingsPage() {
                         type="email" 
                         value={settings.support_email || ''} 
                         onChange={(e) => handleValueChange('support_email', e.target.value)}
+                        placeholder="support@cloudhost.vn"
+                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 font-semibold text-blue-600" 
+                      />
+                    </div>
+                  </div>
+
+                  <div className="pt-4 border-t border-slate-100 space-y-4">
+                    <h3 className="text-sm font-bold text-slate-800">Thông Tin Pháp Lý & Cơ Quan Chủ Quản (Chân Trang)</h3>
+
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Cơ Quan Chủ Quản / Tên Công Ty</label>
+                      <textarea 
+                        rows={2}
+                        value={settings.company_name || ''} 
+                        onChange={(e) => handleValueChange('company_name', e.target.value)}
+                        placeholder="Công ty Cổ phần Công nghệ Hạ Tầng Số Việt Nam, trực thuộc Tập đoàn Công nghệ Việt Nam."
+                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20" 
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Mã Số Doanh Nghiệp & Giấy Phép</label>
+                      <textarea 
+                        rows={3}
+                        value={settings.business_license || ''} 
+                        onChange={(e) => handleValueChange('business_license', e.target.value)}
+                        placeholder="0500589150 do Ban Quản lý các Khu công nghệ cao và Khu công nghiệp - UBND thành phố Hà Nội cấp lần đầu..."
+                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20" 
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Chịu Trách Nhiệm Nội Dung</label>
+                      <input 
+                        type="text" 
+                        value={settings.content_responsible || ''} 
+                        onChange={(e) => handleValueChange('content_responsible', e.target.value)}
+                        placeholder="Ông Lê Bá Tân."
                         className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20" 
                       />
                     </div>
