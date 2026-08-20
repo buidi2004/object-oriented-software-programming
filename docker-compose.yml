@@ -9,14 +9,14 @@ services:
       - "5053:8080"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=CloudServiceStoreDb;User Id=sa;Password=Your_Strong_Password_123!;TrustServerCertificate=True;
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=CloudServiceStoreDb;User Id=sa;Password=${DB_SA_PASSWORD};TrustServerCertificate=True;
       - Vps__DefaultImage=vps-demo-image
       - Cache__Enabled=true
       - Cache__RedisConnectionString=redis:6379
       - EmailSettings__SmtpHost=smtp.gmail.com
       - EmailSettings__SmtpPort=587
       - EmailSettings__SenderEmail=buidi7170@gmail.com
-      - EmailSettings__SenderPassword=${EMAIL_SENDER_PASSWORD:-acmbfwjvytdzwnys}
+      - EmailSettings__SenderPassword=${EMAIL_SENDER_PASSWORD}
       - EmailSettings__SenderName=${EMAIL_SENDER_NAME:-CloudHost VN}
       - Frontend__BaseUrl=${FRONTEND_BASE_URL:-https://your-domain.com} # Đọc từ biến môi trường trên VPS, nếu không có sẽ lấy mặc định
     volumes:
@@ -42,7 +42,7 @@ services:
       - "1433:1433"
     environment:
       - ACCEPT_EULA=Y
-      - SA_PASSWORD=Your_Strong_Password_123!
+      - SA_PASSWORD=${DB_SA_PASSWORD}
       - MSSQL_MEMORY_LIMIT_MB=1024
     volumes:
       - sqlserver_data:/var/opt/mssql
