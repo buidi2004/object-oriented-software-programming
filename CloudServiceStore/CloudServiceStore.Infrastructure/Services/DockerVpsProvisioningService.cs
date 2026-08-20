@@ -79,7 +79,7 @@ public class DockerVpsProvisioningService : IVpsProvisioningService
                 HostConfig = new HostConfig
                 {
                     Memory = Math.Min(spec.MemoryBytes, 200 * 1024 * 1024L), // Capped at 200MB for demo
-                    NanoCPUs = spec.CpuCores * 1_000_000_000L,
+                    NanoCPUs = Math.Min((long)spec.CpuCores, Environment.ProcessorCount) * 1_000_000_000L,
                     PidsLimit = Math.Max(100, spec.CpuCores * 100),
                     NetworkMode = "bridge",
                     RestartPolicy = new RestartPolicy { Name = RestartPolicyKind.UnlessStopped }
