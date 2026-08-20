@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { 
   ArrowLeft, Plus, Edit2, Trash2, Image as ImageIcon, 
-  AlertCircle, Upload, CheckCircle2, X, ExternalLink, Eye, EyeOff, Loader2 
+  AlertCircle, Upload, CheckCircle2, X, ExternalLink, Eye, EyeOff, Loader2, RotateCcw 
 } from 'lucide-react';
 
 interface Banner {
@@ -74,6 +74,63 @@ export default function AdminBannersPage() {
       }
     } catch (err) {
       console.error('Failed to load banners:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleResetDefaultBanners = async () => {
+    if (!confirm('Khôi phục 5 Banner mẫu mặc định cho Trang Chủ?')) return;
+    const token = localStorage.getItem('accessToken');
+    if (!token) return;
+
+    setIsLoading(true);
+    const defaultTemplates = [
+      {
+        imageUrl: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop",
+        linkUrl: "/partners",
+        displayOrder: 1,
+        isActive: true
+      },
+      {
+        imageUrl: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=2034&auto=format&fit=crop",
+        linkUrl: "/services/cloud-vps",
+        displayOrder: 2,
+        isActive: true
+      },
+      {
+        imageUrl: "https://images.unsplash.com/photo-1510511459019-5d019702280d?q=80&w=2070&auto=format&fit=crop",
+        linkUrl: "/services/web-hosting",
+        displayOrder: 3,
+        isActive: true
+      },
+      {
+        imageUrl: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop",
+        linkUrl: "/about",
+        displayOrder: 4,
+        isActive: true
+      },
+      {
+        imageUrl: "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=2070&auto=format&fit=crop",
+        linkUrl: "/services/dedicated-server",
+        displayOrder: 5,
+        isActive: true
+      }
+    ];
+
+    try {
+      for (const t of defaultTemplates) {
+        await fetch('/api/banners', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+          body: JSON.stringify(t)
+        });
+      }
+      await fetchBanners(token);
+      alert('Đã khôi phục thành công 5 banner mẫu!');
+    } catch (err) {
+      console.error(err);
+      alert('Đã có lỗi khi tạo banner mẫu.');
     } finally {
       setIsLoading(false);
     }
@@ -276,13 +333,23 @@ export default function AdminBannersPage() {
               <p className="text-xs text-slate-500">{banners.length} banner đang được quản lý</p>
             </div>
           </div>
-          <button 
-            onClick={handleOpenAdd} 
-            className="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-md shadow-blue-500/20 transition-all flex items-center gap-2"
-          >
-            <Plus className="w-4 h-4" />
-            Thêm Banner Mới
-          </button>
+          <div className="flex items-center gap-3">
+            <button 
+              onClick={handleResetDefaultBanners} 
+              className="px-3.5 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-100 text-slate-700 font-bold text-sm transition-all flex items-center gap-2"
+              title="Khôi phục 5 banner chuẩn mặc định"
+            >
+              <RotateCcw className="w-4 h-4 text-slate-500" />
+              Khôi Phục 5 Banner Mẫu
+            </button>
+            <button 
+              onClick={handleOpenAdd} 
+              className="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-md shadow-blue-500/20 transition-all flex items-center gap-2"
+            >
+              <Plus className="w-4 h-4" />
+              Thêm Banner Mới
+            </button>
+          </div>
         </div>
       </header>
 
@@ -294,13 +361,21 @@ export default function AdminBannersPage() {
               <ImageIcon className="w-8 h-8" />
             </div>
             <h2 className="text-xl font-bold text-slate-900 mb-2">Chưa có banner nào</h2>
-            <p className="text-slate-500 text-sm mb-6">Thêm banner để hiển thị các chương trình khuyến mãi và dịch vụ nổi bật trên trang chủ.</p>
-            <button
-              onClick={handleOpenAdd}
-              className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-sm transition-all inline-flex items-center gap-2"
-            >
-              <Plus className="w-4 h-4" /> Tạo Banner Đầu Tiên
-            </button>
+            <p className="text-slate-500 text-sm mb-6">Thêm banner hoặc khôi phục 5 banner mẫu mặc định cho trang chủ.</p>
+            <div className="flex items-center justify-center gap-3">
+              <button
+                onClick={handleResetDefaultBanners}
+                className="px-5 py-3 border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold rounded-xl text-sm transition-all inline-flex items-center gap-2"
+              >
+                <RotateCcw className="w-4 h-4" /> Khôi Phục 5 Banner Mẫu
+              </button>
+              <button
+                onClick={handleOpenAdd}
+                className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-sm transition-all inline-flex items-center gap-2"
+              >
+                <Plus className="w-4 h-4" /> Tạo Banner Đầu Tiên
+              </button>
+            </div>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

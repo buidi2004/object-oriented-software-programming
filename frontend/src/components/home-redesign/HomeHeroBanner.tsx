@@ -21,8 +21,11 @@ export const HomeHeroBanner = () => {
       try {
         const res = await api.get('/banners');
         if (res.data && Array.isArray(res.data) && res.data.length > 0) {
-          // Lọc các banner đang active và parse sang format slide
-          const activeBanners = res.data.filter((b: any) => b.isActive !== false);
+          // Lọc các banner đang active và sắp xếp theo displayOrder
+          const activeBanners = res.data
+            .filter((b: any) => b.isActive !== false)
+            .sort((a: any, b: any) => (a.displayOrder || 1) - (b.displayOrder || 1));
+            
           if (activeBanners.length > 0) {
             setSlides(activeBanners.map((b: any, idx: number) => ({
               id: b.id || idx,
