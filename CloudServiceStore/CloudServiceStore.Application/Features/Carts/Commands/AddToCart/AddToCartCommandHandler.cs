@@ -76,7 +76,7 @@ public class AddToCartCommandHandler : IRequestHandler<AddToCartCommand, Guid>
         
         try
         {
-            var addedItem = cart.Items.FirstOrDefault(i => i.ServicePlanId == request.ServicePlanId && i.BillingCycle == request.BillingCycle);
+            var addedItem = cart?.Items?.FirstOrDefault(i => i.ServicePlanId == request.ServicePlanId && i.BillingCycle == request.BillingCycle);
             return addedItem?.Id ?? Guid.Empty;
         }
         catch (Exception ex)
