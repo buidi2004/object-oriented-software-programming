@@ -99,19 +99,19 @@ export const HomeSolutionsSection = () => {
   const currentSolutions = data.solutions[activeTab] || data.solutions['default'] || [];
 
   return (
-    <section className="py-16 bg-white overflow-hidden">
+    <section className="py-12 md:py-16 bg-white overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-3xl font-black text-slate-900 tracking-tight mb-8">
+        <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight mb-6 md:mb-8">
           {data.sectionTitle}
         </h2>
 
         {/* Tabs Row */}
-        <div className="flex overflow-x-auto pb-4 mb-6 gap-2 hide-scrollbar">
+        <div className="flex overflow-x-auto pb-3 mb-6 gap-2 scrollbar-none">
           {data.tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`relative whitespace-nowrap px-6 py-2.5 rounded-full text-sm font-bold transition-colors outline-none border ${
+              className={`relative whitespace-nowrap px-4 sm:px-6 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-bold transition-colors outline-none border shrink-0 ${
                 activeTab === tab.id
                   ? 'text-white border-transparent'
                   : 'bg-white border-slate-200 text-slate-600 hover:border-blue-300 hover:text-blue-600'
@@ -131,12 +131,12 @@ export const HomeSolutionsSection = () => {
         </div>
 
         {/* Cards Grid */}
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
           {currentSolutions.map((sol, idx) => (
             <div 
               key={idx} 
               onClick={() => { if (sol.link && sol.link !== '#') router.push(sol.link); }}
-              className="group relative rounded-2xl overflow-hidden h-72 cursor-pointer shadow-lg"
+              className="group relative rounded-2xl overflow-hidden h-64 sm:h-72 cursor-pointer shadow-lg"
             >
               <div 
                 className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
@@ -144,14 +144,14 @@ export const HomeSolutionsSection = () => {
               />
               <div 
                 className="absolute inset-0 opacity-90" 
-                style={{ background: 'linear-gradient(to top, rgba(15, 23, 42, 0.9) 0%, rgba(15, 23, 42, 0.4) 60%, transparent 100%)' }}
+                style={{ background: 'linear-gradient(to top, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.4) 60%, transparent 100%)' }}
               />
               
-              <div className="absolute inset-0 p-8 flex flex-col justify-end text-white">
-                <h3 className="text-xl font-bold mb-2">{sol.title}</h3>
-                <p className="text-sm text-slate-300 line-clamp-2 mb-4">{sol.desc}</p>
+              <div className="absolute inset-0 p-5 sm:p-8 flex flex-col justify-end text-white">
+                <h3 className="text-lg sm:text-xl font-bold mb-1.5 sm:mb-2">{sol.title}</h3>
+                <p className="text-xs sm:text-sm text-slate-300 line-clamp-2 mb-3 sm:mb-4">{sol.desc}</p>
                 <div>
-                  <span className="inline-flex items-center px-4 py-2 rounded-lg bg-blue-600/90 hover:bg-blue-600 text-sm font-bold backdrop-blur-sm transition-colors">
+                  <span className="inline-flex items-center px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-lg bg-blue-600/90 hover:bg-blue-600 text-xs sm:text-sm font-bold backdrop-blur-sm transition-colors">
                     Xem chi tiết
                   </span>
                 </div>

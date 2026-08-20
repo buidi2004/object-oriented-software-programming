@@ -51,22 +51,22 @@ export const HomeAboutSection = () => {
   }, []);
 
   return (
-    <section className="py-16 bg-white overflow-hidden">
+    <section className="py-12 md:py-16 bg-white overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
+        <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
           
           {/* Left Text & Stats */}
-          <div className="space-y-10">
+          <div className="space-y-8 md:space-y-10">
             <div>
-              <h2 className="text-3xl md:text-4xl font-black text-slate-900 tracking-tight mb-6">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 tracking-tight mb-4 md:mb-6">
                 {data.title}
               </h2>
-              <p className="text-lg text-slate-600 leading-relaxed max-w-lg">
+              <p className="text-base sm:text-lg text-slate-600 leading-relaxed max-w-lg">
                 {data.description}
               </p>
             </div>
 
-            <div className="grid grid-cols-2 gap-x-8 gap-y-10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6 sm:gap-y-10">
               {data.stats.map((st, idx) => (
                 <StatBlock 
                   key={idx}
@@ -84,12 +84,12 @@ export const HomeAboutSection = () => {
           </div>
 
           {/* Right Image */}
-          <div className="relative">
-            <div className="absolute inset-0 bg-blue-50 transform translate-x-10 -translate-y-10 rounded-3xl -z-10" />
+          <div className="relative mt-4 lg:mt-0">
+            <div className="hidden sm:block absolute inset-0 bg-blue-50 transform sm:translate-x-6 lg:translate-x-10 -translate-y-6 lg:-translate-y-10 rounded-3xl -z-10" />
             <img 
               src={data.imageUrl || DEFAULT_ABOUT.imageUrl} 
               alt="Data Center" 
-              className="rounded-3xl shadow-2xl object-cover w-full h-[500px]"
+              className="rounded-2xl sm:rounded-3xl shadow-xl lg:shadow-2xl object-cover w-full h-[280px] sm:h-[380px] lg:h-[500px]"
               onError={(e) => {
                 (e.target as HTMLImageElement).src = DEFAULT_ABOUT.imageUrl;
               }}

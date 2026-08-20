@@ -37,17 +37,17 @@ export const HomeServicesSection = () => {
           </Link>
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Left Sidebar Tabs */}
-          <div className="w-full lg:w-64 shrink-0 flex flex-col gap-1 border-r border-slate-200 pr-4">
+        <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
+          {/* Left Sidebar Tabs (Horizontal scroll on mobile, vertical sidebar on desktop) */}
+          <div className="w-full lg:w-64 shrink-0 flex lg:flex-col overflow-x-auto lg:overflow-visible gap-2 lg:gap-1 border-b lg:border-b-0 lg:border-r border-slate-200 pb-3 lg:pb-0 lg:pr-4 scrollbar-none">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`text-left px-4 py-3 rounded-xl text-sm font-bold transition-all ${
+                className={`whitespace-nowrap lg:whitespace-normal text-left px-4 py-2.5 lg:py-3 rounded-xl text-xs sm:text-sm font-bold transition-all shrink-0 lg:shrink ${
                   activeTab === tab.id
-                    ? 'bg-blue-50 text-blue-600'
-                    : 'text-slate-600 hover:bg-slate-100'
+                    ? 'bg-blue-600 text-white lg:bg-blue-50 lg:text-blue-600 shadow-sm lg:shadow-none'
+                    : 'text-slate-600 bg-white lg:bg-transparent border lg:border-none border-slate-200 hover:bg-slate-100'
                 }`}
               >
                 {tab.label}
@@ -57,24 +57,24 @@ export const HomeServicesSection = () => {
 
           {/* Right Content Grid */}
           <div className="flex-1">
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
               {cloudServices.map((service, idx) => {
                 const Icon = service.icon;
                 return (
-                  <div key={idx} className="bg-white rounded-2xl p-6 border border-slate-100 shadow-xs hover:shadow-md transition-shadow group flex flex-col justify-between">
+                  <div key={idx} className="bg-white rounded-2xl p-5 sm:p-6 border border-slate-100 shadow-xs hover:shadow-md transition-shadow group flex flex-col justify-between">
                     <div>
-                      <div className="flex items-start gap-4 mb-4">
-                        <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
-                          <Icon className="w-6 h-6" />
+                      <div className="flex items-start gap-3.5 sm:gap-4 mb-3 sm:mb-4">
+                        <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+                          <Icon className="w-5 h-5 sm:w-6 sm:h-6" />
                         </div>
                         <div>
-                          <h3 className="text-lg font-bold text-slate-900 mb-1 group-hover:text-blue-600 transition-colors">{service.title}</h3>
-                          <p className="text-sm text-slate-500 leading-relaxed">{service.desc}</p>
+                          <h3 className="text-base sm:text-lg font-bold text-slate-900 mb-1 group-hover:text-blue-600 transition-colors">{service.title}</h3>
+                          <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">{service.desc}</p>
                         </div>
                       </div>
                     </div>
-                    <Link href={service.href} className="text-sm font-bold text-blue-600 hover:text-blue-700 mt-4 inline-flex items-center gap-1 w-max">
-                      Xem chi tiết <span className="text-lg leading-none">›</span>
+                    <Link href={service.href} className="text-xs sm:text-sm font-bold text-blue-600 hover:text-blue-700 mt-3 sm:mt-4 inline-flex items-center gap-1 w-max">
+                      Xem chi tiết <span className="text-base sm:text-lg leading-none">›</span>
                     </Link>
                   </div>
                 );

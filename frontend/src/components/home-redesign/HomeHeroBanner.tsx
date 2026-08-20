@@ -55,7 +55,7 @@ export const HomeHeroBanner = () => {
   return (
     <div className="relative w-full group">
       {/* Background Banner */}
-      <div className="relative w-full h-[500px] md:h-[600px] bg-slate-900 overflow-hidden">
+      <div className="relative w-full h-[460px] sm:h-[500px] md:h-[600px] bg-slate-900 overflow-hidden">
         
         {/* Render Slides */}
         {slides.map((slide, idx) => (
@@ -75,19 +75,19 @@ export const HomeHeroBanner = () => {
         ))}
         
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col justify-center pointer-events-none">
-          <div className="grid md:grid-cols-2 gap-10 items-center">
+          <div className="grid md:grid-cols-2 gap-6 md:gap-10 items-center">
             {/* Text Content */}
-            <div className="text-white space-y-6 pointer-events-auto">
-              <h3 className="text-lg md:text-xl font-bold tracking-wider text-blue-300">CLOUDHOST VN TỰ HÀO</h3>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-black leading-tight tracking-tight">
-                Chương trình phát triển đối tác <br />
+            <div className="text-white space-y-4 md:space-y-6 pointer-events-auto">
+              <h3 className="text-sm sm:text-base md:text-xl font-bold tracking-wider text-blue-300">CLOUDHOST VN TỰ HÀO</h3>
+              <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black leading-tight tracking-tight">
+                Chương trình phát triển đối tác <br className="hidden sm:inline" />
                 Cloud khu vực Đông Nam Á
               </h1>
-              <p className="text-lg text-slate-300 max-w-xl">
+              <p className="text-sm sm:text-base md:text-lg text-slate-300 max-w-xl line-clamp-3 sm:line-clamp-none">
                 Mở rộng hệ sinh thái, hợp tác vươn xa cùng nền tảng điện toán đám mây số 1 Việt Nam.
               </p>
-              <div className="pt-4">
-                <Link href="/partners" className="inline-block px-8 py-4 bg-white text-blue-900 font-bold rounded-lg hover:bg-slate-100 transition-colors shadow-lg">
+              <div className="pt-2 md:pt-4">
+                <Link href="/partners" className="inline-block px-6 py-3 sm:px-8 sm:py-4 bg-white text-blue-900 font-bold rounded-xl hover:bg-slate-100 transition-colors shadow-lg text-sm sm:text-base">
                   Tìm hiểu thêm
                 </Link>
               </div>
@@ -109,36 +109,39 @@ export const HomeHeroBanner = () => {
         {/* Navigation Arrows */}
         <button 
           onClick={prevSlide}
-          className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-black/20 hover:bg-black/40 text-white flex items-center justify-center backdrop-blur-sm transition-all opacity-0 group-hover:opacity-100 z-20"
+          className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-11 sm:h-11 md:w-12 md:h-12 rounded-full bg-black/30 hover:bg-black/50 text-white flex items-center justify-center backdrop-blur-sm transition-all opacity-80 md:opacity-0 md:group-hover:opacity-100 z-20"
+          aria-label="Previous Slide"
         >
-          <ChevronLeft className="w-6 h-6" />
+          <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
         </button>
         <button 
           onClick={nextSlide}
-          className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-black/20 hover:bg-black/40 text-white flex items-center justify-center backdrop-blur-sm transition-all opacity-0 group-hover:opacity-100 z-20"
+          className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-11 sm:h-11 md:w-12 md:h-12 rounded-full bg-black/30 hover:bg-black/50 text-white flex items-center justify-center backdrop-blur-sm transition-all opacity-80 md:opacity-0 md:group-hover:opacity-100 z-20"
+          aria-label="Next Slide"
         >
-          <ChevronRight className="w-6 h-6" />
+          <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
         </button>
 
         {/* Dots */}
-        <div className="absolute bottom-24 left-0 right-0 flex justify-center gap-2 z-20">
+        <div className="absolute bottom-4 sm:bottom-8 md:bottom-24 left-0 right-0 flex justify-center gap-2 z-20">
           {slides.map((_, idx) => (
             <button
               key={idx}
               onClick={() => setCurrentSlide(idx)}
-              className={`w-2 h-2 rounded-full transition-all ${
-                idx === currentSlide ? 'bg-white w-6' : 'bg-white/50 hover:bg-white/80'
+              className={`h-2 rounded-full transition-all ${
+                idx === currentSlide ? 'bg-white w-6' : 'bg-white/50 hover:bg-white/80 w-2'
               }`}
+              aria-label={`Slide ${idx + 1}`}
             />
           ))}
         </div>
       </div>
 
       {/* Feature Strip (Normal Flow - No Overlap) */}
-      <div className="bg-slate-50 w-full py-12 relative z-10">
+      <div className="bg-slate-50 w-full py-8 md:py-12 relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-white rounded-2xl shadow-xl shadow-slate-200/50 p-6 lg:p-8 border border-slate-100">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-10">
+          <div className="bg-white rounded-2xl shadow-xl shadow-slate-200/50 p-5 sm:p-6 lg:p-8 border border-slate-100">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 lg:gap-10">
               <FeatureBox icon={Network} title="Hệ sinh thái mở" desc="Đa dạng giải pháp và ứng dụng" />
               <FeatureBox icon={Zap} title="Linh hoạt" desc="Tùy biến tài nguyên theo nhu cầu" />
               <FeatureBox icon={ShieldCheck} title="An toàn bảo mật" desc="Hệ thống bảo vệ nhiều lớp" />

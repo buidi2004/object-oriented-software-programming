@@ -63,10 +63,10 @@ export const Footer: React.FC = () => {
       
       {/* 1. Top Section: Newsletter & Connect */}
       <div className="border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
           
-          <div className="flex items-center gap-4">
-            <span className="font-bold text-slate-800 text-lg">Kết nối</span>
+          <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4">
+            <span className="font-bold text-slate-800 text-base sm:text-lg">Kết nối</span>
             <div className="flex gap-2">
               {[
                 { id: 'fb', icon: Facebook },
@@ -82,21 +82,21 @@ export const Footer: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
-            <span className="font-bold text-slate-800 text-lg whitespace-nowrap">Đăng ký nhận tin</span>
-            <form onSubmit={handleSubscribe} className="flex w-full md:w-[400px]">
+          <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 w-full md:w-auto">
+            <span className="font-bold text-slate-800 text-base sm:text-lg whitespace-nowrap">Đăng ký nhận tin</span>
+            <form onSubmit={handleSubscribe} className="flex w-full md:w-[380px]">
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="Email"
-                className="flex-1 bg-slate-100 border-none rounded-l-md px-4 py-2.5 text-sm text-slate-800 focus:ring-0 focus:outline-none"
+                placeholder="Nhập email của bạn..."
+                className="flex-1 bg-slate-100 border-none rounded-l-xl px-4 py-2.5 text-sm text-slate-800 focus:ring-0 focus:outline-none min-w-0"
                 required
               />
               <button 
                 type="submit" 
                 disabled={loading}
-                className="bg-red-600 hover:bg-red-700 text-white px-8 py-2.5 rounded-r-md font-bold text-sm transition-colors disabled:opacity-50 shrink-0"
+                className="bg-red-600 hover:bg-red-700 text-white px-6 sm:px-8 py-2.5 rounded-r-xl font-bold text-sm transition-colors disabled:opacity-50 shrink-0"
               >
                 {loading ? <Loader2 className="w-4 h-4 animate-spin mx-auto" /> : 'Gửi'}
               </button>
@@ -201,42 +201,42 @@ export const Footer: React.FC = () => {
 
       {/* 3. Bottom Section: Copyright & Badges */}
       <div className="bg-white border-t border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col lg:flex-row items-center justify-between gap-4">
-          <div className="text-[13px] text-slate-600">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col lg:flex-row items-center justify-between gap-4 text-center lg:text-left">
+          <div className="text-xs sm:text-[13px] text-slate-600">
             &copy; Bản quyền thuộc về: <strong>{brandInfo.company}</strong>
           </div>
           
-          <div className="flex items-center flex-wrap gap-2">
+          <div className="flex items-center justify-center flex-wrap gap-2 pt-2 lg:pt-0">
             {/* Bộ Quốc Phòng */}
-            <div className="h-9 px-2 border border-slate-200 rounded flex items-center bg-white shadow-sm">
-              <span className="text-red-600 font-bold text-[10px] text-center leading-none">CÔNG TÁC TRỌNG YẾU<br/>BỘ QUỐC PHÒNG</span>
+            <div className="h-9 px-2 border border-slate-200 rounded flex items-center bg-white shadow-xs">
+              <span className="text-red-600 font-bold text-[9px] sm:text-[10px] text-center leading-none">CÔNG TÁC TRỌNG YẾU<br/>BỘ QUỐC PHÒNG</span>
             </div>
             
             {/* Bộ Công Thương đỏ */}
-            <div className="h-9 px-2.5 border-2 border-[#cc0000] rounded-lg flex items-center gap-1.5 bg-white shadow-sm">
-              <ShieldCheck className="w-5 h-5 text-[#cc0000]" />
+            <div className="h-9 px-2 sm:px-2.5 border-2 border-[#cc0000] rounded-lg flex items-center gap-1.5 bg-white shadow-xs">
+              <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5 text-[#cc0000]" />
               <div className="flex flex-col items-start leading-[11px]">
-                <span className="text-[7px] font-bold text-[#cc0000] tracking-wider uppercase">Đã đăng ký</span>
-                <span className="text-[11px] font-black text-[#cc0000] uppercase">Bộ Công Thương</span>
+                <span className="text-[6px] sm:text-[7px] font-bold text-[#cc0000] tracking-wider uppercase">Đã đăng ký</span>
+                <span className="text-[10px] sm:text-[11px] font-black text-[#cc0000] uppercase">Bộ Công Thương</span>
               </div>
             </div>
 
             {/* Đã thông báo Bộ Công Thương xanh */}
-            <div className="h-9 px-2.5 border-2 border-[#095a9d] rounded-lg flex items-center gap-1.5 bg-white shadow-sm">
-              <ShieldCheck className="w-5 h-5 text-[#095a9d]" />
+            <div className="h-9 px-2 sm:px-2.5 border-2 border-[#095a9d] rounded-lg flex items-center gap-1.5 bg-white shadow-xs">
+              <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5 text-[#095a9d]" />
               <div className="flex flex-col items-start leading-[11px]">
-                <span className="text-[7px] font-bold text-[#095a9d] tracking-wider uppercase">Đã thông báo</span>
-                <span className="text-[11px] font-black text-[#095a9d] uppercase">Bộ Công Thương</span>
+                <span className="text-[6px] sm:text-[7px] font-bold text-[#095a9d] tracking-wider uppercase">Đã thông báo</span>
+                <span className="text-[10px] sm:text-[11px] font-black text-[#095a9d] uppercase">Bộ Công Thương</span>
               </div>
             </div>
 
             {/* IPv6 */}
-            <div className="h-9 w-9 rounded-full border-2 border-[#009e49] flex items-center justify-center bg-white shadow-sm">
-              <span className="text-[11px] font-black text-[#009e49]">IPv6</span>
+            <div className="h-9 w-9 rounded-full border-2 border-[#009e49] flex items-center justify-center bg-white shadow-xs">
+              <span className="text-[10px] sm:text-[11px] font-black text-[#009e49]">IPv6</span>
             </div>
 
             {/* DMCA */}
-            <img src="https://images.dmca.com/Badges/dmca_protected_sml_120m.png?ID=default" alt="DMCA" className="h-8 object-contain" />
+            <img src="https://images.dmca.com/Badges/dmca_protected_sml_120m.png?ID=default" alt="DMCA" className="h-7 sm:h-8 object-contain" />
           </div>
         </div>
       </div>

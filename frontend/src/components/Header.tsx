@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import {
   Cloud, Server, Globe, Shield, ShoppingCart, Menu, X, Cpu, ChevronDown, LogOut, Wallet,
   Gamepad2, Mail, Database, HardDrive, ShieldCheck, Zap, Layers, Palette, ShoppingBag, Activity, ArrowRight, Compass,
-  LifeBuoy, Megaphone, BookOpen, DownloadCloud, ActivitySquare, Search
+  LifeBuoy, Megaphone, BookOpen, DownloadCloud, ActivitySquare, Search, LayoutTemplate
 } from 'lucide-react';
 import { useAuthStore } from '../store/useAuthStore';
 import { useUIStore } from '../store/useUIStore';
@@ -443,32 +443,91 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
 
         {mobileMenuOpen && (
-          <div className="lg:hidden bg-white border-b border-slate-100 px-4 pt-2 pb-6 space-y-1 animate-in slide-in-from-top duration-200">
-            {navItems.map(item => (
-              <Link
-                key={item.id}
-                href={item.href}
-                onClick={() => setMobileMenuOpen(false)}
-                className={`block w-full text-left px-4 py-2.5 rounded-xl text-sm font-bold transition-all whitespace-nowrap ${pathname === item.href || (item.href !== '/' && item.href !== '/#contact' && pathname.startsWith(item.href))
-                    ? 'bg-blue-50 text-blue-600'
-                    : 'text-slate-700 hover:bg-slate-50'
-                  }`}
-              >
-                {item.label}
-              </Link>
-            ))}
+          <div className="lg:hidden bg-white border-b border-slate-100 px-4 pt-2 pb-6 space-y-3 animate-in slide-in-from-top duration-200 max-h-[85vh] overflow-y-auto">
+            <div className="space-y-1">
+              {navItems.map(item => (
+                <Link
+                  key={item.id}
+                  href={item.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`block w-full text-left px-4 py-2.5 rounded-xl text-sm font-bold transition-all ${pathname === item.href || (item.href !== '/' && item.href !== '/#contact' && pathname.startsWith(item.href))
+                      ? 'bg-blue-50 text-blue-600'
+                      : 'text-slate-700 hover:bg-slate-50'
+                    }`}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </div>
 
-            <div className="pt-3 mt-2 border-t border-slate-100 flex flex-col gap-2">
+            {/* Quick Mobile Services Grid */}
+            <div className="p-3 bg-slate-50 rounded-2xl border border-slate-100">
+              <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2 px-1">
+                Dịch vụ phổ biến
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <Link 
+                  href="/services/cloud-vps" 
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="p-2.5 bg-white rounded-xl border border-slate-200/70 text-xs font-bold text-slate-800 hover:text-blue-600 flex items-center gap-2 shadow-2xs"
+                >
+                  <Server className="w-4 h-4 text-blue-600" /> Cloud VPS
+                </Link>
+                <Link 
+                  href="/services/hosting" 
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="p-2.5 bg-white rounded-xl border border-slate-200/70 text-xs font-bold text-slate-800 hover:text-blue-600 flex items-center gap-2 shadow-2xs"
+                >
+                  <LayoutTemplate className="w-4 h-4 text-emerald-600" /> Web Hosting
+                </Link>
+                <Link 
+                  href="/services/domain" 
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="p-2.5 bg-white rounded-xl border border-slate-200/70 text-xs font-bold text-slate-800 hover:text-blue-600 flex items-center gap-2 shadow-2xs"
+                >
+                  <Globe className="w-4 h-4 text-amber-600" /> Tên Miền
+                </Link>
+                <Link 
+                  href="/services/email-hosting" 
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="p-2.5 bg-white rounded-xl border border-slate-200/70 text-xs font-bold text-slate-800 hover:text-blue-600 flex items-center gap-2 shadow-2xs"
+                >
+                  <Mail className="w-4 h-4 text-purple-600" /> Email Cty
+                </Link>
+              </div>
+            </div>
+
+            {/* Quick Support Links */}
+            <div className="flex items-center justify-between px-2 pt-1 text-xs font-semibold text-slate-600">
+              <Link href="/news" onClick={() => setMobileMenuOpen(false)} className="hover:text-blue-600 flex items-center gap-1">
+                <Megaphone className="w-3.5 h-3.5 text-amber-500" /> Tin tức & Ưu đãi
+              </Link>
+              <Link href="/support/tickets" onClick={() => setMobileMenuOpen(false)} className="hover:text-blue-600 flex items-center gap-1">
+                <LifeBuoy className="w-3.5 h-3.5 text-blue-500" /> Gửi Yêu Cầu Hỗ Trợ
+              </Link>
+            </div>
+
+            <div className="pt-3 border-t border-slate-100 flex flex-col gap-2">
               {user ? (
                 <>
-                  <Link
-                    href="/dashboard"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-blue-50 text-blue-600 font-bold text-sm"
-                  >
-                    <Cloud className="w-4 h-4" />
-                    Bảng điều khiển ({user.fullName})
-                  </Link>
+                  <div className="flex items-center justify-between p-3 bg-blue-50/70 rounded-xl border border-blue-100">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-full bg-blue-600 text-white font-bold text-xs flex items-center justify-center">
+                        {user.fullName.charAt(0).toUpperCase()}
+                      </div>
+                      <div>
+                        <div className="text-xs font-bold text-slate-900 truncate max-w-[160px]">{user.fullName}</div>
+                        <div className="text-[11px] font-semibold text-emerald-600">{walletBalance.toLocaleString('vi-VN')} đ</div>
+                      </div>
+                    </div>
+                    <Link
+                      href="/dashboard"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="px-3 py-1.5 bg-blue-600 text-white font-bold text-xs rounded-lg hover:bg-blue-700 shadow-xs"
+                    >
+                      Bảng điều khiển
+                    </Link>
+                  </div>
 
                   {(user.role === 'Admin' || user.role === 'Editor') && (
                     <Link
@@ -486,9 +545,9 @@ export const Header: React.FC<HeaderProps> = ({
                       logout();
                       setMobileMenuOpen(false);
                     }}
-                    className="w-full text-center px-4 py-2.5 text-sm font-bold text-rose-500 hover:bg-rose-50 rounded-xl"
+                    className="w-full text-center px-4 py-2 text-xs font-bold text-rose-500 hover:bg-rose-50 rounded-xl transition-colors"
                   >
-                    Đăng xuất
+                    Đăng xuất tài khoản
                   </button>
                 </>
               ) : (
@@ -507,7 +566,7 @@ export const Header: React.FC<HeaderProps> = ({
                       handleOpenAuth('register');
                       setMobileMenuOpen(false);
                     }}
-                    className="w-full text-center px-4 py-2.5 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl"
+                    className="w-full text-center px-4 py-2.5 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-md shadow-blue-500/20"
                   >
                     Đăng ký
                   </button>
