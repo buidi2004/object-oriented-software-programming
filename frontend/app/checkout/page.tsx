@@ -198,12 +198,12 @@ export default function CheckoutPage() {
               <h2 className="text-lg font-bold text-slate-900 mb-4">Dịch vụ trong giỏ hàng</h2>
               <div className="space-y-4">
                 {cartItems.map((item) => (
-                  <div key={item.id} className="flex items-center justify-between py-3 border-b border-slate-100 last:border-0">
-                    <div>
-                      <p className="font-semibold text-slate-900">{item.title}</p>
-                      <p className="text-sm text-slate-500">{item.type === 'vps' ? 'Cloud VPS' : item.type === 'hosting' ? 'Web Hosting' : 'Tên miền'}</p>
+                  <div key={item.id} className="flex flex-col sm:flex-row sm:items-center justify-between py-3 border-b border-slate-100 last:border-0 gap-1.5 sm:gap-4">
+                    <div className="flex-1 min-w-0">
+                      <p className="font-bold text-sm sm:text-base text-slate-900 leading-snug">{item.title}</p>
+                      <p className="text-xs text-slate-500">{item.type === 'vps' ? 'Cloud VPS' : item.type === 'hosting' ? 'Web Hosting' : 'Tên miền'}</p>
                     </div>
-                    <span className="font-bold text-slate-900">{item.price.toLocaleString('vi-VN')} đ</span>
+                    <span className="font-extrabold text-sm sm:text-base text-blue-600 sm:text-slate-900 shrink-0">{item.price.toLocaleString('vi-VN')} đ</span>
                   </div>
                 ))}
               </div>

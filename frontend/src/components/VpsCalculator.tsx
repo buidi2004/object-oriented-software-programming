@@ -86,12 +86,12 @@ export const VpsCalculator: React.FC<VpsCalculatorProps> = ({ onAddToCart, onVie
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           <div className="lg:col-span-8 bg-white p-6 sm:p-8 rounded-3xl border border-slate-200/80 shadow-xl space-y-8">
             <div>
-              <div className="flex justify-between items-center mb-3">
-                <label className="text-sm font-extrabold text-slate-900 flex items-center gap-2.5">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1.5 sm:gap-0 mb-3">
+                <label className="text-xs sm:text-sm font-extrabold text-slate-900 flex items-center gap-2">
                   <ResourceIcon type="cpu" />
                   Vi Xử Lý (CPU Cores):
                 </label>
-                <span className="text-lg font-black text-blue-600 bg-blue-50 px-3 py-1 rounded-xl">
+                <span className="text-sm sm:text-lg font-black text-blue-600 bg-blue-50 px-2.5 sm:px-3 py-1 rounded-xl w-fit">
                   {cpu} vCPU Core (AMD EPYC)
                 </span>
               </div>
@@ -105,12 +105,12 @@ export const VpsCalculator: React.FC<VpsCalculatorProps> = ({ onAddToCart, onVie
             </div>
 
             <div>
-              <div className="flex justify-between items-center mb-3">
-                <label className="text-sm font-extrabold text-slate-900 flex items-center gap-2.5">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1.5 sm:gap-0 mb-3">
+                <label className="text-xs sm:text-sm font-extrabold text-slate-900 flex items-center gap-2">
                   <ResourceIcon type="ram" />
                   Bộ Nhớ (RAM DDR5):
                 </label>
-                <span className="text-lg font-black text-indigo-600 bg-indigo-50 px-3 py-1 rounded-xl">
+                <span className="text-sm sm:text-lg font-black text-indigo-600 bg-indigo-50 px-2.5 sm:px-3 py-1 rounded-xl w-fit">
                   {ram} GB RAM
                 </span>
               </div>
@@ -124,12 +124,12 @@ export const VpsCalculator: React.FC<VpsCalculatorProps> = ({ onAddToCart, onVie
             </div>
 
             <div>
-              <div className="flex justify-between items-center mb-3">
-                <label className="text-sm font-extrabold text-slate-900 flex items-center gap-2.5">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1.5 sm:gap-0 mb-3">
+                <label className="text-xs sm:text-sm font-extrabold text-slate-900 flex items-center gap-2">
                   <ResourceIcon type="disk" />
                   Ổ Cứng Enterprise NVMe SSD:
                 </label>
-                <span className="text-lg font-black text-cyan-600 bg-cyan-50 px-3 py-1 rounded-xl">
+                <span className="text-sm sm:text-lg font-black text-cyan-600 bg-cyan-50 px-2.5 sm:px-3 py-1 rounded-xl w-fit">
                   {disk} GB NVMe Raid 10
                 </span>
               </div>
