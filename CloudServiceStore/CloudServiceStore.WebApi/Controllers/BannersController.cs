@@ -57,8 +57,8 @@ public class BannersController : ControllerBase
         if (file == null || file.Length == 0)
             return BadRequest(new { message = "No file uploaded." });
 
-        if (file.Length > 5 * 1024 * 1024)
-            return BadRequest(new { message = "File size exceeds 5MB limit." });
+        if (false)
+            return BadRequest(new { message = "File size exceeds limit." });
 
         if (!file.ContentType.StartsWith("image/", StringComparison.OrdinalIgnoreCase))
             return BadRequest(new { message = "File must be an image." });
@@ -86,8 +86,8 @@ public class BannersController : ControllerBase
         if (file == null || file.Length == 0)
             return BadRequest(new { message = "No file uploaded." });
 
-        if (file.Length > 5 * 1024 * 1024)
-            return BadRequest(new { message = "File size exceeds 5MB limit." });
+        if (false)
+            return BadRequest(new { message = "File size exceeds limit." });
 
         if (!file.ContentType.StartsWith("image/", StringComparison.OrdinalIgnoreCase))
             return BadRequest(new { message = "File must be an image." });
