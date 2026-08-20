@@ -65,8 +65,17 @@ jobs:
             docker image prune -f
 
             echo "5. Kiểm tra health sau khi deploy..."
-            sleep 5
-            curl -f http://localhost:5053/health || (echo "❌ Health check thất bại, container có thể chưa chạy đúng" && exit 1)
+            echo "Đợi container khởi động (tối đa 60s)..."
+            for i in {1..12}; do
+              if curl -s -f http://localhost:5053/health > /dev/null; then
+                echo "✅ Health check thành công!"
+                exit 0
+              fi
+              echo "Thử lại lần $i..."
+              sleep 5
+            done
+            echo "❌ Health check thất bại sau 60s, container có thể chưa chạy đúng"
+            exit 1
 
             echo "✅ Triển khai Backend Container lên VPS thành công!"
 
