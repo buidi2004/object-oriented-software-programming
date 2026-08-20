@@ -5,9 +5,28 @@ import Link from 'next/link';
 import { 
   Phone, Mail, MapPin, Send, MessageSquare, Clock, 
   CheckCircle2, AlertCircle, Headphones, Building2, 
-  ShieldCheck, ArrowRight, Zap, ExternalLink, HelpCircle
+  ShieldCheck, ArrowRight, Zap, ExternalLink, HelpCircle, ChevronDown, Plus, Minus
 } from 'lucide-react';
 import { api } from '@/src/lib/api';
+
+const FAQS = [
+  {
+    question: "Thời gian triển khai dịch vụ Cloud VPS là bao lâu?",
+    answer: "Hệ thống của chúng tôi được tự động hóa 100%. Ngay sau khi thanh toán thành công, VPS của bạn sẽ được khởi tạo và sẵn sàng sử dụng trong vòng chưa tới 60 giây."
+  },
+  {
+    question: "CloudHost có hỗ trợ chuyển dữ liệu (Migration) không?",
+    answer: "Có, đội ngũ kỹ thuật của chúng tôi hỗ trợ chuyển dữ liệu website hoàn toàn miễn phí từ nhà cung cấp cũ về CloudHost mà không làm gián đoạn thời gian hoạt động của trang web."
+  },
+  {
+    question: "Tôi có thể nâng cấp cấu hình VPS sau này không?",
+    answer: "Hoàn toàn có thể. CloudHost cho phép bạn nâng cấp CPU, RAM, ổ cứng linh hoạt bất kỳ lúc nào chỉ với vài cú click mà không làm mất dữ liệu."
+  },
+  {
+    question: "Cam kết Uptime của dịch vụ là bao nhiêu?",
+    answer: "Chúng tôi cam kết thời gian hoạt động (Uptime) đạt 99.99% nhờ kiến trúc hạ tầng Cloud Cluster dự phòng cao cấp."
+  }
+];
 
 export default function ContactPage() {
   const [name, setName] = useState('');
@@ -17,6 +36,7 @@ export default function ContactPage() {
   const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
 
   const showToast = (msg: string, type: 'success' | 'error' = 'success') => {
     setToast({ message: msg, type });
@@ -45,6 +65,14 @@ export default function ContactPage() {
             });
           }
         }).catch(() => {});
+      } else {
+        await api.post('/contact', {
+          name,
+          email,
+          phone,
+          subject: serviceTopic,
+          message
+        });
       }
 
       showToast('Cảm ơn bạn! Yêu cầu tư vấn đã được gửi thành công. Chuyên viên sẽ liên hệ với bạn trong vòng 15 phút.');
@@ -333,7 +361,68 @@ export default function ContactPage() {
             </div>
 
           </div>
+        </div>
 
+        {/* FAQ & Map Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-12">
+          
+          {/* FAQ Section */}
+          <div className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-sm">
+            <div className="mb-6">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs font-bold uppercase tracking-wider mb-2">
+                <HelpCircle className="w-3.5 h-3.5" />
+                Câu Hỏi Thường Gặp
+              </div>
+              <h2 className="text-2xl font-black text-slate-900">Giải Đáp Nhanh</h2>
+            </div>
+            
+            <div className="space-y-4">
+              {FAQS.map((faq, index) => (
+                <div 
+                  key={index} 
+                  className={`border border-slate-200 rounded-2xl overflow-hidden transition-all ${openFaq === index ? 'ring-2 ring-indigo-500/20' : 'hover:border-indigo-300'}`}
+                >
+                  <button 
+                    onClick={() => setOpenFaq(openFaq === index ? null : index)}
+                    className="w-full flex items-center justify-between p-4 bg-white text-left focus:outline-none"
+                  >
+                    <span className="font-bold text-slate-900 text-sm">{faq.question}</span>
+                    {openFaq === index ? (
+                      <Minus className="w-4 h-4 text-indigo-600 shrink-0" />
+                    ) : (
+                      <Plus className="w-4 h-4 text-slate-400 shrink-0" />
+                    )}
+                  </button>
+                  {openFaq === index && (
+                    <div className="px-4 pb-4 text-sm text-slate-600 leading-relaxed border-t border-slate-100 pt-3">
+                      {faq.answer}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Google Maps Section */}
+          <div className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-sm flex flex-col">
+            <div className="mb-6">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold uppercase tracking-wider mb-2">
+                <MapPin className="w-3.5 h-3.5" />
+                Bản Đồ Chỉ Đường
+              </div>
+              <h2 className="text-2xl font-black text-slate-900">Trụ Sở Chính Của Chúng Tôi</h2>
+            </div>
+            
+            <div className="relative flex-1 min-h-[300px] w-full rounded-2xl overflow-hidden border border-slate-200">
+              <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3723.9244031580227!2d105.78715871540237!3d21.03571059291881!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab483ed5c935%3A0x6b306443c224af86!2sHITC%20Building!5e0!3m2!1svi!2s!4v1689617260589!5m2!1svi!2s" 
+                className="absolute inset-0 w-full h-full border-0" 
+                allowFullScreen={false} 
+                loading="lazy" 
+                referrerPolicy="no-referrer-when-downgrade"
+              ></iframe>
+            </div>
+          </div>
         </div>
 
       </main>

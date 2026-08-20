@@ -29,9 +29,19 @@ public class GetMyNotificationSettingQueryHandler : IRequestHandler<GetMyNotific
 
         if (setting == null)
         {
-            return new NotificationSettingDto(true, true, true); // Default settings if not created
+            return new NotificationSettingDto(true, true, true, null, null, null, false, false, false, false);
         }
 
-        return new NotificationSettingDto(setting.EmailOnOrder, setting.EmailOnSecurity, setting.EmailOnPromotion);
+        return new NotificationSettingDto(
+            setting.EmailOnOrder,
+            setting.EmailOnSecurity,
+            setting.EmailOnPromotion,
+            setting.PhoneNumber,
+            setting.ZaloId,
+            setting.TelegramChatId,
+            setting.SmsOnOrder,
+            setting.SmsOnExpiring,
+            setting.ZaloOnPromotion,
+            setting.TelegramOnAlert);
     }
 }

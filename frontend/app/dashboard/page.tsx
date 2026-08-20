@@ -9,14 +9,15 @@ import {
 } from 'lucide-react';
 import RecentlyViewed from '../../src/components/RecentlyViewed';
 import { api } from '@/src/lib/api';
+import { DashboardLoyaltyWidgets } from '@/src/components/team-features/DashboardLoyaltyWidgets';
 
 interface DashboardStats {
   totalOrders: number;
   activeServices: number;
-  walletBalance: number;
-  loyaltyPoints: number;
-  openTickets: number;
-  monthlySpend: number;
+  totalSpent: number;     // API: totalSpent
+  loyaltyPoints: number; // from /loyalty/me
+  openTickets: number;   // from /tickets/me count
+  invoicesCount: number;
 }
 
 const colorClasses: Record<string, string> = {
@@ -63,26 +64,26 @@ export default function DashboardPage() {
 
   const fetchDashboardData = async () => {
     try {
-      const [dashboardRes, userRes] = await Promise.all([
+      const [dashboardRes, loyaltyRes, ticketsRes] = await Promise.all([
         api.get('/dashboard/me').catch(() => null),
-        api.get('/users/me').catch(() => null),
+        api.get('/loyalty/me').catch(() => null),
+        api.get('/tickets/me').catch(() => ({ data: [] })),
       ]);
 
-      if (dashboardRes && dashboardRes.data) {
-        setStats(dashboardRes.data);
-      } else {
-        setStats({
-          totalOrders: 0,
-          activeServices: 0,
-          walletBalance: 0,
-          loyaltyPoints: 0,
-          openTickets: 0,
-          monthlySpend: 0,
-        });
-      }
+      const dash = dashboardRes?.data || {};
+      setStats({
+        totalOrders:   dash.totalOrders   ?? 0,
+        activeServices: dash.activeServices ?? 0,
+        totalSpent:    dash.totalSpent     ?? 0,
+        loyaltyPoints: loyaltyRes?.data?.points ?? 0,
+        openTickets:   Array.isArray(ticketsRes?.data)
+          ? ticketsRes.data.filter((t: any) => t.status !== 'Closed' && t.status !== 'Resolved').length
+          : 0,
+        invoicesCount: 0,
+      });
 
-      if (userRes && userRes.data) {
-        setUser(userRes.data);
+      if (dashboardRes?.data?.user) {
+        setUser(dashboardRes.data.user);
       }
     } catch (err) {
       console.error('Failed to fetch dashboard:', err);
@@ -125,15 +126,16 @@ export default function DashboardPage() {
         </div>
       )}
 
+      <DashboardLoyaltyWidgets />
+
       {/* Stats Grid */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         {[
           { label: 'Đơn hàng', value: stats?.totalOrders || 0, icon: ShoppingCart, colorKey: 'blue' },
           { label: 'Dịch vụ đang chạy', value: stats?.activeServices || 0, icon: Server, colorKey: 'emerald' },
-          { label: 'Số dư ví', value: stats?.walletBalance ? `${(stats.walletBalance / 1000).toFixed(0)}K` : '0đ', icon: CreditCard, colorKey: 'amber' },
-          { label: 'Tên miền', value: stats?.openTickets || 0, icon: Globe, colorKey: 'cyan' },
+          { label: 'Hóa đơn chờ', value: stats?.invoicesCount || 0, icon: FileText, colorKey: 'rose' },
           { label: 'Điểm thưởng', value: stats?.loyaltyPoints || 0, icon: ShieldCheck, colorKey: 'purple' },
-          { label: 'Hóa đơn tháng', value: stats?.monthlySpend ? `${(stats.monthlySpend / 1000).toFixed(0)}K` : '0đ', icon: TrendingUp, colorKey: 'rose' },
+          { label: 'Hóa đơn tháng', value: stats?.totalSpent ? `${(stats.totalSpent / 1000).toFixed(0)}K₫` : '0đ', icon: TrendingUp, colorKey: 'rose' },
         ].map((stat) => (
           <div key={`stat-${stat.label}`} className="bg-white rounded-2xl p-4 border border-slate-200 hover:border-blue-200 transition-colors">
             <stat.icon className={`w-6 h-6 ${colorClasses[stat.colorKey]} mb-2`} />
@@ -148,13 +150,10 @@ export default function DashboardPage() {
         {[
           { title: 'Quản lý VPS', desc: 'Máy chủ đám mây của bạn', href: '/dashboard/vps-instances', icon: Server, colorKey: 'blue' },
           { title: 'Quản lý SSL', desc: 'Chứng chỉ bảo mật', href: '/dashboard/ssl-certificates', icon: ShieldCheck, colorKey: 'emerald' },
-          { title: 'Quản lý đơn hàng', desc: 'Xem lịch sử và trạng thái', href: '/orders', icon: ShoppingCart, colorKey: 'amber' },
-          { title: 'Ví tiền', desc: 'Nạp tiền và xem giao dịch', href: '/wallet', icon: CreditCard, colorKey: 'rose' },
-          { title: 'Hỗ trợ', desc: 'Tạo ticket hoặc xem lịch sử', href: '/tickets', icon: Activity, colorKey: 'indigo' },
+          { title: 'Hỗ trợ kỹ thuật', desc: 'Gửi yêu cầu hoặc theo dõi ticket', href: '/dashboard/tickets', icon: Activity, colorKey: 'blue' },
           { title: 'Tên miền', desc: 'Quản lý DNS', href: '/domains', icon: Globe, colorKey: 'cyan' },
           { title: 'Tự động gia hạn', desc: 'Quản lý gia hạn tự động', href: '/dashboard/auto-renew', icon: Clock, colorKey: 'violet' },
           { title: 'Backup VPS', desc: 'Sao lưu và khôi phục', href: '/dashboard/vps-backups', icon: Clock, colorKey: 'teal' },
-          { title: 'Lịch sử thanh toán', desc: 'Xem giao dịch ví', href: '/dashboard/payments', icon: CreditCard, colorKey: 'emerald' },
           { title: 'Hóa đơn', desc: 'Tải xuống hóa đơn', href: '/dashboard/invoices', icon: FileText, colorKey: 'sky' },
           { title: 'Thông báo', desc: 'Cài đặt thông báo', href: '/dashboard/notifications', icon: Activity, colorKey: 'amber' },
         ].map((action) => (

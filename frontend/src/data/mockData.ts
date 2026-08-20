@@ -29,11 +29,11 @@ export const HOSTING_PACKAGES: HostingPackage[] = [
       backup: 'Tự động hàng tuần'
     },
     features: [
-      'LiteSpeed Web Server + LSCache',
-      'cPanel Quản trị chuẩn quốc tế',
-      'Quét Mã Độc Imunify360',
-      'Anti-DDoS cơ bản 10Gbps',
-      'Hỗ trợ kỹ thuật 24/7/365'
+      'LiteSpeed + LSCache',
+      'cPanel quản trị',
+      'Quét mã độc Imunify360',
+      'Anti-DDoS cơ bản',
+      'Hỗ trợ kỹ thuật 24/7'
     ]
   },
   {
@@ -53,12 +53,12 @@ export const HOSTING_PACKAGES: HostingPackage[] = [
       backup: 'Tự động hàng ngày (Daily)'
     },
     features: [
-      'LiteSpeed Web Server + LSCache Pro',
-      'Tối ưu tốc độ gấp 10 lần WordPress',
-      'Imunify360 AI Shield Chống Hacker',
-      'Anti-DDoS Pro Chống nghẽn',
-      'Miễn phí 01 Tên miền .com (Hạn năm)',
-      'Hỗ trợ chuyển dữ liệu Miễn phí'
+      'LiteSpeed + LSCache Pro',
+      'Tối ưu x10 WordPress',
+      'Imunify360 AI Shield',
+      'Anti-DDoS Pro',
+      'Tặng Tên miền .com',
+      'Hỗ trợ chuyển dữ liệu'
     ]
   },
   {
@@ -78,11 +78,11 @@ export const HOSTING_PACKAGES: HostingPackage[] = [
     },
     features: [
       'Hạ tầng chuyên dụng AMD EPYC',
-      'IP Riêng (Dedicated IP) đi kèm',
+      'Miễn phí IP Riêng (Dedicated IP)',
       'Dedicated Redis / Memcached',
       'Anti-DDoS Enterprise 500Gbps',
-      'Cam kết Uptime 99.99% SLA',
-      'Chuyên viên tư vấn kỹ thuật riêng'
+      'Cam kết 99.99% Uptime SLA',
+      'Hỗ trợ VIP 1-1 chuyên sâu'
     ]
   }
 ];

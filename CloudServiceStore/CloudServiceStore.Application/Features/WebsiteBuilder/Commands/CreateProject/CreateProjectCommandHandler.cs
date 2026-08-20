@@ -1,6 +1,7 @@
 using CloudServiceStore.Application.Exceptions;
 using CloudServiceStore.Application.Interfaces;
 using CloudServiceStore.Domain.Entities;
+using CloudServiceStore.Domain.Enums;
 using CloudServiceStore.Domain.Interfaces;
 using MediatR;
 
@@ -26,13 +27,21 @@ public class CreateProjectCommandHandler : IRequestHandler<CreateProjectCommand,
     {
         var userId = _currentUser.UserId ?? throw new UnauthorizedException("Chưa đăng nhập");
 
+        // Idempotency check
+        if (!string.IsNullOrEmpty(request.IdempotencyKey))
+        {
+            var existing = await _repo.FirstOrDefaultAsync(x => x.IdempotencyKey == request.IdempotencyKey, cancellationToken);
+            if (existing != null)
+                return existing.Id;
+        }
+
         var project = new WebsiteBuilderProject
         {
             Id = Guid.NewGuid(),
             UserId = userId,
             Name = request.Name,
             TemplateId = request.TemplateId,
-            IsPublished = false,
+            IdempotencyKey = request.IdempotencyKey,
             CreatedAt = DateTime.UtcNow
         };
 

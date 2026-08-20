@@ -37,12 +37,18 @@ public class AddToCartCommandHandler : IRequestHandler<AddToCartCommand, Guid>
         if (!planExists)
             throw new NotFoundException("Gói dịch vụ không tồn tại hoặc đã bị khoá.");
 
-        var cart = await _cartRepo.FirstOrDefaultAsync(c => c.UserId == userId && c.Status == CloudServiceStore.Domain.Enums.CartStatus.Active, ct, c => c.Items);
+        var cart = await _cartRepo.FirstOrDefaultAsync(c => c.UserId == userId, ct, c => c.Items);
 
         if (cart == null)
         {
             cart = new Cart(userId);
             await _cartRepo.AddAsync(cart, ct);
+        }
+        else if (cart.Status != CloudServiceStore.Domain.Enums.CartStatus.Active)
+        {
+            cart.Reactivate();
+            cart.Clear();
+            _cartRepo.Update(cart);
         }
 
         Console.WriteLine($"cart is null? {cart == null}");

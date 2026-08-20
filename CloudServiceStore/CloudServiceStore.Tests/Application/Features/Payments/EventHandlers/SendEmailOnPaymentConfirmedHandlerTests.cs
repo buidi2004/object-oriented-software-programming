@@ -16,13 +16,23 @@ namespace CloudServiceStore.Tests.Application.Features.Payments.EventHandlers;
 
 public class SendEmailOnPaymentConfirmedHandlerTests
 {
+    private readonly Mock<IEmailService> _mockEmailService;
+    private readonly Mock<IRepository<OrderRequest>> _mockOrderRepo;
+    private readonly Mock<IRepository<AppUser>> _mockUserRepo;
     private readonly Mock<ILogger<SendEmailOnPaymentConfirmedHandler>> _mockLoggerSendEmailOnPaymentConfirmedHandler;
     private readonly SendEmailOnPaymentConfirmedHandler _handler;
 
     public SendEmailOnPaymentConfirmedHandlerTests()
     {
+        _mockEmailService = new Mock<IEmailService>();
+        _mockOrderRepo = new Mock<IRepository<OrderRequest>>();
+        _mockUserRepo = new Mock<IRepository<AppUser>>();
         _mockLoggerSendEmailOnPaymentConfirmedHandler = new Mock<ILogger<SendEmailOnPaymentConfirmedHandler>>();
-        _handler = new SendEmailOnPaymentConfirmedHandler(_mockLoggerSendEmailOnPaymentConfirmedHandler.Object);
+        _handler = new SendEmailOnPaymentConfirmedHandler(
+            _mockEmailService.Object,
+            _mockOrderRepo.Object,
+            _mockUserRepo.Object,
+            _mockLoggerSendEmailOnPaymentConfirmedHandler.Object);
     }
 
     [Fact]

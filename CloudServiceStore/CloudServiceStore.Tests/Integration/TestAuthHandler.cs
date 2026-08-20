@@ -1,3 +1,4 @@
+using System;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
@@ -17,18 +18,24 @@ public class TestAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions
 
     protected override Task<AuthenticateResult> HandleAuthenticateAsync()
     {
-        // Extract the Authorization header to determine role
-        var role = "User"; // Default
-        if (Request.Headers.TryGetValue("Authorization", out var authHeader))
+        if (!Request.Headers.TryGetValue("Authorization", out var authHeader) || string.IsNullOrWhiteSpace(authHeader))
         {
-            var headerValue = authHeader.ToString();
-            if (headerValue.Contains("admin", System.StringComparison.OrdinalIgnoreCase))
-                role = "Admin";
-            else if (headerValue.Contains("customer", System.StringComparison.OrdinalIgnoreCase))
-                role = "Customer";
-            else if (headerValue.Contains("editor", System.StringComparison.OrdinalIgnoreCase))
-                role = "Editor";
+            return Task.FromResult(AuthenticateResult.NoResult());
         }
+
+        var headerValue = authHeader.ToString();
+        if (headerValue.Equals("none", StringComparison.OrdinalIgnoreCase))
+        {
+            return Task.FromResult(AuthenticateResult.NoResult());
+        }
+
+        var role = "User"; // Default fallback
+        if (headerValue.Contains("admin", StringComparison.OrdinalIgnoreCase))
+            role = "Admin";
+        else if (headerValue.Contains("customer", StringComparison.OrdinalIgnoreCase))
+            role = "Customer";
+        else if (headerValue.Contains("editor", StringComparison.OrdinalIgnoreCase))
+            role = "Editor";
 
         var claims = new[] 
         {

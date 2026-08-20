@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ShoppingCart, CreditCard, QrCode, Banknote, CheckCircle, Loader2, AlertCircle, ArrowRight } from 'lucide-react';
 import { useCartStore } from '@/src/store/useCartStore';
+import { CheckoutAddressBook } from '@/src/components/team-features/CheckoutAddressBook';
 
 interface CartItem {
   id: string;
@@ -65,8 +66,6 @@ export default function CheckoutPage() {
 
   const paymentMethods: PaymentMethod[] = [
     { id: 'vietqr', name: 'Chuyển khoản VietQR (MB Bank)', icon: QrCode, description: 'Quét mã VietQR chuyển khoản tự động 24/7 (SePay)' },
-    { id: 'momo', name: 'Ví MoMo (Sandbox)', icon: CreditCard, description: 'Thanh toán quét mã qua cổng Ví MoMo 1-click' },
-    { id: 'vnpay', name: 'VNPAY QR', icon: QrCode, description: 'Cổng thanh toán thẻ và VNPAY QR' },
   ];
 
   const handlePayment = async () => {
@@ -94,15 +93,9 @@ export default function CheckoutPage() {
       const orderData = await orderResponse.json();
       const orderId = orderData.orderId || orderData.id || `ORD_${Date.now()}`;
 
-      // 2. Route directly to dedicated Sandbox payment gateway
-      if (selectedMethod === 'momo') {
-        router.push(`/sandbox/momo?orderId=${orderId}&amount=${finalAmount}`);
-        return;
-      } else if (selectedMethod === 'vietqr') {
+      // 2. Route to VietQR payment gateway
+      if (selectedMethod === 'vietqr') {
         router.push(`/sandbox/vietqr?orderId=${orderId}&amount=${finalAmount}`);
-        return;
-      } else if (selectedMethod === 'vnpay') {
-        router.push(`/sandbox/vnpay?key=${orderId}&amount=${finalAmount}`);
         return;
       }
 
@@ -202,16 +195,17 @@ export default function CheckoutPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Order Items */}
           <div className="lg:col-span-2 space-y-4">
+            <CheckoutAddressBook />
             <div className="bg-white rounded-2xl p-6 border border-slate-200">
               <h2 className="text-lg font-bold text-slate-900 mb-4">Dịch vụ trong giỏ hàng</h2>
               <div className="space-y-4">
                 {cartItems.map((item) => (
-                  <div key={item.id} className="flex items-center justify-between py-3 border-b border-slate-100 last:border-0">
-                    <div>
-                      <p className="font-semibold text-slate-900">{item.title}</p>
-                      <p className="text-sm text-slate-500">{item.type === 'vps' ? 'Cloud VPS' : item.type === 'hosting' ? 'Web Hosting' : 'Tên miền'}</p>
+                  <div key={item.id} className="flex flex-col sm:flex-row sm:items-center justify-between py-3 border-b border-slate-100 last:border-0 gap-1.5 sm:gap-4">
+                    <div className="flex-1 min-w-0">
+                      <p className="font-bold text-sm sm:text-base text-slate-900 leading-snug">{item.title}</p>
+                      <p className="text-xs text-slate-500">{item.type === 'vps' ? 'Cloud VPS' : item.type === 'hosting' ? 'Web Hosting' : 'Tên miền'}</p>
                     </div>
-                    <span className="font-bold text-slate-900">{item.price.toLocaleString('vi-VN')} đ</span>
+                    <span className="font-extrabold text-sm sm:text-base text-blue-600 sm:text-slate-900 shrink-0">{item.price.toLocaleString('vi-VN')} đ</span>
                   </div>
                 ))}
               </div>

@@ -20,9 +20,10 @@ public class ResetPasswordCommandHandlerTests
     private readonly Mock<IRepository<AppUser>> _userRepoMock = new();
     private readonly Mock<IUnitOfWork> _uowMock = new();
     private readonly Mock<IPasswordHasher> _hasherMock = new();
+    private readonly Mock<IEmailService> _emailMock = new();
 
     private ResetPasswordCommandHandler CreateHandler() =>
-        new(_tokenRepoMock.Object, _userRepoMock.Object, _uowMock.Object, _hasherMock.Object);
+        new(_tokenRepoMock.Object, _userRepoMock.Object, _uowMock.Object, _hasherMock.Object, _emailMock.Object);
 
     [Fact]
     public async Task Handle_InvalidToken_ThrowsBadRequestException()

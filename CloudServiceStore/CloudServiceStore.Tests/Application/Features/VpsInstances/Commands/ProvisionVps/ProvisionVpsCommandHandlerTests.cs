@@ -24,9 +24,11 @@ public class ProvisionVpsCommandHandlerTests
     private readonly Mock<IRepository<OrderRequest>> _mockOrderRepository;
     private readonly Mock<IRepository<ServiceCategory>> _mockCategoryRepository;
     private readonly Mock<IRepository<ServicePlan>> _mockPlanRepository;
+    private readonly Mock<IRepository<AppUser>> _mockUserRepository;
     private readonly Mock<IUnitOfWork> _mockUnitOfWork;
     private readonly Mock<IJobScheduler> _mockJobScheduler;
     private readonly Mock<ICurrentUserService> _mockCurrentUserService;
+    private readonly Mock<IEmailService> _mockEmailService;
     private readonly ProvisionVpsCommandHandler _handler;
 
     public ProvisionVpsCommandHandlerTests()
@@ -36,9 +38,11 @@ public class ProvisionVpsCommandHandlerTests
         _mockOrderRepository = new Mock<IRepository<OrderRequest>>();
         _mockCategoryRepository = new Mock<IRepository<ServiceCategory>>();
         _mockPlanRepository = new Mock<IRepository<ServicePlan>>();
+        _mockUserRepository = new Mock<IRepository<AppUser>>();
         _mockUnitOfWork = new Mock<IUnitOfWork>();
         _mockJobScheduler = new Mock<IJobScheduler>();
         _mockCurrentUserService = new Mock<ICurrentUserService>();
+        _mockEmailService = new Mock<IEmailService>();
 
         _handler = new ProvisionVpsCommandHandler(
             _mockVpsProvisioningService.Object,
@@ -47,9 +51,11 @@ public class ProvisionVpsCommandHandlerTests
             _mockOrderRepository.Object,
             _mockCategoryRepository.Object,
             _mockPlanRepository.Object,
+            _mockUserRepository.Object,
             _mockUnitOfWork.Object,
             _mockJobScheduler.Object,
             _mockCurrentUserService.Object,
+            _mockEmailService.Object,
             Options.Create(new VpsSettings { DemoTtlMinutes = 2 }));
     }
 
@@ -80,6 +86,9 @@ public class ProvisionVpsCommandHandlerTests
         _mockRepositoryVpsInstance
             .Setup(x => x.FirstOrDefaultAsync(It.IsAny<System.Linq.Expressions.Expression<Func<VpsInstance, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<System.Linq.Expressions.Expression<Func<VpsInstance, object>>[]>()))
             .ReturnsAsync((VpsInstance?)null);
+        _mockRepositoryVpsInstance
+            .Setup(x => x.WhereAsync(It.IsAny<System.Linq.Expressions.Expression<Func<VpsInstance, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<System.Linq.Expressions.Expression<Func<VpsInstance, object>>[]>()))
+            .ReturnsAsync(new System.Collections.Generic.List<VpsInstance>());
         _mockVpsProvisioningService
             .Setup(x => x.ProvisionAsync(It.IsAny<VpsProvisionSpec>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new ProvisionResult(true, "container-123", "vps-nano-test", null));

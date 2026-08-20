@@ -18,6 +18,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using StackExchange.Redis;
+using CloudServiceStore.Infrastructure.BackgroundServices;
 
 namespace CloudServiceStore.Infrastructure;
 
@@ -39,13 +40,36 @@ public static class DependencyInjection
         services.AddSingleton<IQrCodeGeneratorFactory, QrCodeGeneratorFactory>();
         services.AddSingleton<IPasswordHasher, BCryptPasswordHasher>();
         services.AddSingleton<ITokenGenerator, JwtTokenGenerator>();
-        services.AddScoped<IEmailService, LoggingEmailService>();
+        services.Configure<EmailSettings>(configuration.GetSection(EmailSettings.SectionName));
+
+        // Use real Gmail SMTP if configured, otherwise fall back to logging-only
+        var senderEmail = configuration[$"{EmailSettings.SectionName}:SenderEmail"];
+        if (!string.IsNullOrWhiteSpace(senderEmail))
+        {
+            services.AddScoped<IEmailService, GmailEmailService>();
+        }
+        else
+        {
+            services.AddScoped<IEmailService, LoggingEmailService>();
+        }
 
         services.AddSingleton<IVpsSpecParser, VpsSpecParser>();
-        services.AddSingleton<IVpsProvisioningService, DockerVpsProvisioningService>();
+        services.AddScoped<IVpsProvisioningService, DockerVpsProvisioningService>();
+        services.AddScoped<IAcmeProvisioningService, AcmeProvisioningService>();
+        services.AddScoped<IMinioProvisioningService, MinioProvisioningService>();
+        services.AddScoped<IDatabaseProvisioningService, DockerDatabaseProvisioningService>();
+        services.AddScoped<IGameServerProvisioningService, DockerGameServerProvisioningService>();
+        services.AddScoped<IAppInstallerService, DockerAppInstallerService>();
+        services.AddScoped<ICdnProvisioningService, CloudflareCdnProvisioningService>();
+        services.AddScoped<IStaticSiteProvisioningService, MockStaticSiteProvisioningService>();
         services.AddSingleton<IJobScheduler, HangfireJobScheduler>();
         services.AddHostedService<CloudServiceStore.Infrastructure.BackgroundServices.VpsIdleMonitorService>();
         services.AddScoped<ITerminateVpsJob, TerminateVpsJob>();
+
+        // Background Queue & Workers
+        services.AddSingleton<IResourceProvisioningQueue, ResourceProvisioningQueue>();
+        services.AddHostedService<ResourceProvisioningWorker>();
+        services.AddHostedService<SubscriptionMonitorWorker>();
 
         return services;
     }

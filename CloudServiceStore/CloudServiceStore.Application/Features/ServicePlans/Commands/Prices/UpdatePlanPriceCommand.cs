@@ -32,11 +32,13 @@ public class UpdatePlanPriceCommandValidator : AbstractValidator<UpdatePlanPrice
 public class UpdatePlanPriceCommandHandler : IRequestHandler<UpdatePlanPriceCommand>
 {
     private readonly IRepository<PlanPrice> _repository;
+    private readonly IRepository<PlanPriceHistory> _historyRepository;
     private readonly IUnitOfWork _unitOfWork;
 
-    public UpdatePlanPriceCommandHandler(IRepository<PlanPrice> repository, IUnitOfWork unitOfWork)
+    public UpdatePlanPriceCommandHandler(IRepository<PlanPrice> repository, IRepository<PlanPriceHistory> historyRepository, IUnitOfWork unitOfWork)
     {
         _repository = repository;
+        _historyRepository = historyRepository;
         _unitOfWork = unitOfWork;
     }
 
@@ -46,12 +48,26 @@ public class UpdatePlanPriceCommandHandler : IRequestHandler<UpdatePlanPriceComm
         if (price == null || price.ServicePlanId != request.ServicePlanId)
             throw new NotFoundException(nameof(PlanPrice), request.Id);
 
+        var oldPrice = price.Price;
         price.BillingCycle = request.BillingCycle;
         price.Price = request.Price;
         price.Currency = request.Currency;
         price.EffectiveFrom = request.EffectiveFrom;
 
         _repository.Update(price);
+        if (oldPrice != request.Price)
+        {
+            await _historyRepository.AddAsync(new PlanPriceHistory
+            {
+                Id = Guid.NewGuid(),
+                ServicePlanId = request.ServicePlanId,
+                OldPrice = oldPrice,
+                NewPrice = request.Price,
+                Currency = request.Currency,
+                Reason = "Cập nhật giá gói dịch vụ",
+                ChangedAt = DateTime.UtcNow
+            }, cancellationToken);
+        }
         await _unitOfWork.SaveChangesAsync(cancellationToken);
     }
 }

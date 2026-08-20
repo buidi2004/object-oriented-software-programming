@@ -23,9 +23,11 @@ public class ProvisionVpsCommandHandler : IRequestHandler<ProvisionVpsCommand, S
     private readonly IRepository<OrderRequest> _orderRepo;
     private readonly IRepository<ServiceCategory> _categoryRepo;
     private readonly IRepository<ServicePlan> _planRepo;
+    private readonly IRepository<AppUser> _userRepo;
     private readonly IUnitOfWork _uow;
     private readonly IJobScheduler _jobScheduler;
     private readonly ICurrentUserService _currentUserService;
+    private readonly IEmailService _emailService;
     private readonly VpsSettings _vpsSettings;
 
     public ProvisionVpsCommandHandler(
@@ -35,9 +37,11 @@ public class ProvisionVpsCommandHandler : IRequestHandler<ProvisionVpsCommand, S
         IRepository<OrderRequest> orderRepo,
         IRepository<ServiceCategory> categoryRepo,
         IRepository<ServicePlan> planRepo,
+        IRepository<AppUser> userRepo,
         IUnitOfWork uow,
         IJobScheduler jobScheduler,
         ICurrentUserService currentUserService,
+        IEmailService emailService,
         IOptions<VpsSettings> vpsSettings)
     {
         _provisioningService = provisioningService;
@@ -46,9 +50,11 @@ public class ProvisionVpsCommandHandler : IRequestHandler<ProvisionVpsCommand, S
         _orderRepo = orderRepo;
         _categoryRepo = categoryRepo;
         _planRepo = planRepo;
+        _userRepo = userRepo;
         _uow = uow;
         _jobScheduler = jobScheduler;
         _currentUserService = currentUserService;
+        _emailService = emailService;
         _vpsSettings = vpsSettings.Value;
     }
 
@@ -101,7 +107,7 @@ public class ProvisionVpsCommandHandler : IRequestHandler<ProvisionVpsCommand, S
                 v => v.UserId == order.UserId && v.Status != VpsInstanceStatus.Terminated,
                 cancellationToken);
 
-            if (activeVpsList.Count >= 10)
+            if (activeVpsList?.Count >= 10)
             {
                 throw new BadRequestException("Bạn đã đạt giới hạn tối đa 10 máy chủ Cloud VPS hoạt động cùng lúc.");
             }
@@ -153,6 +159,22 @@ public class ProvisionVpsCommandHandler : IRequestHandler<ProvisionVpsCommand, S
             vpsInstance.Status = VpsInstanceStatus.Running;
             _vpsRepo.Update(vpsInstance);
             await _uow.SaveChangesAsync(cancellationToken);
+
+            // Send VPS credentials email to customer
+            var customer = await _userRepo.GetByIdAsync(order.UserId, cancellationToken);
+            if (customer != null && !string.IsNullOrEmpty(customer.Email))
+            {
+                var ip = "103.124.95.50";
+                var port = 22;
+                await _emailService.SendVpsProvisionedEmailAsync(
+                    customer.Email, 
+                    vpsInstance.PlanName, 
+                    ip, 
+                    "root", 
+                    "CloudHost@2026", 
+                    port, 
+                    cancellationToken);
+            }
 
             results.Add(VpsInstanceMapper.ToDto(vpsInstance));
         }

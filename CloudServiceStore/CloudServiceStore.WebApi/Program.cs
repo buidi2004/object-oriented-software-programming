@@ -18,6 +18,8 @@ using CloudServiceStore.Application.Configuration;
 using CloudServiceStore.Infrastructure;
 using Hangfire;
 
+using System.Threading.RateLimiting;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -28,19 +30,33 @@ builder.Services.AddSwaggerGen(options =>
     options.CustomSchemaIds(type => type.FullName);
 });
 
+builder.Services.AddTransient<IResourceStatusNotifier, SignalRResourceStatusNotifier>();
+
 builder.Services.AddRateLimiter(options =>
 {
-    options.AddFixedWindowLimiter("login", opt =>
+    options.AddPolicy("login", httpContext =>
     {
-        opt.PermitLimit = (builder.Environment.IsDevelopment() || builder.Environment.IsEnvironment("Testing")) ? 1000 : 5;
-        opt.Window = TimeSpan.FromMinutes(15);
-        opt.QueueLimit = 0;
+        var clientIp = httpContext.Connection.RemoteIpAddress?.ToString() 
+                       ?? httpContext.Request.Headers["X-Forwarded-For"].FirstOrDefault() 
+                       ?? "unknown";
+
+        var isDevOrTest = builder.Environment.IsDevelopment() || builder.Environment.IsEnvironment("Testing");
+
+        return RateLimitPartition.GetFixedWindowLimiter(
+            clientIp,
+            _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = isDevOrTest ? 1000 : 5,
+                Window = TimeSpan.FromMinutes(15),
+                QueueLimit = 0
+            });
     });
 
     options.OnRejected = async (context, ct) =>
     {
         context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
-        await context.HttpContext.Response.WriteAsync("Quá nhiều lần thử, thử lại sau.", ct);
+        context.HttpContext.Response.ContentType = "application/json";
+        await context.HttpContext.Response.WriteAsync("{\"message\": \"Quá nhiều lần thử từ IP này. Vui lòng thử lại sau 15 phút.\"}", ct);
     };
 });
 
@@ -152,6 +168,22 @@ app.UseHangfireDashboard("/hangfire", new DashboardOptions
 app.MapControllers();
 app.MapHub<CloudServiceStore.WebApi.Hubs.VpsTerminalHub>("/hubs/vps-terminal");
 app.MapHub<CloudServiceStore.WebApi.Hubs.LiveChatHub>("/hubs/chat");
+app.MapHub<CloudServiceStore.WebApi.Hubs.ResourceStatusHub>("/hubs/resource-status");
+
+// Test email endpoint (development only)
+if (app.Environment.IsDevelopment())
+{
+    app.MapGet("/test-email", async (IEmailService emailService, string? to) =>
+    {
+        var toEmail = to ?? "buidi7170@gmail.com";
+        await emailService.SendEmailAsync(
+            toEmail,
+            "🧪 Test Email từ CloudHost VN",
+            "<h2>Xin chào!</h2><p>Nếu bạn đọc được mail này, tích hợp Gmail SMTP đã thành công 🎉</p><p>Gửi lúc: " + DateTime.UtcNow.ToString("HH:mm:ss dd/MM/yyyy") + " UTC</p>"
+        );
+        return Results.Ok(new { success = true, message = $"Email sent to {toEmail}" });
+    });
+}
 
 app.Run();
 public partial class Program { }

@@ -7,3 +7,11 @@ public enum DeployStatus
     Success = 3,
     Failed = 4
 }
+
+public enum StaticSiteStatus
+{
+    Pending = 0,
+    Provisioning = 1,
+    Active = 2,
+    Failed = 3
+}

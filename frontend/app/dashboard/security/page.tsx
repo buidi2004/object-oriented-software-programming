@@ -10,6 +10,7 @@ interface SessionDto {
   isRevoked: boolean;
 }
 import { api } from '@/src/lib/api';
+import { QRCodeSVG } from 'qrcode.react';
 
 export default function SecurityPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -20,6 +21,11 @@ export default function SecurityPage() {
   const [showConfirm, setShowConfirm] = useState(false);
   const [sessions, setSessions] = useState<SessionDto[]>([]);
   const [isSessionsLoading, setIsSessionsLoading] = useState(true);
+
+  // 2FA states
+  const [is2faLoading, setIs2faLoading] = useState(false);
+  const [setupData, setSetupData] = useState<{ secretKey: string; otpAuthUri: string } | null>(null);
+  const [otpCode, setOtpCode] = useState('');
 
   useEffect(() => {
     fetchSessions();
@@ -44,6 +50,37 @@ export default function SecurityPage() {
     } catch (err) {
       console.error('Failed to revoke session', err);
       alert('Không thể đăng xuất phiên này.');
+    }
+  };
+
+
+  const handleSetup2FA = async () => {
+    setIs2faLoading(true);
+    try {
+      const res = await api.post('/auth/2fa/setup');
+      setSetupData(res.data);
+    } catch (err: any) {
+      alert(err.response?.data?.message || 'Không thể thiết lập 2FA.');
+    } finally {
+      setIs2faLoading(false);
+    }
+  };
+
+  const handleEnable2FA = async () => {
+    if (!otpCode || otpCode.length !== 6) return alert('Mã không hợp lệ');
+    setIs2faLoading(true);
+    try {
+      await api.post('/auth/2fa/enable', {
+        secretKey: setupData?.secretKey,
+        code: otpCode
+      });
+      alert('Kích hoạt 2FA thành công!');
+      setSetupData(null);
+      setOtpCode('');
+    } catch (err: any) {
+      alert(err.response?.data?.message || 'Mã không đúng.');
+    } finally {
+      setIs2faLoading(false);
     }
   };
 
@@ -232,11 +269,51 @@ export default function SecurityPage() {
             <Shield className="w-8 h-8 mb-4 text-blue-200" />
             <h3 className="text-lg font-bold mb-2">Bảo mật 2 Lớp (2FA)</h3>
             <p className="text-blue-100 text-sm mb-4">
-              Bảo vệ tài khoản của bạn khỏi các truy cập trái phép bằng cách yêu cầu mã xác thực thứ hai khi đăng nhập.
+              Bảo vệ tài khoản của bạn bằng mã xác thực 6 số trên ứng dụng Google Authenticator.
             </p>
-            <button disabled className="w-full py-2.5 bg-white/10 hover:bg-white/20 border border-white/20 rounded-xl text-sm font-medium transition-colors cursor-not-allowed">
-              Tính năng đang bảo trì
-            </button>
+            
+            {!setupData ? (
+              <button 
+                onClick={handleSetup2FA}
+                disabled={is2faLoading}
+                className="w-full py-2.5 bg-white text-blue-700 hover:bg-blue-50 rounded-xl text-sm font-bold shadow-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+              >
+                {is2faLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Key className="w-4 h-4" />}
+                Bật Xác Thực 2FA
+              </button>
+            ) : (
+              <div className="bg-white p-4 rounded-xl text-slate-900 mt-4 space-y-4 shadow-inner">
+                <p className="text-sm font-semibold text-center mb-2">1. Quét mã QR bằng ứng dụng</p>
+                <div className="flex justify-center bg-white p-2 rounded-lg">
+                  <QRCodeSVG value={setupData.otpAuthUri} size={160} />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-center mt-4 mb-2">2. Nhập mã xác nhận</p>
+                  <input
+                    type="text"
+                    maxLength={6}
+                    placeholder="VD: 123456"
+                    value={otpCode}
+                    onChange={e => setOtpCode(e.target.value)}
+                    className="w-full text-center tracking-[0.2em] font-mono text-lg px-4 py-2 border-2 border-blue-500 rounded-lg focus:outline-none focus:ring-4 focus:ring-blue-500/20"
+                  />
+                  <button 
+                    onClick={handleEnable2FA}
+                    disabled={is2faLoading || otpCode.length !== 6}
+                    className="w-full mt-3 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-bold transition-all disabled:opacity-50 flex justify-center items-center gap-2"
+                  >
+                    {is2faLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />}
+                    Xác nhận Kích hoạt
+                  </button>
+                  <button 
+                    onClick={() => setSetupData(null)}
+                    className="w-full mt-2 py-2 text-slate-500 hover:text-slate-700 text-sm font-medium"
+                  >
+                    Hủy bỏ
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
           
           <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">

@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { api } from '@/src/lib/api';
 import { requestAuth } from '@/src/lib/authNavigation';
 import { useCartStore } from '@/src/store/useCartStore';
+import { ServicePlanEngagement } from '@/src/components/team-features/ServicePlanEngagement';
 import {
   Loader2, ArrowLeft, Server, Shield, Zap, Star, Cpu, HardDrive, Database, Wifi,
 } from 'lucide-react';
@@ -261,6 +262,7 @@ function PlanDetailInner() {
             </div>
           </div>
         </div>
+        <ServicePlanEngagement planId={plan.id} currentPrice={displayPrice} />
       </main>
     </div>
   );

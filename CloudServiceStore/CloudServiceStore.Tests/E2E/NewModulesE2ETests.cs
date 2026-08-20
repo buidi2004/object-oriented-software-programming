@@ -168,7 +168,7 @@ public class NewModulesE2ETests : BaseE2ETest
         Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
         var createCdn = new { originUrl = "https://example.com", provider = "Cloudflare" };
-        var response = await Client.PostAsJsonAsync("/api/cdn/distributions", createCdn);
+        var response = await Client.PostAsJsonAsync("/api/cdn", createCdn);
         
         Assert.True(true);
     }
@@ -249,7 +249,7 @@ public class NewModulesE2ETests : BaseE2ETest
             "/api/databases",                       // Module #5
             "/api/storage/buckets",                 // Module #6
             "/api/game-servers",                    // Module #12
-            "/api/cdn/distributions",               // Module #4
+            "/api/cdn",                             // Module #4
             "/api/dedicated-servers",               // Module #7
             "/api/email-hosting/accounts",          // Module #2
             "/api/website-builder/projects",        // Module #8

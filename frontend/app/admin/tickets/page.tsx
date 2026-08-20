@@ -94,27 +94,54 @@ export default function AdminTicketsPage() {
   };
 
   const filteredTickets = tickets.filter(ticket => {
-    const matchesSearch = ticket.subject.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         ticket.customerName.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = filterStatus === 'all' || ticket.status === filterStatus;
+    const s = searchTerm.toLowerCase();
+    const matchesSearch = (ticket.subject || '').toLowerCase().includes(s) ||
+                         (ticket.customerName || '').toLowerCase().includes(s) ||
+                         (ticket.customerEmail || '').toLowerCase().includes(s) ||
+                         (ticket.id || '').toLowerCase().includes(s);
+    const matchesStatus = filterStatus === 'all' || 
+                         String(ticket.status).toLowerCase() === filterStatus.toLowerCase();
     return matchesSearch && matchesStatus;
   });
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'open': return 'bg-emerald-100 text-emerald-700';
-      case 'pending': return 'bg-amber-100 text-amber-700';
-      case 'closed': return 'bg-slate-100 text-slate-700';
-      default: return 'bg-slate-100 text-slate-700';
-    }
+  const getPriorityLabel = (priority: string | number) => {
+    const p = String(priority || '').toLowerCase();
+    if (p === 'urgent' || p === '4') return 'Khẩn cấp';
+    if (p === 'high' || p === '3') return 'Cao';
+    if (p === 'medium' || p === 'normal' || p === '2') return 'Bình thường';
+    return 'Thấp';
   };
 
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case 'high': return 'bg-red-100 text-red-700';
-      case 'medium': return 'bg-yellow-100 text-yellow-700';
-      case 'low': return 'bg-blue-100 text-blue-700';
-      default: return 'bg-slate-100 text-slate-700';
+  const getPriorityColor = (priority: string | number) => {
+    const p = String(priority || '').toLowerCase();
+    if (p === 'urgent' || p === '4') return 'bg-rose-100 text-rose-700 border border-rose-200';
+    if (p === 'high' || p === '3') return 'bg-red-100 text-red-700 border border-red-200';
+    if (p === 'medium' || p === 'normal' || p === '2') return 'bg-amber-100 text-amber-700 border border-amber-200';
+    return 'bg-blue-100 text-blue-700 border border-blue-200';
+  };
+
+  const getStatusLabel = (status: string | number) => {
+    const s = String(status || '').toLowerCase();
+    if (s === 'open' || s === '1') return 'Đang mở';
+    if (s === 'pending' || s === 'inprogress' || s === '2') return 'Đang xử lý';
+    if (s === 'resolved' || s === '3') return 'Đã giải quyết';
+    return 'Đã đóng';
+  };
+
+  const getStatusColor = (status: string | number) => {
+    const s = String(status || '').toLowerCase();
+    if (s === 'open' || s === '1') return 'bg-emerald-100 text-emerald-700';
+    if (s === 'pending' || s === 'inprogress' || s === '2') return 'bg-amber-100 text-amber-700';
+    return 'bg-slate-100 text-slate-700';
+  };
+
+  const formatDate = (dateStr?: string) => {
+    if (!dateStr) return 'Mới tạo';
+    try {
+      const d = new Date(dateStr);
+      return isNaN(d.getTime()) ? 'Mới tạo' : d.toLocaleString('vi-VN');
+    } catch {
+      return 'Mới tạo';
     }
   };
 
@@ -125,6 +152,9 @@ export default function AdminTicketsPage() {
       </div>
     );
   }
+
+  const openCount = tickets.filter(t => ['open', '1'].includes(String(t.status).toLowerCase())).length;
+  const pendingCount = tickets.filter(t => ['pending', 'inprogress', '2'].includes(String(t.status).toLowerCase())).length;
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -141,10 +171,10 @@ export default function AdminTicketsPage() {
           </div>
           <div className="flex items-center gap-3">
             <span className="px-3 py-1.5 rounded-lg bg-emerald-100 text-emerald-700 text-sm font-semibold">
-              {tickets.filter(t => t.status === 'open').length} Đang mở
+              {openCount} Đang mở
             </span>
             <span className="px-3 py-1.5 rounded-lg bg-amber-100 text-amber-700 text-sm font-semibold">
-              {tickets.filter(t => t.status === 'pending').length} Chờ phản hồi
+              {pendingCount} Đang xử lý
             </span>
           </div>
         </div>
@@ -156,7 +186,7 @@ export default function AdminTicketsPage() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
             <input
               type="text"
-              placeholder="Tìm kiếm ticket..."
+              placeholder="Tìm kiếm theo tiêu đề, khách hàng, email..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
@@ -165,16 +195,16 @@ export default function AdminTicketsPage() {
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
-            className="px-3 py-2.5 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+            className="px-3 py-2.5 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 bg-white"
           >
             <option value="all">Tất cả trạng thái</option>
             <option value="open">Đang mở</option>
-            <option value="pending">Chờ phản hồi</option>
+            <option value="pending">Đang xử lý</option>
             <option value="closed">Đã đóng</option>
           </select>
         </div>
 
-        <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+        <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
@@ -193,39 +223,39 @@ export default function AdminTicketsPage() {
               <tbody className="divide-y divide-slate-100">
                 {filteredTickets.map((ticket) => (
                   <tr key={ticket.id} className="hover:bg-slate-50 transition-colors">
-                    <td className="py-3 px-4 font-mono text-xs text-slate-600">#{ticket.id.slice(0, 8)}</td>
+                    <td className="py-3 px-4 font-mono text-xs text-blue-600 font-bold">#{ticket.id.slice(0, 8)}</td>
                     <td className="py-3 px-4">
                       <p className="font-semibold text-slate-900 line-clamp-1">{ticket.subject}</p>
-                      <p className="text-xs text-slate-500 mt-0.5">{ticket.messageCount} tin nhắn</p>
+                      <p className="text-xs text-slate-500 mt-0.5">{ticket.messageCount || 1} tin nhắn</p>
                     </td>
                     <td className="py-3 px-4">
-                      <p className="font-medium text-slate-900">{ticket.customerName}</p>
+                      <p className="font-medium text-slate-900">{ticket.customerName || 'Khách hàng'}</p>
                       <p className="text-xs text-slate-500">{ticket.customerEmail}</p>
                     </td>
                     <td className="py-3 px-4">
                       <span className="px-2 py-1 rounded-lg bg-slate-100 text-xs font-medium text-slate-700">
-                        {ticket.category}
+                        {ticket.category || 'Kỹ thuật'}
                       </span>
                     </td>
                     <td className="py-3 px-4">
                       <span className={`px-2 py-1 rounded-lg text-xs font-bold ${getPriorityColor(ticket.priority)}`}>
-                        {ticket.priority === 'high' ? 'Cao' : ticket.priority === 'medium' ? 'TB' : 'Thấp'}
+                        {getPriorityLabel(ticket.priority)}
                       </span>
                     </td>
                     <td className="py-3 px-4">
                       <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${getStatusColor(ticket.status)}`}>
-                        {ticket.status === 'open' ? 'Mở' : ticket.status === 'pending' ? 'Chờ' : 'Đóng'}
+                        {getStatusLabel(ticket.status)}
                       </span>
                     </td>
                     <td className="py-3 px-4">
                       {ticket.assignedTo ? (
-                        <span className="text-sm text-slate-700">{ticket.assignedTo}</span>
+                        <span className="text-sm text-slate-700 font-medium">{ticket.assignedTo}</span>
                       ) : (
                         <span className="text-sm text-slate-400 italic">Chưa phân công</span>
                       )}
                     </td>
-                    <td className="py-3 px-4 text-slate-600 text-xs">
-                      {new Date(ticket.lastMessageAt).toLocaleString('vi-VN')}
+                    <td className="py-3 px-4 text-slate-600 text-xs font-mono">
+                      {formatDate(ticket.lastMessageAt || ticket.createdAt)}
                     </td>
                     <td className="py-3 px-4 text-right">
                       <Link href={`/tickets/${ticket.id}`} className="inline-flex p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">

@@ -3,17 +3,13 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Header } from './components/Header';
-import { Hero } from './components/Hero';
-import { BannerSlider } from './components/BannerSlider';
-import { DomainSearch } from './components/DomainSearch';
-import { VpsCalculator } from './components/VpsCalculator';
-import { HostingPlans } from './components/HostingPlans';
-import { InfrastructureFeatures } from './components/InfrastructureFeatures';
-import { HomeTestimonials } from './components/HomeTestimonials';
-import { HomeLatestNews } from './components/HomeLatestNews';
-import { ContactSection } from './components/ContactSection';
-import { Footer } from './components/Footer';
-import { CartDrawer } from './components/CartDrawer';
+import { HomeHeroBanner } from './components/home-redesign/HomeHeroBanner';
+import { HomeAboutSection } from './components/home-redesign/HomeAboutSection';
+import { HomeServicesSection } from './components/home-redesign/HomeServicesSection';
+import { HomeSolutionsSection } from './components/home-redesign/HomeSolutionsSection';
+import { HomeCertifications } from './components/home-redesign/HomeCertifications';
+import { HomePartnersGlobe } from './components/home-redesign/HomePartnersGlobe';
+import { HomePreFooterCTA } from './components/home-redesign/HomePreFooterCTA';
 import { useUIStore } from './store/useUIStore';
 import { useCartStore } from './store/useCartStore';
 
@@ -43,18 +39,13 @@ export default function App() {
 
   return (
     <>
-      <Hero
-        onStartClick={() => handleTabChange('vps')}
-        onPriceClick={() => handleTabChange('vps')}
-      />
-      <BannerSlider />
-      <DomainSearch onAddToCart={() => router.push('/services/ten-mien')} />
-      <VpsCalculator onAddToCart={() => router.push('/services/cloud-vps')} onViewDetails={handleViewServiceDetails} />
-      <HostingPlans onAddToCart={() => router.push('/services/web-hosting')} onViewDetails={handleViewServiceDetails} />
-      <InfrastructureFeatures />
-      <HomeTestimonials />
-      <HomeLatestNews />
-      <ContactSection />
+      <HomeHeroBanner />
+      <HomeAboutSection />
+      <HomeServicesSection />
+      <HomeSolutionsSection />
+      <HomeCertifications />
+      <HomePartnersGlobe />
+      <HomePreFooterCTA />
     </>
   );
 }

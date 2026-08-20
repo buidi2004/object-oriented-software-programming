@@ -151,7 +151,7 @@ export default function ServicePageSections({ content, group = 'all', skipFaqs =
             {content.useCases.map((uc, i) => (
               <div key={i} className="bg-white/5 border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-colors">
                 <h3 className="text-lg font-bold mb-2">{uc.title}</h3>
-                <p className="text-sm text-slate-400 mb-4 leading-relaxed">{uc.description}</p>
+                <p className="text-base text-slate-300 mb-4 leading-relaxed">{uc.description}</p>
                 <div className="flex flex-wrap gap-1.5">
                   {uc.tags.map((tag, j) => (
                     <span key={j} className="px-2 py-0.5 rounded-md bg-white/10 text-xs font-medium text-slate-300">
@@ -176,9 +176,9 @@ export default function ServicePageSections({ content, group = 'all', skipFaqs =
             <div className="text-center mb-10">
               <h2 className="text-3xl font-extrabold text-slate-900 mb-3">{content.specTable.title}</h2>
             </div>
-            <div className="overflow-x-auto rounded-2xl border border-slate-200">
+            <div className="overflow-x-auto rounded-2xl border border-slate-200 max-h-[600px] overflow-y-auto">
               <table className="w-full border-collapse min-w-[600px]">
-                <thead>
+                <thead className="sticky top-0 z-10 shadow-sm">
                   <tr className="bg-slate-50 border-b-2 border-slate-200">
                     {content.specTable.columns.map((col, i) => (
                       <th
@@ -192,7 +192,7 @@ export default function ServicePageSections({ content, group = 'all', skipFaqs =
                 </thead>
                 <tbody>
                   {content.specTable.rows.map((row, i) => (
-                    <tr key={i} className="border-b border-slate-100 hover:bg-slate-50/50">
+                    <tr key={i} className="border-b border-slate-100 even:bg-slate-50 hover:bg-slate-100/50">
                       <td className="py-3 px-4 text-sm font-semibold text-slate-700">{row.label}</td>
                       {row.values.map((val, j) => (
                         <td
@@ -201,7 +201,13 @@ export default function ServicePageSections({ content, group = 'all', skipFaqs =
                             j === (row.highlightIndex ?? 1) ? `${theme.highlightBg} font-semibold ${theme.highlightText}` : 'text-slate-600'
                           }`}
                         >
-                          {val}
+                          {val === 'Có' || val === 'Được hỗ trợ' ? (
+                            <div className="flex justify-center">
+                              <CheckCircle2 className={`w-5 h-5 ${theme.accentText}`} />
+                            </div>
+                          ) : (
+                            val
+                          )}
                         </td>
                       ))}
                     </tr>

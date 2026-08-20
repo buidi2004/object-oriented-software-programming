@@ -13,24 +13,34 @@ public class InstallAppCommandHandler : IRequestHandler<InstallAppCommand, Guid>
     private readonly IRepository<AppTemplate> _templateRepo;
     private readonly IRepository<HostingAccount> _hostingRepo;
     private readonly ICurrentUserService _currentUser;
+    private readonly IAppInstallerService _installerService;
 
     public InstallAppCommandHandler(
         IUnitOfWork uow,
         IRepository<AppInstallation> repo,
         IRepository<AppTemplate> templateRepo,
         IRepository<HostingAccount> hostingRepo,
-        ICurrentUserService currentUser)
+        ICurrentUserService currentUser,
+        IAppInstallerService installerService)
     {
         _uow = uow;
         _repo = repo;
         _templateRepo = templateRepo;
         _hostingRepo = hostingRepo;
         _currentUser = currentUser;
+        _installerService = installerService;
     }
 
     public async Task<Guid> Handle(InstallAppCommand request, CancellationToken cancellationToken)
     {
-        var userId = _currentUser.UserId ?? throw new UnauthorizedException("Chưa đăng nhập");
+        var userId = _currentUser.UserId.GetValueOrDefault();
+
+        // Idempotency check
+        var existing = await _repo.FirstOrDefaultAsync(x => x.IdempotencyKey == request.IdempotencyKey, cancellationToken);
+        if (existing != null)
+        {
+            return existing.Id;
+        }
 
         var template = await _templateRepo.GetByIdAsync(request.TemplateId, cancellationToken)
             ?? throw new NotFoundException("Không tìm thấy ứng dụng");
@@ -47,10 +57,26 @@ public class InstallAppCommandHandler : IRequestHandler<InstallAppCommand, Guid>
             UserId = userId,
             TemplateId = request.TemplateId,
             HostingAccountId = request.HostingAccountId,
-            CreatedAt = DateTime.UtcNow
+            IdempotencyKey = request.IdempotencyKey
         };
 
+        installation.MarkAsInstalling();
+
         await _repo.AddAsync(installation, cancellationToken);
+        await _uow.SaveChangesAsync(cancellationToken);
+
+        // Provisioning
+        string installUrl = await _installerService.InstallAppAsync(installation, cancellationToken);
+
+        if (!string.IsNullOrEmpty(installUrl))
+        {
+            installation.MarkAsCompleted(installUrl);
+        }
+        else
+        {
+            installation.MarkAsFailed("Lỗi tạo container cho App.");
+        }
+
         await _uow.SaveChangesAsync(cancellationToken);
 
         return installation.Id;

@@ -73,6 +73,7 @@ public class AppDbContext : DbContext
     public DbSet<CartReminder> CartReminders => Set<CartReminder>();
     public DbSet<ChatMessage> ChatMessages => Set<ChatMessage>();
     public DbSet<ChatSession> ChatSessions => Set<ChatSession>();
+    public DbSet<Resource> Resources => Set<Resource>();
     public DbSet<ControlPanelCredential> ControlPanelCredentials => Set<ControlPanelCredential>();
     public DbSet<Permission> Permissions => Set<Permission>();
     public DbSet<RolePermission> RolePermissions => Set<RolePermission>();
@@ -106,6 +107,18 @@ public class AppDbContext : DbContext
     // Module #16: Marketplace
     public DbSet<MarketplaceListing> MarketplaceListings => Set<MarketplaceListing>();
     public DbSet<MarketplacePurchase> MarketplacePurchases => Set<MarketplacePurchase>();
+    public DbSet<BillingAddress> BillingAddresses => Set<BillingAddress>();
+    public DbSet<PinnedService> PinnedServices => Set<PinnedService>();
+    public DbSet<TicketFeedback> TicketFeedbacks => Set<TicketFeedback>();
+    public DbSet<ServiceBundle> ServiceBundles => Set<ServiceBundle>();
+    public DbSet<StockAlertSubscription> StockAlertSubscriptions => Set<StockAlertSubscription>();
+    public DbSet<FreeTrialRequest> FreeTrialRequests => Set<FreeTrialRequest>();
+    public DbSet<PlanPriceHistory> PlanPriceHistories => Set<PlanPriceHistory>();
+    public DbSet<PlanQuestion> PlanQuestions => Set<PlanQuestion>();
+    public DbSet<PlanAnswer> PlanAnswers => Set<PlanAnswer>();
+    public DbSet<ObjectStorageBucket> ObjectStorageBuckets { get; set; } = null!;
+    public DbSet<ManagedDatabaseInstance> ManagedDatabases { get; set; } = null!;
+    public DbSet<TwoFactorBackupCode> TwoFactorBackupCodes => Set<TwoFactorBackupCode>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -122,6 +135,15 @@ public class AppDbContext : DbContext
             .HasForeignKey(ci => ci.CartId)
             .OnDelete(DeleteBehavior.Cascade);
 
+        builder.Entity<BillingAddress>().HasIndex(x => new { x.UserId, x.IsDefault });
+        builder.Entity<PinnedService>().HasIndex(x => new { x.UserId, x.ServiceType, x.ServiceId }).IsUnique();
+        builder.Entity<TicketFeedback>().HasIndex(x => x.TicketId).IsUnique();
+        builder.Entity<StockAlertSubscription>().HasIndex(x => new { x.UserId, x.ServicePlanId }).IsUnique();
+        builder.Entity<FreeTrialRequest>().HasIndex(x => x.UserId).IsUnique();
+        builder.Entity<PlanPriceHistory>().HasIndex(x => new { x.ServicePlanId, x.ChangedAt });
+        builder.Entity<PlanQuestion>().HasIndex(x => x.ServicePlanId);
+        builder.Entity<PlanAnswer>().HasIndex(x => x.QuestionId);
+
         base.OnModelCreating(builder);
     }
 
@@ -134,6 +156,13 @@ public class AppDbContext : DbContext
         foreach (var entry in ChangeTracker.Entries())
         {
             Console.WriteLine($"[DEBUG EF] ENTITY: {entry.Entity.GetType().Name} - STATE: {entry.State}");
+        }
+
+        Guid? validUserId = null;
+        if (userId.HasValue)
+        {
+            var userExists = AppUsers.Local.Any(u => u.Id == userId.Value) || AppUsers.Any(u => u.Id == userId.Value);
+            if (userExists) validUserId = userId.Value;
         }
 
         foreach (var entry in ChangeTracker.Entries())
@@ -170,7 +199,7 @@ public class AppDbContext : DbContext
                 auditEntries.Add(new AuditLog
                 {
                     Id = Guid.NewGuid(),
-                    UserId = userId,
+                    UserId = validUserId,
                     Action = action,
                     EntityName = entityName,
                     EntityId = entityId,

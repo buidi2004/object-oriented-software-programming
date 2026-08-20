@@ -175,12 +175,12 @@ export const DomainSearch: React.FC<DomainSearchProps> = ({ onAddToCart }) => {
           )}
 
           {/* Extension Cards Grid */}
-          <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div className="mt-10 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 gap-4">
             {DOMAIN_EXTENSIONS.map((item) => (
               <div
                 key={item.extension}
-                className={`p-4 rounded-2xl border text-center transition-all bg-white hover:border-blue-300 hover:shadow-md relative overflow-hidden ${
-                  item.isPopular ? 'border-blue-200 ring-2 ring-blue-500/10' : 'border-slate-200/80'
+                className={`p-5 flex flex-col justify-between rounded-2xl border text-center transition-all bg-white hover:border-blue-300 hover:shadow-md relative overflow-hidden ${
+                  item.isPopular ? 'border-blue-200 ring-2 ring-blue-500/10 shadow-sm' : 'border-slate-200/80'
                 }`}
               >
                 {item.featuredText && (
@@ -188,19 +188,21 @@ export const DomainSearch: React.FC<DomainSearchProps> = ({ onAddToCart }) => {
                     {item.featuredText}
                   </span>
                 )}
-                <div className="text-xl font-black text-slate-900">{item.extension}</div>
-                <div className="text-sm font-extrabold text-blue-600 mt-1">
-                  {item.pricePerYear.toLocaleString('vi-VN')} đ
-                  <span className="text-[10px] font-semibold text-slate-400">/năm</span>
-                </div>
-                {item.originalPrice && (
-                  <div className="text-[11px] text-slate-400 line-through">
-                    {item.originalPrice.toLocaleString('vi-VN')} đ
+                <div>
+                  <div className="text-xl font-black text-slate-900">{item.extension}</div>
+                  <div className="text-sm font-extrabold text-blue-600 mt-2">
+                    {item.pricePerYear.toLocaleString('vi-VN')} đ
+                    <span className="text-[10px] font-semibold text-slate-400">/năm</span>
                   </div>
-                )}
+                  {item.originalPrice && (
+                    <div className="text-[11px] text-slate-400 line-through mt-0.5">
+                      {item.originalPrice.toLocaleString('vi-VN')} đ
+                    </div>
+                  )}
+                </div>
                 <button
                   onClick={() => handleRegisterDomain(`mybrand${item.extension}`, item.pricePerYear)}
-                  className="mt-3 w-full py-1.5 px-3 rounded-lg bg-slate-100 hover:bg-blue-50 text-slate-700 hover:text-blue-600 font-bold text-xs transition-colors cursor-pointer"
+                  className="mt-4 w-full py-2 rounded-xl bg-slate-100 hover:bg-blue-50 text-slate-700 hover:text-blue-600 font-bold text-sm transition-colors cursor-pointer"
                 >
                   Đăng ký
                 </button>

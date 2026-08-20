@@ -1,19 +1,33 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Bell, ShieldCheck, ShoppingBag, Gift, Loader2, Save, AlertCircle } from 'lucide-react';
+import { Bell, ShieldCheck, ShoppingBag, Gift, Loader2, Save, AlertCircle, MessageSquare, Send } from 'lucide-react';
 import { api } from '@/src/lib/api';
 
 interface NotificationSettings {
   emailOnOrder: boolean;
   emailOnSecurity: boolean;
   emailOnPromotion: boolean;
+  phoneNumber: string;
+  zaloId: string;
+  telegramChatId: string;
+  smsOnOrder: boolean;
+  smsOnExpiring: boolean;
+  zaloOnPromotion: boolean;
+  telegramOnAlert: boolean;
 }
 
 const DEFAULT_SETTINGS: NotificationSettings = {
   emailOnOrder: true,
   emailOnSecurity: true,
   emailOnPromotion: false,
+  phoneNumber: '',
+  zaloId: '',
+  telegramChatId: '',
+  smsOnOrder: false,
+  smsOnExpiring: false,
+  zaloOnPromotion: false,
+  telegramOnAlert: false,
 };
 
 function normalizeSettings(data: unknown): NotificationSettings {
@@ -23,6 +37,13 @@ function normalizeSettings(data: unknown): NotificationSettings {
     emailOnOrder: Boolean(raw.emailOnOrder ?? raw.EmailOnOrder ?? true),
     emailOnSecurity: Boolean(raw.emailOnSecurity ?? raw.EmailOnSecurity ?? true),
     emailOnPromotion: Boolean(raw.emailOnPromotion ?? raw.EmailOnPromotion ?? false),
+    phoneNumber: String(raw.phoneNumber ?? raw.PhoneNumber ?? ''),
+    zaloId: String(raw.zaloId ?? raw.ZaloId ?? ''),
+    telegramChatId: String(raw.telegramChatId ?? raw.TelegramChatId ?? ''),
+    smsOnOrder: Boolean(raw.smsOnOrder ?? raw.SmsOnOrder ?? false),
+    smsOnExpiring: Boolean(raw.smsOnExpiring ?? raw.SmsOnExpiring ?? false),
+    zaloOnPromotion: Boolean(raw.zaloOnPromotion ?? raw.ZaloOnPromotion ?? false),
+    telegramOnAlert: Boolean(raw.telegramOnAlert ?? raw.TelegramOnAlert ?? false),
   };
 }
 
@@ -182,6 +203,23 @@ export default function NotificationsPage() {
               <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
             </label>
           </div>
+        </div>
+      </div>
+
+      <div className="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden">
+        <div className="px-6 py-5 border-b border-slate-100"><h2 className="text-lg font-bold text-slate-900">SMS, Zalo và Telegram</h2><p className="text-sm text-slate-500">Khai báo kênh liên hệ và bật từng loại thông báo.</p></div>
+        <div className="grid md:grid-cols-3 gap-4 p-6 border-b border-slate-100">
+          <label className="text-sm font-semibold">Số điện thoại<input value={settings.phoneNumber} onChange={e=>setSettings({...settings,phoneNumber:e.target.value})} placeholder="0901234567" className="mt-2 w-full border rounded-lg px-3 py-2 font-normal" /></label>
+          <label className="text-sm font-semibold">Zalo ID<input value={settings.zaloId} onChange={e=>setSettings({...settings,zaloId:e.target.value})} placeholder="Zalo ID" className="mt-2 w-full border rounded-lg px-3 py-2 font-normal" /></label>
+          <label className="text-sm font-semibold">Telegram Chat ID<input value={settings.telegramChatId} onChange={e=>setSettings({...settings,telegramChatId:e.target.value})} placeholder="123456789" className="mt-2 w-full border rounded-lg px-3 py-2 font-normal" /></label>
+        </div>
+        <div className="divide-y divide-slate-100">
+          {([
+            ['smsOnOrder','SMS khi đơn hàng cập nhật',ShoppingBag],
+            ['smsOnExpiring','SMS khi dịch vụ sắp hết hạn',MessageSquare],
+            ['zaloOnPromotion','Zalo khi có khuyến mãi',Gift],
+            ['telegramOnAlert','Telegram khi có cảnh báo',Send],
+          ] as const).map(([key,label,Icon])=><div key={key} className="px-6 py-4 flex items-center justify-between"><span className="flex items-center gap-3 text-sm font-semibold"><Icon className="w-5 h-5 text-slate-400"/>{label}</span><label className="relative inline-flex items-center cursor-pointer"><input type="checkbox" className="sr-only peer" checked={Boolean(settings[key])} onChange={()=>handleToggle(key)}/><div className="w-11 h-6 bg-slate-200 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"/></label></div>)}
         </div>
       </div>
     </div>

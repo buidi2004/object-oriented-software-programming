@@ -104,7 +104,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IAsyn
         {
             DbAdapter = DbAdapter.SqlServer,
             SchemasToInclude = new[] { "dbo" },
-            TablesToIgnore = new Respawn.Graph.Table[] { "Roles" }
+            TablesToIgnore = new Respawn.Graph.Table[] { "Roles", "AppUsers" }
         });
     }
 
