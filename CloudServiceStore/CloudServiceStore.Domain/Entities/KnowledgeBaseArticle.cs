@@ -5,10 +5,10 @@ namespace CloudServiceStore.Domain.Entities;
 
 public class KnowledgeBaseArticle : AggregateRoot
 {
-    public string Title { get; private set; }
-    public string Slug { get; private set; }
-    public string Content { get; private set; }
-    public string CategoryTag { get; private set; }
+    public string Title { get; private set; } = null!;
+    public string Slug { get; private set; } = null!;
+    public string Content { get; private set; } = null!;
+    public string CategoryTag { get; private set; } = null!;
     public bool IsPublished { get; private set; }
     public int ViewCount { get; private set; }
     public Guid AuthorId { get; private set; }

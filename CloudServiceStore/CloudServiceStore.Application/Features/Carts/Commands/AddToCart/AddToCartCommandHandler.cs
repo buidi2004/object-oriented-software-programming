@@ -56,7 +56,7 @@ public class AddToCartCommandHandler : IRequestHandler<AddToCartCommand, Guid>
         
         try
         {
-            cart.AddItem(request.ServicePlanId, request.BillingCycle, request.Quantity);
+            cart?.AddItem(request.ServicePlanId, request.BillingCycle, request.Quantity);
         }
         catch (Exception ex)
         {

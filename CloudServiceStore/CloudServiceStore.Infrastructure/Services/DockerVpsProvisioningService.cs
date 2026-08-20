@@ -118,6 +118,7 @@ public class DockerVpsProvisioningService : IVpsProvisioningService
 
     public async Task<string> ExecCommandAsync(string containerId, string command, CancellationToken ct)
     {
+        if (_dockerClient == null) return "Docker client is not available.";
         try
         {
             var createParams = new ContainerExecCreateParameters

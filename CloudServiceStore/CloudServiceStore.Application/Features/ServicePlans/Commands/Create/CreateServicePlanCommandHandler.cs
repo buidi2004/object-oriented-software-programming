@@ -51,7 +51,7 @@ public class CreateServicePlanCommandHandler : IRequestHandler<CreateServicePlan
         var plan = new ServicePlan(request.CategoryId, request.Name, request.Cpu, request.Ram, request.Ssd, request.Bandwidth, qrCodeUrl);
         // Force the ID since we needed it for QR
         var prop = plan.GetType().GetProperty("Id");
-        prop.SetValue(plan, planId);
+        prop?.SetValue(plan, planId);
 
         if (!request.IsActive)
         {

@@ -5,9 +5,9 @@ namespace CloudServiceStore.Domain.Entities;
 
 public class FaqItem : AggregateRoot
 {
-    public string Question { get; private set; }
-    public string Answer { get; private set; }
-    public string CategoryTag { get; private set; }
+    public string Question { get; private set; } = null!;
+    public string Answer { get; private set; } = null!;
+    public string CategoryTag { get; private set; } = null!;
     public int DisplayOrder { get; private set; }
 
     private FaqItem() { } // EF Core
