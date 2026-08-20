@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="BCrypt.Net-Next" Version="4.2.0" />
+    <PackageReference Include="Certes" Version="3.0.4" />
     <PackageReference Include="Dapper" Version="2.1.79" />
     <PackageReference Include="Docker.DotNet" Version="3.125.15" />
     <PackageReference Include="Hangfire.Core" Version="1.8.24" />

@@ -30,6 +30,7 @@ public static class DependencyInjection
         services.Configure<CacheSettings>(configuration.GetSection(CacheSettings.SectionName));
         services.Configure<ProvisioningSettings>(configuration.GetSection(ProvisioningSettings.SectionName));
         services.Configure<MinIOSettings>(configuration.GetSection(MinIOSettings.SectionName));
+        services.Configure<AcmeSettings>(configuration.GetSection(AcmeSettings.SectionName));
         AddCatalogCaching(services, configuration);
 
         services.AddDbContext<AppDbContext>(options =>
@@ -60,6 +61,7 @@ public static class DependencyInjection
         services.AddSingleton<DockerClientFactory>();
         services.AddSingleton<DockerPortAllocator>();
         services.AddSingleton<DockerResourceChecker>();
+        services.AddSingleton<IAcmeChallengeStore, AcmeChallengeStore>();
 
         services.AddSingleton<IVpsSpecParser, VpsSpecParser>();
         services.AddScoped<IVpsProvisioningService, DockerVpsProvisioningService>();

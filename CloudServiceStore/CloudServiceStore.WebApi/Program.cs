@@ -173,6 +173,15 @@ app.MapHub<CloudServiceStore.WebApi.Hubs.LiveChatHub>("/hubs/chat");
 app.MapHub<CloudServiceStore.WebApi.Hubs.ResourceStatusHub>("/hubs/resource-status");
 app.MapHealthChecks("/health");
 
+// Let's Encrypt ACME HTTP-01 Challenge Endpoint (bypasses auth and rate limit)
+app.MapGet("/.well-known/acme-challenge/{token}", (string token, CloudServiceStore.Application.Interfaces.IAcmeChallengeStore store) =>
+{
+    var keyAuthz = store.GetChallenge(token);
+    return string.IsNullOrEmpty(keyAuthz)
+        ? Microsoft.AspNetCore.Http.Results.NotFound()
+        : Microsoft.AspNetCore.Http.Results.Text(keyAuthz, "text/plain");
+}).AllowAnonymous().DisableRateLimiting();
+
 // Test email endpoint (development only)
 if (app.Environment.IsDevelopment())
 {
