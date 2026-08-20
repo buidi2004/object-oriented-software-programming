@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, Search, Filter, MessageSquare, Clock, AlertCircle, CheckCircle2, User, Tag, ChevronRight } from 'lucide-react';
+import { ArrowLeft, Search, Filter, MessageSquare, Clock, AlertCircle, CheckCircle2, User, Tag, ChevronRight, Mail, X, Loader2 } from 'lucide-react';
 
 interface Ticket {
   id: string;
@@ -26,6 +26,13 @@ export default function AdminTicketsPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
   const [selectedTicket, setSelectedTicket] = useState<string | null>(null);
+  
+  // Email Modal State
+  const [emailModalOpen, setEmailModalOpen] = useState(false);
+  const [emailTicketId, setEmailTicketId] = useState<string | null>(null);
+  const [emailSubject, setEmailSubject] = useState('');
+  const [emailBody, setEmailBody] = useState('');
+  const [isSendingEmail, setIsSendingEmail] = useState(false);
 
   useEffect(() => {
     checkAdminAccess();
@@ -90,6 +97,44 @@ export default function AdminTicketsPage() {
       }
     } catch (error) {
       console.error('Failed to assign ticket:', error);
+    }
+  };
+
+  const handleSendEmail = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!emailTicketId || !emailSubject.trim() || !emailBody.trim()) return;
+
+    const token = localStorage.getItem('accessToken');
+    if (!token) return;
+
+    setIsSendingEmail(true);
+    try {
+      const response = await fetch(`/api/tickets/${emailTicketId}/email`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          subject: emailSubject,
+          htmlBody: emailBody
+        }),
+      });
+
+      if (response.ok) {
+        alert('Đã gửi email thành công!');
+        setEmailModalOpen(false);
+        setEmailSubject('');
+        setEmailBody('');
+      } else {
+        const errorData = await response.json();
+        alert('Gửi email thất bại: ' + (errorData.message || 'Lỗi không xác định'));
+      }
+    } catch (error) {
+      console.error('Lỗi khi gửi email:', error);
+      alert('Đã có lỗi xảy ra khi gửi email');
+    } finally {
+      setIsSendingEmail(false);
     }
   };
 
@@ -257,7 +302,18 @@ export default function AdminTicketsPage() {
                     <td className="py-3 px-4 text-slate-600 text-xs font-mono">
                       {formatDate(ticket.lastMessageAt || ticket.createdAt)}
                     </td>
-                    <td className="py-3 px-4 text-right">
+                    <td className="py-3 px-4 text-right flex justify-end gap-2">
+                      <button 
+                        onClick={() => {
+                          setEmailTicketId(ticket.id);
+                          setEmailSubject(`Re: ${ticket.subject}`);
+                          setEmailModalOpen(true);
+                        }}
+                        className="inline-flex p-2 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
+                        title="Gửi Email cho khách hàng"
+                      >
+                        <Mail className="w-4 h-4" />
+                      </button>
                       <Link href={`/tickets/${ticket.id}`} className="inline-flex p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
                         <ChevronRight className="w-4 h-4" />
                       </Link>
@@ -276,6 +332,82 @@ export default function AdminTicketsPage() {
           )}
         </div>
       </main>
+
+      {/* Email Modal */}
+      {emailModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+          <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl overflow-hidden flex flex-col">
+            <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+              <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+                <Mail className="w-5 h-5 text-blue-600" />
+                Gửi Email cho khách hàng
+              </h2>
+              <button 
+                onClick={() => setEmailModalOpen(false)}
+                className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-200 rounded-lg transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            
+            <form onSubmit={handleSendEmail} className="p-6 flex flex-col gap-4">
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1">
+                  Tiêu đề email
+                </label>
+                <input
+                  type="text"
+                  value={emailSubject}
+                  onChange={(e) => setEmailSubject(e.target.value)}
+                  className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                  placeholder="Nhập tiêu đề..."
+                  required
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1">
+                  Nội dung (hỗ trợ HTML)
+                </label>
+                <textarea
+                  value={emailBody}
+                  onChange={(e) => setEmailBody(e.target.value)}
+                  className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 min-h-[200px]"
+                  placeholder="Nhập nội dung email..."
+                  required
+                />
+              </div>
+              
+              <div className="flex items-center justify-end gap-3 mt-4">
+                <button
+                  type="button"
+                  onClick={() => setEmailModalOpen(false)}
+                  className="px-4 py-2 rounded-lg text-slate-600 font-medium hover:bg-slate-100 transition-colors"
+                >
+                  Hủy
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSendingEmail || !emailSubject.trim() || !emailBody.trim()}
+                  className="px-6 py-2 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                >
+                  {isSendingEmail ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      Đang gửi...
+                    </>
+                  ) : (
+                    <>
+                      <Mail className="w-4 h-4" />
+                      Gửi Email
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

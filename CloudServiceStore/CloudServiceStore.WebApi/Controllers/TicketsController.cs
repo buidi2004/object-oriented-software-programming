@@ -109,7 +109,19 @@ public class TicketsController : ControllerBase
         var result = await _mediator.Send(new GetTicketByIdQuery(id), ct);
         return Ok(result);
     }
+    [HttpPost("{id:guid}/email")]
+    [Authorize(Roles = "Admin,Staff")]
+    public async Task<IActionResult> SendEmail(Guid id, [FromBody] SendTicketEmailRequest dto, CancellationToken ct)
+    {
+        if (dto == null || string.IsNullOrWhiteSpace(dto.Subject) || string.IsNullOrWhiteSpace(dto.HtmlBody))
+            return BadRequest(new { message = "Tiêu đề và nội dung email không được để trống." });
+
+        var command = new CloudServiceStore.Application.Features.Tickets.Commands.SendTicketEmail.SendTicketEmailCommand(id, dto.Subject, dto.HtmlBody);
+        await _mediator.Send(command, ct);
+        return Ok(new { success = true });
+    }
 }
 
 public record AddTicketMessageRequest(string Message, string? AttachmentUrl = null);
 public record AssignTicketRequest(Guid StaffId);
+public record SendTicketEmailRequest(string Subject, string HtmlBody);
