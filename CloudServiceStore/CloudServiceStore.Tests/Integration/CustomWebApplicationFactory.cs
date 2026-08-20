@@ -59,9 +59,9 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IAsyn
             
             // Remove ALL registered IEmailService
             var emailServiceDescriptors = services.Where(d => d.ServiceType == typeof(CloudServiceStore.Application.Interfaces.IEmailService)).ToList();
-            foreach (var descriptor in emailServiceDescriptors)
+            foreach (var emailDesc in emailServiceDescriptors)
             {
-                services.Remove(descriptor);
+                services.Remove(emailDesc);
             }
             services.AddTransient<CloudServiceStore.Application.Interfaces.IEmailService, CloudServiceStore.Tests.Mocks.MockEmailService>();
 
