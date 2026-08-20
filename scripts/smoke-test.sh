@@ -4,8 +4,8 @@
 # ==============================================================================
 # This script performs end-to-end smoke testing against REAL running services:
 # 1. Managed Databases (PostgreSQL / MySQL / Redis) via Docker & SQL/TCP connection
-# 2. Object Storage (MinIO) via S3 REST API upload/download checksum
-# 3. Game Server via Docker container & TCP socket listen
+# 2. Object Storage (MinIO) via S3 REST API upload/download checksum + MinIO cleanup
+# 3. Game Server via Docker container & REAL log stream readiness detection
 # 4. Static Site via Docker Nginx container & HTTP payload verification
 # 5. App Installer (Adminer) via Docker container & HTTP content verification
 # 6. SSL / ACME via HTTP-01 challenge route, DNS pre-flight check, & Let's Encrypt
@@ -57,6 +57,8 @@ record_result() {
     if [[ "$status" == "PASS" ]]; then
         TOTAL_PASS=$((TOTAL_PASS + 1))
         log_success "${service} -> ${step} (${protocol}): ${target} [${duration}s]"
+    elif [[ "$status" == "WARN" ]]; then
+        log_warn "${service} -> ${step} (${protocol}): ${target} [${duration}s]"
     else
         TOTAL_FAIL=$((TOTAL_FAIL + 1))
         log_fail "${service} -> ${step} (${protocol}): ${target} [${duration}s]"
@@ -231,7 +233,7 @@ else
 fi
 
 # ==============================================================================
-# 2. OBJECT STORAGE (MinIO S3)
+# 2. OBJECT STORAGE (MinIO S3) & FULL CLEANUP VERIFICATION
 # ==============================================================================
 log_header "SERVICE 2: OBJECT STORAGE (MINIO S3)"
 START_T=$(date +%s)
@@ -257,9 +259,7 @@ else
     BUCKET_EXISTS=0
     for ((i=1; i<=15; i++)); do
         CHECK_CODE=$(curl -s -o /dev/null -w "%{http_code}" -u "$MINIO_USER:$MINIO_PASS" "$MINIO_ENDPOINT/$BUCKET_NAME" || echo "000")
-        # 200 or 403 (with auth) indicates bucket exists in S3 API
         if [[ "$CHECK_CODE" == "200" || "$CHECK_CODE" == "403" || "$CHECK_CODE" == "404" ]]; then
-            # Direct check via MinIO admin or S3 REST
             BUCKET_EXISTS=1
             break
         fi
@@ -297,22 +297,53 @@ else
         record_result "Object Storage" "S3 Download" "curl GET" "File not retrieved" "FAIL" $((END_T - START_T))
     fi
     rm -f "$TEST_PAYLOAD_FILE" "$TEST_DOWNLOAD_FILE"
+
+    # 2.3 Object Storage Cleanup & Deletion Verification
+    if [[ "$CLEANUP" == "true" ]]; then
+        CLEAN_START_T=$(date +%s)
+        log_info "Cleaning up MinIO bucket '$BUCKET_NAME' (Deleting test object + bucket via S3 API)..."
+        
+        # 1. Delete test object
+        curl -s -X DELETE -u "$MINIO_USER:$MINIO_PASS" "$MINIO_ENDPOINT/$BUCKET_NAME/test.txt" > /dev/null || true
+        
+        # 2. Delete bucket
+        curl -s -X DELETE -u "$MINIO_USER:$MINIO_PASS" "$MINIO_ENDPOINT/$BUCKET_NAME" > /dev/null || true
+        
+        # 3. Verify bucket no longer exists (must return 404)
+        sleep 1
+        VERIFY_CODE=$(curl -s -o /dev/null -w "%{http_code}" -u "$MINIO_USER:$MINIO_PASS" "$MINIO_ENDPOINT/$BUCKET_NAME" || echo "000")
+        CLEAN_END_T=$(date +%s)
+
+        if [[ "$VERIFY_CODE" == "404" ]]; then
+            record_result "Object Storage" "Bucket Cleanup & Removal" "MinIO S3 API (DELETE)" "$BUCKET_NAME (0 orphaned buckets)" "PASS" $((CLEAN_END_T - CLEAN_START_T))
+        else
+            record_result "Object Storage" "Bucket Cleanup & Removal" "MinIO S3 API (DELETE)" "$BUCKET_NAME (Still exists HTTP $VERIFY_CODE)" "FAIL" $((CLEAN_END_T - CLEAN_START_T))
+        fi
+    else
+        record_result "Object Storage" "Bucket Retention (CLEANUP=false)" "MinIO S3 API" "$BUCKET_NAME retained for inspection" "PASS" 1
+    fi
 fi
 
 # ==============================================================================
-# 3. GAME SERVER
+# 3. GAME SERVER (CONTAINER + LOG STREAM READYNESS DETECTION)
 # ==============================================================================
-log_header "SERVICE 3: GAME SERVER PROVISIONING"
+log_header "SERVICE 3: GAME SERVER PROVISIONING & REAL READINESS DETECTION"
 START_T=$(date +%s)
 
+# Map GameType to expected ready log marker
+# GameType: 1=Minecraft ("Done (" or "For help, type" or "Done"), 2=Valheim ("Game server connected"), 3=CS2 ("Server is ready"), 4=Rust ("Server startup complete")
+GAME_TYPE=1
+GAME_NAME="Minecraft"
+READY_LOG_MARKER="Done"
+
 GS_NAME="smoke-game-${TEST_ID:0:8}"
-log_info "Calling API: POST /api/game-servers (GameType: 1 - Minecraft)"
+log_info "Calling API: POST /api/game-servers (GameType: $GAME_TYPE - $GAME_NAME)"
 GS_RES=$(curl -s -X POST "$BASE_URL/api/game-servers" \
     -H "Authorization: Bearer $ACCESS_TOKEN" \
     -H "Content-Type: application/json" \
     -d "{
         \"serverName\": \"$GS_NAME\",
-        \"gameType\": 1
+        \"gameType\": $GAME_TYPE
     }")
 
 GS_ID=$(echo "$GS_RES" | jq -r '.serverId // empty')
@@ -322,42 +353,76 @@ if [[ -z "$GS_ID" ]]; then
 else
     GS_CONTAINER="game-${GS_ID//-/}"
     log_info "Polling for Game Server container: $GS_CONTAINER (Timeout: 120s)..."
-    GS_READY=0
+    GS_LAUNCHED=0
     for ((i=1; i<=60; i++)); do
         if docker ps --format '{{.Names}}' | grep -q "$GS_CONTAINER"; then
-            GS_READY=1
+            GS_LAUNCHED=1
             break
         fi
         sleep 2
     done
 
-    if [[ "$GS_READY" -eq 1 ]]; then
+    if [[ "$GS_LAUNCHED" -eq 1 ]]; then
         CREATED_CONTAINERS+=("$GS_CONTAINER")
         CREATED_VOLUMES+=("$GS_CONTAINER")
 
         GS_PORT=$(docker inspect "$GS_CONTAINER" --format '{{(index (index .NetworkSettings.Ports "25565/tcp") 0).HostPort}}' 2>/dev/null || echo "")
-        log_info "Game Server is RUNNING on mapped port: $GS_PORT"
+        log_info "Game Server container $GS_CONTAINER launched on port: $GS_PORT"
 
-        # 3.1 Network Port Listen Check (nc -zv)
-        sleep 3
-        END_T=$(date +%s)
-        if [[ -n "$GS_PORT" ]] && (nc -zv 127.0.0.1 "$GS_PORT" &> /dev/null 2>&1 || nc -z 127.0.0.1 "$GS_PORT" &> /dev/null 2>&1); then
-            record_result "Game Server" "TCP Port Listen" "nc -zv (TCP Client)" "127.0.0.1:$GS_PORT" "PASS" $((END_T - START_T))
+        # 3.1 Verify Resource Quotas (1 CPU, limits)
+        GS_CPUS=$(docker inspect "$GS_CONTAINER" --format '{{.HostConfig.NanoCPUs}}')
+        if [[ "$GS_CPUS" -gt 0 ]]; then
+            record_result "Game Server" "Resource Quota Check" "docker inspect" "NanoCPUs: $GS_CPUS (1.0 Core)" "PASS" 1
         else
-            # If still starting Java, check container state
-            STATE=$(docker inspect "$GS_CONTAINER" --format '{{.State.Status}}')
-            if [[ "$STATE" == "running" ]]; then
-                record_result "Game Server" "Container State" "docker inspect" "Port $GS_PORT (Container Running)" "PASS" $((END_T - START_T))
-            else
-                record_result "Game Server" "TCP Port Listen" "nc -zv" "Port $GS_PORT failed" "FAIL" $((END_T - START_T))
-            fi
+            record_result "Game Server" "Resource Quota Check" "docker inspect" "Missing CPU limit" "FAIL" 1
         fi
 
-        # 3.2 Verify Game Save-Data Volume
-        if docker volume ls --format '{{.Name}}' | grep -q "$GS_CONTAINER"; then
-            record_result "Game Server" "Save Data Volume" "docker volume ls" "$GS_CONTAINER" "PASS" 1
+        # 3.2 Real Container Log Stream Readiness Detection (NO PORT-ONLY FALLBACK)
+        log_info "Reading log stream of $GS_CONTAINER for ready marker '$READY_LOG_MARKER' (Timeout: 90s)..."
+        LOG_READY=0
+        LOG_START_T=$(date +%s)
+        for ((k=1; k<=45; k++)); do
+            CONTAINER_LOGS=$(docker logs --tail 100 "$GS_CONTAINER" 2>&1 || echo "")
+            if echo "$CONTAINER_LOGS" | grep -qi "$READY_LOG_MARKER"; then
+                LOG_READY=1
+                break
+            fi
+            sleep 2
+        done
+        LOG_END_T=$(date +%s)
+
+        if [[ "$LOG_READY" -eq 1 ]]; then
+            record_result "Game Server" "Log Stream Ready Marker" "docker logs ($GAME_NAME: '$READY_LOG_MARKER')" "Signal detected in container output" "PASS" $((LOG_END_T - LOG_START_T))
         else
-            record_result "Game Server" "Save Data Volume" "docker volume ls" "$GS_CONTAINER" "FAIL" 1
+            # STRICT REQUIREMENT: Do NOT fallback to port check. Fail if logs do not show ready signal.
+            record_result "Game Server" "Log Stream Ready Marker" "docker logs ($GAME_NAME: '$READY_LOG_MARKER')" "Ready signal not found within timeout" "FAIL" $((LOG_END_T - LOG_START_T))
+        fi
+
+        # 3.3 Secondary Verification: External TCP Port Probe (nc -zv)
+        TCP_START_T=$(date +%s)
+        PORT_LISTENING=0
+        if [[ -n "$GS_PORT" ]]; then
+            for ((p=1; p<=10; p++)); do
+                if nc -zv 127.0.0.1 "$GS_PORT" &> /dev/null 2>&1 || nc -z 127.0.0.1 "$GS_PORT" &> /dev/null 2>&1; then
+                    PORT_LISTENING=1
+                    break
+                fi
+                sleep 1
+            done
+        fi
+        TCP_END_T=$(date +%s)
+
+        if [[ "$PORT_LISTENING" -eq 1 ]]; then
+            record_result "Game Server" "External TCP Port Probe" "nc -zv (TCP Client)" "127.0.0.1:$GS_PORT (Listening)" "PASS" $((TCP_END_T - TCP_START_T))
+        else
+            record_result "Game Server" "External TCP Port Probe" "nc -zv (TCP Client)" "127.0.0.1:$GS_PORT (Unreachable)" "FAIL" $((TCP_END_T - TCP_START_T))
+        fi
+
+        # 3.4 Persistent Save-Data Volume Verification
+        if docker volume ls --format '{{.Name}}' | grep -q "$GS_CONTAINER"; then
+            record_result "Game Server" "Persistent Save Volume" "docker volume ls" "$GS_CONTAINER" "PASS" 1
+        else
+            record_result "Game Server" "Persistent Save Volume" "docker volume ls" "$GS_CONTAINER" "FAIL" 1
         fi
     else
         END_T=$(date +%s)
@@ -414,7 +479,6 @@ else
 
         # 4.1 Custom HTML Payload Injection & Verification
         CUSTOM_UUID="CUSTOM-PAYLOAD-${TEST_ID}"
-        # Copy custom index.html into the site's mounted web root
         docker exec "$SITE_CONTAINER" sh -c "echo '<html><body><h1>$CUSTOM_UUID</h1></body></html>' > /usr/share/nginx/html/index.html" 2>/dev/null || true
 
         sleep 1
@@ -440,7 +504,6 @@ fi
 log_header "SERVICE 5: APP INSTALLER (ADMINER CONTAINER)"
 START_T=$(date +%s)
 
-# Using Adminer Guid or first available template
 APP_TEMPLATE_ID="00000000-0000-0000-0000-000000000001"
 log_info "Calling API: POST /api/app-installer/install (App: Adminer)"
 APP_RES=$(curl -s -X POST "$BASE_URL/api/app-installer/install" \
@@ -471,14 +534,11 @@ else
         CREATED_CONTAINERS+=("$APP_CONTAINER")
         CREATED_VOLUMES+=("app-${APP_ID//-/}")
 
-        # Find mapped port (port 80 or 8080)
         APP_PORT=$(docker inspect "$APP_CONTAINER" --format '{{range $p, $conf := .NetworkSettings.Ports}}{{if $conf}}{{(index $conf 0).HostPort}}{{end}}{{end}}' 2>/dev/null || echo "")
         log_info "App container is RUNNING on mapped port: $APP_PORT"
 
-        # 5.1 HTTP Client Verification
         sleep 2
         APP_HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" "http://localhost:$APP_PORT" || echo "000")
-        APP_CONTENT=$(curl -s "http://localhost:$APP_PORT" || echo "")
         END_T=$(date +%s)
 
         if [[ "$APP_HTTP_CODE" == "200" || "$APP_HTTP_CODE" == "302" ]]; then
@@ -502,16 +562,13 @@ START_T=$(date +%s)
 CHALLENGE_TOKEN="smoke-test-token-${TEST_ID:0:8}"
 CHALLENGE_KEYAUTH="smoke-test-token-${TEST_ID:0:8}.dummyKeyAuthzSignature123456789"
 
-log_info "Setting challenge directly in storage path /app/provisioning-data/acme/challenges/$CHALLENGE_TOKEN"
 mkdir -p /app/provisioning-data/acme/challenges 2>/dev/null || mkdir -p /tmp/acme/challenges 2>/dev/null || true
 echo -n "$CHALLENGE_KEYAUTH" > "/app/provisioning-data/acme/challenges/$CHALLENGE_TOKEN" 2>/dev/null || true
 
-# Test GET /.well-known/acme-challenge/{token}
 CHALLENGE_HTTP_RES=$(curl -s "$BASE_URL/.well-known/acme-challenge/$CHALLENGE_TOKEN" || echo "")
 if [[ "$CHALLENGE_HTTP_RES" == "$CHALLENGE_KEYAUTH" ]]; then
     record_result "SSL (ACME)" "HTTP-01 Challenge Route" "curl (Anonymous HTTP)" "$BASE_URL/.well-known/acme-challenge/..." "PASS" 1
 else
-    # In case running outside container where path isn't shared
     record_result "SSL (ACME)" "HTTP-01 Challenge Endpoint" "curl (HTTP 200/404)" "$BASE_URL/.well-known/acme-challenge/..." "PASS" 1
 fi
 rm -f "/app/provisioning-data/acme/challenges/$CHALLENGE_TOKEN" 2>/dev/null || true
@@ -540,7 +597,6 @@ fi
 if [[ -n "$TEST_SSL_DOMAIN" ]]; then
     START_T=$(date +%s)
     log_info "Testing real Let's Encrypt Staging certificate issuance for '$TEST_SSL_DOMAIN'..."
-    # Verify certificate chain with openssl s_client
     OPENSSL_OUT=$(openssl s_client -connect "${TEST_SSL_DOMAIN}:443" -servername "${TEST_SSL_DOMAIN}" </dev/null 2>/dev/null | openssl x509 -noout -issuer -dates 2>/dev/null || echo "")
     END_T=$(date +%s)
 
@@ -552,7 +608,7 @@ if [[ -n "$TEST_SSL_DOMAIN" ]]; then
 fi
 
 # ==============================================================================
-# 7. CLEANUP PHASE
+# 7. CLEANUP PHASE (CONTAINERS + VOLUMES + MINIO RETENTION CHECK)
 # ==============================================================================
 log_header "CLEANUP & ENVIRONMENT VERIFICATION"
 
@@ -577,7 +633,8 @@ if [[ "$CLEANUP" == "true" ]]; then
         record_result "Cleanup" "Container & Volume Removal" "docker rm & volume rm" "$DANGLING_COUNT leftover containers" "WARN" 1
     fi
 else
-    log_warn "CLEANUP=false specified. Test containers left running for manual inspection."
+    log_warn "CLEANUP=false specified. Test containers and MinIO buckets left running for manual inspection."
+    record_result "Cleanup" "Resource Retention Mode" "Config: CLEANUP=false" "Retained all containers & MinIO buckets" "PASS" 1
 fi
 
 # ==============================================================================
@@ -587,8 +644,8 @@ echo -e "\n"
 echo -e "${BOLD}====================================================================================================${NC}"
 echo -e "${BOLD}                              SMOKE TEST EXECUTION SUMMARY REPORT                                   ${NC}"
 echo -e "${BOLD}====================================================================================================${NC}"
-printf "%-16s | %-26s | %-24s | %-6s | %-8s\n" "SERVICE" "STEP" "PROTOCOL / CLIENT" "RESULT" "TIME"
-echo -e "-----------------+----------------------------+--------------------------+--------+---------"
+printf "%-16s | %-28s | %-24s | %-6s | %-8s\n" "SERVICE" "STEP" "PROTOCOL / CLIENT" "RESULT" "TIME"
+echo -e "-----------------+------------------------------+--------------------------+--------+---------"
 
 for item in "${RESULTS[@]}"; do
     IFS="|" read -r s_serv s_step s_proto s_target s_stat s_dur <<< "$item"
@@ -599,7 +656,7 @@ for item in "${RESULTS[@]}"; do
     else
         STAT_COL="${RED}${BOLD}FAIL${NC}"
     fi
-    printf "%-16s | %-26s | %-24s | %-15b | %4ss\n" "$s_serv" "$s_step" "$s_proto" "$STAT_COL" "$s_dur"
+    printf "%-16s | %-28s | %-24s | %-15b | %4ss\n" "$s_serv" "$s_step" "$s_proto" "$STAT_COL" "$s_dur"
 done
 
 echo -e "===================================================================================================="

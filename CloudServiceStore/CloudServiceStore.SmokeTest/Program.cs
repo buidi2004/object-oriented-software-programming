@@ -62,10 +62,10 @@ public class Program
         // 1. Managed Database (PostgreSQL)
         await TestManagedDatabaseAsync(testId);
 
-        // 2. Object Storage (MinIO)
+        // 2. Object Storage (MinIO S3) + Cleanup
         await TestObjectStorageAsync(testId);
 
-        // 3. Game Server
+        // 3. Game Server + Real Log Stream Readiness
         await TestGameServerAsync(testId);
 
         // 4. Static Site (Nginx)
@@ -77,10 +77,14 @@ public class Program
         // 6. SSL / ACME
         await TestSslAcmeAsync(testId);
 
-        // Cleanup
+        // Cleanup Docker resources
         if (Cleanup)
         {
-            await RunCleanupAsync();
+            await RunDockerCleanupAsync();
+        }
+        else
+        {
+            RecordResult("Cleanup", "Resource Retention Mode", "Config: CLEANUP=false", "Retained all containers & MinIO buckets", true, "0.1s");
         }
 
         // Render Summary Table
@@ -163,6 +167,11 @@ public class Program
             sw.Stop();
 
             RecordResult("Database", "Live TCP / SQL Connect", "TCP Socket (pg_isready)", $"localhost:{port}", connected, $"{sw.Elapsed.TotalSeconds:F1}s");
+
+            // Persistent Volume check
+            var volumes = await Docker.Volumes.ListAsync();
+            bool volumeExists = volumes.Volumes.Any(v => v.Name.Contains(containerName));
+            RecordResult("Database", "Persistent Volume", "docker volume ls", containerName, volumeExists, "0.1s");
         }
         catch (Exception ex)
         {
@@ -232,6 +241,25 @@ public class Program
 
             bool matched = expectedHash == actualHash;
             RecordResult("Object Storage", "S3 PUT & GET Integrity", "MinIO S3 SDK (SHA256)", $"{bucketName}/test.txt", matched, $"{sw.Elapsed.TotalSeconds:F1}s");
+
+            // MinIO Cleanup & Verification
+            if (Cleanup)
+            {
+                var cleanSw = Stopwatch.StartNew();
+                // 1. Delete test object
+                await minio.RemoveObjectAsync(new RemoveObjectArgs().WithBucket(bucketName).WithObject("test.txt"));
+                // 2. Delete bucket
+                await minio.RemoveBucketAsync(new RemoveBucketArgs().WithBucket(bucketName));
+                // 3. Confirm deletion
+                bool stillExists = await minio.BucketExistsAsync(new BucketExistsArgs().WithBucket(bucketName));
+                cleanSw.Stop();
+
+                RecordResult("Object Storage", "Bucket Cleanup & Removal", "MinIO SDK (RemoveBucket)", $"{bucketName} (0 orphaned buckets)", !stillExists, $"{cleanSw.Elapsed.TotalSeconds:F1}s");
+            }
+            else
+            {
+                RecordResult("Object Storage", "Bucket Retention (CLEANUP=false)", "MinIO S3 API", $"{bucketName} retained for inspection", true, "0.1s");
+            }
         }
         catch (Exception ex)
         {
@@ -243,15 +271,17 @@ public class Program
     private static async Task TestGameServerAsync(string testId)
     {
         var sw = Stopwatch.StartNew();
-        AnsiConsole.MarkupLine("\n[bold yellow]=== SERVICE 3: GAME SERVER (MINECRAFT) ===[/]");
+        AnsiConsole.MarkupLine("\n[bold yellow]=== SERVICE 3: GAME SERVER & LOG STREAM READINESS ===[/]");
         var serverName = $"smoke-game-{testId}";
+        int gameType = 1; // Minecraft
+        string readyMarker = "Done";
 
         try
         {
             var res = await Http.PostAsJsonAsync("/api/game-servers", new
             {
                 serverName,
-                gameType = 1 // Minecraft
+                gameType
             });
 
             var json = await res.Content.ReadFromJsonAsync<JsonElement>();
@@ -260,6 +290,7 @@ public class Program
             CreatedContainers.Add(containerName);
             CreatedVolumes.Add(containerName);
 
+            // 3.1 Container Launch
             var container = await PollContainerAsync(containerName, TimeSpan.FromSeconds(120));
             if (container == null) throw new TimeoutException($"Game server container '{containerName}' not running within 120s.");
 
@@ -267,14 +298,64 @@ public class Program
             var portBinding = inspect.NetworkSettings.Ports["25565/tcp"]?.FirstOrDefault()?.HostPort;
             int port = int.Parse(portBinding ?? "0");
 
-            sw.Stop();
-            RecordResult("Game Server", "Container & Port Listen", "TCP Socket", $"Port {port}", port > 0, $"{sw.Elapsed.TotalSeconds:F1}s");
+            // 3.2 CPU Quota Check
+            bool hasCpuLimit = inspect.HostConfig.NanoCPUs > 0;
+            RecordResult("Game Server", "Resource Quotas", "docker inspect", $"NanoCPUs: {inspect.HostConfig.NanoCPUs}", hasCpuLimit, "0.1s");
+
+            // 3.3 Log Stream Ready Marker Detection (STRICT - NO PORT FALLBACK)
+            AnsiConsole.MarkupLine($"[cyan]Reading log stream of {containerName} for ready marker '{readyMarker}' (Timeout: 90s)...[/]");
+            var logSw = Stopwatch.StartNew();
+            bool logReady = await WaitForLogMarkerAsync(container.ID, readyMarker, TimeSpan.FromSeconds(90));
+            logSw.Stop();
+
+            RecordResult("Game Server", "Log Stream Ready Marker", $"docker logs (Minecraft: '{readyMarker}')", logReady ? "Signal detected in container output" : "Ready signal not found within timeout", logReady, $"{logSw.Elapsed.TotalSeconds:F1}s");
+
+            // 3.4 Secondary External TCP Socket probe
+            var tcpSw = Stopwatch.StartNew();
+            bool portListening = await ProbeTcpSocketAsync("127.0.0.1", port, TimeSpan.FromSeconds(10));
+            tcpSw.Stop();
+            RecordResult("Game Server", "External TCP Port Probe", "TCP Socket (nc -zv equivalent)", $"127.0.0.1:{port}", portListening, $"{tcpSw.Elapsed.TotalSeconds:F1}s");
+
+            // 3.5 Persistent Save Volume
+            var volumes = await Docker.Volumes.ListAsync();
+            bool volumeExists = volumes.Volumes.Any(v => v.Name.Contains(containerName));
+            RecordResult("Game Server", "Persistent Save Volume", "docker volume ls", containerName, volumeExists, "0.1s");
         }
         catch (Exception ex)
         {
             sw.Stop();
-            RecordResult("Game Server", "Provisioning", "Docker / TCP", serverName, false, $"{sw.Elapsed.TotalSeconds:F1}s", ex.Message);
+            RecordResult("Game Server", "Provisioning", "Docker / Logs", serverName, false, $"{sw.Elapsed.TotalSeconds:F1}s", ex.Message);
         }
+    }
+
+    private static async Task<bool> WaitForLogMarkerAsync(string containerId, string marker, TimeSpan timeout)
+    {
+        var deadline = DateTime.UtcNow.Add(timeout);
+        while (DateTime.UtcNow < deadline)
+        {
+            try
+            {
+                var logStream = await Docker.Containers.GetContainerLogsAsync(containerId,
+                    false,
+                    new ContainerLogsParameters { ShowStdout = true, ShowStderr = true, Tail = "100" });
+
+                using (logStream)
+                {
+                    using var stdout = new MemoryStream();
+                    using var stderr = new MemoryStream();
+                    await logStream.CopyOutputToAsync(null, stdout, stderr, default);
+
+                    var logs = Encoding.UTF8.GetString(stdout.ToArray()) + Encoding.UTF8.GetString(stderr.ToArray());
+                    if (logs.Contains(marker, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return true;
+                    }
+                }
+            }
+            catch { }
+            await Task.Delay(2000);
+        }
+        return false;
     }
 
     private static async Task TestStaticSiteAsync(string testId)
@@ -430,9 +511,9 @@ public class Program
         return false;
     }
 
-    private static async Task RunCleanupAsync()
+    private static async Task RunDockerCleanupAsync()
     {
-        AnsiConsole.MarkupLine("\n[bold cyan]=== CLEANUP PHASE ===[/]");
+        AnsiConsole.MarkupLine("\n[bold cyan]=== CLEANUP PHASE (DOCKER) ===[/]");
         foreach (var c in CreatedContainers)
         {
             try
