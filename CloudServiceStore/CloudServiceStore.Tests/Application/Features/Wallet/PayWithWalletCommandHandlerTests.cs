@@ -20,8 +20,9 @@ public class PayWithWalletCommandHandlerTests
     private readonly Mock<IRepository<WalletTransaction>> _transactionRepoMock = new();
     private readonly Mock<IRepository<OrderRequest>> _orderRepoMock = new();
     private readonly Mock<ICurrentUserService> _currentUserMock = new();
+    private readonly Mock<MediatR.IMediator> _mediatorMock = new();
 
-    private PayWithWalletCommandHandler CreateHandler() => new(_uowMock.Object, _walletRepoMock.Object, _transactionRepoMock.Object, _orderRepoMock.Object, _currentUserMock.Object);
+    private PayWithWalletCommandHandler CreateHandler() => new(_uowMock.Object, _walletRepoMock.Object, _transactionRepoMock.Object, _orderRepoMock.Object, _currentUserMock.Object, _mediatorMock.Object);
 
     [Fact]
     public async Task Handle_OrderNotFound_ThrowsNotFoundException()

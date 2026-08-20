@@ -19,9 +19,11 @@ public class CheckoutCommandHandler : IRequestHandler<CheckoutCommand, Guid>
     private readonly IRepository<PlanPrice> _priceRepo;
     private readonly ICurrentUserService _currentUser;
     private readonly IRepository<Cart> _cartRepo;
+    private readonly IEmailService _emailService;
+    private readonly IRepository<AppUser> _userRepo;
 
-    public CheckoutCommandHandler(IUnitOfWork uow, IRepository<OrderRequest> orderRepo, IRepository<Coupon> couponRepo, IRepository<PlanPrice> priceRepo, ICurrentUserService currentUser, IRepository<Cart> cartRepo)
-    { _uow = uow; _orderRepo = orderRepo; _couponRepo = couponRepo; _priceRepo = priceRepo; _currentUser = currentUser; _cartRepo = cartRepo; }
+    public CheckoutCommandHandler(IUnitOfWork uow, IRepository<OrderRequest> orderRepo, IRepository<Coupon> couponRepo, IRepository<PlanPrice> priceRepo, ICurrentUserService currentUser, IRepository<Cart> cartRepo, IEmailService emailService, IRepository<AppUser> userRepo)
+    { _uow = uow; _orderRepo = orderRepo; _couponRepo = couponRepo; _priceRepo = priceRepo; _currentUser = currentUser; _cartRepo = cartRepo; _emailService = emailService; _userRepo = userRepo; }
 
     public async Task<Guid> Handle(CheckoutCommand request, CancellationToken ct)
     {
@@ -69,6 +71,25 @@ public class CheckoutCommandHandler : IRequestHandler<CheckoutCommand, Guid>
         cart.Checkout();
 
         await _uow.SaveChangesAsync(ct);
+
+        // Send order confirmation email to customer
+        try
+        {
+            var user = await _userRepo.GetByIdAsync(userId, ct);
+            if (user != null && !string.IsNullOrEmpty(user.Email))
+            {
+                await _emailService.SendOrderConfirmationEmailAsync(
+                    user.Email,
+                    order.Id.ToString(),
+                    order.TotalAmount,
+                    ct);
+            }
+        }
+        catch
+        {
+            // Don't let email failure crash the checkout flow
+        }
+
         return order.Id;
     }
 }

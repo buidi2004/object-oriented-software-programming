@@ -22,6 +22,8 @@ public class CheckoutCommandHandlerTests
     private readonly Mock<IRepository<PlanPrice>> _mockRepositoryPlanPrice;
     private readonly Mock<ICurrentUserService> _mockCurrentUserService;
     private readonly Mock<IRepository<Cart>> _mockRepositoryCart;
+    private readonly Mock<IEmailService> _mockEmailService;
+    private readonly Mock<IRepository<AppUser>> _mockUserRepo;
     private readonly CheckoutCommandHandler _handler;
 
     public CheckoutCommandHandlerTests()
@@ -32,7 +34,9 @@ public class CheckoutCommandHandlerTests
         _mockRepositoryPlanPrice = new Mock<IRepository<PlanPrice>>();
         _mockCurrentUserService = new Mock<ICurrentUserService>();
         _mockRepositoryCart = new Mock<IRepository<Cart>>();
-        _handler = new CheckoutCommandHandler(_mockUnitOfWork.Object, _mockRepositoryOrderRequest.Object, _mockRepositoryCoupon.Object, _mockRepositoryPlanPrice.Object, _mockCurrentUserService.Object, _mockRepositoryCart.Object);
+        _mockEmailService = new Mock<IEmailService>();
+        _mockUserRepo = new Mock<IRepository<AppUser>>();
+        _handler = new CheckoutCommandHandler(_mockUnitOfWork.Object, _mockRepositoryOrderRequest.Object, _mockRepositoryCoupon.Object, _mockRepositoryPlanPrice.Object, _mockCurrentUserService.Object, _mockRepositoryCart.Object, _mockEmailService.Object, _mockUserRepo.Object);
     }
 
     [Fact]

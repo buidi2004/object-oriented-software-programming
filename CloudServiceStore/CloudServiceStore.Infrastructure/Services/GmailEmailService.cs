@@ -15,11 +15,13 @@ public class GmailEmailService : IEmailService
 {
     private readonly EmailSettings _settings;
     private readonly ILogger<GmailEmailService> _logger;
+    private readonly string _frontendBaseUrl;
 
-    public GmailEmailService(IOptions<EmailSettings> settings, ILogger<GmailEmailService> logger)
+    public GmailEmailService(IOptions<EmailSettings> settings, ILogger<GmailEmailService> logger, IOptions<FrontendSettings> frontendOptions)
     {
         _settings = settings.Value;
         _logger = logger;
+        _frontendBaseUrl = frontendOptions.Value.BaseUrl.TrimEnd('/');
     }
 
     public async Task SendEmailAsync(string toEmail, string subject, string htmlBody, CancellationToken cancellationToken = default)
@@ -125,7 +127,7 @@ public class GmailEmailService : IEmailService
                 Bạn có thể theo dõi trạng thái tại trang <strong>Dashboard</strong>.
             </p>
             <div style='text-align: center; margin: 28px 0;'>
-                <a href='http://localhost:3000/dashboard' 
+                <a href='{_frontendBaseUrl}/dashboard' 
                    style='background: linear-gradient(135deg, #00b894 0%, #00cec9 100%); color: white; padding: 14px 40px; 
                           text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; display: inline-block;
                           box-shadow: 0 4px 15px rgba(0, 184, 148, 0.4);'>
@@ -155,7 +157,7 @@ public class GmailEmailService : IEmailService
                 </ul>
             </div>
             <div style='text-align: center; margin: 28px 0;'>
-                <a href='http://localhost:3000/marketplace' 
+                <a href='{_frontendBaseUrl}/marketplace' 
                    style='background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 14px 40px; 
                           text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; display: inline-block;
                           box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);'>
@@ -181,7 +183,7 @@ public class GmailEmailService : IEmailService
                 ⚠️ Nếu bạn không thực hiện thay đổi này, hãy liên hệ ngay với đội ngũ hỗ trợ khẩn cấp của chúng tôi để bảo vệ tài khoản.
             </p>
             <div style='text-align: center; margin: 28px 0;'>
-                <a href='http://localhost:3000/contact' 
+                <a href='{_frontendBaseUrl}/contact' 
                    style='background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); color: white; padding: 14px 40px; 
                           text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 15px; display: inline-block;
                           box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);'>
@@ -227,7 +229,7 @@ public class GmailEmailService : IEmailService
                 🔒 <em>Vui lòng đổi mật khẩu ngay sau lần đăng nhập đầu tiên để đảm bảo an toàn.</em>
             </p>
             <div style='text-align: center; margin: 28px 0;'>
-                <a href='http://localhost:3000/dashboard/vps' 
+                <a href='{_frontendBaseUrl}/dashboard/vps' 
                    style='background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%); color: white; padding: 14px 40px; 
                           text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 15px; display: inline-block;
                           box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);'>
@@ -252,7 +254,7 @@ public class GmailEmailService : IEmailService
                 </p>
             </div>
             <div style='text-align: center; margin: 28px 0;'>
-                <a href='http://localhost:3000/dashboard' 
+                <a href='{_frontendBaseUrl}/dashboard' 
                    style='background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 14px 40px; 
                           text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 15px; display: inline-block;
                           box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);'>
