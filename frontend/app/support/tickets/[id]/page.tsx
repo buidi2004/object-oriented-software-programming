@@ -7,6 +7,7 @@ import { api } from '@/src/lib/api';
 import { Header } from '@/src/components/Header';
 import { LifeBuoy, ArrowLeft, Send, AlertCircle, Loader2, CheckCircle, Clock, User as UserIcon } from 'lucide-react';
 import { useAuthStore } from '@/src/store/useAuthStore';
+import { TicketCsat } from '@/src/components/team-features/TicketCsat';
 
 interface TicketMessage {
   id: string;
@@ -236,6 +237,7 @@ export default function TicketDetailPage() {
             </form>
           )}
         </div>
+        {isClosed && <TicketCsat ticketId={ticket.id} />}
       </div>
     </div>
   );

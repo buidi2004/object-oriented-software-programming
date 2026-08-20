@@ -10,9 +10,9 @@ public class GameServerInstance : AggregateRoot
     public int Port { get; set; }
     public string ContainerId { get; set; } = string.Empty;
     public string ServerName { get; set; } = string.Empty;
-    public GameServerStatus Status { get; private set; } = GameServerStatus.Pending;
+    public GameServerStatus Status { get; set; } = GameServerStatus.Pending;
     public string IdempotencyKey { get; set; } = "";
-    public string FailureReason { get; private set; } = "";
+    public string FailureReason { get; set; } = "";
     public bool IsActive { get; set; } = true;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime ExpiresAt { get; set; }

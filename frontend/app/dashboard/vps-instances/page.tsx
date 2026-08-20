@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { api } from '@/src/lib/api';
 import VpsTerminalModal from '@/src/components/VpsTerminalModal';
+import { PinServiceButton } from '@/src/components/team-features/PinServiceButton';
 
 interface VpsInstance {
   id: string;
@@ -292,6 +293,7 @@ export default function VpsInstancesPage() {
                       <p className="text-sm text-slate-400 mt-1 font-mono">{selected.containerId?.substring(0, 12)}</p>
                     </div>
                     <div className="flex items-center gap-2">
+                      <PinServiceButton serviceType="VPS" serviceId={selected.id} displayName={selected.planName || selected.containerName} />
                       {(() => {
                         const meta = getStatusMeta(selected.status);
                         return (

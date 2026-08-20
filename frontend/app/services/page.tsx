@@ -310,9 +310,14 @@ export default function ServicesPage() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-blue-50 text-blue-600 text-xs font-bold uppercase tracking-wider mb-4">
-            <Zap className="w-3.5 h-3.5" />
-            Dịch Vụ Cloud
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-blue-50 text-blue-600 text-xs font-bold uppercase tracking-wider">
+              <Zap className="w-3.5 h-3.5" />
+              Dịch Vụ Cloud
+            </div>
+            <Link href="/bundles" className="inline-flex items-center gap-1 px-3.5 py-1 rounded-full bg-emerald-50 text-emerald-600 text-xs font-bold hover:bg-emerald-100 transition-colors">
+              🎁 Combo tiết kiệm
+            </Link>
           </div>
           <h1 className="text-4xl sm:text-5xl font-black text-slate-900 tracking-tight mb-4">
             Giải Pháp Cloud Toàn Diện

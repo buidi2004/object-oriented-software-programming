@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import RecentlyViewed from '../../src/components/RecentlyViewed';
 import { api } from '@/src/lib/api';
+import { DashboardLoyaltyWidgets } from '@/src/components/team-features/DashboardLoyaltyWidgets';
 
 interface DashboardStats {
   totalOrders: number;
@@ -124,6 +125,8 @@ export default function DashboardPage() {
           </button>
         </div>
       )}
+
+      <DashboardLoyaltyWidgets />
 
       {/* Stats Grid */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">

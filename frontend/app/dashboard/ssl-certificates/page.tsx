@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ShieldCheck, Shield, ArrowRight, Loader, Download, Copy, Lock, Info } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { PinServiceButton } from '@/src/components/team-features/PinServiceButton';
 import { useResourceProvisioning } from '@/src/hooks/useResourceProvisioning';
 import { ProvisioningStatusBadge } from '@/src/components/shared/ProvisioningStatusBadge';
 

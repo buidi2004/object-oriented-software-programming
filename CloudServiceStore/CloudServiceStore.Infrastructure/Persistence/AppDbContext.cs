@@ -103,6 +103,15 @@ public class AppDbContext : DbContext
     // Module #16: Marketplace
     public DbSet<MarketplaceListing> MarketplaceListings => Set<MarketplaceListing>();
     public DbSet<MarketplacePurchase> MarketplacePurchases => Set<MarketplacePurchase>();
+    public DbSet<BillingAddress> BillingAddresses => Set<BillingAddress>();
+    public DbSet<PinnedService> PinnedServices => Set<PinnedService>();
+    public DbSet<TicketFeedback> TicketFeedbacks => Set<TicketFeedback>();
+    public DbSet<ServiceBundle> ServiceBundles => Set<ServiceBundle>();
+    public DbSet<StockAlertSubscription> StockAlertSubscriptions => Set<StockAlertSubscription>();
+    public DbSet<FreeTrialRequest> FreeTrialRequests => Set<FreeTrialRequest>();
+    public DbSet<PlanPriceHistory> PlanPriceHistories => Set<PlanPriceHistory>();
+    public DbSet<PlanQuestion> PlanQuestions => Set<PlanQuestion>();
+    public DbSet<PlanAnswer> PlanAnswers => Set<PlanAnswer>();
     public DbSet<ObjectStorageBucket> ObjectStorageBuckets { get; set; } = null!;
     public DbSet<ManagedDatabaseInstance> ManagedDatabases { get; set; } = null!;
     public DbSet<TwoFactorBackupCode> TwoFactorBackupCodes => Set<TwoFactorBackupCode>();
@@ -121,6 +130,15 @@ public class AppDbContext : DbContext
             .WithOne(ci => ci.Cart)
             .HasForeignKey(ci => ci.CartId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<BillingAddress>().HasIndex(x => new { x.UserId, x.IsDefault });
+        builder.Entity<PinnedService>().HasIndex(x => new { x.UserId, x.ServiceType, x.ServiceId }).IsUnique();
+        builder.Entity<TicketFeedback>().HasIndex(x => x.TicketId).IsUnique();
+        builder.Entity<StockAlertSubscription>().HasIndex(x => new { x.UserId, x.ServicePlanId }).IsUnique();
+        builder.Entity<FreeTrialRequest>().HasIndex(x => x.UserId).IsUnique();
+        builder.Entity<PlanPriceHistory>().HasIndex(x => new { x.ServicePlanId, x.ChangedAt });
+        builder.Entity<PlanQuestion>().HasIndex(x => x.ServicePlanId);
+        builder.Entity<PlanAnswer>().HasIndex(x => x.QuestionId);
 
         base.OnModelCreating(builder);
     }

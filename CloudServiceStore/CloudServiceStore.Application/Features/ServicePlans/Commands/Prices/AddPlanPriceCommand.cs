@@ -31,15 +31,18 @@ public class AddPlanPriceCommandHandler : IRequestHandler<AddPlanPriceCommand, G
 {
     private readonly IRepository<ServicePlan> _planRepository;
     private readonly IRepository<PlanPrice> _priceRepository;
+    private readonly IRepository<PlanPriceHistory> _historyRepository;
     private readonly IUnitOfWork _unitOfWork;
 
     public AddPlanPriceCommandHandler(
         IRepository<ServicePlan> planRepository,
         IRepository<PlanPrice> priceRepository,
+        IRepository<PlanPriceHistory> historyRepository,
         IUnitOfWork unitOfWork)
     {
         _planRepository = planRepository;
         _priceRepository = priceRepository;
+        _historyRepository = historyRepository;
         _unitOfWork = unitOfWork;
     }
 
@@ -60,6 +63,16 @@ public class AddPlanPriceCommandHandler : IRequestHandler<AddPlanPriceCommand, G
         };
 
         await _priceRepository.AddAsync(price, cancellationToken);
+        await _historyRepository.AddAsync(new PlanPriceHistory
+        {
+            Id = Guid.NewGuid(),
+            ServicePlanId = request.ServicePlanId,
+            OldPrice = 0,
+            NewPrice = request.Price,
+            Currency = request.Currency,
+            Reason = "Thêm mức giá mới",
+            ChangedAt = DateTime.UtcNow
+        }, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return price.Id;
