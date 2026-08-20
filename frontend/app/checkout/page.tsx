@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ShoppingCart, CreditCard, QrCode, Banknote, CheckCircle, Loader2, AlertCircle, ArrowRight } from 'lucide-react';
 import { useCartStore } from '@/src/store/useCartStore';
+import { CheckoutAddressBook } from '@/src/components/team-features/CheckoutAddressBook';
 
 interface CartItem {
   id: string;
@@ -202,6 +203,7 @@ export default function CheckoutPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Order Items */}
           <div className="lg:col-span-2 space-y-4">
+            <CheckoutAddressBook />
             <div className="bg-white rounded-2xl p-6 border border-slate-200">
               <h2 className="text-lg font-bold text-slate-900 mb-4">Dịch vụ trong giỏ hàng</h2>
               <div className="space-y-4">

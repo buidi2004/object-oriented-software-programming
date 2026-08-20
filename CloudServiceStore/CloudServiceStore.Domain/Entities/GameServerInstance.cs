@@ -10,7 +10,7 @@ public class GameServerInstance : AggregateRoot
     public int Port { get; set; }
     public string ContainerId { get; set; } = string.Empty;
     public string ServerName { get; set; } = string.Empty;
-    public GameServerStatus Status { get; set; }
+    public GameServerStatus Status { get; set; } = GameServerStatus.Creating;
     public bool IsActive { get; set; } = true;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime ExpiresAt { get; set; }

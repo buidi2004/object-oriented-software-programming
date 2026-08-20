@@ -40,7 +40,14 @@ public class UpdateNotificationSettingCommandHandler : IRequestHandler<UpdateNot
                 UserId = userId,
                 EmailOnOrder = request.EmailOnOrder,
                 EmailOnSecurity = request.EmailOnSecurity,
-                EmailOnPromotion = request.EmailOnPromotion
+                EmailOnPromotion = request.EmailOnPromotion,
+                PhoneNumber = request.PhoneNumber,
+                ZaloId = request.ZaloId,
+                TelegramChatId = request.TelegramChatId,
+                SmsOnOrder = request.SmsOnOrder,
+                SmsOnExpiring = request.SmsOnExpiring,
+                ZaloOnPromotion = request.ZaloOnPromotion,
+                TelegramOnAlert = request.TelegramOnAlert
             };
             await _repo.AddAsync(setting, ct);
         }
@@ -49,6 +56,13 @@ public class UpdateNotificationSettingCommandHandler : IRequestHandler<UpdateNot
             setting.EmailOnOrder = request.EmailOnOrder;
             setting.EmailOnSecurity = request.EmailOnSecurity;
             setting.EmailOnPromotion = request.EmailOnPromotion;
+            setting.PhoneNumber = request.PhoneNumber;
+            setting.ZaloId = request.ZaloId;
+            setting.TelegramChatId = request.TelegramChatId;
+            setting.SmsOnOrder = request.SmsOnOrder;
+            setting.SmsOnExpiring = request.SmsOnExpiring;
+            setting.ZaloOnPromotion = request.ZaloOnPromotion;
+            setting.TelegramOnAlert = request.TelegramOnAlert;
             _repo.Update(setting);
         }
 

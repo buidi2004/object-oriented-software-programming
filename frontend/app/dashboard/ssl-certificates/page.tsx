@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ShieldCheck, Shield, ArrowRight, Loader, Download, Copy, Lock, Info } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { PinServiceButton } from '@/src/components/team-features/PinServiceButton';
 
 export default function SslCertificatesPage() {
   const [certificates, setCertificates] = useState<any[]>([]);
@@ -84,6 +85,7 @@ export default function SslCertificatesPage() {
                   <span className={`px-3 py-1 rounded-full text-xs font-bold ${cert.certificate ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>
                     {cert.certificate ? 'Active' : 'Pending Issuance'}
                   </span>
+                  <PinServiceButton serviceType="SSL" serviceId={cert.id} displayName={cert.domain?.name || 'SSL Certificate'} />
                 </div>
 
                 <div className="bg-slate-50 rounded-xl p-4 mb-4 border border-slate-100">

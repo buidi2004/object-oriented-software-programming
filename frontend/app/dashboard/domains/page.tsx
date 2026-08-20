@@ -13,6 +13,7 @@ import {
   Calendar,
   Layers
 } from 'lucide-react';
+import { PinServiceButton } from '@/src/components/team-features/PinServiceButton';
 
 interface DomainItem {
   id: string;
@@ -157,6 +158,7 @@ export default function CustomerDomainsDashboardPage() {
                   </td>
                   <td className="px-6 py-4 text-right">
                     <div className="flex items-center justify-end gap-2">
+                      <PinServiceButton serviceType="DOMAIN" serviceId={dom.id} displayName={dom.name} />
                       <button 
                         onClick={() => alert(`Cấu hình bản ghi DNS (A, CNAME, MX, TXT) cho tên miền: ${dom.name}`)}
                         className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold flex items-center gap-1.5 transition-colors"

@@ -1,5 +1,16 @@
 # MCP Codebase Memory - CloudServiceStore
 
+## Team Features 1-10 (2026-08-19)
+
+- Domain entities: `BillingAddress`, `PinnedService`, `TicketFeedback`, `ServiceBundle`, `StockAlertSubscription`, `FreeTrialRequest`, `PlanPriceHistory`, `PlanQuestion`, `PlanAnswer`.
+- API implementation: `CloudServiceStore.WebApi/Controllers/TeamFeaturesController.cs`.
+- Extended notification settings support SMS, Zalo and Telegram identifiers/toggles.
+- Cart stores `BundleDiscountPercent`; checkout applies the better discount between bundle and coupon.
+- Plan price commands automatically append `PlanPriceHistory` entries.
+- Migration: `20260819175829_AddTeamMemberFeatures`.
+- Frontend components: `frontend/src/components/team-features/`; bundle page: `frontend/app/bundles/page.tsx`.
+- Verification: backend build passed, frontend production build passed, focused tests passed 3/3.
+
 > **[HƯỚNG DẪN DÀNH CHO AI (AGENT INSTRUCTION)]**
 > Khi người dùng (@) tham chiếu đến file này, đây là lệnh yêu cầu AI (Agent) phải kích hoạt **MCP (Model Context Protocol / Tools)** để `view_file`, `list_dir` hoặc `grep_search` một cách cẩn thận thay vì đoán mò code.
 > Hãy sử dụng bản đồ kiến trúc dưới đây làm kim chỉ nam để biết file nằm ở đâu trước khi gọi Tool đọc file.

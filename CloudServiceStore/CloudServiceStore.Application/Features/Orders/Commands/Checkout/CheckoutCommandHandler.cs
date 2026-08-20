@@ -47,6 +47,9 @@ public class CheckoutCommandHandler : IRequestHandler<CheckoutCommand, Guid>
         decimal discountAmount = 0;
         Guid? couponId = null;
 
+        if (cart.BundleDiscountPercent > 0)
+            discountAmount = subTotal * (cart.BundleDiscountPercent / 100m);
+
         if (!string.IsNullOrEmpty(request.CouponCode))
         {
             var coupon = await _couponRepo.FirstOrDefaultAsync(c => c.Code == request.CouponCode && c.IsActive && c.ExpiryDate > DateTime.UtcNow, ct);
@@ -55,7 +58,7 @@ public class CheckoutCommandHandler : IRequestHandler<CheckoutCommand, Guid>
 
             coupon.Use();
             _couponRepo.Update(coupon);
-            discountAmount = subTotal * (coupon.DiscountPercent / 100m);
+            discountAmount = Math.Max(discountAmount, subTotal * (coupon.DiscountPercent / 100m));
             couponId = coupon.Id;
         }
 

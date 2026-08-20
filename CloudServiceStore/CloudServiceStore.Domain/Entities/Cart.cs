@@ -10,6 +10,7 @@ public class Cart : AggregateRoot
     public Guid UserId { get; private set; }
     public Enums.CartStatus Status { get; private set; } = Enums.CartStatus.Active;
     public DateTime UpdatedAt { get; private set; } = DateTime.UtcNow;
+    public decimal BundleDiscountPercent { get; private set; }
 
     public AppUser User { get; private set; } = null!;
     
@@ -72,6 +73,13 @@ public class Cart : AggregateRoot
     public void Clear()
     {
         _items.Clear();
+        BundleDiscountPercent = 0;
+        UpdatedAt = DateTime.UtcNow;
+    }
+
+    public void ApplyBundleDiscount(decimal discountPercent)
+    {
+        BundleDiscountPercent = Math.Clamp(discountPercent, 0m, 100m);
         UpdatedAt = DateTime.UtcNow;
     }
 

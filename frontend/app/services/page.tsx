@@ -321,9 +321,12 @@ export default function ServicesPage() {
               </span>
             </div>
           </Link>
-          <Link href="/" className="text-sm font-semibold text-slate-600 hover:text-blue-600 flex items-center gap-1">
-            ← Về Trang Chủ
-          </Link>
+          <div className="flex items-center gap-4">
+            <Link href="/bundles" className="text-sm font-semibold text-blue-600 hover:text-blue-700">Combo tiết kiệm</Link>
+            <Link href="/" className="text-sm font-semibold text-slate-600 hover:text-blue-600 flex items-center gap-1">
+              ← Về Trang Chủ
+            </Link>
+          </div>
         </div>
       </header>
 
