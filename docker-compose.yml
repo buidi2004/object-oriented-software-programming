@@ -17,6 +17,7 @@ services:
       - EmailSettings__SenderEmail=buidi7170@gmail.com
       - EmailSettings__SenderPassword=acmbfwjvytdzwnys
       - EmailSettings__SenderName=CloudHost VN
+      - Frontend__BaseUrl=https://your-domain.com # Thay bằng domain thực tế của frontend (Vercel/Netlify)
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./CloudServiceStore/images:/app/images
