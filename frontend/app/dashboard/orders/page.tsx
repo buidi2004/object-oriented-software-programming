@@ -4,11 +4,23 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ShoppingCart, Eye, AlertCircle, RefreshCw, Download } from 'lucide-react';
 
+interface OrderItem {
+  id: string;
+  serviceName?: string;
+  planName?: string;
+  quantity?: number;
+  unitPrice?: number;
+}
+
 interface Order {
   id: string;
-  servicePlanName: string;
+  // API không có servicePlanName trực tiếp — lấy từ items[]
+  items: OrderItem[];
   status: string;
+  subTotal?: number;
+  discountAmount?: number;
   totalAmount: number;
+  autoRenew?: boolean;
   createdAt: string;
 }
 
@@ -164,7 +176,11 @@ export default function CustomerOrdersPage() {
               <div key={order.id} className="px-6 py-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
                 <div>
                   <p className="font-semibold text-slate-900">#{order.id.slice(0, 8).toUpperCase()}</p>
-                  <p className="text-sm text-slate-600 mt-0.5">{order.servicePlanName}</p>
+                  <p className="text-sm text-slate-500 mt-0.5">
+                    {order.items?.[0]?.serviceName
+                      || order.items?.[0]?.planName
+                      || (order.items?.length ? `${order.items.length} dịch vụ` : 'Đơn hàng dịch vụ')}
+                  </p>
                   <div className="flex items-center gap-3 mt-2">
                     <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${statusColors[order.status] || 'bg-slate-100 text-slate-700'}`}>
                       {statusLabels[order.status] || order.status}

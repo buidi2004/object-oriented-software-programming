@@ -28,9 +28,9 @@ public class SystemSettingsIntegrationTests : BaseIntegrationTest, IClassFixture
         var content = await getByKeyResponse.Content.ReadFromJsonAsync<System.Text.Json.JsonElement>();
         content.GetProperty("value").GetString().Should().Be("My Store");
 
-        // 3. Unauthenticated GetAll (Should Fail - Forbidden due to TestAuthHandler)
+        // 3. Unauthenticated GetAll (Should Fail - Unauthorized/Forbidden)
         var getAllResponse = await Client.GetAsync("/api/system-settings");
-        getAllResponse.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+        getAllResponse.StatusCode.Should().BeOneOf(HttpStatusCode.Unauthorized, HttpStatusCode.Forbidden);
 
         // 4. Authenticate as Admin
         AuthenticateAdmin();

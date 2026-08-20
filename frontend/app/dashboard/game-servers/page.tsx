@@ -8,6 +8,8 @@ import {
 } from 'lucide-react';
 import { api } from '@/src/lib/api';
 import { useAuthStore } from '@/src/store/useAuthStore';
+import { useResourceProvisioning } from '@/src/hooks/useResourceProvisioning';
+import { ProvisioningStatusBadge } from '@/src/components/shared/ProvisioningStatusBadge';
 
 interface GameServer {
   id: string;
@@ -183,27 +185,10 @@ export default function DashboardGameServersPage() {
                         {s.currentPlayers || 0} / {s.maxPlayers || 32} online
                       </td>
                       <td className="px-6 py-4">
-                        <span className="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-600 font-bold text-[10px]">
-                          Running
-                        </span>
+                        <GameServerStatusBadge server={s} />
                       </td>
                       <td className="px-6 py-4 text-right">
-                        <div className="inline-flex items-center gap-1.5">
-                          <button
-                            onClick={() => handleAction('Khởi động lại (Restart)', s.name)}
-                            className="p-1.5 rounded-lg bg-slate-100 hover:bg-purple-50 text-slate-600 hover:text-purple-600 transition-colors"
-                            title="Restart"
-                          >
-                            <RotateCcw className="w-3.5 h-3.5" />
-                          </button>
-                          <button
-                            onClick={() => handleAction('Dừng (Stop)', s.name)}
-                            className="p-1.5 rounded-lg bg-slate-100 hover:bg-rose-50 text-slate-600 hover:text-rose-600 transition-colors"
-                            title="Stop"
-                          >
-                            <Square className="w-3.5 h-3.5" />
-                          </button>
-                        </div>
+                        <GameServerControls server={s} handleAction={handleAction} />
                       </td>
                     </tr>
                   ))}
@@ -292,6 +277,38 @@ export default function DashboardGameServersPage() {
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+function GameServerStatusBadge({ server }: { server: GameServer }) {
+  const status = useResourceProvisioning('GameServerInstance', server.id, server.status || 'Provisioning');
+  return <ProvisioningStatusBadge status={status} />;
+}
+
+function GameServerControls({ server, handleAction }: { server: GameServer, handleAction: (a: string, n: string) => void }) {
+  const status = useResourceProvisioning('GameServerInstance', server.id, server.status || 'Provisioning');
+  
+  if (status === 'Provisioning' || status === 'Failed' || status === 'Terminated') {
+    return null;
+  }
+
+  return (
+    <div className="inline-flex items-center gap-1.5">
+      <button
+        onClick={() => handleAction('Khởi động lại (Restart)', server.name)}
+        className="p-1.5 rounded-lg bg-slate-100 hover:bg-purple-50 text-slate-600 hover:text-purple-600 transition-colors"
+        title="Restart"
+      >
+        <RotateCcw className="w-3.5 h-3.5" />
+      </button>
+      <button
+        onClick={() => handleAction('Dừng (Stop)', server.name)}
+        className="p-1.5 rounded-lg bg-slate-100 hover:bg-rose-50 text-slate-600 hover:text-rose-600 transition-colors"
+        title="Stop"
+      >
+        <Square className="w-3.5 h-3.5" />
+      </button>
     </div>
   );
 }

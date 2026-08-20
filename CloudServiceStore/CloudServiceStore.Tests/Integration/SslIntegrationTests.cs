@@ -45,7 +45,7 @@ public class SslIntegrationTests : BaseIntegrationTest
         var domainId = registerContent.GetProperty("domainId").GetGuid();
 
         // 3. Request SSL
-        var requestCommand = new RequestSslCertificateCommand(domainId, "-----BEGIN CERTIFICATE REQUEST-----...");
+        var requestCommand = new RequestSslCertificateCommand(domainId, "-----BEGIN CERTIFICATE REQUEST-----...", Guid.NewGuid().ToString());
         var requestResponse = await Client.PostAsJsonAsync("/api/ssl", requestCommand);
         requestResponse.EnsureSuccessStatusCode();
         var requestContent = await requestResponse.Content.ReadFromJsonAsync<System.Text.Json.JsonElement>();

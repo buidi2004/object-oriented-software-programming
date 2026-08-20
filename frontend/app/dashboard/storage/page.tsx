@@ -8,6 +8,9 @@ import {
 } from 'lucide-react';
 import { api } from '@/src/lib/api';
 import { useAuthStore } from '@/src/store/useAuthStore';
+import { useResourceProvisioning } from '@/src/hooks/useResourceProvisioning';
+import { ProvisioningStatusBadge } from '@/src/components/shared/ProvisioningStatusBadge';
+import { ResourceActionMenu } from '@/src/components/shared/ResourceActionMenu';
 
 interface BucketItem {
   id: string;
@@ -16,6 +19,7 @@ interface BucketItem {
   sizeBytes: number;
   objectCount: number;
   isPublic: boolean;
+  status?: string;
   createdAt: string;
 }
 
@@ -164,6 +168,7 @@ export default function DashboardStoragePage() {
                       <td className="px-6 py-4 font-bold text-slate-900 flex items-center gap-2 font-mono">
                         <HardDrive className="w-4 h-4 text-blue-500" />
                         {b.name}
+                        <StorageRealtimeBadge bucket={b} />
                       </td>
                       <td className="px-6 py-4 text-slate-600 uppercase font-semibold">
                         {b.region || 'vn-hn-1'}
@@ -178,8 +183,8 @@ export default function DashboardStoragePage() {
                           {b.isPublic ? 'Public Read' : 'Private (Auth Only)'}
                         </span>
                       </td>
-                      <td className="px-6 py-4 text-right text-slate-500 font-mono text-[11px]">
-                        https://s3.cloudhost.vn/{b.name}
+                      <td className="px-6 py-4 text-right">
+                        <StorageEndpointCell bucket={b} />
                       </td>
                     </tr>
                   ))}
@@ -268,5 +273,54 @@ export default function DashboardStoragePage() {
         </div>
       )}
     </div>
+  );
+}
+
+function StorageRealtimeBadge({ bucket }: { bucket: BucketItem }) {
+  const status = useResourceProvisioning('ObjectStorageBucket', bucket.id, bucket.status || 'Provisioning');
+  if (status === 'Running' || status === 'Active') return null;
+  return <ProvisioningStatusBadge status={status} />;
+}
+
+function StorageEndpointCell({ bucket }: { bucket: BucketItem }) {
+  const status = useResourceProvisioning('ObjectStorageBucket', bucket.id, bucket.status || 'Provisioning');
+  
+  const copyEndpoint = () => {
+    const url = `https://s3.cloudhost.vn/${bucket.name}`;
+    navigator.clipboard.writeText(url);
+    alert('Đã copy endpoint!');
+  };
+
+  return (
+    <div className="flex items-center justify-end gap-2">
+      <span className="text-slate-500 font-mono text-[11px]">
+        https://s3.cloudhost.vn/{bucket.name}
+      </span>
+      {status === 'Running' || status === 'Active' ? (
+        <button onClick={copyEndpoint} className="p-1.5 rounded-lg hover:bg-blue-50 text-blue-600 transition-colors" title="Copy Endpoint">
+          <ExternalLink className="w-4 h-4" />
+        </button>
+      ) : null}
+      <StorageActionMenu bucket={bucket} status={status} />
+    </div>
+  );
+}
+
+function StorageActionMenu({ bucket, status }: { bucket: BucketItem, status: string }) {
+  const handleTerminate = async () => {
+    try {
+      await api.delete(`/storage/buckets/${bucket.id}`);
+      alert('Đã xóa Bucket');
+    } catch (err) {
+      console.error(err);
+      alert('Lỗi khi xóa');
+    }
+  };
+
+  return (
+    <ResourceActionMenu 
+      status={status}
+      onTerminate={handleTerminate}
+    />
   );
 }

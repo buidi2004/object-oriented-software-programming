@@ -8,7 +8,7 @@ import {
   DollarSign, TrendingUp, AlertCircle, Package, Settings, 
   FileText, Tag, Image, HelpCircle, CreditCard, Shield, ArrowUp, ArrowDown, 
   ShieldAlert, Clock, Bell, Globe, Building2, Download, Star, RefreshCw, Send,
-  Cpu, FileSpreadsheet, Search, Activity, Award, Share2, ShieldCheck, Database
+  Cpu, FileSpreadsheet, Search, Activity, Award, Share2, ShieldCheck, Database, DownloadCloud, Key, LayoutTemplate, ShoppingBag
 } from 'lucide-react';
 
 interface AdminModuleItem {
@@ -74,29 +74,56 @@ export default function AdminDashboardPage() {
   };
 
   const fetchStats = async (token: string) => {
+    const headers = { Authorization: `Bearer ${token}` };
+    const today = new Date().toISOString().slice(0, 10);
+    const yearStart = `${new Date().getFullYear()}-01-01`;
+
     try {
-      const [usersRes, ordersRes, revenueRes, ticketsRes] = await Promise.all([
-        fetch('/api/users', { headers: { Authorization: `Bearer ${token}` } }),
-        fetch('/api/orders', { headers: { Authorization: `Bearer ${token}` } }),
-        fetch('/api/dashboard/revenue-stats?startDate=2024-01-01&endDate=2024-12-31', {
-          headers: { Authorization: `Bearer ${token}` }
-        }),
-        fetch('/api/tickets/queue', { headers: { Authorization: `Bearer ${token}` } }),
+      // revenue-stats trả về totalRevenue + totalOrders + totalUsers trong 1 request
+      const [revenueRes, ticketsRes, vpsRes, refundsRes] = await Promise.all([
+        fetch(`/api/dashboard/revenue-stats?startDate=${yearStart}&endDate=${today}`, { headers }),
+        fetch('/api/tickets/queue', { headers }),
+        fetch('/api/VpsInstances/admin', { headers }),
+        fetch('/api/refund-requests', { headers }),
       ]);
 
-      if (usersRes.ok) {
-        const usersData = await usersRes.json();
-        setStats({
-          totalUsers: usersData.length || 0,
-          totalOrders: 0,
-          totalRevenue: 0,
-          activeVpsInstances: 0,
-          openTickets: 0,
-          pendingRefunds: 0,
-          monthlyGrowth: 12.5,
-          todayOrders: 0
-        });
+      // Parse revenue-stats (object với totalRevenue, totalOrders, totalUsers)
+      let totalRevenue = 0, totalOrders = 0, totalUsers = 0;
+      if (revenueRes.ok) {
+        const rev = await revenueRes.json();
+        totalRevenue = rev?.totalRevenue ?? 0;
+        totalOrders  = rev?.totalOrders  ?? 0;
+        totalUsers   = rev?.totalUsers   ?? 0;
       }
+
+      // Tickets, VPS, Refunds đều trả về array
+      const getArrayLen = async (res: Response): Promise<number> => {
+        if (!res.ok) return 0;
+        try {
+          const data = await res.json();
+          if (Array.isArray(data)) return data.length;
+          if (typeof data?.totalCount === 'number') return data.totalCount;
+          if (Array.isArray(data?.items)) return data.items.length;
+        } catch {}
+        return 0;
+      };
+
+      const [openTickets, activeVpsInstances, pendingRefunds] = await Promise.all([
+        getArrayLen(ticketsRes),
+        getArrayLen(vpsRes),
+        getArrayLen(refundsRes),
+      ]);
+
+      setStats({
+        totalUsers,
+        totalOrders,
+        totalRevenue,
+        activeVpsInstances,
+        openTickets,
+        pendingRefunds,
+        monthlyGrowth: 12.5,
+        todayOrders: 0,
+      });
     } catch (error) {
       console.error('Failed to fetch stats:', error);
     } finally {
@@ -124,15 +151,18 @@ export default function AdminDashboardPage() {
     {
       category: '2. Sản Phẩm, Bảng Giá & Khuyến Mãi',
       items: [
+        { href: '/admin/domains', label: 'Tên Miền (Domains)', desc: 'Đăng ký và cấu hình DNS tên miền', icon: Globe, color: 'blue' },
+        { href: '/admin/dedicated-servers', label: 'Máy Chủ Vật Lý', desc: 'Kiểm soát Dedicated Server', icon: Server, color: 'slate' },
+        { href: '/admin/migrations', label: 'Yêu Cầu Chuyển Đổi', desc: 'Hỗ trợ chuyển dữ liệu lên Cloud', icon: ArrowUp, color: 'fuchsia' },
+        { href: '/admin/security', label: 'Security Add-ons', desc: 'Giám sát dịch vụ bảo mật (WAF, Scan)', icon: ShieldCheck, color: 'emerald' },
+        { href: '/admin/apps', label: 'App Installer', desc: 'Lịch sử cài đặt ứng dụng Web', icon: LayoutTemplate, color: 'indigo' },
+        { href: '/admin/marketplace', label: 'Chợ Ứng Dụng', desc: 'Giao dịch mua bán Plugin & Theme', icon: ShoppingBag, color: 'fuchsia' },
         { href: '/admin/service-plans', label: 'Gói Dịch Vụ', desc: 'Cấu hình giá VPS, Hosting, Dedicated', icon: Package, color: 'indigo' },
-        { href: '/admin/dedicated-servers', label: 'Máy Chủ Vật Lý Riêng', desc: 'Quản lý phần cứng Dedicated & Rack', icon: Server, color: 'purple' },
-        { href: '/admin/domains', label: 'Tên Miền & DNS', desc: 'Quản lý tên miền, Auth Code & Transfer', icon: Globe, color: 'blue' },
         { href: '/admin/categories', label: 'Danh Mục Sản Phẩm', desc: 'Quản lý danh mục & phân loại dịch vụ', icon: Package, color: 'blue' },
         { href: '/admin/coupons', label: 'Mã Giảm Giá (Coupons)', desc: 'Tạo mã voucher % hoặc số tiền cố định', icon: Tag, color: 'rose' },
         { href: '/admin/promotions', label: 'Chương Trình Sale', desc: 'Thiết lập flash sale & đợt khuyến mãi', icon: Tag, color: 'pink' },
         { href: '/admin/gift-cards', label: 'Gift Cards', desc: 'Phát hành thẻ nạp tiền quà tặng', icon: CreditCard, color: 'amber' },
         { href: '/admin/exchange-rates', label: 'Tỷ Giá Ngoại Tệ', desc: 'Cập nhật tỷ giá USD, EUR sang VNĐ', icon: DollarSign, color: 'emerald' },
-        { href: '/admin/migrations', label: 'Yêu Cầu Di Dời Web', desc: 'Tiếp nhận chuyển dữ liệu từ nhà cung cấp khác', icon: RefreshCw, color: 'cyan' },
       ]
     },
     {
@@ -142,8 +172,10 @@ export default function AdminDashboardPage() {
         { href: '/admin/blog-comments', label: 'Kiểm Duyệt Bình Luận', desc: 'Kiểm duyệt và xóa comment spam', icon: MessageSquare, color: 'sky' },
         { href: '/admin/reviews', label: 'Đánh Giá Khách Hàng', desc: 'Duyệt đánh giá sao và phản hồi dịch vụ', icon: Star, color: 'amber' },
         { href: '/admin/knowledge-base', label: 'Knowledge Base', desc: 'Tài liệu hướng dẫn kỹ thuật chi tiết', icon: FileText, color: 'teal' },
+        { href: '/admin/resources', label: 'Tài Nguyên', desc: 'Quản lý file tải xuống, phần mềm', icon: DownloadCloud, color: 'emerald' },
         { href: '/admin/faqs', label: 'Câu Hỏi FAQ', desc: 'Quản lý các câu hỏi thường gặp', icon: HelpCircle, color: 'violet' },
-        { href: '/admin/banners', label: 'Banners Quảng Cáo', desc: 'Quản lý banner trang chủ & landing page', icon: Image, color: 'orange' },
+        { href: '/admin/banners', label: 'Banners Quảng Cáo', desc: 'Quản lý 5 banner trang chủ & landing page', icon: Image, color: 'orange' },
+        { href: '/admin/landing-content', label: 'Nội Dung Trang Chủ', desc: 'Tùy biến Về Chúng Tôi, Số Liệu & Giải Pháp Ngành Nghề', icon: LayoutTemplate, color: 'blue' },
         { href: '/admin/testimonials', label: 'Testimonials Đối Tác', desc: 'Cảm nhận của các doanh nghiệp lớn', icon: FileText, color: 'violet' },
         { href: '/admin/newsletters', label: 'Email Newsletter', desc: 'Danh sách khách hàng đăng ký nhận tin', icon: MessageSquare, color: 'sky' },
         { href: '/admin/service-seo', label: 'SEO Dịch Vụ', desc: 'Tối ưu thẻ Meta Title/Desc cho từng trang', icon: Globe, color: 'teal' },
@@ -153,6 +185,8 @@ export default function AdminDashboardPage() {
       category: '4. Báo Cáo, Kỹ Thuật & Hệ Thống',
       items: [
         { href: '/admin/revenue', label: 'Báo Cáo Doanh Thu', desc: 'Biểu đồ tăng trưởng và cơ cấu doanh thu', icon: TrendingUp, color: 'cyan' },
+        { href: '/admin/invoices', label: 'Quản Lý Hóa Đơn', desc: 'Kiểm soát hóa đơn điện tử toàn hệ thống', icon: FileText, color: 'blue' },
+        { href: '/admin/api-keys', label: 'Quản Lý API Keys', desc: 'Giám sát và thu hồi mã kết nối hệ thống', icon: Key, color: 'purple' },
         { href: '/admin/exports', label: 'Trung Tâm Xuất Dữ Liệu', desc: 'Xuất file CSV/JSON đơn hàng và khách hàng', icon: Download, color: 'emerald' },
         { href: '/admin/backups', label: 'Sao Lưu Toàn Hệ Thống', desc: 'Quản lý Snapshot & Storage Backup S3', icon: Database, color: 'teal' },
         { href: '/admin/ssl-certificates', label: 'Chứng Chỉ Bảo Mật SSL', desc: 'Theo dõi thời hạn và gia hạn HTTPS', icon: ShieldCheck, color: 'emerald' },

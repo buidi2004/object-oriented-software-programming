@@ -30,12 +30,19 @@ public class GetMyCartQueryHandler : IRequestHandler<GetMyCartQuery, CartDto>
     {
         var userId = _currentUser.UserId ?? throw new UnauthorizedException("Người dùng chưa đăng nhập");
 
-        var cart = await _cartRepo.FirstOrDefaultAsync(c => c.UserId == userId && c.Status == Domain.Enums.CartStatus.Active, ct);
+        var cart = await _cartRepo.FirstOrDefaultAsync(c => c.UserId == userId, ct, c => c.Items);
 
         if (cart == null)
         {
             cart = new Cart(userId);
             await _cartRepo.AddAsync(cart, ct);
+            await _uow.SaveChangesAsync(ct);
+        }
+        else if (cart.Status != Domain.Enums.CartStatus.Active)
+        {
+            cart.Reactivate();
+            cart.Clear();
+            _cartRepo.Update(cart);
             await _uow.SaveChangesAsync(ct);
         }
 

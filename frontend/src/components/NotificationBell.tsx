@@ -13,10 +13,7 @@ export default function NotificationBell() {
 
   useEffect(() => {
     if (user) {
-      // Mocking fetch to a nonexistent unread endpoint for now. 
-      // In real scenario, we'd fetch actual unread count.
-      // We will assume 3 unread for demo purposes or fetch from real if exist.
-      setUnreadCount(3);
+      setUnreadCount(0);
     }
   }, [user]);
 

@@ -50,13 +50,21 @@ public class PaymentsController : ControllerBase
     }
 
     [HttpPost("webhook/sepay")]
+    [AllowAnonymous]
     public async Task<IActionResult> SePayWebhook([FromBody] CloudServiceStore.Application.DTOs.SePayWebhookPayload payload, [FromServices] Microsoft.Extensions.Configuration.IConfiguration config, CancellationToken ct)
     {
-        // 1. Verify API Key
-        var expectedApiKey = config["SePay:ApiKey"];
-        var authHeader = Request.Headers["Authorization"].ToString();
+        // 1. Verify API Key (supports "Apikey <key>", "Bearer <key>", or direct key in Authorization / X-SePay-ApiKey header)
+        var expectedApiKey = config["SePay:ApiKey"] ?? string.Empty;
+        var authHeader = Request.Headers["Authorization"].ToString().Trim();
+        var xApiKey = Request.Headers["X-SePay-ApiKey"].ToString().Trim();
         
-        if (string.IsNullOrEmpty(authHeader) || !authHeader.Equals($"Apikey {expectedApiKey}", StringComparison.OrdinalIgnoreCase))
+        var isValidKey = !string.IsNullOrEmpty(expectedApiKey) && (
+            authHeader.Equals($"Apikey {expectedApiKey}", StringComparison.OrdinalIgnoreCase) ||
+            authHeader.Equals($"Bearer {expectedApiKey}", StringComparison.OrdinalIgnoreCase) ||
+            authHeader.Equals(expectedApiKey, StringComparison.OrdinalIgnoreCase) ||
+            xApiKey.Equals(expectedApiKey, StringComparison.OrdinalIgnoreCase));
+
+        if (!isValidKey)
         {
             return Unauthorized(new { message = "Invalid API Key" });
         }

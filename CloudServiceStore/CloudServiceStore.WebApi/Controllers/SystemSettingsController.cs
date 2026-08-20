@@ -43,10 +43,14 @@ public class SystemSettingsController : ControllerBase
     }
 
     [HttpPut("{key}")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Editor")]
     public async Task<IActionResult> Update(string key, [FromBody] UpdateSettingCommand command, CancellationToken ct)
     {
-        if (key != command.Key) return BadRequest();
+        if (command == null) return BadRequest(new { message = "Command body is required" });
+        if (!string.Equals(key, command.Key, StringComparison.OrdinalIgnoreCase))
+        {
+            command = command with { Key = key };
+        }
         await _mediator.Send(command, ct);
         return NoContent();
     }

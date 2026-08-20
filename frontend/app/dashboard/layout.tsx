@@ -12,7 +12,7 @@ import {
   ChevronDown, Menu, X, Monitor, RefreshCw, History,
   Repeat, Shield, AlertCircle, Loader2, Cpu, Mail,
   Database, HardDrive, Layers, Palette, Gift, RotateCcw,
-  Building2, KeyRound, Key, Star, Bell, ArrowRightLeft
+  Building2, KeyRound, Key, Star, Bell, ArrowRightLeft, Package, ShoppingBag
 } from 'lucide-react';
 
 interface UserInfo {
@@ -49,6 +49,8 @@ const menuGroups: MenuGroup[] = [
       { id: 'databases', name: 'Databases', href: '/dashboard/databases', icon: Database },
       { id: 'storage', name: 'Object Storage S3', href: '/dashboard/storage', icon: HardDrive },
       { id: 'game-servers', name: 'Game Servers', href: '/dashboard/game-servers', icon: Monitor },
+      { id: 'apps', name: 'App Installer', href: '/dashboard/apps', icon: Package },
+      { id: 'marketplace', name: 'Marketplace', href: '/dashboard/marketplace', icon: ShoppingBag },
       { id: 'static-sites', name: 'Static Sites', href: '/dashboard/static-sites', icon: Layers },
       { id: 'website-builder', name: 'Website Builder', href: '/dashboard/website-builder', icon: Palette },
       { id: 'vps-backups', name: 'Backup VPS', href: '/dashboard/vps-backups', icon: RefreshCw },
@@ -68,7 +70,7 @@ const menuGroups: MenuGroup[] = [
     items: [
       { id: 'orders', name: 'Đơn hàng', href: '/dashboard/orders', icon: ShoppingCart },
       { id: 'invoices', name: 'Hóa đơn', href: '/dashboard/invoices', icon: FileText },
-      { id: 'payments', name: 'Ví tiền & Nạp tiền', href: '/dashboard/payments', icon: CreditCard },
+      { id: 'payments', name: 'Thanh toán & Giao dịch', href: '/dashboard/payments', icon: CreditCard },
       { id: 'refund-requests', name: 'Yêu cầu hoàn tiền', href: '/dashboard/refund-requests', icon: RotateCcw },
       { id: 'auto-renew', name: 'Tự động gia hạn', href: '/dashboard/auto-renew', icon: Repeat },
       { id: 'gift-cards', name: 'Thẻ quà tặng', href: '/dashboard/gift-cards', icon: Gift },

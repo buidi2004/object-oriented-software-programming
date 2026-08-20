@@ -24,6 +24,8 @@ public class AppInstallationConfiguration : IEntityTypeConfiguration<AppInstalla
         builder.Property(x => x.ContainerId).HasMaxLength(255);
         builder.Property(x => x.InstallUrl).HasMaxLength(500);
         
+        builder.HasIndex(x => x.IdempotencyKey).IsUnique();
+        
         builder.HasOne(x => x.User)
                .WithMany()
                .HasForeignKey(x => x.UserId)
@@ -64,6 +66,8 @@ public class GameServerInstanceConfiguration : IEntityTypeConfiguration<GameServ
         builder.HasKey(x => x.Id);
         builder.Property(x => x.ContainerId).HasMaxLength(255);
         builder.Property(x => x.ServerName).HasMaxLength(255);
+        
+        builder.HasIndex(x => x.IdempotencyKey).IsUnique();
         
         builder.HasOne(x => x.User)
                .WithMany()

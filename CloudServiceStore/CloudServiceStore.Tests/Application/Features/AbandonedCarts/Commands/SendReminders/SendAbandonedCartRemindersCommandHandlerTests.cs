@@ -19,6 +19,8 @@ public class SendAbandonedCartRemindersCommandHandlerTests
     private readonly Mock<IUnitOfWork> _mockUnitOfWork;
     private readonly Mock<IRepository<Cart>> _mockRepositoryCart;
     private readonly Mock<IRepository<CartReminder>> _mockRepositoryCartReminder;
+    private readonly Mock<IRepository<AppUser>> _mockRepositoryUser;
+    private readonly Mock<IEmailService> _mockEmailService;
     private readonly SendAbandonedCartRemindersCommandHandler _handler;
 
     public SendAbandonedCartRemindersCommandHandlerTests()
@@ -26,7 +28,14 @@ public class SendAbandonedCartRemindersCommandHandlerTests
         _mockUnitOfWork = new Mock<IUnitOfWork>();
         _mockRepositoryCart = new Mock<IRepository<Cart>>();
         _mockRepositoryCartReminder = new Mock<IRepository<CartReminder>>();
-        _handler = new SendAbandonedCartRemindersCommandHandler(_mockUnitOfWork.Object, _mockRepositoryCart.Object, _mockRepositoryCartReminder.Object);
+        _mockRepositoryUser = new Mock<IRepository<AppUser>>();
+        _mockEmailService = new Mock<IEmailService>();
+        _handler = new SendAbandonedCartRemindersCommandHandler(
+            _mockUnitOfWork.Object, 
+            _mockRepositoryCart.Object, 
+            _mockRepositoryCartReminder.Object,
+            _mockRepositoryUser.Object,
+            _mockEmailService.Object);
     }
 
     [Fact]

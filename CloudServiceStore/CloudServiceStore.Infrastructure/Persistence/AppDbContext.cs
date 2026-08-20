@@ -73,6 +73,7 @@ public class AppDbContext : DbContext
     public DbSet<CartReminder> CartReminders => Set<CartReminder>();
     public DbSet<ChatMessage> ChatMessages => Set<ChatMessage>();
     public DbSet<ChatSession> ChatSessions => Set<ChatSession>();
+    public DbSet<Resource> Resources => Set<Resource>();
     public DbSet<ControlPanelCredential> ControlPanelCredentials => Set<ControlPanelCredential>();
     public DbSet<Permission> Permissions => Set<Permission>();
     public DbSet<RolePermission> RolePermissions => Set<RolePermission>();
@@ -111,6 +112,9 @@ public class AppDbContext : DbContext
     public DbSet<PlanPriceHistory> PlanPriceHistories => Set<PlanPriceHistory>();
     public DbSet<PlanQuestion> PlanQuestions => Set<PlanQuestion>();
     public DbSet<PlanAnswer> PlanAnswers => Set<PlanAnswer>();
+    public DbSet<ObjectStorageBucket> ObjectStorageBuckets { get; set; } = null!;
+    public DbSet<ManagedDatabaseInstance> ManagedDatabases { get; set; } = null!;
+    public DbSet<TwoFactorBackupCode> TwoFactorBackupCodes => Set<TwoFactorBackupCode>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -150,6 +154,13 @@ public class AppDbContext : DbContext
             Console.WriteLine($"[DEBUG EF] ENTITY: {entry.Entity.GetType().Name} - STATE: {entry.State}");
         }
 
+        Guid? validUserId = null;
+        if (userId.HasValue)
+        {
+            var userExists = AppUsers.Local.Any(u => u.Id == userId.Value) || AppUsers.Any(u => u.Id == userId.Value);
+            if (userExists) validUserId = userId.Value;
+        }
+
         foreach (var entry in ChangeTracker.Entries())
         {
             if (entry.Entity is AuditLog || entry.State == EntityState.Detached || entry.State == EntityState.Unchanged)
@@ -184,7 +195,7 @@ public class AppDbContext : DbContext
                 auditEntries.Add(new AuditLog
                 {
                     Id = Guid.NewGuid(),
-                    UserId = userId,
+                    UserId = validUserId,
                     Action = action,
                     EntityName = entityName,
                     EntityId = entityId,

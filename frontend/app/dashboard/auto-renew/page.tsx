@@ -29,16 +29,18 @@ export default function AutoRenewPage() {
     if (!token) return;
 
     try {
-      const res = await api.get('/orders/me?status=Active');
+      const res = await api.get('/orders/me');
       
       if (res.data && Array.isArray(res.data)) {
-        const settings: AutoRenewSetting[] = res.data.map((order: any) => ({
-          orderId: order.id,
-          isAutoRenewEnabled: order.autoRenew || false,
-          nextBillingDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(), // Should be from order but mocking date for now if not available
-          serviceType: 'Dịch vụ',
-          serviceName: order.servicePlanName || 'Dịch vụ',
-        }));
+        const settings: AutoRenewSetting[] = res.data
+          .filter((order: any) => order.status === 'Paid')
+          .map((order: any) => ({
+            orderId: order.id,
+            isAutoRenewEnabled: order.autoRenew || false,
+            nextBillingDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+            serviceType: 'Dịch vụ',
+            serviceName: (order.items && order.items[0]?.servicePlanName) || 'Cloud VPS',
+          }));
         setAutoRenewSettings(settings);
       } else {
         setAutoRenewSettings([]);

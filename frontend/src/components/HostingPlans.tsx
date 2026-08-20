@@ -35,19 +35,19 @@ export const HostingPlans: React.FC<HostingPlansProps> = ({ onAddToCart, onViewD
   };
 
   return (
-    <section id="hosting-plans-section" className="py-16 bg-white">
+    <section id="hosting-plans-section" className="py-24 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header Title */}
-        <div className="text-center max-w-2xl mx-auto mb-10">
-          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-indigo-50 text-indigo-600 text-xs font-bold uppercase tracking-wider mb-2">
+        <div className="text-center max-w-2xl mx-auto mb-16">
+          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-indigo-50 text-indigo-600 text-sm font-bold uppercase tracking-wider mb-2">
             <Globe className="w-3.5 h-3.5" />
             NVMe Web Hosting
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
             Gói Hosting NVMe Tốc Độ Cao Cho Website
           </h2>
-          <p className="text-slate-600 text-sm sm:text-base mt-2">
+          <p className="text-slate-600 text-base sm:text-lg mt-3 leading-relaxed">
             Tối ưu 100% cho WordPress, WooCommerce & Laravel. Tích hợp LiteSpeed Web Server + LSCache tăng tốc x10.
           </p>
 
@@ -56,7 +56,7 @@ export const HostingPlans: React.FC<HostingPlansProps> = ({ onAddToCart, onViewD
             <button
               type="button"
               onClick={() => setIsYearly(false)}
-              className={`px-5 py-2 rounded-full text-xs font-extrabold transition-all cursor-pointer ${
+              className={`px-5 py-2 rounded-full text-sm font-extrabold transition-all cursor-pointer ${
                 !isYearly ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-900'
               }`}
             >
@@ -65,7 +65,7 @@ export const HostingPlans: React.FC<HostingPlansProps> = ({ onAddToCart, onViewD
             <button
               type="button"
               onClick={() => setIsYearly(true)}
-              className={`px-5 py-2 rounded-full text-xs font-extrabold transition-all flex items-center gap-1.5 cursor-pointer ${
+              className={`px-5 py-2 rounded-full text-sm font-extrabold transition-all flex items-center gap-1.5 cursor-pointer ${
                 isYearly ? 'bg-blue-600 text-white shadow-md' : 'text-slate-500 hover:text-slate-900'
               }`}
             >
@@ -85,21 +85,21 @@ export const HostingPlans: React.FC<HostingPlansProps> = ({ onAddToCart, onViewD
             return (
               <div
                 key={pkg.id}
-                className={`relative rounded-3xl p-7 sm:p-8 flex flex-col justify-between transition-all duration-300 ${
+                className={`relative rounded-3xl p-8 sm:p-10 flex flex-col justify-between transition-all duration-300 ${
                   pkg.isPopular
                     ? 'bg-slate-900 text-white shadow-2xl ring-2 ring-blue-500 scale-105 z-10'
                     : 'bg-white text-slate-900 border border-slate-200 hover:border-blue-300 hover:shadow-xl'
                 }`}
               >
                 {pkg.isPopular && (
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-cyan-400 to-blue-500 text-slate-950 text-xs font-black px-4 py-1 rounded-full uppercase tracking-wider shadow-md">
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-blue-600 text-white text-sm font-black px-5 py-1.5 rounded-full uppercase tracking-wider shadow-md">
                     Khuyên Dùng Nhiều Nhất
                   </div>
                 )}
 
                 <div>
                   <h3 className="text-2xl font-extrabold tracking-tight">{pkg.name}</h3>
-                  <p className={`text-xs mt-1 min-h-[32px] ${pkg.isPopular ? 'text-slate-400' : 'text-slate-500'}`}>
+                  <p className={`text-sm mt-2 leading-relaxed min-h-[32px] ${pkg.isPopular ? 'text-slate-300' : 'text-slate-500'}`}>
                     {pkg.tagline}
                   </p>
 
@@ -109,19 +109,19 @@ export const HostingPlans: React.FC<HostingPlansProps> = ({ onAddToCart, onViewD
                       <span className="text-3xl sm:text-4xl font-black tracking-tight text-blue-500">
                         {displayPrice.toLocaleString('vi-VN')} đ
                       </span>
-                      <span className={`text-xs font-bold ${pkg.isPopular ? 'text-slate-400' : 'text-slate-500'}`}>
+                      <span className={`text-sm font-bold ${pkg.isPopular ? 'text-slate-300' : 'text-slate-500'}`}>
                         /tháng
                       </span>
                     </div>
                     {isYearly && (
-                      <div className="text-[11px] text-emerald-500 font-bold mt-1">
+                      <div className="text-sm text-emerald-500 font-bold mt-1">
                         Thanh toán theo năm: {(displayPrice * 12).toLocaleString('vi-VN')} đ/năm
                       </div>
                     )}
                   </div>
 
                   {/* Core Specs */}
-                  <div className="space-y-3 mb-6 text-sm font-semibold">
+                  <div className="space-y-3 mb-6 text-base font-semibold">
                     <div className="flex items-center gap-2.5">
                       <Zap className="w-4 h-4 text-cyan-400 shrink-0" />
                       <span>{pkg.specs.storage}</span>
@@ -141,7 +141,7 @@ export const HostingPlans: React.FC<HostingPlansProps> = ({ onAddToCart, onViewD
                   </div>
 
                   {/* Feature Checklist */}
-                  <div className="space-y-2.5 border-t pt-6 border-slate-200/20 text-xs font-medium">
+                  <div className="space-y-3 border-t pt-6 border-slate-200/20 text-sm font-medium leading-relaxed">
                     {pkg.features.map((feat, idx) => (
                       <div key={idx} className="flex items-start gap-2">
                         <CheckCircle2 className={`w-4 h-4 shrink-0 mt-0.5 ${pkg.isPopular ? 'text-cyan-400' : 'text-blue-600'}`} />
@@ -156,15 +156,15 @@ export const HostingPlans: React.FC<HostingPlansProps> = ({ onAddToCart, onViewD
                 <div className="mt-8 space-y-3">
                   <a
                     href="/services/hosting"
-                    className="block w-full py-3 rounded-xl border-2 border-blue-600 text-blue-600 font-bold text-sm hover:bg-blue-50 transition-colors text-center"
+                    className="block w-full py-3 rounded-xl border-2 border-slate-200 text-slate-700 font-bold text-base hover:bg-slate-50 transition-colors text-center"
                   >
                     Xem chi tiết
                   </a>
                   <button
                     onClick={() => handleSelectPackage(pkg)}
-                    className={`w-full py-3.5 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 cursor-pointer ${
+                    className={`w-full py-3.5 rounded-xl font-bold text-base transition-all flex items-center justify-center gap-2 cursor-pointer ${
                       pkg.isPopular
-                        ? 'bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white shadow-lg shadow-blue-500/30'
+                        ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg'
                         : 'bg-slate-900 hover:bg-slate-800 text-white shadow-md'
                     }`}
                   >

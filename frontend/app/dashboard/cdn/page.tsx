@@ -8,6 +8,8 @@ import {
 } from 'lucide-react';
 import { api } from '@/src/lib/api';
 import { useAuthStore } from '@/src/store/useAuthStore';
+import { useResourceProvisioning } from '@/src/hooks/useResourceProvisioning';
+import { ProvisioningStatusBadge } from '@/src/components/shared/ProvisioningStatusBadge';
 
 interface CdnDistribution {
   id: string;
@@ -171,10 +173,11 @@ export default function DashboardCdnPage() {
                       <td className="px-6 py-4 font-bold text-slate-900 flex items-center gap-2">
                         <Globe className="w-4 h-4 text-amber-500" />
                         {d.domain}
+                        <CdnRealtimeBadge dist={d} />
                       </td>
                       <td className="px-6 py-4 text-slate-600 font-mono">{d.originServer}</td>
-                      <td className="px-6 py-4 text-slate-600 font-mono text-[11px] text-blue-600">
-                        {d.cname || `${d.domain}.cdn.cloudhost.vn`}
+                      <td className="px-6 py-4 font-mono text-[11px]">
+                        <CdnCnameCell dist={d} />
                       </td>
                       <td className="px-6 py-4">
                         <span className="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-600 font-bold text-[10px]">
@@ -275,5 +278,28 @@ export default function DashboardCdnPage() {
         </div>
       )}
     </div>
+  );
+}
+
+function CdnRealtimeBadge({ dist }: { dist: CdnDistribution }) {
+  const status = useResourceProvisioning('CdnDistribution', dist.id, dist.status || 'Provisioning');
+  // Nếu status là Provisioning, map thành Deploying cho phù hợp ngữ cảnh CDN
+  const displayStatus = status === 'Provisioning' ? 'Deploying' : status;
+  
+  if (displayStatus === 'Running' || displayStatus === 'Active') return null;
+  return <ProvisioningStatusBadge status={displayStatus} />;
+}
+
+function CdnCnameCell({ dist }: { dist: CdnDistribution }) {
+  const status = useResourceProvisioning('CdnDistribution', dist.id, dist.status || 'Provisioning');
+  
+  if (status === 'Provisioning' || status === 'Deploying') {
+    return <span className="text-slate-400 italic">Đang khởi tạo mạng lưới...</span>;
+  }
+  
+  return (
+    <span className="text-blue-600">
+      {dist.cname || `${dist.domain}.cdn.cloudhost.vn`}
+    </span>
   );
 }

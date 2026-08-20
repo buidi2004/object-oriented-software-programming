@@ -16,13 +16,23 @@ namespace CloudServiceStore.Tests.Application.Features.Dashboard.Queries.GetReve
 
 public class GetRevenueStatsQueryHandlerTests
 {
-    private readonly Mock<IRepository<OrderRequest>> _mockRepositoryOrderRequest;
+    private readonly Mock<IRepository<OrderRequest>> _mockOrderRepo;
+    private readonly Mock<IRepository<ServiceCategory>> _mockCategoryRepo;
+    private readonly Mock<IRepository<ServicePlan>> _mockPlanRepo;
+    private readonly Mock<IRepository<AppUser>> _mockUserRepo;
     private readonly GetRevenueStatsQueryHandler _handler;
 
     public GetRevenueStatsQueryHandlerTests()
     {
-        _mockRepositoryOrderRequest = new Mock<IRepository<OrderRequest>>();
-        _handler = new GetRevenueStatsQueryHandler(_mockRepositoryOrderRequest.Object);
+        _mockOrderRepo = new Mock<IRepository<OrderRequest>>();
+        _mockCategoryRepo = new Mock<IRepository<ServiceCategory>>();
+        _mockPlanRepo = new Mock<IRepository<ServicePlan>>();
+        _mockUserRepo = new Mock<IRepository<AppUser>>();
+        _handler = new GetRevenueStatsQueryHandler(
+            _mockOrderRepo.Object, 
+            _mockPlanRepo.Object,
+            _mockCategoryRepo.Object, 
+            _mockUserRepo.Object);
     }
 
     [Fact]

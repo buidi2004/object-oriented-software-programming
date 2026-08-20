@@ -33,8 +33,8 @@ public class PurchaseListingCommandHandler : IRequestHandler<PurchaseListingComm
         var listing = await _listingRepo.GetByIdAsync(request.ListingId, cancellationToken)
             ?? throw new NotFoundException("Không tìm thấy sản phẩm");
 
-        if (!listing.IsActive)
-            throw new ConflictException("Sản phẩm đã bị gỡ bỏ");
+        if (listing.Status != CloudServiceStore.Domain.Enums.MarketplaceListingStatus.Active)
+            throw new BadRequestException("Sản phẩm này không còn bán");
 
         var existingPurchase = await _purchaseRepo.GetAllAsync(cancellationToken);
         var alreadyPurchased = existingPurchase.Any(p =>

@@ -20,11 +20,12 @@ public class RegisterCommandHandlerTests
     private readonly Mock<IRepository<NewsletterSubscriber>> _newsletterRepoMock = new();
     private readonly Mock<IRoleRepository> _roleRepoMock = new();
     private readonly Mock<IPasswordHasher> _hasherMock = new();
+    private readonly Mock<IEmailService> _emailServiceMock = new();
 
     private RegisterCommandHandler CreateHandler()
     {
         _uowMock.Setup(u => u.Roles).Returns(_roleRepoMock.Object);
-        return new RegisterCommandHandler(_uowMock.Object, _userRepoMock.Object, _newsletterRepoMock.Object, _hasherMock.Object);
+        return new RegisterCommandHandler(_uowMock.Object, _userRepoMock.Object, _newsletterRepoMock.Object, _hasherMock.Object, _emailServiceMock.Object);
     }
 
     [Fact]

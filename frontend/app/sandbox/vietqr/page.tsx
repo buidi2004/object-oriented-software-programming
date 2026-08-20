@@ -15,7 +15,7 @@ function VietQRSandboxContent() {
 
   const orderId = searchParams.get('orderId') || 'PAY_SAMPLE_ORDER';
   const amountStr = searchParams.get('amount') || '500000';
-  const amount = parseFloat(amountStr) || 500000;
+  const [amount, setAmount] = useState<number>(() => parseFloat(amountStr) || 500000);
 
   const [copiedField, setCopiedField] = useState<string | null>(null);
   const [timeLeft, setTimeLeft] = useState(900); // 15 minutes
@@ -71,6 +71,24 @@ function VietQRSandboxContent() {
   const encodedName = encodeURIComponent(customAccName.toUpperCase());
   const qrImageUrl = `https://img.vietqr.io/image/${currentBankObj.bin}-${customAccNumber}-compact2.png?amount=${Math.round(amount)}&addInfo=${cleanContent}&accountName=${encodedName}`;
 
+  // Sync actual order amount from backend
+  useEffect(() => {
+    if (orderId && orderId !== 'PAY_SAMPLE_ORDER') {
+      const token = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
+      const headers: Record<string, string> = {};
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+
+      fetch(`/api/orders/${orderId}`, { headers })
+        .then(r => r.ok ? r.json() : null)
+        .then(order => {
+          if (order && order.totalAmount) {
+            setAmount(order.totalAmount);
+          }
+        })
+        .catch(() => {});
+    }
+  }, [orderId]);
+
   // Fetch configured system settings if available
   useEffect(() => {
     Promise.all([
@@ -94,6 +112,45 @@ function VietQRSandboxContent() {
     return () => clearInterval(timer);
   }, []);
 
+  // Trigger Instant Payment & VPS Provisioning
+  const handleSimulatePaymentSuccess = async () => {
+    setIsLoading(true);
+    try {
+      const token = localStorage.getItem('accessToken');
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+
+      const res = await fetch('/api/payments/sandbox/simulate-sepay', {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          idempotencyKey: cleanContent,
+          amount: amount,
+        }),
+      });
+
+      setStatus('success');
+      setMessage('Hệ thống đã nhận được tiền, kích hoạt máy ảo VPS và gửi email bàn giao thông số máy chủ tới hòm thư Gmail của bạn!');
+      confetti({
+        particleCount: 120,
+        spread: 80,
+        origin: { y: 0.6 }
+      });
+    } catch {
+      setStatus('success');
+      setMessage('Giao dịch đã được xác nhận thành công!');
+      confetti({
+        particleCount: 80,
+        spread: 60,
+        origin: { y: 0.6 }
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+
+
   // Real-time polling to check if order has been paid in background
   useEffect(() => {
     if (!orderId || orderId === 'PAY_SAMPLE_ORDER' || status === 'success') return;
@@ -110,7 +167,7 @@ function VietQRSandboxContent() {
           const isPaid = order.status === 2 || order.status === 'Paid' || String(order.status).toLowerCase() === 'paid';
           if (isPaid) {
             setStatus('success');
-            setMessage('Hệ thống đã nhận được tiền và kích hoạt máy ảo VPS thành công!');
+            setMessage('Hệ thống đã nhận được tiền, kích hoạt máy ảo VPS và gửi email bàn giao thành công!');
             confetti({
               particleCount: 120,
               spread: 80,
@@ -122,7 +179,7 @@ function VietQRSandboxContent() {
       } catch {
         // Continue polling
       }
-    }, 2500);
+    }, 2000);
 
     return () => clearInterval(pollInterval);
   }, [orderId, status]);
@@ -137,49 +194,6 @@ function VietQRSandboxContent() {
     navigator.clipboard.writeText(text);
     setCopiedField(field);
     setTimeout(() => setCopiedField(null), 2000);
-  };
-
-  // Trigger Instant Payment & VPS Provisioning
-  const handleSimulatePaymentSuccess = async () => {
-    setIsLoading(true);
-    try {
-      const res = await fetch('/api/payments/sandbox/simulate-sepay', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          idempotencyKey: cleanContent,
-          amount: amount,
-        }),
-      });
-
-      if (res.ok) {
-        setStatus('success');
-        setMessage('Hệ thống đã nhận được tiền và tự động khởi tạo máy ảo VPS thành công!');
-        confetti({
-          particleCount: 120,
-          spread: 80,
-          origin: { y: 0.6 }
-        });
-      } else {
-        setStatus('success');
-        setMessage('Giao dịch đã được ghi nhận và máy ảo đang được khởi tạo!');
-        confetti({
-          particleCount: 80,
-          spread: 60,
-          origin: { y: 0.6 }
-        });
-      }
-    } catch {
-      setStatus('success');
-      setMessage('Giao dịch đã được xác nhận thành công!');
-      confetti({
-        particleCount: 80,
-        spread: 60,
-        origin: { y: 0.6 }
-      });
-    } finally {
-      setIsLoading(false);
-    }
   };
 
   if (status === 'success') {
@@ -268,7 +282,6 @@ function VietQRSandboxContent() {
           {/* Left: QR Code Section */}
           <div className="lg:col-span-5 flex flex-col items-center justify-center bg-slate-50 p-6 rounded-3xl border border-slate-200/80 text-center">
             {isFakeAccount ? (
-              /* Show warning instead of QR when using fake/empty account */
               <div className="w-60 h-60 flex flex-col items-center justify-center bg-red-50 border-2 border-dashed border-red-300 rounded-2xl p-4">
                 <AlertCircle className="w-12 h-12 text-red-400 mb-3" />
                 <p className="text-sm font-bold text-red-600 mb-1">Chưa có STK thật</p>
@@ -277,7 +290,6 @@ function VietQRSandboxContent() {
                 </p>
               </div>
             ) : (
-              /* Show real QR when valid account is configured */
               <div className="bg-white p-3 rounded-2xl shadow-md border border-slate-200 relative group mb-4">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
@@ -312,7 +324,7 @@ function VietQRSandboxContent() {
                 </p>
                 <div className="mt-3 pt-3 border-t border-slate-200 w-full flex items-center justify-center gap-2 text-xs font-bold text-blue-600">
                   <span className="w-2 h-2 rounded-full bg-blue-600 animate-ping" />
-                  Đang lắng nghe chuyển khoản tự động...
+                  Đang lắng nghe chuyển khoản từ ngân hàng...
                 </div>
               </>
             )}
@@ -320,8 +332,7 @@ function VietQRSandboxContent() {
 
           {/* Right: Transfer Information & 1-Click Copy */}
           <div className="lg:col-span-7 space-y-4">
-            {/* Notice / Real Banking App Notice & Config Accordion */}
-            {/* CRITICAL: Account Configuration Panel */}
+            {/* Account Configuration Panel */}
             <div className={`rounded-2xl p-4 text-xs space-y-2 border-2 ${
               isFakeAccount 
                 ? 'bg-red-50 border-red-300 text-red-900' 
@@ -347,18 +358,6 @@ function VietQRSandboxContent() {
 
               {showConfig && (
                 <div className="pt-2 border-t border-current/20 space-y-3 mt-2">
-                  {isFakeAccount && (
-                    <div className="bg-red-100 border border-red-300 rounded-lg px-3 py-2 text-red-800">
-                      <p className="font-bold text-[12px]">🔴 Tại sao App ngân hàng báo &quot;Mã QR không hợp lệ&quot;?</p>
-                      <p className="text-[11px] mt-1 leading-relaxed">
-                        App ngân hàng kiểm tra số tài khoản nhận qua hệ thống <strong>NAPAS 24/7</strong>. 
-                        Nếu số tài khoản <strong>không tồn tại thật</strong> trong hệ thống ngân hàng, 
-                        app sẽ từ chối và báo &quot;mã QR không hợp lệ&quot; hoặc &quot;tài khoản thụ hưởng không tồn tại&quot;.
-                      </p>
-                      <p className="text-[11px] mt-1 font-bold">👉 Nhập đúng STK ngân hàng thật của bạn bên dưới để tạo mã QR quét được!</p>
-                    </div>
-                  )}
-                  
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     <div>
                       <label className="block text-[11px] font-semibold text-slate-700 mb-1">🏦 Chọn Ngân Hàng</label>
@@ -399,12 +398,6 @@ function VietQRSandboxContent() {
                       className="w-full px-2.5 py-1.5 rounded-lg border border-blue-300 bg-white text-slate-900 text-xs font-bold focus:outline-none focus:border-blue-600"
                     />
                   </div>
-
-                  {!isFakeAccount && (
-                    <div className="bg-emerald-100 border border-emerald-300 rounded-lg px-3 py-2 text-emerald-800 text-[11px]">
-                      ✅ Mã QR đã sẵn sàng! Quét bằng App ngân hàng bất kỳ trên điện thoại.
-                    </div>
-                  )}
                 </div>
               )}
             </div>
@@ -472,22 +465,15 @@ function VietQRSandboxContent() {
               </div>
             </div>
 
-            {/* Simulation Action Button */}
+            {/* Auto-confirm notice */}
             <div className="pt-2 space-y-3">
-              <button
-                onClick={handleSimulatePaymentSuccess}
-                disabled={isLoading}
-                className="w-full py-4 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-base shadow-lg shadow-emerald-600/20 hover:shadow-xl transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-70"
-              >
-                {isLoading ? (
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                ) : (
-                  <>
-                    <CheckCircle className="w-5 h-5" />
-                    Tôi Đã Chuyển Khoản — Kích Hoạt VPS Ngay
-                  </>
-                )}
-              </button>
+              <div className="w-full py-4 rounded-2xl bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 text-center">
+                <p className="text-sm font-bold text-amber-800 flex items-center justify-center gap-2">
+                  <ShieldCheck className="w-5 h-5 text-emerald-500" />
+                  Hệ thống tự động xác nhận khi nhận được tiền
+                </p>
+                <p className="text-xs text-amber-600 mt-1">Sau khi chuyển khoản, VPS sẽ được kích hoạt tự động trong vài giây</p>
+              </div>
 
               <div className="flex items-center justify-between text-xs text-slate-400 px-1">
                 <span className="flex items-center gap-1">

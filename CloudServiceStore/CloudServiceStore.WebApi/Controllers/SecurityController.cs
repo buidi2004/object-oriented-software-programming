@@ -9,6 +9,7 @@ using CloudServiceStore.Application.Features.Security.Queries.GetMySessions;
 using CloudServiceStore.Application.Features.SecurityAddons.Commands.PurchaseSecurityAddon;
 using CloudServiceStore.Application.Features.SecurityAddons.Commands.RunMalwareScan;
 using CloudServiceStore.Application.Features.SecurityAddons.Queries.GetMySecurityAddons;
+using CloudServiceStore.Application.Features.SecurityAddons.Queries.GetAllSecuritySubscriptions;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -69,6 +70,14 @@ public class SecurityController : ControllerBase
     {
         await _mediator.Send(new RevokeSessionCommand(id), ct);
         return NoContent();
+    }
+
+    [HttpGet("addons/admin")]
+    [Authorize(Roles = "Admin,Editor")]
+    public async Task<IActionResult> GetAllSecurityAddonsForAdmin(CancellationToken ct)
+    {
+        var result = await _mediator.Send(new GetAllSecuritySubscriptionsQuery(), ct);
+        return Ok(result);
     }
 
     [HttpPost("change-password")]

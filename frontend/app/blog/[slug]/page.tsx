@@ -42,12 +42,16 @@ export default function BlogPostPage() {
           id: data.id,
           slug: data.slug || slug,
           title: data.title,
-          excerpt: data.summary || data.content?.slice(0, 150) || '',
+          // API không có 'summary' — dùng 100 ký tự đầu của content
+          excerpt: data.content?.replace(/<[^>]*>/g, '').slice(0, 150) || '',
           content: data.content || '',
-          author: data.authorName || 'Ban Biên Tập',
+          // API không có 'authorName' — hiện mặc định
+          author: 'Ban Biên Tập',
+          // publishedAt có thể null nếu chưa publish
           publishedAt: data.publishedAt || data.createdAt || new Date().toISOString(),
-          category: data.category || 'Tin tức & Hướng dẫn',
-          image: data.thumbnailUrl
+          // API không có 'category' — dùng tags hoặc mặc định
+          category: data.tags?.split(',')[0]?.trim() || 'Tin tức & Hướng dẫn',
+          image: data.thumbnailUrl,
         });
       } else {
         // Fallback demo article if database is empty

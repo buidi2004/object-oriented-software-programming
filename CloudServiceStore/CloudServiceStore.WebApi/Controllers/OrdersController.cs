@@ -10,6 +10,7 @@ using CloudServiceStore.Application.Features.Orders.Queries.GetOrderById;
 using CloudServiceStore.Application.Features.Orders.Queries.GetOrders;
 using CloudServiceStore.Application.Features.Invoices.Queries.GetInvoice;
 using CloudServiceStore.Application.Features.Invoices.Queries.GetMyInvoices;
+using CloudServiceStore.Application.Features.Invoices.Queries.GetAllInvoices;
 using CloudServiceStore.Application.Features.Invoices.Commands.GenerateInvoice;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -126,6 +127,14 @@ public class OrdersController : ControllerBase
     public async Task<IActionResult> GetMyInvoices(CancellationToken ct)
     {
         var invoices = await _mediator.Send(new GetMyInvoicesQuery(), ct);
+        return Ok(invoices);
+    }
+
+    [HttpGet("invoices/admin")]
+    [Authorize(Roles = "Admin,Editor")]
+    public async Task<IActionResult> GetAllInvoicesForAdmin(CancellationToken ct)
+    {
+        var invoices = await _mediator.Send(new GetAllInvoicesQuery(), ct);
         return Ok(invoices);
     }
 }

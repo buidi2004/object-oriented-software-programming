@@ -1,4 +1,5 @@
 using CloudServiceStore.Domain.Primitives;
+using CloudServiceStore.Domain.Enums;
 using System;
 
 namespace CloudServiceStore.Domain.Entities;
@@ -22,6 +23,12 @@ public class AppUser : AggregateRoot
     public DateTime CreatedAt { get; internal set; }
     public string? AvatarUrl { get; internal set; }
     
+    public bool IsTwoFactorEnabled { get; private set; } = false;
+    public string? TwoFactorSecretKey { get; private set; }
+
+    public AuthProvider AuthProvider { get; set; } = AuthProvider.Local;
+    public string? ProviderId { get; set; }
+
     public Role Role { get; internal set; } = null!;
 
     internal AppUser() { }
@@ -93,5 +100,17 @@ public class AppUser : AggregateRoot
     public void UpdateAvatarUrl(string avatarUrl)
     {
         AvatarUrl = avatarUrl;
+    }
+
+    public void EnableTwoFactor(string secretKey)
+    {
+        TwoFactorSecretKey = secretKey;
+        IsTwoFactorEnabled = true;
+    }
+
+    public void DisableTwoFactor()
+    {
+        TwoFactorSecretKey = null;
+        IsTwoFactorEnabled = false;
     }
 }

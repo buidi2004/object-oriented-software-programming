@@ -1,5 +1,4 @@
-using System.Collections.Generic;
-using System.Threading;
+using System;
 using System.Threading.Tasks;
 using CloudServiceStore.Application.Features.GameServers.Commands.CreateGameServer;
 using MediatR;
@@ -10,24 +9,26 @@ namespace CloudServiceStore.WebApi.Controllers;
 
 [ApiController]
 [Route("api/game-servers")]
+[Authorize]
 public class GameServersController : ControllerBase
 {
     private readonly IMediator _mediator;
 
-    public GameServersController(IMediator mediator) => _mediator = mediator;
-
-    [HttpGet]
-    [Authorize(Roles = "Customer")]
-    public async Task<IActionResult> GetMyGameServers(CancellationToken ct)
+    public GameServersController(IMediator mediator)
     {
-        return Ok(new List<object>());
+        _mediator = mediator;
     }
 
     [HttpPost]
-    [Authorize(Roles = "Customer")]
-    public async Task<IActionResult> CreateGameServer([FromBody] CreateGameServerCommand command, CancellationToken ct)
+    public async Task<IActionResult> CreateGameServer([FromBody] CreateGameServerCommand command)
     {
-        var serverId = await _mediator.Send(command, ct);
+        var serverId = await _mediator.Send(command);
         return Ok(new { serverId });
+    }
+
+    [HttpGet]
+    public IActionResult Get()
+    {
+        return Ok(new object[] { });
     }
 }

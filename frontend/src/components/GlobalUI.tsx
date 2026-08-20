@@ -6,6 +6,7 @@ import { AuthModal } from './AuthModal';
 import { AuthQueryListener } from './AuthQueryListener';
 import { CartDrawer } from './CartDrawer';
 import { CloudDashboard } from './CloudDashboard';
+import { CookieConsent } from './CookieConsent';
 import { useUIStore } from '../store/useUIStore';
 import { useCartStore } from '../store/useCartStore';
 import { CartItem } from '../types';
@@ -61,6 +62,8 @@ export const GlobalUI = () => {
       {ui.isDashboardOpen && (
         <CloudDashboard onClose={() => ui.setIsDashboardOpen(false)} />
       )}
+
+      <CookieConsent />
     </>
   );
 };

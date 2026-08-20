@@ -2,9 +2,6 @@ import axios from 'axios';
 
 export const api = axios.create({
   baseURL: '/api',
-  headers: {
-    'Content-Type': 'application/json',
-  },
 });
 
 api.interceptors.request.use(
@@ -12,6 +9,10 @@ api.interceptors.request.use(
     const token = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
+    }
+    // If sending FormData, do not set application/json so browser sets proper multipart boundary
+    if (config.data instanceof FormData && config.headers) {
+      delete config.headers['Content-Type'];
     }
     return config;
   },
