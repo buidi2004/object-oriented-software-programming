@@ -15,9 +15,9 @@ services:
       - EmailSettings__SmtpHost=smtp.gmail.com
       - EmailSettings__SmtpPort=587
       - EmailSettings__SenderEmail=buidi7170@gmail.com
-      - EmailSettings__SenderPassword=acmbfwjvytdzwnys
-      - EmailSettings__SenderName=CloudHost VN
-      - Frontend__BaseUrl=https://your-domain.com # Thay bằng domain thực tế của frontend (Vercel/Netlify)
+      - EmailSettings__SenderPassword=${EMAIL_SENDER_PASSWORD:-acmbfwjvytdzwnys}
+      - EmailSettings__SenderName=${EMAIL_SENDER_NAME:-CloudHost VN}
+      - Frontend__BaseUrl=${FRONTEND_BASE_URL:-https://your-domain.com} # Đọc từ biến môi trường trên VPS, nếu không có sẽ lấy mặc định
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./CloudServiceStore/images:/app/images
