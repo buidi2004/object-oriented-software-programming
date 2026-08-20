@@ -58,8 +58,6 @@ public class CreateCdnCommandHandler : IRequestHandler<CreateCdnCommand, Guid>
 
         await _taskQueue.QueueBackgroundWorkItemAsync(async (serviceProvider, ct) =>
         {
-            await Task.Delay(5000, ct);
-
             var scopedRepo = serviceProvider.GetRequiredService<IRepository<CloudServiceStore.Domain.Entities.CdnDistribution>>();
             var scopedUow = serviceProvider.GetRequiredService<IUnitOfWork>();
             var scopedProvService = serviceProvider.GetRequiredService<ICdnProvisioningService>();
@@ -68,15 +66,22 @@ public class CreateCdnCommandHandler : IRequestHandler<CreateCdnCommand, Guid>
             var dbDistribution = await scopedRepo.GetByIdAsync(distributionId, ct);
             if (dbDistribution == null) return;
 
-            string cname = await scopedProvService.CreateDistributionAsync(dbDistribution, ct);
+            try
+            {
+                string cname = await scopedProvService.CreateDistributionAsync(dbDistribution, ct);
 
-            if (!string.IsNullOrEmpty(cname))
-            {
-                dbDistribution.MarkAsActive(cname);
+                if (!string.IsNullOrEmpty(cname))
+                {
+                    dbDistribution.MarkAsActive(cname);
+                }
+                else
+                {
+                    dbDistribution.MarkAsFailed("Lỗi tạo Zone trên CDN.");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                dbDistribution.MarkAsFailed("Lỗi tạo Zone trên Cloudflare API.");
+                dbDistribution.MarkAsFailed($"Lỗi cấp phát CDN: {ex.Message}");
             }
 
             await scopedUow.SaveChangesAsync(ct);

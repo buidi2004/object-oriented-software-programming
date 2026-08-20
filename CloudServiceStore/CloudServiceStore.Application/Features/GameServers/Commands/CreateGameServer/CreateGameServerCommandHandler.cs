@@ -60,8 +60,6 @@ public class CreateGameServerCommandHandler : IRequestHandler<CreateGameServerCo
 
         await _taskQueue.QueueBackgroundWorkItemAsync(async (serviceProvider, ct) =>
         {
-            await Task.Delay(5000, ct); // Simulate delay
-
             var scopedRepo = serviceProvider.GetRequiredService<IRepository<GameServerInstance>>();
             var scopedUow = serviceProvider.GetRequiredService<IUnitOfWork>();
             var scopedProvService = serviceProvider.GetRequiredService<IGameServerProvisioningService>();
@@ -70,15 +68,22 @@ public class CreateGameServerCommandHandler : IRequestHandler<CreateGameServerCo
             var dbServer = await scopedRepo.GetByIdAsync(serverId, ct);
             if (dbServer == null) return;
 
-            int assignedPort = await scopedProvService.ProvisionGameServerAsync(dbServer, ct);
+            try
+            {
+                int assignedPort = await scopedProvService.ProvisionGameServerAsync(dbServer, ct);
 
-            if (assignedPort > 0)
-            {
-                dbServer.MarkAsRunning(assignedPort);
+                if (assignedPort > 0)
+                {
+                    dbServer.MarkAsRunning(assignedPort);
+                }
+                else
+                {
+                    dbServer.MarkAsFailed("Lỗi tạo container cho Game Server.");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                dbServer.MarkAsFailed("Lỗi tạo container cho Game Server.");
+                dbServer.MarkAsFailed($"Lỗi cấp phát: {ex.Message}");
             }
 
             await scopedUow.SaveChangesAsync(ct);

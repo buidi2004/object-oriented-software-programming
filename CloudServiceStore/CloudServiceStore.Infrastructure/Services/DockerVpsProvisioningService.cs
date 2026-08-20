@@ -157,6 +157,7 @@ public class DockerVpsProvisioningService : IVpsProvisioningService
 
     public async Task TerminateAsync(string containerId, CancellationToken ct)
     {
+        if (_dockerClient == null) return;
         try
         {
             _logger.LogInformation("Terminating container {ContainerId}", containerId);
@@ -177,6 +178,7 @@ public class DockerVpsProvisioningService : IVpsProvisioningService
 
     public async Task<bool> IsRunningAsync(string containerId, CancellationToken ct)
     {
+        if (_dockerClient == null) return false;
         try
         {
             var inspect = await _dockerClient.Containers.InspectContainerAsync(containerId, ct);
@@ -191,6 +193,7 @@ public class DockerVpsProvisioningService : IVpsProvisioningService
 
     public async Task StartAsync(string containerId, CancellationToken ct)
     {
+        if (_dockerClient == null) throw new InvalidOperationException("Docker client is not available.");
         try
         {
             await _dockerClient.Containers.StartContainerAsync(containerId, new ContainerStartParameters(), ct);
@@ -204,6 +207,7 @@ public class DockerVpsProvisioningService : IVpsProvisioningService
 
     public async Task StopAsync(string containerId, CancellationToken ct)
     {
+        if (_dockerClient == null) throw new InvalidOperationException("Docker client is not available.");
         try
         {
             await _dockerClient.Containers.StopContainerAsync(containerId, new ContainerStopParameters { WaitBeforeKillSeconds = 1 }, ct);
@@ -217,6 +221,7 @@ public class DockerVpsProvisioningService : IVpsProvisioningService
 
     public async Task RestartAsync(string containerId, CancellationToken ct)
     {
+        if (_dockerClient == null) throw new InvalidOperationException("Docker client is not available.");
         try
         {
             await _dockerClient.Containers.RestartContainerAsync(containerId, new ContainerRestartParameters { WaitBeforeKillSeconds = 1 }, ct);

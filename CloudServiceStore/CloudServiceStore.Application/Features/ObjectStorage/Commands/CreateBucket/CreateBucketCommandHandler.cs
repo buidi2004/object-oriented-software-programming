@@ -61,8 +61,6 @@ public class CreateBucketCommandHandler : IRequestHandler<CreateBucketCommand, G
         // Enqueue Provisioning Task
         await _taskQueue.QueueBackgroundWorkItemAsync(async (serviceProvider, ct) =>
         {
-            await Task.Delay(5000, ct); // Simulate real-world provisioning delay
-
             var scopedRepo = serviceProvider.GetRequiredService<IRepository<ObjectStorageBucket>>();
             var scopedUow = serviceProvider.GetRequiredService<IUnitOfWork>();
             var scopedProvService = serviceProvider.GetRequiredService<IMinioProvisioningService>();
@@ -71,15 +69,22 @@ public class CreateBucketCommandHandler : IRequestHandler<CreateBucketCommand, G
             var dbBucket = await scopedRepo.GetByIdAsync(bucketId, ct);
             if (dbBucket == null) return;
 
-            var minioResult = await scopedProvService.CreateBucketAsync(dbBucket.BucketName, dbBucket.Region, ct);
+            try
+            {
+                var minioResult = await scopedProvService.CreateBucketAsync(dbBucket.BucketName, dbBucket.Region, ct);
 
-            if (minioResult)
-            {
-                dbBucket.MarkAsActive();
+                if (minioResult)
+                {
+                    dbBucket.MarkAsActive();
+                }
+                else
+                {
+                    dbBucket.MarkAsFailed("Failed to create bucket via MinIO API.");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                dbBucket.MarkAsFailed("Failed to create bucket via MinIO API.");
+                dbBucket.MarkAsFailed($"Lỗi cấp phát: {ex.Message}");
             }
 
             await scopedUow.SaveChangesAsync(ct);

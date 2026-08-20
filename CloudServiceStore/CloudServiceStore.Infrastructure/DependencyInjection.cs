@@ -7,6 +7,7 @@ using CloudServiceStore.Infrastructure.ExternalServices.QrCode;
 using CloudServiceStore.Infrastructure.Persistence;
 using CloudServiceStore.Infrastructure.Persistence.Repositories;
 using CloudServiceStore.Infrastructure.Security;
+using CloudServiceStore.Infrastructure.Helpers;
 using CloudServiceStore.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
@@ -27,6 +28,8 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<CacheSettings>(configuration.GetSection(CacheSettings.SectionName));
+        services.Configure<ProvisioningSettings>(configuration.GetSection(ProvisioningSettings.SectionName));
+        services.Configure<MinIOSettings>(configuration.GetSection(MinIOSettings.SectionName));
         AddCatalogCaching(services, configuration);
 
         services.AddDbContext<AppDbContext>(options =>
@@ -53,6 +56,11 @@ public static class DependencyInjection
             services.AddScoped<IEmailService, LoggingEmailService>();
         }
 
+        // Shared provisioning infrastructure
+        services.AddSingleton<DockerClientFactory>();
+        services.AddSingleton<DockerPortAllocator>();
+        services.AddSingleton<DockerResourceChecker>();
+
         services.AddSingleton<IVpsSpecParser, VpsSpecParser>();
         services.AddScoped<IVpsProvisioningService, DockerVpsProvisioningService>();
         services.AddScoped<IAcmeProvisioningService, AcmeProvisioningService>();
@@ -61,7 +69,7 @@ public static class DependencyInjection
         services.AddScoped<IGameServerProvisioningService, DockerGameServerProvisioningService>();
         services.AddScoped<IAppInstallerService, DockerAppInstallerService>();
         services.AddScoped<ICdnProvisioningService, CloudflareCdnProvisioningService>();
-        services.AddScoped<IStaticSiteProvisioningService, MockStaticSiteProvisioningService>();
+        services.AddScoped<IStaticSiteProvisioningService, DockerStaticSiteProvisioningService>();
         services.AddSingleton<IJobScheduler, HangfireJobScheduler>();
         services.AddHostedService<CloudServiceStore.Infrastructure.BackgroundServices.VpsIdleMonitorService>();
         services.AddScoped<ITerminateVpsJob, TerminateVpsJob>();

@@ -27,7 +27,7 @@ public class ExceptionHandlingMiddleware
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An unhandled exception occurred.");
+            _logger.LogError(ex, "An unhandled exception occurred: {Message}", ex.Message);
             await HandleExceptionAsync(context, ex);
         }
     }
@@ -37,8 +37,8 @@ public class ExceptionHandlingMiddleware
         int statusCode = StatusCodes.Status500InternalServerError;
         string type = "https://tools.ietf.org/html/rfc7231#section-6.6.1";
         string title = "An internal server error occurred.";
-        string detail = exception.Message + (exception.InnerException != null ? " Inner: " + exception.InnerException.Message : "");
-        
+        string detail = exception.Message;
+
         if (exception is UnauthorizedException || exception is UnauthorizedAccessException)
         {
             statusCode = StatusCodes.Status401Unauthorized;
@@ -62,6 +62,20 @@ public class ExceptionHandlingMiddleware
             statusCode = StatusCodes.Status400BadRequest;
             type = "https://tools.ietf.org/html/rfc7231#section-6.5.1";
             title = "Bad Request";
+        }
+        else if (exception is TimeoutException || exception is TaskCanceledException || exception is OperationCanceledException)
+        {
+            statusCode = StatusCodes.Status504GatewayTimeout;
+            type = "https://tools.ietf.org/html/rfc7231#section-6.6.5";
+            title = "Gateway Timeout";
+            detail = "Yêu cầu cấp phát tài nguyên bị quá thời gian chờ (Timeout). Vui lòng thử lại sau.";
+        }
+        else if (exception.GetType().Name.Contains("DockerApiException"))
+        {
+            statusCode = StatusCodes.Status502BadGateway;
+            type = "https://tools.ietf.org/html/rfc7231#section-6.6.3";
+            title = "Docker Service Error";
+            detail = "Dịch vụ Docker gặp sự cố tạm thời khi cấp phát tài nguyên. Vui lòng liên hệ quản trị viên.";
         }
 
         context.Response.ContentType = "application/problem+json";

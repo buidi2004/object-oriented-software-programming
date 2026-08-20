@@ -57,8 +57,6 @@ public class CreateStaticSiteCommandHandler : IRequestHandler<CreateStaticSiteCo
 
         await _taskQueue.QueueBackgroundWorkItemAsync(async (serviceProvider, ct) =>
         {
-            await Task.Delay(5000, ct);
-
             var scopedRepo = serviceProvider.GetRequiredService<IRepository<StaticSite>>();
             var scopedUow = serviceProvider.GetRequiredService<IUnitOfWork>();
             var scopedProvService = serviceProvider.GetRequiredService<IStaticSiteProvisioningService>();
@@ -67,15 +65,22 @@ public class CreateStaticSiteCommandHandler : IRequestHandler<CreateStaticSiteCo
             var dbSite = await scopedRepo.GetByIdAsync(staticSiteId, ct);
             if (dbSite == null) return;
 
-            bool success = await scopedProvService.ProvisionProjectAsync(dbSite, ct);
+            try
+            {
+                bool success = await scopedProvService.ProvisionProjectAsync(dbSite, ct);
 
-            if (success)
-            {
-                dbSite.MarkAsActive();
+                if (success)
+                {
+                    dbSite.MarkAsActive();
+                }
+                else
+                {
+                    dbSite.MarkAsFailed("Lỗi tạo Project cho Static Site.");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                dbSite.MarkAsFailed("Lỗi tạo Project trên CI/CD.");
+                dbSite.MarkAsFailed($"Lỗi cấp phát: {ex.Message}");
             }
 
             await scopedUow.SaveChangesAsync(ct);

@@ -13,17 +13,20 @@ namespace CloudServiceStore.Infrastructure.Jobs;
 public class SslRenewalJob
 {
     private readonly IRepository<SslCertificate> _sslRepo;
+    private readonly IRepository<DomainRecord> _domainRepo;
     private readonly IAcmeProvisioningService _acmeService;
     private readonly IUnitOfWork _uow;
     private readonly ILogger<SslRenewalJob> _logger;
 
     public SslRenewalJob(
         IRepository<SslCertificate> sslRepo,
+        IRepository<DomainRecord> domainRepo,
         IAcmeProvisioningService acmeService,
         IUnitOfWork uow,
         ILogger<SslRenewalJob> logger)
     {
         _sslRepo = sslRepo;
+        _domainRepo = domainRepo;
         _acmeService = acmeService;
         _uow = uow;
         _logger = logger;
@@ -35,8 +38,8 @@ public class SslRenewalJob
 
         var allCerts = await _sslRepo.GetAllAsync(cancellationToken);
         
-        // Gia hạn trước 7 ngày
-        var thresholdDate = DateTime.UtcNow.AddDays(7);
+        // Gia hạn trước 30 ngày theo tiêu chuẩn Let's Encrypt / ACME
+        var thresholdDate = DateTime.UtcNow.AddDays(30);
 
         var expiringCerts = allCerts.Where(x => 
             x.Status == SslCertificateStatus.Issued && 
@@ -51,21 +54,22 @@ public class SslRenewalJob
 
         foreach (var cert in expiringCerts)
         {
-            _logger.LogInformation($"Tiến hành gia hạn SSL cho DomainId {cert.DomainId}");
+            _logger.LogInformation("Tiến hành gia hạn SSL cho DomainId {DomainId}", cert.DomainId);
 
-            // Fake domain name since we don't eager load Domain here in this simple job
-            // Thường thì phải include(x => x.Domain) nhưng ở đây gọi dummy
-            var acmeResult = await _acmeService.IssueCertificateAsync("domain.com", cert.Csr, cancellationToken);
+            var domain = await _domainRepo.GetByIdAsync(cert.DomainId, cancellationToken);
+            var domainName = domain?.Name ?? "example.com";
+
+            var acmeResult = await _acmeService.IssueCertificateAsync(domainName, cert.Csr, cancellationToken);
 
             if (acmeResult.IsSuccess)
             {
                 cert.MarkAsIssued(acmeResult.Certificate, acmeResult.PrivateKey, acmeResult.ExpiryDate);
-                _logger.LogInformation($"Gia hạn thành công SSL cho DomainId {cert.DomainId}");
+                _logger.LogInformation("Gia hạn thành công SSL cho {DomainName} (DomainId {DomainId})", domainName, cert.DomainId);
             }
             else
             {
-                // Nếu lỗi gia hạn, cứ để Issued và báo lỗi, đợi chạy lại ngày mai
-                _logger.LogWarning($"Gia hạn thất bại SSL cho DomainId {cert.DomainId}: {acmeResult.ErrorMessage}");
+                // Nếu lỗi gia hạn, cứ để Issued và báo lỗi, đợi chạy lại ở lần chạy tiếp theo
+                _logger.LogWarning("Gia hạn thất bại SSL cho {DomainName}: {Error}", domainName, acmeResult.ErrorMessage);
             }
         }
 

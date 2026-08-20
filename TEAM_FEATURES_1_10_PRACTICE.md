@@ -1,66 +1,39 @@
-# Hướng dẫn thực hành 10 chức năng mới
+# LỆNH: Bổ sung & Map đúng module Admin FE theo toàn bộ dịch vụ Backend
 
-## 1. Chuẩn bị và khởi chạy
+## Bối cảnh
+`frontend/app/dashboard/*` (Customer Portal) đã có đủ module cho tất cả dịch vụ. `frontend/app/admin/*` (Admin Portal) đang **thiếu module** cho một số dịch vụ (trong đó có 6 dịch vụ vừa chuyển từ mock sang real: SSL, Object Storage, Managed Database, Game Server, Static Site, App Installer) — hậu quả: khách mua dịch vụ xong, Admin không có màn hình nào để xem/quản lý.
 
-Mở PowerShell tại thư mục `object-oriented-software-programming`.
+## Bước 0 — Audit thật, không đoán
+Trước khi code, liệt kê chính xác:
+1. Toàn bộ route/module hiện có trong `frontend/app/dashboard/*`.
+2. Toàn bộ route/module hiện có trong `frontend/app/admin/*`.
+3. Diff ra danh sách chính xác các dịch vụ **có ở Dashboard nhưng thiếu ở Admin**.
+4. Với từng dịch vụ thiếu, xác định Controller/Feature tương ứng ở Backend (`WebApi/Controllers/{Entity}Controller.cs`) để biết chính xác endpoint nào cần gọi.
 
-```powershell
-cd CloudServiceStore
-dotnet ef database update --project CloudServiceStore.Infrastructure/CloudServiceStore.Infrastructure.csproj --startup-project CloudServiceStore.WebApi/CloudServiceStore.WebApi.csproj
-dotnet run --project CloudServiceStore.WebApi/CloudServiceStore.WebApi.csproj --launch-profile http
-```
+Không tự bịa danh sách — output bước này phải là bảng liệt kê thật từ codebase.
 
-Mở terminal thứ hai:
+## Yêu cầu bắt buộc cho MỖI module Admin bổ sung
 
-```powershell
-cd frontend
-$env:NODE_OPTIONS='--max-old-space-size=4096'
-npx.cmd next dev --turbo --port 3000
-```
+1. **Map 1-1 với Backend**: mỗi entity/service ở Backend phải có đúng 1 module Admin tương ứng, gọi đúng endpoint thật (không hardcode dữ liệu giả, không để trống mảng rỗng).
+2. **List page**: bảng danh sách toàn bộ instance của dịch vụ đó (mọi khách hàng), có filter theo trạng thái (`Provisioning/Active/Failed/Suspended...`), search theo khách hàng/tên resource, phân trang server-side (không load hết rồi filter client-side nếu dữ liệu lớn).
+3. **Detail page**: xem chi tiết 1 instance — thông số kỹ thuật, chủ sở hữu, lịch sử job provisioning, log lỗi nếu có (đặc biệt quan trọng với các dịch vụ vừa chuyển real, vì giờ sẽ có case fail thật).
+4. **Action buttons đúng theo loại dịch vụ** (không copy nguyên si nút của VPS cho dịch vụ khác nếu không hợp lý):
+   - SSL: Renew ngay, Revoke, xem ngày hết hạn.
+   - Object Storage: Xem dung lượng đã dùng/quota, reset access key, xoá bucket.
+   - Database: Start/Stop/Restart container, xem connection string (ẩn password, có nút "hiện"), backup thủ công.
+   - Game Server: Start/Stop/Restart, xem console log real-time, đổi resource limit.
+   - Static Site: Redeploy, xem domain gán, purge cache.
+   - App Installer: Xem app đã cài, gỡ cài đặt, xem log container.
+   - Với dịch vụ nào Admin cần **can thiệp khẩn cấp** (VD: instance kẹt ở `Provisioning` quá lâu do lỗi backend) → thêm nút "Force Retry Provisioning" / "Mark as Failed" thủ công.
+5. **Trạng thái realtime qua SignalR**: dùng đúng hub client đã có (đừng tạo hub riêng), để khi backend chuyển trạng thái container tự động, Admin thấy cập nhật ngay không cần F5.
+6. **Error handling ở UI**: mọi lỗi từ API (400/409/500 mới được xử lý đúng ở Backend theo lệnh trước) phải hiển thị message rõ ràng cho admin qua toast/banner — không được để page trắng, không được nuốt lỗi im lặng trong console.
+7. **Sidebar/menu Admin**: thêm mục điều hướng cho từng module mới, đặt đúng nhóm (VD nhóm "Provisioning" hoặc "Services" hiện có), có badge số lượng resource đang ở trạng thái `Failed`/cần chú ý nếu sidebar hiện tại đã hỗ trợ badge.
+8. **Type-safe**: dùng type generate từ OpenAPI/Swagger có sẵn trong `src/types/`, không tự định nghĩa interface trùng lặp lệch với backend.
+9. **Tái dùng component/style hiện có**: dùng đúng design system, table component, modal component đang dùng cho các module Admin khác (VD VPS Admin) — không tạo UI kit mới, không tự ý đổi màu/style khác biệt.
+10. **Responsive**: đảm bảo dùng được trên tablet, không chỉ desktop.
 
-Truy cập `http://localhost:3000`. Swagger backend ở `http://localhost:5053/swagger`.
-
-Tài khoản quản trị demo do seeder tạo:
-
-- Email: `admin@cloudservicestore.com`
-- Mật khẩu: `Admin@123`
-
-## 2. Thực hành từng chức năng
-
-1. **Sổ địa chỉ thanh toán:** đăng nhập, thêm sản phẩm vào giỏ, mở `/checkout`, tạo nhiều địa chỉ, đặt địa chỉ mặc định và xóa địa chỉ không còn dùng.
-2. **VIP Club:** mở `/dashboard`; widget VIP hiển thị tổng chi tiêu, hạng Đồng/Bạc/Vàng/Kim Cương, mức giảm và tiến trình lên hạng.
-3. **Ghim dịch vụ:** mở VPS, Domain hoặc SSL trong Dashboard, bấm biểu tượng ghim; quay lại `/dashboard` để dùng widget Quick Access.
-4. **Kênh thông báo:** mở `/dashboard/notifications`, nhập số điện thoại/Zalo ID/Telegram Chat ID, bật từng công tắc SMS, Zalo và Telegram rồi lưu.
-5. **CSAT ticket:** tạo ticket, dùng tài khoản staff/admin đóng ticket, mở lại chi tiết ticket bằng tài khoản khách và gửi đánh giá 1-5 sao cùng nhận xét. Mỗi ticket chỉ đánh giá một lần.
-6. **Combo dịch vụ:** mở `/bundles`, chọn combo và bấm thêm toàn bộ vào giỏ. Giảm giá combo được lưu trên giỏ và áp dụng lúc checkout; nếu có coupon, hệ thống lấy mức giảm cao hơn.
-7. **Cảnh báo tồn kho/giá:** mở một trang `/services/plans/{planId}`, nhập giá mục tiêu và bấm theo dõi. Danh sách đăng ký có API `GET /api/stock-alerts/me`.
-8. **Dùng thử VPS:** tại chi tiết gói, bấm bắt đầu dùng thử. Mỗi tài khoản chỉ đăng ký một lần và thời hạn được đặt đúng 3 ngày.
-9. **Lịch sử giá:** admin thêm hoặc sửa giá trong quản trị gói. Mỗi thay đổi được ghi tự động và biểu đồ sparkline hiển thị tại chi tiết gói.
-10. **Hỏi đáp gói cước:** khách đăng câu hỏi tại chi tiết gói; staff/admin trả lời công khai qua `POST /api/plan-questions/{questionId}/answers`.
-
-## 3. API chính
-
-| Chức năng | Endpoint |
-|---|---|
-| Billing address | `GET/POST /api/billing-addresses`, `PUT /{id}/default`, `DELETE /{id}` |
-| VIP | `GET /api/vip-club/me` |
-| Pinned services | `GET /api/pinned-services`, `POST /api/pinned-services/toggle` |
-| Notification channels | `GET/PUT /api/notification-settings` |
-| Ticket CSAT | `GET/POST /api/tickets/{id}/feedback` |
-| Bundles | `GET/POST /api/service-bundles`, `POST /{id}/add-to-cart` |
-| Alerts | `GET /api/stock-alerts/me`, `POST /api/stock-alerts`, `DELETE /{id}` |
-| Free trial | `GET /api/free-trials/my-status`, `POST /api/free-trials/request` |
-| Price history | `GET /api/service-plans/{id}/price-history` |
-| Q&A | `GET/POST /api/service-plans/{id}/questions`, `POST /api/plan-questions/{id}/answers` |
-
-## 4. Kiểm tra nhanh
-
-```powershell
-cd CloudServiceStore
-dotnet build CloudServiceStore.slnx --no-restore
-dotnet test CloudServiceStore.Tests/CloudServiceStore.Tests.csproj --filter FullyQualifiedName~TeamFeatureEntitiesTests
-cd ..\frontend
-npm.cmd run build
-```
-
-Migration của nhóm chức năng là `20260819175829_AddTeamMemberFeatures`.
+## Definition of Done
+- Chạy diff lại bước 0: 0 dịch vụ nào có ở Dashboard mà thiếu ở Admin.
+- Mỗi module mới có đủ: List + Detail + Action buttons đúng nghiệp vụ + realtime update + error handling tử tế.
+- Test thử tạo 1 order thật cho mỗi dịch vụ (SSL/Storage/Database/Game Server/Static Site/App) → xác nhận Admin thấy resource xuất hiện, thao tác action không bị lỗi 400/500 không rõ nguyên nhân.
+- `npm run build` ở frontend vẫn pass 100%, không phát sinh route lỗi.

@@ -68,8 +68,6 @@ public class RequestSslCertificateCommandHandler : IRequestHandler<RequestSslCer
 
         await _taskQueue.QueueBackgroundWorkItemAsync(async (serviceProvider, ct) =>
         {
-            await Task.Delay(5000, ct);
-
             var scopedRepo = serviceProvider.GetRequiredService<IRepository<SslCertificate>>();
             var scopedUow = serviceProvider.GetRequiredService<IUnitOfWork>();
             var scopedProvService = serviceProvider.GetRequiredService<IAcmeProvisioningService>();
@@ -78,20 +76,28 @@ public class RequestSslCertificateCommandHandler : IRequestHandler<RequestSslCer
             var dbCert = await scopedRepo.GetByIdAsync(certId, ct);
             if (dbCert == null) return;
 
-            var acmeResult = await scopedProvService.IssueCertificateAsync(domainName, csr, ct);
+            string newStatus = "Failed";
+            try
+            {
+                var acmeResult = await scopedProvService.IssueCertificateAsync(domainName, csr, ct);
 
-            if (acmeResult.IsSuccess)
-            {
-                dbCert.MarkAsIssued(acmeResult.Certificate, acmeResult.PrivateKey, acmeResult.ExpiryDate);
+                if (acmeResult.IsSuccess)
+                {
+                    dbCert.MarkAsIssued(acmeResult.Certificate, acmeResult.PrivateKey, acmeResult.ExpiryDate);
+                    newStatus = "Issued";
+                }
+                else
+                {
+                    dbCert.MarkAsFailed(acmeResult.ErrorMessage);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                dbCert.MarkAsFailed(acmeResult.ErrorMessage);
+                dbCert.MarkAsFailed($"Lỗi cấp phát SSL: {ex.Message}");
             }
 
             await scopedUow.SaveChangesAsync(ct);
 
-            var newStatus = acmeResult.IsSuccess ? "Issued" : "Failed";
             await scopedNotifier.NotifyStatusChangedAsync("SslCertificate", dbCert.Id.ToString(), newStatus);
         });
 

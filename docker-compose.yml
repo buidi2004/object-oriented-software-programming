@@ -19,12 +19,22 @@ services:
       - EmailSettings__SenderPassword=${EMAIL_SENDER_PASSWORD}
       - EmailSettings__SenderName=${EMAIL_SENDER_NAME:-CloudHost VN}
       - Frontend__BaseUrl=${FRONTEND_BASE_URL:-https://your-domain.com} # Đọc từ biến môi trường trên VPS, nếu không có sẽ lấy mặc định
+      - MinIO__Endpoint=minio:9000
+      - MinIO__AccessKey=${MINIO_ROOT_USER:-minioadmin}
+      - MinIO__SecretKey=${MINIO_ROOT_PASSWORD:-minioadmin}
+      - MinIO__UseSSL=false
+      - Provisioning__PortRangeStart=30000
+      - Provisioning__PortRangeEnd=40000
+      - Provisioning__TimeoutSeconds=60
+      - Provisioning__DataPath=/app/provisioning-data
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./CloudServiceStore/images:/app/images
+      - provisioning_data:/app/provisioning-data
     depends_on:
       - sqlserver
       - redis
+      - minio
     restart: unless-stopped
     mem_limit: 512m
 
@@ -57,5 +67,22 @@ services:
     restart: unless-stopped
     mem_limit: 256m
 
+  minio:
+    image: minio/minio:latest
+    container_name: cloudservicestore_minio
+    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      - MINIO_ROOT_USER=${MINIO_ROOT_USER:-minioadmin}
+      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD:-minioadmin}
+    volumes:
+      - minio_data:/data
+    restart: unless-stopped
+    mem_limit: 512m
+
 volumes:
   sqlserver_data:
+  minio_data:
+  provisioning_data:

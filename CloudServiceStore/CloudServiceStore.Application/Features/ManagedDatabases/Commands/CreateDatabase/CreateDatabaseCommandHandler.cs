@@ -61,8 +61,6 @@ public class CreateDatabaseCommandHandler : IRequestHandler<CreateDatabaseComman
         // Enqueue Provisioning Task
         await _taskQueue.QueueBackgroundWorkItemAsync(async (serviceProvider, ct) =>
         {
-            await Task.Delay(5000, ct); // Simulate real-world provisioning delay
-
             var scopedRepo = serviceProvider.GetRequiredService<IRepository<ManagedDatabaseInstance>>();
             var scopedUow = serviceProvider.GetRequiredService<IUnitOfWork>();
             var scopedProvService = serviceProvider.GetRequiredService<IDatabaseProvisioningService>();
@@ -71,15 +69,22 @@ public class CreateDatabaseCommandHandler : IRequestHandler<CreateDatabaseComman
             var dbInstance = await scopedRepo.GetByIdAsync(instanceId, ct);
             if (dbInstance == null) return;
 
-            int assignedPort = await scopedProvService.ProvisionDatabaseAsync(dbInstance, ct);
+            try
+            {
+                int assignedPort = await scopedProvService.ProvisionDatabaseAsync(dbInstance, ct);
 
-            if (assignedPort > 0)
-            {
-                dbInstance.MarkAsRunning(assignedPort);
+                if (assignedPort > 0)
+                {
+                    dbInstance.MarkAsRunning(assignedPort);
+                }
+                else
+                {
+                    dbInstance.MarkAsFailed("Lỗi khi cấp phát Database qua Docker.");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                dbInstance.MarkAsFailed("Lỗi khi cấp phát Database qua Docker.");
+                dbInstance.MarkAsFailed($"Lỗi cấp phát: {ex.Message}");
             }
 
             await scopedUow.SaveChangesAsync(ct);
