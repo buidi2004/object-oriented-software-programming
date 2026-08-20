@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, Search, Server, AlertCircle, Cpu, Database, HardDrive } from 'lucide-react';
+import { ArrowLeft, Search, Server, AlertCircle, Cpu, Database, HardDrive, Trash2, Loader2 } from 'lucide-react';
 import { getVpsStatusMeta, formatRamMb } from '@/src/utils/vpsStatus';
 
 interface VpsInstanceDto {
@@ -26,6 +26,8 @@ export default function AdminVpsInstancesPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [bulkDeleting, setBulkDeleting] = useState(false);
 
   useEffect(() => {
     checkAdminAccess();
@@ -74,6 +76,54 @@ export default function AdminVpsInstancesPage() {
     }
   };
 
+  const handleDelete = async (instance: VpsInstanceDto) => {
+    if (!confirm(`Bạn có chắc muốn xóa VPS "${instance.containerName}"?\nHành động này không thể hoàn tác!`)) return;
+    const token = localStorage.getItem('accessToken');
+    if (!token) return;
+
+    setDeletingId(instance.id);
+    try {
+      const response = await fetch(`/api/VpsInstances/${instance.id}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (response.ok || response.status === 204) {
+        setInstances(prev => prev.filter(i => i.id !== instance.id));
+      } else {
+        alert('Xóa VPS thất bại. Lỗi: ' + response.status);
+      }
+    } catch (err) {
+      console.error('Delete failed:', err);
+      alert('Xóa VPS thất bại.');
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
+  const handleBulkDeleteTerminated = async () => {
+    const terminated = instances.filter(i => i.status === 'Terminated');
+    if (terminated.length === 0) { alert('Không có VPS nào ở trạng thái Terminated.'); return; }
+    if (!confirm(`Xóa tất cả ${terminated.length} VPS đã huỷ (Terminated)?\nHành động này không thể hoàn tác!`)) return;
+
+    const token = localStorage.getItem('accessToken');
+    if (!token) return;
+    setBulkDeleting(true);
+
+    const deletedIds: string[] = [];
+    for (const inst of terminated) {
+      try {
+        const res = await fetch(`/api/VpsInstances/${inst.id}`, {
+          method: 'DELETE',
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (res.ok || res.status === 204) deletedIds.push(inst.id);
+      } catch { /* skip failed */ }
+    }
+    setInstances(prev => prev.filter(i => !deletedIds.includes(i.id)));
+    setBulkDeleting(false);
+    alert(`Đã xóa ${deletedIds.length}/${terminated.length} VPS thành công.`);
+  };
+
   const filteredInstances = instances.filter((instance) => {
     const matchesSearch =
       instance.containerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -116,6 +166,14 @@ export default function AdminVpsInstancesPage() {
             <span className="px-3 py-1.5 rounded-lg bg-red-100 text-red-700 text-sm font-semibold">
               {stoppedCount} Stopped/Failed
             </span>
+            <button
+              onClick={handleBulkDeleteTerminated}
+              disabled={bulkDeleting}
+              className="px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-700 text-white text-sm font-semibold flex items-center gap-1.5 transition-colors disabled:opacity-50"
+            >
+              {bulkDeleting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
+              Xóa tất cả đã huỷ
+            </button>
           </div>
         </div>
       </header>
@@ -193,6 +251,19 @@ export default function AdminVpsInstancesPage() {
                     <span className="font-semibold">{new Date(instance.expiresAt).toLocaleDateString('vi-VN')}</span>
                   </div>
                 </div>
+
+                <button
+                  onClick={() => handleDelete(instance)}
+                  disabled={deletingId === instance.id}
+                  className="w-full mt-2 py-2 rounded-lg border border-red-200 text-red-600 hover:bg-red-50 text-sm font-semibold flex items-center justify-center gap-2 transition-colors disabled:opacity-50"
+                >
+                  {deletingId === instance.id ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <Trash2 className="w-4 h-4" />
+                  )}
+                  Xóa VPS
+                </button>
               </div>
             );
           })}
