@@ -56,6 +56,13 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IAsyn
             {
                 services.Remove(hostedService);
             }
+            
+            var emailServiceDescriptor = services.SingleOrDefault(d => d.ServiceType == typeof(CloudServiceStore.Application.Interfaces.IEmailService));
+            if (emailServiceDescriptor != null)
+            {
+                services.Remove(emailServiceDescriptor);
+            }
+            services.AddTransient<CloudServiceStore.Application.Interfaces.IEmailService, CloudServiceStore.Tests.Mocks.MockEmailService>();
 
             services.AddDbContext<AppDbContext>(options =>
             {
