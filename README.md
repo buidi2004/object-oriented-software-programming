@@ -1,4 +1,10 @@
-# LỆNH: Chuyển đổi Mock Provisioning Services → Real Implementation (100% Free Tier)
+# CloudServiceStore — Cloud Hosting Platform
+
+[![CI Develop](https://github.com/buidi2004/object-oriented-software-programming/actions/workflows/ci-develop.yml/badge.svg?branch=develop)](https://github.com/buidi2004/object-oriented-software-programming/actions/workflows/ci-develop.yml)
+[![Deploy to Production](https://github.com/buidi2004/object-oriented-software-programming/actions/workflows/deploy-main.yml/badge.svg?branch=main)](https://github.com/buidi2004/object-oriented-software-programming/actions/workflows/deploy-main.yml)
+
+---
+
 
 ## Bối cảnh
 Dự án `CloudServiceStore` (.NET Clean Architecture: Domain/Application/Infrastructure/WebApi/Tests, CQRS+MediatR, Docker Compose, đã có `VpsInstance` provisioning thật qua `Docker.DotNet`).

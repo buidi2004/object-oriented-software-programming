@@ -1,11 +1,18 @@
+# ╔═══════════════════════════════════════════════════════════════════════════╗
+# ║                     🚀 CI Pipeline — Develop Branch                     ║
+# ║  Build ─► Unit Tests ──┐                                                ║
+# ║                        ├──► ✅ Status Report                            ║
+# ║  Build ─► Integration ─┘                                                ║
+# ║  Frontend Lint ─────────┘                                                ║
+# ╚═══════════════════════════════════════════════════════════════════════════╝
+
 name: CI Develop
+
 on:
   push:
-    branches:
-      - develop
+    branches: [develop]
   pull_request:
-    branches:
-      - develop
+    branches: [develop]
 
 concurrency:
   group: ci-develop-${{ github.ref }}
@@ -13,51 +20,237 @@ concurrency:
 
 permissions:
   contents: read
+  checks: write
+  pull-requests: write
 
+env:
+  DOTNET_VERSION: |
+    8.0.x
+    10.0.x
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+
+# ─────────────────────────────────────────────────────────────────────────────
 jobs:
-  build_and_test:
+
+  # ┌─────────────────────────────────────────────────────────────────────────┐
+  # │  🔨 STAGE 1: Restore & Build (shared by test jobs via cache)          │
+  # └─────────────────────────────────────────────────────────────────────────┘
+  build:
+    name: 🔨 Build Backend
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 5
 
     steps:
-      - name: Checkout code
+      - name: 📥 Checkout
         uses: actions/checkout@v4
 
-      - name: Setup .NET
+      - name: ⚙️ Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: |
-            8.0.x
-            10.0.x
+          dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      - name: Cache NuGet packages
+      - name: 📦 Cache NuGet
         uses: actions/cache@v4
         with:
           path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
-          restore-keys: |
-            ${{ runner.os }}-nuget-
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj') }}
+          restore-keys: nuget-${{ runner.os }}-
 
-      - name: Restore dependencies (WebApi)
-        run: dotnet restore CloudServiceStore/CloudServiceStore.WebApi/CloudServiceStore.WebApi.csproj
-
-      - name: Restore dependencies (Tests)
+      - name: 🔄 Restore
         run: dotnet restore CloudServiceStore/CloudServiceStore.Tests/CloudServiceStore.Tests.csproj
 
-      - name: Build
-        run: dotnet build CloudServiceStore/CloudServiceStore.WebApi/CloudServiceStore.WebApi.csproj --configuration Release --no-restore
+      - name: 🏗️ Build (Release)
+        run: dotnet build CloudServiceStore/CloudServiceStore.Tests/CloudServiceStore.Tests.csproj --configuration Release --no-restore
 
-      - name: Test
+      - name: 📤 Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-output
+          path: |
+            CloudServiceStore/**/bin/Release/
+            CloudServiceStore/**/obj/Release/
+          retention-days: 1
+
+  # ┌─────────────────────────────────────────────────────────────────────────┐
+  # │  🧪 STAGE 2a: Unit & Domain Tests (no Docker/DB needed — fast)        │
+  # └─────────────────────────────────────────────────────────────────────────┘
+  unit-tests:
+    name: 🧪 Unit Tests
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: ⚙️ Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: 📦 Cache NuGet
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj') }}
+          restore-keys: nuget-${{ runner.os }}-
+
+      - name: 📥 Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-output
+          path: CloudServiceStore/
+
+      - name: 🧪 Run Unit & Domain Tests
         run: >
           dotnet test CloudServiceStore/CloudServiceStore.Tests/CloudServiceStore.Tests.csproj
           --configuration Release
+          --no-build
           --verbosity normal
-          --logger "trx;LogFileName=test-results.trx"
+          --filter "FullyQualifiedName~Domain|FullyQualifiedName~Application|FullyQualifiedName~WebApi|FullyQualifiedName~Infrastructure.CatalogCache|FullyQualifiedName~Infrastructure.VpsSpec|FullyQualifiedName~Infrastructure.Acme|FullyQualifiedName~Infrastructure.Minio"
+          --logger "trx;LogFileName=unit-results.trx"
+          --collect:"XPlat Code Coverage"
+          --results-directory ./TestResults
 
-      - name: Publish test results
+      - name: 📊 Upload Unit Test Results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: test-results
-          path: '**/test-results.trx'
+          name: unit-test-results
+          path: ./TestResults/
           retention-days: 7
+
+      - name: 📈 Test Report
+        if: always()
+        uses: dorny/test-reporter@v1
+        with:
+          name: 🧪 Unit Test Report
+          path: ./TestResults/unit-results.trx
+          reporter: dotnet-trx
+
+  # ┌─────────────────────────────────────────────────────────────────────────┐
+  # │  🔗 STAGE 2b: Integration & E2E Tests (TestContainers + MSSQL)        │
+  # └─────────────────────────────────────────────────────────────────────────┘
+  integration-tests:
+    name: 🔗 Integration Tests
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: ⚙️ Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: 📦 Cache NuGet
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj') }}
+          restore-keys: nuget-${{ runner.os }}-
+
+      - name: 📥 Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-output
+          path: CloudServiceStore/
+
+      - name: 🐳 Pre-pull TestContainers MSSQL
+        run: docker pull mcr.microsoft.com/mssql/server:2022-latest
+
+      - name: 🔗 Run Integration & E2E Tests
+        run: >
+          dotnet test CloudServiceStore/CloudServiceStore.Tests/CloudServiceStore.Tests.csproj
+          --configuration Release
+          --no-build
+          --verbosity normal
+          --filter "FullyQualifiedName~Integration|FullyQualifiedName~E2E"
+          --logger "trx;LogFileName=integration-results.trx"
+          --results-directory ./TestResults
+
+      - name: 📊 Upload Integration Test Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: integration-test-results
+          path: ./TestResults/
+          retention-days: 7
+
+      - name: 📈 Test Report
+        if: always()
+        uses: dorny/test-reporter@v1
+        with:
+          name: 🔗 Integration Test Report
+          path: ./TestResults/integration-results.trx
+          reporter: dotnet-trx
+
+  # ┌─────────────────────────────────────────────────────────────────────────┐
+  # │  🎨 STAGE 2c: Frontend Type Check (parallel, no backend dependency)   │
+  # └─────────────────────────────────────────────────────────────────────────┘
+  frontend-check:
+    name: 🎨 Frontend Type Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: ⚙️ Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: 📦 Install Dependencies
+        run: npm ci
+        working-directory: frontend
+
+      - name: 🔍 TypeScript Type Check
+        run: npx tsc --noEmit
+        working-directory: frontend
+
+      - name: 🏗️ Build (Next.js)
+        run: npm run build
+        working-directory: frontend
+
+  # ┌─────────────────────────────────────────────────────────────────────────┐
+  # │  ✅ STAGE 3: Final Status Gate (all jobs must pass)                   │
+  # └─────────────────────────────────────────────────────────────────────────┘
+  ci-status:
+    name: ✅ CI Status
+    if: always()
+    needs: [build, unit-tests, integration-tests, frontend-check]
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+
+    steps:
+      - name: 🔍 Check all job results
+        run: |
+          echo "╔═══════════════════════════════════════════════════════╗"
+          echo "║              📊 CI Pipeline Summary                  ║"
+          echo "╠═══════════════════════════════════════════════════════╣"
+          echo "║  🔨 Build:              ${{ needs.build.result }}"
+          echo "║  🧪 Unit Tests:         ${{ needs.unit-tests.result }}"
+          echo "║  🔗 Integration Tests:  ${{ needs.integration-tests.result }}"
+          echo "║  🎨 Frontend Check:     ${{ needs.frontend-check.result }}"
+          echo "╚═══════════════════════════════════════════════════════╝"
+
+          if [[ "${{ needs.build.result }}" != "success" ]] || \
+             [[ "${{ needs.unit-tests.result }}" != "success" ]] || \
+             [[ "${{ needs.integration-tests.result }}" != "success" ]] || \
+             [[ "${{ needs.frontend-check.result }}" != "success" ]]; then
+            echo ""
+            echo "❌ One or more jobs failed. CI is NOT green."
+            exit 1
+          fi
+
+          echo ""
+          echo "✅ All jobs passed! CI is green."
