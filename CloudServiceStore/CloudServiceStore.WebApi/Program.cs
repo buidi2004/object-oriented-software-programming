@@ -94,7 +94,7 @@ builder.Services.AddSignalR();
 builder.Services.AddHealthChecks();
 
 // JWT Bearer Configuration
-var jwtSettings = builder.Configuration.GetSection(JwtSettings.SectionName).Get<JwtSettings>();
+var jwtSettings = builder.Configuration.GetSection(JwtSettings.SectionName).Get<JwtSettings>() ?? new JwtSettings();
 builder.Services.AddAuthentication(defaultScheme: JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
