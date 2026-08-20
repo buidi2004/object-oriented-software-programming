@@ -20,7 +20,7 @@ RUN --mount=type=cache,id=nuget,target=/root/.nuget/packages \
 COPY . .
 WORKDIR "/src/CloudServiceStore.WebApi"
 RUN --mount=type=cache,id=nuget,target=/root/.nuget/packages \
-    dotnet publish "CloudServiceStore.WebApi.csproj" -c Release -o /app/publish --no-restore /p:UseAppHost=false
+    dotnet publish "CloudServiceStore.WebApi.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
