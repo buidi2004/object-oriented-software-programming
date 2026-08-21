@@ -8,6 +8,7 @@ import {
   Cpu, HardDrive, Activity, RefreshCw, ShoppingCart, Lock,
   Layers, Key, ChevronDown, ChevronUp, Award, BarChart3, Cloud
 } from 'lucide-react';
+import { MysqlLogo, PostgresLogo, RedisLogo } from '@/src/components/icons/BrandLogos';
 import { useCartStore } from '@/src/store/useCartStore';
 import { api } from '@/src/lib/api';
 
@@ -168,24 +169,29 @@ export default function DatabasesServicePage() {
             Tập trung hoàn toàn vào viết code ứng dụng. Hãy để CloudHost đảm nhiệm việc vá lỗi, cấu hình Cluster Master-Replica, tự động sao lưu Point-in-Time và tối ưu hiệu năng IOPS.
           </p>
 
-          {/* Engine Selector */}
-          <div className="flex flex-wrap items-center justify-center gap-3 mb-8">
+          {/* Engine Selector with Official Brand Logos */}
+          <div className="flex flex-wrap items-center justify-center gap-4 mb-8">
             {[
-              { id: 'mysql', label: '🐬 MySQL 8.0 Enterprise', desc: 'InnoDB Engine & Replication' },
-              { id: 'postgres', label: '🐘 PostgreSQL 16 Pro', desc: 'JSONB, PostGIS & TimescaleDB' },
-              { id: 'redis', label: '⚡ Redis 7.2 In-Memory', desc: 'Ultra Low-Latency Caching' },
+              { id: 'mysql', label: 'MySQL 8.0 Enterprise', desc: 'InnoDB Engine & Replication', Logo: MysqlLogo },
+              { id: 'postgres', label: 'PostgreSQL 16 Pro', desc: 'JSONB, PostGIS & TimescaleDB', Logo: PostgresLogo },
+              { id: 'redis', label: 'Redis 7.2 In-Memory', desc: 'Ultra Low-Latency Caching', Logo: RedisLogo },
             ].map((eng) => (
               <button
                 key={eng.id}
                 onClick={() => setEngine(eng.id as any)}
-                className={`px-5 py-3 rounded-2xl text-xs font-bold transition-all flex flex-col items-center gap-0.5 border ${
+                className={`px-6 py-3.5 rounded-2xl text-xs font-bold transition-all flex items-center gap-3 border ${
                   engine === eng.id
                     ? 'bg-gradient-to-r from-teal-600 to-emerald-600 text-white shadow-xl shadow-teal-500/30 border-teal-400 scale-105'
                     : 'bg-slate-800/80 text-slate-300 hover:text-white border-slate-700 hover:border-slate-600'
                 }`}
               >
-                <span className="font-extrabold text-sm">{eng.label}</span>
-                <span className="text-[10px] text-teal-200 opacity-80">{eng.desc}</span>
+                <div className="p-1 rounded-lg bg-white/10 shrink-0">
+                  <eng.Logo className="w-6 h-6" />
+                </div>
+                <div className="text-left">
+                  <div className="font-extrabold text-sm text-white">{eng.label}</div>
+                  <div className="text-[10px] text-teal-200 opacity-80">{eng.desc}</div>
+                </div>
               </button>
             ))}
           </div>

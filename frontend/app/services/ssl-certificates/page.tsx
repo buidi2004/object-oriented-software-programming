@@ -7,6 +7,7 @@ import {
   ShieldCheck, Lock, CheckCircle2, Server, Globe, Shield, ArrowRight, 
   Star, ShoppingCart, Key, Award, ChevronDown, ChevronUp, Zap, HelpCircle
 } from 'lucide-react';
+import { SectigoLogo, DigicertLogo } from '@/src/components/icons/BrandLogos';
 import { useCartStore } from '@/src/store/useCartStore';
 
 export default function SslServicePage() {
@@ -23,6 +24,7 @@ export default function SslServicePage() {
       period: 'Miễn phí trọn đời',
       validation: 'Domain Validation (Tự động 60s)',
       warranty: 'Bảo mật tiêu chuẩn',
+      Logo: Lock,
       features: [
         'Mã hóa 256-bit chuẩn bảo mật quốc tế',
         'Xác thực quyền sở hữu tên miền nhanh chóng',
@@ -41,6 +43,7 @@ export default function SslServicePage() {
       period: '199.000đ / năm',
       validation: 'Cấp phát trong 5 phút',
       warranty: '$10,000 USD Bảo hiểm',
+      Logo: SectigoLogo,
       features: [
         'Cấp bởi Tổ chức CA uy tín số 1 thế giới Sectigo',
         'Tương thích 99.9% thiết bị di động và trình duyệt cổ',
@@ -59,6 +62,7 @@ export default function SslServicePage() {
       period: '1.990.000đ / năm',
       validation: 'Xác minh hồ sơ pháp lý Doanh Nghiệp',
       warranty: '$1,750,000 USD Bảo hiểm',
+      Logo: DigicertLogo,
       features: [
         'Hiển thị tên Doanh Nghiệp xác thực chính thức trên chứng chỉ',
         'Bảo hiểm bồi thường danh tiếng lên tới $1.75 Triệu USD',
@@ -105,9 +109,19 @@ export default function SslServicePage() {
         <div className="absolute -top-32 right-10 w-96 h-96 bg-emerald-500/20 rounded-full blur-[100px] pointer-events-none" />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-bold uppercase tracking-wider mb-6 shadow-inner">
-            <ShieldCheck className="w-4 h-4 text-emerald-400 animate-pulse" />
-            Chứng Chỉ Bảo Mật SSL / TLS Quốc Tế - Sectigo & DigiCert
+          <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-slate-800/90 border border-slate-700 text-emerald-300 text-xs font-bold uppercase tracking-wider mb-6 shadow-xl">
+            <div className="flex items-center gap-1.5 border-r border-slate-700 pr-3">
+              <SectigoLogo className="w-4 h-4" />
+              <span>Sectigo CA</span>
+            </div>
+            <div className="flex items-center gap-1.5 border-r border-slate-700 pr-3">
+              <DigicertLogo className="w-4 h-4" />
+              <span>DigiCert</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <ShieldCheck className="w-4 h-4 text-emerald-400" />
+              <span>TLS 1.3 256-bit</span>
+            </div>
           </div>
 
           <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-white max-w-5xl mx-auto leading-tight mb-6">
@@ -146,7 +160,7 @@ export default function SslServicePage() {
               <div>
                 <div className="flex items-center justify-between mb-4">
                   <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">
-                    <Lock className="w-6 h-6" />
+                    <plan.Logo className="w-6 h-6" />
                   </div>
                   <span className="px-2.5 py-1 rounded-full bg-slate-700/60 border border-slate-600 text-[11px] font-bold text-slate-300">
                     {plan.validation}

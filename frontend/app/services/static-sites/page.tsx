@@ -9,6 +9,7 @@ import {
   GitBranch, RefreshCw, Layers, ShieldCheck, ChevronDown,
   ChevronUp, Sparkles, Play, Code, FileCode
 } from 'lucide-react';
+import { NginxLogo } from '@/src/components/icons/BrandLogos';
 import { useCartStore } from '@/src/store/useCartStore';
 import { api } from '@/src/lib/api';
 
@@ -128,9 +129,9 @@ export default function StaticSitesServicePage() {
         <div className="absolute top-40 -left-20 w-80 h-80 bg-blue-500/15 rounded-full blur-[90px] pointer-events-none" />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-bold uppercase tracking-wider mb-6 shadow-inner">
-            <Globe className="w-4 h-4 text-cyan-400 animate-pulse" />
-            Lưu Trữ Web Tĩnh Siêu Tốc Trên Container Nginx Cô Lập
+          <div className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full bg-slate-800/90 border border-slate-700 text-cyan-300 text-xs font-bold uppercase tracking-wider mb-6 shadow-xl">
+            <NginxLogo className="w-4 h-4" />
+            <span>Nginx Container Engine • Ultra Low TTFB &lt; 15ms</span>
           </div>
 
           <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-white max-w-5xl mx-auto leading-tight mb-6">

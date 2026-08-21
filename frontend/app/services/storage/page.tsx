@@ -8,6 +8,7 @@ import {
   Cpu, Activity, RefreshCw, ShoppingCart, Lock, Globe,
   DownloadCloud, Layers, Key, ChevronDown, ChevronUp, Award, BarChart3, Database
 } from 'lucide-react';
+import { MinioLogo, AwsS3Logo } from '@/src/components/icons/BrandLogos';
 import { useCartStore } from '@/src/store/useCartStore';
 import { api } from '@/src/lib/api';
 
@@ -145,9 +146,15 @@ export default function ObjectStorageServicePage() {
         <div className="absolute top-40 -left-20 w-80 h-80 bg-cyan-500/15 rounded-full blur-[90px] pointer-events-none" />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-300 text-xs font-bold uppercase tracking-wider mb-6 shadow-inner">
-            <DownloadCloud className="w-4 h-4 text-blue-400 animate-pulse" />
-            Lưu Trữ Đám Mây Chuẩn AWS S3 Tương Thích 100% - MinIO High Performance
+          <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-slate-800/90 border border-slate-700 text-blue-300 text-xs font-bold uppercase tracking-wider mb-6 shadow-xl">
+            <div className="flex items-center gap-1.5 border-r border-slate-700 pr-3">
+              <MinioLogo className="w-4 h-4" />
+              <span>MinIO High-Perf</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <AwsS3Logo className="w-4 h-4" />
+              <span>AWS S3 Compatible API</span>
+            </div>
           </div>
 
           <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-white max-w-5xl mx-auto leading-tight mb-6">

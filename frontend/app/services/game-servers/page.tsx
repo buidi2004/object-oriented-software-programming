@@ -9,6 +9,7 @@ import {
   Sliders, Award, RefreshCw, Layers, ShieldCheck, ChevronDown,
   ChevronUp, Sparkles, Play, Globe, MessageSquare, Flame, Laptop
 } from 'lucide-react';
+import { MinecraftLogo, Cs2Logo, RustGameLogo, AmdLogo } from '@/src/components/icons/BrandLogos';
 import { useCartStore } from '@/src/store/useCartStore';
 import { api } from '@/src/lib/api';
 
@@ -150,7 +151,6 @@ export default function GameServersServicePage() {
     <div className="min-h-screen bg-slate-900 text-slate-100 selection:bg-purple-500 selection:text-white">
       {/* 1. HERO SECTION */}
       <section className="relative overflow-hidden pt-20 pb-32">
-        {/* Background glow effects */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[600px] bg-gradient-to-b from-purple-600/20 via-pink-600/10 to-transparent blur-3xl pointer-events-none" />
         <div className="absolute -top-32 right-10 w-96 h-96 bg-purple-500/20 rounded-full blur-[100px] pointer-events-none" />
         <div className="absolute top-40 -left-20 w-80 h-80 bg-blue-500/15 rounded-full blur-[90px] pointer-events-none" />
@@ -173,24 +173,29 @@ export default function GameServersServicePage() {
             Tự động chống DDoS Game Layer 7, cài đặt 1-Click và bàn giao tức thì trong 60 giây.
           </p>
 
-          {/* Game Selector Chips */}
-          <div className="flex flex-wrap items-center justify-center gap-3 mb-8">
+          {/* Game Selector Chips with Official Vector Logos */}
+          <div className="flex flex-wrap items-center justify-center gap-4 mb-8">
             {[
-              { id: 'minecraft', label: '🎮 Minecraft (Java & Bedrock)', desc: 'PaperMC, Purpur, Forge' },
-              { id: 'cs2', label: '🔫 Counter-Strike 2 (CS2)', desc: '128-Tick Match & Practice' },
-              { id: 'rust', label: '🛡️ Rust Dedicated', desc: 'Oxide / uMod Support' },
+              { id: 'minecraft', label: 'Minecraft (Java & Bedrock)', desc: 'PaperMC, Purpur, Forge', Logo: MinecraftLogo },
+              { id: 'cs2', label: 'Counter-Strike 2 (CS2)', desc: '128-Tick Match & Practice', Logo: Cs2Logo },
+              { id: 'rust', label: 'Rust Dedicated Server', desc: 'Oxide / uMod Support', Logo: RustGameLogo },
             ].map((game) => (
               <button
                 key={game.id}
                 onClick={() => setSelectedGame(game.id as any)}
-                className={`px-5 py-3 rounded-2xl text-xs font-bold transition-all flex flex-col items-center gap-0.5 border ${
+                className={`px-6 py-3.5 rounded-2xl text-xs font-bold transition-all flex items-center gap-3 border ${
                   selectedGame === game.id
                     ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-xl shadow-purple-500/30 border-purple-400 scale-105'
                     : 'bg-slate-800/80 text-slate-300 hover:text-white border-slate-700 hover:border-slate-600'
                 }`}
               >
-                <span className="font-extrabold text-sm">{game.label}</span>
-                <span className="text-[10px] text-purple-200 opacity-80">{game.desc}</span>
+                <div className="p-1 rounded-lg bg-white/10 shrink-0">
+                  <game.Logo className="w-6 h-6" />
+                </div>
+                <div className="text-left">
+                  <div className="font-extrabold text-sm text-white">{game.label}</div>
+                  <div className="text-[10px] text-purple-200 opacity-80">{game.desc}</div>
+                </div>
               </button>
             ))}
           </div>

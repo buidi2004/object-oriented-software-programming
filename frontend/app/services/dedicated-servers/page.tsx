@@ -9,6 +9,7 @@ import {
   Layers, Key, ChevronDown, ChevronUp, Award, BarChart3, Globe,
   ShieldAlert, Settings, Terminal
 } from 'lucide-react';
+import { DellLogo, IntelLogo, AmdLogo } from '@/src/components/icons/BrandLogos';
 import { useCartStore } from '@/src/store/useCartStore';
 import { api } from '@/src/lib/api';
 
@@ -155,9 +156,19 @@ export default function DedicatedServersPage() {
         <div className="absolute top-40 -left-20 w-80 h-80 bg-blue-500/15 rounded-full blur-[90px] pointer-events-none" />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-300 text-xs font-bold uppercase tracking-wider mb-6 shadow-inner">
-            <Server className="w-4 h-4 text-purple-400 animate-pulse" />
-            Máy Chủ Vật Lý Riêng Biệt Enterprise - Dell PowerEdge & AMD EPYC
+          <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-slate-800/90 border border-slate-700 text-purple-300 text-xs font-bold uppercase tracking-wider mb-6 shadow-xl">
+            <div className="flex items-center gap-1.5 border-r border-slate-700 pr-3">
+              <DellLogo className="w-4 h-4" />
+              <span>Dell EMC</span>
+            </div>
+            <div className="flex items-center gap-1.5 border-r border-slate-700 pr-3">
+              <IntelLogo className="w-4 h-4" />
+              <span>Intel Xeon</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <AmdLogo className="w-4 h-4" />
+              <span>AMD EPYC</span>
+            </div>
           </div>
 
           <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-white max-w-5xl mx-auto leading-tight mb-6">
