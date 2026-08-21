@@ -1,7 +1,9 @@
-using System.Collections.Generic;
+using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CloudServiceStore.Application.Features.DatabaseInstances.Commands.CreateDatabaseInstance;
+using CloudServiceStore.Application.Interfaces;
 using CloudServiceStore.Domain.Entities;
 using CloudServiceStore.Domain.Interfaces;
 using MediatR;
@@ -15,23 +17,55 @@ namespace CloudServiceStore.WebApi.Controllers;
 public class DatabasesController : ControllerBase
 {
     private readonly IMediator _mediator;
-    private readonly IRepository<DatabaseInstance> _repo;
+    private readonly IRepository<ManagedDatabaseInstance> _repo;
+    private readonly ICurrentUserService _currentUser;
 
-    public DatabasesController(IMediator mediator, IRepository<DatabaseInstance> repo)
+    public DatabasesController(
+        IMediator mediator,
+        IRepository<ManagedDatabaseInstance> repo,
+        ICurrentUserService currentUser)
     {
         _mediator = mediator;
         _repo = repo;
+        _currentUser = currentUser;
     }
 
     [HttpGet]
-    [Authorize(Roles = "Customer")]
+    [Authorize]
     public async Task<IActionResult> GetMyDatabases(CancellationToken ct)
     {
-        return Ok(new List<object>());
+        var userId = _currentUser.UserId;
+        var host = HttpContext.Request.Host.Host;
+        if (string.IsNullOrWhiteSpace(host) || host == "0.0.0.0")
+        {
+            host = "127.0.0.1";
+        }
+
+        var databases = userId.HasValue
+            ? await _repo.WhereAsync(d => d.UserId == userId.Value, ct)
+            : await _repo.GetAllAsync(ct);
+
+        var result = databases.Select(d => new
+        {
+            id = d.Id,
+            name = d.Name,
+            engine = d.Engine.ToString(),
+            version = d.Version,
+            host = host,
+            port = d.Port,
+            adminUser = d.AdminUser,
+            username = d.AdminUser,
+            adminPassword = d.AdminPassword,
+            status = d.Status.ToString(),
+            failureReason = d.FailureReason,
+            createdAt = d.CreatedAt
+        }).OrderByDescending(d => d.createdAt);
+
+        return Ok(result);
     }
 
     [HttpPost]
-    [Authorize(Roles = "Customer")]
+    [Authorize]
     public async Task<IActionResult> CreateDatabase([FromBody] CreateDatabaseInstanceCommand command, CancellationToken ct)
     {
         var instanceId = await _mediator.Send(command, ct);

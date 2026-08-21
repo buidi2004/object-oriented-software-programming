@@ -39,6 +39,7 @@ public class ObjectStorageController : ControllerBase
     }
 
     [HttpGet("buckets")]
+    [HttpGet("buckets/me")]
     public async Task<IActionResult> GetBuckets(CancellationToken ct)
     {
         var userId = _currentUser.UserId;
