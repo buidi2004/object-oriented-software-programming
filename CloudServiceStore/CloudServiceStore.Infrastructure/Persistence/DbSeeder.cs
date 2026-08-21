@@ -180,9 +180,9 @@ public static class DbSeeder
             EnsurePlan("static-sites", "Static Site Pro (Custom Domain)", "0.5 vCPU", "128MB", "5GB NVMe", "Custom SSL & Unlimited BW", 49000, 49000 * 12 * 0.8m);
 
             // --- OBJECT STORAGE ---
-            EnsurePlan("storage", "S3 Storage Starter (50GB)", null, null, "50GB NVMe", "1TB Bandwidth", 50000, 50000 * 12 * 0.8m);
-            EnsurePlan("storage", "S3 Storage Pro (250GB)", null, null, "250GB NVMe", "5TB Bandwidth", 200000, 200000 * 12 * 0.8m);
-            EnsurePlan("storage", "S3 Storage Enterprise (1TB)", null, null, "1TB NVMe", "Unlimited Bandwidth", 690000, 690000 * 12 * 0.8m);
+            EnsurePlan("object-storage", "S3 Storage Starter (50GB)", null, null, "50GB NVMe", "1TB Bandwidth", 50000, 50000 * 12 * 0.8m);
+            EnsurePlan("object-storage", "S3 Storage Pro (250GB)", null, null, "250GB NVMe", "5TB Bandwidth", 200000, 200000 * 12 * 0.8m);
+            EnsurePlan("object-storage", "S3 Storage Enterprise (1TB)", null, null, "1TB NVMe", "Unlimited Bandwidth", 690000, 690000 * 12 * 0.8m);
 
             // --- SECURITY & WAF ---
             EnsurePlan("security-waf", "WAF Shield Basic", null, null, null, "Lọc SQLi, XSS", 99000, 99000 * 12 * 0.8m);

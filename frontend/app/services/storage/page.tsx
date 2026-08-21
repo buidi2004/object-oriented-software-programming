@@ -8,20 +8,36 @@ import {
   Lock, Globe, Activity, ShoppingCart 
 } from 'lucide-react';
 import { useCartStore } from '@/src/store/useCartStore';
+import { api } from '@/src/lib/api';
 
-export default function StorageServicePage() {
+export default function ObjectStorageServicePage() {
   const router = useRouter();
   const addItem = useCartStore((state) => state.addItem);
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('yearly');
+  const [dbPlans, setDbPlans] = useState<any[]>([]);
 
-  const plans = [
+  React.useEffect(() => {
+    async function loadPlans() {
+      try {
+        const res = await api.get('/categories/object-storage/plans');
+        if (res.data?.plans?.length) {
+          setDbPlans(res.data.plans);
+        }
+      } catch (err) {
+        console.warn('Could not load storage plans from API', err);
+      }
+    }
+    loadPlans();
+  }, []);
+
+  const defaultPlans = [
     {
-      id: 'storage-250gb',
-      name: 'Object Storage 250GB',
+      id: 'storage-starter-50gb',
+      name: 'S3 Storage Starter (50GB)',
       tagline: 'Phù hợp lưu trữ Media, Ảnh Web & Backup nhỏ',
-      monthlyPrice: 99000,
-      yearlyPrice: 79000 * 12,
-      capacity: '250 GB Dung lượng S3',
+      monthlyPrice: 50000,
+      yearlyPrice: 50000 * 12 * 0.8,
+      capacity: '50 GB Dung lượng S3',
       bandwidth: '1 TB Băng thông tải ra/tháng',
       features: [
         'Chuẩn giao tiếp AWS S3 Compatible API',
@@ -34,12 +50,12 @@ export default function StorageServicePage() {
       popular: false,
     },
     {
-      id: 'storage-1tb',
-      name: 'Object Storage 1TB',
+      id: 'storage-pro-250gb',
+      name: 'S3 Storage Pro (250GB)',
       tagline: 'Lựa chọn tốt nhất cho Web Video, E-learning, App',
-      monthlyPrice: 299000,
-      yearlyPrice: 239000 * 12,
-      capacity: '1,000 GB (1TB) Dung lượng S3',
+      monthlyPrice: 200000,
+      yearlyPrice: 200000 * 12 * 0.8,
+      capacity: '250 GB Dung lượng S3',
       bandwidth: '5 TB Băng thông tải ra/tháng',
       features: [
         'Chuẩn giao tiếp AWS S3 Compatible API',
@@ -52,17 +68,17 @@ export default function StorageServicePage() {
       popular: true,
     },
     {
-      id: 'storage-5tb',
-      name: 'Object Storage 5TB Enterprise',
+      id: 'storage-enterprise-1tb',
+      name: 'S3 Storage Enterprise (1TB)',
       tagline: 'Dành cho Kho dữ liệu lớn, Big Data & Backup tổng',
-      monthlyPrice: 1190000,
-      yearlyPrice: 952000 * 12,
-      capacity: '5,000 GB (5TB) Dung lượng S3',
-      bandwidth: '20 TB Băng thông tải ra/tháng',
+      monthlyPrice: 690000,
+      yearlyPrice: 690000 * 12 * 0.8,
+      capacity: '1,000 GB (1TB) Dung lượng S3',
+      bandwidth: 'Không giới hạn băng thông',
       features: [
         'Chuẩn giao tiếp AWS S3 Compatible API',
-        'Băng thông tải ra lên đến 20TB',
-        'Dung lượng cực lớn 5TB',
+        'Băng thông tải ra không giới hạn',
+        'Dung lượng cực lớn 1TB NVMe',
         'Báo cáo chi tiết dung lượng',
         'Cam kết chất lượng dịch vụ SLA 99.9%',
       ],
@@ -71,6 +87,16 @@ export default function StorageServicePage() {
     },
   ];
 
+  const plans = defaultPlans.map((dp, idx) => {
+    const matchingDb = dbPlans[idx];
+    return {
+      ...dp,
+      id: matchingDb?.id || dp.id,
+      monthlyPrice: matchingDb?.monthlyPrice || dp.monthlyPrice,
+      yearlyPrice: matchingDb?.yearlyPrice || dp.yearlyPrice,
+    };
+  });
+
   const handleOrder = async (plan: typeof plans[0]) => {
     const cycleMonths = billingCycle === 'yearly' ? 12 : 1;
     const price = billingCycle === 'yearly' ? plan.yearlyPrice : plan.monthlyPrice;
@@ -78,6 +104,8 @@ export default function StorageServicePage() {
       name: `${plan.name} (${billingCycle === 'yearly' ? '12 Tháng' : '1 Tháng'})`,
       price: price,
       billingCycle: cycleMonths,
+      type: 'storage',
+      details: plan.capacity
     });
     router.push('/cart');
   };

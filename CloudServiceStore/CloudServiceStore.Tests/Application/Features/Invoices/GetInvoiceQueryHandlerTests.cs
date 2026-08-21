@@ -16,10 +16,12 @@ public class GetInvoiceQueryHandlerTests
 {
     private readonly Mock<IRepository<Invoice>> _invoiceRepoMock = new();
     private readonly Mock<IRepository<OrderRequest>> _orderRepoMock = new();
+    private readonly Mock<IRepository<Payment>> _paymentRepoMock = new();
     private readonly Mock<ICurrentUserService> _currentUserMock = new();
+    private readonly Mock<IUnitOfWork> _uowMock = new();
     
     private GetInvoiceQueryHandler CreateHandler() 
-        => new(_invoiceRepoMock.Object, _orderRepoMock.Object, _currentUserMock.Object);
+        => new(_invoiceRepoMock.Object, _orderRepoMock.Object, _paymentRepoMock.Object, _currentUserMock.Object, _uowMock.Object);
 
     [Fact]
     public async Task Handle_UnauthenticatedUser_ThrowsUnauthorizedException()

@@ -8,16 +8,32 @@ import {
   Cpu, HardDrive, Activity, RefreshCw, ShoppingCart 
 } from 'lucide-react';
 import { useCartStore } from '@/src/store/useCartStore';
+import { api } from '@/src/lib/api';
 
 export default function DatabasesServicePage() {
   const router = useRouter();
   const addItem = useCartStore((state) => state.addItem);
   const [engine, setEngine] = useState<'mysql' | 'postgres' | 'redis'>('mysql');
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('yearly');
+  const [dbPlans, setDbPlans] = useState<any[]>([]);
 
-  const plans = [
+  React.useEffect(() => {
+    async function loadPlans() {
+      try {
+        const res = await api.get('/categories/managed-database/plans');
+        if (res.data?.plans?.length) {
+          setDbPlans(res.data.plans);
+        }
+      } catch (err) {
+        console.warn('Could not load managed database plans from API', err);
+      }
+    }
+    loadPlans();
+  }, []);
+
+  const defaultPlans = [
     {
-      id: 'db-micro',
+      id: '7d9ae64f-db23-404c-8ed2-3eb39a1e4723',
       name: 'DB Micro',
       tagline: 'Lý tưởng cho môi trường Dev/Test & App nhỏ',
       monthlyPrice: 199000,
@@ -34,7 +50,7 @@ export default function DatabasesServicePage() {
       popular: false,
     },
     {
-      id: 'db-standard',
+      id: '2bf4b5b1-ec2d-4140-9819-ca61c551078b',
       name: 'DB Standard',
       tagline: 'Phổ biến cho ứng dụng Web nhỏ',
       monthlyPrice: 599000,
@@ -51,7 +67,7 @@ export default function DatabasesServicePage() {
       popular: true,
     },
     {
-      id: 'db-enterprise',
+      id: '38a09ebe-14ae-4a96-b155-8f5c3da8e622',
       name: 'DB Pro',
       tagline: 'Dành cho dự án cá nhân',
       monthlyPrice: 1590000,
@@ -69,13 +85,25 @@ export default function DatabasesServicePage() {
     },
   ];
 
+  const plans = defaultPlans.map((dp, idx) => {
+    const matchingDb = dbPlans[idx];
+    return {
+      ...dp,
+      id: matchingDb?.id || dp.id,
+      monthlyPrice: matchingDb?.monthlyPrice || dp.monthlyPrice,
+      yearlyPrice: matchingDb?.yearlyPrice || dp.yearlyPrice,
+    };
+  });
+
   const handleOrder = async (plan: typeof plans[0]) => {
     const cycleMonths = billingCycle === 'yearly' ? 12 : 1;
     const price = billingCycle === 'yearly' ? plan.yearlyPrice : plan.monthlyPrice;
-    await addItem(`${plan.id}-${engine}`, cycleMonths, false, {
+    await addItem(plan.id, cycleMonths, false, {
       name: `${plan.name} (${engine.toUpperCase()}) - ${billingCycle === 'yearly' ? '12 Tháng' : '1 Tháng'}`,
       price: price,
       billingCycle: cycleMonths,
+      type: 'database',
+      details: `${plan.cpu} • ${plan.ram} • ${plan.storage}`
     });
     router.push('/cart');
   };

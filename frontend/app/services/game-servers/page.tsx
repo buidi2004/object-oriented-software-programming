@@ -8,16 +8,32 @@ import {
   Cpu, HardDrive, Terminal, Clock, ShoppingCart 
 } from 'lucide-react';
 import { useCartStore } from '@/src/store/useCartStore';
+import { api } from '@/src/lib/api';
 
 export default function GameServersServicePage() {
   const router = useRouter();
   const addItem = useCartStore((state) => state.addItem);
   const [selectedGame, setSelectedGame] = useState<'minecraft' | 'cs2' | 'rust'>('minecraft');
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('yearly');
+  const [dbPlans, setDbPlans] = useState<any[]>([]);
 
-  const plans = [
+  React.useEffect(() => {
+    async function loadPlans() {
+      try {
+        const res = await api.get('/categories/game-server/plans');
+        if (res.data?.plans?.length) {
+          setDbPlans(res.data.plans);
+        }
+      } catch (err) {
+        console.warn('Could not load game server plans from API', err);
+      }
+    }
+    loadPlans();
+  }, []);
+
+  const defaultPlans = [
     {
-      id: 'game-starter',
+      id: '5ac0ac63-8ad6-44f5-8981-95334603b4fd',
       name: 'Game Server Starter',
       tagline: 'Phù hợp chơi cùng nhóm bạn từ 5 - 10 người',
       monthlyPrice: 149000,
@@ -34,7 +50,7 @@ export default function GameServersServicePage() {
       popular: false,
     },
     {
-      id: 'game-pro',
+      id: '552009b7-4ca9-41fd-adc0-b6443ce5b0fa',
       name: 'Game Server Pro',
       tagline: 'Phổ biến cho Cộng đồng nhỏ',
       monthlyPrice: 299000,
@@ -51,7 +67,7 @@ export default function GameServersServicePage() {
       popular: true,
     },
     {
-      id: 'game-extreme',
+      id: '0348fc3c-bdbf-49c3-9fdd-7a6c6a1aeb82',
       name: 'Game Server Extreme',
       tagline: 'Dành cho Máy chủ Mods nhẹ',
       monthlyPrice: 599000,
@@ -69,13 +85,25 @@ export default function GameServersServicePage() {
     },
   ];
 
+  const plans = defaultPlans.map((dp, idx) => {
+    const matchingDb = dbPlans[idx] || dbPlans.find((p: any) => p.name?.toLowerCase().includes(selectedGame));
+    return {
+      ...dp,
+      id: matchingDb?.id || dp.id,
+      monthlyPrice: matchingDb?.monthlyPrice || dp.monthlyPrice,
+      yearlyPrice: matchingDb?.yearlyPrice || dp.yearlyPrice,
+    };
+  });
+
   const handleOrder = async (plan: typeof plans[0]) => {
     const cycleMonths = billingCycle === 'yearly' ? 12 : 1;
     const price = billingCycle === 'yearly' ? plan.yearlyPrice : plan.monthlyPrice;
-    await addItem(`${plan.id}-${selectedGame}`, cycleMonths, false, {
+    await addItem(plan.id, cycleMonths, false, {
       name: `${plan.name} (${selectedGame.toUpperCase()}) - ${billingCycle === 'yearly' ? '12 Tháng' : '1 Tháng'}`,
       price: price,
       billingCycle: cycleMonths,
+      type: 'game',
+      details: `${plan.cpu} • ${plan.ram} • ${plan.storage}`
     });
     router.push('/cart');
   };

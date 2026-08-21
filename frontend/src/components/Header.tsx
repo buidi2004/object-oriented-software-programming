@@ -17,28 +17,32 @@ import GlobalSearch from './GlobalSearch';
 const serviceCategories = [
   {
     name: 'Hạ tầng & Máy chủ',
-    description: 'Cung cấp các dịch vụ trên hạ tầng chuyên dụng theo nhiều mô hình khác nhau, tùy thuộc vào nhu cầu của khách hàng.',
+    description: 'Cung cấp các dịch vụ hạ tầng máy chủ chuyên dụng, ảo hóa CPU AMD/Intel hiệu năng cao và container tối ưu.',
     services: [
-      { id: 1, title: 'Cloud VPS NVMe', desc: 'Máy chủ ảo hiệu năng cao', link: '/services/cloud-vps', icon: Server, color: 'text-red-600 bg-red-50' },
-      { id: 2, title: 'Dedicated Server', desc: 'Máy chủ vật lý riêng biệt', link: '/services/dedicated-server', icon: Cpu, color: 'text-red-600 bg-red-50' },
-      { id: 3, title: 'Game Servers', desc: 'Minecraft, CS:GO, Rust', link: '/services/game-servers', icon: Gamepad2, color: 'text-red-600 bg-red-50' }
+      { id: 1, title: 'Cloud VPS NVMe', desc: 'Máy chủ ảo hiệu năng cao CPU AMD EPYC', link: '/services/cloud-vps', icon: Server, color: 'text-blue-600 bg-blue-50' },
+      { id: 2, title: 'Dedicated Server', desc: 'Máy chủ vật lý riêng biệt Dual Xeon & EPYC', link: '/services/dedicated-servers', icon: Cpu, color: 'text-purple-600 bg-purple-50' },
+      { id: 3, title: 'Game Servers', desc: 'Minecraft, CS2, Rust Anti-DDoS 100Gbps', link: '/services/game-servers', icon: Gamepad2, color: 'text-rose-600 bg-rose-50' },
+      { id: 4, title: 'Static Sites (Nginx)', desc: 'Web tĩnh tốc độ cao trên container Nginx', link: '/services/static-sites', icon: Globe, color: 'text-cyan-600 bg-cyan-50' }
     ]
   },
   {
     name: 'Web & Bảo mật',
-    description: 'Giải pháp lưu trữ web tốc độ cao và bảo mật đường truyền toàn diện đạt chuẩn quốc tế.',
+    description: 'Giải pháp lưu trữ web tốc độ cao, cài ứng dụng 1 chạm và bảo vệ đường truyền đạt chuẩn quốc tế.',
     services: [
-      { id: 1, title: 'NVMe Web Hosting', desc: 'LiteSpeed + LSCache tốc độ', link: '/services/hosting', icon: Globe, color: 'text-red-600 bg-red-50' },
-      { id: 2, title: 'Chứng Chỉ SSL', desc: 'Bảo mật mã hóa DV/EV', link: '/services/ssl-certificates', icon: ShieldCheck, color: 'text-red-600 bg-red-50' },
-      { id: 3, title: 'Đăng Ký Tên Miền', desc: '.VN, .COM, .AI, .IO giá tốt', link: '/services/domain', icon: Compass, color: 'text-red-600 bg-red-50' }
+      { id: 1, title: 'NVMe Web Hosting', desc: 'LiteSpeed + cPanel tối ưu tốc độ', link: '/services/hosting', icon: LayoutTemplate, color: 'text-emerald-600 bg-emerald-50' },
+      { id: 2, title: '1-Click Apps Installer', desc: 'Cài WordPress, Ghost, Nextcloud 60s', link: '/apps', icon: Layers, color: 'text-amber-600 bg-amber-50' },
+      { id: 3, title: 'Chứng Chỉ SSL / TLS', desc: 'Bảo mật mã hóa HTTPS DV/EV', link: '/services/ssl-certificates', icon: ShieldCheck, color: 'text-teal-600 bg-teal-50' },
+      { id: 4, title: 'Tên Miền (DNS)', desc: 'Đăng ký .VN, .COM, .AI, .IO giá tốt', link: '/domains', icon: Compass, color: 'text-indigo-600 bg-indigo-50' }
     ]
   },
   {
     name: 'Dữ liệu & Giải pháp',
-    description: 'Hệ sinh thái lưu trữ và ứng dụng doanh nghiệp đáng tin cậy, vận hành mượt mà 24/7.',
+    description: 'Hệ sinh thái lưu trữ S3, cơ sở dữ liệu quản trị tự động và dịch vụ chuyển đổi dữ liệu toàn diện.',
     services: [
-      { id: 1, title: 'Email Doanh Nghiệp', desc: 'Hòm thư bảo mật theo tên miền', link: '/services/email-hosting', icon: Mail, color: 'text-red-600 bg-red-50' },
-      { id: 2, title: 'Cloud Storage', desc: 'Lưu trữ đám mây an toàn', link: '/services/storage', icon: HardDrive, color: 'text-red-600 bg-red-50' }
+      { id: 1, title: 'Managed Databases', desc: 'PostgreSQL, MySQL, Redis tự động', link: '/services/databases', icon: Database, color: 'text-teal-600 bg-teal-50' },
+      { id: 2, title: 'Object Storage (S3)', desc: 'Lưu trữ MinIO S3 API tương thích cao', link: '/services/storage', icon: HardDrive, color: 'text-blue-600 bg-blue-50' },
+      { id: 3, title: 'Bảo Mật & WAF', desc: 'Tường lửa L7, chống DDoS & quét mã độc', link: '/services/security', icon: Shield, color: 'text-red-600 bg-red-50' },
+      { id: 4, title: 'Chuyển Đổi Dữ Liệu', desc: 'Hỗ trợ chuyển dữ liệu lên Cloud 24/7', link: '/services/migrations', icon: Zap, color: 'text-orange-600 bg-orange-50' }
     ]
   }
 ];
@@ -175,66 +179,109 @@ export const Header: React.FC<HeaderProps> = ({
               </button>
 
               {servicesDropdownOpen && (
-                <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 w-[900px] max-w-[95vw] z-50">
-                  <div className="bg-white rounded-2xl shadow-[0_20px_50px_-12px_rgba(0,0,0,0.15)] border border-slate-200 flex overflow-hidden min-h-[380px] animate-in fade-in slide-in-from-top-2 duration-200">
-
-                    {/* Left Sidebar */}
-                    <div className="w-1/3 bg-slate-50 border-r border-slate-200 py-4 flex flex-col">
-                      {serviceCategories.map((cat, idx) => (
-                        <button
-                          key={idx}
-                          onMouseEnter={() => setActiveServiceCategory(idx)}
-                          onClick={() => setActiveServiceCategory(idx)}
-                          className={`text-left px-6 py-4 text-[15px] font-semibold transition-all border-l-[3px] outline-none ${activeServiceCategory === idx
-                              ? 'border-red-600 text-red-600 bg-white shadow-[-5px_0_15px_-10px_rgba(0,0,0,0.1)_inset]'
-                              : 'border-transparent text-slate-700 hover:bg-slate-100 hover:text-slate-900'
-                            }`}
-                        >
-                          {cat.name}
-                        </button>
-                      ))}
-                    </div>
-
-                    {/* Right Content */}
-                    <div className="w-2/3 p-8 bg-white flex flex-col">
-                      {/* Banner */}
-                      <div className="flex items-center gap-6 mb-8">
-                        <div className="w-16 h-16 shrink-0 relative flex items-center justify-center">
-                          <div className="absolute inset-0 bg-red-100 rounded-2xl transform rotate-3" />
-                          <div className="absolute inset-0 bg-white border border-red-200 rounded-2xl shadow-sm transform -rotate-3 flex items-center justify-center">
-                            <Cloud className="w-8 h-8 text-red-600 drop-shadow-md" />
+                <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 w-[940px] max-w-[95vw] z-50">
+                  <div className="bg-white rounded-3xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.18)] border border-slate-200 flex flex-col overflow-hidden min-h-[420px] animate-in fade-in slide-in-from-top-2 duration-200">
+                    
+                    <div className="flex flex-1">
+                      {/* Left Sidebar */}
+                      <div className="w-[280px] bg-slate-50/80 border-r border-slate-200/80 py-5 flex flex-col justify-between shrink-0">
+                        <div className="space-y-1 px-3">
+                          <div className="text-[11px] font-black uppercase tracking-wider text-slate-400 px-3 pb-2">
+                            Danh Mục Dịch Vụ ({serviceCategories.length})
                           </div>
+                          {serviceCategories.map((cat, idx) => (
+                            <button
+                              key={idx}
+                              onMouseEnter={() => setActiveServiceCategory(idx)}
+                              onClick={() => setActiveServiceCategory(idx)}
+                              className={`w-full text-left px-4 py-3.5 rounded-2xl text-[14px] font-bold transition-all flex items-center justify-between outline-none ${
+                                activeServiceCategory === idx
+                                  ? 'bg-white text-blue-600 shadow-sm border border-slate-200/80 font-black'
+                                  : 'text-slate-700 hover:bg-slate-100/80 hover:text-slate-900'
+                              }`}
+                            >
+                              <span>{cat.name}</span>
+                              <span className={`text-xs px-2 py-0.5 rounded-full font-bold ${
+                                activeServiceCategory === idx ? 'bg-blue-100 text-blue-700' : 'bg-slate-200 text-slate-600'
+                              }`}>
+                                {cat.services.length}
+                              </span>
+                            </button>
+                          ))}
                         </div>
-                        <p className="text-[13px] text-slate-600 font-medium leading-relaxed max-w-sm">
-                          {serviceCategories[activeServiceCategory].description}
-                        </p>
+
+                        {/* Direct Service Plans link in left sidebar */}
+                        <div className="px-3 pt-4 border-t border-slate-200/60 mt-4">
+                          <Link
+                            href="/services"
+                            onClick={() => setServicesDropdownOpen(false)}
+                            className="block p-3 rounded-2xl bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 hover:border-blue-300 transition-all group"
+                          >
+                            <div className="text-xs font-black text-blue-900 group-hover:text-blue-600 flex items-center justify-between">
+                              <span>Xem Tất Cả 12 Gói Dịch Vụ</span>
+                              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                            </div>
+                            <p className="text-[11px] text-slate-500 mt-0.5">Bảng giá tổng hợp & so sánh</p>
+                          </Link>
+                        </div>
                       </div>
 
-                      {/* Grid of services */}
-                      <div className="grid grid-cols-2 gap-4 flex-1 content-start">
-                        {serviceCategories[activeServiceCategory].services.map((service, idx) => {
-                          const SIcon = service.icon;
-                          return (
-                            <Link
-                              key={idx}
-                              href={service.link}
-                              onClick={() => setServicesDropdownOpen(false)}
-                              className="flex items-start gap-4 p-4 rounded-2xl hover:bg-slate-50 border border-slate-100 transition-all group"
-                            >
-                              <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${service.color} transition-transform group-hover:scale-110 shadow-sm`}>
-                                <SIcon className="w-5 h-5" />
-                              </div>
-                              <div>
-                                <div className="text-[14px] font-bold text-slate-900 group-hover:text-red-600 transition-colors mb-1 line-clamp-1">
-                                  {service.title}
-                                </div>
-                                <div className="text-[12px] font-medium text-slate-500 line-clamp-2 leading-snug">
-                                  {service.desc}
-                                </div>
-                              </div>
-                            </Link>
-                          );
-                        })}
+                      {/* Right Content */}
+                      <div className="flex-1 p-6 sm:p-7 bg-white flex flex-col justify-between">
+                        <div>
+                          {/* Banner */}
+                          <div className="flex items-center gap-4 mb-6 pb-4 border-b border-slate-100">
+                            <div className="w-12 h-12 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center shrink-0 shadow-2xs">
+                              <Cloud className="w-6 h-6 text-blue-600" />
+                            </div>
+                            <div>
+                              <h4 className="text-sm font-black text-slate-900">{serviceCategories[activeServiceCategory].name}</h4>
+                              <p className="text-[12px] text-slate-500 font-medium leading-relaxed max-w-lg mt-0.5">
+                                {serviceCategories[activeServiceCategory].description}
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* 4 Services Grid */}
+                          <div className="grid grid-cols-2 gap-3.5">
+                            {serviceCategories[activeServiceCategory].services.map((service, idx) => {
+                              const SIcon = service.icon;
+                              return (
+                                <Link
+                                  key={idx}
+                                  href={service.link}
+                                  onClick={() => setServicesDropdownOpen(false)}
+                                  className="flex items-start gap-3.5 p-3.5 rounded-2xl hover:bg-slate-50 border border-slate-100 hover:border-blue-200 transition-all group"
+                                >
+                                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${service.color} transition-transform group-hover:scale-110 shadow-2xs`}>
+                                    <SIcon className="w-5 h-5" />
+                                  </div>
+                                  <div className="min-w-0">
+                                    <div className="text-[13px] font-black text-slate-900 group-hover:text-blue-600 transition-colors mb-0.5 truncate">
+                                      {service.title}
+                                    </div>
+                                    <div className="text-[11px] font-medium text-slate-500 line-clamp-2 leading-snug">
+                                      {service.desc}
+                                    </div>
+                                  </div>
+                                </Link>
+                              );
+                            })}
+                          </div>
+                        </div>
+
+                        {/* Bottom Bar */}
+                        <div className="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                          <span className="font-semibold text-slate-600">⚡ Triển khai tự động trong 30-60 giây</span>
+                          <Link
+                            href="/services"
+                            onClick={() => setServicesDropdownOpen(false)}
+                            className="font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1"
+                          >
+                            <span>Xem bảng giá & khuyến mãi</span>
+                            <ArrowRight className="w-3.5 h-3.5" />
+                          </Link>
+                        </div>
                       </div>
                     </div>
 
@@ -300,7 +347,7 @@ export const Header: React.FC<HeaderProps> = ({
                         <BookOpen className="w-4 h-4" />
                       </div>
                       <div>
-                        <div className="text-sm font-bold text-slate-700 group-hover:text-indigo-600">Cơ sở kiến thức</div>
+                        <div className="text-sm font-bold text-slate-700 group-hover:text-indigo-600">Thư viện tài liệu</div>
                       </div>
                     </Link>
 
@@ -313,20 +360,20 @@ export const Header: React.FC<HeaderProps> = ({
                         <DownloadCloud className="w-4 h-4" />
                       </div>
                       <div>
-                        <div className="text-sm font-bold text-slate-700 group-hover:text-emerald-600">Tài nguyên</div>
+                        <div className="text-sm font-bold text-slate-700 group-hover:text-emerald-600">Tài nguyên & Phần mềm</div>
                       </div>
                     </Link>
 
                     <Link
                       href="/status"
                       onClick={() => setSupportDropdownOpen(false)}
-                      className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-teal-50/70 transition-colors group"
+                      className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-rose-50/70 transition-colors group"
                     >
-                      <div className="w-8 h-8 rounded-lg bg-teal-100/70 text-teal-600 flex items-center justify-center shrink-0">
+                      <div className="w-8 h-8 rounded-lg bg-rose-100/70 text-rose-600 flex items-center justify-center shrink-0">
                         <ActivitySquare className="w-4 h-4" />
                       </div>
                       <div>
-                        <div className="text-sm font-bold text-slate-700 group-hover:text-teal-600">Trạng thái mạng</div>
+                        <div className="text-sm font-bold text-slate-700 group-hover:text-rose-600">Trạng thái hệ thống</div>
                       </div>
                     </Link>
                   </div>
@@ -337,45 +384,41 @@ export const Header: React.FC<HeaderProps> = ({
             <Link
               href="/contact"
               className={`${navLinkBase} ${pathname === '/contact'
-                  ? 'text-blue-600 bg-blue-50/80'
+                  ? 'text-blue-600 bg-blue-50/80 font-black'
                   : 'text-slate-700 hover:text-blue-600 hover:bg-slate-50'
                 }`}
             >
               Liên hệ
             </Link>
 
-            {user && (user.role === 'Admin' || user.role === 'Editor') && (
+            {/* Admin Panel Quick Link for Staff / Admin */}
+            {(user?.role === 'Admin' || user?.role === 'Editor') && (
               <Link
                 href="/admin"
-                className={`${navLinkBase} text-indigo-600 bg-indigo-50/80 hover:bg-indigo-100 font-bold gap-1`}
+                className="px-3.5 py-2 rounded-xl text-xs font-black bg-gradient-to-r from-red-600 to-rose-600 text-white shadow-xs hover:shadow-red-500/20 hover:from-red-500 hover:to-rose-500 transition-all flex items-center gap-1.5 shrink-0"
               >
-                <Shield className="w-4 h-4 text-indigo-600" />
-                Admin Panel
+                <Shield className="w-3.5 h-3.5" />
+                <span>Admin Panel</span>
               </Link>
             )}
           </nav>
 
-          {/* Actions — luôn icon-first, không chiếm width cố định lớn */}
-          <div className="flex items-center justify-end gap-0.5 sm:gap-1.5 shrink-0 ml-auto lg:ml-0">
+          {/* Action Icons & Profile */}
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+            <GlobalSearch />
 
             <button
               onClick={handleOpenCart}
-              className="relative p-2.5 rounded-full text-slate-700 hover:bg-slate-100 transition-colors shrink-0"
-              title="Giỏ hàng"
+              className="relative p-2 text-slate-700 hover:bg-slate-100 rounded-xl transition-colors shrink-0"
               aria-label="Giỏ hàng"
             >
               <ShoppingCart className="w-5 h-5" />
               {cartCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 bg-rose-500 text-white text-[10px] font-black w-4 h-4 rounded-full flex items-center justify-center">
+                <span className="absolute -top-1 -right-1 bg-gradient-to-r from-rose-500 to-red-600 text-white text-[10px] font-black w-4 h-4 rounded-full flex items-center justify-center border-2 border-white animate-pulse">
                   {cartCount}
                 </span>
               )}
             </button>
-
-            <Link href="/dashboard" className="hidden lg:flex items-center gap-2 text-sm font-medium text-slate-700 hover:text-blue-600 transition-colors mx-2">
-              <Search className="w-4 h-4" />
-              <span>Quản lý dịch vụ</span>
-            </Link>
 
             {user ? (
               <div className="hidden sm:flex items-center gap-1.5 shrink-0">
@@ -460,40 +503,39 @@ export const Header: React.FC<HeaderProps> = ({
               ))}
             </div>
 
-            {/* Quick Mobile Services Grid */}
+            {/* Quick Mobile Services Grid for all 12 services */}
             <div className="p-3 bg-slate-50 rounded-2xl border border-slate-100">
-              <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2 px-1">
-                Dịch vụ phổ biến
+              <div className="text-[11px] font-black uppercase tracking-wider text-slate-400 mb-2.5 px-1 flex items-center justify-between">
+                <span>Toàn bộ 12 Dịch Vụ Cloud</span>
+                <Link href="/services" onClick={() => setMobileMenuOpen(false)} className="text-blue-600 font-bold lowercase">
+                  xem tất cả →
+                </Link>
               </div>
-              <div className="grid grid-cols-2 gap-2">
-                <Link 
-                  href="/services/cloud-vps" 
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="p-2.5 bg-white rounded-xl border border-slate-200/70 text-xs font-bold text-slate-800 hover:text-blue-600 flex items-center gap-2 shadow-2xs"
-                >
-                  <Server className="w-4 h-4 text-blue-600" /> Cloud VPS
-                </Link>
-                <Link 
-                  href="/services/hosting" 
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="p-2.5 bg-white rounded-xl border border-slate-200/70 text-xs font-bold text-slate-800 hover:text-blue-600 flex items-center gap-2 shadow-2xs"
-                >
-                  <LayoutTemplate className="w-4 h-4 text-emerald-600" /> Web Hosting
-                </Link>
-                <Link 
-                  href="/services/domain" 
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="p-2.5 bg-white rounded-xl border border-slate-200/70 text-xs font-bold text-slate-800 hover:text-blue-600 flex items-center gap-2 shadow-2xs"
-                >
-                  <Globe className="w-4 h-4 text-amber-600" /> Tên Miền
-                </Link>
-                <Link 
-                  href="/services/email-hosting" 
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="p-2.5 bg-white rounded-xl border border-slate-200/70 text-xs font-bold text-slate-800 hover:text-blue-600 flex items-center gap-2 shadow-2xs"
-                >
-                  <Mail className="w-4 h-4 text-purple-600" /> Email Cty
-                </Link>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                {[
+                  { label: 'Cloud VPS', href: '/services/cloud-vps', icon: Server, color: 'text-blue-600' },
+                  { label: 'Dedicated Server', href: '/services/dedicated-servers', icon: Cpu, color: 'text-purple-600' },
+                  { label: 'Managed DB', href: '/services/databases', icon: Database, color: 'text-teal-600' },
+                  { label: 'Game Servers', href: '/services/game-servers', icon: Gamepad2, color: 'text-rose-600' },
+                  { label: '1-Click Apps', href: '/apps', icon: Layers, color: 'text-amber-600' },
+                  { label: 'Static Sites', href: '/services/static-sites', icon: Globe, color: 'text-cyan-600' },
+                  { label: 'Object Storage', href: '/services/storage', icon: HardDrive, color: 'text-blue-600' },
+                  { label: 'Chứng Chỉ SSL', href: '/services/ssl-certificates', icon: ShieldCheck, color: 'text-teal-600' },
+                  { label: 'Tên Miền (DNS)', href: '/domains', icon: Compass, color: 'text-indigo-600' },
+                  { label: 'Bảo Mật & WAF', href: '/services/security', icon: Shield, color: 'text-red-600' },
+                  { label: 'Chuyển Đổi Data', href: '/services/migrations', icon: Zap, color: 'text-orange-600' },
+                  { label: 'Web Hosting', href: '/services/hosting', icon: LayoutTemplate, color: 'text-emerald-600' },
+                ].map((svc, idx) => (
+                  <Link 
+                    key={idx}
+                    href={svc.href} 
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="p-2.5 bg-white rounded-xl border border-slate-200/70 text-xs font-bold text-slate-800 hover:text-blue-600 flex items-center gap-2 shadow-2xs"
+                  >
+                    <svc.icon className={`w-4 h-4 ${svc.color} shrink-0`} /> 
+                    <span className="truncate">{svc.label}</span>
+                  </Link>
+                ))}
               </div>
             </div>
 

@@ -8,19 +8,35 @@ import {
   GitBranch, RefreshCw, Cpu, Activity, ShoppingCart 
 } from 'lucide-react';
 import { useCartStore } from '@/src/store/useCartStore';
+import { api } from '@/src/lib/api';
 
 export default function StaticSitesServicePage() {
   const router = useRouter();
   const addItem = useCartStore((state) => state.addItem);
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('yearly');
+  const [dbPlans, setDbPlans] = useState<any[]>([]);
 
-  const plans = [
+  React.useEffect(() => {
+    async function loadPlans() {
+      try {
+        const res = await api.get('/categories/static-sites/plans');
+        if (res.data?.plans?.length) {
+          setDbPlans(res.data.plans);
+        }
+      } catch (err) {
+        console.warn('Could not load static site plans from API', err);
+      }
+    }
+    loadPlans();
+  }, []);
+
+  const defaultPlans = [
     {
-      id: 'static-hobby',
-      name: 'Static Hobby',
+      id: 'c4f880e1-52b6-4313-a0b7-aa0fe24ed8ba',
+      name: 'Static Site Starter',
       tagline: 'Phù hợp cho dự án cá nhân & Portfolio sinh viên',
-      monthlyPrice: 49000,
-      yearlyPrice: 39000 * 12,
+      monthlyPrice: 0,
+      yearlyPrice: 0,
       sites: '3 Websites tĩnh',
       bandwidth: '100 GB Băng thông',
       features: [
@@ -34,11 +50,11 @@ export default function StaticSitesServicePage() {
       popular: false,
     },
     {
-      id: 'static-pro',
+      id: '19d5647d-9d41-4436-a3e7-5e7f34c73d0e',
       name: 'Static Web Pro',
       tagline: 'Lựa chọn lý tưởng cho Freelancer & Agency Web',
-      monthlyPrice: 129000,
-      yearlyPrice: 99000 * 12,
+      monthlyPrice: 49000,
+      yearlyPrice: 39000 * 12,
       sites: '15 Websites tĩnh',
       bandwidth: '500 GB Băng thông',
       features: [
@@ -51,25 +67,17 @@ export default function StaticSitesServicePage() {
       badge: 'Bán chạy nhất',
       popular: true,
     },
-    {
-      id: 'static-team',
-      name: 'Static Agency Team',
-      tagline: 'Dành cho Doanh nghiệp & Startup nhiều sản phẩm',
-      monthlyPrice: 349000,
-      yearlyPrice: 279000 * 12,
-      sites: 'Không giới hạn Website',
-      bandwidth: '2,000 GB Băng thông',
-      features: [
-        'Hỗ trợ HTML/CSS/JS thuần',
-        'Upload mã nguồn thủ công qua Dashboard',
-        'Dedicated Anycast IP riêng',
-        'Cam kết chất lượng dịch vụ SLA 99.9%',
-        'Hỗ trợ VIP 1-1',
-      ],
-      badge: 'Agency & Team',
-      popular: false,
-    },
   ];
+
+  const plans = defaultPlans.map((dp, idx) => {
+    const matchingDb = dbPlans[idx];
+    return {
+      ...dp,
+      id: matchingDb?.id || dp.id,
+      monthlyPrice: matchingDb?.monthlyPrice ?? dp.monthlyPrice,
+      yearlyPrice: matchingDb?.yearlyPrice ?? dp.yearlyPrice,
+    };
+  });
 
   const handleOrder = async (plan: typeof plans[0]) => {
     const cycleMonths = billingCycle === 'yearly' ? 12 : 1;
@@ -78,6 +86,8 @@ export default function StaticSitesServicePage() {
       name: `${plan.name} (${billingCycle === 'yearly' ? '12 Tháng' : '1 Tháng'})`,
       price: price,
       billingCycle: cycleMonths,
+      type: 'vps',
+      details: `${plan.sites} • ${plan.bandwidth}`
     });
     router.push('/cart');
   };
