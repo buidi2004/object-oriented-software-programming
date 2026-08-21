@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { 
   MessageSquare, ChevronRight, AlertCircle, RefreshCw, ChevronUp, ChevronDown,
   Globe, CreditCard, FileText, Info, Download, Rocket, Send, Loader2, X, CheckCircle2,
-  Mail, LifeBuoy, Plus, Clock
+  Mail, LifeBuoy, Plus, Clock, ExternalLink
 } from 'lucide-react';
 import { api } from '@/src/lib/api';
 
@@ -310,6 +310,39 @@ export default function CustomerTicketsPage() {
                   </div>
                 </div>
               </div>
+
+              {/* Quick Knowledgebase Highlights */}
+              <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-xs space-y-3">
+                <div className="flex items-center justify-between">
+                  <h3 className="font-bold text-slate-900 text-xs flex items-center gap-1.5">
+                    <Info className="w-4 h-4 text-blue-600" /> Cơ sở kiến thức & Hướng dẫn nhanh
+                  </h3>
+                  <button onClick={() => setActiveMenu('knowledge')} className="text-[11px] text-blue-600 hover:underline">
+                    Xem tất cả &gt;
+                  </button>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <Link
+                    href="/dashboard/knowledgebase/ssh-guide"
+                    className="p-3 bg-slate-50 border border-slate-200 rounded-lg hover:border-blue-500 hover:bg-blue-50/30 transition-all block group"
+                  >
+                    <p className="font-bold text-slate-800 text-xs group-hover:text-blue-600 flex items-center justify-between">
+                      Hướng dẫn kết nối SSH vào VPS Linux <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-blue-600" />
+                    </p>
+                    <p className="text-slate-500 text-[11px] mt-0.5">Cách dùng Web terminal và phần mềm MobaXterm/PuTTY.</p>
+                  </Link>
+
+                  <Link
+                    href="/dashboard/knowledgebase/reinstall-os"
+                    className="p-3 bg-slate-50 border border-slate-200 rounded-lg hover:border-blue-500 hover:bg-blue-50/30 transition-all block group"
+                  >
+                    <p className="font-bold text-slate-800 text-xs group-hover:text-blue-600 flex items-center justify-between">
+                      Cách cài đặt lại Hệ điều hành (Rebuild OS) <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-blue-600" />
+                    </p>
+                    <p className="text-slate-500 text-[11px] mt-0.5">Các bước tự động cài Ubuntu, Debian, Alpine.</p>
+                  </Link>
+                </div>
+              </div>
             </div>
           )}
 
@@ -377,19 +410,40 @@ export default function CustomerTicketsPage() {
             </div>
           )}
 
-          {/* VIEW 4: CƠ SỞ KIẾN THỨC */}
+          {/* VIEW 4: CƠ SỞ KIẾN THỨC (Matches screenshot with direct links to long guides) */}
           {activeMenu === 'knowledge' && (
             <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm text-xs space-y-4">
-              <h2 className="text-base font-bold text-slate-900">Cơ sở kiến thức</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div className="p-3 border border-slate-200 rounded-lg hover:border-blue-500 cursor-pointer">
-                  <p className="font-bold text-slate-800">Hướng dẫn kết nối SSH vào VPS Linux</p>
-                  <p className="text-slate-500 text-[11px] mt-1">Cách dùng terminal và phần mềm MobaXterm/Putty.</p>
-                </div>
-                <div className="p-3 border border-slate-200 rounded-lg hover:border-blue-500 cursor-pointer">
-                  <p className="font-bold text-slate-800">Cách cài đặt lại Hệ điều hành (Rebuild OS)</p>
-                  <p className="text-slate-500 text-[11px] mt-1">Các bước tự động cài Ubuntu, Debian, Alpine.</p>
-                </div>
+              <div>
+                <h2 className="text-base font-bold text-slate-900">Cơ sở kiến thức</h2>
+                <p className="text-slate-500 text-xs mt-0.5">Tài liệu và hướng dẫn kỹ thuật chi tiết dành cho quản trị viên máy chủ</p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                <Link
+                  href="/dashboard/knowledgebase/ssh-guide"
+                  className="p-4 border border-slate-200 rounded-xl hover:border-blue-500 hover:bg-blue-50/20 transition-all block group"
+                >
+                  <p className="font-bold text-slate-800 text-sm group-hover:text-blue-600 flex items-center justify-between">
+                    Hướng dẫn kết nối SSH vào VPS Linux <ExternalLink className="w-3.5 h-3.5 text-slate-400 group-hover:text-blue-600" />
+                  </p>
+                  <p className="text-slate-500 text-xs mt-1.5 leading-relaxed">
+                    Cách dùng Web terminal trực tiếp, kết nối bằng MobaXterm, PuTTY, xác thực SSH Key và bảng lệnh Linux cơ bản.
+                  </p>
+                  <span className="inline-block text-blue-600 font-bold text-[11px] mt-3">Đọc bài viết chi tiết &gt;</span>
+                </Link>
+
+                <Link
+                  href="/dashboard/knowledgebase/reinstall-os"
+                  className="p-4 border border-slate-200 rounded-xl hover:border-blue-500 hover:bg-blue-50/20 transition-all block group"
+                >
+                  <p className="font-bold text-slate-800 text-sm group-hover:text-blue-600 flex items-center justify-between">
+                    Cách cài đặt lại Hệ điều hành (Rebuild OS) <ExternalLink className="w-3.5 h-3.5 text-slate-400 group-hover:text-blue-600" />
+                  </p>
+                  <p className="text-slate-500 text-xs mt-1.5 leading-relaxed">
+                    Các bước tự động cài Ubuntu 24.04, Debian 12, Alpine Linux, phân tích ưu nhược điểm từng bản phân phối trong 30 giây.
+                  </p>
+                  <span className="inline-block text-blue-600 font-bold text-[11px] mt-3">Đọc bài viết chi tiết &gt;</span>
+                </Link>
               </div>
             </div>
           )}
