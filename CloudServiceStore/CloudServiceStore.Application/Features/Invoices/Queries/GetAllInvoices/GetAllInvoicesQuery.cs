@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using CloudServiceStore.Application.Features.Invoices.Queries.GetMyInvoices;
+using CloudServiceStore.Application.DTOs;
 using CloudServiceStore.Domain.Entities;
 using CloudServiceStore.Domain.Interfaces;
 using MediatR;
@@ -35,7 +35,7 @@ public class GetAllInvoicesQueryHandler : IRequestHandler<GetAllInvoicesQuery, L
             return new InvoiceDto
             {
                 Id = i.Id,
-                OrderId = i.OrderId,
+                OrderRequestId = i.OrderId,
                 InvoiceNumber = i.InvoiceNumber,
                 IssuedAt = i.IssuedAt,
                 PdfUrl = i.PdfUrl,

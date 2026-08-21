@@ -8,5 +8,14 @@ public class InvoiceDto
     public Guid OrderRequestId { get; set; }
     public string InvoiceNumber { get; set; } = null!;
     public DateTime IssuedAt { get; set; }
+    public DateTime? DueDate { get; set; }
     public string PdfUrl { get; set; } = null!;
+    public decimal Amount { get; set; }
+    public string? CustomerName { get; set; }
+    public string? CustomerAddress { get; set; }
+    public string? PlanName { get; set; }
+    public string? ContainerName { get; set; }
+    public string? PaymentMethod { get; set; }
+    public string? TransactionCode { get; set; }
+    public string? Status { get; set; }
 }
