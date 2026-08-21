@@ -6,9 +6,11 @@ import { useRouter } from 'next/navigation';
 import { 
   HardDrive, Server, Shield, Zap, CheckCircle2, ArrowRight, 
   Cpu, Activity, RefreshCw, ShoppingCart, Lock, Globe,
-  DownloadCloud, Layers, Key, ChevronDown, ChevronUp, Award, BarChart3, Database
+  DownloadCloud, Layers, Key, ChevronDown, ChevronUp, Award, BarChart3, Database,
+  Terminal, Sliders, Check, Copy, Code, Sparkles, Folder, FileText, ShieldCheck
 } from 'lucide-react';
-import { MinioLogo, AwsS3Logo } from '@/src/components/icons/BrandLogos';
+import { SiMinio } from 'react-icons/si';
+import { FaAws } from 'react-icons/fa6';
 import { useCartStore } from '@/src/store/useCartStore';
 import { api } from '@/src/lib/api';
 
@@ -18,6 +20,14 @@ export default function ObjectStorageServicePage() {
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('yearly');
   const [dbPlans, setDbPlans] = useState<any[]>([]);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+
+  // Pre-signed URL Generator state
+  const [bucketName, setBucketName] = useState('production-assets');
+  const [objectKey, setObjectKey] = useState('uploads/media-2026.mp4');
+  const [expiryMinutes, setExpiryMinutes] = useState('60');
+  const [copied, setCopied] = useState(false);
+
+  const presignedUrl = `https://s3.sencloudhost.vn/${bucketName}/${objectKey}?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIOSFODNN7EXAMPLE%2F20260822%2Fap-southeast-1%2Fs3%2Faws4_request&X-Amz-Date=20260822T051000Z&X-Amz-Expires=${Number(expiryMinutes) * 60}&X-Amz-SignedHeaders=host&X-Amz-Signature=c51f4967bf0b55a02e6c43cf305d762e84d4cf56a735c0ac4d6d67eb83c3ab15`;
 
   useEffect(() => {
     async function loadPlans() {
@@ -33,64 +43,73 @@ export default function ObjectStorageServicePage() {
     loadPlans();
   }, []);
 
+  const handleCopy = () => {
+    navigator.clipboard.writeText(presignedUrl);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   const defaultPlans = [
     {
       id: '8f7f1c19-3186-40c6-80c4-fc53d2e70378',
-      name: 'S3 Storage Starter (50GB)',
-      tagline: 'Phù hợp lưu trữ Media, Ảnh Web, Tệp đính kèm & Backup nhỏ',
+      name: 'S3 Starter (50GB)',
+      tier: 'Media & Web Attachments',
+      workload: 'Lưu trữ ảnh sản phẩm, avatar, tệp đính kèm văn bản & backup web nhỏ',
       monthlyPrice: 50000,
       yearlyPrice: 50000 * 12 * 0.8,
-      capacity: '50 GB Dung Lượng S3 NVMe',
-      bandwidth: '1 TB Băng Thông Tải Ra (Egress)/tháng',
-      buckets: 'Không giới hạn số lượng Buckets',
+      capacity: '50 GB NVMe Storage',
+      egress: '1 TB / tháng (Miễn phí)',
+      buckets: 'Không giới hạn Buckets',
+      durability: '99.999999999% (11 số 9)',
       features: [
         'Chuẩn giao tiếp AWS S3 Compatible API 100%',
-        'Tương thích Cyberduck, S3 Browser, rclone, AWS CLI',
+        'Tương thích Cyberduck, S3 Browser, rclone, AWS CLI, SDK',
         'Tạo Pre-signed URL chia sẻ tệp có thời hạn bảo mật',
-        'Lưu trữ phân tán Erasure Coding an toàn 99.9999%',
-        'Cấp phát cặp mã Access Key & Secret Key tức thì'
+        'Lưu trữ phân tán Erasure Coding an toàn 11 số 9',
+        'Cấp phát cặp mã Access Key & Secret Key tức thì trong 60s'
       ],
-      badge: null,
       popular: false,
     },
     {
       id: 'd68a4605-3dda-4a08-9898-c12647c4e5d7',
-      name: 'S3 Storage Pro (250GB)',
-      tagline: 'Lựa chọn tốt nhất cho Web Video, E-learning, App Mobile & Ảnh',
+      name: 'S3 Standard (250GB)',
+      tier: 'E-Commerce & Mobile Apps',
+      workload: 'Web Video, App Mobile, Hệ thống E-learning & Kho ảnh phân giải cao',
       monthlyPrice: 200000,
       yearlyPrice: 200000 * 12 * 0.8,
-      capacity: '250 GB Dung Lượng S3 NVMe',
-      bandwidth: '5 TB Băng Thông Tải Ra (Egress)/tháng',
-      buckets: 'Không giới hạn Buckets + Tùy biến CORS',
+      capacity: '250 GB NVMe Storage',
+      egress: '5 TB / tháng (Miễn phí)',
+      buckets: 'Không giới hạn Buckets + Custom Domain',
+      durability: '99.999999999% (11 số 9)',
       features: [
         'Chuẩn giao tiếp AWS S3 Compatible API 100%',
         'Tốc độ đọc ghi Multi-part Upload siêu tốc 10Gbps',
         'Hỗ trợ gắn Custom Domain CDN (https://cdn.yourdomain.com)',
-        'Bảo mật mã hóa tự động Server-Side Encryption (SSE-S3)',
+        'Mã hóa bảo mật tự động Server-Side Encryption (SSE-S3 AES-256)',
         'Báo cáo chi tiết dung lượng lưu trữ & lưu lượng thời gian thực',
-        'Cam kết SLA Độ bền dữ liệu 99.999999999% (11 số 9)'
+        'Cam kết SLA Độ bền dữ liệu 11 số 9 bằng hợp đồng'
       ],
-      badge: 'Phổ biến nhất',
       popular: true,
     },
     {
       id: 'e2eeefc0-8035-42ec-8646-fd9403181ef6',
-      name: 'S3 Storage Enterprise (1TB)',
-      tagline: 'Dành cho Kho dữ liệu lớn, Big Data, Video Streaming & Backup tổng',
+      name: 'S3 Enterprise (1TB)',
+      tier: 'Big Data & Video Streaming',
+      workload: 'Kho dữ liệu lớn, Video Streaming 4K, Backup cụm máy chủ & Logs tập trung',
       monthlyPrice: 690000,
       yearlyPrice: 690000 * 12 * 0.8,
-      capacity: '1,000 GB (1TB) Dung Lượng S3 NVMe',
-      bandwidth: 'Băng Thông Tải Ra Không Giới Hạn',
-      buckets: 'Không giới hạn Buckets + Multi-Region Sync',
+      capacity: '1,000 GB (1TB) NVMe Storage',
+      egress: 'Không giới hạn Băng thông tải ra',
+      buckets: 'Không giới hạn + Multi-Region Sync',
+      durability: '99.999999999% (11 số 9)',
       features: [
         'Chuẩn giao tiếp AWS S3 Compatible API 100%',
         'Multi-Region Replication đồng bộ dữ liệu giữa 2 miền Bắc - Nam',
         'Tốc độ truyền tải nội địa siêu tốc không tính phí Data Transfer',
         'Phân quyền chi tiết qua IAM Policy & Bucket Policy JSON',
         'Tích hợp tự động Lifecycle Rules xóa/nén tệp cũ',
-        'Kỹ sư hỗ trợ chuyển đổi dữ liệu từ AWS S3 / Wasabi sang miễn phí'
+        'Kỹ sư SEN CloudHost hỗ trợ chuyển đổi dữ liệu từ AWS S3 sang miễn phí'
       ],
-      badge: 'Dung lượng khủng',
       popular: false,
     },
   ];
@@ -120,296 +139,480 @@ export default function ObjectStorageServicePage() {
 
   const faqs = [
     {
-      q: 'CloudHost S3 Storage có tương thích hoàn toàn với AWS S3 không?',
-      a: 'Hoàn toàn tương thích 100%! Bạn có thể sử dụng bất kỳ SDK hay công cụ nào hỗ trợ S3 API như AWS SDK (NodeJS, Python Boto3, PHP, Go, C# .NET), AWS CLI, Cyberduck, S3 Browser, FileZilla Pro, rclone, Nextcloud S3 Driver chỉ cần đổi Endpoint URL về server CloudHost.'
+      q: 'SEN CloudHost S3 Storage có tương thích hoàn toàn với AWS S3 không?',
+      a: 'Hoàn toàn tương thích 100%! Bạn có thể sử dụng bất kỳ SDK hay công cụ nào hỗ trợ S3 API như AWS SDK (Node.js, Python Boto3, PHP, Go, C# .NET, Java), AWS CLI, Cyberduck, S3 Browser, FileZilla Pro, rclone, Nextcloud S3 Driver chỉ cần đổi Endpoint URL về server SEN CloudHost (s3.sencloudhost.vn).'
     },
     {
-      q: 'Dữ liệu của tôi được lưu trữ và bảo vệ như thế nào?',
-      a: 'Hệ thống áp dụng công nghệ Erasure Coding phân tán dữ liệu thành nhiều mảnh lưu trữ trên các cụm máy chủ và ổ cứng NVMe độc lập. Ngay cả khi 2 ổ cứng hoặc 1 máy chủ vật lý bị hỏng đồng thời, dữ liệu của bạn vẫn nguyên vẹn 100% mà không bị gián đoạn đọc/ghi.'
+      q: 'Dữ liệu được bảo vệ an toàn như thế nào trước rủi ro hỏng hóc ổ cứng?',
+      a: 'Hệ thống áp dụng công nghệ phân tán Erasure Coding (12+4) lưu trữ dữ liệu thành nhiều mảnh trên các cụm máy chủ và ổ cứng NVMe độc lập. Ngay cả khi 4 ổ cứng hoặc 1 máy chủ vật lý bị hỏng đồng thời, dữ liệu của bạn vẫn nguyên vẹn 100% với độ bền 99.999999999% (11 số 9).'
     },
     {
-      q: 'Tôi có thể gắn tên miền riêng cho S3 Bucket làm CDN không?',
-      a: 'Có, bạn có thể dễ dàng cấu hình CNAME từ tên miền của bạn (ví dụ media.yourdomain.com hoặc static.yourdomain.com) trỏ trực tiếp vào S3 Bucket và gắn chứng chỉ SSL HTTPS miễn phí.'
+      q: 'Tôi có thể gắn tên miền riêng cho S3 Bucket làm CDN media không?',
+      a: 'Có, bạn có thể dễ dàng cấu hình CNAME từ tên miền của bạn (ví dụ cdn.yourdomain.com hoặc static.yourdomain.com) trỏ trực tiếp vào S3 Bucket và gắn chứng chỉ SSL HTTPS miễn phí.'
     },
     {
-      q: 'Chi phí băng thông tải ra (Egress Traffic) tính như thế nào?',
-      a: 'Khác với AWS S3 tính phí băng thông tải ra đắt đỏ ($0.09/GB), CloudHost cung cấp dung lượng băng thông tải ra cực lớn (1TB - 5TB/tháng hoặc Không giới hạn ở gói Enterprise) với mức giá trọn gói siêu tiết kiệm.'
+      q: 'Chi phí băng thông tải ra (Egress Traffic) tính như thế nào so với AWS S3?',
+      a: 'Khác với AWS S3 tính phí băng thông tải ra đắt đỏ ($0.09/GB khiến hóa đơn phình to), SEN CloudHost cung cấp dung lượng băng thông tải ra cực lớn (1TB - 5TB/tháng hoặc Không giới hạn ở gói Enterprise) với mức giá trọn gói siêu tiết kiệm.'
     }
   ];
 
   return (
-    <div className="min-h-screen bg-slate-900 text-slate-100 selection:bg-blue-500 selection:text-white">
-      {/* 1. HERO SECTION */}
-      <section className="relative overflow-hidden pt-20 pb-32">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[600px] bg-gradient-to-b from-blue-600/20 via-indigo-600/10 to-transparent blur-3xl pointer-events-none" />
-        <div className="absolute -top-32 right-10 w-96 h-96 bg-blue-500/20 rounded-full blur-[100px] pointer-events-none" />
-        <div className="absolute top-40 -left-20 w-80 h-80 bg-cyan-500/15 rounded-full blur-[90px] pointer-events-none" />
+    <div className="min-h-screen bg-[#090d16] text-slate-100 selection:bg-sky-500 selection:text-white font-sans">
+      
+      {/* 1. HERO SECTION: S3 OBJECT STORAGE TELEMETRY */}
+      <section className="relative pt-16 pb-20 border-b border-slate-800/80 overflow-hidden">
+        {/* Technical Grid Blueprint */}
+        <div 
+          className="absolute inset-0 opacity-[0.06] pointer-events-none" 
+          style={{ 
+            backgroundImage: `linear-gradient(to right, #0284c7 1px, transparent 1px), linear-gradient(to bottom, #0284c7 1px, transparent 1px)`,
+            backgroundSize: '40px 40px' 
+          }}
+        />
+        <div className="absolute top-0 right-1/4 w-[600px] h-[300px] bg-sky-600/10 blur-[120px] pointer-events-none" />
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-slate-800/90 border border-slate-700 text-blue-300 text-xs font-bold uppercase tracking-wider mb-6 shadow-xl">
-            <div className="flex items-center gap-1.5 border-r border-slate-700 pr-3">
-              <MinioLogo className="w-4 h-4" />
-              <span>MinIO High-Perf</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <AwsS3Logo className="w-4 h-4" />
-              <span>AWS S3 Compatible API</span>
-            </div>
-          </div>
-
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-white max-w-5xl mx-auto leading-tight mb-6">
-            Lưu Trữ Không Giới Hạn Với{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-400 to-indigo-300">
-              Object Storage S3
-            </span>
-          </h1>
-
-          <p className="text-base sm:text-xl text-slate-300 max-w-3xl mx-auto mb-10 leading-relaxed font-normal">
-            Giải pháp lưu trữ tệp, media, video và sao lưu dữ liệu tốc độ cao. 
-            Tương thích toàn diện chuẩn AWS S3 API, độ bền dữ liệu 99.999999999% và miễn phí băng thông nội địa.
-          </p>
-
-          {/* Billing Switch */}
-          <div className="inline-flex items-center p-1.5 rounded-2xl bg-slate-800/90 backdrop-blur-md border border-slate-700 shadow-2xl">
-            <button
-              onClick={() => setBillingCycle('monthly')}
-              className={`px-6 py-2.5 rounded-xl text-xs font-black transition-all ${
-                billingCycle === 'monthly'
-                  ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30'
-                  : 'text-slate-400 hover:text-white'
-              }`}
-            >
-              Thanh Toán Theo Tháng
-            </button>
-            <button
-              onClick={() => setBillingCycle('yearly')}
-              className={`px-6 py-2.5 rounded-xl text-xs font-black transition-all flex items-center gap-2 ${
-                billingCycle === 'yearly'
-                  ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30'
-                  : 'text-slate-400 hover:text-white'
-              }`}
-            >
-              <span>Thanh Toán Theo Năm</span>
-              <span className="px-2 py-0.5 rounded-full bg-emerald-500 text-white text-[10px] font-black uppercase">
-                Tiết kiệm 20%
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          {/* Engineering Status Bar */}
+          <div className="flex flex-wrap items-center justify-between gap-4 p-3.5 mb-10 rounded-2xl bg-[#0d1424] border border-slate-800 text-xs font-mono">
+            <div className="flex items-center gap-3">
+              <span className="flex items-center gap-1.5 text-emerald-400 font-bold">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                OBJECT STORAGE ENGINE: S3 API COMPATIBLE
               </span>
-            </button>
+              <span className="text-slate-600 hidden sm:inline">|</span>
+              <span className="text-slate-300 hidden sm:inline">
+                DURABILITY: <strong className="text-emerald-400 font-mono">99.999999999% (11 số 9)</strong>
+              </span>
+            </div>
+
+            <div className="flex items-center gap-4 text-slate-400">
+              <span>EGRESS FEE: <strong className="text-emerald-400 font-mono">0đ / Miễn Phí</strong></span>
+              <span>NETWORK: <strong className="text-white font-mono">10Gbps Multi-part</strong></span>
+            </div>
           </div>
-        </div>
-      </section>
 
-      {/* 2. PRICING CARDS */}
-      <section className="relative -mt-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-28">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
-          {plans.map((plan) => {
-            const displayPrice = billingCycle === 'yearly' ? Math.round(plan.yearlyPrice / 12) : plan.monthlyPrice;
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            
+            {/* Left Headline */}
+            <div className="lg:col-span-7 space-y-6">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-sky-950/60 border border-sky-800/60 text-sky-300 text-xs font-mono">
+                <DownloadCloud className="w-3.5 h-3.5 text-sky-400" />
+                HIGH-PERFORMANCE MINIO &amp; AWS S3 API COMPATIBLE
+              </div>
 
-            return (
-              <div
-                key={plan.id}
-                className={`relative rounded-3xl bg-slate-800/90 backdrop-blur-md p-8 border transition-all duration-300 flex flex-col justify-between ${
-                  plan.popular
-                    ? 'border-blue-500 shadow-2xl shadow-blue-500/20 ring-2 ring-blue-500/40 bg-gradient-to-b from-slate-800 to-slate-900 lg:-translate-y-4'
-                    : 'border-slate-700/80 shadow-xl hover:border-slate-600 hover:shadow-2xl'
-                }`}
-              >
-                {plan.badge && (
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                    <span className="px-4 py-1.5 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white text-xs font-black uppercase tracking-wider shadow-lg">
-                      {plan.badge}
-                    </span>
+              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.15]">
+                Lưu Trữ Đối Tượng Chuẩn{' '}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-teal-300 to-emerald-400 font-mono">
+                  S3 API Không Giới Hạn
+                </span>
+              </h1>
+
+              <p className="text-slate-300 text-base sm:text-lg leading-relaxed max-w-2xl font-normal">
+                Tương thích 100% công cụ và thư viện AWS S3. Tốc độ đọc ghi 10Gbps trên mảng NVMe Enterprise, 
+                độ bền 11 số 9 với Erasure Coding và miễn phí 100% băng thông tải ra nội địa.
+              </p>
+
+              {/* Vendor & API Badges */}
+              <div className="flex flex-wrap items-center gap-3 pt-2">
+                <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0f172a] border border-slate-800 text-xs font-mono text-slate-300">
+                  <SiMinio className="w-4 h-4 text-rose-500" />
+                  <span>MinIO High-Performance</span>
+                </div>
+                <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0f172a] border border-slate-800 text-xs font-mono text-slate-300">
+                  <FaAws className="w-4 h-4 text-amber-500" />
+                  <span>AWS S3 Compatible SDK</span>
+                </div>
+                <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0f172a] border border-slate-800 text-xs font-mono text-slate-300">
+                  <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                  <span>SSE-S3 AES-256</span>
+                </div>
+              </div>
+
+              {/* Endpoint Quick Spec */}
+              <div className="p-4 rounded-xl bg-[#0c1322] border border-slate-800 text-xs font-mono space-y-2">
+                <div className="flex items-center justify-between text-slate-400">
+                  <span>S3 Endpoint: <strong className="text-white">https://s3.sencloudhost.vn</strong></span>
+                  <span>Region: <strong className="text-sky-400">ap-southeast-1</strong></span>
+                </div>
+                <div className="text-slate-400">
+                  Toolchain: <span className="text-slate-300">AWS CLI, Boto3, AWS-SDK Node.js, Cyberduck, rclone, Nextcloud</span>
+                </div>
+              </div>
+
+            </div>
+
+            {/* Right Pre-Signed URL Simulator */}
+            <div className="lg:col-span-5">
+              <div className="rounded-2xl bg-[#0b1320] border border-slate-800 p-6 shadow-2xl space-y-5">
+                <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+                  <div className="flex items-center gap-2">
+                    <span className="w-3 h-3 rounded-full bg-rose-500/80" />
+                    <span className="w-3 h-3 rounded-full bg-amber-500/80" />
+                    <span className="w-3 h-3 rounded-full bg-emerald-500/80" />
+                    <span className="text-xs font-mono text-slate-400 ml-2">s3-presigned-generator.sen</span>
                   </div>
-                )}
+                  <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-sky-950/80 text-sky-400 border border-sky-800/60">
+                    HMAC-SHA256
+                  </span>
+                </div>
 
-                <div>
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="w-12 h-12 rounded-2xl bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center font-bold">
-                      <HardDrive className="w-6 h-6" />
-                    </div>
-                    <span className="px-2.5 py-1 rounded-full bg-slate-700/60 border border-slate-600 text-[11px] font-bold text-slate-300">
-                      S3 Compatible
-                    </span>
+                <div className="space-y-3 font-mono text-xs">
+                  <div>
+                    <label className="text-slate-500 block mb-1">Bucket Name:</label>
+                    <input
+                      type="text"
+                      value={bucketName}
+                      onChange={(e) => setBucketName(e.target.value)}
+                      className="w-full px-3 py-2 rounded-lg bg-[#060a12] border border-slate-800 text-white font-mono text-xs focus:outline-none focus:border-sky-500"
+                    />
                   </div>
 
-                  <h3 className="text-2xl font-black text-white mb-1">{plan.name}</h3>
-                  <p className="text-xs text-slate-400 mb-6 min-h-[32px]">{plan.tagline}</p>
-
-                  <div className="mb-6 pb-6 border-b border-slate-700/60">
-                    <div className="flex items-baseline gap-1">
-                      <span className="text-4xl font-black text-white">
-                        {displayPrice.toLocaleString('vi-VN')}
-                      </span>
-                      <span className="text-sm text-slate-400 font-bold">đ/tháng</span>
-                    </div>
-                    {billingCycle === 'yearly' && (
-                      <p className="text-xs text-emerald-400 font-semibold mt-1">
-                        Thanh toán {plan.yearlyPrice.toLocaleString('vi-VN')} đ/năm (Tiết kiệm 20%)
-                      </p>
-                    )}
+                  <div>
+                    <label className="text-slate-500 block mb-1">Object Key (Tệp tin):</label>
+                    <input
+                      type="text"
+                      value={objectKey}
+                      onChange={(e) => setObjectKey(e.target.value)}
+                      className="w-full px-3 py-2 rounded-lg bg-[#060a12] border border-slate-800 text-white font-mono text-xs focus:outline-none focus:border-sky-500"
+                    />
                   </div>
 
-                  <div className="space-y-3 mb-8 text-sm">
-                    <div className="p-3 rounded-2xl bg-slate-900/60 border border-slate-700/50 text-slate-200 font-bold flex items-center gap-2.5">
-                      <HardDrive className="w-4 h-4 text-blue-400 shrink-0" />
-                      <span>{plan.capacity}</span>
-                    </div>
-                    <div className="p-3 rounded-2xl bg-slate-900/60 border border-slate-700/50 text-slate-200 font-bold flex items-center gap-2.5">
-                      <Activity className="w-4 h-4 text-emerald-400 shrink-0" />
-                      <span>{plan.bandwidth}</span>
-                    </div>
-                    <div className="p-3 rounded-2xl bg-slate-900/60 border border-slate-700/50 text-slate-200 font-bold flex items-center gap-2.5">
-                      <Layers className="w-4 h-4 text-purple-400 shrink-0" />
-                      <span>{plan.buckets}</span>
-                    </div>
-
-                    <div className="pt-3 space-y-2.5">
-                      {plan.features.map((feat, idx) => (
-                        <div key={idx} className="flex items-start gap-2.5 text-xs text-slate-300">
-                          <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                          <span>{feat}</span>
-                        </div>
-                      ))}
-                    </div>
+                  <div>
+                    <label className="text-slate-500 block mb-1">Thời hạn hết hạn (Phút):</label>
+                    <select
+                      value={expiryMinutes}
+                      onChange={(e) => setExpiryMinutes(e.target.value)}
+                      className="w-full px-3 py-2 rounded-lg bg-[#060a12] border border-slate-800 text-white font-mono text-xs focus:outline-none focus:border-sky-500"
+                    >
+                      <option value="15">15 Phút (Bảo mật cao)</option>
+                      <option value="60">60 Phút (1 Giờ)</option>
+                      <option value="1440">1440 Phút (24 Giờ)</option>
+                    </select>
                   </div>
                 </div>
 
-                <button
-                  onClick={() => handleOrder(plan)}
-                  className={`w-full py-4 rounded-2xl font-black text-sm transition-all flex items-center justify-center gap-2 shadow-lg ${
-                    plan.popular
-                      ? 'bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white shadow-blue-500/25 hover:shadow-blue-500/40 hover:scale-[1.02]'
-                      : 'bg-slate-700 hover:bg-slate-600 text-white'
-                  }`}
-                >
-                  <ShoppingCart className="w-4 h-4" />
-                  <span>Kích Hoạt S3 Bucket Ngay</span>
-                </button>
+                <div className="space-y-2 font-mono text-xs">
+                  <div className="text-slate-500 flex items-center justify-between">
+                    <span>// Generated Secure Pre-signed URL:</span>
+                    <button onClick={handleCopy} className="text-sky-400 hover:underline flex items-center gap-1">
+                      <Copy className="w-3 h-3" /> {copied ? 'Đã sao chép!' : 'Copy URL'}
+                    </button>
+                  </div>
+                  <div className="p-3 rounded-xl bg-[#060a12] border border-slate-800/90 text-sky-300 break-all select-all font-mono text-[11px] max-h-20 overflow-y-auto leading-relaxed">
+                    {presignedUrl}
+                  </div>
+                </div>
+
+                <div className="pt-2">
+                  <a
+                    href="#spec-matrix"
+                    className="w-full py-3.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs font-mono flex items-center justify-center gap-2 transition-all shadow-lg shadow-sky-600/20"
+                  >
+                    <span>XEM BẢNG CẤU HÌNH VÀ BÁO GIÁ</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </a>
+                </div>
               </div>
-            );
-          })}
+            </div>
+
+          </div>
+
         </div>
       </section>
 
-      {/* 3. S3 STORAGE ARCHITECTURE & SPEED SHOWCASE */}
-      <section className="py-24 bg-slate-950/80 border-t border-slate-800 relative overflow-hidden">
+      {/* 2. THREE CORE S3 ARCHITECTURE SCHEMATICS */}
+      <section className="py-24 bg-[#070b12] border-b border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-bold uppercase tracking-wider mb-3">
-              <DownloadCloud className="w-3.5 h-3.5" />
-              Kiến Trúc Lưu Trữ Phân Tán Erasure Coding
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-sky-950 text-sky-400 text-xs font-mono mb-3 border border-sky-800">
+              <Layers className="w-3.5 h-3.5" />
+              S3 DISTRIBUTED ARCHITECTURE
             </div>
-            <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight mb-4">
-              Độ Bền Dữ Liệu 11 Số 9 (99.999999999%)
+            <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
+              3 Công Nghệ Cốt Lõi Của SEN S3 Storage
             </h2>
-            <p className="text-slate-400 text-sm sm:text-base leading-relaxed">
-              Dữ liệu được lưu trữ phân mảnh đa node trên cụm MinIO Cluster Enterprise. Tốc độ đọc ghi Multi-part Upload siêu tốc 10Gbps và mã hóa đầu cuối an toàn tuyệt đối.
+            <p className="text-slate-400 text-sm sm:text-base mt-3 leading-relaxed font-normal">
+              Đảm bảo an toàn 11 số 9 cho kho dữ liệu doanh nghiệp mà không phải lo chi phí phát sinh.
             </p>
           </div>
 
-          {/* 3 Real Visual Architecture Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-            <div className="bg-slate-900/90 rounded-3xl p-6 border border-slate-800 overflow-hidden flex flex-col justify-between group hover:border-blue-500/50 transition-all">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            {/* Schematic 1: Erasure Coding 12+4 */}
+            <div className="p-6 rounded-3xl bg-[#0c1322] border border-slate-800 flex flex-col justify-between space-y-6">
               <div>
-                <div className="h-48 rounded-2xl overflow-hidden mb-6 relative bg-slate-800">
-                  <img
-                    src="https://images.unsplash.com/photo-1544383835-bda2bc66a55d?auto=format&fit=crop&w=800&q=80"
-                    alt="NVMe All-Flash Storage Cluster"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent" />
-                  <span className="absolute bottom-3 left-3 px-3 py-1 rounded-lg bg-blue-600/90 text-white text-[11px] font-black uppercase">
-                    NVMe All-Flash Tier
-                  </span>
+                <div className="p-4 rounded-2xl bg-[#060a12] border border-slate-800 mb-6 font-mono text-xs">
+                  <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
+                    <span>ERASURE CODING (12+4)</span>
+                    <span className="text-emerald-400">11 9s DURABILITY</span>
+                  </div>
+                  <div className="space-y-2 text-slate-300 text-[11px]">
+                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                      <span>Data Chunks</span>
+                      <span className="text-sky-400 font-bold">12 Mảnh dữ liệu</span>
+                    </div>
+                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                      <span>Parity Chunks</span>
+                      <span className="text-emerald-400 font-bold">4 Mảnh chẵn lẻ</span>
+                    </div>
+                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                      <span>Drive Failure Tolerance</span>
+                      <span className="text-amber-400 font-bold">4 Drives Failed OK</span>
+                    </div>
+                  </div>
                 </div>
-                <h3 className="text-xl font-black text-white mb-2">Tốc Độ Đọc Ghi Vượt Trội</h3>
-                <p className="text-xs text-slate-400 leading-relaxed mb-4">
-                  Trang bị 100% ổ cứng Enterprise NVMe Gen4 kết hợp card mạng quang 10Gbps, mang lại tốc độ truyền tải tệp và video streaming mượt mà không có độ trễ buffer.
+
+                <h3 className="text-lg font-bold text-white mb-2">Độ Bền 99.999999999% (11 Số 9)</h3>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  Công nghệ Erasure Coding chia nhỏ từng object thành 12 mảnh dữ liệu và 4 mảnh parity phân tán 
+                  trên 16 ổ cứng độc lập. Ngay cả khi 4 ổ đĩa hỏng đồng thời, dữ liệu của bạn vẫn đọc/ghi bình thường.
                 </p>
               </div>
-              <ul className="space-y-2 text-xs text-slate-300 pt-3 border-t border-slate-800">
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-blue-400" /> Tốc độ tải tệp lên đến 1,000MB/s</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-blue-400" /> Multi-part Parallel Upload siêu tốc</li>
-              </ul>
+
+              <div className="pt-4 border-t border-slate-800/80 text-xs font-mono text-slate-300 flex items-center justify-between">
+                <span>Data Loss Risk:</span>
+                <strong className="text-emerald-400">&lt; 0.000000001%</strong>
+              </div>
             </div>
 
-            <div className="bg-slate-900/90 rounded-3xl p-6 border border-slate-800 overflow-hidden flex flex-col justify-between group hover:border-cyan-500/50 transition-all">
+            {/* Schematic 2: 0$ Egress Bandwidth */}
+            <div className="p-6 rounded-3xl bg-[#0c1322] border border-slate-800 flex flex-col justify-between space-y-6">
               <div>
-                <div className="h-48 rounded-2xl overflow-hidden mb-6 relative bg-slate-800">
-                  <img
-                    src="https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=800&q=80"
-                    alt="Pre-signed URL & AES-256 Encryption"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent" />
-                  <span className="absolute bottom-3 left-3 px-3 py-1 rounded-lg bg-cyan-600/90 text-white text-[11px] font-black uppercase">
-                    Security & Pre-signed URL
-                  </span>
+                <div className="p-4 rounded-2xl bg-[#060a12] border border-slate-800 mb-6 font-mono text-xs">
+                  <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
+                    <span>ZERO EGRESS TRAFFIC COST</span>
+                    <span className="text-sky-400">SAVE 90% COST</span>
+                  </div>
+                  <div className="space-y-2 text-slate-300 text-[11px]">
+                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                      <span>AWS S3 Egress Fee</span>
+                      <span className="text-rose-400 font-bold">$0.09 / GB (Đắt đỏ)</span>
+                    </div>
+                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                      <span>SEN CloudHost Egress</span>
+                      <span className="text-emerald-400 font-bold">0đ / Miễn phí trọn gói</span>
+                    </div>
+                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                      <span>Domestic Bandwidth</span>
+                      <span className="text-sky-400 font-bold">10Gbps Không giới hạn</span>
+                    </div>
+                  </div>
                 </div>
-                <h3 className="text-xl font-black text-white mb-2">Bảo Mật & Phân Quyền Chi Tiết</h3>
-                <p className="text-xs text-slate-400 leading-relaxed mb-4">
-                  Tạo Pre-signed URL có thời hạn (15 phút, 1 giờ, 24 giờ) cho phép người dùng upload/download an toàn mà không để lộ khóa bí mật hay cấu trúc thư mục lưu trữ.
+
+                <h3 className="text-lg font-bold text-white mb-2">Miễn Phí Băng Thông Tải Ra (0$ Egress)</h3>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  Không còn lo ngại hóa đơn đám mây tăng vọt khi lượt xem video hoặc tải ảnh tăng cao. 
+                  SEN CloudHost cung cấp dung lượng băng thông tải ra cực lớn miễn phí 100% trong nước.
                 </p>
               </div>
-              <ul className="space-y-2 text-xs text-slate-300 pt-3 border-t border-slate-800">
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-cyan-400" /> Mã hóa tệp lưu trữ SSE-S3 AES-256</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-cyan-400" /> Quản lý Access Key / Secret Key riêng cho từng app</li>
-              </ul>
+
+              <div className="pt-4 border-t border-slate-800/80 text-xs font-mono text-slate-300 flex items-center justify-between">
+                <span>Monthly Bill Predictability:</span>
+                <strong className="text-emerald-400">100% Giá Trọn Gói Cố Định</strong>
+              </div>
             </div>
 
-            <div className="bg-slate-900/90 rounded-3xl p-6 border border-slate-800 overflow-hidden flex flex-col justify-between group hover:border-indigo-500/50 transition-all">
+            {/* Schematic 3: Custom Domain CDN & Edge SSL */}
+            <div className="p-6 rounded-3xl bg-[#0c1322] border border-slate-800 flex flex-col justify-between space-y-6">
               <div>
-                <div className="h-48 rounded-2xl overflow-hidden mb-6 relative bg-slate-800">
-                  <img
-                    src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=800&q=80"
-                    alt="Global CDN & Custom Domain"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent" />
-                  <span className="absolute bottom-3 left-3 px-3 py-1 rounded-lg bg-indigo-600/90 text-white text-[11px] font-black uppercase">
-                    CDN Custom Domain
-                  </span>
+                <div className="p-4 rounded-2xl bg-[#060a12] border border-slate-800 mb-6 font-mono text-xs">
+                  <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
+                    <span>CUSTOM DOMAIN &amp; AUTO SSL</span>
+                    <span className="text-purple-400">CDN READY</span>
+                  </div>
+                  <div className="space-y-2 text-slate-300 text-[11px]">
+                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                      <span>Custom Domain</span>
+                      <span className="text-sky-400 font-bold">cdn.yourdomain.com</span>
+                    </div>
+                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                      <span>Auto SSL HTTPS</span>
+                      <span className="text-emerald-400 font-bold">Let&apos;s Encrypt Auto</span>
+                    </div>
+                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                      <span>CORS Configuration</span>
+                      <span className="text-purple-400">JSON Policy Custom</span>
+                    </div>
+                  </div>
                 </div>
-                <h3 className="text-xl font-black text-white mb-2">Tích Hợp CDN & Tên Miền Riêng</h3>
-                <p className="text-xs text-slate-400 leading-relaxed mb-4">
-                  Dễ dàng kết nối tên miền thương hiệu của bạn với chứng chỉ SSL Let's Encrypt tự động, tăng tốc độ phân phối nội dung tĩnh tới người dùng khắp toàn cầu.
+
+                <h3 className="text-lg font-bold text-white mb-2">Gắn Tên Miền Riêng &amp; Tối Ưu CDN</h3>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  Cấu hình CNAME từ tên miền thương hiệu của bạn trực tiếp vào S3 Bucket. 
+                  Tự động cấp phát chứng chỉ SSL HTTPS miễn phí và thiết lập Cache-Control tăng tốc website tức thì.
                 </p>
               </div>
-              <ul className="space-y-2 text-xs text-slate-300 pt-3 border-t border-slate-800">
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-indigo-400" /> Tự động nén tệp WebP / Gzip / Brotli</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-indigo-400" /> Miễn phí chứng chỉ bảo mật HTTPS SSL</li>
-              </ul>
+
+              <div className="pt-4 border-t border-slate-800/80 text-xs font-mono text-slate-300 flex items-center justify-between">
+                <span>CDN Cache Header:</span>
+                <strong className="text-purple-400">max-age=31536000 Immutable</strong>
+              </div>
             </div>
+
           </div>
+
         </div>
       </section>
 
-      {/* 4. FAQ ACCORDION */}
-      <section className="py-20 bg-slate-950/60 border-t border-slate-800">
+      {/* 3. TECHNICAL SPECIFICATION MATRIX & PRICING */}
+      <section id="spec-matrix" className="py-24 bg-[#090d16] border-b border-slate-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-sky-950 text-sky-400 text-xs font-mono mb-3 border border-sky-800">
+                <Sliders className="w-3.5 h-3.5" />
+                OBJECT STORAGE SPEC SHEET
+              </div>
+              <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
+                Bảng So Sánh Gói S3 Object Storage
+              </h2>
+              <p className="text-slate-400 text-xs sm:text-sm mt-1 font-normal">
+                Minh bạch 100% dung lượng NVMe, băng thông Egress và chuẩn giao tiếp S3 API.
+              </p>
+            </div>
+
+            {/* Billing Switch */}
+            <div className="inline-flex items-center p-1 rounded-xl bg-[#0c1322] border border-slate-800 font-mono text-xs">
+              <button
+                onClick={() => setBillingCycle('monthly')}
+                className={`px-4 py-2 rounded-lg font-bold transition-all ${
+                  billingCycle === 'monthly'
+                    ? 'bg-sky-600 text-white shadow'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                Thanh toán Tháng
+              </button>
+              <button
+                onClick={() => setBillingCycle('yearly')}
+                className={`px-4 py-2 rounded-lg font-bold transition-all flex items-center gap-1.5 ${
+                  billingCycle === 'yearly'
+                    ? 'bg-sky-600 text-white shadow'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <span>Thanh toán Năm</span>
+                <span className="px-1.5 py-0.2 rounded bg-emerald-500 text-white text-[10px] font-bold">
+                  -20%
+                </span>
+              </button>
+            </div>
+          </div>
+
+          {/* Matrix Table */}
+          <div className="rounded-2xl border border-slate-800 bg-[#0c1322] overflow-hidden shadow-2xl">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs font-mono">
+                <thead>
+                  <tr className="border-b border-slate-800 bg-[#080d17] text-slate-400">
+                    <th className="p-5 font-bold uppercase text-[11px] w-1/4">Thông Số Kỹ Thuật</th>
+                    {plans.map((p) => {
+                      const displayPrice = billingCycle === 'yearly' ? Math.round(p.yearlyPrice / 12) : p.monthlyPrice;
+                      return (
+                        <th key={p.id} className="p-5 text-white border-l border-slate-800/80 w-1/4">
+                          <div className="text-sm font-extrabold text-white">{p.name}</div>
+                          <div className="text-[11px] text-slate-400 font-sans font-normal">{p.tier}</div>
+                          <div className="text-lg font-black text-sky-400 mt-2">
+                            {displayPrice.toLocaleString('vi-VN')} <span className="text-xs font-normal text-slate-400">đ/tháng</span>
+                          </div>
+                        </th>
+                      );
+                    })}
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-800/60 text-slate-300">
+                  <tr className="hover:bg-slate-900/40">
+                    <td className="p-4 font-bold text-slate-400">Dung Lượng NVMe Storage</td>
+                    {plans.map((p) => (
+                      <td key={p.id} className="p-4 border-l border-slate-800/60 text-emerald-400 font-bold">{p.capacity}</td>
+                    ))}
+                  </tr>
+                  <tr className="hover:bg-slate-900/40">
+                    <td className="p-4 font-bold text-slate-400">Băng Thông Tải Ra (Egress Traffic)</td>
+                    {plans.map((p) => (
+                      <td key={p.id} className="p-4 border-l border-slate-800/60 text-sky-400 font-bold">{p.egress}</td>
+                    ))}
+                  </tr>
+                  <tr className="hover:bg-slate-900/40">
+                    <td className="p-4 font-bold text-slate-400">Số Lượng Bucket &amp; Custom Domain</td>
+                    {plans.map((p) => (
+                      <td key={p.id} className="p-4 border-l border-slate-800/60 text-white font-bold">{p.buckets}</td>
+                    ))}
+                  </tr>
+                  <tr className="hover:bg-slate-900/40">
+                    <td className="p-4 font-bold text-slate-400">Độ Bền Dữ Liệu (Durability SLA)</td>
+                    {plans.map((p) => (
+                      <td key={p.id} className="p-4 border-l border-slate-800/60 text-emerald-400 font-bold">{p.durability}</td>
+                    ))}
+                  </tr>
+                  <tr className="hover:bg-slate-900/40">
+                    <td className="p-4 font-bold text-slate-400">Tương Thích Chuẩn AWS S3 API</td>
+                    {plans.map((p) => (
+                      <td key={p.id} className="p-4 border-l border-slate-800/60 text-slate-200">100% Full Compatibility</td>
+                    ))}
+                  </tr>
+                  <tr className="hover:bg-slate-900/40">
+                    <td className="p-4 font-bold text-slate-400">Mã Hóa Server-Side (SSE-S3)</td>
+                    {plans.map((p) => (
+                      <td key={p.id} className="p-4 border-l border-slate-800/60 text-slate-200">AES-256 Automatic</td>
+                    ))}
+                  </tr>
+                  <tr className="bg-[#080d17]">
+                    <td className="p-5 font-bold text-slate-400">Hành Động Khởi Tạo</td>
+                    {plans.map((p) => (
+                      <td key={p.id} className="p-5 border-l border-slate-800/60">
+                        <button
+                          onClick={() => handleOrder(p)}
+                          className={`w-full py-3 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-2 ${
+                            p.popular
+                              ? 'bg-sky-600 hover:bg-sky-500 text-white shadow-lg shadow-sky-600/30'
+                              : 'bg-slate-800 hover:bg-slate-700 text-white'
+                          }`}
+                        >
+                          <span>Khởi Tạo S3 Bucket Ngay</span>
+                          <ArrowRight className="w-3.5 h-3.5" />
+                        </button>
+                      </td>
+                    ))}
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* 4. FAQ SECTION */}
+      <section className="py-20 bg-[#090d16] border-b border-slate-800">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-2xl sm:text-4xl font-black text-white mb-2">Câu Hỏi Thường Gặp (FAQ)</h2>
-            <p className="text-slate-400 text-xs sm:text-sm">Giải đáp chi tiết thắc mắc trước khi bạn bắt đầu</p>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-white">Câu Hỏi Thường Gặp Về S3 Object Storage</h2>
+            <p className="text-slate-400 text-xs sm:text-sm mt-2 font-mono">SEN CLOUDHOST S3 STORAGE FAQ</p>
           </div>
 
           <div className="space-y-3">
             {faqs.map((faq, idx) => (
               <div
                 key={idx}
-                className="bg-slate-900/90 rounded-2xl border border-slate-800 overflow-hidden transition-all"
+                className="bg-[#0c1322] rounded-2xl border border-slate-800 overflow-hidden transition-all"
               >
                 <button
                   onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
-                  className="w-full p-5 text-left font-bold text-sm sm:text-base text-white flex items-center justify-between gap-4 hover:text-blue-400 transition-colors"
+                  className="w-full p-5 text-left font-bold text-sm text-white flex items-center justify-between gap-4 hover:text-sky-400 transition-colors"
                 >
                   <span>{faq.q}</span>
                   {openFaq === idx ? (
-                    <ChevronUp className="w-5 h-5 text-blue-400 shrink-0" />
+                    <ChevronUp className="w-5 h-5 text-sky-400 shrink-0" />
                   ) : (
                     <ChevronDown className="w-5 h-5 text-slate-500 shrink-0" />
                   )}
                 </button>
                 {openFaq === idx && (
-                  <div className="px-5 pb-5 text-xs sm:text-sm text-slate-300 leading-relaxed border-t border-slate-800/60 pt-3">
+                  <div className="px-5 pb-5 text-xs text-slate-300 leading-relaxed border-t border-slate-800/60 pt-3 font-normal">
                     {faq.a}
                   </div>
                 )}
@@ -421,33 +624,42 @@ export default function ObjectStorageServicePage() {
 
       {/* 5. CALL TO ACTION */}
       <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="rounded-3xl bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 p-8 sm:p-12 border border-blue-500/30 text-center relative overflow-hidden shadow-2xl">
-          <div className="relative z-10 max-w-3xl mx-auto">
-            <h3 className="text-2xl sm:text-4xl font-black text-white mb-4">
-              Lưu Trữ Dữ Liệu An Toàn & Tiết Kiệm Tới 80% Chi Phí
+        <div className="rounded-3xl bg-gradient-to-r from-[#0d182e] via-[#091122] to-[#0d182e] p-8 sm:p-12 border border-sky-600/30 text-center relative overflow-hidden shadow-2xl">
+          <div className="relative z-10 max-w-3xl mx-auto space-y-6">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-sky-950 border border-sky-800 text-sky-400 text-xs font-mono">
+              <Zap className="w-3.5 h-3.5" />
+              S3 ACCESS KEYS IN 60 SECONDS
+            </div>
+            
+            <h3 className="text-2xl sm:text-4xl font-extrabold text-white">
+              Bảo Vệ Kho Dữ Liệu Của Bạn Trên Đám Mây S3 An Toàn
             </h3>
-            <p className="text-slate-300 text-xs sm:text-base mb-8 leading-relaxed">
-              Bắt đầu với gói S3 50GB chỉ 50.000đ/tháng. Nhận ngay Access Key & Secret Key trong 60 giây, hỗ trợ di chuyển dữ liệu từ AWS S3 / Google Cloud sang hoàn toàn miễn phí.
+            
+            <p className="text-slate-300 text-xs sm:text-base leading-relaxed font-normal">
+              Chỉ từ 50.000đ/tháng với 50GB NVMe. Nhận ngay cặp mã Access Key &amp; Secret Key trong 60 giây và hỗ trợ chuyển dữ liệu từ AWS S3 sang miễn phí.
             </p>
-            <div className="flex flex-wrap items-center justify-center gap-4">
+            
+            <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
               <button
                 onClick={() => {
-                  window.scrollTo({ top: 400, behavior: 'smooth' });
+                  const el = document.getElementById('spec-matrix');
+                  el?.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className="px-8 py-3.5 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-400 hover:to-cyan-400 text-white font-black text-sm shadow-xl shadow-blue-500/25 transition-all hover:scale-105"
+                className="px-8 py-3.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs font-mono shadow-xl shadow-sky-600/25 transition-all hover:scale-105"
               >
-                Xem Bảng Giá & Kích Hoạt
+                Khởi Tạo S3 Bucket Ngay
               </button>
               <Link
                 href="/contact"
-                className="px-8 py-3.5 rounded-2xl bg-white/10 hover:bg-white/20 text-white font-bold text-sm border border-white/20 transition-all"
+                className="px-8 py-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs font-mono border border-slate-700 transition-all"
               >
-                Tư Vấn Chuyên Sâu 24/7
+                Tư Vấn Di Dời Dữ Liệu Lớn
               </Link>
             </div>
           </div>
         </div>
       </section>
+
     </div>
   );
 }

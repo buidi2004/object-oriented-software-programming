@@ -1,324 +1,581 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { 
-  ShieldCheck, Lock, CheckCircle2, Server, Globe, Shield, ArrowRight, 
-  Star, ShoppingCart, Key, Award, ChevronDown, ChevronUp, Zap, HelpCircle
+  ShieldCheck, Lock, CheckCircle2, ArrowRight, Shield, 
+  Zap, Award, Globe, Key, AlertTriangle, ChevronDown, 
+  ChevronUp, RefreshCw, ShoppingCart, Activity, Layers,
+  Terminal, Sliders, Check, Copy, Sparkles, FileText, CheckCircle
 } from 'lucide-react';
 import { SectigoLogo, DigicertLogo } from '@/src/components/icons/BrandLogos';
 import { useCartStore } from '@/src/store/useCartStore';
+import { api } from '@/src/lib/api';
 
-export default function SslServicePage() {
+export default function SslCertificatesPage() {
   const router = useRouter();
   const addItem = useCartStore((state) => state.addItem);
+  const [billingCycle, setBillingCycle] = useState<'yearly' | 'two_year'>('yearly');
+  const [dbPlans, setDbPlans] = useState<any[]>([]);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
-  const sslPlans = [
+  // SSL Certificate Inspector Simulator state
+  const [inspectDomain, setInspectDomain] = useState('sencloudhost.vn');
+  const [tlsVersion, setTlsVersion] = useState<'1.3' | '1.2'>('1.3');
+
+  useEffect(() => {
+    async function loadPlans() {
+      try {
+        const res = await api.get('/categories/ssl-certificates/plans');
+        if (res.data?.plans?.length) {
+          setDbPlans(res.data.plans);
+        }
+      } catch (err) {
+        console.warn('Could not load SSL plans from API', err);
+      }
+    }
+    loadPlans();
+  }, []);
+
+  const defaultPlans = [
     {
-      id: 'ssl-letsencrypt-dv',
-      name: 'Let\'s Encrypt SSL (DV)',
-      description: 'Chứng chỉ bảo mật tiêu chuẩn miễn phí, tự động gia hạn cho mọi website.',
-      price: 0,
-      period: 'Miễn phí trọn đời',
-      validation: 'Domain Validation (Tự động 60s)',
-      warranty: 'Bảo mật tiêu chuẩn',
-      Logo: Lock,
+      id: '26471cb7-3e11-47fa-bba7-f3708e923e2e',
+      name: 'Sectigo PositiveSSL (DV)',
+      ca: 'Sectigo CA (Comodo)',
+      type: 'Domain Validation (DV)',
+      workload: 'Website cá nhân, Blog, Landing Page & Web doanh nghiệp vừa và nhỏ',
+      yearlyPrice: 199000,
+      twoYearPrice: 350000,
+      warranty: '$10,000 USD',
+      subdomains: '1 Domain duy nhất (domain.com & www)',
+      issueTime: 'Cấp phát trong 5 Phút (Xác thực DNS)',
+      trustLevel: '99.9% Trình duyệt & Mobile',
       features: [
-        'Mã hóa 256-bit chuẩn bảo mật quốc tế',
-        'Xác thực quyền sở hữu tên miền nhanh chóng',
-        'Tự động gia hạn qua giao thức ACME / DNS',
-        'Hiển thị ổ khóa an toàn HTTPS trên Chrome, Safari, Firefox',
-        'Tối ưu điểm số SEO trên công cụ tìm kiếm Google'
+        'Mã hóa 256-bit SHA-256 / RSA 2048-bit & ECC',
+        'Xác thực quyền sở hữu tên miền qua bản ghi DNS / Email',
+        'Biểu tượng ổ khóa bảo mật trên Chrome, Safari, Firefox',
+        'Tương thích 100% chuẩn TLS 1.3 và HTTP/3',
+        'Kỹ sư SEN CloudHost hỗ trợ cài đặt lên máy chủ miễn phí'
       ],
-      badge: 'Miễn phí',
       popular: false,
     },
     {
-      id: 'ssl-sectigo-positivesll',
-      name: 'Sectigo PositiveSSL (DV Thương Mại)',
-      description: 'Chứng chỉ SSL thương mại uy tín toàn cầu cho Web bán hàng & Blog.',
-      price: 199000,
-      period: '199.000đ / năm',
-      validation: 'Cấp phát trong 5 phút',
-      warranty: '$10,000 USD Bảo hiểm',
-      Logo: SectigoLogo,
+      id: 'f9411986-7a71-46be-a9f4-8395bbd15c7e',
+      name: 'Sectigo Wildcard SSL (*.domain)',
+      ca: 'Sectigo CA (Comodo)',
+      type: 'Wildcard Domain (DV)',
+      workload: 'Bảo vệ không giới hạn tất cả subdomain (*.yourdomain.com)',
+      yearlyPrice: 1290000,
+      twoYearPrice: 2300000,
+      warranty: '$10,000 USD',
+      subdomains: 'Không giới hạn Subdomains (*.domain.com)',
+      issueTime: 'Cấp phát trong 10 Phút',
+      trustLevel: '99.9% Trình duyệt & Mobile',
       features: [
-        'Cấp bởi Tổ chức CA uy tín số 1 thế giới Sectigo',
-        'Tương thích 99.9% thiết bị di động và trình duyệt cổ',
-        'Tặng kèm Dynamic Site Seal huy hiệu bảo mật uy tín',
-        'Bảo hiểm bồi thường rò rỉ dữ liệu $10,000 USD',
-        'Hỗ trợ cài đặt hoàn chỉnh lên Hosting / VPS 24/7'
+        'Bảo vệ tên miền chính và TOÀN BỘ subdomain con không giới hạn',
+        'Tiết kiệm chi phí khi chạy nhiều dịch vụ (api, app, mail, cdn)',
+        'Mã hóa cấp cao 256-bit với thuật toán RSA / ECDSA',
+        'Tự động gia hạn và tái cấp phát không giới hạn số lần',
+        'Tặng huy hiệu bảo mật Sectigo Site Seal động'
       ],
-      badge: 'Bán chạy nhất',
       popular: true,
     },
     {
-      id: 'ssl-digicert-ev',
-      name: 'DigiCert EV Business (Xác Thực Doanh Nghiệp)',
-      description: 'Cấp độ bảo mật cao nhất cho Ngân hàng, Sàn TMĐT & Tập đoàn lớn.',
-      price: 1990000,
-      period: '1.990.000đ / năm',
-      validation: 'Xác minh hồ sơ pháp lý Doanh Nghiệp',
-      warranty: '$1,750,000 USD Bảo hiểm',
-      Logo: DigicertLogo,
+      id: 'a9477e38-9276-4740-9a3b-31295b9d3161',
+      name: 'DigiCert EV Secure Site',
+      ca: 'DigiCert Worldwide CA',
+      type: 'Extended Validation (EV)',
+      workload: 'Ngân hàng, Sàn TMĐT, Cổng thanh toán & Tập đoàn tài chính',
+      yearlyPrice: 6500000,
+      twoYearPrice: 11900000,
+      warranty: '$1,750,000 USD (Cực lớn)',
+      subdomains: '1 Domain (Kèm chứng nhận Doanh nghiệp)',
+      issueTime: '1 - 3 Ngày (Thẩm định giấy phép ĐKKD)',
+      trustLevel: '100% Cấp độ xác thực tối cao',
       features: [
-        'Hiển thị tên Doanh Nghiệp xác thực chính thức trên chứng chỉ',
-        'Bảo hiểm bồi thường danh tiếng lên tới $1.75 Triệu USD',
-        'Thuật toán mã hóa RSA 2048-bit & ECC đường cong Elliptic',
-        'Xác minh pháp nhân doanh nghiệp qua Tổng Cục Thuế',
-        'Ưu tiên giải quyết khiếu nại kỹ thuật VIP trong 15 phút'
+        'Mức bảo hiểm đền bù sự cố $1,750,000 USD',
+        'Xác minh pháp lý doanh nghiệp minh bạch tuyệt đối',
+        'Bảo vệ chống giả mạo thương hiệu và Phishing lừa đảo',
+        'Tích hợp tính năng quét lỗ hổng mã độc Malware hàng ngày',
+        'Đội ngũ thẩm định pháp lý DigiCert hỗ trợ hoàn thiện hồ sơ'
       ],
-      badge: 'Cấp Doanh Nghiệp',
       popular: false,
     },
   ];
 
-  const handleOrder = async (plan: typeof sslPlans[0]) => {
-    await addItem(plan.id, 1, false, {
-      name: plan.name,
-      price: plan.price,
-      billingCycle: 1,
-      type: 'vps',
-      details: `${plan.validation} • ${plan.warranty}`
+  const plans = defaultPlans.map((dp, idx) => {
+    const matchingDb = dbPlans[idx];
+    return {
+      ...dp,
+      id: matchingDb?.id || dp.id,
+      yearlyPrice: matchingDb?.yearlyPrice || dp.yearlyPrice,
+      twoYearPrice: matchingDb?.twoYearPrice || dp.twoYearPrice,
+    };
+  });
+
+  const handleOrder = async (plan: typeof plans[0]) => {
+    const price = billingCycle === 'two_year' ? plan.twoYearPrice : plan.yearlyPrice;
+    await addItem(plan.id, 12, false, {
+      name: `${plan.name} - ${billingCycle === 'two_year' ? '2 Năm' : '1 Năm'}`,
+      price: price,
+      billingCycle: 12,
+      type: 'ssl',
+      details: `${plan.type} • Bảo hiểm ${plan.warranty}`
     });
     router.push('/cart');
   };
 
   const faqs = [
     {
-      q: 'Chứng chỉ SSL (HTTPS) có thực sự cần thiết cho website không?',
-      a: 'Có, cực kỳ quan trọng! Không có SSL, Google Chrome sẽ hiển thị cảnh báo đỏ "Không an toàn" khiến khách hàng rời bỏ website ngay lập tức. Ngoài ra, SSL là tiêu chí bắt buộc để bảo mật thông tin thanh toán, mật khẩu khách hàng và tăng thứ hạng SEO Google.'
+      q: 'Sự khác biệt giữa chứng chỉ SSL DV, Wildcard và EV là gì?',
+      a: '1) DV (Domain Validation): Xác thực quyền sở hữu tên miền tự động qua DNS trong 5 phút, phù hợp mọi website; 2) Wildcard: Bảo vệ tên miền chính và không giới hạn mọi tên miền con (*.domain.com); 3) EV (Extended Validation): Thẩm định giấy phép kinh doanh của doanh nghiệp, mang lại mức bảo hiểm $1,750,000 USD và độ tin cậy tối đa cho ngân hàng/thương mại điện tử.'
     },
     {
-      q: 'Sự khác biệt giữa SSL DV, OV và EV là gì?',
-      a: 'DV (Domain Validation) chỉ xác thực quyền sở hữu tên miền, cấp trong 5 phút. OV (Organization Validation) và EV (Extended Validation) yêu cầu xác minh giấy phép kinh doanh của công ty, mang lại mức độ tin cậy và giá trị bồi thường bảo hiểm bảo mật cao nhất.'
+      q: 'Tại sao nên mua SSL trả phí từ Sectigo/DigiCert thay vì dùng Let\'s Encrypt miễn phí?',
+      a: 'Chứng chỉ thương mại từ Sectigo/DigiCert cung cấp: Hợp đồng bảo hiểm tài chính khi bị giải mã trái phép ($10,000 - $1,750,000 USD), thời hạn sử dụng 1-2 năm không lo hết hạn mỗi 90 ngày, tương thích 100% với các thiết bị di động/SmartTV cũ, và đi kèm huy hiệu Site Seal uy tín.'
     },
     {
-      q: 'CloudHost có hỗ trợ cài đặt SSL lên máy chủ giúp tôi không?',
-      a: 'Có! Đội ngũ kỹ thuật viên của CloudHost hỗ trợ tạo mã CSR, xác thực DNS và cấu hình SSL trực tiếp lên Nginx, Apache, IIS, cPanel hoặc DirectAdmin hoàn toàn miễn phí 24/7.'
+      q: 'Sau khi thanh toán, tôi cần làm gì để nhận file chứng chỉ SSL?',
+      a: 'Bạn chỉ cần tạo mã CSR (hoặc để kỹ thuật viên SEN CloudHost hỗ trợ tạo giúp) và thêm 1 bản ghi CNAME vào cấu hình DNS của tên miền. Sau khi hệ thống xác thực hoàn tất trong 5 phút, file chứng chỉ (.crt, .ca-bundle) sẽ được gửi tới bạn.'
+    },
+    {
+      q: 'SEN CloudHost có hỗ trợ cài đặt chứng chỉ SSL lên máy chủ hosting/VPS không?',
+      a: 'Có! Kỹ thuật viên của chúng tôi sẽ hỗ trợ cài đặt hoàn toàn miễn phí lên Nginx, Apache, IIS, cPanel, Plesk, DirectAdmin hoặc bất kỳ hạ tầng nào của bạn 24/7.'
     }
   ];
 
   return (
-    <div className="min-h-screen bg-slate-900 text-slate-100 selection:bg-emerald-500 selection:text-white">
-      {/* 1. HERO SECTION */}
-      <section className="relative overflow-hidden pt-20 pb-32">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[600px] bg-gradient-to-b from-emerald-600/20 via-teal-600/10 to-transparent blur-3xl pointer-events-none" />
-        <div className="absolute -top-32 right-10 w-96 h-96 bg-emerald-500/20 rounded-full blur-[100px] pointer-events-none" />
+    <div className="min-h-screen bg-[#090d16] text-slate-100 selection:bg-emerald-500 selection:text-white font-sans">
+      
+      {/* 1. HERO SECTION: SSL/TLS CERTIFICATE TELEMETRY */}
+      <section className="relative pt-16 pb-20 border-b border-slate-800/80 overflow-hidden">
+        {/* Technical Grid Blueprint */}
+        <div 
+          className="absolute inset-0 opacity-[0.06] pointer-events-none" 
+          style={{ 
+            backgroundImage: `linear-gradient(to right, #10b981 1px, transparent 1px), linear-gradient(to bottom, #10b981 1px, transparent 1px)`,
+            backgroundSize: '40px 40px' 
+          }}
+        />
+        <div className="absolute top-0 right-1/4 w-[600px] h-[300px] bg-emerald-600/10 blur-[120px] pointer-events-none" />
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-slate-800/90 border border-slate-700 text-emerald-300 text-xs font-bold uppercase tracking-wider mb-6 shadow-xl">
-            <div className="flex items-center gap-1.5 border-r border-slate-700 pr-3">
-              <SectigoLogo className="w-4 h-4" />
-              <span>Sectigo CA</span>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          {/* Status Bar */}
+          <div className="flex flex-wrap items-center justify-between gap-4 p-3.5 mb-10 rounded-2xl bg-[#0d1424] border border-slate-800 text-xs font-mono">
+            <div className="flex items-center gap-3">
+              <span className="flex items-center gap-1.5 text-emerald-400 font-bold">
+                <Lock className="w-3.5 h-3.5 text-emerald-400" />
+                SECURITY PROTOCOL: TLS 1.3 256-BIT ENCRYPTION
+              </span>
+              <span className="text-slate-600 hidden sm:inline">|</span>
+              <span className="text-slate-300 hidden sm:inline">
+                CA AUTHORITIES: <strong className="text-white font-mono">Sectigo &amp; DigiCert Worldwide</strong>
+              </span>
             </div>
-            <div className="flex items-center gap-1.5 border-r border-slate-700 pr-3">
-              <DigicertLogo className="w-4 h-4" />
-              <span>DigiCert</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <ShieldCheck className="w-4 h-4 text-emerald-400" />
-              <span>TLS 1.3 256-bit</span>
+
+            <div className="flex items-center gap-4 text-slate-400">
+              <span>WARRANTY: <strong className="text-emerald-400 font-mono">Up to $1.75M USD</strong></span>
+              <span>COMPATIBILITY: <strong className="text-white font-mono">99.9% Browsers</strong></span>
             </div>
           </div>
 
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-white max-w-5xl mx-auto leading-tight mb-6">
-            Bảo Vệ Người Dùng & Tăng Uy Tín Với{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-300">
-              Chứng Chỉ SSL HTTPS
-            </span>
-          </h1>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            
+            {/* Left Headline */}
+            <div className="lg:col-span-7 space-y-6">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-emerald-950/60 border border-emerald-800/60 text-emerald-300 text-xs font-mono">
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                OFFICIAL SECTIGO &amp; DIGICERT CA CERTIFICATES
+              </div>
 
-          <p className="text-base sm:text-xl text-slate-300 max-w-3xl mx-auto mb-10 leading-relaxed font-normal">
-            Mã hóa 256-bit cấp ngân hàng. Loại bỏ cảnh báo "Không an toàn", tăng 40% tỷ lệ chuyển đổi mua hàng và nâng cao thứ hạng SEO trên Google Search.
-          </p>
-        </div>
-      </section>
+              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.15]">
+                Bảo Vệ Website Với{' '}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 font-mono">
+                  Chứng Chỉ SSL / TLS
+                </span>
+              </h1>
 
-      {/* 2. PRICING CARDS */}
-      <section className="relative -mt-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-28">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
-          {sslPlans.map((plan) => (
-            <div
-              key={plan.id}
-              className={`relative rounded-3xl bg-slate-800/90 backdrop-blur-md p-8 border transition-all duration-300 flex flex-col justify-between ${
-                plan.popular
-                  ? 'border-emerald-500 shadow-2xl shadow-emerald-500/20 ring-2 ring-emerald-500/40 bg-gradient-to-b from-slate-800 to-slate-900 lg:-translate-y-4'
-                  : 'border-slate-700/80 shadow-xl hover:border-slate-600 hover:shadow-2xl'
-              }`}
-            >
-              {plan.badge && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                  <span className="px-4 py-1.5 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-xs font-black uppercase tracking-wider shadow-lg">
-                    {plan.badge}
-                  </span>
+              <p className="text-slate-300 text-base sm:text-lg leading-relaxed max-w-2xl font-normal">
+                Mã hóa 100% dữ liệu truyền tải với chuẩn TLS 1.3 256-bit. 
+                Loại bỏ cảnh báo không an toàn trên trình duyệt, tăng điểm SEO Google và bảo hiểm tài chính lên đến 1,750,000 USD.
+              </p>
+
+              {/* CA Badges */}
+              <div className="flex flex-wrap items-center gap-3 pt-2">
+                <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0f172a] border border-slate-800 text-xs font-mono text-slate-300">
+                  <SectigoLogo className="w-4 h-4" />
+                  <span>Sectigo CA (Comodo)</span>
                 </div>
-              )}
-
-              <div>
-                <div className="flex items-center justify-between mb-4">
-                  <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">
-                    <plan.Logo className="w-6 h-6" />
-                  </div>
-                  <span className="px-2.5 py-1 rounded-full bg-slate-700/60 border border-slate-600 text-[11px] font-bold text-slate-300">
-                    {plan.validation}
-                  </span>
+                <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0f172a] border border-slate-800 text-xs font-mono text-slate-300">
+                  <DigicertLogo className="w-4 h-4" />
+                  <span>DigiCert EV Enterprise</span>
                 </div>
-
-                <h3 className="text-2xl font-black text-white mb-1">{plan.name}</h3>
-                <p className="text-xs text-slate-400 mb-6 min-h-[32px]">{plan.description}</p>
-
-                <div className="mb-6 pb-6 border-b border-slate-700/60">
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-4xl font-black text-white">
-                      {plan.price === 0 ? '0 đ' : plan.price.toLocaleString('vi-VN')}
-                    </span>
-                    <span className="text-sm text-slate-400 font-bold">/ năm</span>
-                  </div>
-                  <p className="text-xs text-emerald-400 font-semibold mt-1">
-                    🛡️ Bảo hiểm: {plan.warranty}
-                  </p>
-                </div>
-
-                <div className="space-y-3 mb-8 text-sm">
-                  <div className="pt-3 space-y-2.5">
-                    {plan.features.map((feat, idx) => (
-                      <div key={idx} className="flex items-start gap-2.5 text-xs text-slate-300">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                        <span>{feat}</span>
-                      </div>
-                    ))}
-                  </div>
+                <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0f172a] border border-slate-800 text-xs font-mono text-slate-300">
+                  <Lock className="w-4 h-4 text-amber-400" />
+                  <span>Green Padlock Trust</span>
                 </div>
               </div>
 
-              <button
-                onClick={() => handleOrder(plan)}
-                className={`w-full py-4 rounded-2xl font-black text-sm transition-all flex items-center justify-center gap-2 shadow-lg ${
-                  plan.popular
-                    ? 'bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:scale-[1.02]'
-                    : 'bg-slate-700 hover:bg-slate-600 text-white'
-                }`}
-              >
-                <ShoppingCart className="w-4 h-4" />
-                <span>{plan.price === 0 ? 'Kích Hoạt SSL Miễn Phí' : 'Đăng Ký Chứng Chỉ SSL'}</span>
-              </button>
+              {/* Handshake Details */}
+              <div className="p-4 rounded-xl bg-[#0c1322] border border-slate-800 text-xs font-mono space-y-2">
+                <div className="flex items-center justify-between text-slate-400">
+                  <span>Cryptographic Cipher: <strong className="text-white">TLS_AES_256_GCM_SHA384</strong></span>
+                  <span>Handshake: <strong className="text-emerald-400">0-RTT Resumption</strong></span>
+                </div>
+                <div className="text-slate-400">
+                  Site Seal: <span className="text-slate-300">Huy hiệu tín nhiệm tương tác động tăng 42% tỷ lệ chốt đơn</span>
+                </div>
+              </div>
+
             </div>
-          ))}
+
+            {/* Right Certificate Inspector Simulator */}
+            <div className="lg:col-span-5">
+              <div className="rounded-2xl bg-[#0b1320] border border-slate-800 p-6 shadow-2xl space-y-5">
+                <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+                  <div className="flex items-center gap-2">
+                    <Lock className="w-3.5 h-3.5 text-emerald-400" />
+                    <span className="text-xs font-mono text-emerald-400 font-bold">https://{inspectDomain}</span>
+                  </div>
+                  <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-emerald-950/80 text-emerald-400 border border-emerald-800/60">
+                    VALID (SECURE)
+                  </span>
+                </div>
+
+                <div className="p-3.5 rounded-xl bg-[#060a12] border border-slate-800 space-y-2 font-mono text-xs text-slate-300">
+                  <div className="flex justify-between">
+                    <span className="text-slate-500">Issued To:</span>
+                    <span className="text-white font-bold">{inspectDomain}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-500">Issued By:</span>
+                    <span className="text-sky-400">Sectigo RSA Domain Validation Secure Server CA</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-500">Key Exchange:</span>
+                    <span className="text-emerald-400 font-bold">ECDHE-RSA-AES256-GCM-SHA384</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-500">OCSP Stapling:</span>
+                    <span className="text-emerald-400">Enabled (Fast Verification)</span>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3 font-mono text-xs">
+                  <div className="p-3 rounded-xl bg-[#0e1627] border border-slate-800">
+                    <div className="text-[10px] text-slate-500 uppercase">Handshake Latency</div>
+                    <div className="text-base font-extrabold text-emerald-400 mt-0.5">&lt; 3.8 ms</div>
+                    <div className="text-[10px] text-slate-500">TLS 1.3 0-RTT</div>
+                  </div>
+
+                  <div className="p-3 rounded-xl bg-[#0e1627] border border-slate-800">
+                    <div className="text-[10px] text-slate-500 uppercase">Browser Trust</div>
+                    <div className="text-base font-extrabold text-sky-400 mt-0.5">100% Verified</div>
+                    <div className="text-[10px] text-slate-500">Chrome, Safari, iOS</div>
+                  </div>
+                </div>
+
+                <div className="pt-2">
+                  <a
+                    href="#spec-matrix"
+                    className="w-full py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs font-mono flex items-center justify-center gap-2 transition-all shadow-lg shadow-emerald-600/20"
+                  >
+                    <span>XEM BẢNG CHỨNG CHỈ VÀ ĐẶT MUA</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </a>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
         </div>
       </section>
 
-      {/* 3. REALISTIC VISUAL TRUST & SECURITY ARCHITECTURE */}
-      <section className="py-24 bg-slate-950/80 border-t border-slate-800 relative overflow-hidden">
+      {/* 2. THREE CORE SSL ARCHITECTURE SCHEMATICS */}
+      <section className="py-24 bg-[#070b12] border-b border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold uppercase tracking-wider mb-3">
-              <Shield className="w-3.5 h-3.5" />
-              Mã Hóa Đường Truyền Chuẩn TLS 1.3
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-emerald-950 text-emerald-400 text-xs font-mono mb-3 border border-emerald-800">
+              <ShieldCheck className="w-3.5 h-3.5" />
+              CRYPTOGRAPHIC STANDARDS
             </div>
-            <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight mb-4">
-              Không Thể Đánh Cắp Dữ Liệu Khách Hàng
+            <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
+              3 Giá Trị Cốt Lõi Của Chứng Chỉ SSL Chính Hãng
             </h2>
-            <p className="text-slate-400 text-sm sm:text-base leading-relaxed">
-              Thuật toán mã hóa bất đối xứng khóa RSA 2048-bit và mã hóa đối xứng AES-GCM 256-bit bảo vệ tuyệt đối thông tin thẻ tín dụng, mật khẩu và dữ liệu nhạy cảm.
+            <p className="text-slate-400 text-sm sm:text-base mt-3 leading-relaxed font-normal">
+              Đảm bảo an toàn giao dịch tài chính, dữ liệu mật khẩu người dùng và uy tín thương hiệu.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-            <div className="bg-slate-900/90 rounded-3xl p-6 border border-slate-800 overflow-hidden flex flex-col justify-between group hover:border-emerald-500/50 transition-all">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            {/* Schematic 1: TLS 1.3 0-RTT Handshake */}
+            <div className="p-6 rounded-3xl bg-[#0c1322] border border-slate-800 flex flex-col justify-between space-y-6">
               <div>
-                <div className="h-48 rounded-2xl overflow-hidden mb-6 relative bg-slate-800">
-                  <img
-                    src="https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=800&q=80"
-                    alt="Green Padlock Browser Security"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent" />
-                  <span className="absolute bottom-3 left-3 px-3 py-1 rounded-lg bg-emerald-600/90 text-white text-[11px] font-black uppercase">
-                    Green Lock HTTPS
-                  </span>
+                <div className="p-4 rounded-2xl bg-[#060a12] border border-slate-800 mb-6 font-mono text-xs">
+                  <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
+                    <span>TLS 1.3 0-RTT HANDSHAKE</span>
+                    <span className="text-emerald-400">1-ROUND TRIP</span>
+                  </div>
+                  <div className="space-y-2 text-slate-300 text-[11px]">
+                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                      <span>TLS 1.2 Cũ (2 Round-Trips)</span>
+                      <span className="text-rose-400">80 - 120ms</span>
+                    </div>
+                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                      <span>TLS 1.3 Mới (1 Round-Trip)</span>
+                      <span className="text-emerald-400 font-bold">20 - 40ms</span>
+                    </div>
+                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                      <span>0-RTT Reconnection</span>
+                      <span className="text-sky-400 font-bold">&lt; 5ms Tức thì</span>
+                    </div>
+                  </div>
                 </div>
-                <h3 className="text-xl font-black text-white mb-2">Ổ Khóa Xanh Uy Tín Tuyệt Đối</h3>
-                <p className="text-xs text-slate-400 leading-relaxed mb-4">
-                  Trình duyệt hiển thị kết nối bảo mật hoàn hảo, xóa bỏ hoàn toàn thông báo cảnh báo nguy hiểm, giúp khách hàng an tâm mua hàng và thanh toán trực tuyến.
+
+                <h3 className="text-lg font-bold text-white mb-2">Bắt Tay Mã Hóa TLS 1.3 Siêu Tốc</h3>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  Giao thức TLS 1.3 loại bỏ các thuật toán mã hóa lỗi thời, giảm 50% thời gian thiết lập kết nối mã hóa 
+                  giúp website tải nhanh hơn và bảo vệ chống lại các hình thức tấn công nghe lén Man-in-the-Middle.
                 </p>
               </div>
-              <ul className="space-y-2 text-xs text-slate-300 pt-3 border-t border-slate-800">
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> Tương thích 100% Google Chrome & iOS</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> Tăng thứ hạng SEO trên Google Ranking</li>
-              </ul>
+
+              <div className="pt-4 border-t border-slate-800/80 text-xs font-mono text-slate-300 flex items-center justify-between">
+                <span>Speed Improvement:</span>
+                <strong className="text-emerald-400">+40% Tốc độ mở trang</strong>
+              </div>
             </div>
 
-            <div className="bg-slate-900/90 rounded-3xl p-6 border border-slate-800 overflow-hidden flex flex-col justify-between group hover:border-teal-500/50 transition-all">
+            {/* Schematic 2: Insurance Warranty */}
+            <div className="p-6 rounded-3xl bg-[#0c1322] border border-slate-800 flex flex-col justify-between space-y-6">
               <div>
-                <div className="h-48 rounded-2xl overflow-hidden mb-6 relative bg-slate-800">
-                  <img
-                    src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=800&q=80"
-                    alt="Fast TLS Handshake 0-RTT"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent" />
-                  <span className="absolute bottom-3 left-3 px-3 py-1 rounded-lg bg-teal-600/90 text-white text-[11px] font-black uppercase">
-                    TLS 1.3 0-RTT
-                  </span>
+                <div className="p-4 rounded-2xl bg-[#060a12] border border-slate-800 mb-6 font-mono text-xs">
+                  <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
+                    <span>FINANCIAL WARRANTY</span>
+                    <span className="text-sky-400">$1,750,000 USD</span>
+                  </div>
+                  <div className="space-y-2 text-slate-300 text-[11px]">
+                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                      <span>Sectigo PositiveSSL</span>
+                      <span className="text-slate-300">$10,000 USD</span>
+                    </div>
+                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                      <span>Sectigo Wildcard</span>
+                      <span className="text-slate-300">$10,000 USD</span>
+                    </div>
+                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                      <span>DigiCert EV Secure</span>
+                      <span className="text-emerald-400 font-bold">$1,750,000 USD</span>
+                    </div>
+                  </div>
                 </div>
-                <h3 className="text-xl font-black text-white mb-2">Tốc Độ Bắt Tay TLS Siêu Tốc</h3>
-                <p className="text-xs text-slate-400 leading-relaxed mb-4">
-                  Chuẩn giao thức TLS 1.3 tối tân rút ngắn thời gian bắt tay mã hóa xuống chỉ còn 1 round-trip (hoặc 0-RTT khi kết nối lại), giúp website tải cực nhanh.
+
+                <h3 className="text-lg font-bold text-white mb-2">Bảo Hiểm Tài Chính Quốc Tế</h3>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  Cam kết bồi thường thiệt hại tài chính từ các tổ chức CA hàng đầu thế giới nếu xảy ra sự cố 
+                  chứng chỉ bị giả mạo hoặc giải mã trái phép, mang lại sự an tâm tuyệt đối cho khách hàng giao dịch.
                 </p>
               </div>
-              <ul className="space-y-2 text-xs text-slate-300 pt-3 border-t border-slate-800">
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-teal-400" /> Giảm 50% độ trễ kết nối HTTPS</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-teal-400" /> Chống tấn công Man-in-the-Middle</li>
-              </ul>
+
+              <div className="pt-4 border-t border-slate-800/80 text-xs font-mono text-slate-300 flex items-center justify-between">
+                <span>Underwritten By:</span>
+                <strong className="text-sky-400">Sectigo &amp; DigiCert Global</strong>
+              </div>
             </div>
 
-            <div className="bg-slate-900/90 rounded-3xl p-6 border border-slate-800 overflow-hidden flex flex-col justify-between group hover:border-cyan-500/50 transition-all">
+            {/* Schematic 3: Site Seal & SEO Boost */}
+            <div className="p-6 rounded-3xl bg-[#0c1322] border border-slate-800 flex flex-col justify-between space-y-6">
               <div>
-                <div className="h-48 rounded-2xl overflow-hidden mb-6 relative bg-slate-800">
-                  <img
-                    src="https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&w=800&q=80"
-                    alt="Trust Seal Badge"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent" />
-                  <span className="absolute bottom-3 left-3 px-3 py-1 rounded-lg bg-cyan-600/90 text-white text-[11px] font-black uppercase">
-                    Site Seal Badge
-                  </span>
+                <div className="p-4 rounded-2xl bg-[#060a12] border border-slate-800 mb-6 font-mono text-xs">
+                  <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
+                    <span>SEAL &amp; GOOGLE SEO RANKING</span>
+                    <span className="text-amber-400">TOP 1 TRUST</span>
+                  </div>
+                  <div className="space-y-2 text-slate-300 text-[11px]">
+                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                      <span>Google Ranking Signal</span>
+                      <span className="text-emerald-400 font-bold">+15% Điểm SEO</span>
+                    </div>
+                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                      <span>Checkout Conversion</span>
+                      <span className="text-amber-400 font-bold">+42% Tỷ lệ mua</span>
+                    </div>
+                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                      <span>Browser Warning</span>
+                      <span className="text-emerald-400 font-bold">Loại bỏ 100%</span>
+                    </div>
+                  </div>
                 </div>
-                <h3 className="text-xl font-black text-white mb-2">Huy Hiệu Chứng Nhận Quốc Tế</h3>
-                <p className="text-xs text-slate-400 leading-relaxed mb-4">
-                  Gắn huy hiệu động Sectigo / DigiCert Trust Seal ở chân trang hoặc form thanh toán để khẳng định sự chuyên nghiệp và minh bạch pháp lý của doanh nghiệp.
+
+                <h3 className="text-lg font-bold text-white mb-2">Tăng Uy Tín &amp; Tối Ưu Thứ Hạng SEO</h3>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  Google ưu tiên xếp hạng cao hơn cho các website kích hoạt HTTPS hợp lệ. 
+                  Biểu tượng ổ khóa an toàn và huy hiệu Site Seal giúp khách hàng tin tưởng nhập thông tin thẻ và chuyển khoản.
                 </p>
               </div>
-              <ul className="space-y-2 text-xs text-slate-300 pt-3 border-t border-slate-800">
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-cyan-400" /> Nhấp vào hiển thị thông tin bảo hiểm</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-cyan-400" /> Tăng uy tín thương hiệu doanh nghiệp</li>
-              </ul>
+
+              <div className="pt-4 border-t border-slate-800/80 text-xs font-mono text-slate-300 flex items-center justify-between">
+                <span>Google Algorithm:</span>
+                <strong className="text-emerald-400">HTTPS Ranking Boost Active</strong>
+              </div>
             </div>
+
           </div>
+
         </div>
       </section>
 
-      {/* 4. FAQ ACCORDION */}
-      <section className="py-20 bg-slate-950/60 border-t border-slate-800">
+      {/* 3. TECHNICAL SPECIFICATION MATRIX & PRICING */}
+      <section id="spec-matrix" className="py-24 bg-[#090d16] border-b border-slate-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-emerald-950 text-emerald-400 text-xs font-mono mb-3 border border-emerald-800">
+                <Sliders className="w-3.5 h-3.5" />
+                SSL CERTIFICATE SPEC SHEET
+              </div>
+              <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
+                Bảng So Sánh Các Gói Chứng Chỉ SSL
+              </h2>
+              <p className="text-slate-400 text-xs sm:text-sm mt-1 font-normal">
+                Bảo vệ 100% kết nối cho trang web, cổng API và ứng dụng di động.
+              </p>
+            </div>
+
+            {/* Billing Switch */}
+            <div className="inline-flex items-center p-1 rounded-xl bg-[#0c1322] border border-slate-800 font-mono text-xs">
+              <button
+                onClick={() => setBillingCycle('yearly')}
+                className={`px-4 py-2 rounded-lg font-bold transition-all ${
+                  billingCycle === 'yearly'
+                    ? 'bg-emerald-600 text-white shadow'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                1 Năm
+              </button>
+              <button
+                onClick={() => setBillingCycle('two_year')}
+                className={`px-4 py-2 rounded-lg font-bold transition-all flex items-center gap-1.5 ${
+                  billingCycle === 'two_year'
+                    ? 'bg-emerald-600 text-white shadow'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <span>2 Năm</span>
+                <span className="px-1.5 py-0.2 rounded bg-emerald-500 text-white text-[10px] font-bold">
+                  -15%
+                </span>
+              </button>
+            </div>
+          </div>
+
+          {/* Matrix Table */}
+          <div className="rounded-2xl border border-slate-800 bg-[#0c1322] overflow-hidden shadow-2xl">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs font-mono">
+                <thead>
+                  <tr className="border-b border-slate-800 bg-[#080d17] text-slate-400">
+                    <th className="p-5 font-bold uppercase text-[11px] w-1/4">Thông Số Chứng Chỉ</th>
+                    {plans.map((p) => {
+                      const displayPrice = billingCycle === 'two_year' ? Math.round(p.twoYearPrice / 2) : p.yearlyPrice;
+                      return (
+                        <th key={p.id} className="p-5 text-white border-l border-slate-800/80 w-1/4">
+                          <div className="text-sm font-extrabold text-white">{p.name}</div>
+                          <div className="text-[11px] text-slate-400 font-sans font-normal">{p.type}</div>
+                          <div className="text-lg font-black text-emerald-400 mt-2">
+                            {displayPrice.toLocaleString('vi-VN')} <span className="text-xs font-normal text-slate-400">đ/năm</span>
+                          </div>
+                        </th>
+                      );
+                    })}
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-800/60 text-slate-300">
+                  <tr className="hover:bg-slate-900/40">
+                    <td className="p-4 font-bold text-slate-400">Tổ Chức Phát Hành (CA)</td>
+                    {plans.map((p) => (
+                      <td key={p.id} className="p-4 border-l border-slate-800/60 text-white font-bold">{p.ca}</td>
+                    ))}
+                  </tr>
+                  <tr className="hover:bg-slate-900/40">
+                    <td className="p-4 font-bold text-slate-400">Phạm Vi Tên Miền Bảo Vệ</td>
+                    {plans.map((p) => (
+                      <td key={p.id} className="p-4 border-l border-slate-800/60 text-emerald-400 font-bold">{p.subdomains}</td>
+                    ))}
+                  </tr>
+                  <tr className="hover:bg-slate-900/40">
+                    <td className="p-4 font-bold text-slate-400">Mức Bảo Hiểm Sự Cố</td>
+                    {plans.map((p) => (
+                      <td key={p.id} className="p-4 border-l border-slate-800/60 text-sky-400 font-bold">{p.warranty}</td>
+                    ))}
+                  </tr>
+                  <tr className="hover:bg-slate-900/40">
+                    <td className="p-4 font-bold text-slate-400">Thời Gian Cấp Phát</td>
+                    {plans.map((p) => (
+                      <td key={p.id} className="p-4 border-l border-slate-800/60 text-white font-bold">{p.issueTime}</td>
+                    ))}
+                  </tr>
+                  <tr className="hover:bg-slate-900/40">
+                    <td className="p-4 font-bold text-slate-400">Huy Hiệu Site Seal Tín Nhiệm</td>
+                    {plans.map((p) => (
+                      <td key={p.id} className="p-4 border-l border-slate-800/60 text-slate-200">Động (Dynamic Interactive)</td>
+                    ))}
+                  </tr>
+                  <tr className="hover:bg-slate-900/40">
+                    <td className="p-4 font-bold text-slate-400">Hỗ Trợ Cài Đặt Miễn Phí 24/7</td>
+                    {plans.map((p) => (
+                      <td key={p.id} className="p-4 border-l border-slate-800/60 text-emerald-400 font-bold">100% Miễn Phí</td>
+                    ))}
+                  </tr>
+                  <tr className="bg-[#080d17]">
+                    <td className="p-5 font-bold text-slate-400">Hành Động Khởi Tạo</td>
+                    {plans.map((p) => (
+                      <td key={p.id} className="p-5 border-l border-slate-800/60">
+                        <button
+                          onClick={() => handleOrder(p)}
+                          className={`w-full py-3 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-2 ${
+                            p.popular
+                              ? 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-600/30'
+                              : 'bg-slate-800 hover:bg-slate-700 text-white'
+                          }`}
+                        >
+                          <span>Đăng Ký Chứng Chỉ Ngay</span>
+                          <ArrowRight className="w-3.5 h-3.5" />
+                        </button>
+                      </td>
+                    ))}
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* 4. FAQ SECTION */}
+      <section className="py-20 bg-[#090d16] border-b border-slate-800">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-2xl sm:text-4xl font-black text-white mb-2">Câu Hỏi Thường Gặp (FAQ)</h2>
-            <p className="text-slate-400 text-xs sm:text-sm">Giải đáp chi tiết thắc mắc trước khi bạn đăng ký SSL</p>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-white">Câu Hỏi Thường Gặp Về Chứng Chỉ SSL</h2>
+            <p className="text-slate-400 text-xs sm:text-sm mt-2 font-mono">SEN CLOUDHOST SSL CERTIFICATES FAQ</p>
           </div>
 
           <div className="space-y-3">
             {faqs.map((faq, idx) => (
               <div
                 key={idx}
-                className="bg-slate-900/90 rounded-2xl border border-slate-800 overflow-hidden transition-all"
+                className="bg-[#0c1322] rounded-2xl border border-slate-800 overflow-hidden transition-all"
               >
                 <button
                   onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
-                  className="w-full p-5 text-left font-bold text-sm sm:text-base text-white flex items-center justify-between gap-4 hover:text-emerald-400 transition-colors"
+                  className="w-full p-5 text-left font-bold text-sm text-white flex items-center justify-between gap-4 hover:text-emerald-400 transition-colors"
                 >
                   <span>{faq.q}</span>
                   {openFaq === idx ? (
@@ -328,7 +585,7 @@ export default function SslServicePage() {
                   )}
                 </button>
                 {openFaq === idx && (
-                  <div className="px-5 pb-5 text-xs sm:text-sm text-slate-300 leading-relaxed border-t border-slate-800/60 pt-3">
+                  <div className="px-5 pb-5 text-xs text-slate-300 leading-relaxed border-t border-slate-800/60 pt-3 font-normal">
                     {faq.a}
                   </div>
                 )}
@@ -340,33 +597,42 @@ export default function SslServicePage() {
 
       {/* 5. CALL TO ACTION */}
       <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="rounded-3xl bg-gradient-to-r from-emerald-950 via-teal-950 to-slate-900 p-8 sm:p-12 border border-emerald-500/30 text-center relative overflow-hidden shadow-2xl">
-          <div className="relative z-10 max-w-3xl mx-auto">
-            <h3 className="text-2xl sm:text-4xl font-black text-white mb-4">
-              Bật Ổ Khóa Xanh Bảo Mật Cho Website Của Bạn Ngay
+        <div className="rounded-3xl bg-gradient-to-r from-[#0a1e16] via-[#06120d] to-[#0a1e16] p-8 sm:p-12 border border-emerald-600/30 text-center relative overflow-hidden shadow-2xl">
+          <div className="relative z-10 max-w-3xl mx-auto space-y-6">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-emerald-950 border border-emerald-800 text-emerald-400 text-xs font-mono">
+              <Zap className="w-3.5 h-3.5" />
+              ISSUANCE IN 5 MINUTES
+            </div>
+            
+            <h3 className="text-2xl sm:text-4xl font-extrabold text-white">
+              Kích Hoạt Ổ Khóa Xanh HTTPS Cho Website Của Bạn Ngay
             </h3>
-            <p className="text-slate-300 text-xs sm:text-base mb-8 leading-relaxed">
-              Cấp phát chứng chỉ trong 5 phút. Kỹ sư hỗ trợ cài đặt hoàn chỉnh lên server miễn phí.
+            
+            <p className="text-slate-300 text-xs sm:text-base leading-relaxed font-normal">
+              Chỉ từ 199.000đ/năm. Cấp phát tự động qua DNS trong 5 phút và đội ngũ kỹ sư hỗ trợ cài đặt lên máy chủ miễn phí.
             </p>
-            <div className="flex flex-wrap items-center justify-center gap-4">
+            
+            <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
               <button
                 onClick={() => {
-                  window.scrollTo({ top: 400, behavior: 'smooth' });
+                  const el = document.getElementById('spec-matrix');
+                  el?.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className="px-8 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white font-black text-sm shadow-xl shadow-emerald-500/25 transition-all hover:scale-105"
+                className="px-8 py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs font-mono shadow-xl shadow-emerald-600/25 transition-all hover:scale-105"
               >
-                Xem Bảng Giá & Đăng Ký
+                Đăng Ký Chứng Chỉ Ngay
               </button>
               <Link
                 href="/contact"
-                className="px-8 py-3.5 rounded-2xl bg-white/10 hover:bg-white/20 text-white font-bold text-sm border border-white/20 transition-all"
+                className="px-8 py-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs font-mono border border-slate-700 transition-all"
               >
-                Hỗ Trợ Kỹ Thuật 24/7
+                Tư Vấn Doanh Nghiệp EV
               </Link>
             </div>
           </div>
         </div>
       </section>
+
     </div>
   );
 }

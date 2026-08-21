@@ -7,9 +7,9 @@ import {
   Server, Cpu, Shield, Zap, CheckCircle2, ArrowRight, 
   HardDrive, Activity, RefreshCw, ShoppingCart, Lock,
   Layers, Key, ChevronDown, ChevronUp, Award, BarChart3, Globe,
-  ShieldAlert, Settings, Terminal
+  ShieldAlert, Settings, Terminal, Radio, Power, Sliders, Check
 } from 'lucide-react';
-import { DellLogo, IntelLogo, AmdLogo } from '@/src/components/icons/BrandLogos';
+import { SiDell, SiIntel, SiAmd, SiUbuntu, SiDebian, SiProxmox, SiVmware } from 'react-icons/si';
 import { useCartStore } from '@/src/store/useCartStore';
 import { api } from '@/src/lib/api';
 
@@ -19,6 +19,10 @@ export default function DedicatedServersPage() {
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('yearly');
   const [dbPlans, setDbPlans] = useState<any[]>([]);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+
+  // IPMI Simulator State
+  const [serverPower, setServerPower] = useState<'on' | 'off' | 'rebooting'>('on');
+  const [activeIso, setActiveIso] = useState<string>('Ubuntu 24.04 LTS');
 
   useEffect(() => {
     async function loadPlans() {
@@ -34,73 +38,91 @@ export default function DedicatedServersPage() {
     loadPlans();
   }, []);
 
+  const handlePowerAction = (action: 'reboot' | 'toggle') => {
+    if (action === 'reboot') {
+      setServerPower('rebooting');
+      setTimeout(() => setServerPower('on'), 2500);
+    } else {
+      setServerPower((prev) => (prev === 'on' ? 'off' : 'on'));
+    }
+  };
+
   const defaultPlans = [
     {
       id: 'd9a48911-3755-46ae-a2e6-7649d363296c',
-      name: 'Dedicated Dual Xeon E5-2670',
-      tagline: 'Lựa chọn tiết kiệm cho hệ thống ERP, Kế toán & Ảo hóa nhẹ',
+      name: 'Dell R630 Dual Xeon',
+      model: 'Dell PowerEdge R630',
+      workload: 'Hệ thống ERP nội bộ, Kế toán Doanh nghiệp & Ảo hóa nhẹ (5-15 VM)',
       monthlyPrice: 1990000,
       yearlyPrice: 1592000 * 12,
-      cpu: '2x Intel Xeon E5-2670 (16 Core / 32 Thread)',
-      ram: '64 GB RAM DDR3 ECC',
+      cpu: '2x Intel Xeon E5-2670v3',
+      cores: '24 Cores / 48 Threads (2.3GHz - 3.1GHz)',
+      ram: '64 GB DDR4 ECC Registered',
       storage: '2x 480 GB SSD Enterprise (Hardware RAID 1)',
-      network: '1 Gbps Shared / 100 Mbps Cam kết quốc tế',
-      ip: '1 IPv4 Tĩnh Riêng + /64 IPv6',
-      ipmi: 'IPMI / KVM HTML5 Toàn Quyền Quản Trị Từ Xa',
+      network: '1 Gbps Dedicated Port (100 Mbps Quốc tế)',
+      ip: '1 Clean IPv4 Tĩnh + /64 IPv6',
+      ipmi: 'iDRAC 8 Enterprise Dedicated Port',
+      setupTime: 'Bàn giao 2 Giờ',
+      metrics: { powerUsage: '220W', chassisTemp: '22°C', psuRedundant: '2x 750W Titanium' },
       features: [
-        'Toàn quyền 100% phần cứng (Bare-metal)',
-        'Cổng mạng 1Gbps không giới hạn băng thông trong nước',
-        'Phần cứng chính hãng Dell PowerEdge / Supermicro',
-        'Miễn phí cài đặt Proxmox, VMware ESXi, Ubuntu, Windows Server',
-        'Hỗ trợ thay thế linh kiện hỏng hóc trong 30 phút'
+        'Toàn quyền 100% Bare-metal không chia sẻ phần cứng',
+        'Băng thông trong nước không giới hạn kết nối Core Switch 10Gbps',
+        'iDRAC 8 Enterprise HTML5 Virtual KVM & Virtual Media',
+        'Miễn phí cài đặt Ubuntu, Debian, Windows Server, Proxmox VE',
+        'Cam kết thay thế linh kiện hỏng hóc trong 30 phút'
       ],
-      badge: null,
       popular: false,
     },
     {
       id: '71607590-b198-4ae0-a29a-fbbe8efb04cb',
-      name: 'Dedicated Dual Xeon E5-2680v4',
-      tagline: 'Cấu hình tiêu chuẩn cho Doanh nghiệp, Sàn TMĐT & Ảo hóa Proxmox',
+      name: 'Dell R740 Dual Xeon v4',
+      model: 'Dell PowerEdge R740 2U',
+      workload: 'Cụm Ảo hóa Proxmox/VMware (30-60 VPS), Sàn TMĐT & Cơ sở dữ liệu lớn',
       monthlyPrice: 2990000,
       yearlyPrice: 2392000 * 12,
-      cpu: '2x Intel Xeon E5-2680v4 (28 Core / 56 Thread)',
-      ram: '128 GB RAM DDR4 ECC',
-      storage: '2x 960 GB NVMe Gen4 Enterprise (RAID 1)',
-      network: '1 Gbps Dedicated Port / 200 Mbps Quốc tế',
-      ip: '2 IPv4 Tĩnh Riêng + Hỗ trợ /29 Subnet',
-      ipmi: 'iDRAC 8 Enterprise / HTML5 Virtual Media',
+      cpu: '2x Intel Xeon E5-2680v4',
+      cores: '28 Cores / 56 Threads (2.4GHz - 3.3GHz)',
+      ram: '128 GB DDR4 ECC Registered',
+      storage: '2x 960 GB NVMe Gen4 Enterprise (Hardware RAID 1)',
+      network: '1 Gbps Dedicated Port (200 Mbps Quốc tế)',
+      ip: '2 Clean IPv4 Tĩnh + Hỗ trợ cấp Subnet /29',
+      ipmi: 'iDRAC 9 Enterprise HTML5 Remote KVM',
+      setupTime: 'Bàn giao 1 - 2 Giờ',
+      metrics: { powerUsage: '340W', chassisTemp: '24°C', psuRedundant: '2x 1100W Platinum' },
       features: [
-        'Hiệu năng 56 Threads cực mạnh cho cụm 20-40 VPS',
-        'Tốc độ đọc ghi NVMe 7,000MB/s IOPS 800,000',
-        'Bảo vệ chống DDoS L3/L4/L7 500Gbps phần cứng',
+        'Hiệu năng 56 Threads cực mạnh cho cụm Ảo hóa Proxmox / ESXi',
+        'Tốc độ đọc ghi NVMe 7,000MB/s IOPS 800,000 chuyên dụng',
+        'Bảo vệ chống DDoS L3/L4/L7 500Gbps phần cứng trực tiếp',
         'Đặt tại Datacenter Viettel IDC / VNPT Tier-III chuẩn quốc tế',
-        'Cam kết chất lượng dịch vụ SLA 99.99% bằng hợp đồng',
-        'Kỹ sư hỗ trợ cài đặt cụm ảo hóa Proxmox / KVM miễn phí'
+        'Cam kết chất lượng dịch vụ SLA 99.99% bằng hợp đồng pháp lý',
+        'Kỹ sư SEN CloudHost hỗ trợ dựng cụm Cluster KVM miễn phí'
       ],
-      badge: 'Bán chạy nhất',
       popular: true,
     },
     {
       id: 'fa49fecf-4cf6-4ffc-a3b0-4f513ba6f595',
-      name: 'Dedicated AMD EPYC 7502',
-      tagline: 'Quái thú hiệu năng cho Big Data, AI Inference & Cụm Kubernetes',
+      name: 'Dell R6515 AMD EPYC',
+      model: 'Dell PowerEdge R6515 Zen 2',
+      workload: 'AI Inference, Big Data Analytics, Sàn Chứng khoán & Cụm Kubernetes',
       monthlyPrice: 4990000,
       yearlyPrice: 3992000 * 12,
-      cpu: 'AMD EPYC 7502 (32 Core / 64 Thread, 128MB Cache)',
-      ram: '256 GB RAM DDR4 ECC Registered',
-      storage: '2x 1.92 TB NVMe Gen4 Enterprise RAID',
-      network: '10 Gbps Uplink Port / 500 Mbps Quốc tế',
-      ip: '5 IPv4 Tĩnh Riêng (/29 Subnet)',
-      ipmi: 'IPMI 2.0 / KVM Over IP Dedicated Network',
+      cpu: 'AMD EPYC 7502 (128MB Cache L3)',
+      cores: '32 Cores / 64 Threads (2.5GHz - 3.35GHz)',
+      ram: '256 GB DDR4 ECC Registered 3200MHz',
+      storage: '2x 1.92 TB NVMe Gen4 Enterprise U.2 (Hardware RAID 1)',
+      network: '10 Gbps Uplink Port (500 Mbps Quốc tế)',
+      ip: '5 Clean IPv4 Tĩnh (/29 Subnet Riêng)',
+      ipmi: 'iDRAC 9 Enterprise Dedicated Out-of-band',
+      setupTime: 'Bàn giao trong ngày',
+      metrics: { powerUsage: '380W', chassisTemp: '25°C', psuRedundant: '2x 1400W Titanium' },
       features: [
-        'Kiến trúc AMD EPYC Zen 2 đỉnh cao 64 Luồng xử lý',
-        'Dung lượng RAM khủng 256GB ECC đáp ứng hàng triệu request',
-        'Cổng Uplink 10Gbps siêu tốc kết nối trực tiếp Core Switch',
-        'Tặng kèm tường lửa phần cứng WAF Shield Enterprise',
-        'Hạ tầng nguồn điện kép 2N độc lập với máy phát dự phòng',
-        'Đội ngũ kỹ sư VIP hỗ trợ 1-1 riêng biệt 24/7'
+        'Kiến trúc AMD EPYC Zen 2 đỉnh cao 64 Luồng xử lý dữ liệu lớn',
+        'Dung lượng RAM 256GB ECC đáp ứng hàng chục triệu request đồng thời',
+        'Cổng Uplink quang 10Gbps kết nối trực tiếp Core Switch Datacenter',
+        'Tặng kèm bản quyền WAF Shield Enterprise & Giám sát SOC 24/7',
+        'Hạ tầng nguồn điện kép 2N độc lập với 3 máy phát dự phòng Kohler',
+        'Đội ngũ kỹ sư Level 3 hỗ trợ kỹ thuật 1-1 riêng biệt 24/7'
       ],
-      badge: 'Hiệu năng đỉnh cao',
       popular: false,
     },
   ];
@@ -131,297 +153,483 @@ export default function DedicatedServersPage() {
   const faqs = [
     {
       q: 'Máy chủ vật lý Dedicated Server được bàn giao trong bao lâu?',
-      a: 'Đối với các cấu hình tiêu chuẩn có sẵn tại Datacenter, máy chủ sẽ được cài đặt hệ điều hành (Ubuntu, Debian, AlmaLinux, Windows Server, Proxmox VE, VMware ESXi) và bàn giao thông tin đăng nhập IPMI / SSH trong vòng 2 đến 4 giờ làm việc. Với các cấu hình tùy biến phần cứng theo yêu cầu, thời gian bàn giao tối đa trong vòng 24 giờ.'
+      a: 'Đối với các cấu hình tiêu chuẩn có sẵn tại Datacenter (Viettel IDC Pháp Vân / VNPT Nam Thăng Long), máy chủ sẽ được cài đặt hệ điều hành theo yêu cầu (Ubuntu, Debian, AlmaLinux, Windows Server, Proxmox VE, VMware ESXi) và bàn giao thông tin đăng nhập IPMI / SSH trong vòng 1 đến 2 giờ làm việc.'
     },
     {
-      q: 'Tôi có toàn quyền điều khiển phần cứng qua IPMI/KVM không?',
-      a: 'Hoàn toàn có! Khách hàng được cung cấp tài khoản IPMI / iDRAC riêng biệt có kết nối mạng Out-of-Band an toàn, cho phép bạn bật/tắt nguồn máy chủ, reboot cứng, gắn file ISO cài lại hệ điều hành và theo dõi cảm biến nhiệt độ phần cứng từ xa 24/7 mà không cần qua nhân viên kỹ thuật.'
+      q: 'Tôi có toàn quyền điều khiển phần cứng qua IPMI/iDRAC không?',
+      a: 'Hoàn toàn có. Khách hàng được cấp tài khoản iDRAC 9 Enterprise riêng biệt kết nối qua mạng Out-of-Band an toàn, cho phép bạn bật/tắt nguồn máy chủ, hard reboot, gắn file ISO cài lại OS từ xa và theo dõi cảm biến nhiệt độ phần cứng 24/7 mà không cần qua nhân viên kỹ thuật.'
     },
     {
-      q: 'Chính sách bảo hành và thay thế linh kiện phần cứng như thế nào?',
-      a: 'Chúng tôi cam kết thay thế linh kiện phần cứng hỏng hóc (RAM, Ổ cứng SSD/NVMe, Nguồn Redundant, Quạt Fan) trong vòng tối đa 30 phút. Kho linh kiện dự phòng 1:1 luôn sẵn sàng tại chỗ trong Datacenter để đảm bảo máy chủ của bạn không bị gián đoạn.'
+      q: 'Chính sách thay thế linh kiện phần cứng hỏng hóc (SLA) như thế nào?',
+      a: 'Chúng tôi cam kết thay thế linh kiện phần cứng hỏng hóc (RAM, Ổ cứng NVMe/SSD, Nguồn Redundant, Quạt tản nhiệt) trong vòng tối đa 30 phút. Kho linh kiện dự phòng 1:1 luôn sẵn sàng tại chỗ trong phòng máy Datacenter.'
     },
     {
       q: 'Tôi có thể thuê thêm dải địa chỉ IP tĩnh (Subnet /29, /28, /27) không?',
-      a: 'Có, chúng tôi hỗ trợ cấp phát thêm dải IP tĩnh Clean IPv4 với định tuyến trực tiếp vào máy chủ của bạn, phục vụ nhu cầu tạo nhiều VPS ảo hóa hoặc chạy đa dịch vụ với chi phí chỉ từ 50.000đ/IP/tháng.'
+      a: 'Có. Chúng tôi hỗ trợ cấp phát dải IP tĩnh Clean IPv4 với định tuyến trực tiếp vào cổng mạng Dedicated của bạn, phục vụ nhu cầu tạo nhiều VPS ảo hóa hoặc chạy đa dịch vụ với chi phí chỉ từ 50.000đ/IP/tháng.'
     }
   ];
 
   return (
-    <div className="min-h-screen bg-slate-900 text-slate-100 selection:bg-purple-500 selection:text-white">
-      {/* 1. HERO SECTION */}
-      <section className="relative overflow-hidden pt-20 pb-32">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[600px] bg-gradient-to-b from-indigo-600/20 via-purple-600/10 to-transparent blur-3xl pointer-events-none" />
-        <div className="absolute -top-32 right-10 w-96 h-96 bg-purple-500/20 rounded-full blur-[100px] pointer-events-none" />
-        <div className="absolute top-40 -left-20 w-80 h-80 bg-blue-500/15 rounded-full blur-[90px] pointer-events-none" />
+    <div className="min-h-screen bg-[#090d16] text-slate-100 selection:bg-purple-500 selection:text-white font-sans">
+      
+      {/* 1. HERO SECTION: BARE-METAL TELEMETRY CONSOLE */}
+      <section className="relative pt-16 pb-20 border-b border-slate-800/80 overflow-hidden">
+        {/* Technical Grid Blueprint */}
+        <div 
+          className="absolute inset-0 opacity-[0.06] pointer-events-none" 
+          style={{ 
+            backgroundImage: `linear-gradient(to right, #a855f7 1px, transparent 1px), linear-gradient(to bottom, #a855f7 1px, transparent 1px)`,
+            backgroundSize: '40px 40px' 
+          }}
+        />
+        <div className="absolute top-0 right-1/4 w-[600px] h-[300px] bg-purple-600/10 blur-[120px] pointer-events-none" />
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-slate-800/90 border border-slate-700 text-purple-300 text-xs font-bold uppercase tracking-wider mb-6 shadow-xl">
-            <div className="flex items-center gap-1.5 border-r border-slate-700 pr-3">
-              <DellLogo className="w-4 h-4" />
-              <span>Dell EMC</span>
-            </div>
-            <div className="flex items-center gap-1.5 border-r border-slate-700 pr-3">
-              <IntelLogo className="w-4 h-4" />
-              <span>Intel Xeon</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <AmdLogo className="w-4 h-4" />
-              <span>AMD EPYC</span>
-            </div>
-          </div>
-
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-white max-w-5xl mx-auto leading-tight mb-6">
-            Sức Mạnh Phần Cứng Độc Quyền Với{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-amber-300">
-              Dedicated Servers
-            </span>
-          </h1>
-
-          <p className="text-base sm:text-xl text-slate-300 max-w-3xl mx-auto mb-10 leading-relaxed font-normal">
-            Toàn quyền sử dụng 100% tài nguyên CPU, RAM ECC và Ổ cứng NVMe Gen4 Enterprise. 
-            Đặt tại Datacenter Tier-III Viettel / VNPT, kết nối cổng mạng 10Gbps và bảo vệ Anti-DDoS 500Gbps.
-          </p>
-
-          {/* Billing Switch */}
-          <div className="inline-flex items-center p-1.5 rounded-2xl bg-slate-800/90 backdrop-blur-md border border-slate-700 shadow-2xl">
-            <button
-              onClick={() => setBillingCycle('monthly')}
-              className={`px-6 py-2.5 rounded-xl text-xs font-black transition-all ${
-                billingCycle === 'monthly'
-                  ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/30'
-                  : 'text-slate-400 hover:text-white'
-              }`}
-            >
-              Thanh Toán Theo Tháng
-            </button>
-            <button
-              onClick={() => setBillingCycle('yearly')}
-              className={`px-6 py-2.5 rounded-xl text-xs font-black transition-all flex items-center gap-2 ${
-                billingCycle === 'yearly'
-                  ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/30'
-                  : 'text-slate-400 hover:text-white'
-              }`}
-            >
-              <span>Thanh Toán Theo Năm</span>
-              <span className="px-2 py-0.5 rounded-full bg-emerald-500 text-white text-[10px] font-black uppercase">
-                Tiết kiệm 20%
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          {/* Engineering Status Bar */}
+          <div className="flex flex-wrap items-center justify-between gap-4 p-3.5 mb-10 rounded-2xl bg-[#0d1424] border border-slate-800 text-xs font-mono">
+            <div className="flex items-center gap-3">
+              <span className="flex items-center gap-1.5 text-purple-400 font-bold">
+                <span className="w-2 h-2 rounded-full bg-purple-400 animate-pulse" />
+                HARDWARE STATUS: 100% BARE-METAL ISOLATED
               </span>
-            </button>
+              <span className="text-slate-600 hidden sm:inline">|</span>
+              <span className="text-slate-300 hidden sm:inline">
+                DATACENTER: <strong className="text-white font-mono">Tier-III Viettel IDC &amp; VNPT</strong>
+              </span>
+            </div>
+
+            <div className="flex items-center gap-4 text-slate-400">
+              <span>UPTIME: <strong className="text-white font-mono">99.99%</strong></span>
+              <span>NETWORK: <strong className="text-purple-400 font-mono">10Gbps Core Uplink</strong></span>
+              <span>DDOS: <strong className="text-emerald-400 font-mono">500Gbps Hardware</strong></span>
+            </div>
           </div>
-        </div>
-      </section>
 
-      {/* 2. PRICING CARDS */}
-      <section className="relative -mt-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-28">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
-          {plans.map((plan) => {
-            const displayPrice = billingCycle === 'yearly' ? Math.round(plan.yearlyPrice / 12) : plan.monthlyPrice;
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            
+            {/* Left Headline */}
+            <div className="lg:col-span-7 space-y-6">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-purple-950/60 border border-purple-800/60 text-purple-300 text-xs font-mono">
+                <Server className="w-3.5 h-3.5 text-purple-400" />
+                DELL POWEREDGE &amp; AMD EPYC ENTERPRISE BARE-METAL
+              </div>
 
-            return (
-              <div
-                key={plan.id}
-                className={`relative rounded-3xl bg-slate-800/90 backdrop-blur-md p-8 border transition-all duration-300 flex flex-col justify-between ${
-                  plan.popular
-                    ? 'border-purple-500 shadow-2xl shadow-purple-500/20 ring-2 ring-purple-500/40 bg-gradient-to-b from-slate-800 to-slate-900 lg:-translate-y-4'
-                    : 'border-slate-700/80 shadow-xl hover:border-slate-600 hover:shadow-2xl'
-                }`}
-              >
-                {plan.badge && (
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                    <span className="px-4 py-1.5 rounded-full bg-gradient-to-r from-purple-500 to-pink-600 text-white text-xs font-black uppercase tracking-wider shadow-lg">
-                      {plan.badge}
-                    </span>
+              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.15]">
+                Toàn Quyền Phần Cứng Với{' '}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-amber-300 font-mono">
+                  Dedicated Servers
+                </span>
+              </h1>
+
+              <p className="text-slate-300 text-base sm:text-lg leading-relaxed max-w-2xl font-normal">
+                Không chia sẻ CPU, không hao hụt tài nguyên ảo hóa. Trang bị vi xử lý Dual Intel Xeon / AMD EPYC, 
+                ổ cứng NVMe Enterprise Hardware RAID và toàn quyền quản trị Out-of-Band qua iDRAC 9 HTML5.
+              </p>
+
+              {/* Vendor Badges */}
+              <div className="flex flex-wrap items-center gap-3 pt-2">
+                <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0f172a] border border-slate-800 text-xs font-mono text-slate-300">
+                  <SiDell className="w-4 h-4 text-sky-400" />
+                  <span>Dell EMC PowerEdge</span>
+                </div>
+                <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0f172a] border border-slate-800 text-xs font-mono text-slate-300">
+                  <SiIntel className="w-4 h-4 text-blue-400" />
+                  <span>Intel Xeon Scalable</span>
+                </div>
+                <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0f172a] border border-slate-800 text-xs font-mono text-slate-300">
+                  <SiAmd className="w-4 h-4 text-rose-500" />
+                  <span>AMD EPYC Zen 2</span>
+                </div>
+              </div>
+
+              {/* Supported Hypervisors & OS */}
+              <div className="p-4 rounded-xl bg-[#0c1322] border border-slate-800 text-xs font-mono space-y-2">
+                <div className="text-slate-400 flex items-center justify-between">
+                  <span>Supported OS &amp; Hypervisors:</span>
+                  <span className="text-purple-400">1-Click ISO Mount</span>
+                </div>
+                <div className="flex flex-wrap items-center gap-3 text-slate-300">
+                  <span className="flex items-center gap-1.5"><SiProxmox className="w-3.5 h-3.5 text-amber-500" /> Proxmox VE</span>
+                  <span className="flex items-center gap-1.5"><SiVmware className="w-3.5 h-3.5 text-slate-400" /> VMware ESXi</span>
+                  <span className="flex items-center gap-1.5"><SiUbuntu className="w-3.5 h-3.5 text-orange-500" /> Ubuntu Server</span>
+                  <span className="flex items-center gap-1.5"><SiDebian className="w-3.5 h-3.5 text-rose-500" /> Debian</span>
+                  <span>Windows Server 2022</span>
+                </div>
+              </div>
+
+            </div>
+
+            {/* Right iDRAC Remote Console Simulator */}
+            <div className="lg:col-span-5">
+              <div className="rounded-2xl bg-[#0b1320] border border-slate-800 p-6 shadow-2xl space-y-5">
+                <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+                  <div className="flex items-center gap-2">
+                    <span className="w-3 h-3 rounded-full bg-rose-500/80" />
+                    <span className="w-3 h-3 rounded-full bg-amber-500/80" />
+                    <span className="w-3 h-3 rounded-full bg-emerald-500/80" />
+                    <span className="text-xs font-mono text-slate-400 ml-2">iDRAC 9 Enterprise v5.10</span>
                   </div>
-                )}
+                  <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded border ${
+                    serverPower === 'on' 
+                      ? 'bg-emerald-950/80 text-emerald-400 border-emerald-800/60' 
+                      : serverPower === 'rebooting' 
+                      ? 'bg-amber-950/80 text-amber-400 border-amber-800/60' 
+                      : 'bg-rose-950/80 text-rose-400 border-rose-800/60'
+                  }`}>
+                    {serverPower === 'on' ? 'POWER ON' : serverPower === 'rebooting' ? 'REBOOTING...' : 'POWER OFF'}
+                  </span>
+                </div>
 
-                <div>
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="w-12 h-12 rounded-2xl bg-purple-500/10 border border-purple-500/20 text-purple-400 flex items-center justify-center font-bold">
-                      <Server className="w-6 h-6" />
-                    </div>
-                    <span className="px-2.5 py-1 rounded-full bg-slate-700/60 border border-slate-600 text-[11px] font-bold text-slate-300">
-                      Bare-Metal 100%
-                    </span>
+                {/* Live Telemetry Sensors */}
+                <div className="grid grid-cols-3 gap-2 text-center font-mono">
+                  <div className="p-2.5 rounded-xl bg-[#0e1627] border border-slate-800">
+                    <div className="text-[10px] text-slate-500 uppercase">Chassis Temp</div>
+                    <div className="text-sm font-extrabold text-emerald-400 mt-0.5">23.5 °C</div>
                   </div>
-
-                  <h3 className="text-2xl font-black text-white mb-1">{plan.name}</h3>
-                  <p className="text-xs text-slate-400 mb-6 min-h-[32px]">{plan.tagline}</p>
-
-                  <div className="mb-6 pb-6 border-b border-slate-700/60">
-                    <div className="flex items-baseline gap-1">
-                      <span className="text-4xl font-black text-white">
-                        {displayPrice.toLocaleString('vi-VN')}
-                      </span>
-                      <span className="text-sm text-slate-400 font-bold">đ/tháng</span>
-                    </div>
-                    {billingCycle === 'yearly' && (
-                      <p className="text-xs text-emerald-400 font-semibold mt-1">
-                        Thanh toán {plan.yearlyPrice.toLocaleString('vi-VN')} đ/năm (Tiết kiệm 20%)
-                      </p>
-                    )}
+                  <div className="p-2.5 rounded-xl bg-[#0e1627] border border-slate-800">
+                    <div className="text-[10px] text-slate-500 uppercase">Fan Speed</div>
+                    <div className="text-sm font-extrabold text-sky-400 mt-0.5">4,800 RPM</div>
                   </div>
-
-                  <div className="space-y-3 mb-8 text-sm">
-                    <div className="p-3 rounded-2xl bg-slate-900/60 border border-slate-700/50 text-slate-200 font-bold flex items-center gap-2.5">
-                      <Cpu className="w-4 h-4 text-purple-400 shrink-0" />
-                      <span className="truncate">{plan.cpu}</span>
-                    </div>
-                    <div className="p-3 rounded-2xl bg-slate-900/60 border border-slate-700/50 text-slate-200 font-bold flex items-center gap-2.5">
-                      <Server className="w-4 h-4 text-blue-400 shrink-0" />
-                      <span>{plan.ram}</span>
-                    </div>
-                    <div className="p-3 rounded-2xl bg-slate-900/60 border border-slate-700/50 text-slate-200 font-bold flex items-center gap-2.5">
-                      <HardDrive className="w-4 h-4 text-pink-400 shrink-0" />
-                      <span className="truncate">{plan.storage}</span>
-                    </div>
-                    <div className="p-3 rounded-2xl bg-slate-900/60 border border-slate-700/50 text-slate-200 font-bold flex items-center gap-2.5">
-                      <Activity className="w-4 h-4 text-emerald-400 shrink-0" />
-                      <span className="truncate">{plan.network}</span>
-                    </div>
-                    <div className="p-3 rounded-2xl bg-slate-900/60 border border-slate-700/50 text-slate-200 font-bold flex items-center gap-2.5">
-                      <Terminal className="w-4 h-4 text-amber-400 shrink-0" />
-                      <span className="truncate">{plan.ipmi}</span>
-                    </div>
-
-                    <div className="pt-3 space-y-2.5">
-                      {plan.features.map((feat, idx) => (
-                        <div key={idx} className="flex items-start gap-2.5 text-xs text-slate-300">
-                          <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                          <span>{feat}</span>
-                        </div>
-                      ))}
-                    </div>
+                  <div className="p-2.5 rounded-xl bg-[#0e1627] border border-slate-800">
+                    <div className="text-[10px] text-slate-500 uppercase">Power Draw</div>
+                    <div className="text-sm font-extrabold text-purple-400 mt-0.5">340 W</div>
                   </div>
                 </div>
 
-                <button
-                  onClick={() => handleOrder(plan)}
-                  className={`w-full py-4 rounded-2xl font-black text-sm transition-all flex items-center justify-center gap-2 shadow-lg ${
-                    plan.popular
-                      ? 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white shadow-purple-500/25 hover:shadow-purple-500/40 hover:scale-[1.02]'
-                      : 'bg-slate-700 hover:bg-slate-600 text-white'
-                  }`}
-                >
-                  <ShoppingCart className="w-4 h-4" />
-                  <span>Thuê Máy Chủ Vật Lý Ngay</span>
-                </button>
+                {/* Interactive IPMI Actions */}
+                <div className="space-y-2 font-mono text-xs">
+                  <div className="text-slate-500">// Out-of-Band Hardware Controls</div>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => handlePowerAction('reboot')}
+                      disabled={serverPower === 'rebooting'}
+                      className="flex-1 py-2.5 rounded-xl bg-[#0f172a] hover:bg-slate-800 border border-slate-700 text-white font-bold transition-all flex items-center justify-center gap-1.5"
+                    >
+                      <RefreshCw className={`w-3.5 h-3.5 ${serverPower === 'rebooting' ? 'animate-spin' : ''}`} />
+                      Hard Reboot
+                    </button>
+                    <button
+                      onClick={() => handlePowerAction('toggle')}
+                      className="flex-1 py-2.5 rounded-xl bg-[#0f172a] hover:bg-slate-800 border border-slate-700 text-white font-bold transition-all flex items-center justify-center gap-1.5"
+                    >
+                      <Power className="w-3.5 h-3.5 text-rose-400" />
+                      {serverPower === 'on' ? 'Power Down' : 'Power Up'}
+                    </button>
+                  </div>
+                </div>
+
+                <div className="pt-2">
+                  <a
+                    href="#spec-matrix"
+                    className="w-full py-3.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs font-mono flex items-center justify-center gap-2 transition-all shadow-lg shadow-purple-600/20"
+                  >
+                    <span>XEM BẢNG CẤU HÌNH VÀ BÁO GIÁ</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </a>
+                </div>
               </div>
-            );
-          })}
+            </div>
+
+          </div>
+
         </div>
       </section>
 
-      {/* 3. REALISTIC HARDWARE & INFRASTRUCTURE BREAKDOWN */}
-      <section className="py-24 bg-slate-950/80 border-t border-slate-800 relative overflow-hidden">
+      {/* 2. THREE CORE HARDWARE ARCHITECTURE SCHEMATICS */}
+      <section className="py-24 bg-[#070b12] border-b border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 text-xs font-bold uppercase tracking-wider mb-3">
-              <Server className="w-3.5 h-3.5" />
-              Phần Cứng Enterprise & Tiêu Chuẩn Trung Tâm Dữ Liệu
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-purple-950 text-purple-400 text-xs font-mono mb-3 border border-purple-800">
+              <Layers className="w-3.5 h-3.5" />
+              ENTERPRISE BARE-METAL INFRASTRUCTURE
             </div>
-            <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight mb-4">
-              Hạ Tầng Vật Lý Thực Tế Chuẩn Tier-III Quốc Tế
+            <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
+              3 Trụ Cột Phần Cứng Chuẩn DataCenter Tier-III
             </h2>
-            <p className="text-slate-400 text-sm sm:text-base leading-relaxed">
-              Toàn bộ hệ thống máy chủ vật lý được lắp đặt trong các tủ Rack chuyên dụng 42U tại Viettel IDC & VNPT, trang bị nguồn điện dự phòng kép N+1 và hệ thống mạng quang tốc độ 100Gbps Backbone.
+            <p className="text-slate-400 text-sm sm:text-base mt-3 leading-relaxed font-normal">
+              Được lắp ráp và kiểm tra tải 72 giờ liên tục bằng linh kiện chính hãng trước khi bàn giao tới khách hàng.
             </p>
           </div>
 
-          {/* 3 Realistic Datacenter Visual Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-            <div className="bg-slate-900/90 rounded-3xl p-6 border border-slate-800 overflow-hidden flex flex-col justify-between group hover:border-purple-500/50 transition-all">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            {/* Schematic 1: Hardware RAID & NVMe Engine */}
+            <div className="p-6 rounded-3xl bg-[#0c1322] border border-slate-800 flex flex-col justify-between space-y-6">
               <div>
-                <div className="h-52 rounded-2xl overflow-hidden mb-6 relative bg-slate-800">
-                  <img
-                    src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=800&q=80"
-                    alt="Dell PowerEdge Server Rack Tier 3"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent" />
-                  <span className="absolute bottom-3 left-3 px-3 py-1 rounded-lg bg-purple-600/90 text-white text-[11px] font-black uppercase">
-                    Dell PowerEdge R740 / R6515
-                  </span>
+                <div className="p-4 rounded-2xl bg-[#060a12] border border-slate-800 mb-6 font-mono text-xs">
+                  <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
+                    <span>HARDWARE RAID-10 STORAGE</span>
+                    <span className="text-emerald-400">800k IOPS</span>
+                  </div>
+                  <div className="space-y-2 text-slate-300 text-[11px]">
+                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                      <span>PERC H730P Controller</span>
+                      <span className="text-sky-400">2GB NV Cache</span>
+                    </div>
+                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                      <span>Drive 01 + Drive 02</span>
+                      <span className="text-emerald-400 font-bold">Mirror RAID 1</span>
+                    </div>
+                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                      <span>Sequential Read/Write</span>
+                      <span className="text-purple-400 font-bold">7,200 MB/s</span>
+                    </div>
+                  </div>
                 </div>
-                <h3 className="text-xl font-black text-white mb-2">Phần Cứng Chuyên Dụng 100% Brand-New</h3>
-                <p className="text-xs text-slate-400 leading-relaxed mb-4">
-                  Sử dụng khung máy chủ chính hãng Dell PowerEdge và Supermicro chuẩn Rack 1U/2U, bộ vi xử lý Intel Xeon Scalable và AMD EPYC cùng RAM DDR4/DDR5 ECC tự sửa lỗi.
+
+                <h3 className="text-lg font-bold text-white mb-2">Hardware RAID &amp; NVMe Gen4</h3>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  Card điều khiển RAID phần cứng Dell PERC chuyên dụng có pin dự phòng bảo vệ bộ nhớ đệm Cache. 
+                  Đảm bảo tốc độ đọc ghi dữ liệu tức thì và tự động tái tạo dữ liệu khi thay thế ổ cứng mới.
                 </p>
               </div>
-              <ul className="space-y-2 text-xs text-slate-300 pt-3 border-t border-slate-800">
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-purple-400" /> Nguồn kép Hot-plug Redundant 750W/1100W</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-purple-400" /> Thay thế linh kiện hỏng trong 30 phút</li>
-              </ul>
+
+              <div className="pt-4 border-t border-slate-800/80 text-xs font-mono text-slate-300 flex items-center justify-between">
+                <span>Hot-Swap Drive:</span>
+                <strong className="text-emerald-400">Thay thế không cần tắt máy</strong>
+              </div>
             </div>
 
-            <div className="bg-slate-900/90 rounded-3xl p-6 border border-slate-800 overflow-hidden flex flex-col justify-between group hover:border-pink-500/50 transition-all">
+            {/* Schematic 2: Out-of-Band Remote KVM */}
+            <div className="p-6 rounded-3xl bg-[#0c1322] border border-slate-800 flex flex-col justify-between space-y-6">
               <div>
-                <div className="h-52 rounded-2xl overflow-hidden mb-6 relative bg-slate-800">
-                  <img
-                    src="https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&w=800&q=80"
-                    alt="Core Fiber Switch 10Gbps Uplink"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent" />
-                  <span className="absolute bottom-3 left-3 px-3 py-1 rounded-lg bg-pink-600/90 text-white text-[11px] font-black uppercase">
-                    10Gbps Network Port
-                  </span>
+                <div className="p-4 rounded-2xl bg-[#060a12] border border-slate-800 mb-6 font-mono text-xs">
+                  <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
+                    <span>ISOLATED IPMI NETWORK</span>
+                    <span className="text-sky-400">OUT-OF-BAND</span>
+                  </div>
+                  <div className="space-y-2 text-slate-300 text-[11px]">
+                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                      <span>Dedicated Management NIC</span>
+                      <span className="text-emerald-400">100Mbps Isolated</span>
+                    </div>
+                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                      <span>Virtual Media ISO</span>
+                      <span className="text-sky-400">Mount from Local PC</span>
+                    </div>
+                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                      <span>BIOS / UEFI Console</span>
+                      <span className="text-purple-400 font-bold">HTML5 No-Java</span>
+                    </div>
+                  </div>
                 </div>
-                <h3 className="text-xl font-black text-white mb-2">Băng Thông Cáp Quang Không Giới Hạn</h3>
-                <p className="text-xs text-slate-400 leading-relaxed mb-4">
-                  Kết nối trực tiếp vào mạng lõi Backbone của các nhà mạng Viettel, VNPT, FPT Telecom với dung lượng truyền tải hơn 100Gbps, đảm bảo tốc độ tải file và streaming video mượt mà.
+
+                <h3 className="text-lg font-bold text-white mb-2">Quản Trị iDRAC 9 HTML5 Toàn Quyền</h3>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  Cung cấp đường truyền mạng riêng biệt cho phép truy cập console phần cứng ở mức BIOS/UEFI. 
+                  Cài đặt lại hệ điều hành qua file ISO tùy chỉnh và khôi phục sự cố từ xa mà không cần nhờ hỗ trợ trực tiếp.
                 </p>
               </div>
-              <ul className="space-y-2 text-xs text-slate-300 pt-3 border-t border-slate-800">
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-pink-400" /> Băng thông trong nước Unlimited 1Gbps</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-pink-400" /> Tuyến cáp quang biển quốc tế APG, AAG, SJC</li>
-              </ul>
+
+              <div className="pt-4 border-t border-slate-800/80 text-xs font-mono text-slate-300 flex items-center justify-between">
+                <span>Remote Access:</span>
+                <strong className="text-sky-400">Toàn quyền Root / IPMI 24/7</strong>
+              </div>
             </div>
 
-            <div className="bg-slate-900/90 rounded-3xl p-6 border border-slate-800 overflow-hidden flex flex-col justify-between group hover:border-blue-500/50 transition-all">
+            {/* Schematic 3: Tier-III 2N Redundancy */}
+            <div className="p-6 rounded-3xl bg-[#0c1322] border border-slate-800 flex flex-col justify-between space-y-6">
               <div>
-                <div className="h-52 rounded-2xl overflow-hidden mb-6 relative bg-slate-800">
-                  <img
-                    src="https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=800&q=80"
-                    alt="Remote IPMI / KVM Virtual Console"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent" />
-                  <span className="absolute bottom-3 left-3 px-3 py-1 rounded-lg bg-blue-600/90 text-white text-[11px] font-black uppercase">
-                    IPMI HTML5 Remote
-                  </span>
+                <div className="p-4 rounded-2xl bg-[#060a12] border border-slate-800 mb-6 font-mono text-xs">
+                  <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
+                    <span>2N POWER &amp; NETWORK BACKBONE</span>
+                    <span className="text-amber-400">SLA 99.99%</span>
+                  </div>
+                  <div className="space-y-2 text-slate-300 text-[11px]">
+                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                      <span>Dual PSU Feed A + B</span>
+                      <span className="text-emerald-400 font-bold">2N Independent</span>
+                    </div>
+                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                      <span>Diesel Generators</span>
+                      <span className="text-amber-400">Kohler 3x 2500kVA</span>
+                    </div>
+                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                      <span>Cooling System</span>
+                      <span className="text-sky-400">N+1 CRAC 22°C</span>
+                    </div>
+                  </div>
                 </div>
-                <h3 className="text-xl font-black text-white mb-2">Quản Trị Phần Cứng Từ Xa Toàn Quyền</h3>
-                <p className="text-xs text-slate-400 leading-relaxed mb-4">
-                  Tài khoản KVM Over IP / IPMI 2.0 riêng biệt cho phép truy cập console BIOS, kiểm tra phần cứng, bật/tắt nguồn và cài lại hệ điều hành từ file ISO riêng của bạn bất cứ lúc nào.
+
+                <h3 className="text-lg font-bold text-white mb-2">Hạ Tầng Datacenter Tier-III Chuẩn Quốc Tế</h3>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  Đặt tại Datacenter Viettel IDC và VNPT đạt chứng nhận TIA-942 Rated 3. Nguồn điện kép 2N độc lập 
+                  kèm máy phát điện dự phòng chạy liên tục 72 giờ và hệ thống làm mát chính xác duy trì nhiệt độ 22°C.
                 </p>
               </div>
-              <ul className="space-y-2 text-xs text-slate-300 pt-3 border-t border-slate-800">
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-blue-400" /> HTML5 Virtual Console không cần Java</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-blue-400" /> Virtual Media Mount ISO trực tiếp</li>
-              </ul>
+
+              <div className="pt-4 border-t border-slate-800/80 text-xs font-mono text-slate-300 flex items-center justify-between">
+                <span>Power Redundancy:</span>
+                <strong className="text-amber-400">2N Nguồn Kép Riêng Biệt</strong>
+              </div>
             </div>
+
           </div>
+
         </div>
       </section>
 
-      {/* 4. FAQ ACCORDION */}
-      <section className="py-20 bg-slate-950/60 border-t border-slate-800">
+      {/* 3. TECHNICAL SPECIFICATION MATRIX & PRICING */}
+      <section id="spec-matrix" className="py-24 bg-[#090d16] border-b border-slate-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-purple-950 text-purple-400 text-xs font-mono mb-3 border border-purple-800">
+                <Sliders className="w-3.5 h-3.5" />
+                HARDWARE SPEC SHEET
+              </div>
+              <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
+                Bảng So Sánh Cấu Hình Phần Cứng Dedicated Server
+              </h2>
+              <p className="text-slate-400 text-xs sm:text-sm mt-1 font-normal">
+                Cam kết 100% linh kiện chính hãng Dell / Intel / AMD với hợp đồng SLA rõ ràng.
+              </p>
+            </div>
+
+            {/* Billing Switch */}
+            <div className="inline-flex items-center p-1 rounded-xl bg-[#0c1322] border border-slate-800 font-mono text-xs">
+              <button
+                onClick={() => setBillingCycle('monthly')}
+                className={`px-4 py-2 rounded-lg font-bold transition-all ${
+                  billingCycle === 'monthly'
+                    ? 'bg-purple-600 text-white shadow'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                Thanh toán Tháng
+              </button>
+              <button
+                onClick={() => setBillingCycle('yearly')}
+                className={`px-4 py-2 rounded-lg font-bold transition-all flex items-center gap-1.5 ${
+                  billingCycle === 'yearly'
+                    ? 'bg-purple-600 text-white shadow'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <span>Thanh toán Năm</span>
+                <span className="px-1.5 py-0.2 rounded bg-emerald-500 text-white text-[10px] font-bold">
+                  -20%
+                </span>
+              </button>
+            </div>
+          </div>
+
+          {/* Matrix Table */}
+          <div className="rounded-2xl border border-slate-800 bg-[#0c1322] overflow-hidden shadow-2xl">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs font-mono">
+                <thead>
+                  <tr className="border-b border-slate-800 bg-[#080d17] text-slate-400">
+                    <th className="p-5 font-bold uppercase text-[11px] w-1/4">Thông Số Kỹ Thuật</th>
+                    {plans.map((p) => {
+                      const displayPrice = billingCycle === 'yearly' ? Math.round(p.yearlyPrice / 12) : p.monthlyPrice;
+                      return (
+                        <th key={p.id} className="p-5 text-white border-l border-slate-800/80 w-1/4">
+                          <div className="text-sm font-extrabold text-white">{p.name}</div>
+                          <div className="text-[11px] text-slate-400 font-sans font-normal">{p.model}</div>
+                          <div className="text-lg font-black text-purple-400 mt-2">
+                            {displayPrice.toLocaleString('vi-VN')} <span className="text-xs font-normal text-slate-400">đ/tháng</span>
+                          </div>
+                        </th>
+                      );
+                    })}
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-800/60 text-slate-300">
+                  <tr className="hover:bg-slate-900/40">
+                    <td className="p-4 font-bold text-slate-400">Vi Xử Lý (Processor)</td>
+                    {plans.map((p) => (
+                      <td key={p.id} className="p-4 border-l border-slate-800/60 text-white font-bold">{p.cpu}</td>
+                    ))}
+                  </tr>
+                  <tr className="hover:bg-slate-900/40">
+                    <td className="p-4 font-bold text-slate-400">Số Nhân / Luồng Xử Lý</td>
+                    {plans.map((p) => (
+                      <td key={p.id} className="p-4 border-l border-slate-800/60 text-purple-400 font-bold">{p.cores}</td>
+                    ))}
+                  </tr>
+                  <tr className="hover:bg-slate-900/40">
+                    <td className="p-4 font-bold text-slate-400">Bộ Nhớ RAM ECC</td>
+                    {plans.map((p) => (
+                      <td key={p.id} className="p-4 border-l border-slate-800/60 text-white font-bold">{p.ram}</td>
+                    ))}
+                  </tr>
+                  <tr className="hover:bg-slate-900/40">
+                    <td className="p-4 font-bold text-slate-400">Ổ Cứng Lưu Trữ Enterprise</td>
+                    {plans.map((p) => (
+                      <td key={p.id} className="p-4 border-l border-slate-800/60 text-emerald-400 font-bold">{p.storage}</td>
+                    ))}
+                  </tr>
+                  <tr className="hover:bg-slate-900/40">
+                    <td className="p-4 font-bold text-slate-400">Băng Thông &amp; Cổng Mạng</td>
+                    {plans.map((p) => (
+                      <td key={p.id} className="p-4 border-l border-slate-800/60 text-sky-400 font-bold">{p.network}</td>
+                    ))}
+                  </tr>
+                  <tr className="hover:bg-slate-900/40">
+                    <td className="p-4 font-bold text-slate-400">Địa Chỉ IP Tĩnh Riêng</td>
+                    {plans.map((p) => (
+                      <td key={p.id} className="p-4 border-l border-slate-800/60 text-slate-200">{p.ip}</td>
+                    ))}
+                  </tr>
+                  <tr className="hover:bg-slate-900/40">
+                    <td className="p-4 font-bold text-slate-400">Quản Trị Remote KVM</td>
+                    {plans.map((p) => (
+                      <td key={p.id} className="p-4 border-l border-slate-800/60 text-purple-300">{p.ipmi}</td>
+                    ))}
+                  </tr>
+                  <tr className="hover:bg-slate-900/40">
+                    <td className="p-4 font-bold text-slate-400">Thời Gian Bàn Giao Server</td>
+                    {plans.map((p) => (
+                      <td key={p.id} className="p-4 border-l border-slate-800/60 text-emerald-400 font-bold">{p.setupTime}</td>
+                    ))}
+                  </tr>
+                  <tr className="bg-[#080d17]">
+                    <td className="p-5 font-bold text-slate-400">Hành Động Khởi Tạo</td>
+                    {plans.map((p) => (
+                      <td key={p.id} className="p-5 border-l border-slate-800/60">
+                        <button
+                          onClick={() => handleOrder(p)}
+                          className={`w-full py-3 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-2 ${
+                            p.popular
+                              ? 'bg-purple-600 hover:bg-purple-500 text-white shadow-lg shadow-purple-600/30'
+                              : 'bg-slate-800 hover:bg-slate-700 text-white'
+                          }`}
+                        >
+                          <span>Khởi Tạo Server Ngay</span>
+                          <ArrowRight className="w-3.5 h-3.5" />
+                        </button>
+                      </td>
+                    ))}
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* 4. FAQ SECTION */}
+      <section className="py-20 bg-[#090d16] border-b border-slate-800">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-2xl sm:text-4xl font-black text-white mb-2">Câu Hỏi Thường Gặp Về Máy Chủ Vật Lý</h2>
-            <p className="text-slate-400 text-xs sm:text-sm">Giải đáp chi tiết trước khi bạn thuê máy chủ riêng</p>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-white">Câu Hỏi Thường Gặp Về Máy Chủ Vật Lý</h2>
+            <p className="text-slate-400 text-xs sm:text-sm mt-2 font-mono">SEN CLOUDHOST DEDICATED SERVERS FAQ</p>
           </div>
 
           <div className="space-y-3">
             {faqs.map((faq, idx) => (
               <div
                 key={idx}
-                className="bg-slate-900/90 rounded-2xl border border-slate-800 overflow-hidden transition-all"
+                className="bg-[#0c1322] rounded-2xl border border-slate-800 overflow-hidden transition-all"
               >
                 <button
                   onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
-                  className="w-full p-5 text-left font-bold text-sm sm:text-base text-white flex items-center justify-between gap-4 hover:text-purple-400 transition-colors"
+                  className="w-full p-5 text-left font-bold text-sm text-white flex items-center justify-between gap-4 hover:text-purple-400 transition-colors"
                 >
                   <span>{faq.q}</span>
                   {openFaq === idx ? (
@@ -431,7 +639,7 @@ export default function DedicatedServersPage() {
                   )}
                 </button>
                 {openFaq === idx && (
-                  <div className="px-5 pb-5 text-xs sm:text-sm text-slate-300 leading-relaxed border-t border-slate-800/60 pt-3">
+                  <div className="px-5 pb-5 text-xs text-slate-300 leading-relaxed border-t border-slate-800/60 pt-3 font-normal">
                     {faq.a}
                   </div>
                 )}
@@ -443,33 +651,42 @@ export default function DedicatedServersPage() {
 
       {/* 5. CALL TO ACTION */}
       <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="rounded-3xl bg-gradient-to-r from-purple-900 via-indigo-900 to-slate-900 p-8 sm:p-12 border border-purple-500/30 text-center relative overflow-hidden shadow-2xl">
-          <div className="relative z-10 max-w-3xl mx-auto">
-            <h3 className="text-2xl sm:text-4xl font-black text-white mb-4">
-              Cần Cấu Hình Máy Chủ Vật Lý Tùy Biến Theo Yêu Cầu?
+        <div className="rounded-3xl bg-gradient-to-r from-[#180e2b] via-[#0f091f] to-[#180e2b] p-8 sm:p-12 border border-purple-600/30 text-center relative overflow-hidden shadow-2xl">
+          <div className="relative z-10 max-w-3xl mx-auto space-y-6">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-purple-950 border border-purple-800 text-purple-400 text-xs font-mono">
+              <Zap className="w-3.5 h-3.5" />
+              PROVISIONING WITHIN 2 HOURS
+            </div>
+            
+            <h3 className="text-2xl sm:text-4xl font-extrabold text-white">
+              Cần Cấu Hình Phần Cứng Tùy Biến Theo Nhu Cầu?
             </h3>
-            <p className="text-slate-300 text-xs sm:text-base mb-8 leading-relaxed">
-              Chúng tôi hỗ trợ lắp đặt phần cứng theo yêu cầu (GPU NVIDIA Tesla, RAM lên đến 1TB, Ổ cứng SSD NVMe 15TB). Bàn giao nhanh chóng, hỗ trợ hợp đồng và xuất hóa đơn VAT đầy đủ.
+            
+            <p className="text-slate-300 text-xs sm:text-base leading-relaxed font-normal">
+              Đội ngũ kỹ sư SEN CloudHost hỗ trợ lắp ráp phần cứng tùy chọn (Dual Xeon Platinum, AMD EPYC 9004 Series, GPU NVIDIA A100, 10Gbps Uplink) theo yêu cầu riêng của doanh nghiệp.
             </p>
-            <div className="flex flex-wrap items-center justify-center gap-4">
+            
+            <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
               <button
                 onClick={() => {
-                  window.scrollTo({ top: 400, behavior: 'smooth' });
+                  const el = document.getElementById('spec-matrix');
+                  el?.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className="px-8 py-3.5 rounded-2xl bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-400 hover:to-pink-500 text-white font-black text-sm shadow-xl shadow-purple-500/25 transition-all hover:scale-105"
+                className="px-8 py-3.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs font-mono shadow-xl shadow-purple-600/25 transition-all hover:scale-105"
               >
-                Xem Bảng Giá & Đặt Thuê
+                Khởi Tạo Server Ngay
               </button>
               <Link
                 href="/contact"
-                className="px-8 py-3.5 rounded-2xl bg-white/10 hover:bg-white/20 text-white font-bold text-sm border border-white/20 transition-all"
+                className="px-8 py-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs font-mono border border-slate-700 transition-all"
               >
-                Liên Hệ Chuyên Viên Tư Vấn
+                Yêu Cầu Báo Giá Tùy Biến
               </Link>
             </div>
           </div>
         </div>
       </section>
+
     </div>
   );
 }

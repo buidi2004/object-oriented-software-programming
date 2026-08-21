@@ -7,9 +7,10 @@ import {
   Gamepad2, Server, Shield, Zap, CheckCircle2, ArrowRight, 
   Cpu, HardDrive, Terminal, Clock, ShoppingCart, Activity,
   Sliders, Award, RefreshCw, Layers, ShieldCheck, ChevronDown,
-  ChevronUp, Sparkles, Play, Globe, MessageSquare, Flame, Laptop
+  ChevronUp, Sparkles, Play, Globe, Flame, Radio, BarChart3, Wifi
 } from 'lucide-react';
-import { MinecraftLogo, Cs2Logo, RustGameLogo, AmdLogo } from '@/src/components/icons/BrandLogos';
+import { SiCounterstrike, SiRust, SiAmd } from 'react-icons/si';
+import { BiCube } from 'react-icons/bi';
 import { useCartStore } from '@/src/store/useCartStore';
 import { api } from '@/src/lib/api';
 
@@ -20,6 +21,11 @@ export default function GameServersServicePage() {
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('yearly');
   const [dbPlans, setDbPlans] = useState<any[]>([]);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+
+  // Live Telemetry simulation
+  const [tps, setTps] = useState<number>(20.0);
+  const [ping, setPing] = useState<number>(6.5);
+  const [packetDrops, setPacketDrops] = useState<number>(0);
 
   useEffect(() => {
     async function loadPlans() {
@@ -38,71 +44,82 @@ export default function GameServersServicePage() {
   const defaultPlans = [
     {
       id: '5ac0ac63-8ad6-44f5-8981-95334603b4fd',
-      name: 'Game Server Starter',
-      tagline: 'Phù hợp chơi cùng nhóm bạn từ 5 - 10 người',
+      name: 'Game Starter (5-15 Slots)',
+      tier: 'Community & Group Play',
+      workload: 'Chơi cùng nhóm bạn, sinh tồn Vanilla, Server nhỏ & Mini-Games',
       monthlyPrice: 149000,
       yearlyPrice: 119000 * 12,
-      cpu: '2 Core AMD Ryzen 9',
-      ram: '4 GB RAM DDR5',
-      storage: '25 GB NVMe Gen4',
-      bandwidth: '100 Mbps Unlimited',
-      slots: '10 - 20 Players',
+      cpu: '2 vCPU AMD Ryzen 9 7950X (5.7GHz)',
+      ram: '4 GB DDR5 ECC 5600MHz',
+      storage: '30 GB NVMe Gen4 (7,000MB/s)',
+      ddos: '500 Gbps Game Anti-DDoS',
+      slots: '15 Người chơi đồng thời',
+      tickrate: '20.0 TPS / 64-Tick',
+      backup: 'Tự động sao lưu 3 ngày',
+      metrics: { tpsAverage: '20.0 TPS', memoryLatency: '0.2 ms', pingLocal: '6 ms' },
       features: [
-        'Tối ưu riêng cho PaperMC, Spigot, Purpur',
-        'Bảo vệ chống DDoS Game Layer 7 lên đến 500Gbps',
-        'Khởi tạo máy chủ trong 60 giây',
-        'Web Console & Quản lý File trực quan',
-        'Tự động Backup dữ liệu hàng ngày'
+        'Hỗ trợ cài đặt 1-Click: PaperMC, Purpur, Fabric, Forge, CS2, Rust',
+        'Bảo vệ chống tấn công DDoS L3/L4/L7 chuyên biệt cho Game UDP',
+        'Web Console quản lý Server, file manager & live console log',
+        'Cấp phát IP tĩnh riêng kèm Port tiêu chuẩn trong 60 giây',
+        'Tự động khởi động lại (Auto-Restart) khi xảy ra crash server'
       ],
-      badge: null,
       popular: false,
     },
     {
-      id: '552009b7-4ca9-41fd-adc0-b6443ce5b0fa',
-      name: 'Game Server Pro (Match Server)',
-      tagline: 'Phổ biến cho Clan & Cộng đồng thi đấu 128 Tickrate',
+      id: '81dbbc5f-a316-4355-83c9-f131a48c6680',
+      name: 'Game Standard (20-50 Slots)',
+      tier: 'Semi-Pro & Competitive',
+      workload: 'Server cộng đồng vừa, Giải đấu CS2 128-Tick, Server Minecraft Modpack nặng',
       monthlyPrice: 299000,
       yearlyPrice: 239000 * 12,
-      cpu: '4 Core AMD Ryzen 9 5.0GHz',
-      ram: '8 GB RAM DDR5',
-      storage: '50 GB NVMe Gen4',
-      bandwidth: '1 Gbps Dedicated Port',
-      slots: '30 - 64 Players',
+      cpu: '4 vCPU AMD Ryzen 9 7950X (5.7GHz)',
+      ram: '8 GB DDR5 ECC 5600MHz',
+      storage: '60 GB NVMe Gen4 (7,000MB/s)',
+      ddos: '500 Gbps Game Anti-DDoS',
+      slots: '50 Người chơi đồng thời',
+      tickrate: '20.0 TPS / 128-Tick CS2',
+      backup: 'Tự động sao lưu 7 ngày',
+      metrics: { tpsAverage: '20.0 TPS', memoryLatency: '0.15 ms', pingLocal: '4 ms' },
       features: [
-        'Hỗ trợ Minecraft Mods, CS2 128-Tick, Rust Server',
-        'Anti-DDoS L3/L4/L7 Chuyên Dụng Cho Gaming',
-        'Web Terminal SSH & FTP File Manager Siêu Tốc',
-        'Cài đặt Plugin / Modpacks 1-Click',
-        'Độ trễ Ping nội địa < 5ms, Quốc tế < 35ms'
+        'Hiệu năng 4 Cores Ryzen 9 đơn nhân khủng 5.7GHz không nghẽn cổ chai',
+        'Hỗ trợ modpack nặng (>150 mods) & cụm plugin EssentialsX, Dynmap',
+        'CS2 Dedicated Server cấu hình chuẩn 128-Tick Matchmaking & Practice',
+        'Phân bổ tài nguyên RAM DDR5 riêng biệt không chia sẻ (No Overcommit)',
+        'Hỗ trợ cài đặt Domain Server riêng (play.yourdomain.com) miễn phí',
+        'Kỹ sư SEN CloudHost hỗ trợ tối ưu cấu hình server.properties 24/7'
       ],
-      badge: 'Bán chạy nhất',
       popular: true,
     },
     {
-      id: '0348fc3c-bdbf-49c3-9fdd-7a6c6a1aeb82',
-      name: 'Game Server Extreme (High-Load)',
-      tagline: 'Dành cho Máy chủ Network lớn, Custom Mods & Sự Kiện',
+      id: 'c88126b4-cb30-4e3b-9ab5-73bf1f62c0eb',
+      name: 'Game Pro Cluster (100+ Slots)',
+      tier: 'Large Network & Enterprise',
+      workload: 'Cụm Minecraft Network BungeeCord/Velocity, Server Rust 200 slots',
       monthlyPrice: 599000,
       yearlyPrice: 479000 * 12,
-      cpu: '6 Core AMD Ryzen 9 5.0GHz',
-      ram: '16 GB RAM DDR5 ECC',
-      storage: '100 GB NVMe Gen4 Enterprise',
-      bandwidth: '1 Gbps Dedicated Port',
-      slots: 'Không giới hạn Slots',
+      cpu: '8 vCPU AMD Ryzen 9 7950X (5.7GHz)',
+      ram: '16 GB DDR5 ECC 5600MHz',
+      storage: '120 GB NVMe Gen4 Enterprise',
+      ddos: '500 Gbps Game Anti-DDoS Dedicated',
+      slots: '150+ Người chơi không giới hạn',
+      tickrate: '20.0 TPS / 128-Tick',
+      backup: 'Tự động sao lưu 14 ngày',
+      metrics: { tpsAverage: '20.0 TPS', memoryLatency: '0.1 ms', pingLocal: '2 ms' },
       features: [
-        'Cụm BungeeCord / Velocity Network đa cụm máy chủ',
-        'Khởi tạo máy chủ tức thì trong 30 giây',
-        'Dedicated Anycast IPv4 riêng biệt',
-        'Hỗ trợ cài đặt Modpack nặng (RLCraft, ATM9, Rust Oxide)',
-        'Kỹ thuật viên túc trực hỗ trợ 24/7'
+        'Khả năng gánh tải cụm BungeeCord / Velocity kết nối 5-10 sub-servers',
+        'Băng thông mạng 10Gbps Core Switch chịu tải hàng nghìn kết nối UDP',
+        'Tường lửa AI lọc botnet spam kết nối và exploit packets',
+        'Tùy chỉnh JVM Flags (Aikar Flags) tối ưu hóa Garbage Collection',
+        'Hỗ trợ chuyển đổi toàn bộ thế giới và dữ liệu game cũ sang miễn phí',
+        'Kỹ sư Game Server Level 3 hỗ trợ kỹ thuật 1-1 riêng biệt 24/7'
       ],
-      badge: 'Cộng đồng lớn',
       popular: false,
     },
   ];
 
   const plans = defaultPlans.map((dp, idx) => {
-    const matchingDb = dbPlans[idx] || dbPlans.find((p: any) => p.name?.toLowerCase().includes(selectedGame));
+    const matchingDb = dbPlans[idx];
     return {
       ...dp,
       id: matchingDb?.id || dp.id,
@@ -118,408 +135,531 @@ export default function GameServersServicePage() {
       name: `${plan.name} (${selectedGame.toUpperCase()}) - ${billingCycle === 'yearly' ? '12 Tháng' : '1 Tháng'}`,
       price: price,
       billingCycle: cycleMonths,
-      type: 'game',
+      type: 'vps',
       details: `${plan.cpu} • ${plan.ram} • ${plan.storage}`
     });
     router.push('/cart');
   };
 
+  const gamesMeta = {
+    minecraft: {
+      name: 'Minecraft Java & Bedrock',
+      version: 'PaperMC, Purpur, Fabric, Forge (1.20+)',
+      Icon: BiCube,
+      color: '#5C8D37',
+      port: 25565,
+      specHighlight: 'Tối ưu Aikar JVM Flags, TPS 20.0 liên tục'
+    },
+    cs2: {
+      name: 'Counter-Strike 2 (CS2)',
+      version: 'Valve Dedicated Server (128-Tick)',
+      Icon: SiCounterstrike,
+      color: '#DE9B35',
+      port: 27015,
+      specHighlight: 'Hỗ trợ MatchZy, Prac Mode, FastDL HTTP'
+    },
+    rust: {
+      name: 'Rust Dedicated Server',
+      version: 'Oxide / uMod Framework Support',
+      Icon: SiRust,
+      color: '#DEA584',
+      port: 28015,
+      specHighlight: 'Rust+ App Integration, Procedural Maps 4k'
+    }
+  };
+
+  const currentGame = gamesMeta[selectedGame];
+
   const faqs = [
     {
-      q: 'Máy chủ Game của CloudHost hỗ trợ những tựa game nào?',
-      a: 'Hệ thống hỗ trợ toàn diện các tựa game nổi tiếng như Minecraft (Java & Bedrock, Forge, Fabric, PaperMC, Purpur), Counter-Strike 2 (CS2 128-Tick, Practice Mod, Retake), Rust, ARK: Survival Evolved, Palworld, Valheim, GTA V (FiveM), Terraria và Team Fortress 2.'
+      q: 'Tại sao máy chủ Game SEN CloudHost dùng vi xử lý AMD Ryzen 9 7950X?',
+      a: 'Hầu hết các game engine như Minecraft và CS2 hoạt động chủ yếu dựa vào hiệu năng đơn nhân (Single-Thread Performance). Vi xử lý AMD Ryzen 9 7950X với xung nhịp đơn nhân lên đến 5.7GHz và kiến trúc Zen 4 bộ nhớ đệm L3 64MB đem lại chỉ số TPS 20.0 mượt mà tuyệt đối mà các dòng chip Xeon xung thấp không thể đạt được.'
     },
     {
-      q: 'Hệ thống chống tấn công DDoS Game hoạt động như thế nào?',
-      a: 'Chúng tôi triển khai hệ thống lọc Anti-DDoS phần cứng chuyên dụng cho Game tại cổng Router Edge với băng thông lọc hơn 500Gbps. Hệ thống tự động phát hiện và chặn đứng các đợt tấn công UDP Flood, SYN Flood, Minecraft Bot Attack, CS2 Query Exploit trong vòng chưa đầy 1 giây mà không làm gián đoạn người chơi.'
+      q: 'Hệ thống bảo vệ Anti-DDoS Game 500Gbps xử lý các đợt tấn công như thế nào?',
+      a: 'Hạ tầng mạng SEN CloudHost tích hợp phần cứng lọc gói tin chuyên dụng Corero SmartWall. Hệ thống nhận diện sâu giao thức UDP của từng tựa game, phân tích và loại bỏ các gói tin rác (SYN flood, UDP reflection, Bot join attack) trong thời gian dưới 1 giây mà không làm tăng ping hay gián đoạn trải nghiệm của người chơi thật.'
     },
     {
-      q: 'Tôi có thể cài đặt thêm Mods, Plugins hoặc Custom Map không?',
-      a: 'Hoàn toàn được! Bảng điều khiển tích hợp File Manager trực quan và kết nối SFTP/SSH cho phép bạn upload dữ liệu, cài đặt plugin (.jar, .amxx, Oxide/uMod) hoặc custom map tùy ý chỉ trong vài cú nhấp chuột.'
+      q: 'Tôi có thể cài đặt Modpack, Plugin và tùy chỉnh file server.properties không?',
+      a: 'Hoàn toàn được! Bạn được cung cấp bảng điều khiển Web Console với đầy đủ tính năng: Quản lý File trực quan, Sửa file cấu hình, Kéo thả cài đặt Mod/Plugin (.jar, .zip), Quản trị lệnh Console theo thời gian thực và Truy cập SFTP tốc độ cao.'
     },
     {
-      q: 'Ping và độ trễ của máy chủ Game tại Việt Nam như thế nào?',
-      a: 'Máy chủ đặt tại Datacenter Tier-III Viettel IDC & VNPT Hà Nội / TP.HCM với kết nối cáp quang trực tiếp tới các ISP lớn. Ping trung bình trong nước chỉ từ 2ms - 10ms, và đi Đông Nam Á (Singapore, Thái Lan) từ 25ms - 35ms, đảm bảo trải nghiệm chơi game mượt mà không giật lag.'
-    },
-    {
-      q: 'Tôi có được hỗ trợ kỹ thuật khi máy chủ bị lỗi mod/plugin không?',
-      a: 'Đội ngũ kỹ thuật viên Game Server giàu kinh nghiệm luôn túc trực 24/7/365 qua LiveChat và Ticket hỗ trợ gỡ lỗi crash log, tối ưu TPS máy chủ và cài đặt plugin hoàn toàn miễn phí.'
+      q: 'Tôi có thể gắn tên miền riêng dạng play.tenmien.com vào máy chủ không?',
+      a: 'Có. Chúng tôi hỗ trợ cấu hình bản ghi SRV và A record miễn phí để bạn có thể cung cấp địa chỉ IP dễ nhớ cho cộng đồng người chơi mà không cần phải nhớ số Port phức tạp.'
     }
   ];
 
   return (
-    <div className="min-h-screen bg-slate-900 text-slate-100 selection:bg-purple-500 selection:text-white">
-      {/* 1. HERO SECTION */}
-      <section className="relative overflow-hidden pt-20 pb-32">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[600px] bg-gradient-to-b from-purple-600/20 via-pink-600/10 to-transparent blur-3xl pointer-events-none" />
-        <div className="absolute -top-32 right-10 w-96 h-96 bg-purple-500/20 rounded-full blur-[100px] pointer-events-none" />
-        <div className="absolute top-40 -left-20 w-80 h-80 bg-blue-500/15 rounded-full blur-[90px] pointer-events-none" />
+    <div className="min-h-screen bg-[#090d16] text-slate-100 selection:bg-amber-500 selection:text-white font-sans">
+      
+      {/* 1. HERO SECTION: GAME TELEMETRY & TICK RATE CONSOLE */}
+      <section className="relative pt-16 pb-20 border-b border-slate-800/80 overflow-hidden">
+        {/* Technical Grid Blueprint */}
+        <div 
+          className="absolute inset-0 opacity-[0.06] pointer-events-none" 
+          style={{ 
+            backgroundImage: `linear-gradient(to right, #f59e0b 1px, transparent 1px), linear-gradient(to bottom, #f59e0b 1px, transparent 1px)`,
+            backgroundSize: '40px 40px' 
+          }}
+        />
+        <div className="absolute top-0 right-1/4 w-[600px] h-[300px] bg-amber-600/10 blur-[120px] pointer-events-none" />
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-300 text-xs font-bold uppercase tracking-wider mb-6 shadow-inner">
-            <Gamepad2 className="w-4 h-4 text-purple-400 animate-pulse" />
-            Máy Chủ Game Hiệu Năng Cao - AMD Ryzen 9 5.0GHz & Anti-DDoS 500Gbps
-          </div>
-
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-white max-w-5xl mx-auto leading-tight mb-6">
-            Khởi Tạo Máy Chủ Game Đỉnh Cao Với{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-amber-300">
-              Zero Latency & 99.99% Uptime
-            </span>
-          </h1>
-
-          <p className="text-base sm:text-xl text-slate-300 max-w-3xl mx-auto mb-10 leading-relaxed font-normal">
-            Trang bị phần cứng AMD Ryzen 9 7950X, RAM DDR5 ECC 5600MHz và ổ cứng NVMe Gen4 tốc độ 7,000MB/s. 
-            Tự động chống DDoS Game Layer 7, cài đặt 1-Click và bàn giao tức thì trong 60 giây.
-          </p>
-
-          {/* Game Selector Chips with Official Vector Logos */}
-          <div className="flex flex-wrap items-center justify-center gap-4 mb-8">
-            {[
-              { id: 'minecraft', label: 'Minecraft (Java & Bedrock)', desc: 'PaperMC, Purpur, Forge', Logo: MinecraftLogo },
-              { id: 'cs2', label: 'Counter-Strike 2 (CS2)', desc: '128-Tick Match & Practice', Logo: Cs2Logo },
-              { id: 'rust', label: 'Rust Dedicated Server', desc: 'Oxide / uMod Support', Logo: RustGameLogo },
-            ].map((game) => (
-              <button
-                key={game.id}
-                onClick={() => setSelectedGame(game.id as any)}
-                className={`px-6 py-3.5 rounded-2xl text-xs font-bold transition-all flex items-center gap-3 border ${
-                  selectedGame === game.id
-                    ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-xl shadow-purple-500/30 border-purple-400 scale-105'
-                    : 'bg-slate-800/80 text-slate-300 hover:text-white border-slate-700 hover:border-slate-600'
-                }`}
-              >
-                <div className="p-2 rounded-xl bg-slate-900/90 border border-slate-700/60 shrink-0 flex items-center justify-center">
-                  <game.Logo className="w-6 h-6" />
-                </div>
-                <div className="text-left">
-                  <div className="font-extrabold text-sm text-white">{game.label}</div>
-                  <div className="text-[10px] text-purple-200 opacity-80">{game.desc}</div>
-                </div>
-              </button>
-            ))}
-          </div>
-
-          {/* Billing Switch */}
-          <div className="inline-flex items-center p-1.5 rounded-2xl bg-slate-800/90 backdrop-blur-md border border-slate-700 shadow-2xl">
-            <button
-              onClick={() => setBillingCycle('monthly')}
-              className={`px-6 py-2.5 rounded-xl text-xs font-black transition-all ${
-                billingCycle === 'monthly'
-                  ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/30'
-                  : 'text-slate-400 hover:text-white'
-              }`}
-            >
-              Thanh Toán Theo Tháng
-            </button>
-            <button
-              onClick={() => setBillingCycle('yearly')}
-              className={`px-6 py-2.5 rounded-xl text-xs font-black transition-all flex items-center gap-2 ${
-                billingCycle === 'yearly'
-                  ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/30'
-                  : 'text-slate-400 hover:text-white'
-              }`}
-            >
-              <span>Thanh Toán Theo Năm</span>
-              <span className="px-2 py-0.5 rounded-full bg-emerald-500 text-white text-[10px] font-black uppercase">
-                Tiết kiệm 20%
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          {/* Status Bar */}
+          <div className="flex flex-wrap items-center justify-between gap-4 p-3.5 mb-10 rounded-2xl bg-[#0d1424] border border-slate-800 text-xs font-mono">
+            <div className="flex items-center gap-3">
+              <span className="flex items-center gap-1.5 text-emerald-400 font-bold">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                GAME TICK RATE: 20.0 TPS (100% STABLE)
               </span>
-            </button>
+              <span className="text-slate-600 hidden sm:inline">|</span>
+              <span className="text-slate-300 hidden sm:inline">
+                CPU: <strong className="text-amber-400 font-mono">AMD Ryzen 9 7950X (5.7GHz)</strong>
+              </span>
+            </div>
+
+            <div className="flex items-center gap-4 text-slate-400">
+              <span>PING VN: <strong className="text-emerald-400 font-mono">&lt; 8ms</strong></span>
+              <span>PORT: <strong className="text-white font-mono">10Gbps Fiber</strong></span>
+              <span>DDOS: <strong className="text-sky-400 font-mono">500Gbps Game Filter</strong></span>
+            </div>
           </div>
-        </div>
-      </section>
 
-      {/* 2. PRICING CARDS */}
-      <section className="relative -mt-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-28">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
-          {plans.map((plan) => {
-            const displayPrice = billingCycle === 'yearly' ? Math.round(plan.yearlyPrice / 12) : plan.monthlyPrice;
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            
+            {/* Left Headline */}
+            <div className="lg:col-span-7 space-y-6">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-amber-950/60 border border-amber-800/60 text-amber-300 text-xs font-mono">
+                <Gamepad2 className="w-3.5 h-3.5 text-amber-400" />
+                HIGH-TICKRATE DEDICATED GAME SERVERS
+              </div>
 
-            return (
-              <div
-                key={plan.id}
-                className={`relative rounded-3xl bg-slate-800/90 backdrop-blur-md p-8 border transition-all duration-300 flex flex-col justify-between ${
-                  plan.popular
-                    ? 'border-purple-500 shadow-2xl shadow-purple-500/20 ring-2 ring-purple-500/40 bg-gradient-to-b from-slate-800 to-slate-900 lg:-translate-y-4'
-                    : 'border-slate-700/80 shadow-xl hover:border-slate-600 hover:shadow-2xl'
-                }`}
-              >
-                {plan.badge && (
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                    <span className="px-4 py-1.5 rounded-full bg-gradient-to-r from-purple-500 to-pink-600 text-white text-xs font-black uppercase tracking-wider shadow-lg">
-                      {plan.badge}
-                    </span>
-                  </div>
-                )}
+              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.15]">
+                Máy Chủ Game Đỉnh Cao Với{' '}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-400 to-rose-400 font-mono">
+                  Ryzen 9 5.7GHz
+                </span>
+              </h1>
 
-                <div>
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="w-12 h-12 rounded-2xl bg-purple-500/10 border border-purple-500/20 text-purple-400 flex items-center justify-center font-bold">
-                      <Gamepad2 className="w-6 h-6" />
-                    </div>
-                    <span className="px-2.5 py-1 rounded-full bg-slate-700/60 border border-slate-600 text-[11px] font-bold text-slate-300">
-                      {plan.slots}
-                    </span>
-                  </div>
+              <p className="text-slate-300 text-base sm:text-lg leading-relaxed max-w-2xl font-normal">
+                Không lag giật, không nghẽn TPS. Sức mạnh đơn nhân tối thượng từ AMD Zen 4, RAM DDR5 5600MHz 
+                và tường lửa phần cứng Anti-DDoS 500Gbps tự động lọc gói tin rác UDP.
+              </p>
 
-                  <h3 className="text-2xl font-black text-white mb-1">{plan.name}</h3>
-                  <p className="text-xs text-slate-400 mb-6 min-h-[32px]">{plan.tagline}</p>
-
-                  <div className="mb-6 pb-6 border-b border-slate-700/60">
-                    <div className="flex items-baseline gap-1">
-                      <span className="text-4xl font-black text-white">
-                        {displayPrice.toLocaleString('vi-VN')}
-                      </span>
-                      <span className="text-sm text-slate-400 font-bold">đ/tháng</span>
-                    </div>
-                    {billingCycle === 'yearly' && (
-                      <p className="text-xs text-emerald-400 font-semibold mt-1">
-                        Thanh toán {plan.yearlyPrice.toLocaleString('vi-VN')} đ/năm (Tiết kiệm 20%)
-                      </p>
-                    )}
-                  </div>
-
-                  <div className="space-y-3 mb-8 text-sm">
-                    <div className="p-3 rounded-2xl bg-slate-900/60 border border-slate-700/50 text-slate-200 font-bold flex items-center gap-2.5">
-                      <Cpu className="w-4 h-4 text-purple-400 shrink-0" />
-                      <span>{plan.cpu}</span>
-                    </div>
-                    <div className="p-3 rounded-2xl bg-slate-900/60 border border-slate-700/50 text-slate-200 font-bold flex items-center gap-2.5">
-                      <Server className="w-4 h-4 text-blue-400 shrink-0" />
-                      <span>{plan.ram}</span>
-                    </div>
-                    <div className="p-3 rounded-2xl bg-slate-900/60 border border-slate-700/50 text-slate-200 font-bold flex items-center gap-2.5">
-                      <HardDrive className="w-4 h-4 text-pink-400 shrink-0" />
-                      <span>{plan.storage}</span>
-                    </div>
-                    <div className="p-3 rounded-2xl bg-slate-900/60 border border-slate-700/50 text-slate-200 font-bold flex items-center gap-2.5">
-                      <Activity className="w-4 h-4 text-emerald-400 shrink-0" />
-                      <span>{plan.bandwidth}</span>
-                    </div>
-
-                    <div className="pt-3 space-y-2.5">
-                      {plan.features.map((feat, idx) => (
-                        <div key={idx} className="flex items-start gap-2.5 text-xs text-slate-300">
-                          <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                          <span>{feat}</span>
+              {/* Game Selector Chips */}
+              <div className="pt-2">
+                <div className="text-xs font-mono uppercase text-slate-400 tracking-wider mb-3">
+                  Chọn Tựa Game Khởi Tạo:
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  {(['minecraft', 'cs2', 'rust'] as const).map((gKey) => {
+                    const g = gamesMeta[gKey];
+                    const active = selectedGame === gKey;
+                    return (
+                      <button
+                        key={gKey}
+                        onClick={() => setSelectedGame(gKey)}
+                        className={`p-3.5 rounded-xl border text-left transition-all flex items-center gap-3.5 ${
+                          active
+                            ? 'bg-[#131d31] border-amber-500 shadow-lg shadow-amber-500/10'
+                            : 'bg-[#0e1626] border-slate-800 hover:border-slate-700 text-slate-400'
+                        }`}
+                      >
+                        <div 
+                          className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 border"
+                          style={{ 
+                            backgroundColor: active ? '#0b1322' : '#0a0f1a',
+                            borderColor: active ? g.color : '#1e293b' 
+                          }}
+                        >
+                          <g.Icon className="w-5 h-5" style={{ color: g.color }} />
                         </div>
-                      ))}
+                        <div>
+                          <div className={`text-xs font-bold font-mono ${active ? 'text-white' : 'text-slate-300'}`}>
+                            {g.name.split(' ')[0]}
+                          </div>
+                          <div className="text-[10px] text-slate-400 font-mono">
+                            Port {g.port}
+                          </div>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Engine Spec Details */}
+              <div className="p-4 rounded-xl bg-[#0c1322] border border-slate-800 text-xs font-mono space-y-2">
+                <div className="flex items-center justify-between text-slate-400">
+                  <span>Selected Engine: <strong className="text-white">{currentGame.name}</strong></span>
+                  <span>Port: <strong className="text-amber-400">{currentGame.port}</strong></span>
+                </div>
+                <div className="text-slate-400">
+                  Profile: <span className="text-slate-300">{currentGame.specHighlight}</span>
+                </div>
+              </div>
+
+            </div>
+
+            {/* Right Telemetry Monitor */}
+            <div className="lg:col-span-5">
+              <div className="rounded-2xl bg-[#0b1320] border border-slate-800 p-6 shadow-2xl space-y-5">
+                <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+                  <div className="flex items-center gap-2">
+                    <span className="w-3 h-3 rounded-full bg-rose-500/80" />
+                    <span className="w-3 h-3 rounded-full bg-amber-500/80" />
+                    <span className="w-3 h-3 rounded-full bg-emerald-500/80" />
+                    <span className="text-xs font-mono text-slate-400 ml-2">game-server-telemetry.sen</span>
+                  </div>
+                  <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-emerald-950/80 text-emerald-400 border border-emerald-800/60">
+                    20.0 TPS STABLE
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3 font-mono">
+                  <div className="p-3 rounded-xl bg-[#0e1627] border border-slate-800">
+                    <div className="text-[10px] text-slate-500 uppercase">Tick Rate / TPS</div>
+                    <div className="text-base font-extrabold text-emerald-400 mt-0.5">20.0 / 20.0</div>
+                    <div className="text-[10px] text-slate-500">Tick Duration: 12.4ms</div>
+                  </div>
+
+                  <div className="p-3 rounded-xl bg-[#0e1627] border border-slate-800">
+                    <div className="text-[10px] text-slate-500 uppercase">Domestic Ping</div>
+                    <div className="text-base font-extrabold text-sky-400 mt-0.5">&lt; 6.5 ms</div>
+                    <div className="text-[10px] text-slate-500">Viettel / VNPT / FPT</div>
+                  </div>
+                </div>
+
+                <div className="space-y-2 font-mono text-xs">
+                  <div className="text-slate-500">// Live DDoS Filtering Telemetry</div>
+                  <div className="p-3 rounded-xl bg-[#060a12] border border-slate-800 text-slate-300 space-y-1.5 text-[11px]">
+                    <div className="flex justify-between">
+                      <span className="text-slate-500">UDP Flood Filter:</span>
+                      <span className="text-emerald-400 font-bold">ARMED (0 packet loss)</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-slate-500">Garbage Collector:</span>
+                      <span className="text-sky-400 font-bold">ZGC (Pause &lt; 0.2ms)</span>
                     </div>
                   </div>
                 </div>
 
-                <button
-                  onClick={() => handleOrder(plan)}
-                  className={`w-full py-4 rounded-2xl font-black text-sm transition-all flex items-center justify-center gap-2 shadow-lg ${
-                    plan.popular
-                      ? 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white shadow-purple-500/25 hover:shadow-purple-500/40 hover:scale-[1.02]'
-                      : 'bg-slate-700 hover:bg-slate-600 text-white'
-                  }`}
-                >
-                  <ShoppingCart className="w-4 h-4" />
-                  <span>Tạo Máy Chủ Game Ngay</span>
-                </button>
+                <div className="pt-2">
+                  <a
+                    href="#spec-matrix"
+                    className="w-full py-3.5 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs font-mono flex items-center justify-center gap-2 transition-all shadow-lg shadow-amber-600/20"
+                  >
+                    <span>XEM BẢNG CẤU HÌNH VÀ BÁO GIÁ</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </a>
+                </div>
               </div>
-            );
-          })}
+            </div>
+
+          </div>
+
         </div>
       </section>
 
-      {/* 3. REALISTIC HARDWARE & DATACENTER SHOWCASE SECTION */}
-      <section className="py-24 bg-slate-950/80 border-t border-slate-800 relative overflow-hidden">
+      {/* 2. THREE CORE GAME ARCHITECTURE SCHEMATICS */}
+      <section className="py-24 bg-[#070b12] border-b border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-bold uppercase tracking-wider mb-3">
-              <Server className="w-3.5 h-3.5" />
-              Hạ Tầng Phần Cứng Máy Chủ Vật Lý Đỉnh Cao
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-amber-950 text-amber-400 text-xs font-mono mb-3 border border-amber-800">
+              <Flame className="w-3.5 h-3.5" />
+              ULTRA LOW-LATENCY INFRASTRUCTURE
             </div>
-            <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight mb-4">
-              Không Ảo Hóa Quá Tải, Cam Kết 100% Sức Mạnh Phần Cứng
+            <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
+              3 Công Nghệ Độc Quyền Cho Game Server
             </h2>
-            <p className="text-slate-400 text-sm sm:text-base leading-relaxed">
-              Mỗi máy chủ Game được vận hành trên CPU AMD Ryzen 9 7950X xung nhịp 5.7GHz Boost, bộ nhớ RAM DDR5 ECC và cụm tản nhiệt nước công nghiệp tại Datacenter Tier-III.
+            <p className="text-slate-400 text-sm sm:text-base mt-3 leading-relaxed font-normal">
+              Được thiết kế riêng biệt để giải quyết các bài toán hóc búa nhất của game server: đơn nhân, giật lag mạng và DDoS.
             </p>
           </div>
 
-          {/* 3 Columns Hardware Specs with Real Photos */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-            <div className="bg-slate-900/90 rounded-3xl p-6 border border-slate-800 overflow-hidden flex flex-col justify-between group hover:border-purple-500/50 transition-all">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            {/* Schematic 1: AMD Ryzen 5.7GHz Single-Core */}
+            <div className="p-6 rounded-3xl bg-[#0c1322] border border-slate-800 flex flex-col justify-between space-y-6">
               <div>
-                <div className="h-48 rounded-2xl overflow-hidden mb-6 relative bg-slate-800">
-                  <img
-                    src="https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?auto=format&fit=crop&w=800&q=80"
-                    alt="AMD Ryzen 9 High Clock Processor"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent" />
-                  <span className="absolute bottom-3 left-3 px-3 py-1 rounded-lg bg-purple-600/90 text-white text-[11px] font-black uppercase">
-                    AMD Ryzen 9 7950X
-                  </span>
+                <div className="p-4 rounded-2xl bg-[#060a12] border border-slate-800 mb-6 font-mono text-xs">
+                  <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
+                    <span>ZEN 4 5.7GHZ BOOST</span>
+                    <span className="text-amber-400">TPS 20.0</span>
+                  </div>
+                  <div className="space-y-2 text-slate-300 text-[11px]">
+                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                      <span>Single-Thread Cinebench</span>
+                      <span className="text-emerald-400 font-bold">2,150 pts</span>
+                    </div>
+                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                      <span>L3 Cache Allocation</span>
+                      <span className="text-sky-400">64MB Direct</span>
+                    </div>
+                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                      <span>DDR5 RAM Bandwidth</span>
+                      <span className="text-amber-400 font-bold">5,600 MHz</span>
+                    </div>
+                  </div>
                 </div>
-                <h3 className="text-xl font-black text-white mb-2">Xung Nhịp Đơn Nhân 5.7 GHz</h3>
-                <p className="text-xs text-slate-400 leading-relaxed mb-4">
-                  Game Server (đặc biệt Minecraft & CS2) phụ thuộc lớn vào sức mạnh đơn nhân. AMD Ryzen 9 mang lại số khung hình TPS 20.0 tuyệt đối ngay cả khi máy chủ đông người chơi và nhiều entity.
+
+                <h3 className="text-lg font-bold text-white mb-2">Sức Mạnh Đơn Nhân Tối Thượng</h3>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  Tối ưu cho vòng lặp chính (Main Game Loop) của Minecraft &amp; CS2. 
+                  Ngăn chặn triệt để tình trạng sụt giảm TPS khi server có nhiều công trình redstone phức tạp hoặc mob đông đúc.
                 </p>
               </div>
-              <ul className="space-y-2 text-xs text-slate-300 pt-3 border-t border-slate-800">
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-purple-400" /> 16 Cores / 32 Threads kiến trúc Zen 4</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-purple-400" /> 80MB L3 Cache cực lớn</li>
-              </ul>
+
+              <div className="pt-4 border-t border-slate-800/80 text-xs font-mono text-slate-300 flex items-center justify-between">
+                <span>Processor Engine:</span>
+                <strong className="text-amber-400">AMD Ryzen 9 7950X</strong>
+              </div>
             </div>
 
-            <div className="bg-slate-900/90 rounded-3xl p-6 border border-slate-800 overflow-hidden flex flex-col justify-between group hover:border-pink-500/50 transition-all">
+            {/* Schematic 2: 500Gbps Game Anti-DDoS */}
+            <div className="p-6 rounded-3xl bg-[#0c1322] border border-slate-800 flex flex-col justify-between space-y-6">
               <div>
-                <div className="h-48 rounded-2xl overflow-hidden mb-6 relative bg-slate-800">
-                  <img
-                    src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=800&q=80"
-                    alt="Tier-III Datacenter Enterprise Server Rack"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent" />
-                  <span className="absolute bottom-3 left-3 px-3 py-1 rounded-lg bg-pink-600/90 text-white text-[11px] font-black uppercase">
-                    Datacenter Tier III
-                  </span>
+                <div className="p-4 rounded-2xl bg-[#060a12] border border-slate-800 mb-6 font-mono text-xs">
+                  <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
+                    <span>CORERO SMARTWALL FILTER</span>
+                    <span className="text-sky-400">500GBPS L3-L7</span>
+                  </div>
+                  <div className="space-y-2 text-slate-300 text-[11px]">
+                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                      <span>1. Attack Packet Ingress</span>
+                      <span className="text-rose-400 font-bold">UDP Amplification</span>
+                    </div>
+                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                      <span>2. Hardware Game Filter</span>
+                      <span className="text-emerald-400 font-bold">Dropped &lt; 1s</span>
+                    </div>
+                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                      <span>3. Clean Player Traffic</span>
+                      <span className="text-sky-400 font-bold">0ms Ping Increase</span>
+                    </div>
+                  </div>
                 </div>
-                <h3 className="text-xl font-black text-white mb-2">Hạ Tầng Trung Tâm Dữ Liệu Chuẩn Quốc Tế</h3>
-                <p className="text-xs text-slate-400 leading-relaxed mb-4">
-                  Cụm máy chủ đặt tại Viettel IDC & VNPT Data Center với chứng chỉ ISO 27001 và ANSI/TIA-942 Rated 3, cam kết nguồn điện kép 2N và hệ thống làm mát chính xác duy trì nhiệt độ 20°C.
+
+                <h3 className="text-lg font-bold text-white mb-2">Tường Lửa Anti-DDoS 500Gbps Phần Cứng</h3>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  Lọc sạch các đợt tấn công UDP flood, SYN flood, BOT spam kết nối. 
+                  Server của bạn luôn hoạt động bình thường, không bao giờ bị rớt mạng hay tăng đột biến độ trễ khi đối thủ tấn công.
                 </p>
               </div>
-              <ul className="space-y-2 text-xs text-slate-300 pt-3 border-t border-slate-800">
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-pink-400" /> Cam kết Uptime 99.99% bằng SLA</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-pink-400" /> Nguồn máy phát điện dự phòng 72 giờ</li>
-              </ul>
+
+              <div className="pt-4 border-t border-slate-800/80 text-xs font-mono text-slate-300 flex items-center justify-between">
+                <span>Mitigation SLA:</span>
+                <strong className="text-sky-400">Tự động kích hoạt &lt; 1 Giây</strong>
+              </div>
             </div>
 
-            <div className="bg-slate-900/90 rounded-3xl p-6 border border-slate-800 overflow-hidden flex flex-col justify-between group hover:border-blue-500/50 transition-all">
+            {/* Schematic 3: 1-Click Game Management Console */}
+            <div className="p-6 rounded-3xl bg-[#0c1322] border border-slate-800 flex flex-col justify-between space-y-6">
               <div>
-                <div className="h-48 rounded-2xl overflow-hidden mb-6 relative bg-slate-800">
-                  <img
-                    src="https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&w=800&q=80"
-                    alt="Network Switch & Fiber Optical"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent" />
-                  <span className="absolute bottom-3 left-3 px-3 py-1 rounded-lg bg-blue-600/90 text-white text-[11px] font-black uppercase">
-                    Anti-DDoS 500Gbps
-                  </span>
+                <div className="p-4 rounded-2xl bg-[#060a12] border border-slate-800 mb-6 font-mono text-xs">
+                  <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
+                    <span>WEB CONSOLE &amp; MODPACK</span>
+                    <span className="text-emerald-400">AUTO-DEPLOY</span>
+                  </div>
+                  <div className="space-y-2 text-slate-300 text-[11px]">
+                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                      <span>1-Click Installer</span>
+                      <span className="text-amber-400">CurseForge / Modrinth</span>
+                    </div>
+                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                      <span>Live Terminal Console</span>
+                      <span className="text-emerald-400">Real-time STDIN/OUT</span>
+                    </div>
+                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                      <span>Scheduled Backups</span>
+                      <span className="text-sky-400">Offsite S3 Storage</span>
+                    </div>
+                  </div>
                 </div>
-                <h3 className="text-xl font-black text-white mb-2">Lọc Tấn Công DDoS Tức Thì</h3>
-                <p className="text-xs text-slate-400 leading-relaxed mb-4">
-                  Thuật toán Game Shield phân tích sâu từng gói tin TCP/UDP của game, phát hiện và hấp thụ toàn bộ đợt tấn công từ chối dịch vụ mà không tăng ping hay kick người chơi.
+
+                <h3 className="text-lg font-bold text-white mb-2">Bảng Quản Trị Web Console Tiện Lợi</h3>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  Cài đặt modpack, plugin, quản lý file bản đồ và chạy lệnh server trực tiếp trên trình duyệt. 
+                  Tự động sao lưu bản đồ hàng ngày lên đám mây S3 độc lập, khôi phục lại chỉ với 1 cú nhấp chuột.
                 </p>
               </div>
-              <ul className="space-y-2 text-xs text-slate-300 pt-3 border-t border-slate-800">
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-blue-400" /> Phân tích giao thức Game Packet L7</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-blue-400" /> Miễn phí 100% kèm theo tất cả các gói</li>
-              </ul>
+
+              <div className="pt-4 border-t border-slate-800/80 text-xs font-mono text-slate-300 flex items-center justify-between">
+                <span>Backup Storage:</span>
+                <strong className="text-emerald-400">Tự động hàng ngày (S3 Cloud)</strong>
+              </div>
             </div>
+
           </div>
 
-          {/* 4 Feature Badges */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            {[
-              { icon: Zap, title: 'Triển Khai Tức Thì 60s', desc: 'Hệ thống tự động cài đặt hệ điều hành và game daemon chỉ sau 1 phút.' },
-              { icon: Terminal, title: 'Web Terminal & SFTP', desc: 'Toàn quyền truy cập root, console dòng lệnh và chỉnh sửa file trực quan.' },
-              { icon: RefreshCw, title: 'Tự Động Sao Lưu Hàng Ngày', desc: 'Bảo vệ map, inventory và database người chơi khỏi mọi rủi ro.' },
-              { icon: Flame, title: 'Hỗ Trợ Modpack 1-Click', desc: 'Cài đặt hàng ngàn bản mod Paper, Spigot, Forge, Fabric, Oxide chỉ 1 chạm.' },
-            ].map((feat, idx) => (
-              <div key={idx} className="p-5 rounded-2xl bg-slate-900/60 border border-slate-800/80 hover:bg-slate-850 transition-colors">
-                <div className="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-400 flex items-center justify-center mb-3">
-                  <feat.icon className="w-5 h-5" />
-                </div>
-                <h4 className="text-sm font-bold text-white mb-1">{feat.title}</h4>
-                <p className="text-xs text-slate-400 leading-relaxed">{feat.desc}</p>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 
-      {/* 4. PERFORMANCE BENCHMARK COMPARISON TABLE */}
-      <section className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-2xl mx-auto mb-12">
-          <h2 className="text-2xl sm:text-4xl font-black text-white mb-3">
-            Bảng So Sánh Hiệu Năng Vượt Trội
-          </h2>
-          <p className="text-xs sm:text-sm text-slate-400">
-            Xem sự khác biệt giữa Game Server chuyên dụng tại CloudHost so với VPS thông thường.
-          </p>
-        </div>
+      {/* 3. TECHNICAL SPECIFICATION MATRIX & PRICING */}
+      <section id="spec-matrix" className="py-24 bg-[#090d16] border-b border-slate-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-amber-950 text-amber-400 text-xs font-mono mb-3 border border-amber-800">
+                <Sliders className="w-3.5 h-3.5" />
+                GAME INFRASTRUCTURE SPEC SHEET
+              </div>
+              <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
+                Bảng So Sánh Cấu Hình Game Server
+              </h2>
+              <p className="text-slate-400 text-xs sm:text-sm mt-1 font-normal">
+                Phân bổ tài nguyên CPU &amp; RAM DDR5 chuyên dụng 100% không overcommit.
+              </p>
+            </div>
 
-        <div className="overflow-x-auto rounded-3xl border border-slate-800 bg-slate-900/80 shadow-2xl">
-          <table className="w-full text-left text-xs sm:text-sm">
-            <thead className="bg-slate-950 text-slate-300 font-bold border-b border-slate-800">
-              <tr>
-                <th className="py-4 px-6">Thông số & Tính năng</th>
-                <th className="py-4 px-6 text-purple-400 font-black">CloudHost Game Server</th>
-                <th className="py-4 px-6 text-slate-400">VPS Đám Mây Thông Thường</th>
-                <th className="py-4 px-6 text-slate-400">Tự Host Tại Nhà (Home Server)</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-800/80 text-slate-300">
-              <tr className="hover:bg-slate-800/40 transition-colors">
-                <td className="py-4 px-6 font-bold text-white">Vi Xử Lý (CPU)</td>
-                <td className="py-4 px-6 text-purple-300 font-bold">AMD Ryzen 9 7950X (5.7GHz)</td>
-                <td className="py-4 px-6 text-slate-400">Intel Xeon E5 cũ (2.2 - 2.6GHz)</td>
-                <td className="py-4 px-6 text-slate-400">CPU PC cá nhân (Chia sẻ)</td>
-              </tr>
-              <tr className="hover:bg-slate-800/40 transition-colors">
-                <td className="py-4 px-6 font-bold text-white">Bộ Nhớ RAM</td>
-                <td className="py-4 px-6 text-purple-300 font-bold">DDR5 ECC 5600MHz Chuyên Dụng</td>
-                <td className="py-4 px-6 text-slate-400">DDR3/DDR4 Shared Memory</td>
-                <td className="py-4 px-6 text-slate-400">Non-ECC RAM (Dễ dump crash)</td>
-              </tr>
-              <tr className="hover:bg-slate-800/40 transition-colors">
-                <td className="py-4 px-6 font-bold text-white">Chống Tấn Công DDoS</td>
-                <td className="py-4 px-6 text-emerald-400 font-bold">Game Shield L7 500Gbps (Miễn Phí)</td>
-                <td className="py-4 px-6 text-slate-400">Cơ bản L3/L4 (Bị null route khi bị đánh)</td>
-                <td className="py-4 px-6 text-rose-400">Không có (Nguy cơ lộ IP gia đình)</td>
-              </tr>
-              <tr className="hover:bg-slate-800/40 transition-colors">
-                <td className="py-4 px-6 font-bold text-white">Độ Trễ Ping Nội Địa</td>
-                <td className="py-4 px-6 text-emerald-400 font-bold">&lt; 5ms (Cáp quang băng thông 1Gbps)</td>
-                <td className="py-4 px-6 text-slate-400">20ms - 60ms (Port chia sẻ)</td>
-                <td className="py-4 px-6 text-slate-400">Biến động (Phụ thuộc mạng nhà)</td>
-              </tr>
-              <tr className="hover:bg-slate-800/40 transition-colors">
-                <td className="py-4 px-6 font-bold text-white">Bảo Vệ Sao Lưu (Backup)</td>
-                <td className="py-4 px-6 text-purple-300 font-bold">Tự động hàng ngày sang cụm S3 riêng</td>
-                <td className="py-4 px-6 text-slate-400">Tính phí snapshot phụ</td>
-                <td className="py-4 px-6 text-slate-400">Phải tự copy thủ công</td>
-              </tr>
-            </tbody>
-          </table>
+            {/* Billing Switch */}
+            <div className="inline-flex items-center p-1 rounded-xl bg-[#0c1322] border border-slate-800 font-mono text-xs">
+              <button
+                onClick={() => setBillingCycle('monthly')}
+                className={`px-4 py-2 rounded-lg font-bold transition-all ${
+                  billingCycle === 'monthly'
+                    ? 'bg-amber-600 text-white shadow'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                Thanh toán Tháng
+              </button>
+              <button
+                onClick={() => setBillingCycle('yearly')}
+                className={`px-4 py-2 rounded-lg font-bold transition-all flex items-center gap-1.5 ${
+                  billingCycle === 'yearly'
+                    ? 'bg-amber-600 text-white shadow'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <span>Thanh toán Năm</span>
+                <span className="px-1.5 py-0.2 rounded bg-emerald-500 text-white text-[10px] font-bold">
+                  -20%
+                </span>
+              </button>
+            </div>
+          </div>
+
+          {/* Matrix Table */}
+          <div className="rounded-2xl border border-slate-800 bg-[#0c1322] overflow-hidden shadow-2xl">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs font-mono">
+                <thead>
+                  <tr className="border-b border-slate-800 bg-[#080d17] text-slate-400">
+                    <th className="p-5 font-bold uppercase text-[11px] w-1/4">Thông Số Kỹ Thuật</th>
+                    {plans.map((p) => {
+                      const displayPrice = billingCycle === 'yearly' ? Math.round(p.yearlyPrice / 12) : p.monthlyPrice;
+                      return (
+                        <th key={p.id} className="p-5 text-white border-l border-slate-800/80 w-1/4">
+                          <div className="text-sm font-extrabold text-white">{p.name}</div>
+                          <div className="text-[11px] text-slate-400 font-sans font-normal">{p.tier}</div>
+                          <div className="text-lg font-black text-amber-400 mt-2">
+                            {displayPrice.toLocaleString('vi-VN')} <span className="text-xs font-normal text-slate-400">đ/tháng</span>
+                          </div>
+                        </th>
+                      );
+                    })}
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-800/60 text-slate-300">
+                  <tr className="hover:bg-slate-900/40">
+                    <td className="p-4 font-bold text-slate-400">Vi Xử Lý (CPU Engine)</td>
+                    {plans.map((p) => (
+                      <td key={p.id} className="p-4 border-l border-slate-800/60 text-white font-bold">{p.cpu}</td>
+                    ))}
+                  </tr>
+                  <tr className="hover:bg-slate-900/40">
+                    <td className="p-4 font-bold text-slate-400">Bộ Nhớ RAM DDR5</td>
+                    {plans.map((p) => (
+                      <td key={p.id} className="p-4 border-l border-slate-800/60 text-amber-400 font-bold">{p.ram}</td>
+                    ))}
+                  </tr>
+                  <tr className="hover:bg-slate-900/40">
+                    <td className="p-4 font-bold text-slate-400">Ổ Cứng NVMe Gen4</td>
+                    {plans.map((p) => (
+                      <td key={p.id} className="p-4 border-l border-slate-800/60 text-emerald-400 font-bold">{p.storage}</td>
+                    ))}
+                  </tr>
+                  <tr className="hover:bg-slate-900/40">
+                    <td className="p-4 font-bold text-slate-400">Bảo Vệ Anti-DDoS Phần Cứng</td>
+                    {plans.map((p) => (
+                      <td key={p.id} className="p-4 border-l border-slate-800/60 text-sky-400 font-bold">{p.ddos}</td>
+                    ))}
+                  </tr>
+                  <tr className="hover:bg-slate-900/40">
+                    <td className="p-4 font-bold text-slate-400">Slot Người Chơi Khuyến Nghị</td>
+                    {plans.map((p) => (
+                      <td key={p.id} className="p-4 border-l border-slate-800/60 text-white font-bold">{p.slots}</td>
+                    ))}
+                  </tr>
+                  <tr className="hover:bg-slate-900/40">
+                    <td className="p-4 font-bold text-slate-400">Tiêu Chuẩn Tick Rate / TPS</td>
+                    {plans.map((p) => (
+                      <td key={p.id} className="p-4 border-l border-slate-800/60 text-emerald-400 font-bold">{p.tickrate}</td>
+                    ))}
+                  </tr>
+                  <tr className="hover:bg-slate-900/40">
+                    <td className="p-4 font-bold text-slate-400">Sao Lưu Bản Đồ Tự Động</td>
+                    {plans.map((p) => (
+                      <td key={p.id} className="p-4 border-l border-slate-800/60 text-slate-200">{p.backup}</td>
+                    ))}
+                  </tr>
+                  <tr className="bg-[#080d17]">
+                    <td className="p-5 font-bold text-slate-400">Hành Động Khởi Tạo</td>
+                    {plans.map((p) => (
+                      <td key={p.id} className="p-5 border-l border-slate-800/60">
+                        <button
+                          onClick={() => handleOrder(p)}
+                          className={`w-full py-3 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-2 ${
+                            p.popular
+                              ? 'bg-amber-600 hover:bg-amber-500 text-white shadow-lg shadow-amber-600/30'
+                              : 'bg-slate-800 hover:bg-slate-700 text-white'
+                          }`}
+                        >
+                          <span>Khởi Tạo Game Server Ngay</span>
+                          <ArrowRight className="w-3.5 h-3.5" />
+                        </button>
+                      </td>
+                    ))}
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
         </div>
       </section>
 
-      {/* 5. FAQ ACCORDION */}
-      <section className="py-20 bg-slate-950/60 border-t border-slate-800">
+      {/* 4. FAQ SECTION */}
+      <section className="py-20 bg-[#090d16] border-b border-slate-800">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-2xl sm:text-4xl font-black text-white mb-2">Câu Hỏi Thường Gặp (FAQ)</h2>
-            <p className="text-slate-400 text-xs sm:text-sm">Giải đáp chi tiết thắc mắc trước khi bạn bắt đầu</p>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-white">Câu Hỏi Thường Gặp Về Máy Chủ Game</h2>
+            <p className="text-slate-400 text-xs sm:text-sm mt-2 font-mono">SEN CLOUDHOST GAME SERVER FAQ</p>
           </div>
 
           <div className="space-y-3">
             {faqs.map((faq, idx) => (
               <div
                 key={idx}
-                className="bg-slate-900/90 rounded-2xl border border-slate-800 overflow-hidden transition-all"
+                className="bg-[#0c1322] rounded-2xl border border-slate-800 overflow-hidden transition-all"
               >
                 <button
                   onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
-                  className="w-full p-5 text-left font-bold text-sm sm:text-base text-white flex items-center justify-between gap-4 hover:text-purple-400 transition-colors"
+                  className="w-full p-5 text-left font-bold text-sm text-white flex items-center justify-between gap-4 hover:text-amber-400 transition-colors"
                 >
                   <span>{faq.q}</span>
                   {openFaq === idx ? (
-                    <ChevronUp className="w-5 h-5 text-purple-400 shrink-0" />
+                    <ChevronUp className="w-5 h-5 text-amber-400 shrink-0" />
                   ) : (
                     <ChevronDown className="w-5 h-5 text-slate-500 shrink-0" />
                   )}
                 </button>
                 {openFaq === idx && (
-                  <div className="px-5 pb-5 text-xs sm:text-sm text-slate-300 leading-relaxed border-t border-slate-800/60 pt-3">
+                  <div className="px-5 pb-5 text-xs text-slate-300 leading-relaxed border-t border-slate-800/60 pt-3 font-normal">
                     {faq.a}
                   </div>
                 )}
@@ -529,35 +669,44 @@ export default function GameServersServicePage() {
         </div>
       </section>
 
-      {/* 6. CALL TO ACTION BANNER */}
+      {/* 5. CALL TO ACTION */}
       <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="rounded-3xl bg-gradient-to-r from-purple-900 via-indigo-900 to-slate-900 p-8 sm:p-12 border border-purple-500/30 text-center relative overflow-hidden shadow-2xl">
-          <div className="relative z-10 max-w-3xl mx-auto">
-            <h3 className="text-2xl sm:text-4xl font-black text-white mb-4">
-              Sẵn Sàng Mở Máy Chủ Game Cho Cộng Đồng Của Bạn?
+        <div className="rounded-3xl bg-gradient-to-r from-[#1f1408] via-[#140c04] to-[#1f1408] p-8 sm:p-12 border border-amber-600/30 text-center relative overflow-hidden shadow-2xl">
+          <div className="relative z-10 max-w-3xl mx-auto space-y-6">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-amber-950 border border-amber-800 text-amber-400 text-xs font-mono">
+              <Zap className="w-3.5 h-3.5" />
+              DEPLOY IN 60 SECONDS
+            </div>
+            
+            <h3 className="text-2xl sm:text-4xl font-extrabold text-white">
+              Bắt Đầu Trải Nghiệm Máy Chủ Game Đỉnh Cao Ngay Hôm Nay
             </h3>
-            <p className="text-slate-300 text-xs sm:text-base mb-8 leading-relaxed">
-              Khởi tạo ngay chỉ với 149.000đ/tháng. Bàn giao máy chủ trong 60 giây, hoàn tiền 100% trong 7 ngày nếu không hài lòng.
+            
+            <p className="text-slate-300 text-xs sm:text-base leading-relaxed font-normal">
+              Chỉ từ 149.000đ/tháng. Bàn giao bảng điều khiển Web Console trong 60 giây và hỗ trợ chuyển map game từ nơi khác sang miễn phí.
             </p>
-            <div className="flex flex-wrap items-center justify-center gap-4">
+            
+            <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
               <button
                 onClick={() => {
-                  window.scrollTo({ top: 400, behavior: 'smooth' });
+                  const el = document.getElementById('spec-matrix');
+                  el?.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className="px-8 py-3.5 rounded-2xl bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-400 hover:to-pink-500 text-white font-black text-sm shadow-xl shadow-purple-500/25 transition-all hover:scale-105"
+                className="px-8 py-3.5 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs font-mono shadow-xl shadow-amber-600/25 transition-all hover:scale-105"
               >
-                Xem Bảng Giá & Đặt Mua
+                Khởi Tạo Game Server Ngay
               </button>
               <Link
                 href="/contact"
-                className="px-8 py-3.5 rounded-2xl bg-white/10 hover:bg-white/20 text-white font-bold text-sm border border-white/20 transition-all"
+                className="px-8 py-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs font-mono border border-slate-700 transition-all"
               >
-                Tư Vấn Miễn Phí 24/7
+                Tư Vấn Cụm Game Lớn
               </Link>
             </div>
           </div>
         </div>
       </section>
+
     </div>
   );
 }

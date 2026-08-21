@@ -7,7 +7,7 @@ import {
   Boxes, Search, Zap, CheckCircle2, ArrowRight, 
   Globe, Server, Shield, Cpu, ExternalLink, Play,
   DownloadCloud, Layers, Activity, ChevronDown, ChevronUp,
-  Sparkles, Terminal, HardDrive, Lock
+  Sparkles, Terminal, HardDrive, Lock, Sliders, Check, Copy, Radio
 } from 'lucide-react';
 import {
   SiWordpress,
@@ -36,11 +36,11 @@ export default function AppMarketplacePage() {
       name: 'WordPress CMS',
       category: 'cms',
       description: 'Nền tảng CMS hàng đầu thế giới tích hợp sẵn LiteSpeed Web Server, PHP 8.3 & MariaDB. Tối ưu 100/100 PageSpeed.',
-      tag: 'Phổ biến nhất',
-      version: '6.5 (Mới nhất)',
+      tag: 'CMS & Website',
+      version: 'v6.5 Enterprise',
       Logo: SiWordpress,
       brandColor: '#21759B',
-      color: 'from-blue-600 to-indigo-600',
+      port: '80 / 443',
       specs: '1 vCPU • 1GB RAM',
     },
     {
@@ -49,10 +49,10 @@ export default function AppMarketplacePage() {
       category: 'cms',
       description: 'Nền tảng xuất bản nội dung, newsletter & blog hiện đại viết bằng Node.js. Siêu tốc và tối ưu chuẩn SEO.',
       tag: 'Blogging & News',
-      version: '5.82',
+      version: 'v5.82 Node.js',
       Logo: SiGhost,
       brandColor: '#FFFFFF',
-      color: 'from-zinc-600 to-slate-800',
+      port: '2368',
       specs: '1 vCPU • 1GB RAM',
     },
     {
@@ -61,10 +61,10 @@ export default function AppMarketplacePage() {
       category: 'tools',
       description: 'Đám mây lưu trữ dữ liệu riêng tư chuẩn Enterprise, đồng bộ ảnh, danh bạ, tài liệu văn phòng và bảo mật E2EE.',
       tag: 'Lưu trữ riêng tư',
-      version: '28.0.4',
+      version: 'v28.0 Enterprise',
       Logo: SiNextcloud,
       brandColor: '#0082C9',
-      color: 'from-blue-500 to-cyan-500',
+      port: '8080',
       specs: '2 vCPU • 2GB RAM',
     },
     {
@@ -73,10 +73,10 @@ export default function AppMarketplacePage() {
       category: 'tools',
       description: 'Công cụ tự động hóa quy trình làm việc kéo thả mã nguồn mở kết nối hơn 400+ ứng dụng & AI LLM Nodes.',
       tag: 'Tự động hóa & AI',
-      version: '1.38',
+      version: 'v1.38 AI Node',
       Logo: SiN8N,
       brandColor: '#EA4B71',
-      color: 'from-amber-600 to-orange-600',
+      port: '5678',
       specs: '1 vCPU • 2GB RAM',
     },
     {
@@ -85,10 +85,10 @@ export default function AppMarketplacePage() {
       category: 'dev',
       description: 'Môi trường Docker Container Engine cài sẵn Portainer GUI quản lý container, volumes và stacks trực quan.',
       tag: 'DevOps & Container',
-      version: '26.0 / 2.20',
+      version: 'v26.0 / v2.20',
       Logo: SiDocker,
       brandColor: '#2496ED',
-      color: 'from-cyan-600 to-blue-600',
+      port: '9000 / 9443',
       specs: '1 vCPU • 1GB RAM',
     },
     {
@@ -97,10 +97,10 @@ export default function AppMarketplacePage() {
       category: 'ai',
       description: 'Chạy các mô hình ngôn ngữ lớn Llama 3, Mistral, Gemma, Phi-3 cục bộ riêng tư với REST API tương thích OpenAI.',
       tag: 'AI & Machine Learning',
-      version: '0.1.32',
+      version: 'v0.1.32 API',
       Logo: SiOllama,
       brandColor: '#FFFFFF',
-      color: 'from-purple-600 to-pink-600',
+      port: '11434',
       specs: '4 vCPU • 8GB RAM',
     },
     {
@@ -109,10 +109,10 @@ export default function AppMarketplacePage() {
       category: 'cms',
       description: 'Headless CMS mã nguồn mở số 1 cho React, Vue, Next.js và Mobile Apps với REST & GraphQL API tự động.',
       tag: 'Headless CMS',
-      version: '4.24',
+      version: 'v4.24 GraphQL',
       Logo: SiStrapi,
       brandColor: '#4945FF',
-      color: 'from-indigo-600 to-violet-600',
+      port: '1337',
       specs: '2 vCPU • 2GB RAM',
     },
     {
@@ -121,10 +121,10 @@ export default function AppMarketplacePage() {
       category: 'dev',
       description: 'Trình quản trị cơ sở dữ liệu MySQL, PostgreSQL, SQLite siêu nhẹ chỉ 1 file PHP an toàn và tốc độ.',
       tag: 'Database GUI',
-      version: '4.8.1',
+      version: 'v4.8.1 Secure',
       Logo: SiAdminer,
       brandColor: '#F46E26',
-      color: 'from-emerald-600 to-teal-600',
+      port: '8080',
       specs: '0.5 vCPU • 512MB RAM',
     },
   ];
@@ -160,106 +160,142 @@ export default function AppMarketplacePage() {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-900 text-slate-100 selection:bg-indigo-500 selection:text-white">
-      {/* 1. HERO SECTION */}
-      <section className="relative overflow-hidden pt-20 pb-32">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[600px] bg-gradient-to-b from-indigo-600/20 via-purple-600/10 to-transparent blur-3xl pointer-events-none" />
-        <div className="absolute -top-32 right-10 w-96 h-96 bg-indigo-500/20 rounded-full blur-[100px] pointer-events-none" />
+    <div className="min-h-screen bg-[#090d16] text-slate-100 selection:bg-indigo-500 selection:text-white font-sans">
+      
+      {/* 1. HERO SECTION: 1-CLICK MARKETPLACE TELEMETRY */}
+      <section className="relative pt-16 pb-20 border-b border-slate-800/80 overflow-hidden">
+        {/* Technical Grid Blueprint */}
+        <div 
+          className="absolute inset-0 opacity-[0.06] pointer-events-none" 
+          style={{ 
+            backgroundImage: `linear-gradient(to right, #6366f1 1px, transparent 1px), linear-gradient(to bottom, #6366f1 1px, transparent 1px)`,
+            backgroundSize: '40px 40px' 
+          }}
+        />
+        <div className="absolute top-0 right-1/4 w-[600px] h-[300px] bg-indigo-600/10 blur-[120px] pointer-events-none" />
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs font-bold uppercase tracking-wider mb-6 shadow-inner">
-            <Boxes className="w-4 h-4 text-indigo-400 animate-pulse" />
-            Kho Ứng Dụng 1-Click Cài Đặt Tự Động - Hơn 100+ App Mã Nguồn Mở
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          {/* Status Bar */}
+          <div className="flex flex-wrap items-center justify-between gap-4 p-3.5 mb-10 rounded-2xl bg-[#0d1424] border border-slate-800 text-xs font-mono">
+            <div className="flex items-center gap-3">
+              <span className="flex items-center gap-1.5 text-indigo-400 font-bold">
+                <Boxes className="w-3.5 h-3.5 text-indigo-400" />
+                APP MARKETPLACE: 1-CLICK DOCKER &amp; NATIVE ENGINE
+              </span>
+              <span className="text-slate-600 hidden sm:inline">|</span>
+              <span className="text-slate-300 hidden sm:inline">
+                DEPLOY SPEED: <strong className="text-emerald-400 font-mono">&lt; 60 Giây Tự Động</strong>
+              </span>
+            </div>
+
+            <div className="flex items-center gap-4 text-slate-400">
+              <span>SSL HTTPS: <strong className="text-emerald-400 font-mono">Auto Let&apos;s Encrypt</strong></span>
+              <span>ACCESS: <strong className="text-white font-mono">Root SSH 100%</strong></span>
+            </div>
           </div>
 
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-white max-w-5xl mx-auto leading-tight mb-6">
-            Triển Khai Mọi Ứng Dụng Với{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-cyan-400 to-emerald-300">
-              1-Click App Installer
-            </span>
-          </h1>
+          <div className="text-center max-w-4xl mx-auto space-y-6">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-indigo-950/60 border border-indigo-800/60 text-indigo-300 text-xs font-mono">
+              <Zap className="w-3.5 h-3.5 text-indigo-400" />
+              1-CLICK AUTOMATED APP PROVISIONING
+            </div>
 
-          <p className="text-base sm:text-xl text-slate-300 max-w-3xl mx-auto mb-10 leading-relaxed font-normal">
-            Không cần gõ dòng lệnh phức tạp. Cài đặt WordPress, Ghost, Nextcloud, n8n, Ollama AI, Docker trong vòng 60 giây với chứng chỉ SSL và tường lửa kích hoạt tự động.
-          </p>
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.15]">
+              Triển Khai Ứng Dụng Trong{' '}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-cyan-400 to-emerald-400 font-mono">
+                60 Giây Với 1-Click
+              </span>
+            </h1>
 
-          {/* Search Box */}
-          <div className="max-w-xl mx-auto relative mb-8">
-            <Search className="w-5 h-5 text-slate-400 absolute left-5 top-1/2 -translate-y-1/2" />
-            <input
-              type="text"
-              placeholder="Tìm kiếm ứng dụng (WordPress, Docker, Nextcloud, Ollama AI...)..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-14 pr-6 py-4 rounded-2xl bg-slate-800/90 border border-slate-700 text-white placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-2xl transition-all"
-            />
+            <p className="text-slate-300 text-base sm:text-lg leading-relaxed max-w-2xl mx-auto font-normal">
+              Không cần gõ dòng lệnh phức tạp. Tự động cấp phát container độc lập, thiết lập Nginx Reverse Proxy, 
+              kích hoạt SSL HTTPS và cấu hình cơ sở dữ liệu hoàn chỉnh.
+            </p>
+
+            {/* Search Box */}
+            <div className="max-w-xl mx-auto relative pt-2">
+              <Search className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                placeholder="Tìm kiếm ứng dụng (WordPress, Docker, Nextcloud, Ollama AI...)..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full pl-11 pr-4 py-3.5 rounded-xl bg-[#0c1322] border border-slate-800 text-white placeholder-slate-500 text-xs font-mono focus:outline-none focus:border-indigo-500 shadow-xl transition-all"
+              />
+            </div>
+
+            {/* Category Filter */}
+            <div className="flex flex-wrap items-center justify-center gap-2 pt-2 font-mono text-xs">
+              {[
+                { id: 'all', label: 'Tất Cả Ứng Dụng' },
+                { id: 'cms', label: 'CMS & Website' },
+                { id: 'ai', label: 'AI & Machine Learning' },
+                { id: 'tools', label: 'Lưu Trữ & Tự Động Hóa' },
+                { id: 'dev', label: 'Công Cụ DevOps' },
+              ].map((cat) => (
+                <button
+                  key={cat.id}
+                  onClick={() => setSelectedCategory(cat.id)}
+                  className={`px-4 py-2 rounded-xl border transition-all ${
+                    selectedCategory === cat.id
+                      ? 'bg-indigo-600 text-white border-indigo-400 shadow-md shadow-indigo-600/20 font-bold'
+                      : 'bg-[#0e1627] text-slate-400 border-slate-800 hover:border-slate-700 hover:text-white'
+                  }`}
+                >
+                  {cat.label}
+                </button>
+              ))}
+            </div>
           </div>
 
-          {/* Category Chips */}
-          <div className="flex flex-wrap items-center justify-center gap-2">
-            {[
-              { id: 'all', label: 'Tất cả ứng dụng' },
-              { id: 'cms', label: 'CMS & Website' },
-              { id: 'ai', label: 'Trí Tuệ Nhân Tạo (AI)' },
-              { id: 'tools', label: 'Lưu trữ & Tự động hóa' },
-              { id: 'dev', label: 'Công cụ Lập trình' },
-            ].map((cat) => (
-              <button
-                key={cat.id}
-                onClick={() => setSelectedCategory(cat.id)}
-                className={`px-5 py-2.5 rounded-xl text-xs font-bold transition-all border ${
-                  selectedCategory === cat.id
-                    ? 'bg-indigo-600 text-white border-indigo-400 shadow-lg shadow-indigo-500/30'
-                    : 'bg-slate-800/70 text-slate-300 hover:text-white border-slate-700 hover:border-slate-600'
-                }`}
-              >
-                {cat.label}
-              </button>
-            ))}
-          </div>
         </div>
       </section>
 
       {/* 2. APPS GRID */}
-      <section className="relative -mt-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-28">
+      <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {filteredApps.map((app) => (
             <div
               key={app.id}
-              className="bg-slate-800/90 backdrop-blur-md rounded-3xl p-6 border border-slate-700/80 shadow-xl hover:border-indigo-500/60 hover:shadow-2xl hover:shadow-indigo-500/10 transition-all duration-300 flex flex-col justify-between group"
+              className="p-6 rounded-2xl bg-[#0c1322] border border-slate-800 flex flex-col justify-between hover:border-indigo-500/60 transition-all group"
             >
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <div className="p-3 rounded-2xl bg-slate-900/80 border border-slate-700/60 group-hover:scale-110 transition-transform">
-                    <app.Logo className="w-8 h-8" style={{ color: app.brandColor }} />
+                  <div className="w-12 h-12 rounded-xl bg-[#060a12] border border-slate-800 flex items-center justify-center group-hover:scale-105 transition-transform">
+                    <app.Logo className="w-7 h-7" style={{ color: app.brandColor }} />
                   </div>
-                  <span className="px-2.5 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-[10px] font-extrabold uppercase">
-                    {app.tag}
+                  <span className="px-2 py-0.5 rounded bg-indigo-950/80 border border-indigo-800/60 text-indigo-400 text-[10px] font-mono font-bold">
+                    {app.version}
                   </span>
                 </div>
 
-                <h3 className="text-lg font-black text-white mb-1 group-hover:text-indigo-400 transition-colors">
+                <h3 className="text-base font-bold text-white mb-1 group-hover:text-indigo-400 transition-colors font-mono">
                   {app.name}
                 </h3>
-                <p className="text-xs text-slate-400 line-clamp-3 mb-6 leading-relaxed">
+                <p className="text-xs text-slate-400 line-clamp-3 mb-6 leading-relaxed font-normal">
                   {app.description}
                 </p>
               </div>
 
               <div>
-                <div className="flex items-center justify-between text-[11px] text-slate-400 font-semibold mb-4 pt-4 border-t border-slate-700/60">
-                  <span className="text-slate-300 font-mono text-[10px]">{app.specs}</span>
-                  <span className="text-emerald-400 font-bold flex items-center gap-1">
-                    <CheckCircle2 className="w-3.5 h-3.5" /> 1-Click
-                  </span>
+                <div className="space-y-1.5 font-mono text-[11px] text-slate-400 mb-4 pt-3 border-t border-slate-800">
+                  <div className="flex justify-between">
+                    <span className="text-slate-500">Khuyến nghị:</span>
+                    <span className="text-slate-300 font-bold">{app.specs}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-500">Port mặc định:</span>
+                    <span className="text-indigo-400 font-bold">{app.port}</span>
+                  </div>
                 </div>
 
                 <button
                   onClick={() => handleInstall(app.id)}
-                  className="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-black transition-all flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/30 hover:scale-[1.02]"
+                  className="w-full py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-mono font-bold transition-all flex items-center justify-center gap-1.5 shadow-md shadow-indigo-600/20"
                 >
                   <Play className="w-3.5 h-3.5" />
-                  Cài Đặt Ứng Dụng Ngay
+                  <span>Cài Đặt 1-Click Ngay</span>
                 </button>
               </div>
             </div>
@@ -267,115 +303,158 @@ export default function AppMarketplacePage() {
         </div>
       </section>
 
-      {/* 3. REALISTIC VISUAL SHOWCASE */}
-      <section className="py-24 bg-slate-950/80 border-t border-slate-800 relative overflow-hidden">
+      {/* 3. THREE CORE APPLICATION PROVISIONING SCHEMATICS */}
+      <section className="py-24 bg-[#070b12] border-t border-b border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-bold uppercase tracking-wider mb-3">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-indigo-950 text-indigo-400 text-xs font-mono mb-3 border border-indigo-800">
               <Zap className="w-3.5 h-3.5" />
-              Quy Trình Triển Khai Tự Động Hóa 100%
+              1-CLICK CONTAINER ENGINE
             </div>
-            <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight mb-4">
-              Không Còn Nỗi Ám Ảnh Dòng Lệnh Cấu Hình
+            <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
+              3 Ưu Thế Của Hạ Tầng 1-Click Installer
             </h2>
-            <p className="text-slate-400 text-sm sm:text-base leading-relaxed">
-              Mỗi ứng dụng được đóng gói cô lập, cấp phát tên miền SSL HTTPS và tối ưu thông số bộ nhớ RAM/CPU để đạt hiệu năng cao nhất.
+            <p className="text-slate-400 text-sm sm:text-base mt-3 leading-relaxed font-normal">
+              Được tự động hóa từ hạ tầng phần cứng tới tầng mạng và chứng chỉ bảo mật.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-            <div className="bg-slate-900/90 rounded-3xl p-6 border border-slate-800 overflow-hidden flex flex-col justify-between group hover:border-indigo-500/50 transition-all">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            {/* Schematic 1: 60s Provisioning Flow */}
+            <div className="p-6 rounded-3xl bg-[#0c1322] border border-slate-800 flex flex-col justify-between space-y-6">
               <div>
-                <div className="h-48 rounded-2xl overflow-hidden mb-6 relative bg-slate-800">
-                  <img
-                    src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80"
-                    alt="One Click Automated App Provisioning"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent" />
-                  <span className="absolute bottom-3 left-3 px-3 py-1 rounded-lg bg-indigo-600/90 text-white text-[11px] font-black uppercase">
-                    Automated Deploy
-                  </span>
+                <div className="p-4 rounded-2xl bg-[#060a12] border border-slate-800 mb-6 font-mono text-xs">
+                  <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
+                    <span>60S AUTO-PROVISIONING FLOW</span>
+                    <span className="text-emerald-400">READY TO USE</span>
+                  </div>
+                  <div className="space-y-2 text-slate-300 text-[11px]">
+                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                      <span>1. Cloud-Init OS Setup</span>
+                      <span className="text-sky-400">Ubuntu 24.04 LTS</span>
+                    </div>
+                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                      <span>2. Container Compose Run</span>
+                      <span className="text-indigo-400 font-bold">App Stack Injected</span>
+                    </div>
+                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                      <span>3. Credential Dispatch</span>
+                      <span className="text-emerald-400 font-bold">Root &amp; Web Login</span>
+                    </div>
+                  </div>
                 </div>
-                <h3 className="text-xl font-black text-white mb-2">Khởi Tạo Trong 60 Giây</h3>
-                <p className="text-xs text-slate-400 leading-relaxed mb-4">
-                  Hệ thống tự động biên dịch cấu hình, khởi tạo database và phân quyền bảo mật chỉ trong 1 phút, sẵn sàng link đăng nhập cho bạn sử dụng ngay.
+
+                <h3 className="text-lg font-bold text-white mb-2">Khởi Tạo Trọn Gói Trong 60 Giây</h3>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  Tự động biên dịch cấu hình, khởi tạo database và phân quyền bảo mật chỉ trong 1 phút, 
+                  bàn giao đầy đủ link đăng nhập admin và mật khẩu ngẫu nhiên an toàn.
                 </p>
               </div>
-              <ul className="space-y-2 text-xs text-slate-300 pt-3 border-t border-slate-800">
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-indigo-400" /> Tự động cấu hình Reverse Proxy Nginx</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-indigo-400" /> Cài đặt sẵn tường lửa UFW & Fail2Ban</li>
-              </ul>
+
+              <div className="pt-4 border-t border-slate-800/80 text-xs font-mono text-slate-300 flex items-center justify-between">
+                <span>Setup Duration:</span>
+                <strong className="text-emerald-400">&lt; 60 Giây Hoàn Tất</strong>
+              </div>
             </div>
 
-            <div className="bg-slate-900/90 rounded-3xl p-6 border border-slate-800 overflow-hidden flex flex-col justify-between group hover:border-cyan-500/50 transition-all">
+            {/* Schematic 2: Reverse Proxy & Auto SSL */}
+            <div className="p-6 rounded-3xl bg-[#0c1322] border border-slate-800 flex flex-col justify-between space-y-6">
               <div>
-                <div className="h-48 rounded-2xl overflow-hidden mb-6 relative bg-slate-800">
-                  <img
-                    src="https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=800&q=80"
-                    alt="Automatic SSL & Domain Binding"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent" />
-                  <span className="absolute bottom-3 left-3 px-3 py-1 rounded-lg bg-cyan-600/90 text-white text-[11px] font-black uppercase">
-                    SSL HTTPS 100%
-                  </span>
+                <div className="p-4 rounded-2xl bg-[#060a12] border border-slate-800 mb-6 font-mono text-xs">
+                  <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
+                    <span>NGINX REVERSE PROXY &amp; SSL</span>
+                    <span className="text-sky-400">AUTO-HTTPS</span>
+                  </div>
+                  <div className="space-y-2 text-slate-300 text-[11px]">
+                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                      <span>Port Forwarding</span>
+                      <span className="text-slate-300">Internal Port to 443</span>
+                    </div>
+                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                      <span>SSL Auto-Renewal</span>
+                      <span className="text-emerald-400 font-bold">Let&apos;s Encrypt Certbot</span>
+                    </div>
+                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                      <span>Custom Domain</span>
+                      <span className="text-sky-400 font-bold">1-Click CNAME Bind</span>
+                    </div>
+                  </div>
                 </div>
-                <h3 className="text-xl font-black text-white mb-2">Tích Hợp Sẵn SSL & Tên Miền</h3>
-                <p className="text-xs text-slate-400 leading-relaxed mb-4">
-                  Dễ dàng gắn tên miền riêng cho ứng dụng của bạn và tự động nhận chứng chỉ bảo mật HTTPS SSL miễn phí từ Let's Encrypt.
+
+                <h3 className="text-lg font-bold text-white mb-2">Tự Động Cấu Hình Nginx &amp; SSL HTTPS</h3>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  Không cần cấu hình Nginx hay mở port thủ công. Hệ thống tự động thiết lập Reverse Proxy 
+                  và cấp phát chứng chỉ SSL HTTPS Let&apos;s Encrypt miễn phí vĩnh viễn.
                 </p>
               </div>
-              <ul className="space-y-2 text-xs text-slate-300 pt-3 border-t border-slate-800">
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-cyan-400" /> Tự động gia hạn SSL vĩnh viễn</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-cyan-400" /> Hỗ trợ gắn Subdomain miễn phí</li>
-              </ul>
+
+              <div className="pt-4 border-t border-slate-800/80 text-xs font-mono text-slate-300 flex items-center justify-between">
+                <span>Domain Support:</span>
+                <strong className="text-sky-400">Gắn Tên Miền Riêng Dễ Dàng</strong>
+              </div>
             </div>
 
-            <div className="bg-slate-900/90 rounded-3xl p-6 border border-slate-800 overflow-hidden flex flex-col justify-between group hover:border-pink-500/50 transition-all">
+            {/* Schematic 3: Dedicated NVMe & Root Access */}
+            <div className="p-6 rounded-3xl bg-[#0c1322] border border-slate-800 flex flex-col justify-between space-y-6">
               <div>
-                <div className="h-48 rounded-2xl overflow-hidden mb-6 relative bg-slate-800">
-                  <img
-                    src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=800&q=80"
-                    alt="Dedicated NVMe Resource Isolation"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent" />
-                  <span className="absolute bottom-3 left-3 px-3 py-1 rounded-lg bg-pink-600/90 text-white text-[11px] font-black uppercase">
-                    Resource Isolation
-                  </span>
+                <div className="p-4 rounded-2xl bg-[#060a12] border border-slate-800 mb-6 font-mono text-xs">
+                  <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
+                    <span>KERNEL ISOLATION &amp; SSH</span>
+                    <span className="text-purple-400">ROOT PRIVILEGES</span>
+                  </div>
+                  <div className="space-y-2 text-slate-300 text-[11px]">
+                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                      <span>Root SSH Access</span>
+                      <span className="text-emerald-400 font-bold">Port 22 Full Root</span>
+                    </div>
+                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                      <span>NVMe Gen4 Storage</span>
+                      <span className="text-purple-400 font-bold">Hardware RAID-10</span>
+                    </div>
+                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                      <span>RAM Allocation</span>
+                      <span className="text-sky-400">100% Dedicated ECC</span>
+                    </div>
+                  </div>
                 </div>
-                <h3 className="text-xl font-black text-white mb-2">Tài Nguyên Cô Lập Tuyệt Đối</h3>
-                <p className="text-xs text-slate-400 leading-relaxed mb-4">
-                  Mỗi ứng dụng chạy trong môi trường VPS ảo hóa riêng biệt, không dùng chung tài nguyên với người khác, đảm bảo tốc độ và an toàn bảo mật 100%.
+
+                <h3 className="text-lg font-bold text-white mb-2">Tài Nguyên Cô Lập &amp; Toàn Quyền Root</h3>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  Mỗi ứng dụng chạy trong môi trường máy chủ ảo cô lập hoàn toàn. 
+                  Bạn nhận toàn quyền Root SSH để tùy chỉnh file cấu hình, cài đặt thêm package hoặc tích hợp CI/CD.
                 </p>
               </div>
-              <ul className="space-y-2 text-xs text-slate-300 pt-3 border-t border-slate-800">
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-pink-400" /> RAM ECC & NVMe Gen4 chuyên dụng</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-pink-400" /> Nâng cấp dung lượng chỉ với 1 click</li>
-              </ul>
+
+              <div className="pt-4 border-t border-slate-800/80 text-xs font-mono text-slate-300 flex items-center justify-between">
+                <span>Access Level:</span>
+                <strong className="text-purple-400">Toàn Quyền Root / Sudo 100%</strong>
+              </div>
             </div>
+
           </div>
+
         </div>
       </section>
 
-      {/* 4. FAQ ACCORDION */}
-      <section className="py-20 bg-slate-950/60 border-t border-slate-800">
+      {/* 4. FAQ SECTION */}
+      <section className="py-20 bg-[#090d16] border-b border-slate-800">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-2xl sm:text-4xl font-black text-white mb-2">Câu Hỏi Thường Gặp (FAQ)</h2>
-            <p className="text-slate-400 text-xs sm:text-sm">Giải đáp chi tiết thắc mắc về kho ứng dụng 1-Click</p>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-white">Câu Hỏi Thường Gặp Về 1-Click Apps</h2>
+            <p className="text-slate-400 text-xs sm:text-sm mt-2 font-mono">SEN CLOUDHOST APP INSTALLER FAQ</p>
           </div>
 
           <div className="space-y-3">
             {faqs.map((faq, idx) => (
               <div
                 key={idx}
-                className="bg-slate-900/90 rounded-2xl border border-slate-800 overflow-hidden transition-all"
+                className="bg-[#0c1322] rounded-2xl border border-slate-800 overflow-hidden transition-all"
               >
                 <button
                   onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
-                  className="w-full p-5 text-left font-bold text-sm sm:text-base text-white flex items-center justify-between gap-4 hover:text-indigo-400 transition-colors"
+                  className="w-full p-5 text-left font-bold text-sm text-white flex items-center justify-between gap-4 hover:text-indigo-400 transition-colors"
                 >
                   <span>{faq.q}</span>
                   {openFaq === idx ? (
@@ -385,7 +464,7 @@ export default function AppMarketplacePage() {
                   )}
                 </button>
                 {openFaq === idx && (
-                  <div className="px-5 pb-5 text-xs sm:text-sm text-slate-300 leading-relaxed border-t border-slate-800/60 pt-3">
+                  <div className="px-5 pb-5 text-xs text-slate-300 leading-relaxed border-t border-slate-800/60 pt-3 font-normal">
                     {faq.a}
                   </div>
                 )}
@@ -394,6 +473,42 @@ export default function AppMarketplacePage() {
           </div>
         </div>
       </section>
+
+      {/* 5. CALL TO ACTION */}
+      <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="rounded-3xl bg-gradient-to-r from-[#14122e] via-[#0b0a1a] to-[#14122e] p-8 sm:p-12 border border-indigo-600/30 text-center relative overflow-hidden shadow-2xl">
+          <div className="relative z-10 max-w-3xl mx-auto space-y-6">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-indigo-950 border border-indigo-800 text-indigo-400 text-xs font-mono">
+              <Zap className="w-3.5 h-3.5" />
+              DEPLOY ANY APP IN 60 SECONDS
+            </div>
+            
+            <h3 className="text-2xl sm:text-4xl font-extrabold text-white">
+              Khởi Tạo Ứng Dụng Đám Mây Của Bạn Ngay Hôm Nay
+            </h3>
+            
+            <p className="text-slate-300 text-xs sm:text-base leading-relaxed font-normal">
+              Chỉ với 1 cú click. Toàn quyền Root SSH, tự động cấp phát SSL HTTPS và hỗ trợ kỹ thuật 24/7.
+            </p>
+            
+            <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
+              <Link
+                href="/services/cloud-vps"
+                className="px-8 py-3.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs font-mono shadow-xl shadow-indigo-600/25 transition-all hover:scale-105"
+              >
+                Xem Cấu Hình Cloud VPS
+              </Link>
+              <Link
+                href="/contact"
+                className="px-8 py-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs font-mono border border-slate-700 transition-all"
+              >
+                Yêu Cầu Tích Hợp App Mới
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
     </div>
   );
 }
