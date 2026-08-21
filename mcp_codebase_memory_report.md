@@ -2,15 +2,18 @@
 
 ## Tổng Quan Dự Án
 **CloudServiceStore** là nền tảng thương mại dịch vụ đám mây toàn diện được phát triển với:
-- **Backend**: .NET 8 (ASP.NET Core) theo kiến trúc Clean Architecture / DDD
-- **Frontend**: Next.js 15 (App Router, TypeScript)
-- **Database**: PostgreSQL 16 + Dapper ORM
+- **Backend**: .NET 10.0 (ASP.NET Core) theo kiến trúc Clean Architecture / CQRS / DDD
+- **Frontend**: Next.js 14/15 (App Router, TypeScript, Tailwind CSS, Lucide Icons)
+- **Database**: Microsoft SQL Server + Entity Framework Core + Dapper
+- **Containerization**: Docker Engine API (Docker.DotNet) cho VPS, Databases, Game Servers, 1-Click Apps, Static Sites
+- **Storage**: MinIO S3-Compatible Storage SDK
+- **Security / SSL**: ACME Protocol v2 (Let's Encrypt) + HTTP-01 Challenges + RSA-2048
 - **Cache**: Redis
-- **Realtime**: SignalR
-- **Jobs/Queue**: Hangfire
-- **Auth**: JWT Bearer + BCrypt
-- **Testing**: xUnit, Playwright, Stryker (mutation testing)
-- **Deployment**: Docker Compose
+- **Realtime**: SignalR Hubs (Resource status notifier, Live chat, VPS Terminal)
+- **Jobs/Queue**: Hangfire + IResourceProvisioningQueue Background Workers
+- **Auth**: JWT Bearer + BCrypt + TwoFactor Backup Codes + Audit Logging
+- **Testing**: xUnit, Testcontainers (MSSQL), Playwright E2E
+- **CI/CD & Deployment**: GitHub Actions (4 Parallel Stages) + VPS Docker Compose auto-deploy
 
 ## Cấu Trúc Codebase
 
@@ -164,13 +167,12 @@ frontend/
 3. ResourceProvisioningWorker nhận job từ queue
    ↓
 4. Specific provisioning service xử lý:
-   - DockerVpsProvisioningService → VPS instances
-   - DockerGameServerProvisioningService → Game servers
-   - DockerAppInstallerService → App marketplace
-   - CloudflareCdnProvisioningService → CDN
-   - MinioProvisioningService → Object storage
-   - MockStaticSiteProvisioningService → Static sites
-   - AcmeProvisioningService → SSL certificates
+   - DockerVpsProvisioningService → VPS instances (Ubuntu/Debian, SSH credentials, Cgroups 1GB)
+   - DockerGameServerProvisioningService → Game servers (Minecraft, CS2, Rust, TCP/UDP ports)
+   - DockerAppInstallerService → App marketplace (WordPress, Ghost, n8n, Adminer, Nextcloud)
+   - MinioProvisioningService → Object storage (MinIO S3 Buckets, AWS SDK, Capacity limits)
+   - DockerStaticSiteProvisioningService → Static sites (Nginx Alpine 64MB, Host Volume RO)
+   - AcmeProvisioningService → SSL certificates (Let's Encrypt ACME v2, DNS preflight, RSA-2048)
    ↓
 5. Status update qua SignalR đến customer
    ↓
