@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import {
   Cloud, Server, Globe, Shield, ShoppingCart, Menu, X, Cpu, ChevronDown, LogOut, Wallet,
   Gamepad2, Mail, Database, HardDrive, ShieldCheck, Zap, Layers, Palette, ShoppingBag, Activity, ArrowRight, Compass,
-  LifeBuoy, Megaphone, BookOpen, DownloadCloud, ActivitySquare, Search, LayoutTemplate
+  LifeBuoy, Megaphone, BookOpen, DownloadCloud, ActivitySquare, Search, LayoutTemplate, Boxes, ArrowLeftRight
 } from 'lucide-react';
 import { useAuthStore } from '../store/useAuthStore';
 import { useUIStore } from '../store/useUIStore';
@@ -20,8 +20,8 @@ const serviceCategories = [
     description: 'Cung cấp các dịch vụ hạ tầng máy chủ chuyên dụng, ảo hóa CPU AMD/Intel hiệu năng cao và container tối ưu.',
     services: [
       { id: 1, title: 'Cloud VPS NVMe', desc: 'Máy chủ ảo hiệu năng cao CPU AMD EPYC', link: '/services/cloud-vps', icon: Server, color: 'text-blue-600 bg-blue-50' },
-      { id: 2, title: 'Dedicated Server', desc: 'Máy chủ vật lý riêng biệt Dual Xeon & EPYC', link: '/services/dedicated-servers', icon: Cpu, color: 'text-purple-600 bg-purple-50' },
-      { id: 3, title: 'Game Servers', desc: 'Minecraft, CS2, Rust Anti-DDoS 100Gbps', link: '/services/game-servers', icon: Gamepad2, color: 'text-rose-600 bg-rose-50' },
+      { id: 2, title: 'Dedicated Server', desc: 'Máy chủ vật lý riêng biệt Dual Xeon & EPYC', link: '/services/dedicated-servers', icon: Server, color: 'text-purple-600 bg-purple-50' },
+      { id: 3, title: 'Game Servers', desc: 'Minecraft, CS2, Rust Anti-DDoS 500Gbps', link: '/services/game-servers', icon: Gamepad2, color: 'text-rose-600 bg-rose-50' },
       { id: 4, title: 'Static Sites (Nginx)', desc: 'Web tĩnh tốc độ cao trên container Nginx', link: '/services/static-sites', icon: Globe, color: 'text-cyan-600 bg-cyan-50' }
     ]
   },
@@ -29,9 +29,9 @@ const serviceCategories = [
     name: 'Web & Bảo mật',
     description: 'Giải pháp lưu trữ web tốc độ cao, cài ứng dụng 1 chạm và bảo vệ đường truyền đạt chuẩn quốc tế.',
     services: [
-      { id: 1, title: 'NVMe Web Hosting', desc: 'LiteSpeed + cPanel tối ưu tốc độ', link: '/services/hosting', icon: LayoutTemplate, color: 'text-emerald-600 bg-emerald-50' },
-      { id: 2, title: '1-Click Apps Installer', desc: 'Cài WordPress, Ghost, Nextcloud 60s', link: '/apps', icon: Layers, color: 'text-amber-600 bg-amber-50' },
-      { id: 3, title: 'Chứng Chỉ SSL / TLS', desc: 'Bảo mật mã hóa HTTPS DV/EV', link: '/services/ssl-certificates', icon: ShieldCheck, color: 'text-teal-600 bg-teal-50' },
+      { id: 1, title: 'NVMe Web Hosting', desc: 'LiteSpeed + cPanel tối ưu tốc độ WordPress', link: '/services/hosting', icon: LayoutTemplate, color: 'text-emerald-600 bg-emerald-50' },
+      { id: 2, title: '1-Click Apps Installer', desc: 'Cài WordPress, Ghost, Nextcloud, n8n 60s', link: '/apps', icon: Boxes, color: 'text-amber-600 bg-amber-50' },
+      { id: 3, title: 'Chứng Chỉ SSL / TLS', desc: 'Mã hóa HTTPS bảo hiểm $1.75M USD', link: '/services/ssl-certificates', icon: ShieldCheck, color: 'text-teal-600 bg-teal-50' },
       { id: 4, title: 'Tên Miền (DNS)', desc: 'Đăng ký .VN, .COM, .AI, .IO giá tốt', link: '/domains', icon: Compass, color: 'text-indigo-600 bg-indigo-50' }
     ]
   },
@@ -39,10 +39,10 @@ const serviceCategories = [
     name: 'Dữ liệu & Giải pháp',
     description: 'Hệ sinh thái lưu trữ S3, cơ sở dữ liệu quản trị tự động và dịch vụ chuyển đổi dữ liệu toàn diện.',
     services: [
-      { id: 1, title: 'Managed Databases', desc: 'PostgreSQL, MySQL, Redis tự động', link: '/services/databases', icon: Database, color: 'text-teal-600 bg-teal-50' },
-      { id: 2, title: 'Object Storage (S3)', desc: 'Lưu trữ MinIO S3 API tương thích cao', link: '/services/storage', icon: HardDrive, color: 'text-blue-600 bg-blue-50' },
-      { id: 3, title: 'Bảo Mật & WAF', desc: 'Tường lửa L7, chống DDoS & quét mã độc', link: '/services/security', icon: Shield, color: 'text-red-600 bg-red-50' },
-      { id: 4, title: 'Chuyển Đổi Dữ Liệu', desc: 'Hỗ trợ chuyển dữ liệu lên Cloud 24/7', link: '/services/migrations', icon: Zap, color: 'text-orange-600 bg-orange-50' }
+      { id: 1, title: 'Managed Databases', desc: 'PostgreSQL, MySQL, Redis HA tự động', link: '/services/databases', icon: Database, color: 'text-teal-600 bg-teal-50' },
+      { id: 2, title: 'Object Storage (S3)', desc: 'MinIO S3 API All-Flash 11 số 9 độ bền', link: '/services/storage', icon: HardDrive, color: 'text-blue-600 bg-blue-50' },
+      { id: 3, title: 'Bảo Mật & WAF', desc: 'Tường lửa AI, chống DDoS L7 & OWASP', link: '/services/security', icon: Shield, color: 'text-red-600 bg-red-50' },
+      { id: 4, title: 'Chuyển Đổi Dữ Liệu', desc: 'Di dời Zero-Downtime 24/7 MIỄN PHÍ', link: '/services/migrations', icon: Activity, color: 'text-orange-600 bg-orange-50' }
     ]
   }
 ];
@@ -514,16 +514,16 @@ export const Header: React.FC<HeaderProps> = ({
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                 {[
                   { label: 'Cloud VPS', href: '/services/cloud-vps', icon: Server, color: 'text-blue-600' },
-                  { label: 'Dedicated Server', href: '/services/dedicated-servers', icon: Cpu, color: 'text-purple-600' },
+                  { label: 'Dedicated Server', href: '/services/dedicated-servers', icon: Server, color: 'text-purple-600' },
                   { label: 'Managed DB', href: '/services/databases', icon: Database, color: 'text-teal-600' },
                   { label: 'Game Servers', href: '/services/game-servers', icon: Gamepad2, color: 'text-rose-600' },
-                  { label: '1-Click Apps', href: '/apps', icon: Layers, color: 'text-amber-600' },
+                  { label: '1-Click Apps', href: '/apps', icon: Boxes, color: 'text-amber-600' },
                   { label: 'Static Sites', href: '/services/static-sites', icon: Globe, color: 'text-cyan-600' },
                   { label: 'Object Storage', href: '/services/storage', icon: HardDrive, color: 'text-blue-600' },
                   { label: 'Chứng Chỉ SSL', href: '/services/ssl-certificates', icon: ShieldCheck, color: 'text-teal-600' },
                   { label: 'Tên Miền (DNS)', href: '/domains', icon: Compass, color: 'text-indigo-600' },
                   { label: 'Bảo Mật & WAF', href: '/services/security', icon: Shield, color: 'text-red-600' },
-                  { label: 'Chuyển Đổi Data', href: '/services/migrations', icon: Zap, color: 'text-orange-600' },
+                  { label: 'Chuyển Đổi Data', href: '/services/migrations', icon: ArrowLeftRight, color: 'text-orange-600' },
                   { label: 'Web Hosting', href: '/services/hosting', icon: LayoutTemplate, color: 'text-emerald-600' },
                 ].map((svc, idx) => (
                   <Link 

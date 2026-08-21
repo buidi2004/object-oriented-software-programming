@@ -497,7 +497,106 @@ export default function GameServersServicePage() {
         </div>
       </section>
 
-      {/* 3. TECHNICAL SPECIFICATION MATRIX & PRICING */}
+      {/* 3. REGIONAL PING & LOW-LATENCY NETWORK TELEMETRY */}
+      <section className="py-24 bg-[#090d16] border-b border-slate-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-emerald-950 text-emerald-400 text-xs font-mono mb-3 border border-emerald-800">
+              <Activity className="w-3.5 h-3.5" />
+              REGIONAL PING &amp; PACKET TELEMETRY
+            </div>
+            <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
+              Độ Trễ Cực Thấp Trên Toàn Quốc &amp; Đông Nam Á
+            </h2>
+            <p className="text-slate-400 text-sm sm:text-base mt-3 leading-relaxed font-normal">
+              Định tuyến trực tiếp qua các tuyến cáp quang biển và đường trục VNIX nội địa, đảm bảo ping dưới 10ms trên toàn lãnh thổ Việt Nam.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            {/* Left: Interactive Regional Latency Grid */}
+            <div className="lg:col-span-7 space-y-4 font-mono">
+              <div className="p-6 rounded-2xl bg-[#0c1322] border border-slate-800 space-y-4">
+                <div className="text-xs text-slate-400 uppercase tracking-wider flex items-center justify-between pb-3 border-b border-slate-800">
+                  <span>VÙNG KẾT NỐI (POP LOCATION)</span>
+                  <span>PING THỜI GIAN THỰC</span>
+                </div>
+
+                {[
+                  { region: 'Hà Nội & Miền Bắc (Viettel / VNPT / FPT)', ping: '2.1 ms', status: 'CỰC TỐT', color: 'text-emerald-400', bar: 'w-[98%]', bg: 'bg-emerald-500' },
+                  { region: 'Đà Nẵng & Miền Trung', ping: '4.8 ms', status: 'CỰC TỐT', color: 'text-emerald-400', bar: 'w-[92%]', bg: 'bg-emerald-500' },
+                  { region: 'TP. Hồ Chí Minh & Miền Nam', ping: '6.2 ms', status: 'CỰC TỐT', color: 'text-emerald-400', bar: 'w-[88%]', bg: 'bg-emerald-500' },
+                  { region: 'Singapore (SEA Regional Gateway)', ping: '22.4 ms', status: 'TỐT', color: 'text-sky-400', bar: 'w-[70%]', bg: 'bg-sky-500' },
+                  { region: 'Bangkok, Thái Lan', ping: '26.8 ms', status: 'TỐT', color: 'text-sky-400', bar: 'w-[65%]', bg: 'bg-sky-500' },
+                  { region: 'Hong Kong & Tokyo, Nhật Bản', ping: '38.5 ms', status: 'ỔN ĐỊNH', color: 'text-amber-400', bar: 'w-[52%]', bg: 'bg-amber-500' },
+                ].map((item, i) => (
+                  <div key={i} className="p-3.5 rounded-xl bg-[#060a12] border border-slate-800 space-y-2">
+                    <div className="flex items-center justify-between text-xs">
+                      <div className="flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+                        <span className="text-slate-200 font-bold">{item.region}</span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <span className={`text-[10px] px-2 py-0.5 rounded bg-slate-900 border border-slate-800 ${item.color} font-bold`}>
+                          {item.status}
+                        </span>
+                        <span className={`font-black text-sm ${item.color}`}>{item.ping}</span>
+                      </div>
+                    </div>
+                    {/* Visual Ping Bar */}
+                    <div className="w-full h-1.5 rounded-full bg-slate-900 overflow-hidden">
+                      <div className={`h-full rounded-full ${item.bg} ${item.bar}`} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Right: Network Quality Metrics Card */}
+            <div className="lg:col-span-5 space-y-6">
+              <div className="p-8 rounded-3xl bg-[#0c1322] border border-emerald-500/40 shadow-2xl space-y-6 font-mono">
+                <div className="flex items-center justify-between pb-4 border-b border-slate-800">
+                  <div>
+                    <div className="text-xs text-slate-500 uppercase">TIÊU CHUẨN MẠNG ESPORTS</div>
+                    <div className="text-lg font-black text-white mt-0.5">SEN CLOUD BONE (VNIX 100G)</div>
+                  </div>
+                  <div className="w-3 h-3 rounded-full bg-emerald-400 shadow-md shadow-emerald-400/50" />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4 text-xs">
+                  <div className="p-4 rounded-xl bg-[#060a12] border border-slate-800">
+                    <div className="text-slate-500 text-[10px]">TỶ LỆ RỚT GÓI (PACKET LOSS)</div>
+                    <div className="text-xl font-black text-emerald-400 mt-1">0.00 %</div>
+                    <div className="text-[10px] text-slate-400 mt-0.5">Chuẩn cáp quang Tier-1</div>
+                  </div>
+                  <div className="p-4 rounded-xl bg-[#060a12] border border-slate-800">
+                    <div className="text-slate-500 text-[10px]">ĐỘ BIẾN THIÊN (JITTER)</div>
+                    <div className="text-xl font-black text-sky-400 mt-1">&lt; 0.2 ms</div>
+                    <div className="text-[10px] text-slate-400 mt-0.5">Không giật hình / lag</div>
+                  </div>
+                  <div className="p-4 rounded-xl bg-[#060a12] border border-slate-800">
+                    <div className="text-slate-500 text-[10px]">BĂNG THÔNG NỘI ĐỊA</div>
+                    <div className="text-xl font-black text-amber-400 mt-1">1,000 Mbps</div>
+                    <div className="text-[10px] text-slate-400 mt-0.5">Không giới hạn Traffic</div>
+                  </div>
+                  <div className="p-4 rounded-xl bg-[#060a12] border border-slate-800">
+                    <div className="text-slate-500 text-[10px]">THỜI GIAN PHẢN ỨNG DDoS</div>
+                    <div className="text-xl font-black text-purple-400 mt-1">&lt; 1.0 Giây</div>
+                    <div className="text-[10px] text-slate-400 mt-0.5">Tự động kích hoạt lọc</div>
+                  </div>
+                </div>
+
+                <div className="pt-2 text-xs text-slate-400 leading-relaxed font-sans font-normal">
+                  💡 Máy chủ đặt tại các Data Center lớn ở Hà Nội và TP.HCM với kết nối Peering trực tiếp tới Viettel, VNPT, FPT Telecom, MobiFone và CMC Telecom.
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* 4. TECHNICAL SPECIFICATION MATRIX & PRICING */}
       <section id="spec-matrix" className="py-24 bg-[#090d16] border-b border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           

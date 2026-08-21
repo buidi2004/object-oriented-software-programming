@@ -2,7 +2,11 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Server, Globe, Shield, ArrowRight, Zap, CheckCircle2, Cloud } from 'lucide-react';
+import { 
+  Server, Globe, Shield, ArrowRight, Zap, CheckCircle2, Cloud,
+  Database, HardDrive, Gamepad2, Boxes, ShieldCheck, ShieldAlert,
+  ArrowLeftRight, Activity, LayoutTemplate, Compass
+} from 'lucide-react';
 import { api } from '@/src/lib/api';
 
 const CATEGORY_META: Record<string, {
@@ -10,7 +14,7 @@ const CATEGORY_META: Record<string, {
   title: string;
   subtitle: string;
   description: string;
-  icon: typeof Server;
+  icon: any;
   color: string;
   bgLight: string;
   textColor: string;
@@ -34,7 +38,7 @@ const CATEGORY_META: Record<string, {
     title: 'NVMe Web Hosting',
     subtitle: 'Hosting tốc độ cao cho Website',
     description: 'Tối ưu 100% cho WordPress, WooCommerce & Laravel. Tích hợp LiteSpeed Web Server + LSCache tăng tốc x10.',
-    icon: Globe,
+    icon: LayoutTemplate,
     color: 'from-indigo-600 to-purple-500',
     bgLight: 'bg-indigo-50',
     textColor: 'text-indigo-600',
@@ -42,11 +46,11 @@ const CATEGORY_META: Record<string, {
     features: ['LiteSpeed + LSCache', 'cPanel quản trị', 'Imunify360 AI Shield', 'SSL miễn phí'],
   },
   'ten-mien': {
-    href: '/services/domain',
-    title: 'Đăng Ký Tên Miền',
+    href: '/domains',
+    title: 'Đăng Ký Tên Miền (DNS)',
     subtitle: 'Tên miền .VN & Quốc tế',
     description: 'Đăng ký tên miền với giá tốt nhất thị trường. Hỗ trợ .com, .vn, .net, .ai và hàng trăm đuôi mở rộng khác.',
-    icon: Globe,
+    icon: Compass,
     color: 'from-cyan-500 to-emerald-500',
     bgLight: 'bg-cyan-50',
     textColor: 'text-cyan-600',
@@ -54,16 +58,16 @@ const CATEGORY_META: Record<string, {
     features: ['DNS Management miễn phí', 'WHOIS Privacy Protection', 'Chuyển tên miền dễ dàng', 'Auto-renew thông minh'],
   },
   'dedicated-server': {
-    href: '/services/dedicated-server',
-    title: 'Dedicated Server',
-    subtitle: 'Máy chủ vật lý riêng biệt',
-    description: 'Phần cứng chuyên dụng 100% từ Intel Xeon & AMD EPYC, băng thông không giới hạn, cam kết Uptime 99.99%.',
+    href: '/services/dedicated-servers',
+    title: 'Dedicated Physical Servers',
+    subtitle: 'Máy chủ vật lý riêng biệt 100%',
+    description: 'Phần cứng chuyên dụng 100% từ Dell PowerEdge, Intel Xeon & AMD EPYC, KVM/iDRAC 9 HTML5 từ xa.',
     icon: Server,
     color: 'from-purple-600 to-pink-500',
     bgLight: 'bg-purple-50',
     textColor: 'text-purple-600',
     borderColor: 'border-purple-200',
-    features: ['100% Dedicated Hardware', 'Cổng mạng 10Gbps Uplink', 'iDRAC / IPMI từ xa', 'KVM over IP chuyên dụng'],
+    features: ['100% Bare-metal Hardware', 'Cổng mạng 10Gbps Uplink', 'iDRAC 9 HTML5 Remote KVM', 'SLA thay linh kiện 30m'],
   },
   'email-server': {
     href: '/services/email-hosting',
@@ -79,15 +83,15 @@ const CATEGORY_META: Record<string, {
   },
   'ssl-certificate': {
     href: '/services/ssl-certificates',
-    title: 'Chứng Chỉ SSL',
-    subtitle: 'Bảo mật dữ liệu HTTPS',
-    description: 'Mã hóa kết nối chuẩn 256-bit từ Sectigo, DigiCert, GeoTrust. Tăng độ tin cậy và thứ hạng SEO cho website.',
-    icon: Shield,
+    title: 'Chứng Chỉ SSL / TLS',
+    subtitle: 'Bảo mật dữ liệu HTTPS 256-bit',
+    description: 'Mã hóa kết nối chuẩn 256-bit từ Sectigo, DigiCert. Bảo hiểm lên đến $1.75M USD và tăng uy tín thương hiệu.',
+    icon: ShieldCheck,
     color: 'from-amber-500 to-emerald-500',
     bgLight: 'bg-amber-50',
     textColor: 'text-amber-600',
     borderColor: 'border-amber-200',
-    features: ['Mã hóa 256-bit SHA-2', 'Bảo hiểm lên đến $1.75M', 'Huy hiệu Trust Seal uy tín', 'Kích hoạt trong 5 phút'],
+    features: ['TLS 1.3 0-RTT Handshake', 'Bảo hiểm lên đến $1.75M', 'Huy hiệu Site Seal uy tín', 'Kích hoạt trong 5 phút'],
   },
   'cdn': {
     href: '/services/cdn',
@@ -105,61 +109,85 @@ const CATEGORY_META: Record<string, {
     href: '/services/databases',
     title: 'Managed Cloud Databases',
     subtitle: 'Cơ sở dữ liệu đám mây tự động',
-    description: 'Dịch vụ quản trị MySQL, PostgreSQL, Redis và MongoDB. Tự động sao lưu, mở rộng quy mô và dự phòng cụm High Availability.',
-    icon: Server,
+    description: 'Dịch vụ quản trị PostgreSQL 16, MySQL 8.0, Redis 7.2. Tự động sao lưu PITR đến từng giây, cụm High Availability Master-Replica.',
+    icon: Database,
     color: 'from-teal-600 to-emerald-500',
     bgLight: 'bg-teal-50',
     textColor: 'text-teal-600',
     borderColor: 'border-teal-200',
-    features: ['MySQL 8 / Postgres 16 / Redis', 'High Availability Cluster', 'Tự động Backup hàng ngày', 'Mở rộng 1-Click Zero Downtime'],
+    features: ['Postgres 16 / MySQL 8 / Redis', 'Cụm HA Auto-Failover < 30s', 'Sao lưu PITR tới từng giây', '10,000 IOPS NVMe Dedicated'],
   },
   'storage': {
     href: '/services/storage',
-    title: 'Cloud Object Storage (S3)',
-    subtitle: 'Lưu trữ đám mây tương thích S3',
-    description: 'Lưu trữ tệp tin, media, backup không giới hạn dung lượng với chi phí tiết kiệm 80%. Hoàn toàn tương thích AWS S3 SDK.',
-    icon: Cloud,
+    title: 'Object Storage (S3)',
+    subtitle: 'Lưu trữ đám mây tương thích S3 API',
+    description: 'Lưu trữ tệp tin, video, media không giới hạn dung lượng với độ bền 11 số 9 Erasure Coding và 0$ phí băng thông tải ra.',
+    icon: HardDrive,
     color: 'from-blue-600 to-indigo-600',
     bgLight: 'bg-blue-50',
     textColor: 'text-blue-600',
     borderColor: 'border-blue-200',
-    features: ['100% S3 Compatible API', 'Độ bền dữ liệu 99.999999999%', 'Băng thông tải không giới hạn', 'Phân quyền IAM & Pre-signed URL'],
+    features: ['100% S3 Compatible API', 'Độ bền 11 số 9 (99.999999999%)', 'Miễn phí Egress Bandwidth', 'Pre-signed URL HMAC-SHA256'],
   },
   'game-servers': {
     href: '/services/game-servers',
     title: 'Game Server Hosting',
-    subtitle: 'Máy chủ Game siêu tốc & Low Latency',
-    description: 'Khởi tạo máy chủ Minecraft, CS:GO/CS2, Rust, Palworld, Valheim trong 60 giây. Bảo vệ Anti-DDoS Game chuyên dụng.',
-    icon: Server,
+    subtitle: 'Máy chủ Game Ryzen 9 5.7GHz',
+    description: 'Khởi tạo máy chủ Minecraft, CS2 128-Tick, Rust trong 60 giây. Bảo vệ Anti-DDoS Game 500Gbps chuyên dụng.',
+    icon: Gamepad2,
     color: 'from-purple-600 to-indigo-600',
     bgLight: 'bg-purple-50',
     textColor: 'text-purple-600',
     borderColor: 'border-purple-200',
-    features: ['Khởi tạo trong 60 giây', 'Mod & Plugin Manager 1-Click', 'Anti-DDoS Game chuyên sâu', 'Toàn quyền FTP & Console'],
+    features: ['AMD Ryzen 9 7950X (5.7GHz)', 'Anti-DDoS 500Gbps Game Filter', 'Tick Rate 20.0 TPS / 128-Tick', '1-Click Modpack & Web Console'],
   },
   'app-installer': {
     href: '/apps',
     title: '1-Click App Marketplace',
-    subtitle: 'Cài đặt ứng dụng tức thì',
-    description: 'Hơn 100+ ứng dụng và framework: WordPress, Node.js, Docker, GitLab, Nextcloud, Prestashop sẵn sàng chỉ với 1 cú nhấp.',
-    icon: Globe,
+    subtitle: 'Cài đặt ứng dụng đám mây 60s',
+    description: 'Hơn 100+ ứng dụng và framework: WordPress, Ghost, Nextcloud, n8n, Ollama AI, Docker sẵn sàng chỉ với 1 cú nhấp.',
+    icon: Boxes,
     color: 'from-sky-600 to-blue-600',
     bgLight: 'bg-sky-50',
     textColor: 'text-sky-600',
     borderColor: 'border-sky-200',
-    features: ['100+ Ứng dụng phổ biến', 'Tự động cập nhật bảo mật', 'Sao lưu trước khi update', 'Cấu hình SSL tự động'],
+    features: ['100+ Ứng dụng phổ biến', 'Tự động cấu hình Nginx & SSL', 'Toàn quyền Root SSH 100%', 'Môi trường Container cô lập'],
   },
   'static-sites': {
     href: '/services/static-sites',
-    title: 'Static Sites Hosting (Jamstack)',
-    subtitle: 'Triển khai Web tĩnh siêu tốc',
-    description: 'Deploy Next.js, Vite, React, Astro trực tiếp từ Git. Mạng CDN toàn cầu với SSL tự động và CDN Edge Functions.',
+    title: 'Static Sites Hosting (Nginx)',
+    subtitle: 'Triển khai Web tĩnh TTFB < 15ms',
+    description: 'Deploy Next.js, Vite, React, Astro trên container Nginx cô lập với nén Brotli 11 và SPA routing fallback không lỗi 404.',
     icon: Globe,
     color: 'from-emerald-600 to-teal-500',
     bgLight: 'bg-emerald-50',
     textColor: 'text-emerald-600',
     borderColor: 'border-emerald-200',
-    features: ['Git-integrated Deployments', 'SSL & Custom Domain tự động', 'Preview Deployments', 'Global Edge Caching'],
+    features: ['Nginx Container 128MB cô lập', 'SPA try_files Fallback (No 404)', 'Brotli 11 + HTTP/3 Quic', 'Git Webhook CI/CD tự động'],
+  },
+  'security-waf': {
+    href: '/services/security',
+    title: 'Bảo Mật & WAF Shield',
+    subtitle: 'Tường lửa ứng dụng AI & Anti-DDoS L7',
+    description: 'Lá chắn bảo vệ website chặn đứng 100% tấn công OWASP Top 10 (SQLi, XSS, RCE), ẩn IP máy chủ gốc qua Reverse Proxy.',
+    icon: ShieldAlert,
+    color: 'from-rose-600 to-red-600',
+    bgLight: 'bg-rose-50',
+    textColor: 'text-rose-600',
+    borderColor: 'border-rose-200',
+    features: ['OWASP Top 10 Full Protection', 'AI Zero-Day Heuristic Scanner', 'Origin IP Cloaking 100%', 'Rate Limiting & Botnet Shield'],
+  },
+  'cloud-migration': {
+    href: '/services/migrations',
+    title: 'Chuyển Đổi Dữ Liệu Cloud',
+    subtitle: 'Di dời Zero-Downtime MIỄN PHÍ',
+    description: 'Dịch vụ di dời website, database, cụm máy chủ sang SEN CloudHost không gián đoạn dịch vụ với đội ngũ kỹ sư 1-1.',
+    icon: ArrowLeftRight,
+    color: 'from-teal-600 to-cyan-500',
+    bgLight: 'bg-teal-50',
+    textColor: 'text-teal-600',
+    borderColor: 'border-teal-200',
+    features: ['0s Downtime với Live Sync', 'Kiểm thử Staging trước Go-Live', 'Kế hoạch Rollback an toàn 100%', 'MIỄN PHÍ khi thuê từ 6 tháng'],
   },
   'website-builder': {
     href: '/services/website-builder',
@@ -344,8 +372,8 @@ export default function ServicesPage() {
 
               <div className="mb-6">
                 <span className="text-sm text-slate-500">Chỉ từ</span>
-                <div className="text-3xl font-black text-slate-900">
-                  {svc.startPrice}<span className="text-base font-bold text-slate-500">{svc.priceSuffix}</span>
+                <div className="text-3xl font-black text-slate-900 font-mono">
+                  {svc.startPrice}<span className="text-base font-bold text-slate-500 font-sans">{svc.priceSuffix}</span>
                 </div>
               </div>
 

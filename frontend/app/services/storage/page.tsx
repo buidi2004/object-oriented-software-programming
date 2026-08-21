@@ -26,6 +26,8 @@ export default function ObjectStorageServicePage() {
   const [objectKey, setObjectKey] = useState('uploads/media-2026.mp4');
   const [expiryMinutes, setExpiryMinutes] = useState('60');
   const [copied, setCopied] = useState(false);
+  const [activeSdkTab, setActiveSdkTab] = useState<'aws-cli' | 'python' | 'nodejs' | 'golang'>('aws-cli');
+  const [codeCopied, setCodeCopied] = useState(false);
 
   const presignedUrl = `https://s3.sencloudhost.vn/${bucketName}/${objectKey}?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIOSFODNN7EXAMPLE%2F20260822%2Fap-southeast-1%2Fs3%2Faws4_request&X-Amz-Date=20260822T051000Z&X-Amz-Expires=${Number(expiryMinutes) * 60}&X-Amz-SignedHeaders=host&X-Amz-Signature=c51f4967bf0b55a02e6c43cf305d762e84d4cf56a735c0ac4d6d67eb83c3ab15`;
 
@@ -456,7 +458,156 @@ export default function ObjectStorageServicePage() {
         </div>
       </section>
 
-      {/* 3. TECHNICAL SPECIFICATION MATRIX & PRICING */}
+      {/* 3. MULTI-LANGUAGE SDK & S3 CLI CODE RUNNER */}
+      <section className="py-24 bg-[#090d16] border-b border-slate-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-sky-950 text-sky-400 text-xs font-mono mb-3 border border-sky-800">
+              <Code className="w-3.5 h-3.5" />
+              100% S3 API COMPATIBLE
+            </div>
+            <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
+              Tương Thích Tuyệt Đối AWS S3 SDK &amp; CLI
+            </h2>
+            <p className="text-slate-400 text-sm sm:text-base mt-3 leading-relaxed font-normal">
+              Chỉ cần thay đổi <code className="text-sky-400 font-mono">endpoint_url</code>, giữ nguyên 100% codebase và thư viện S3 hiện có của bạn.
+            </p>
+          </div>
+
+          <div className="p-6 sm:p-8 rounded-3xl bg-[#0c1322] border border-slate-800 shadow-2xl font-mono">
+            {/* Tab Controls */}
+            <div className="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-800">
+              <div className="flex items-center gap-2">
+                {[
+                  { id: 'aws-cli', label: 'AWS CLI / Shell' },
+                  { id: 'python', label: 'Python (Boto3)' },
+                  { id: 'nodejs', label: 'Node.js (AWS SDK v3)' },
+                  { id: 'golang', label: 'Golang (MinIO SDK)' },
+                ].map((tab) => (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveSdkTab(tab.id as typeof activeSdkTab)}
+                    className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                      activeSdkTab === tab.id
+                        ? 'bg-sky-600 text-white shadow'
+                        : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
+
+              <button
+                onClick={() => {
+                  const codes: Record<string, string> = {
+                    'aws-cli': `aws --endpoint-url https://s3.sencloudhost.vn s3 cp ./data-backup.tar.gz s3://my-enterprise-bucket/backups/`,
+                    'python': `import boto3\ns3 = boto3.client('s3', endpoint_url='https://s3.sencloudhost.vn')`,
+                    'nodejs': `import { S3Client } from "@aws-sdk/client-s3";\nconst s3 = new S3Client({ endpoint: "https://s3.sencloudhost.vn" });`,
+                    'golang': `minioClient, err := minio.New("s3.sencloudhost.vn", &minio.Options{ Secure: true })`
+                  };
+                  navigator.clipboard.writeText(codes[activeSdkTab] || '');
+                  setCodeCopied(true);
+                  setTimeout(() => setCodeCopied(false), 2000);
+                }}
+                className="flex items-center gap-1.5 px-3 py-1 rounded bg-slate-900 border border-slate-800 text-xs text-sky-400 hover:text-white hover:bg-slate-800 transition-all"
+              >
+                {codeCopied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                <span>{codeCopied ? 'Đã sao chép!' : 'Sao chép Code'}</span>
+              </button>
+            </div>
+
+            {/* Code Body */}
+            <div className="mt-4 p-5 rounded-2xl bg-[#060a12] border border-slate-800/80 text-xs text-slate-300 overflow-x-auto leading-relaxed">
+              <pre className="text-slate-300 font-mono">
+                {activeSdkTab === 'aws-cli' && (
+`# 1. Cấu hình Endpoint SEN S3 vào AWS CLI
+aws configure set default.s3.signature_version s3v4
+aws configure set aws_access_key_id "AKIAIOSFODNN7EXAMPLE"
+aws configure set aws_secret_access_key "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+
+# 2. Upload tệp tin lên bucket
+aws --endpoint-url https://s3.sencloudhost.vn s3 cp ./backup.tar.gz s3://my-enterprise-bucket/
+
+# 3. Đồng bộ thư mục dung lượng lớn (Multi-part upload)
+aws --endpoint-url https://s3.sencloudhost.vn s3 sync ./media/ s3://my-enterprise-bucket/media/`
+                )}
+                {activeSdkTab === 'python' && (
+`import boto3
+from botocore.client import Config
+
+# Khởi tạo S3 Client với Endpoint SEN CloudHost
+s3 = boto3.client(
+    's3',
+    endpoint_url='https://s3.sencloudhost.vn',
+    aws_access_key_id='AKIAIOSFODNN7EXAMPLE',
+    aws_secret_access_key='wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY',
+    config=Config(signature_version='s3v4'),
+    region_name='ap-southeast-1'
+)
+
+# Upload tệp tin lên bucket
+s3.upload_file('database.sql.gz', 'my-enterprise-bucket', 'backups/database.sql.gz')
+print(" Dữ liệu đã lưu trữ an toàn trên SEN S3 All-Flash!")`
+                )}
+                {activeSdkTab === 'nodejs' && (
+`import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import fs from "fs";
+
+// Khởi tạo S3Client tương thích 100% AWS SDK v3
+const s3 = new S3Client({
+  endpoint: "https://s3.sencloudhost.vn",
+  region: "ap-southeast-1",
+  credentials: {
+    accessKeyId: "AKIAIOSFODNN7EXAMPLE",
+    secretAccessKey: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+  },
+  forcePathStyle: true,
+});
+
+// Upload stream tệp tin
+const fileStream = fs.createReadStream("./user-avatar.jpg");
+await s3.send(new PutObjectCommand({
+  Bucket: "my-enterprise-bucket",
+  Key: "avatars/user-avatar.jpg",
+  Body: fileStream,
+}));
+console.log(" Upload thành công vào cụm NVMe Storage!");`
+                )}
+                {activeSdkTab === 'golang' && (
+`package main
+
+import (
+    "context"
+    "log"
+    "github.com/minio/minio-go/v7"
+    "github.com/minio/minio-go/v7/pkg/credentials"
+)
+
+func main() {
+    endpoint := "s3.sencloudhost.vn"
+    accessKeyID := "AKIAIOSFODNN7EXAMPLE"
+    secretAccessKey := "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+
+    minioClient, err := minio.New(endpoint, &minio.Options{
+        Creds:  credentials.NewStaticV4(accessKeyID, secretAccessKey, ""),
+        Secure: true,
+    })
+    if err != nil {
+        log.Fatalln("Lỗi kết nối:", err)
+    }
+
+    log.Println("Kết nối thành công tới SEN Object Storage S3:", minioClient.EndpointURL())
+}`
+                )}
+              </pre>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* 4. TECHNICAL SPECIFICATION MATRIX & PRICING */}
       <section id="spec-matrix" className="py-24 bg-[#090d16] border-b border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           

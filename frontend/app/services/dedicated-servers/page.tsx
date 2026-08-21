@@ -24,6 +24,13 @@ export default function DedicatedServersPage() {
   const [serverPower, setServerPower] = useState<'on' | 'off' | 'rebooting'>('on');
   const [activeIso, setActiveIso] = useState<string>('Ubuntu 24.04 LTS');
 
+  // Custom Hardware Configurator State
+  const [cfgCpu, setCfgCpu] = useState<'xeon-2680' | 'epyc-7502' | 'xeon-gold'>('epyc-7502');
+  const [cfgRam, setCfgRam] = useState<'64' | '128' | '256' | '512'>('128');
+  const [cfgStorage, setCfgStorage] = useState<'ssd-480' | 'nvme-960' | 'nvme-1920' | 'nvme-raid10'>('nvme-960');
+  const [cfgUplink, setCfgUplink] = useState<'1gbps-shared' | '1gbps-dedi' | '10gbps-sfp'>('1gbps-dedi');
+  const [cfgIp, setCfgIp] = useState<'1' | '5' | '13' | '29'>('5');
+
   useEffect(() => {
     async function loadPlans() {
       try {
@@ -146,6 +153,64 @@ export default function DedicatedServersPage() {
       billingCycle: cycleMonths,
       type: 'vps',
       details: `${plan.cpu} • ${plan.ram} • ${plan.storage}`
+    });
+    router.push('/cart');
+  };
+
+  const cpuPrices: Record<string, { name: string; model: string; price: number; cores: string }> = {
+    'xeon-2680': { name: 'Dual Intel Xeon E5-2680v4', model: 'Dell PowerEdge R740', price: 2490000, cores: '28 Cores / 56 Threads' },
+    'epyc-7502': { name: 'AMD EPYC 7502 Enterprise', model: 'Dell PowerEdge R6515', price: 3490000, cores: '32 Cores / 64 Threads' },
+    'xeon-gold': { name: 'Dual Intel Xeon Gold 6248R', model: 'Dell PowerEdge R740xd', price: 5490000, cores: '48 Cores / 96 Threads' }
+  };
+
+  const ramPrices: Record<string, { label: string; price: number }> = {
+    '64': { label: '64 GB DDR4 ECC Reg', price: 0 },
+    '128': { label: '128 GB DDR4 ECC Reg', price: 500000 },
+    '256': { label: '256 GB DDR4 ECC Reg', price: 1200000 },
+    '512': { label: '512 GB DDR4 ECC Reg', price: 2500000 }
+  };
+
+  const storagePrices: Record<string, { label: string; price: number }> = {
+    'ssd-480': { label: '2x 480 GB SSD RAID 1', price: 0 },
+    'nvme-960': { label: '2x 960 GB NVMe Gen4 RAID 1', price: 400000 },
+    'nvme-1920': { label: '2x 1.92 TB NVMe Gen4 RAID 1', price: 900000 },
+    'nvme-raid10': { label: '4x 1.92 TB NVMe Gen4 RAID 10', price: 2000000 }
+  };
+
+  const uplinkPrices: Record<string, { label: string; price: number }> = {
+    '1gbps-shared': { label: '1 Gbps Shared (100Mbps Quốc tế)', price: 0 },
+    '1gbps-dedi': { label: '1 Gbps Dedicated Cổng Riêng', price: 300000 },
+    '10gbps-sfp': { label: '10 Gbps SFP+ Quang Học Dedicated', price: 1500000 }
+  };
+
+  const ipPrices: Record<string, { label: string; price: number }> = {
+    '1': { label: '1 Clean IPv4 Tĩnh', price: 0 },
+    '5': { label: '5 Clean IPv4 Tĩnh (/29 Subnet)', price: 200000 },
+    '13': { label: '13 Clean IPv4 Tĩnh (/28 Subnet)', price: 600000 },
+    '29': { label: '29 Clean IPv4 Tĩnh (/27 Subnet)', price: 1400000 }
+  };
+
+  const customTotalMonthly = (cpuPrices[cfgCpu]?.price || 0) + 
+                             (ramPrices[cfgRam]?.price || 0) + 
+                             (storagePrices[cfgStorage]?.price || 0) + 
+                             (uplinkPrices[cfgUplink]?.price || 0) + 
+                             (ipPrices[cfgIp]?.price || 0);
+
+  const customTotalYearly = customTotalMonthly * 12 * 0.8;
+
+  const handleCustomOrder = async () => {
+    const cycleMonths = billingCycle === 'yearly' ? 12 : 1;
+    const finalPrice = billingCycle === 'yearly' ? customTotalYearly : customTotalMonthly;
+    const cpuInfo = cpuPrices[cfgCpu];
+    const ramInfo = ramPrices[cfgRam];
+    const storageInfo = storagePrices[cfgStorage];
+
+    await addItem('d9a48911-3755-46ae-a2e6-7649d363296c', cycleMonths, false, {
+      name: `Dedicated Custom (${cpuInfo.name}) - ${billingCycle === 'yearly' ? '12 Tháng' : '1 Tháng'}`,
+      price: finalPrice,
+      billingCycle: cycleMonths,
+      type: 'vps',
+      details: `${cpuInfo.cores} • ${ramInfo.label} • ${storageInfo.label} • ${uplinkPrices[cfgUplink].label}`
     });
     router.push('/cart');
   };
@@ -471,7 +536,272 @@ export default function DedicatedServersPage() {
         </div>
       </section>
 
-      {/* 3. TECHNICAL SPECIFICATION MATRIX & PRICING */}
+      {/* 3. INTERACTIVE BARE-METAL SERVER CONFIGURATOR */}
+      <section id="server-configurator" className="py-24 bg-[#070b12] border-b border-slate-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-purple-950 text-purple-400 text-xs font-mono mb-3 border border-purple-800">
+              <Sliders className="w-3.5 h-3.5" />
+              BUILD YOUR BARE-METAL SERVER
+            </div>
+            <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
+              Tự Cấu Hình Phần Cứng Theo Yêu Cầu
+            </h2>
+            <p className="text-slate-400 text-sm sm:text-base mt-3 leading-relaxed font-normal">
+              Tùy biến CPU, dung lượng RAM ECC, ổ cứng NVMe Enterprise và cổng mạng quang 10Gbps với báo giá tính toán thời gian thực.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            
+            {/* Left: Interactive Configurator Selectors */}
+            <div className="lg:col-span-8 space-y-6">
+              
+              {/* CPU Selection */}
+              <div className="p-6 rounded-2xl bg-[#0c1322] border border-slate-800 space-y-3">
+                <div className="text-xs font-mono text-slate-400 uppercase tracking-wider flex items-center justify-between">
+                  <span>1. Lựa Chọn Vi Xử Lý (Processor):</span>
+                  <span className="text-purple-400 font-bold">{cpuPrices[cfgCpu].cores}</span>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  {(['xeon-2680', 'epyc-7502', 'xeon-gold'] as const).map((key) => {
+                    const c = cpuPrices[key];
+                    const active = cfgCpu === key;
+                    return (
+                      <button
+                        key={key}
+                        onClick={() => setCfgCpu(key)}
+                        className={`p-4 rounded-xl border text-left transition-all ${
+                          active
+                            ? 'bg-[#141b2d] border-purple-500 shadow-md shadow-purple-500/10'
+                            : 'bg-[#060a12] border-slate-800 text-slate-400 hover:border-slate-700'
+                        }`}
+                      >
+                        <div className="font-mono font-bold text-xs text-white">{c.name}</div>
+                        <div className="text-[11px] text-slate-500 font-mono mt-1">{c.model}</div>
+                        <div className="text-xs font-bold text-purple-400 font-mono mt-2">
+                          {c.price.toLocaleString('vi-VN')} đ/tháng
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* RAM Selection */}
+              <div className="p-6 rounded-2xl bg-[#0c1322] border border-slate-800 space-y-3">
+                <div className="text-xs font-mono text-slate-400 uppercase tracking-wider">
+                  2. Bộ Nhớ Trong (RAM DDR4 ECC Registered):
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  {(['64', '128', '256', '512'] as const).map((key) => {
+                    const r = ramPrices[key];
+                    const active = cfgRam === key;
+                    return (
+                      <button
+                        key={key}
+                        onClick={() => setCfgRam(key)}
+                        className={`p-3 rounded-xl border text-center transition-all ${
+                          active
+                            ? 'bg-[#141b2d] border-purple-500 text-white font-bold'
+                            : 'bg-[#060a12] border-slate-800 text-slate-400 hover:border-slate-700'
+                        }`}
+                      >
+                        <div className="font-mono text-xs">{r.label.split(' ')[0]} GB ECC</div>
+                        <div className="text-[10px] text-purple-400 font-mono mt-1">
+                          {r.price === 0 ? 'Mặc định' : `+${r.price.toLocaleString('vi-VN')}đ`}
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Storage Selection */}
+              <div className="p-6 rounded-2xl bg-[#0c1322] border border-slate-800 space-y-3">
+                <div className="text-xs font-mono text-slate-400 uppercase tracking-wider">
+                  3. Ổ Cứng Lưu Trữ Enterprise (Hardware RAID):
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {(['ssd-480', 'nvme-960', 'nvme-1920', 'nvme-raid10'] as const).map((key) => {
+                    const s = storagePrices[key];
+                    const active = cfgStorage === key;
+                    return (
+                      <button
+                        key={key}
+                        onClick={() => setCfgStorage(key)}
+                        className={`p-3.5 rounded-xl border text-left transition-all ${
+                          active
+                            ? 'bg-[#141b2d] border-purple-500 text-white'
+                            : 'bg-[#060a12] border-slate-800 text-slate-400 hover:border-slate-700'
+                        }`}
+                      >
+                        <div className="font-mono font-bold text-xs">{s.label}</div>
+                        <div className="text-[10px] text-emerald-400 font-mono mt-1">
+                          {s.price === 0 ? 'Bao gồm sẵn' : `+${s.price.toLocaleString('vi-VN')} đ/tháng`}
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Network Uplink & IP */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div className="p-6 rounded-2xl bg-[#0c1322] border border-slate-800 space-y-3">
+                  <div className="text-xs font-mono text-slate-400 uppercase tracking-wider">
+                    4. Cổng Mạng Uplink:
+                  </div>
+                  <div className="space-y-2">
+                    {(['1gbps-shared', '1gbps-dedi', '10gbps-sfp'] as const).map((key) => {
+                      const u = uplinkPrices[key];
+                      const active = cfgUplink === key;
+                      return (
+                        <button
+                          key={key}
+                          onClick={() => setCfgUplink(key)}
+                          className={`w-full p-2.5 rounded-xl border text-left transition-all flex items-center justify-between text-xs font-mono ${
+                            active
+                              ? 'bg-[#141b2d] border-purple-500 text-white font-bold'
+                              : 'bg-[#060a12] border-slate-800 text-slate-400 hover:border-slate-700'
+                          }`}
+                        >
+                          <span>{u.label}</span>
+                          <span className="text-sky-400 text-[10px]">
+                            {u.price === 0 ? 'FREE' : `+${(u.price / 1000).toLocaleString('vi-VN')}k`}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div className="p-6 rounded-2xl bg-[#0c1322] border border-slate-800 space-y-3">
+                  <div className="text-xs font-mono text-slate-400 uppercase tracking-wider">
+                    5. Địa Chỉ Clean IPv4:
+                  </div>
+                  <div className="space-y-2">
+                    {(['1', '5', '13', '29'] as const).map((key) => {
+                      const ip = ipPrices[key];
+                      const active = cfgIp === key;
+                      return (
+                        <button
+                          key={key}
+                          onClick={() => setCfgIp(key)}
+                          className={`w-full p-2.5 rounded-xl border text-left transition-all flex items-center justify-between text-xs font-mono ${
+                            active
+                              ? 'bg-[#141b2d] border-purple-500 text-white font-bold'
+                              : 'bg-[#060a12] border-slate-800 text-slate-400 hover:border-slate-700'
+                          }`}
+                        >
+                          <span>{ip.label}</span>
+                          <span className="text-purple-400 text-[10px]">
+                            {ip.price === 0 ? 'FREE' : `+${(ip.price / 1000).toLocaleString('vi-VN')}k`}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            {/* Right: Live Config Datasheet & Rear Chassis Schematic */}
+            <div className="lg:col-span-4 space-y-6">
+              
+              {/* Summary Datasheet Box */}
+              <div className="p-6 rounded-2xl bg-[#0c1322] border border-purple-500/50 shadow-2xl space-y-4 font-mono text-xs">
+                <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+                  <span className="font-bold text-white uppercase">DATASHEET BÁO GIÁ</span>
+                  <span className="px-2 py-0.5 rounded bg-purple-950 text-purple-400 border border-purple-800 text-[10px] font-bold">
+                    CUSTOM BARE-METAL
+                  </span>
+                </div>
+
+                <div className="space-y-2 text-slate-300">
+                  <div className="flex justify-between">
+                    <span className="text-slate-500">Chassis:</span>
+                    <span className="text-white font-bold">{cpuPrices[cfgCpu].model}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-500">Processor:</span>
+                    <span className="text-sky-400">{cpuPrices[cfgCpu].name}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-500">Memory:</span>
+                    <span className="text-white">{ramPrices[cfgRam].label}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-500">Storage:</span>
+                    <span className="text-emerald-400">{storagePrices[cfgStorage].label}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-500">Uplink:</span>
+                    <span className="text-slate-300">{uplinkPrices[cfgUplink].label}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-500">IP Subnet:</span>
+                    <span className="text-purple-300">{ipPrices[cfgIp].label}</span>
+                  </div>
+                </div>
+
+                <div className="pt-4 border-t border-slate-800">
+                  <div className="text-[10px] text-slate-400 uppercase">Tổng Chi Phí Dự Tính:</div>
+                  <div className="text-2xl font-black text-purple-400 mt-1">
+                    {billingCycle === 'yearly'
+                      ? `${Math.round(customTotalYearly / 12).toLocaleString('vi-VN')} đ/tháng`
+                      : `${customTotalMonthly.toLocaleString('vi-VN')} đ/tháng`}
+                  </div>
+                  {billingCycle === 'yearly' && (
+                    <div className="text-[10px] text-emerald-400 mt-0.5">
+                      Thanh toán {customTotalYearly.toLocaleString('vi-VN')} đ/năm (Tiết kiệm 20%)
+                    </div>
+                  )}
+                </div>
+
+                <button
+                  onClick={handleCustomOrder}
+                  className="w-full py-3.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs font-mono flex items-center justify-center gap-2 transition-all shadow-lg shadow-purple-600/30 hover:scale-[1.02]"
+                >
+                  <ShoppingCart className="w-4 h-4" />
+                  <span>ĐẶT CẤU HÌNH NÀY NGAY</span>
+                </button>
+              </div>
+
+              {/* Rear Chassis Port Schematic */}
+              <div className="p-5 rounded-2xl bg-[#060a12] border border-slate-800 font-mono text-[11px] space-y-3">
+                <div className="text-[10px] text-slate-500 uppercase flex items-center justify-between">
+                  <span>REAR CHASSIS INTERFACES</span>
+                  <span className="text-emerald-400">DELL R740 2U</span>
+                </div>
+                <div className="space-y-1.5 text-slate-400">
+                  <div className="p-2 rounded bg-slate-900 border border-slate-800 flex justify-between">
+                    <span>PSU A + B (2N):</span>
+                    <span className="text-emerald-400 font-bold">2x 1400W Titanium</span>
+                  </div>
+                  <div className="p-2 rounded bg-slate-900 border border-slate-800 flex justify-between">
+                    <span>iDRAC Dedicated:</span>
+                    <span className="text-sky-400 font-bold">1x RJ45 100Mbps OOB</span>
+                  </div>
+                  <div className="p-2 rounded bg-slate-900 border border-slate-800 flex justify-between">
+                    <span>Optical Uplink:</span>
+                    <span className="text-purple-400 font-bold">2x 10Gbps SFP+</span>
+                  </div>
+                  <div className="p-2 rounded bg-slate-900 border border-slate-800 flex justify-between">
+                    <span>Ethernet Ports:</span>
+                    <span className="text-slate-300">4x 1Gbps Intel I350</span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* 4. TECHNICAL SPECIFICATION MATRIX & PRICING */}
       <section id="spec-matrix" className="py-24 bg-[#090d16] border-b border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
