@@ -27,10 +27,26 @@ public class GetCategoryPlansBySlugQueryHandler : IRequestHandler<GetCategoryPla
     {
         ["hosting"] = "web-hosting",
         ["domain"] = "ten-mien",
+        ["domains"] = "ten-mien",
         ["vps"] = "cloud-vps",
         ["email"] = "email-server",
+        ["email-hosting"] = "email-server",
         ["ssl"] = "ssl-certificate",
+        ["ssl-certificates"] = "ssl-certificate",
         ["dedicated"] = "dedicated-server",
+        ["dedicated-servers"] = "dedicated-server",
+        ["databases"] = "managed-database",
+        ["database"] = "managed-database",
+        ["managed-databases"] = "managed-database",
+        ["game-servers"] = "game-server",
+        ["games"] = "game-server",
+        ["apps"] = "1click-apps",
+        ["app-installer"] = "1click-apps",
+        ["static-sites"] = "static-sites",
+        ["storage"] = "object-storage",
+        ["object-storage"] = "object-storage",
+        ["security"] = "security-waf",
+        ["migrations"] = "cloud-migration",
     };
 
     private readonly IRepository<ServiceCategory> _categoryRepo;

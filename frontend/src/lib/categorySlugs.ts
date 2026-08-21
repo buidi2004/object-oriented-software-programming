@@ -1,11 +1,40 @@
 /** Slug FE/BE dùng chung — alias URL → slug canonical trong DB. */
 export const CATEGORY_SLUG_ALIASES: Record<string, string> = {
   hosting: 'web-hosting',
+  'web-hosting': 'web-hosting',
   domain: 'ten-mien',
+  domains: 'ten-mien',
+  'ten-mien': 'ten-mien',
   vps: 'cloud-vps',
+  'cloud-vps': 'cloud-vps',
   'vps-custom': 'cloud-vps',
+  dedicated: 'dedicated-server',
+  'dedicated-server': 'dedicated-server',
+  'dedicated-servers': 'dedicated-server',
+  email: 'email-server',
+  'email-hosting': 'email-server',
+  'email-server': 'email-server',
+  ssl: 'ssl-certificate',
+  'ssl-certificate': 'ssl-certificate',
+  'ssl-certificates': 'ssl-certificate',
+  databases: 'managed-database',
+  database: 'managed-database',
+  'managed-database': 'managed-database',
+  'game-servers': 'game-server',
+  games: 'game-server',
+  'game-server': 'game-server',
+  apps: '1click-apps',
+  'app-installer': '1click-apps',
+  '1click-apps': '1click-apps',
+  'static-sites': 'static-sites',
+  storage: 'object-storage',
+  'object-storage': 'object-storage',
+  security: 'security-waf',
+  'security-waf': 'security-waf',
+  migrations: 'cloud-migration',
+  'cloud-migration': 'cloud-migration',
 };
 
 export function resolveCategorySlug(slug: string): string {
-  return CATEGORY_SLUG_ALIASES[slug] ?? slug;
+  return CATEGORY_SLUG_ALIASES[slug.toLowerCase()] ?? slug.toLowerCase();
 }
