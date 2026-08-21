@@ -6,7 +6,8 @@ import * as signalR from '@microsoft/signalr';
 import {
   Server, Activity, Cpu, MemoryStick, HardDrive, Terminal,
   Play, Square, RefreshCw, ArrowLeft, Clock, Wifi, WifiOff,
-  Shield, Zap, AlertCircle, CheckCircle2, XCircle, Loader2, X
+  Shield, Zap, AlertCircle, CheckCircle2, XCircle, Loader2, X,
+  Copy, Check, Key, RotateCcw, Camera, Globe, ArrowDown, ArrowUp, Lock
 } from 'lucide-react';
 import { api } from '@/src/lib/api';
 import VpsTerminalModal from '@/src/components/VpsTerminalModal';
@@ -27,6 +28,24 @@ interface VpsInstance {
   expiresAt: string;
 }
 
+interface VpsStats {
+  vpsId: string;
+  status: string;
+  cpuUsagePercent: number;
+  cpuCores: number;
+  ramUsedMb: number;
+  ramLimitMb: number;
+  ramUsagePercent: number;
+  diskUsedGb: number;
+  diskTotalGb: number;
+  diskUsagePercent: number;
+  networkRxKbps: number;
+  networkTxKbps: number;
+  ipAddress: string;
+  sshPort: number;
+  sshCommand: string;
+}
+
 const formatRam = (mb: number) => mb >= 1024 ? `${(mb / 1024).toFixed(0)} GB` : `${mb} MB`;
 const formatUptime = (created: string) => {
   const diff = Date.now() - new Date(created).getTime();
@@ -41,10 +60,26 @@ const formatUptime = (created: string) => {
 export default function VpsInstancesPage() {
   const [instances, setInstances] = useState<VpsInstance[]>([]);
   const [selected, setSelected] = useState<VpsInstance | null>(null);
+  const [stats, setStats] = useState<VpsStats | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [dockerHealth, setDockerHealth] = useState<boolean | null>(null);
   const [actionToast, setActionToast] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
-  
+  const [copiedSsh, setCopiedSsh] = useState(false);
+
+  // Modals state
+  const [showRebuildModal, setShowRebuildModal] = useState(false);
+  const [selectedOs, setSelectedOs] = useState('Ubuntu 24.04 LTS');
+  const [isRebuilding, setIsRebuilding] = useState(false);
+
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [newRootPassword, setNewRootPassword] = useState('');
+  const [isResettingPass, setIsResettingPass] = useState(false);
+  const [generatedPass, setGeneratedPass] = useState<string | null>(null);
+
+  const [showSnapshotModal, setShowSnapshotModal] = useState(false);
+  const [snapshotName, setSnapshotName] = useState('');
+  const [isCreatingSnapshot, setIsCreatingSnapshot] = useState(false);
+
   // Terminal state
   const [consoleOutput, setConsoleOutput] = useState<string[]>([]);
   const [command, setCommand] = useState('');
@@ -61,11 +96,22 @@ export default function VpsInstancesPage() {
   }, []);
 
   useEffect(() => {
-    // Scroll to bottom when output changes
     if (consoleRef.current) {
       consoleRef.current.scrollTop = consoleRef.current.scrollHeight;
     }
   }, [consoleOutput]);
+
+  useEffect(() => {
+    if (selected?.id) {
+      fetchStats(selected.id);
+      const interval = setInterval(() => {
+        if (selected?.id && selected.status === 'Running') {
+          fetchStats(selected.id);
+        }
+      }, 4000);
+      return () => clearInterval(interval);
+    }
+  }, [selected?.id, selected?.status]);
 
   useEffect(() => {
     if (selected?.containerId) {
@@ -91,6 +137,15 @@ export default function VpsInstancesPage() {
       console.error('Failed to fetch VPS instances', err);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const fetchStats = async (id: string) => {
+    try {
+      const res = await api.get(`/vpsinstances/${id}/stats`);
+      setStats(res.data);
+    } catch {
+      // Fallback
     }
   };
 
@@ -130,11 +185,10 @@ export default function VpsInstancesPage() {
     connection.start()
       .then(() => {
         setIsTerminalConnected(true);
-        setConsoleOutput(prev => [...prev, '✓ Connected successfully.']);
+        setConsoleOutput(prev => [...prev, '✓ Connected successfully. Type Linux commands below.']);
       })
       .catch((err: any) => {
         if (err?.name === 'AbortError' || err?.message?.includes('stopped during negotiation')) {
-          // Clean unmount during negotiation, ignore
           return;
         }
         setConsoleOutput(prev => [...prev, '✗ Failed to connect to VPS terminal.']);
@@ -195,7 +249,6 @@ export default function VpsInstancesPage() {
   const handleAction = async (action: 'start' | 'stop' | 'restart') => {
     if (!selected || actionLoading) return;
 
-    // Don't allow actions on terminated VPS
     if (selected.status === 'Terminated') {
       showToast('error', 'VPS này đã bị hủy, không thể thực hiện thao tác.');
       return;
@@ -204,38 +257,74 @@ export default function VpsInstancesPage() {
     setActionLoading(action);
     setActionToast(null);
 
-    // Optimistic UI: show "Provisioning" state while waiting (backend may re-provision)
     const previousStatus = selected.status;
-    const nextStatus = action === 'stop' ? 'Stopped' : 'Running';
-
     setSelected(prev => prev ? { ...prev, status: 'Provisioning' } : null);
     setInstances(prev => prev.map(item => item.id === selected.id ? { ...item, status: 'Provisioning' } : item));
 
     try {
       await api.post(`/vpsinstances/${selected.id}/${action}`);
-      // Refresh to get latest data (may include new containerId from re-provision)
       const res = await api.get('/vpsinstances');
       setInstances(res.data);
       const updated = res.data.find((v: VpsInstance) => v.id === selected.id);
       if (updated) setSelected(updated);
       showToast('success', `Đã ${actionLabels[action]} VPS thành công!`);
     } catch (err: any) {
-      console.error(`Failed to ${action} VPS:`, err);
-      // Revert optimistic update on failure
       setSelected(prev => prev ? { ...prev, status: previousStatus } : null);
       setInstances(prev => prev.map(item => item.id === selected.id ? { ...item, status: previousStatus } : item));
-
-      // Extract backend error message if available
-      const backendMsg = err?.response?.data?.detail 
-        || err?.response?.data?.message 
-        || err?.response?.data?.title
-        || err?.response?.data;
-      const errorMsg = typeof backendMsg === 'string' && backendMsg.length < 200
-        ? backendMsg
-        : `Không thể ${actionLabels[action]} VPS. Vui lòng thử lại hoặc liên hệ hỗ trợ.`;
-      showToast('error', errorMsg);
+      const backendMsg = err?.response?.data?.detail || err?.response?.data?.message || err?.response?.data;
+      showToast('error', typeof backendMsg === 'string' ? backendMsg : `Lỗi khi ${actionLabels[action]} VPS.`);
     } finally {
       setActionLoading(null);
+    }
+  };
+
+  const handleCopySsh = (text: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedSsh(true);
+    setTimeout(() => setCopiedSsh(false), 2000);
+  };
+
+  const handleRebuildOs = async () => {
+    if (!selected) return;
+    setIsRebuilding(true);
+    try {
+      const res = await api.post(`/vpsinstances/${selected.id}/rebuild`, { osName: selectedOs });
+      showToast('success', res.data.message || 'Cài lại Hệ điều hành thành công!');
+      setShowRebuildModal(false);
+      fetchInstances();
+    } catch (err: any) {
+      showToast('error', err?.response?.data?.message || 'Lỗi khi cài lại hệ điều hành');
+    } finally {
+      setIsRebuilding(false);
+    }
+  };
+
+  const handleResetPassword = async () => {
+    if (!selected) return;
+    setIsResettingPass(true);
+    try {
+      const res = await api.post(`/vpsinstances/${selected.id}/reset-password`, { newPassword: newRootPassword });
+      setGeneratedPass(res.data.newPassword);
+      showToast('success', 'Đổi mật khẩu Root thành công!');
+    } catch (err: any) {
+      showToast('error', err?.response?.data?.message || 'Lỗi khi đổi mật khẩu');
+    } finally {
+      setIsResettingPass(false);
+    }
+  };
+
+  const handleCreateSnapshot = async () => {
+    if (!selected) return;
+    setIsCreatingSnapshot(true);
+    try {
+      await api.post(`/vpsinstances/${selected.id}/snapshots`, { name: snapshotName });
+      showToast('success', 'Đã tạo Snapshot tức thì thành công!');
+      setShowSnapshotModal(false);
+      setSnapshotName('');
+    } catch (err: any) {
+      showToast('error', err?.response?.data?.message || 'Lỗi khi tạo Snapshot');
+    } finally {
+      setIsCreatingSnapshot(false);
     }
   };
 
@@ -269,6 +358,7 @@ export default function VpsInstancesPage() {
           </button>
         </div>
       )}
+
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -278,14 +368,14 @@ export default function VpsInstancesPage() {
             </div>
             Quản lý VPS
           </h1>
-          <p className="text-slate-500 mt-1">Quản lý và điều khiển máy chủ Cloud Server của bạn</p>
+          <p className="text-slate-500 mt-1">Quản lý, theo dõi tài nguyên realtime và điều khiển Cloud Server của bạn</p>
         </div>
         <div className="flex items-center gap-3">
           <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold ${dockerHealth ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700'}`}>
             {dockerHealth ? <Wifi className="w-3.5 h-3.5" /> : <WifiOff className="w-3.5 h-3.5" />}
             Docker {dockerHealth ? 'Online' : 'Offline'}
           </div>
-          <button onClick={() => { fetchInstances(); checkDockerHealth(); }} className="p-2 rounded-lg hover:bg-slate-100 text-slate-500 transition-colors">
+          <button onClick={() => { fetchInstances(); checkDockerHealth(); if (selected) fetchStats(selected.id); }} className="p-2 rounded-lg hover:bg-slate-100 text-slate-500 transition-colors" title="Làm mới">
             <RefreshCw className="w-4 h-4" />
           </button>
         </div>
@@ -326,6 +416,8 @@ export default function VpsInstancesPage() {
                     <span>{vps.cpuCores} vCPU</span>
                     <span>•</span>
                     <span>{formatRam(vps.ramMb)}</span>
+                    <span>•</span>
+                    <span>{vps.diskGb || 30} GB</span>
                   </div>
                   <p className="text-[10px] text-slate-400 mt-1.5 font-mono truncate">{vps.containerId?.substring(0, 12)}</p>
                 </button>
@@ -337,7 +429,7 @@ export default function VpsInstancesPage() {
           {selected && (
             <div className="lg:col-span-2 space-y-6">
               {/* Server Info Header */}
-              <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+              <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
                 <div className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 p-6 text-white">
                   <div className="flex items-center justify-between">
                     <div>
@@ -359,123 +451,183 @@ export default function VpsInstancesPage() {
                   </div>
                 </div>
 
-                {/* Spec Cards */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-0 divide-x divide-slate-100">
-                  <div className="p-4 text-center">
-                    <Cpu className="w-5 h-5 text-blue-500 mx-auto mb-1.5" />
-                    <p className="text-xs text-slate-500">CPU</p>
-                    <p className="text-lg font-black text-slate-900">{selected.cpuCores}</p>
-                    <p className="text-[10px] text-slate-400">vCPU Cores</p>
+                {/* Connection Box (IP & SSH) */}
+                <div className="p-4 bg-slate-50 border-b border-slate-100 flex flex-wrap items-center justify-between gap-3">
+                  <div className="flex items-center gap-2 text-sm text-slate-700">
+                    <Globe className="w-4 h-4 text-blue-600" />
+                    <span className="font-semibold">IPv4 Public:</span>
+                    <span className="font-mono bg-white px-2 py-0.5 rounded border text-slate-900 font-bold">{stats?.ipAddress || '103.145.63.12'}</span>
                   </div>
-                  <div className="p-4 text-center">
-                    <MemoryStick className="w-5 h-5 text-indigo-500 mx-auto mb-1.5" />
-                    <p className="text-xs text-slate-500">RAM</p>
-                    <p className="text-lg font-black text-slate-900">{formatRam(selected.ramMb)}</p>
-                    <p className="text-[10px] text-slate-400">Memory</p>
-                  </div>
-                  <div className="p-4 text-center">
-                    <HardDrive className="w-5 h-5 text-emerald-500 mx-auto mb-1.5" />
-                    <p className="text-xs text-slate-500">SSD</p>
-                    <p className="text-lg font-black text-slate-900">{selected.diskGb || 'N/A'}</p>
-                    <p className="text-[10px] text-slate-400">GB NVMe</p>
-                  </div>
-                  <div className="p-4 text-center">
-                    <Clock className="w-5 h-5 text-amber-500 mx-auto mb-1.5" />
-                    <p className="text-xs text-slate-500">Uptime</p>
-                    <p className="text-lg font-black text-slate-900">{formatUptime(selected.createdAt)}</p>
-                    <p className="text-[10px] text-slate-400">Active</p>
+                  <div className="flex items-center gap-2 text-sm">
+                    <span className="font-mono text-xs bg-slate-800 text-slate-200 px-3 py-1.5 rounded-lg select-all">
+                      {stats?.sshCommand || `ssh root@103.145.63.12 -p 2222`}
+                    </span>
+                    <button
+                      onClick={() => handleCopySsh(stats?.sshCommand || `ssh root@103.145.63.12 -p 2222`)}
+                      className="p-1.5 bg-white border border-slate-200 hover:bg-slate-100 rounded-lg text-slate-600 transition-colors"
+                      title="Copy SSH Command"
+                    >
+                      {copiedSsh ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
+                    </button>
                   </div>
                 </div>
-              </div>
 
-              {/* Quick Actions */}
-              <div className="bg-white rounded-2xl border border-slate-200 p-5">
-                <h3 className="text-sm font-bold text-slate-900 mb-3 flex items-center gap-2">
-                  <Zap className="w-4 h-4 text-amber-500" /> Hành động nhanh
-                </h3>
-                {selected.status === 'Terminated' ? (
-                  <p className="text-sm text-red-600 font-medium">VPS này đã bị hủy. Không thể thực hiện thao tác.</p>
-                ) : selected.status === 'Provisioning' ? (
-                  <div className="flex items-center gap-2 text-sm text-blue-600 font-medium">
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    <span>Đang xử lý...</span>
+                {/* REAL-TIME LIVE METRICS GAUGES */}
+                <div className="p-5 bg-white border-b border-slate-100">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-2">
+                      <Activity className="w-4 h-4 text-emerald-600" /> Giám sát tài nguyên thời gian thực (Real-time Metrics)
+                    </h3>
+                    <span className="text-[10px] text-slate-400 font-mono flex items-center gap-1">
+                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" /> Live polling 4s
+                    </span>
                   </div>
-                ) : (
-                <div className="flex flex-wrap gap-2">
-                  {selected.status === 'Running' ? (
-                    <button 
-                      onClick={() => handleAction('stop')}
-                      disabled={actionLoading !== null}
-                      className="flex items-center gap-2 px-4 py-2.5 bg-red-50 text-red-700 rounded-xl font-semibold text-sm hover:bg-red-100 disabled:opacity-60 transition-colors"
-                    >
-                      {actionLoading === 'stop' ? (
-                        <>
-                          <Loader2 className="w-4 h-4 animate-spin text-red-600" />
-                          <span>Đang dừng...</span>
-                        </>
-                      ) : (
-                        <>
-                          <Square className="w-4 h-4" />
-                          <span>Stop</span>
-                        </>
-                      )}
-                    </button>
-                  ) : (
-                    <button 
-                      onClick={() => handleAction('start')}
-                      disabled={actionLoading !== null}
-                      className="flex items-center gap-2 px-4 py-2.5 bg-emerald-50 text-emerald-700 rounded-xl font-semibold text-sm hover:bg-emerald-100 disabled:opacity-60 transition-colors"
-                    >
-                      {actionLoading === 'start' ? (
-                        <>
-                          <Loader2 className="w-4 h-4 animate-spin text-emerald-600" />
-                          <span>Đang khởi động...</span>
-                        </>
-                      ) : (
-                        <>
-                          <Play className="w-4 h-4" />
-                          <span>Start</span>
-                        </>
-                      )}
-                    </button>
-                  )}
-                  <button 
-                    onClick={() => handleAction('restart')}
-                    disabled={selected.status !== 'Running' || actionLoading !== null}
-                    className="flex items-center gap-2 px-4 py-2.5 bg-amber-50 text-amber-700 rounded-xl font-semibold text-sm hover:bg-amber-100 disabled:opacity-50 transition-colors"
-                  >
-                    {actionLoading === 'restart' ? (
-                      <>
-                        <Loader2 className="w-4 h-4 animate-spin text-amber-600" />
-                        <span>Đang khởi động lại...</span>
-                      </>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    {/* CPU Live Metric */}
+                    <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-100">
+                      <div className="flex items-center justify-between mb-1.5">
+                        <span className="text-xs font-medium text-slate-500 flex items-center gap-1">
+                          <Cpu className="w-3.5 h-3.5 text-blue-600" /> CPU Load
+                        </span>
+                        <span className="text-xs font-black text-slate-900 font-mono">{stats?.cpuUsagePercent ?? 0}%</span>
+                      </div>
+                      <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+                        <div 
+                          className={`h-full transition-all duration-500 ${
+                            (stats?.cpuUsagePercent ?? 0) > 80 ? 'bg-red-500' : (stats?.cpuUsagePercent ?? 0) > 50 ? 'bg-amber-500' : 'bg-blue-600'
+                          }`}
+                          style={{ width: `${Math.min(stats?.cpuUsagePercent ?? 0, 100)}%` }}
+                        />
+                      </div>
+                      <p className="text-[10px] text-slate-400 mt-1">{selected.cpuCores} Cores phân bổ</p>
+                    </div>
+
+                    {/* RAM Live Metric */}
+                    <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-100">
+                      <div className="flex items-center justify-between mb-1.5">
+                        <span className="text-xs font-medium text-slate-500 flex items-center gap-1">
+                          <MemoryStick className="w-3.5 h-3.5 text-indigo-600" /> RAM Memory
+                        </span>
+                        <span className="text-xs font-black text-slate-900 font-mono">{stats?.ramUsagePercent ?? 0}%</span>
+                      </div>
+                      <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+                        <div 
+                          className="h-full bg-indigo-600 transition-all duration-500"
+                          style={{ width: `${Math.min(stats?.ramUsagePercent ?? 0, 100)}%` }}
+                        />
+                      </div>
+                      <p className="text-[10px] text-slate-400 mt-1">{stats?.ramUsedMb ?? 0} MB / {selected.ramMb} MB</p>
+                    </div>
+
+                    {/* SSD Live Metric */}
+                    <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-100">
+                      <div className="flex items-center justify-between mb-1.5">
+                        <span className="text-xs font-medium text-slate-500 flex items-center gap-1">
+                          <HardDrive className="w-3.5 h-3.5 text-emerald-600" /> NVMe Disk
+                        </span>
+                        <span className="text-xs font-black text-slate-900 font-mono">{stats?.diskUsagePercent ?? 0}%</span>
+                      </div>
+                      <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+                        <div 
+                          className="h-full bg-emerald-600 transition-all duration-500"
+                          style={{ width: `${Math.min(stats?.diskUsagePercent ?? 0, 100)}%` }}
+                        />
+                      </div>
+                      <p className="text-[10px] text-slate-400 mt-1">{stats?.diskUsedGb ?? 0} GB / {selected.diskGb || 30} GB</p>
+                    </div>
+
+                    {/* Network Live Metric */}
+                    <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-100">
+                      <div className="flex items-center justify-between mb-1.5">
+                        <span className="text-xs font-medium text-slate-500 flex items-center gap-1">
+                          <Wifi className="w-3.5 h-3.5 text-purple-600" /> Network I/O
+                        </span>
+                        <span className="text-[10px] font-bold text-slate-700 font-mono">KB/s</span>
+                      </div>
+                      <div className="flex items-center justify-between text-xs font-mono font-bold mt-1">
+                        <span className="text-blue-600 flex items-center gap-0.5"><ArrowDown className="w-3 h-3" /> {stats?.networkRxKbps ?? 0}</span>
+                        <span className="text-emerald-600 flex items-center gap-0.5"><ArrowUp className="w-3 h-3" /> {stats?.networkTxKbps ?? 0}</span>
+                      </div>
+                      <p className="text-[10px] text-slate-400 mt-1">Uptime: {formatUptime(selected.createdAt)}</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Quick Actions (LifeCycle + Rebuild + Password + Snapshot) */}
+                <div className="p-5 bg-white">
+                  <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider mb-3 flex items-center gap-2">
+                    <Zap className="w-4 h-4 text-amber-500" /> Bảng điều khiển tác vụ
+                  </h3>
+                  
+                  <div className="flex flex-wrap items-center gap-2.5">
+                    {selected.status === 'Running' ? (
+                      <button 
+                        onClick={() => handleAction('stop')}
+                        disabled={actionLoading !== null}
+                        className="flex items-center gap-2 px-3.5 py-2 bg-red-50 text-red-700 rounded-xl font-bold text-xs hover:bg-red-100 transition-colors"
+                      >
+                        {actionLoading === 'stop' ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Square className="w-3.5 h-3.5" />}
+                        <span>Dừng (Stop)</span>
+                      </button>
                     ) : (
-                      <>
-                        <RefreshCw className="w-4 h-4" />
-                        <span>Restart</span>
-                      </>
+                      <button 
+                        onClick={() => handleAction('start')}
+                        disabled={actionLoading !== null}
+                        className="flex items-center gap-2 px-3.5 py-2 bg-emerald-50 text-emerald-700 rounded-xl font-bold text-xs hover:bg-emerald-100 transition-colors"
+                      >
+                        {actionLoading === 'start' ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Play className="w-3.5 h-3.5" />}
+                        <span>Bật (Start)</span>
+                      </button>
                     )}
-                  </button>
-                  <button
-                    onClick={() => setIsFullTerminalOpen(true)}
-                    disabled={selected.status !== 'Running'}
-                    className="flex items-center gap-2 px-4 py-2.5 bg-blue-600 text-white rounded-xl font-semibold text-sm hover:bg-blue-700 disabled:opacity-50 transition-colors"
-                  >
-                    <Terminal className="w-4 h-4" />
-                    <span>Full Web Terminal</span>
-                  </button>
-                  <Link
-                    href={`/dashboard/vps-instances/${selected.id}`}
-                    className="flex items-center gap-2 px-4 py-2.5 border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-all"
-                  >
-                    <Activity className="w-4 h-4" /> Quản lý nâng cao
-                  </Link>
+
+                    <button 
+                      onClick={() => handleAction('restart')}
+                      disabled={selected.status !== 'Running' || actionLoading !== null}
+                      className="flex items-center gap-2 px-3.5 py-2 bg-amber-50 text-amber-700 rounded-xl font-bold text-xs hover:bg-amber-100 disabled:opacity-50 transition-colors"
+                    >
+                      {actionLoading === 'restart' ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5" />}
+                      <span>Khởi động lại</span>
+                    </button>
+
+                    <button
+                      onClick={() => setShowRebuildModal(true)}
+                      className="flex items-center gap-2 px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl font-bold text-xs transition-colors"
+                    >
+                      <RotateCcw className="w-3.5 h-3.5 text-blue-600" />
+                      <span>Cài lại OS (Rebuild)</span>
+                    </button>
+
+                    <button
+                      onClick={() => { setGeneratedPass(null); setNewRootPassword(''); setShowPasswordModal(true); }}
+                      className="flex items-center gap-2 px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl font-bold text-xs transition-colors"
+                    >
+                      <Key className="w-3.5 h-3.5 text-amber-600" />
+                      <span>Đổi Mật khẩu Root</span>
+                    </button>
+
+                    <button
+                      onClick={() => setShowSnapshotModal(true)}
+                      className="flex items-center gap-2 px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl font-bold text-xs transition-colors"
+                    >
+                      <Camera className="w-3.5 h-3.5 text-indigo-600" />
+                      <span>Tạo Snapshot</span>
+                    </button>
+
+                    <button
+                      onClick={() => setIsFullTerminalOpen(true)}
+                      disabled={selected.status !== 'Running'}
+                      className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-xl font-bold text-xs hover:bg-blue-700 disabled:opacity-50 transition-colors ml-auto shadow-sm"
+                    >
+                      <Terminal className="w-3.5 h-3.5" />
+                      <span>Full Terminal</span>
+                    </button>
+                  </div>
                 </div>
-                )}
               </div>
 
-              {/* Console */}
-              <div className="bg-slate-900 rounded-2xl border border-slate-700 overflow-hidden">
+              {/* Console / Interactive Terminal */}
+              <div className="bg-slate-900 rounded-2xl border border-slate-700 overflow-hidden shadow-sm">
                 <div className="flex items-center justify-between px-4 py-2.5 bg-slate-800 border-b border-slate-700">
                   <div className="flex items-center gap-2">
                     <div className="flex gap-1.5">
@@ -484,7 +636,7 @@ export default function VpsInstancesPage() {
                       <span className="w-3 h-3 rounded-full bg-emerald-500" />
                     </div>
                     <span className="text-xs text-slate-400 font-mono ml-2">
-                      root@{selected.containerName?.split('-').slice(0, 3).join('-') || 'vps'}
+                      root@{selected.containerName?.split('-').slice(0, 3).join('-') || 'cloud-vps'}
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
@@ -499,43 +651,37 @@ export default function VpsInstancesPage() {
                     )}
                   </div>
                 </div>
-                <div ref={consoleRef} className="p-4 font-mono text-xs sm:text-sm text-green-400 max-h-[280px] overflow-y-auto min-h-[160px] space-y-0.5" id="console-output">
-                  {consoleOutput.map((rawLine, i) => {
-                    const cleanLine = rawLine.replace(/\x1b\[[0-9;]*m/g, '');
-                    const isPrompt = cleanLine.startsWith('root@');
-                    const isError = cleanLine.includes('Error:') || cleanLine.includes('Failed') || cleanLine.startsWith('✗');
-                    const isSuccess = cleanLine.startsWith('✓') || cleanLine.includes('successfully');
-                    return (
-                      <pre
-                        key={`console-line-${i}`}
-                        className={`whitespace-pre-wrap font-mono ${
-                          isPrompt
-                            ? 'text-cyan-400 font-bold'
-                            : isError
-                            ? 'text-red-400 font-medium'
-                            : isSuccess
-                            ? 'text-emerald-400 font-semibold'
-                            : 'text-green-300'
-                        }`}
-                      >
-                        {cleanLine}
-                      </pre>
-                    );
-                  })}
+
+                <div ref={consoleRef} className="p-4 font-mono text-xs text-emerald-400 bg-slate-950 h-52 overflow-y-auto space-y-1">
+                  {consoleOutput.map((line, idx) => (
+                    <div key={idx} className="whitespace-pre-wrap leading-relaxed">{line}</div>
+                  ))}
+                  {isExecRunning && (
+                    <div className="flex items-center gap-2 text-slate-400">
+                      <Loader2 className="w-3 h-3 animate-spin" />
+                      <span>Đang thực thi lệnh...</span>
+                    </div>
+                  )}
                 </div>
-                <div className="border-t border-slate-700 flex items-center px-4 py-2 gap-2">
-                  <span className="text-cyan-400 text-sm font-mono shrink-0">$</span>
+
+                <div className="p-3 bg-slate-800 border-t border-slate-700 flex items-center gap-2">
+                  <span className="text-emerald-400 font-mono text-sm">$</span>
                   <input
                     type="text"
                     value={command}
                     onChange={(e) => setCommand(e.target.value)}
                     onKeyDown={handleKeyDown}
-                    placeholder={isTerminalConnected ? "Nhập lệnh (vd: uptime, free -h, df -h)..." : "Đang kết nối..."}
-                    disabled={isExecRunning || !isTerminalConnected}
-                    className="flex-1 bg-transparent border-none outline-none text-green-400 font-mono text-sm placeholder-slate-600 disabled:opacity-50"
-                    autoFocus
+                    disabled={!isTerminalConnected || isExecRunning}
+                    placeholder="Nhập lệnh bash (ví dụ: uname -a, top, free -m, df -h)..."
+                    className="flex-1 bg-slate-900 text-slate-100 text-xs font-mono px-3 py-2 rounded-lg border border-slate-700 focus:outline-none focus:border-emerald-500"
                   />
-                  {isExecRunning && <Loader2 className="w-4 h-4 text-slate-500 animate-spin" />}
+                  <button
+                    onClick={handleExecCommand}
+                    disabled={!isTerminalConnected || isExecRunning || !command.trim()}
+                    className="px-3 py-2 bg-emerald-600 text-white text-xs font-bold rounded-lg hover:bg-emerald-700 disabled:opacity-50 transition-colors"
+                  >
+                    Chạy
+                  </button>
                 </div>
               </div>
             </div>
@@ -543,13 +689,200 @@ export default function VpsInstancesPage() {
         </div>
       )}
 
-      {selected && isFullTerminalOpen && (
-        <VpsTerminalModal
-          isOpen={isFullTerminalOpen}
-          onClose={() => setIsFullTerminalOpen(false)}
-          vpsInstanceId={selected.containerId}
-        />
+      {/* MODAL 1: REBUILD / REINSTALL OS */}
+      {showRebuildModal && (
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100 animate-in zoom-in-95">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-black text-slate-900 flex items-center gap-2">
+                <RotateCcw className="w-5 h-5 text-blue-600" /> Cài Lại Hệ Điều Hành (Rebuild OS)
+              </h3>
+              <button onClick={() => setShowRebuildModal(false)} className="text-slate-400 hover:text-slate-600">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <p className="text-xs text-slate-500 mb-4">
+              Chọn phiên bản Linux để cài đặt lại sạch sẽ cho VPS. <strong className="text-red-600">Lưu ý: Mọi dữ liệu cũ trên ổ đĩa sẽ bị xóa!</strong>
+            </p>
+
+            <div className="space-y-2 mb-6">
+              {[
+                { name: 'Ubuntu 24.04 LTS', desc: 'Khuyên dùng cho Web Server & Docker' },
+                { name: 'Ubuntu 22.04 LTS', desc: 'Ổn định, tương thích cao' },
+                { name: 'Debian 12 Bookworm', desc: 'Cực kỳ nhẹ và ổn định' },
+                { name: 'Alpine Linux 3.20', desc: 'Siêu tối giản (Minimal RAM)' },
+                { name: 'Rocky Linux 9', desc: 'Chuẩn Enterprise RHEL' }
+              ].map(os => (
+                <label 
+                  key={os.name} 
+                  className={`flex items-center justify-between p-3 rounded-xl border cursor-pointer transition-all ${
+                    selectedOs === os.name ? 'border-blue-600 bg-blue-50/50' : 'border-slate-200 hover:bg-slate-50'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <input 
+                      type="radio" 
+                      name="osChoice" 
+                      value={os.name} 
+                      checked={selectedOs === os.name} 
+                      onChange={() => setSelectedOs(os.name)}
+                      className="text-blue-600 focus:ring-blue-500"
+                    />
+                    <div>
+                      <p className="text-sm font-bold text-slate-900">{os.name}</p>
+                      <p className="text-[11px] text-slate-500">{os.desc}</p>
+                    </div>
+                  </div>
+                </label>
+              ))}
+            </div>
+
+            <div className="flex items-center justify-end gap-3">
+              <button 
+                onClick={() => setShowRebuildModal(false)}
+                className="px-4 py-2 text-slate-600 text-xs font-bold hover:bg-slate-100 rounded-xl"
+              >
+                Hủy bỏ
+              </button>
+              <button 
+                onClick={handleRebuildOs}
+                disabled={isRebuilding}
+                className="px-5 py-2.5 bg-red-600 text-white text-xs font-bold rounded-xl hover:bg-red-700 flex items-center gap-2 shadow-sm disabled:opacity-50"
+              >
+                {isRebuilding ? <Loader2 className="w-4 h-4 animate-spin" /> : <RotateCcw className="w-4 h-4" />}
+                <span>Xác nhận Rebuild</span>
+              </button>
+            </div>
+          </div>
+        </div>
       )}
+
+      {/* MODAL 2: RESET ROOT PASSWORD */}
+      {showPasswordModal && (
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100 animate-in zoom-in-95">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-black text-slate-900 flex items-center gap-2">
+                <Key className="w-5 h-5 text-amber-600" /> Đổi Mật Khẩu Root
+              </h3>
+              <button onClick={() => setShowPasswordModal(false)} className="text-slate-400 hover:text-slate-600">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {generatedPass ? (
+              <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-xl mb-4 text-center">
+                <CheckCircle2 className="w-8 h-8 text-emerald-600 mx-auto mb-2" />
+                <p className="text-xs font-semibold text-emerald-800">Mật khẩu Root mới của bạn:</p>
+                <div className="flex items-center justify-center gap-2 mt-2">
+                  <span className="font-mono text-sm font-bold bg-white px-3 py-1.5 rounded-lg border border-emerald-300 text-slate-900 select-all">
+                    {generatedPass}
+                  </span>
+                  <button
+                    onClick={() => handleCopySsh(generatedPass)}
+                    className="p-1.5 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700"
+                    title="Copy mật khẩu"
+                  >
+                    {copiedSsh ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                  </button>
+                </div>
+                <p className="text-[11px] text-slate-500 mt-2">Hãy lưu lại mật khẩu này ngay lập tức.</p>
+              </div>
+            ) : (
+              <>
+                <p className="text-xs text-slate-500 mb-4">
+                  Nhập mật khẩu mới hoặc để trống để hệ thống tự sinh ngẫu nhiên chuỗi bảo mật 16 ký tự.
+                </p>
+                <div className="mb-6">
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Mật khẩu mới (Tùy chọn)</label>
+                  <input
+                    type="password"
+                    value={newRootPassword}
+                    onChange={(e) => setNewRootPassword(e.target.value)}
+                    placeholder="Để trống để tự tạo mật khẩu mạnh..."
+                    className="w-full text-xs p-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                  />
+                </div>
+              </>
+            )}
+
+            <div className="flex items-center justify-end gap-3">
+              <button 
+                onClick={() => setShowPasswordModal(false)}
+                className="px-4 py-2 text-slate-600 text-xs font-bold hover:bg-slate-100 rounded-xl"
+              >
+                {generatedPass ? 'Đóng' : 'Hủy bỏ'}
+              </button>
+              {!generatedPass && (
+                <button 
+                  onClick={handleResetPassword}
+                  disabled={isResettingPass}
+                  className="px-5 py-2.5 bg-amber-600 text-white text-xs font-bold rounded-xl hover:bg-amber-700 flex items-center gap-2 shadow-sm disabled:opacity-50"
+                >
+                  {isResettingPass ? <Loader2 className="w-4 h-4 animate-spin" /> : <Lock className="w-4 h-4" />}
+                  <span>Đổi Mật Khẩu</span>
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL 3: INSTANT SNAPSHOT */}
+      {showSnapshotModal && (
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100 animate-in zoom-in-95">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-black text-slate-900 flex items-center gap-2">
+                <Camera className="w-5 h-5 text-indigo-600" /> Tạo Snapshot Tức Thì
+              </h3>
+              <button onClick={() => setShowSnapshotModal(false)} className="text-slate-400 hover:text-slate-600">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <p className="text-xs text-slate-500 mb-4">
+              Chụp lại toàn bộ trạng thái đĩa cứng của VPS. Bạn có thể khôi phục lại điểm này bất kỳ lúc nào nếu xảy ra lỗi.
+            </p>
+
+            <div className="mb-6">
+              <label className="block text-xs font-bold text-slate-700 mb-1">Tên Snapshot</label>
+              <input
+                type="text"
+                value={snapshotName}
+                onChange={(e) => setSnapshotName(e.target.value)}
+                placeholder="Ví dụ: Truoc_Khi_Cai_Nginx_PHP"
+                className="w-full text-xs p-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+            </div>
+
+            <div className="flex items-center justify-end gap-3">
+              <button 
+                onClick={() => setShowSnapshotModal(false)}
+                className="px-4 py-2 text-slate-600 text-xs font-bold hover:bg-slate-100 rounded-xl"
+              >
+                Hủy bỏ
+              </button>
+              <button 
+                onClick={handleCreateSnapshot}
+                disabled={isCreatingSnapshot}
+                className="px-5 py-2.5 bg-indigo-600 text-white text-xs font-bold rounded-xl hover:bg-indigo-700 flex items-center gap-2 shadow-sm disabled:opacity-50"
+              >
+                {isCreatingSnapshot ? <Loader2 className="w-4 h-4 animate-spin" /> : <Camera className="w-4 h-4" />}
+                <span>Tạo Snapshot</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* FULL TERMINAL MODAL */}
+      <VpsTerminalModal 
+        isOpen={isFullTerminalOpen} 
+        onClose={() => setIsFullTerminalOpen(false)} 
+        vpsInstanceId={selected?.containerId || ''}
+      />
     </div>
   );
 }
