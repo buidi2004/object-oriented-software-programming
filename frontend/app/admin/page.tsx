@@ -8,7 +8,8 @@ import {
   DollarSign, TrendingUp, AlertCircle, Package, Settings, 
   FileText, Tag, Image, HelpCircle, CreditCard, Shield, ArrowUp, ArrowDown, 
   ShieldAlert, Clock, Bell, Globe, Building2, Download, Star, RefreshCw, Send,
-  Cpu, FileSpreadsheet, Search, Activity, Award, Share2, ShieldCheck, Database, DownloadCloud, Key, LayoutTemplate, ShoppingBag
+  Cpu, FileSpreadsheet, Search, Activity, Award, Share2, ShieldCheck, Database, DownloadCloud, Key, LayoutTemplate, ShoppingBag,
+  ChevronRight
 } from 'lucide-react';
 
 interface AdminModuleItem {
@@ -274,6 +275,59 @@ export default function AdminDashboardPage() {
               <p className="text-xs text-slate-500 mt-1 font-medium">{stat.label}</p>
             </div>
           ))}
+        </div>
+
+        {/* QUICK ACCESS: PRICING & HARDWARE SPECS MANAGER FOR 11 SERVICES */}
+        <div className="bg-gradient-to-r from-indigo-900 via-blue-900 to-slate-900 rounded-3xl p-6 text-white shadow-xl mb-8 relative overflow-hidden">
+          <div className="relative z-10 space-y-4">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div>
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-indigo-500/30 border border-indigo-400/30 rounded-full text-indigo-200 text-xs font-bold mb-2">
+                  <DollarSign className="w-3.5 h-3.5 text-emerald-400" /> Trung Tâm Bảng Giá & Gói Cước 11 Dịch Vụ
+                </div>
+                <h2 className="text-lg md:text-xl font-black text-white">
+                  Tùy Chỉnh Giá Bán & Cấu Hình Máy Chủ Toàn Diện
+                </h2>
+                <p className="text-xs text-indigo-200/80 mt-1 max-w-2xl">
+                  Sửa trực tiếp giá bán hàng tháng / hàng năm, thông số CPU / RAM / NVMe và chu kỳ cho từng dịch vụ:
+                </p>
+              </div>
+              <Link
+                href="/admin/service-plans"
+                className="inline-flex items-center gap-2 px-4 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-black rounded-xl transition-all shadow-lg hover:shadow-emerald-500/20 flex-shrink-0"
+              >
+                <span>Xem Tất Cả Gói Dịch Vụ</span>
+                <ChevronRight className="w-4 h-4" />
+              </Link>
+            </div>
+
+            {/* Quick 11 Services Links Grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2.5 pt-2">
+              {[
+                { label: 'Cloud VPS', slug: 'cloud-vps', icon: Server, color: 'hover:bg-blue-600/30' },
+                { label: 'Dedicated Server', slug: 'dedicated-server', icon: Server, color: 'hover:bg-purple-600/30' },
+                { label: 'Managed DB', slug: 'managed-database', icon: Database, color: 'hover:bg-emerald-600/30' },
+                { label: 'Game Servers', slug: 'game-server', icon: Cpu, color: 'hover:bg-rose-600/30' },
+                { label: '1-Click Apps', slug: '1click-apps', icon: LayoutTemplate, color: 'hover:bg-amber-600/30' },
+                { label: 'Static Sites', slug: 'static-sites', icon: Globe, color: 'hover:bg-cyan-600/30' },
+                { label: 'Object Storage', slug: 'object-storage', icon: DownloadCloud, color: 'hover:bg-indigo-600/30' },
+                { label: 'Chứng Chỉ SSL', slug: 'ssl-certificate', icon: ShieldCheck, color: 'hover:bg-teal-600/30' },
+                { label: 'Tên Miền (DNS)', slug: 'ten-mien', icon: Globe, color: 'hover:bg-blue-600/30' },
+                { label: 'Bảo Mật & WAF', slug: 'security-waf', icon: ShieldAlert, color: 'hover:bg-red-600/30' },
+                { label: 'Chuyển Đổi Dữ Liệu', slug: 'cloud-migration', icon: RefreshCw, color: 'hover:bg-orange-600/30' },
+                { label: 'Web Hosting', slug: 'web-hosting', icon: Package, color: 'hover:bg-slate-600/30' },
+              ].map((svc, idx) => (
+                <Link
+                  key={idx}
+                  href={`/admin/service-plans?category=${svc.slug}`}
+                  className={`p-2.5 bg-white/10 hover:bg-white/20 border border-white/10 rounded-xl transition-all flex items-center gap-2 text-xs font-bold text-white group`}
+                >
+                  <svc.icon className="w-4 h-4 text-indigo-300 group-hover:text-emerald-400 transition-colors flex-shrink-0" />
+                  <span className="truncate">{svc.label}</span>
+                </Link>
+              ))}
+            </div>
+          </div>
         </div>
 
         {/* Search Modules Bar */}

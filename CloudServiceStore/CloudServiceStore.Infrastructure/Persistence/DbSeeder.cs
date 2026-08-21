@@ -40,260 +40,164 @@ public static class DbSeeder
                 }
             }
 
-            if (!context.ServiceCategories.Any())
+            logger.LogInformation("Ensuring all 11 Service Categories and Plans exist in database...");
+
+            // 1. Categories
+            var categoriesToEnsure = new (string Name, string Slug)[]
             {
-                logger.LogInformation("Seeding Service Categories and Plans...");
+                ("Cloud VPS", "cloud-vps"),
+                ("Web Hosting", "web-hosting"),
+                ("Tên miền", "ten-mien"),
+                ("Dedicated Server", "dedicated-server"),
+                ("Email Doanh Nghiệp", "email-server"),
+                ("Chứng chỉ SSL", "ssl-certificate"),
+                ("Managed Databases", "managed-database"),
+                ("Game Servers", "game-server"),
+                ("1-Click Apps", "1click-apps"),
+                ("Static Sites", "static-sites"),
+                ("Object Storage", "object-storage"),
+                ("Bảo mật & WAF", "security-waf"),
+                ("Chuyển đổi dữ liệu", "cloud-migration")
+            };
 
-                // 1. Create Categories
-                var vpsCategory = new ServiceCategory { Id = Guid.NewGuid(), Name = "Cloud VPS", Slug = "cloud-vps" };
-                var hostingCategory = new ServiceCategory { Id = Guid.NewGuid(), Name = "Web Hosting", Slug = "web-hosting" };
-                var domainCategory = new ServiceCategory { Id = Guid.NewGuid(), Name = "Tên miền", Slug = "ten-mien" };
-                var dedicatedCategory = new ServiceCategory { Id = Guid.NewGuid(), Name = "Dedicated Server", Slug = "dedicated-server" };
-                var emailCategory = new ServiceCategory { Id = Guid.NewGuid(), Name = "Email Doanh Nghiệp", Slug = "email-server" };
-                var sslCategory = new ServiceCategory { Id = Guid.NewGuid(), Name = "Chứng chỉ SSL", Slug = "ssl-certificate" };
-                var databaseCategory = new ServiceCategory { Id = Guid.NewGuid(), Name = "Managed Databases", Slug = "managed-database" };
-                var gameCategory = new ServiceCategory { Id = Guid.NewGuid(), Name = "Game Servers", Slug = "game-server" };
-                var appCategory = new ServiceCategory { Id = Guid.NewGuid(), Name = "1-Click Apps", Slug = "1click-apps" };
-                var staticCategory = new ServiceCategory { Id = Guid.NewGuid(), Name = "Static Sites", Slug = "static-sites" };
-                var storageCategory = new ServiceCategory { Id = Guid.NewGuid(), Name = "Object Storage", Slug = "object-storage" };
-                var securityCategory = new ServiceCategory { Id = Guid.NewGuid(), Name = "Bảo mật & WAF", Slug = "security-waf" };
-                var migrationCategory = new ServiceCategory { Id = Guid.NewGuid(), Name = "Chuyển đổi dữ liệu", Slug = "cloud-migration" };
+            var existingCategories = await context.ServiceCategories.ToListAsync();
+            var categoryMap = new Dictionary<string, ServiceCategory>();
 
-                await context.ServiceCategories.AddRangeAsync(
-                    vpsCategory, hostingCategory, domainCategory, dedicatedCategory, emailCategory, sslCategory,
-                    databaseCategory, gameCategory, appCategory, staticCategory, storageCategory, securityCategory, migrationCategory
-                );
-
-                // 2. Create Service Plans
-                // --- VPS ---
-                var vpsNano = new ServicePlan(vpsCategory.Id, "Cloud VPS Nano", "1 Core", "1GB", "20GB SSD", "Unlimited", null);
-                var vpsMicro = new ServicePlan(vpsCategory.Id, "Cloud VPS Micro", "1 Core", "2GB", "30GB SSD", "Unlimited", null);
-                var basicVpsPlan = new ServicePlan(vpsCategory.Id, "Cloud VPS Basic", "2 Core", "4GB", "40GB NVMe", "Unlimited", null);
-                var customVpsPlan = new ServicePlan(vpsCategory.Id, "Cloud VPS Standard", "4 Core", "8GB", "80GB NVMe", "Unlimited", null);
-                var advancedVpsPlan = new ServicePlan(vpsCategory.Id, "Cloud VPS Advanced", "6 Core", "12GB", "100GB NVMe", "Unlimited", null);
-                var proVpsPlan = new ServicePlan(vpsCategory.Id, "Cloud VPS Pro", "8 Core", "16GB", "150GB NVMe", "Unlimited", null);
-                var enterpriseVpsPlan = new ServicePlan(vpsCategory.Id, "Cloud VPS Enterprise", "12 Core", "32GB", "250GB NVMe", "Unlimited", null);
-                var titaniumVpsPlan = new ServicePlan(vpsCategory.Id, "Cloud VPS Titanium", "16 Core", "64GB", "500GB NVMe", "Unlimited", null);
-                
-                // --- HOSTING ---
-                var basicHosting = new ServicePlan(hostingCategory.Id, "NVMe Starter", "1 Core", "1GB", "10GB NVMe", "Unlimited", null);
-                var proHosting = new ServicePlan(hostingCategory.Id, "NVMe Pro", "2 Core", "2GB", "20GB NVMe", "Unlimited", null);
-                var businessHosting = new ServicePlan(hostingCategory.Id, "NVMe Business", "4 Core", "4GB", "50GB NVMe", "Unlimited", null);
-                var ecommerceHosting = new ServicePlan(hostingCategory.Id, "NVMe E-commerce", "6 Core", "8GB", "100GB NVMe", "Unlimited", null);
-                var wpBasic = new ServicePlan(hostingCategory.Id, "WordPress Starter", "2 Core", "2GB", "25GB NVMe", "Unlimited", null);
-                var wpPro = new ServicePlan(hostingCategory.Id, "WordPress Pro", "4 Core", "4GB", "60GB NVMe", "Unlimited", null);
-                var wpVip = new ServicePlan(hostingCategory.Id, "WordPress VIP", "8 Core", "8GB", "120GB NVMe", "Unlimited", null);
-                var winHosting = new ServicePlan(hostingCategory.Id, "Windows ASP.NET", "2 Core", "4GB", "50GB SSD", "Unlimited", null);
-                
-                // --- DOMAINS ---
-                var vnDomain = new ServicePlan(domainCategory.Id, "Tên miền .VN", null, null, null, null, null);
-                var comvnDomain = new ServicePlan(domainCategory.Id, "Tên miền .COM.VN", null, null, null, null, null);
-                var eduvnDomain = new ServicePlan(domainCategory.Id, "Tên miền .EDU.VN", null, null, null, null, null);
-                var comDomain = new ServicePlan(domainCategory.Id, "Tên miền .COM", null, null, null, null, null);
-                var netDomain = new ServicePlan(domainCategory.Id, "Tên miền .NET", null, null, null, null, null);
-                var orgDomain = new ServicePlan(domainCategory.Id, "Tên miền .ORG", null, null, null, null, null);
-                var infoDomain = new ServicePlan(domainCategory.Id, "Tên miền .INFO", null, null, null, null, null);
-                var ioDomain = new ServicePlan(domainCategory.Id, "Tên miền .IO", null, null, null, null, null);
-                var aiDomain = new ServicePlan(domainCategory.Id, "Tên miền .AI", null, null, null, null, null);
-                var devDomain = new ServicePlan(domainCategory.Id, "Tên miền .DEV", null, null, null, null, null);
-
-                // --- DEDICATED SERVERS ---
-                var dedBasic = new ServicePlan(dedicatedCategory.Id, "Dedicated Dual E5-2670", "16 Core / 32 Thread", "64GB", "2x 500GB SSD", "1Gbps / 10TB", null);
-                var dedPro = new ServicePlan(dedicatedCategory.Id, "Dedicated Dual E5-2680v4", "28 Core / 56 Thread", "128GB", "2x 1TB NVMe", "1Gbps / 20TB", null);
-                var dedUltra = new ServicePlan(dedicatedCategory.Id, "Dedicated AMD EPYC 7502", "32 Core / 64 Thread", "256GB", "4x 2TB NVMe", "10Gbps / Unmetered", null);
-
-                // --- EMAIL SERVER ---
-                var email10 = new ServicePlan(emailCategory.Id, "Email Doanh Nghiệp 10 User", null, "10 Accounts", "10GB Storage", null, null);
-                var email50 = new ServicePlan(emailCategory.Id, "Email Doanh Nghiệp 50 User", null, "50 Accounts", "50GB Storage", null, null);
-                var emailUnl = new ServicePlan(emailCategory.Id, "Email Doanh Nghiệp Unlimited", null, "Unlimited Accounts", "200GB Storage", null, null);
-
-                // --- SSL ---
-                var sslDv = new ServicePlan(sslCategory.Id, "PositiveSSL (DV)", null, null, null, null, null);
-                var sslWc = new ServicePlan(sslCategory.Id, "Wildcard SSL", null, null, null, null, null);
-                var sslEv = new ServicePlan(sslCategory.Id, "EV SSL (Green Bar)", null, null, null, null, null);
-
-                // --- MANAGED DATABASES ---
-                var dbMicro = new ServicePlan(databaseCategory.Id, "DB Micro (Dev/Test)", "0.5 vCPU", "256MB", "2GB NVMe", "Unlimited", null);
-                var dbStandard = new ServicePlan(databaseCategory.Id, "DB Standard (Production)", "0.5 vCPU", "256MB", "5GB NVMe", "Unlimited", null);
-                var dbPro = new ServicePlan(databaseCategory.Id, "DB Pro (High Availability)", "0.5 vCPU", "256MB", "10GB NVMe", "Unlimited", null);
-
-                // --- GAME SERVERS ---
-                var gameMinecraft = new ServicePlan(gameCategory.Id, "Minecraft Dedicated", "1 Core", "1GB", "10GB NVMe", "Unlimited", null);
-                var gameCs2 = new ServicePlan(gameCategory.Id, "CS2 Match Server", "1 Core", "1GB", "15GB NVMe", "Unlimited", null);
-                var gameRust = new ServicePlan(gameCategory.Id, "Rust Dedicated", "1 Core", "1GB", "20GB NVMe", "Unlimited", null);
-
-                // --- 1-CLICK APPS ---
-                var appWp = new ServicePlan(appCategory.Id, "WordPress Cloud App", "0.5 vCPU", "256MB", "5GB NVMe", "Unlimited", null);
-                var appGhost = new ServicePlan(appCategory.Id, "Ghost Blog Cloud", "0.5 vCPU", "256MB", "5GB NVMe", "Unlimited", null);
-                var appNextcloud = new ServicePlan(appCategory.Id, "Nextcloud Storage App", "0.5 vCPU", "256MB", "10GB NVMe", "Unlimited", null);
-
-                // --- STATIC SITES ---
-                var staticStarter = new ServicePlan(staticCategory.Id, "Static Site Starter", "0.2 vCPU", "64MB", "1GB NVMe", "Unlimited", null);
-                var staticPro = new ServicePlan(staticCategory.Id, "Static Site Pro (Custom Domain)", "0.5 vCPU", "128MB", "5GB NVMe", "Unlimited", null);
-
-                // --- OBJECT STORAGE ---
-                var storage50 = new ServicePlan(storageCategory.Id, "S3 Storage Starter (50GB)", null, null, "50GB NVMe", "1TB Bandwidth", null);
-                var storage250 = new ServicePlan(storageCategory.Id, "S3 Storage Pro (250GB)", null, null, "250GB NVMe", "5TB Bandwidth", null);
-                var storage1000 = new ServicePlan(storageCategory.Id, "S3 Storage Enterprise (1TB)", null, null, "1TB NVMe", "Unlimited", null);
-
-                // --- SECURITY & WAF ---
-                var secWafBasic = new ServicePlan(securityCategory.Id, "WAF Shield Basic", null, null, null, "Lọc SQLi, XSS", null);
-                var secMalwarePro = new ServicePlan(securityCategory.Id, "Malware Scanner & Shield Pro", null, null, null, "Quét mã độc Realtime", null);
-
-                // --- CLOUD MIGRATION ---
-                var migStandard = new ServicePlan(migrationCategory.Id, "Chuyển Đổi Web Chuẩn", null, null, null, "rsync + DB Dump", null);
-                var migVip = new ServicePlan(migrationCategory.Id, "Chuyển Đổi Hệ Thống VIP 24/7", null, null, null, "Zero-downtime VIP", null);
-
-                await context.ServicePlans.AddRangeAsync(
-                    vpsNano, vpsMicro, basicVpsPlan, customVpsPlan, advancedVpsPlan, proVpsPlan, enterpriseVpsPlan, titaniumVpsPlan,
-                    basicHosting, proHosting, businessHosting, ecommerceHosting, wpBasic, wpPro, wpVip, winHosting,
-                    vnDomain, comvnDomain, eduvnDomain, comDomain, netDomain, orgDomain, infoDomain, ioDomain, aiDomain, devDomain,
-                    dedBasic, dedPro, dedUltra,
-                    email10, email50, emailUnl,
-                    sslDv, sslWc, sslEv,
-                    dbMicro, dbStandard, dbPro,
-                    gameMinecraft, gameCs2, gameRust,
-                    appWp, appGhost, appNextcloud,
-                    staticStarter, staticPro,
-                    storage50, storage250, storage1000,
-                    secWafBasic, secMalwarePro,
-                    migStandard, migVip
-                );
-
-                // 3. Create Plan Prices (Mock data for 1 month and 12 months)
-                var prices = new[]
+            foreach (var cat in categoriesToEnsure)
+            {
+                var existing = existingCategories.FirstOrDefault(c => c.Slug == cat.Slug || c.Name == cat.Name);
+                if (existing == null)
                 {
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = vpsNano.Id, BillingCycle = BillingCycle.Monthly, Price = 49000, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = vpsNano.Id, BillingCycle = BillingCycle.Yearly, Price = 49000 * 12 * 0.85m, EffectiveFrom = DateTime.UtcNow },
-                    
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = vpsMicro.Id, BillingCycle = BillingCycle.Monthly, Price = 89000, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = vpsMicro.Id, BillingCycle = BillingCycle.Yearly, Price = 89000 * 12 * 0.8m, EffectiveFrom = DateTime.UtcNow },
-                    
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = basicVpsPlan.Id, BillingCycle = BillingCycle.Monthly, Price = 150000, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = basicVpsPlan.Id, BillingCycle = BillingCycle.Yearly, Price = 150000 * 12 * 0.8m, EffectiveFrom = DateTime.UtcNow },
-                    
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = customVpsPlan.Id, BillingCycle = BillingCycle.Monthly, Price = 280000, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = customVpsPlan.Id, BillingCycle = BillingCycle.Yearly, Price = 280000 * 12 * 0.8m, EffectiveFrom = DateTime.UtcNow },
-                    
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = advancedVpsPlan.Id, BillingCycle = BillingCycle.Monthly, Price = 450000, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = advancedVpsPlan.Id, BillingCycle = BillingCycle.Yearly, Price = 450000 * 12 * 0.8m, EffectiveFrom = DateTime.UtcNow },
-                    
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = proVpsPlan.Id, BillingCycle = BillingCycle.Monthly, Price = 650000, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = proVpsPlan.Id, BillingCycle = BillingCycle.Yearly, Price = 650000 * 12 * 0.8m, EffectiveFrom = DateTime.UtcNow },
+                    existing = new ServiceCategory { Id = Guid.NewGuid(), Name = cat.Name, Slug = cat.Slug };
+                    await context.ServiceCategories.AddAsync(existing);
+                    await context.SaveChangesAsync();
+                }
+                categoryMap[cat.Slug] = existing;
+            }
 
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = enterpriseVpsPlan.Id, BillingCycle = BillingCycle.Monthly, Price = 1200000, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = enterpriseVpsPlan.Id, BillingCycle = BillingCycle.Yearly, Price = 1200000 * 12 * 0.8m, EffectiveFrom = DateTime.UtcNow },
-                    
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = titaniumVpsPlan.Id, BillingCycle = BillingCycle.Monthly, Price = 2500000, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = titaniumVpsPlan.Id, BillingCycle = BillingCycle.Yearly, Price = 2500000 * 12 * 0.75m, EffectiveFrom = DateTime.UtcNow },
+            var existingPlans = await context.ServicePlans.ToListAsync();
+            var newPlans = new List<ServicePlan>();
+            var newPrices = new List<PlanPrice>();
 
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = basicHosting.Id, BillingCycle = BillingCycle.Monthly, Price = 39000, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = basicHosting.Id, BillingCycle = BillingCycle.Yearly, Price = 39000 * 12 * 0.75m, EffectiveFrom = DateTime.UtcNow },
+            void EnsurePlan(string slug, string name, string? cpu, string? ram, string? ssd, string? bw, decimal monthlyPrice, decimal? yearlyPrice = null)
+            {
+                if (!categoryMap.TryGetValue(slug, out var cat)) return;
+                var plan = existingPlans.FirstOrDefault(p => p.Name == name && p.CategoryId == cat.Id);
+                if (plan == null)
+                {
+                    plan = new ServicePlan(cat.Id, name, cpu, ram, ssd, bw, null);
+                    newPlans.Add(plan);
 
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = proHosting.Id, BillingCycle = BillingCycle.Monthly, Price = 89000, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = proHosting.Id, BillingCycle = BillingCycle.Yearly, Price = 89000 * 12 * 0.75m, EffectiveFrom = DateTime.UtcNow },
+                    newPrices.Add(new PlanPrice
+                    {
+                        Id = Guid.NewGuid(),
+                        ServicePlanId = plan.Id,
+                        BillingCycle = BillingCycle.Monthly,
+                        Price = monthlyPrice,
+                        Currency = "VND",
+                        EffectiveFrom = DateTime.UtcNow
+                    });
 
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = businessHosting.Id, BillingCycle = BillingCycle.Monthly, Price = 159000, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = businessHosting.Id, BillingCycle = BillingCycle.Yearly, Price = 159000 * 12 * 0.75m, EffectiveFrom = DateTime.UtcNow },
+                    if (yearlyPrice.HasValue)
+                    {
+                        newPrices.Add(new PlanPrice
+                        {
+                            Id = Guid.NewGuid(),
+                            ServicePlanId = plan.Id,
+                            BillingCycle = BillingCycle.Yearly,
+                            Price = yearlyPrice.Value,
+                            Currency = "VND",
+                            EffectiveFrom = DateTime.UtcNow
+                        });
+                    }
+                }
+            }
 
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = ecommerceHosting.Id, BillingCycle = BillingCycle.Monthly, Price = 299000, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = ecommerceHosting.Id, BillingCycle = BillingCycle.Yearly, Price = 299000 * 12 * 0.75m, EffectiveFrom = DateTime.UtcNow },
+            // --- VPS ---
+            EnsurePlan("cloud-vps", "Cloud VPS Nano", "1 Core", "1GB", "20GB SSD", "Unlimited", 49000, 49000 * 12 * 0.85m);
+            EnsurePlan("cloud-vps", "Cloud VPS Micro", "1 Core", "2GB", "30GB SSD", "Unlimited", 89000, 89000 * 12 * 0.8m);
+            EnsurePlan("cloud-vps", "Cloud VPS Basic", "2 Core", "4GB", "40GB NVMe", "Unlimited", 150000, 150000 * 12 * 0.8m);
+            EnsurePlan("cloud-vps", "Cloud VPS Standard", "4 Core", "8GB", "80GB NVMe", "Unlimited", 280000, 280000 * 12 * 0.8m);
+            EnsurePlan("cloud-vps", "Cloud VPS Advanced", "6 Core", "12GB", "100GB NVMe", "Unlimited", 450000, 450000 * 12 * 0.8m);
+            EnsurePlan("cloud-vps", "Cloud VPS Pro", "8 Core", "16GB", "150GB NVMe", "Unlimited", 650000, 650000 * 12 * 0.8m);
+            EnsurePlan("cloud-vps", "Cloud VPS Enterprise", "12 Core", "32GB", "250GB NVMe", "Unlimited", 1200000, 1200000 * 12 * 0.8m);
+            EnsurePlan("cloud-vps", "Cloud VPS Titanium", "16 Core", "64GB", "500GB NVMe", "Unlimited", 2500000, 2500000 * 12 * 0.75m);
 
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = wpBasic.Id, BillingCycle = BillingCycle.Monthly, Price = 99000, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = wpBasic.Id, BillingCycle = BillingCycle.Yearly, Price = 99000 * 12 * 0.7m, EffectiveFrom = DateTime.UtcNow },
-                    
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = wpPro.Id, BillingCycle = BillingCycle.Monthly, Price = 199000, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = wpPro.Id, BillingCycle = BillingCycle.Yearly, Price = 199000 * 12 * 0.7m, EffectiveFrom = DateTime.UtcNow },
-                    
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = wpVip.Id, BillingCycle = BillingCycle.Monthly, Price = 399000, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = wpVip.Id, BillingCycle = BillingCycle.Yearly, Price = 399000 * 12 * 0.7m, EffectiveFrom = DateTime.UtcNow },
+            // --- HOSTING ---
+            EnsurePlan("web-hosting", "NVMe Starter", "1 Core", "1GB", "10GB NVMe", "Unlimited", 39000, 39000 * 12 * 0.75m);
+            EnsurePlan("web-hosting", "NVMe Pro", "2 Core", "2GB", "20GB NVMe", "Unlimited", 89000, 89000 * 12 * 0.75m);
+            EnsurePlan("web-hosting", "NVMe Business", "4 Core", "4GB", "50GB NVMe", "Unlimited", 159000, 159000 * 12 * 0.75m);
+            EnsurePlan("web-hosting", "NVMe E-commerce", "6 Core", "8GB", "100GB NVMe", "Unlimited", 299000, 299000 * 12 * 0.75m);
+            EnsurePlan("web-hosting", "WordPress Starter", "2 Core", "2GB", "25GB NVMe", "Unlimited", 99000, 99000 * 12 * 0.7m);
+            EnsurePlan("web-hosting", "WordPress Pro", "4 Core", "4GB", "60GB NVMe", "Unlimited", 199000, 199000 * 12 * 0.7m);
+            EnsurePlan("web-hosting", "WordPress VIP", "8 Core", "8GB", "120GB NVMe", "Unlimited", 399000, 399000 * 12 * 0.7m);
+            EnsurePlan("web-hosting", "Windows ASP.NET", "2 Core", "4GB", "50GB SSD", "Unlimited", 149000, 149000 * 12 * 0.7m);
 
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = winHosting.Id, BillingCycle = BillingCycle.Monthly, Price = 149000, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = winHosting.Id, BillingCycle = BillingCycle.Yearly, Price = 149000 * 12 * 0.7m, EffectiveFrom = DateTime.UtcNow },
+            // --- DOMAINS ---
+            EnsurePlan("ten-mien", "Tên miền .VN", null, null, null, null, 750000);
+            EnsurePlan("ten-mien", "Tên miền .COM.VN", null, null, null, null, 650000);
+            EnsurePlan("ten-mien", "Tên miền .EDU.VN", null, null, null, null, 350000);
+            EnsurePlan("ten-mien", "Tên miền .COM", null, null, null, null, 250000);
+            EnsurePlan("ten-mien", "Tên miền .NET", null, null, null, null, 350000);
+            EnsurePlan("ten-mien", "Tên miền .ORG", null, null, null, null, 380000);
+            EnsurePlan("ten-mien", "Tên miền .INFO", null, null, null, null, 400000);
+            EnsurePlan("ten-mien", "Tên miền .IO", null, null, null, null, 1200000);
+            EnsurePlan("ten-mien", "Tên miền .AI", null, null, null, null, 2500000);
+            EnsurePlan("ten-mien", "Tên miền .DEV", null, null, null, null, 450000);
 
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = vnDomain.Id, BillingCycle = BillingCycle.Yearly, Price = 750000, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = comvnDomain.Id, BillingCycle = BillingCycle.Yearly, Price = 650000, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = eduvnDomain.Id, BillingCycle = BillingCycle.Yearly, Price = 350000, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = comDomain.Id, BillingCycle = BillingCycle.Yearly, Price = 250000, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = netDomain.Id, BillingCycle = BillingCycle.Yearly, Price = 350000, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = orgDomain.Id, BillingCycle = BillingCycle.Yearly, Price = 380000, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = infoDomain.Id, BillingCycle = BillingCycle.Yearly, Price = 400000, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = ioDomain.Id, BillingCycle = BillingCycle.Yearly, Price = 1200000, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = aiDomain.Id, BillingCycle = BillingCycle.Yearly, Price = 2500000, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = devDomain.Id, BillingCycle = BillingCycle.Yearly, Price = 450000, EffectiveFrom = DateTime.UtcNow },
+            // --- DEDICATED SERVERS ---
+            EnsurePlan("dedicated-server", "Dedicated Dual E5-2670", "16 Core / 32 Thread", "64GB", "2x 500GB SSD", "1Gbps / 10TB", 2800000, 2800000 * 12 * 0.9m);
+            EnsurePlan("dedicated-server", "Dedicated Dual E5-2680v4", "28 Core / 56 Thread", "128GB", "2x 1TB NVMe", "1Gbps / 20TB", 5500000, 5500000 * 12 * 0.9m);
+            EnsurePlan("dedicated-server", "Dedicated AMD EPYC 7502", "32 Core / 64 Thread", "256GB", "4x 2TB NVMe", "10Gbps / Unmetered", 9900000, 9900000 * 12 * 0.9m);
 
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = dedBasic.Id, BillingCycle = BillingCycle.Monthly, Price = 2800000, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = dedBasic.Id, BillingCycle = BillingCycle.Yearly, Price = 2800000 * 12 * 0.9m, EffectiveFrom = DateTime.UtcNow },
-                    
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = dedPro.Id, BillingCycle = BillingCycle.Monthly, Price = 5500000, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = dedPro.Id, BillingCycle = BillingCycle.Yearly, Price = 5500000 * 12 * 0.9m, EffectiveFrom = DateTime.UtcNow },
-                    
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = dedUltra.Id, BillingCycle = BillingCycle.Monthly, Price = 12500000, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = dedUltra.Id, BillingCycle = BillingCycle.Yearly, Price = 12500000 * 12 * 0.85m, EffectiveFrom = DateTime.UtcNow },
+            // --- EMAIL SERVER ---
+            EnsurePlan("email-server", "Email Doanh Nghiệp 10 User", null, "10 Accounts", "10GB Storage", null, 99000, 99000 * 12 * 0.8m);
+            EnsurePlan("email-server", "Email Doanh Nghiệp 50 User", null, "50 Accounts", "50GB Storage", null, 390000, 39000 * 12 * 0.8m);
+            EnsurePlan("email-server", "Email Doanh Nghiệp Unlimited", null, "Unlimited Accounts", "200GB Storage", null, 890000, 890000 * 12 * 0.8m);
 
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = email10.Id, BillingCycle = BillingCycle.Monthly, Price = 120000, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = email10.Id, BillingCycle = BillingCycle.Yearly, Price = 120000 * 12 * 0.8m, EffectiveFrom = DateTime.UtcNow },
-                    
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = email50.Id, BillingCycle = BillingCycle.Monthly, Price = 450000, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = email50.Id, BillingCycle = BillingCycle.Yearly, Price = 450000 * 12 * 0.8m, EffectiveFrom = DateTime.UtcNow },
-                    
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = emailUnl.Id, BillingCycle = BillingCycle.Monthly, Price = 1500000, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = emailUnl.Id, BillingCycle = BillingCycle.Yearly, Price = 1500000 * 12 * 0.8m, EffectiveFrom = DateTime.UtcNow },
+            // --- SSL ---
+            EnsurePlan("ssl-certificate", "PositiveSSL (DV)", null, null, null, null, 150000);
+            EnsurePlan("ssl-certificate", "Wildcard SSL", null, null, null, null, 1200000);
+            EnsurePlan("ssl-certificate", "EV SSL (Green Bar)", null, null, null, null, 3500000);
 
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = sslDv.Id, BillingCycle = BillingCycle.Yearly, Price = 250000, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = sslWc.Id, BillingCycle = BillingCycle.Yearly, Price = 1800000, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = sslEv.Id, BillingCycle = BillingCycle.Yearly, Price = 3500000, EffectiveFrom = DateTime.UtcNow },
+            // --- MANAGED DATABASES ---
+            EnsurePlan("managed-database", "DB Micro (Dev/Test)", "0.5 vCPU", "256MB", "2GB NVMe", "Unlimited", 99000, 99000 * 12 * 0.85m);
+            EnsurePlan("managed-database", "DB Standard (Production)", "1.0 vCPU", "1GB", "10GB NVMe", "Unlimited", 299000, 299000 * 12 * 0.8m);
+            EnsurePlan("managed-database", "DB Pro (High Availability)", "2.0 vCPU", "4GB", "50GB NVMe", "Unlimited", 699000, 699000 * 12 * 0.8m);
 
-                    // Managed Databases
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = dbMicro.Id, BillingCycle = BillingCycle.Monthly, Price = 199000, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = dbMicro.Id, BillingCycle = BillingCycle.Yearly, Price = 199000 * 12 * 0.8m, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = dbStandard.Id, BillingCycle = BillingCycle.Monthly, Price = 599000, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = dbStandard.Id, BillingCycle = BillingCycle.Yearly, Price = 599000 * 12 * 0.8m, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = dbPro.Id, BillingCycle = BillingCycle.Monthly, Price = 1590000, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = dbPro.Id, BillingCycle = BillingCycle.Yearly, Price = 1590000 * 12 * 0.8m, EffectiveFrom = DateTime.UtcNow },
+            // --- GAME SERVERS ---
+            EnsurePlan("game-server", "Minecraft Dedicated", "2 Core", "4GB", "25GB NVMe", "Anti-DDoS Game", 199000, 199000 * 12 * 0.8m);
+            EnsurePlan("game-server", "CS2 Match Server", "4 Core", "8GB", "50GB NVMe", "128 Tickrate / 1Gbps", 399000, 399000 * 12 * 0.8m);
+            EnsurePlan("game-server", "Rust Dedicated", "6 Core", "16GB", "100GB NVMe", "High Performance", 699000, 699000 * 12 * 0.8m);
 
-                    // Game Servers
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = gameMinecraft.Id, BillingCycle = BillingCycle.Monthly, Price = 149000, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = gameMinecraft.Id, BillingCycle = BillingCycle.Yearly, Price = 149000 * 12 * 0.8m, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = gameCs2.Id, BillingCycle = BillingCycle.Monthly, Price = 199000, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = gameCs2.Id, BillingCycle = BillingCycle.Yearly, Price = 199000 * 12 * 0.8m, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = gameRust.Id, BillingCycle = BillingCycle.Monthly, Price = 249000, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = gameRust.Id, BillingCycle = BillingCycle.Yearly, Price = 249000 * 12 * 0.8m, EffectiveFrom = DateTime.UtcNow },
+            // --- 1-CLICK APPS ---
+            EnsurePlan("1click-apps", "WordPress Cloud App", "1 Core", "2GB", "15GB NVMe", "Auto-Install & SSL", 89000, 89000 * 12 * 0.8m);
+            EnsurePlan("1click-apps", "Ghost Blog Cloud", "1 Core", "1GB", "10GB NVMe", "Fast Node.js Engine", 79000, 79000 * 12 * 0.8m);
+            EnsurePlan("1click-apps", "Nextcloud Storage App", "2 Core", "4GB", "50GB NVMe", "Private Cloud Storage", 159000, 159000 * 12 * 0.8m);
 
-                    // 1-Click Apps
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = appWp.Id, BillingCycle = BillingCycle.Monthly, Price = 99000, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = appWp.Id, BillingCycle = BillingCycle.Yearly, Price = 99000 * 12 * 0.8m, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = appGhost.Id, BillingCycle = BillingCycle.Monthly, Price = 129000, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = appGhost.Id, BillingCycle = BillingCycle.Yearly, Price = 129000 * 12 * 0.8m, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = appNextcloud.Id, BillingCycle = BillingCycle.Monthly, Price = 179000, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = appNextcloud.Id, BillingCycle = BillingCycle.Yearly, Price = 179000 * 12 * 0.8m, EffectiveFrom = DateTime.UtcNow },
+            // --- STATIC SITES ---
+            EnsurePlan("static-sites", "Static Site Starter", "0.2 vCPU", "64MB", "1GB NVMe", "Global CDN", 0, 0);
+            EnsurePlan("static-sites", "Static Site Pro (Custom Domain)", "0.5 vCPU", "128MB", "5GB NVMe", "Custom SSL & Unlimited BW", 49000, 49000 * 12 * 0.8m);
 
-                    // Static Sites
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = staticStarter.Id, BillingCycle = BillingCycle.Monthly, Price = 0, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = staticPro.Id, BillingCycle = BillingCycle.Monthly, Price = 49000, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = staticPro.Id, BillingCycle = BillingCycle.Yearly, Price = 49000 * 12 * 0.8m, EffectiveFrom = DateTime.UtcNow },
+            // --- OBJECT STORAGE ---
+            EnsurePlan("storage", "S3 Storage Starter (50GB)", null, null, "50GB NVMe", "1TB Bandwidth", 50000, 50000 * 12 * 0.8m);
+            EnsurePlan("storage", "S3 Storage Pro (250GB)", null, null, "250GB NVMe", "5TB Bandwidth", 200000, 200000 * 12 * 0.8m);
+            EnsurePlan("storage", "S3 Storage Enterprise (1TB)", null, null, "1TB NVMe", "Unlimited Bandwidth", 690000, 690000 * 12 * 0.8m);
 
-                    // Object Storage
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = storage50.Id, BillingCycle = BillingCycle.Monthly, Price = 50000, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = storage50.Id, BillingCycle = BillingCycle.Yearly, Price = 50000 * 12 * 0.8m, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = storage250.Id, BillingCycle = BillingCycle.Monthly, Price = 200000, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = storage250.Id, BillingCycle = BillingCycle.Yearly, Price = 200000 * 12 * 0.8m, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = storage1000.Id, BillingCycle = BillingCycle.Monthly, Price = 690000, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = storage1000.Id, BillingCycle = BillingCycle.Yearly, Price = 690000 * 12 * 0.8m, EffectiveFrom = DateTime.UtcNow },
+            // --- SECURITY & WAF ---
+            EnsurePlan("security-waf", "WAF Shield Basic", null, null, null, "Lọc SQLi, XSS", 99000, 99000 * 12 * 0.8m);
+            EnsurePlan("security-waf", "Malware Scanner & Shield Pro", null, null, null, "Quét mã độc Realtime", 199000, 199000 * 12 * 0.8m);
 
-                    // Security & WAF
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = secWafBasic.Id, BillingCycle = BillingCycle.Monthly, Price = 99000, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = secWafBasic.Id, BillingCycle = BillingCycle.Yearly, Price = 99000 * 12 * 0.8m, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = secMalwarePro.Id, BillingCycle = BillingCycle.Monthly, Price = 199000, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = secMalwarePro.Id, BillingCycle = BillingCycle.Yearly, Price = 199000 * 12 * 0.8m, EffectiveFrom = DateTime.UtcNow },
+            // --- CLOUD MIGRATION ---
+            EnsurePlan("cloud-migration", "Chuyển Đổi Web Chuẩn", null, null, null, "rsync + DB Dump", 200000);
+            EnsurePlan("cloud-migration", "Chuyển Đổi Hệ Thống VIP 24/7", null, null, null, "Zero-downtime VIP", 500000);
 
-                    // Cloud Migration
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = migStandard.Id, BillingCycle = BillingCycle.Monthly, Price = 200000, EffectiveFrom = DateTime.UtcNow },
-                    new PlanPrice { Id = Guid.NewGuid(), ServicePlanId = migVip.Id, BillingCycle = BillingCycle.Monthly, Price = 500000, EffectiveFrom = DateTime.UtcNow }
-                };
-
-                await context.PlanPrices.AddRangeAsync(prices);
+            if (newPlans.Any())
+            {
+                await context.ServicePlans.AddRangeAsync(newPlans);
+                await context.PlanPrices.AddRangeAsync(newPrices);
                 await context.SaveChangesAsync();
+                logger.LogInformation("Successfully seeded {Count} new service plans and prices!", newPlans.Count);
             }
 
             if (!context.Roles.Any())
