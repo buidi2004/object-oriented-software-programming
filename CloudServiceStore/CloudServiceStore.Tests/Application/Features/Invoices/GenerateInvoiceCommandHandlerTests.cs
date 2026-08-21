@@ -48,7 +48,7 @@ public class GenerateInvoiceCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_InvoiceAlreadyExists_ThrowsConflictException()
+    public async Task Handle_InvoiceAlreadyExists_ReturnsExistingInvoiceId()
     {
         var order = new OrderRequest { Id = Guid.NewGuid(), Status = OrderStatus.Paid };
         _orderRepoMock.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
@@ -61,8 +61,8 @@ public class GenerateInvoiceCommandHandlerTests
         var command = new GenerateInvoiceCommand { OrderRequestId = order.Id };
         var handler = CreateHandler();
 
-        var exception = await Assert.ThrowsAsync<ConflictException>(() => handler.Handle(command, CancellationToken.None));
-        Assert.Contains("already exists", exception.Message);
+        var result = await handler.Handle(command, CancellationToken.None);
+        Assert.Equal(existingInvoice.Id, result);
     }
 
     [Fact]

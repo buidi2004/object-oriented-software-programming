@@ -36,7 +36,7 @@ public class GenerateInvoiceCommandHandler : IRequestHandler<GenerateInvoiceComm
 
         var existingInvoice = await _invoiceRepository.FirstOrDefaultAsync(x => x.OrderId == request.OrderRequestId, cancellationToken);
         if (existingInvoice != null)
-            throw new ConflictException("Invoice already exists for this order.");
+            return existingInvoice.Id;
 
         var invoice = new Invoice(
             request.OrderRequestId,

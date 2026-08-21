@@ -63,12 +63,12 @@ public class GetInvoiceQueryHandlerTests
     }
 
     [Fact]
-    public async Task Handle_InvoiceNotFound_ThrowsNotFoundException()
+    public async Task Handle_InvoiceNotFound_AutoGeneratesAndReturnsInvoiceDto()
     {
         var userId = Guid.NewGuid();
         _currentUserMock.Setup(c => c.UserId).Returns(userId);
         
-        var order = new OrderRequest { Id = Guid.NewGuid(), UserId = userId };
+        var order = new OrderRequest { Id = Guid.NewGuid(), UserId = userId, CreatedAt = DateTime.UtcNow };
         _orderRepoMock.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(order);
             
@@ -78,7 +78,12 @@ public class GetInvoiceQueryHandlerTests
         var query = new GetInvoiceQuery { OrderRequestId = order.Id };
         var handler = CreateHandler();
 
-        await Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(query, CancellationToken.None));
+        var result = await handler.Handle(query, CancellationToken.None);
+
+        Assert.NotNull(result);
+        Assert.Equal(order.Id, result.OrderRequestId);
+        _invoiceRepoMock.Verify(r => r.AddAsync(It.IsAny<Invoice>(), It.IsAny<CancellationToken>()), Times.Once);
+        _uowMock.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
