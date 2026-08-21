@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import api from "@/src/lib/api";
+import { api } from "@/src/lib/api";
 
 const COLORS = ["#ef4444", "#f59e0b", "#22c55e", "#3b82f6", "#a855f7", "#ec4899", "#14b8a6"];
 
@@ -13,8 +13,8 @@ export default function ServiceTagsPage() {
 
   const load = () => {
     api.get("/api/service-tags")
-      .then((res) => { setTags(res.data); setLoading(false); })
-      .catch((err) => { console.error(err); setLoading(false); });
+      .then((res: any) => { setTags(res.data); setLoading(false); })
+      .catch((err: any) => { console.error(err); setLoading(false); });
   };
 
   useEffect(load, []);

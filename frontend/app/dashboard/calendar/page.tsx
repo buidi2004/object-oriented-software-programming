@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import api from "@/src/lib/api";
+import { api } from "@/src/lib/api";
 
 export default function RenewalCalendarPage() {
   const [events, setEvents] = useState<any[]>([]);
@@ -8,8 +8,8 @@ export default function RenewalCalendarPage() {
 
   useEffect(() => {
     api.get("/api/renewals/calendar?month=8&year=2026")
-      .then((res) => { setEvents(res.data); setLoading(false); })
-      .catch((err) => { console.error(err); setLoading(false); });
+      .then((res: any) => { setEvents(res.data); setLoading(false); })
+      .catch((err: any) => { console.error(err); setLoading(false); });
   }, []);
 
   if (loading) return <div className="p-6 text-center">Đang tải lịch thanh toán...</div>;

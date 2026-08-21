@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import api from "@/src/lib/api";
+import { api } from "@/src/lib/api";
 
 const STATUS_LABEL: Record<string, string> = {
   Pending: "Chờ xem xét",
@@ -23,8 +23,8 @@ export default function FeatureRequestsPage() {
 
   const load = () => {
     api.get("/api/feature-requests")
-      .then((res) => { setItems(res.data); setLoading(false); })
-      .catch((err) => { console.error(err); setLoading(false); });
+      .then((res: any) => { setItems(res.data); setLoading(false); })
+      .catch((err: any) => { console.error(err); setLoading(false); });
   };
 
   useEffect(load, []);

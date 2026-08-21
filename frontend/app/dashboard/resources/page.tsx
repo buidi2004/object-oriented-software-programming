@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import api from "@/src/lib/api";
+import { api } from "@/src/lib/api";
 
 const CATEGORY_ICON: Record<string, string> = {
   Tools: "🛠️",
@@ -22,8 +22,8 @@ export default function ResourcesPage() {
 
   useEffect(() => {
     api.get("/api/resources")
-      .then((res) => { setItems(Array.isArray(res.data) ? res.data : res.data.items ?? res.data.result ?? []); setLoading(false); })
-      .catch((err) => { console.error(err); setLoading(false); });
+      .then((res: any) => { setItems(Array.isArray(res.data) ? res.data : res.data.items ?? res.data.result ?? []); setLoading(false); })
+      .catch((err: any) => { console.error(err); setLoading(false); });
   }, []);
 
   const categories = ["Tất cả", ...Array.from(new Set(items.map((i) => i.category).filter(Boolean)))];

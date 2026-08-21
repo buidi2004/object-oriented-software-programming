@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import api from "@/src/lib/api";
+import { api } from "@/src/lib/api";
 import { PieChart, Pie, Cell, Legend, Tooltip, ResponsiveContainer } from "recharts";
 
 export default function SpendingReportPage() {
@@ -12,8 +12,8 @@ export default function SpendingReportPage() {
   useEffect(() => {
     setLoading(true);
     api.get(`/api/spending-reports/monthly?month=${month}&year=${year}`)
-      .then((res) => { setData(res.data); setLoading(false); })
-      .catch((err) => { console.error(err); setLoading(false); });
+      .then((res: any) => { setData(res.data); setLoading(false); })
+      .catch((err: any) => { console.error(err); setLoading(false); });
   }, [month, year]);
 
   if (loading) return <div className="p-6 text-center">Đang tải báo cáo chi tiêu...</div>;
