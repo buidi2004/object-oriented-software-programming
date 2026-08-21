@@ -120,7 +120,7 @@ export default function AdminReviewsPage() {
                 <tr key={review.id} className="hover:bg-gray-50/50 transition-colors">
                   <td className="px-6 py-4">
                     <div className="font-medium text-gray-900">{review.userEmail}</div>
-                    <div className="text-xs text-gray-400 mt-1">{new Date(review.createdAt).toLocaleString('vi-VN')}</div>
+                    <div className="text-xs text-gray-600 mt-1">{new Date(review.createdAt).toLocaleString('vi-VN')}</div>
                   </td>
                   <td className="px-6 py-4">
                     <div className="font-medium text-indigo-600">{review.servicePlanName}</div>
@@ -179,7 +179,7 @@ export default function AdminReviewsPage() {
 
                       <button
                         onClick={() => handleDelete(review.id)}
-                        className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors flex items-center justify-center"
+                        className="p-1.5 text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors flex items-center justify-center"
                         title="Xóa đánh giá"
                       >
                         <Trash2 className="w-4 h-4" />

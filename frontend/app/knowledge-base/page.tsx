@@ -54,7 +54,7 @@ export default function PublicKnowledgeBasePage() {
                   </div>
                   <h2 className="font-bold text-slate-900 group-hover:text-blue-600">{article.title}</h2>
                 </div>
-                <ArrowRight className="w-5 h-5 text-slate-400 group-hover:text-blue-600 shrink-0" />
+                <ArrowRight className="w-5 h-5 text-slate-600 group-hover:text-blue-600 shrink-0" />
               </div>
             </Link>
           ))}

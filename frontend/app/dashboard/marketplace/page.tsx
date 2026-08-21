@@ -79,7 +79,7 @@ export default function UserMarketplacePage() {
           {displayListings.map((item) => (
             <div key={item.id} className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden flex flex-col hover:shadow-md transition-shadow">
               <div className="aspect-video bg-slate-100 flex items-center justify-center border-b border-slate-200">
-                <ShoppingBag className="w-16 h-16 text-slate-300" />
+                <ShoppingBag className="w-16 h-16 text-slate-700" />
               </div>
               <div className="p-6 flex flex-col flex-1">
                 <div className="flex items-center justify-between mb-2">
@@ -99,7 +99,7 @@ export default function UserMarketplacePage() {
                   <button
                     onClick={() => handlePurchase(item.id)}
                     disabled={purchasingId === item.id}
-                    className="flex items-center gap-2 px-4 py-2 bg-fuchsia-600 text-white rounded-xl hover:bg-fuchsia-700 font-semibold transition-colors disabled:opacity-50"
+                    className="flex items-center gap-2 px-4 py-2 bg-fuchsia-600 text-slate-900 rounded-xl hover:bg-fuchsia-700 font-semibold transition-colors disabled:opacity-50"
                   >
                     {purchasingId === item.id ? (
                       <RefreshCw className="w-4 h-4 animate-spin" />

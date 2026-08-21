@@ -211,7 +211,7 @@ export default function AdminDedicatedServersPage() {
 
           <div className="flex items-center gap-3">
             <div className="relative">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <Search className="w-4 h-4 text-slate-600 absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 placeholder="Tìm máy chủ / IP / khách hàng..."
@@ -246,7 +246,7 @@ export default function AdminDedicatedServersPage() {
 
         {/* Create / Edit Modal */}
         {(isCreating || editingServer) && (
-          <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="fixed inset-0 bg-white/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
             <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-lg w-full border border-slate-200 shadow-2xl">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-base font-black text-slate-900">
@@ -254,7 +254,7 @@ export default function AdminDedicatedServersPage() {
                 </h2>
                 <button 
                   onClick={() => { setIsCreating(false); setEditingServer(null); }}
-                  className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100"
+                  className="p-1.5 text-slate-600 hover:text-slate-600 rounded-lg hover:bg-slate-100"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -421,14 +421,14 @@ export default function AdminDedicatedServersPage() {
                   <div className="flex items-center gap-1">
                     <button
                       onClick={() => handleOpenEdit(srv)}
-                      className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                      className="p-1.5 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                       title="Chỉnh sửa máy chủ"
                     >
                       <Edit2 className="w-3.5 h-3.5" />
                     </button>
                     <button
                       onClick={() => handleDeleteServer(srv.id, srv.serverName)}
-                      className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+                      className="p-1.5 text-slate-600 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
                       title="Xóa máy chủ"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
@@ -458,11 +458,11 @@ export default function AdminDedicatedServersPage() {
 
               <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
                 <div>
-                  <div className="text-[10px] text-slate-400 font-semibold">Khách hàng</div>
+                  <div className="text-[10px] text-slate-600 font-semibold">Khách hàng</div>
                   <div className="font-bold text-slate-800 truncate max-w-[140px]">{srv.assignedUser}</div>
                 </div>
                 <div className="text-right">
-                  <div className="text-[10px] text-slate-400 font-semibold">Giá thuê/tháng</div>
+                  <div className="text-[10px] text-slate-600 font-semibold">Giá thuê/tháng</div>
                   <div className="font-black text-purple-600">{srv.monthlyCost.toLocaleString('vi-VN')} đ</div>
                 </div>
               </div>

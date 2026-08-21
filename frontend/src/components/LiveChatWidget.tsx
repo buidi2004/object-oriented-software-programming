@@ -64,7 +64,7 @@ export const LiveChatWidget: React.FC = () => {
       {!isOpen ? (
         <button
           onClick={() => setIsOpen(true)}
-          className="p-4 rounded-full bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 hover:scale-105 text-white shadow-2xl shadow-blue-500/40 flex items-center justify-center cursor-pointer transition-all relative group"
+          className="p-4 rounded-full bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 hover:scale-105 text-slate-900 shadow-2xl shadow-blue-500/40 flex items-center justify-center cursor-pointer transition-all relative group"
         >
           <MessageSquare className="w-6 h-6" />
           <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-emerald-400 border-2 border-white rounded-full animate-ping" />
@@ -74,7 +74,7 @@ export const LiveChatWidget: React.FC = () => {
         <div className="w-80 sm:w-96 bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col h-[480px] animate-in slide-in-from-bottom-5 duration-300">
           
           {/* Top Bar */}
-          <div className="p-4 bg-slate-900 text-white flex items-center justify-between">
+          <div className="p-4 bg-white text-slate-900 flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center text-cyan-300 font-bold">
                 <Bot className="w-5 h-5" />
@@ -90,7 +90,7 @@ export const LiveChatWidget: React.FC = () => {
 
             <button
               onClick={() => setIsOpen(false)}
-              className="p-1.5 rounded-full hover:bg-slate-800 text-slate-400 hover:text-white cursor-pointer"
+              className="p-1.5 rounded-full hover:bg-slate-100 text-slate-600 hover:text-slate-900 cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>

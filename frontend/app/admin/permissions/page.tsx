@@ -187,7 +187,7 @@ export default function AdminPermissionsPage() {
                 <tr key={perm.id} className="hover:bg-slate-50 transition-colors">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-2">
-                      <span className="text-slate-400">{getCategoryIcon(perm.category)}</span>
+                      <span className="text-slate-600">{getCategoryIcon(perm.category)}</span>
                       <span className="font-medium text-slate-900">{perm.name}</span>
                     </div>
                   </td>
@@ -207,7 +207,7 @@ export default function AdminPermissionsPage() {
 
           {permissions.length === 0 && (
             <div className="text-center py-12">
-              <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-300" />
+              <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-700" />
               <p className="font-medium text-slate-500">Chưa có quyền nào</p>
             </div>
           )}

@@ -236,7 +236,7 @@ export default function AdminAbandonedCartsPage() {
         {/* Filter & Search */}
         <div className="flex flex-col sm:flex-row gap-4 mb-6 items-center justify-between">
           <div className="relative w-full sm:max-w-md">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-600" />
             <input
               type="text"
               placeholder="Tìm kiếm theo tên khách hàng hoặc email..."
@@ -286,9 +286,9 @@ export default function AdminAbandonedCartsPage() {
                     </span>
                   </div>
                   <p className="text-xs text-slate-500 flex items-center gap-1.5">
-                    <Mail className="w-3.5 h-3.5 text-slate-400" /> {cart.customerEmail}
+                    <Mail className="w-3.5 h-3.5 text-slate-600" /> {cart.customerEmail}
                   </p>
-                  <p className="text-xs text-slate-400 mt-1 flex items-center gap-1">
+                  <p className="text-xs text-slate-600 mt-1 flex items-center gap-1">
                     <Clock className="w-3.5 h-3.5" />
                     Tạo lúc: {new Date(cart.createdAt).toLocaleString('vi-VN')}
                   </p>
@@ -323,7 +323,7 @@ export default function AdminAbandonedCartsPage() {
               <div className="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between">
                 <button
                   onClick={() => handleDeleteCart(cart.id)}
-                  className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-colors"
+                  className="p-2 text-slate-600 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-colors"
                   title="Xóa giỏ hàng"
                 >
                   <Trash2 className="w-4 h-4" />
@@ -346,9 +346,9 @@ export default function AdminAbandonedCartsPage() {
 
         {filteredCarts.length === 0 && (
           <div className="text-center py-16 bg-white rounded-2xl border border-slate-200">
-            <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-300" />
+            <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-700" />
             <p className="font-bold text-slate-700">Không có giỏ hàng bỏ quên nào</p>
-            <p className="text-xs text-slate-400 mt-1">Hệ thống đang hoạt động tối ưu</p>
+            <p className="text-xs text-slate-600 mt-1">Hệ thống đang hoạt động tối ưu</p>
           </div>
         )}
       </main>

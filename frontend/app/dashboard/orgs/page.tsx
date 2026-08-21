@@ -89,10 +89,10 @@ export default function CustomerOrganizationsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
             <Building2 className="w-6 h-6 text-cyan-400" /> Quản Trị Tổ Chức Doanh Nghiệp & Nhóm (Team)
           </h1>
-          <p className="text-sm text-slate-400">
+          <p className="text-sm text-slate-600">
             Quản lý các tài khoản con (Sub-accounts), phân quyền quản trị máy chủ VPS, hạ tầng mạng và chia sẻ hạn mức tín dụng thanh toán.
           </p>
         </div>
@@ -100,7 +100,7 @@ export default function CustomerOrganizationsPage() {
         <div className="flex items-center gap-3">
           <button 
             onClick={fetchOrgData}
-            className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white transition-colors"
+            className="p-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:text-slate-900 transition-colors"
           >
             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
           </button>
@@ -115,44 +115,44 @@ export default function CustomerOrganizationsPage() {
 
       {/* Org Overview Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="p-6 rounded-2xl bg-slate-900/60 border border-slate-800 shadow-xl space-y-2">
-          <div className="text-xs text-slate-400 font-semibold uppercase tracking-wider flex items-center gap-1.5">
+        <div className="p-6 rounded-2xl bg-white/60 border border-slate-200 shadow-xl space-y-2">
+          <div className="text-xs text-slate-600 font-semibold uppercase tracking-wider flex items-center gap-1.5">
             <Building2 className="w-4 h-4 text-cyan-400" /> Tên Tổ Chức / Doanh Nghiệp
           </div>
-          <div className="text-lg font-bold text-white truncate">{orgName}</div>
-          <div className="text-xs text-slate-400 font-mono">Mã số thuế: {taxCode}</div>
+          <div className="text-lg font-bold text-slate-900 truncate">{orgName}</div>
+          <div className="text-xs text-slate-600 font-mono">Mã số thuế: {taxCode}</div>
         </div>
 
-        <div className="p-6 rounded-2xl bg-slate-900/60 border border-slate-800 shadow-xl space-y-2">
-          <div className="text-xs text-slate-400 font-semibold uppercase tracking-wider flex items-center gap-1.5">
+        <div className="p-6 rounded-2xl bg-white/60 border border-slate-200 shadow-xl space-y-2">
+          <div className="text-xs text-slate-600 font-semibold uppercase tracking-wider flex items-center gap-1.5">
             <CreditCard className="w-4 h-4 text-emerald-400" /> Hạn Mức Tín Dụng Doanh Nghiệp
           </div>
           <div className="text-lg font-bold text-emerald-400">
             {creditLimit.toLocaleString('vi-VN')} đ
           </div>
-          <div className="text-xs text-slate-400">Thanh toán trả sau định kỳ hàng tháng</div>
+          <div className="text-xs text-slate-600">Thanh toán trả sau định kỳ hàng tháng</div>
         </div>
 
-        <div className="p-6 rounded-2xl bg-slate-900/60 border border-slate-800 shadow-xl space-y-2">
-          <div className="text-xs text-slate-400 font-semibold uppercase tracking-wider flex items-center gap-1.5">
+        <div className="p-6 rounded-2xl bg-white/60 border border-slate-200 shadow-xl space-y-2">
+          <div className="text-xs text-slate-600 font-semibold uppercase tracking-wider flex items-center gap-1.5">
             <Users className="w-4 h-4 text-indigo-400" /> Tổng Số Thành Viên
           </div>
-          <div className="text-lg font-bold text-white">{members.length} Tài khoản</div>
-          <div className="text-xs text-slate-400">1 Chủ sở hữu • {members.filter(m => m.role === 'Admin').length} Quản trị viên</div>
+          <div className="text-lg font-bold text-slate-900">{members.length} Tài khoản</div>
+          <div className="text-xs text-slate-600">1 Chủ sở hữu • {members.filter(m => m.role === 'Admin').length} Quản trị viên</div>
         </div>
       </div>
 
       {/* Members Table */}
-      <div className="rounded-3xl bg-slate-900/60 border border-slate-800 shadow-2xl overflow-hidden">
-        <div className="p-5 border-b border-slate-800 flex items-center justify-between">
-          <h2 className="text-base font-bold text-white flex items-center gap-2">
+      <div className="rounded-3xl bg-white/60 border border-slate-200 shadow-2xl overflow-hidden">
+        <div className="p-5 border-b border-slate-200 flex items-center justify-between">
+          <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
             <Users className="w-4 h-4 text-cyan-400" /> Danh Sách Thành Viên & Quyền Hạn
           </h2>
         </div>
 
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
-            <thead className="bg-slate-950/60 text-slate-400 text-xs uppercase font-semibold border-b border-slate-800">
+            <thead className="bg-slate-50/60 text-slate-600 text-xs uppercase font-semibold border-b border-slate-200">
               <tr>
                 <th className="px-6 py-4">Thành Viên</th>
                 <th className="px-6 py-4">Vai Trò (Role)</th>
@@ -160,19 +160,19 @@ export default function CustomerOrganizationsPage() {
                 <th className="px-6 py-4 text-right">Thao Tác</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/60 text-slate-300">
+            <tbody className="divide-y divide-slate-800/60 text-slate-700">
               {members.map((m) => (
                 <tr key={m.id} className="hover:bg-slate-800/30 transition-colors">
                   <td className="px-6 py-4">
-                    <div className="font-semibold text-white">{m.fullName}</div>
-                    <div className="text-xs text-slate-400 font-mono">{m.email}</div>
+                    <div className="font-semibold text-slate-900">{m.fullName}</div>
+                    <div className="text-xs text-slate-600 font-mono">{m.email}</div>
                   </td>
                   <td className="px-6 py-4">
-                    <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold ${m.role === 'Owner' ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' : m.role === 'Admin' ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/20' : 'bg-slate-800 text-slate-300'}`}>
+                    <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold ${m.role === 'Owner' ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' : m.role === 'Admin' ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/20' : 'bg-white text-slate-300'}`}>
                       <ShieldCheck className="w-3 h-3" /> {m.role}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-slate-400 text-xs">
+                  <td className="px-6 py-4 text-slate-600 text-xs">
                     {m.joinedDate}
                   </td>
                   <td className="px-6 py-4 text-right">
@@ -196,29 +196,29 @@ export default function CustomerOrganizationsPage() {
       {/* Modal Mời Thành Viên */}
       {showInviteModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-          <div className="w-full max-w-md p-6 rounded-3xl bg-slate-900 border border-slate-800 shadow-2xl space-y-5">
-            <h2 className="text-xl font-bold text-white flex items-center gap-2">
+          <div className="w-full max-w-md p-6 rounded-3xl bg-white border border-slate-200 shadow-2xl space-y-5">
+            <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
               <UserPlus className="w-5 h-5 text-cyan-400" /> Mời Thành Viên Vào Tổ Chức
             </h2>
             <form onSubmit={handleInvite} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Email người nhận lời mời *</label>
+                <label className="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1.5">Email người nhận lời mời *</label>
                 <input 
                   type="email" 
                   required
                   placeholder="nhanvien@company.vn"
                   value={inviteEmail}
                   onChange={(e) => setInviteEmail(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 text-sm"
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-500 focus:outline-none focus:border-cyan-500 text-sm"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Phân quyền vai trò</label>
+                <label className="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1.5">Phân quyền vai trò</label>
                 <select 
                   value={inviteRole}
                   onChange={(e) => setInviteRole(e.target.value as 'Admin' | 'Member')}
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white focus:outline-none focus:border-cyan-500 text-sm"
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:border-cyan-500 text-sm"
                 >
                   <option value="Member">Member (Chỉ xem & quản lý dịch vụ được giao)</option>
                   <option value="Admin">Admin (Toàn quyền quản trị kỹ thuật & tạo VPS)</option>
@@ -229,7 +229,7 @@ export default function CustomerOrganizationsPage() {
                 <button 
                   type="button" 
                   onClick={() => setShowInviteModal(false)}
-                  className="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 text-sm font-semibold hover:bg-slate-700"
+                  className="px-4 py-2 rounded-xl bg-white text-slate-700 text-sm font-semibold hover:bg-slate-200"
                 >
                   Hủy
                 </button>

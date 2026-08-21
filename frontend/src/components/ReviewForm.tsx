@@ -92,7 +92,7 @@ export default function ReviewForm({ orderId }: ReviewFormProps) {
         <button
           type="submit"
           disabled={isSubmitting || rating === 0}
-          className="w-full flex justify-center items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-xl transition-all disabled:opacity-50"
+          className="w-full flex justify-center items-center gap-2 bg-white hover:bg-slate-100 text-slate-900 font-bold py-3 rounded-xl transition-all disabled:opacity-50"
         >
           {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
           Gửi đánh giá

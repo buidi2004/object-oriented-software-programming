@@ -82,7 +82,7 @@ export function TierRangeSlider({
           return (
             <span
               key={markIndex}
-              className="absolute text-[11px] font-semibold text-slate-400 -translate-x-1/2 whitespace-nowrap"
+              className="absolute text-[11px] font-semibold text-slate-600 -translate-x-1/2 whitespace-nowrap"
               style={{ left: `${left}%` }}
             >
               {formatMark(tiers[markIndex])}

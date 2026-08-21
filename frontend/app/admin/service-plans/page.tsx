@@ -385,7 +385,7 @@ function AdminServicePlansContent() {
     <div className="min-h-screen bg-[#f8fafc] p-4 md:p-8 text-slate-800">
       {/* Toast Notification */}
       {toastMessage && (
-        <div className="fixed top-5 right-5 z-50 px-4 py-3 bg-slate-900 text-white rounded-xl shadow-2xl text-xs font-bold flex items-center gap-2 animate-in slide-in-from-top-2 border border-slate-700">
+        <div className="fixed top-5 right-5 z-50 px-4 py-3 bg-white text-slate-900 rounded-xl shadow-2xl text-xs font-bold flex items-center gap-2 animate-in slide-in-from-top-2 border border-slate-300">
           <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
           <span>{toastMessage}</span>
         </div>
@@ -476,7 +476,7 @@ function AdminServicePlansContent() {
         <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs flex flex-wrap items-center justify-between gap-4">
           <div className="flex flex-wrap items-center gap-3 flex-1 min-w-[300px]">
             <div className="relative flex-1 max-w-md">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Search className="w-4 h-4 text-slate-600 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 placeholder="Tìm theo tên gói, CPU, RAM, SSD..."
@@ -546,7 +546,7 @@ function AdminServicePlansContent() {
                         <div className="font-bold text-slate-900 text-sm group-hover:text-indigo-600 transition-colors">
                           {plan.servicePlanName}
                         </div>
-                        <div className="text-[11px] text-slate-400 font-mono mt-0.5" title={plan.servicePlanId}>
+                        <div className="text-[11px] text-slate-600 font-mono mt-0.5" title={plan.servicePlanId}>
                           ID: {plan.servicePlanId.split('-')[0]}...
                         </div>
                       </td>
@@ -590,7 +590,7 @@ function AdminServicePlansContent() {
                             </span>
                           )}
                           {!plan.cpu && !plan.ram && !plan.ssd && (
-                            <span className="text-slate-400 italic text-[11px]">Dịch vụ không dùng thông số CPU/RAM</span>
+                            <span className="text-slate-600 italic text-[11px]">Dịch vụ không dùng thông số CPU/RAM</span>
                           )}
                         </div>
                       </td>
@@ -637,10 +637,10 @@ function AdminServicePlansContent() {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={7} className="p-12 text-center text-slate-400">
-                      <Package className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+                    <td colSpan={7} className="p-12 text-center text-slate-600">
+                      <Package className="w-12 h-12 text-slate-700 mx-auto mb-3" />
                       <p className="font-bold text-slate-700 text-sm">Không tìm thấy sản phẩm phù hợp</p>
-                      <p className="text-xs text-slate-400 mt-1">Thử thay đổi bộ lọc danh mục hoặc từ khóa tìm kiếm</p>
+                      <p className="text-xs text-slate-600 mt-1">Thử thay đổi bộ lọc danh mục hoặc từ khóa tìm kiếm</p>
                     </td>
                   </tr>
                 )}
@@ -652,7 +652,7 @@ function AdminServicePlansContent() {
 
       {/* MODAL 1: ADD / EDIT PRODUCT & SPECS */}
       {showModal && (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 z-50">
+        <div className="fixed inset-0 bg-white/60 backdrop-blur-xs flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-slate-200 animate-in zoom-in-95">
             <div className="p-6 border-b border-slate-100 flex items-center justify-between sticky top-0 bg-white z-10">
               <div className="flex items-center gap-2">
@@ -663,7 +663,7 @@ function AdminServicePlansContent() {
               </div>
               <button 
                 onClick={() => setShowModal(false)}
-                className="p-2 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100 transition-colors"
+                className="p-2 text-slate-600 hover:text-slate-600 rounded-full hover:bg-slate-100 transition-colors"
               >
                 <XCircle className="w-5 h-5" />
               </button>
@@ -797,7 +797,7 @@ function AdminServicePlansContent() {
               {/* Image Upload */}
               <div>
                 <label className="block font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
-                  <ImageIcon className="w-4 h-4 text-slate-400" />
+                  <ImageIcon className="w-4 h-4 text-slate-600" />
                   Ảnh đại diện sản phẩm (Thumbnail)
                 </label>
                 <div className="flex items-center gap-4">
@@ -806,7 +806,7 @@ function AdminServicePlansContent() {
                       <img src={previewImage.startsWith('blob:') ? previewImage : `http://localhost:5053${previewImage}`} alt="Preview" className="w-full h-full object-cover" />
                     </div>
                   ) : (
-                    <div className="w-16 h-16 rounded-xl border-2 border-dashed border-slate-200 flex items-center justify-center text-slate-400 flex-shrink-0">
+                    <div className="w-16 h-16 rounded-xl border-2 border-dashed border-slate-200 flex items-center justify-center text-slate-600 flex-shrink-0">
                       <Upload className="w-6 h-6" />
                     </div>
                   )}
@@ -817,7 +817,7 @@ function AdminServicePlansContent() {
                       onChange={handleFileChange}
                       className="block w-full text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer"
                     />
-                    <p className="text-[11px] text-slate-400 mt-1">PNG, JPG, WEBP tối đa 2MB</p>
+                    <p className="text-[11px] text-slate-600 mt-1">PNG, JPG, WEBP tối đa 2MB</p>
                   </div>
                 </div>
               </div>
@@ -846,7 +846,7 @@ function AdminServicePlansContent() {
 
       {/* MODAL 2: PRICING MANAGER (Monthly, Yearly, Multi-Cycle) */}
       {showPricingModal && editingPlan && (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 z-50">
+        <div className="fixed inset-0 bg-white/60 backdrop-blur-xs flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col border border-slate-200 animate-in zoom-in-95">
             <div className="p-6 border-b border-slate-100 flex items-center justify-between">
               <div>
@@ -860,7 +860,7 @@ function AdminServicePlansContent() {
               </div>
               <button 
                 onClick={() => setShowPricingModal(false)}
-                className="p-2 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100"
+                className="p-2 text-slate-600 hover:text-slate-600 rounded-full hover:bg-slate-100"
               >
                 <XCircle className="w-5 h-5" />
               </button>
@@ -903,7 +903,7 @@ function AdminServicePlansContent() {
                         className="w-full p-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none font-bold text-emerald-700 pr-12"
                         placeholder="VD: 2800000"
                       />
-                      <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-[11px]">VNĐ</span>
+                      <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-600 font-bold text-[11px]">VNĐ</span>
                     </div>
                   </div>
 
@@ -946,7 +946,7 @@ function AdminServicePlansContent() {
                   </thead>
                   <tbody className="divide-y divide-slate-100">
                     {isPricingLoading ? (
-                      <tr><td colSpan={4} className="p-8 text-center text-slate-400">Đang tải...</td></tr>
+                      <tr><td colSpan={4} className="p-8 text-center text-slate-600">Đang tải...</td></tr>
                     ) : currentPrices.length > 0 ? (
                       currentPrices.map(p => (
                         <tr key={p.id} className="hover:bg-slate-50 transition-colors">
@@ -985,7 +985,7 @@ function AdminServicePlansContent() {
                       ))
                     ) : (
                       <tr>
-                        <td colSpan={4} className="p-8 text-center text-slate-400">
+                        <td colSpan={4} className="p-8 text-center text-slate-600">
                           Chưa có cấu hình giá nào cho sản phẩm này. Hãy thêm mức giá phía trên!
                         </td>
                       </tr>

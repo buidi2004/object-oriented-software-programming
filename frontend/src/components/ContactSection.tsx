@@ -106,7 +106,7 @@ export const ContactSection: React.FC = () => {
                   className="w-full p-5 text-left flex justify-between items-center gap-4 font-bold text-slate-900 text-base hover:text-blue-600 transition-colors cursor-pointer"
                 >
                   <span>{faq.question}</span>
-                  <ChevronDown className={`w-5 h-5 shrink-0 text-slate-400 transition-transform ${openFaq === idx ? 'rotate-180 text-blue-600' : ''}`} />
+                  <ChevronDown className={`w-5 h-5 shrink-0 text-slate-600 transition-transform ${openFaq === idx ? 'rotate-180 text-blue-600' : ''}`} />
                 </button>
 
                 {openFaq === idx && (
@@ -143,7 +143,7 @@ export const ContactSection: React.FC = () => {
                   <MapPin className="w-5 h-5" />
                 </div>
                 <div>
-                  <div className="text-xs font-bold text-slate-400 uppercase">Trụ sở chính</div>
+                  <div className="text-xs font-bold text-slate-600 uppercase">Trụ sở chính</div>
                   <div className="text-sm font-bold text-slate-900 mt-0.5">
                     {contactInfo.address}
                   </div>
@@ -155,7 +155,7 @@ export const ContactSection: React.FC = () => {
                   <Phone className="w-5 h-5" />
                 </div>
                 <div>
-                  <div className="text-xs font-bold text-slate-400 uppercase">Hotline 24/7</div>
+                  <div className="text-xs font-bold text-slate-600 uppercase">Hotline 24/7</div>
                   <div className="text-sm font-bold text-slate-900 mt-0.5">
                     {contactInfo.hotline}
                   </div>
@@ -167,7 +167,7 @@ export const ContactSection: React.FC = () => {
                   <Mail className="w-5 h-5" />
                 </div>
                 <div>
-                  <div className="text-xs font-bold text-slate-400 uppercase">Email Kỹ Thuật</div>
+                  <div className="text-xs font-bold text-slate-600 uppercase">Email Kỹ Thuật</div>
                   <div className="text-sm font-bold text-slate-900 mt-0.5">
                     {contactInfo.email}
                   </div>
@@ -243,7 +243,7 @@ export const ContactSection: React.FC = () => {
 
                 <button
                   type="submit"
-                  className="w-full py-3.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-xs shadow-md transition-all flex items-center justify-center gap-2"
+                  className="w-full py-3.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-slate-900 font-bold text-xs shadow-md transition-all flex items-center justify-center gap-2"
                 >
                   <Send className="w-4 h-4" /> Gửi Yêu Cầu Tư Vấn Ngay
                 </button>

@@ -160,7 +160,7 @@ export default function InvoicesPage() {
                     />
                     <span>Đã thanh toán</span>
                   </div>
-                  <span className="text-slate-400 font-mono text-[11px]">{paidCount}</span>
+                  <span className="text-slate-600 font-mono text-[11px]">{paidCount}</span>
                 </label>
 
                 <label className="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
@@ -174,7 +174,7 @@ export default function InvoicesPage() {
                     />
                     <span>Chưa thanh toán</span>
                   </div>
-                  <span className="text-slate-400 font-mono text-[11px]">{pendingCount}</span>
+                  <span className="text-slate-600 font-mono text-[11px]">{pendingCount}</span>
                 </label>
 
                 <label className="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
@@ -188,7 +188,7 @@ export default function InvoicesPage() {
                     />
                     <span>Đã hủy</span>
                   </div>
-                  <span className="text-slate-400 font-mono text-[11px]">{cancelledCount}</span>
+                  <span className="text-slate-600 font-mono text-[11px]">{cancelledCount}</span>
                 </label>
 
                 <label className="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 cursor-pointer">
@@ -202,7 +202,7 @@ export default function InvoicesPage() {
                     />
                     <span>Đã hoàn tiền</span>
                   </div>
-                  <span className="text-slate-400 font-mono text-[11px]">{refundedCount}</span>
+                  <span className="text-slate-600 font-mono text-[11px]">{refundedCount}</span>
                 </label>
               </div>
             )}
@@ -262,7 +262,7 @@ export default function InvoicesPage() {
                 placeholder="Tìm kiếm hóa đơn..."
                 className="w-56 text-xs pl-8 pr-3 py-1.5 bg-white border border-slate-200 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
-              <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
+              <Search className="w-3.5 h-3.5 text-slate-600 absolute left-2.5 top-1/2 -translate-y-1/2" />
             </div>
           </div>
 
@@ -274,31 +274,31 @@ export default function InvoicesPage() {
                   <th className="py-3 px-4">
                     <div className="flex items-center gap-1 cursor-pointer hover:text-slate-900">
                       <span>Hóa đơn #</span>
-                      <ArrowUpDown className="w-3 h-3 text-slate-400" />
+                      <ArrowUpDown className="w-3 h-3 text-slate-600" />
                     </div>
                   </th>
                   <th className="py-3 px-4">
                     <div className="flex items-center gap-1 cursor-pointer hover:text-slate-900">
                       <span>Ngày tạo hóa đơn</span>
-                      <ArrowUpDown className="w-3 h-3 text-slate-400" />
+                      <ArrowUpDown className="w-3 h-3 text-slate-600" />
                     </div>
                   </th>
                   <th className="py-3 px-4">
                     <div className="flex items-center gap-1 cursor-pointer hover:text-slate-900">
                       <span>Ngày đến hạn</span>
-                      <ArrowUpDown className="w-3 h-3 text-slate-400" />
+                      <ArrowUpDown className="w-3 h-3 text-slate-600" />
                     </div>
                   </th>
                   <th className="py-3 px-4">
                     <div className="flex items-center gap-1 cursor-pointer hover:text-slate-900">
                       <span>Tổng cộng</span>
-                      <ArrowUpDown className="w-3 h-3 text-slate-400" />
+                      <ArrowUpDown className="w-3 h-3 text-slate-600" />
                     </div>
                   </th>
                   <th className="py-3 px-4">
                     <div className="flex items-center gap-1 cursor-pointer hover:text-slate-900">
                       <span>Trạng thái</span>
-                      <ArrowUpDown className="w-3 h-3 text-slate-400" />
+                      <ArrowUpDown className="w-3 h-3 text-slate-600" />
                     </div>
                   </th>
                 </tr>
@@ -306,7 +306,7 @@ export default function InvoicesPage() {
               <tbody className="divide-y divide-slate-100 font-medium">
                 {isLoading ? (
                   <tr>
-                    <td colSpan={5} className="py-8 text-center text-slate-400">
+                    <td colSpan={5} className="py-8 text-center text-slate-600">
                       <div className="flex items-center justify-center gap-2">
                         <RefreshCw className="w-4 h-4 animate-spin text-blue-600" />
                         <span>Đang tải danh sách hóa đơn...</span>
@@ -315,7 +315,7 @@ export default function InvoicesPage() {
                   </tr>
                 ) : paginatedInvoices.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="py-8 text-center text-slate-400">
+                    <td colSpan={5} className="py-8 text-center text-slate-600">
                       Không có hóa đơn nào phù hợp.
                     </td>
                   </tr>
@@ -338,7 +338,7 @@ export default function InvoicesPage() {
                       </td>
                       <td className="py-3 px-4">
                         {inv.status === 'paid' && (
-                          <span className="inline-block px-2.5 py-0.5 rounded text-[11px] font-bold bg-[#16a34a] text-white">
+                          <span className="inline-block px-2.5 py-0.5 rounded text-[11px] font-bold bg-[#16a34a] text-slate-900">
                             Đã thanh toán
                           </span>
                         )}
@@ -348,7 +348,7 @@ export default function InvoicesPage() {
                           </span>
                         )}
                         {inv.status === 'cancelled' && (
-                          <span className="inline-block px-2.5 py-0.5 rounded text-[11px] font-bold bg-slate-500 text-white">
+                          <span className="inline-block px-2.5 py-0.5 rounded text-[11px] font-bold bg-slate-500 text-slate-900">
                             Đã hủy
                           </span>
                         )}

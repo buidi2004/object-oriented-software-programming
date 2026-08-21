@@ -72,7 +72,7 @@ export default function RecentlyViewed() {
                 Xem {new Date(item.viewedAt).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}
               </p>
             </div>
-            <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-blue-600 group-hover:translate-x-1 transition-all" />
+            <ArrowRight className="w-4 h-4 text-slate-600 group-hover:text-blue-600 group-hover:translate-x-1 transition-all" />
           </Link>
         ))}
       </div>

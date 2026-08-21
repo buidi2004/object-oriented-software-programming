@@ -213,7 +213,7 @@ export default function AdminServiceSeoPage() {
         {/* Search */}
         <div className="bg-white rounded-2xl p-4 border border-slate-200 mb-6 flex items-center justify-between shadow-sm">
           <div className="relative w-full max-w-md">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-600" />
             <input
               type="text"
               placeholder="Tìm kiếm dịch vụ cần tối ưu SEO..."
@@ -239,7 +239,7 @@ export default function AdminServiceSeoPage() {
                     </div>
                     <div>
                       <h3 className="text-base font-black text-slate-900">{service.name}</h3>
-                      <p className="text-xs text-slate-400 font-mono">ID: {service.id}</p>
+                      <p className="text-xs text-slate-600 font-mono">ID: {service.id}</p>
                     </div>
                   </div>
 
@@ -379,10 +379,10 @@ export default function AdminServiceSeoPage() {
                             <span key={i} className="px-2 py-0.5 rounded-md bg-white border border-slate-200 text-[10px] text-slate-700 font-medium">
                               {kw.trim()}
                             </span>
-                          )) || <span className="text-slate-400">Chưa đặt từ khóa</span>}
+                          )) || <span className="text-slate-600">Chưa đặt từ khóa</span>}
                         </div>
                       </div>
-                      <div className="text-[10px] text-slate-400 mt-3 flex items-center gap-1">
+                      <div className="text-[10px] text-slate-600 mt-3 flex items-center gap-1">
                         <ImageIcon className="w-3 h-3" /> OG Image: {currentSeo?.openGraphImage ? 'Đã cấu hình' : 'Chưa đặt'}
                       </div>
                     </div>

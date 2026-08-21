@@ -175,7 +175,7 @@ export default function AdminKnowledgeBasePage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="bg-white rounded-xl p-4 border border-slate-200 mb-6">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-600" />
             <input
               type="text"
               placeholder="Tìm kiếm bài viết theo tiêu đề, slug, danh mục..."
@@ -219,7 +219,7 @@ export default function AdminKnowledgeBasePage() {
                     </td>
                     <td className="py-3 px-4 text-slate-600">
                       <span className="inline-flex items-center gap-1.5 font-medium">
-                        <Eye className="w-4 h-4 text-slate-400" />
+                        <Eye className="w-4 h-4 text-slate-600" />
                         {(article.viewCount || 0).toLocaleString()}
                       </span>
                     </td>
@@ -232,14 +232,14 @@ export default function AdminKnowledgeBasePage() {
                       <div className="flex items-center justify-end gap-2">
                         <button 
                           onClick={() => handleOpenEditModal(article)}
-                          className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                          className="p-2 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                           title="Chỉnh sửa"
                         >
                           <Edit2 className="w-4 h-4" />
                         </button>
                         <button 
                           onClick={() => handleDelete(article.id)}
-                          className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                          className="p-2 text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                           title="Xóa"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -254,7 +254,7 @@ export default function AdminKnowledgeBasePage() {
           
           {filteredArticles.length === 0 && (
             <div className="text-center py-12 text-slate-500">
-              <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-300" />
+              <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-700" />
               <p className="font-medium">Chưa có bài viết hướng dẫn nào</p>
             </div>
           )}
@@ -263,7 +263,7 @@ export default function AdminKnowledgeBasePage() {
 
       {/* Modal Thêm/Sửa Bài Viết */}
       {showModal && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 bg-white/60 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl border border-slate-100 animate-in fade-in zoom-in duration-200">
             <div className="flex items-center justify-between pb-4 border-b border-slate-100">
               <h2 className="text-lg font-bold text-slate-900">
@@ -271,7 +271,7 @@ export default function AdminKnowledgeBasePage() {
               </h2>
               <button 
                 onClick={() => setShowModal(false)}
-                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100"
+                className="p-1.5 rounded-lg text-slate-600 hover:text-slate-600 hover:bg-slate-100"
               >
                 <X className="w-5 h-5" />
               </button>

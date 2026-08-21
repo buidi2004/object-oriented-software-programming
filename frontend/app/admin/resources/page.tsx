@@ -180,7 +180,7 @@ export default function AdminResourcesPage() {
                     <td className="p-4 text-right">
                       <button
                         onClick={() => handleDelete(resource.id)}
-                        className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+                        className="p-2 text-slate-600 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
                         title="Xóa"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -196,11 +196,11 @@ export default function AdminResourcesPage() {
 
       {/* Upload Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 bg-white/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in-95 duration-200">
             <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center">
               <h3 className="font-bold text-slate-800 text-lg">Tải lên Tài nguyên mới</h3>
-              <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-slate-600">
+              <button onClick={() => setIsModalOpen(false)} className="text-slate-600 hover:text-slate-600">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -252,7 +252,7 @@ export default function AdminResourcesPage() {
                     onChange={handleFileChange}
                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                   />
-                  <Upload className="w-8 h-8 text-slate-400 mx-auto mb-2" />
+                  <Upload className="w-8 h-8 text-slate-600 mx-auto mb-2" />
                   {file ? (
                     <div className="text-sm font-bold text-blue-600">{file.name} ({formatFileSize(file.size)})</div>
                   ) : (

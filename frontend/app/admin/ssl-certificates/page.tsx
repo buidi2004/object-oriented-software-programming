@@ -250,7 +250,7 @@ export default function AdminSslCertificatesPage() {
 
           <div className="flex items-center gap-3">
             <div className="relative">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <Search className="w-4 h-4 text-slate-600 absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 placeholder="Tìm tên miền / email / CA..."
@@ -324,7 +324,7 @@ export default function AdminSslCertificatesPage() {
                       }`}>
                         {cert.daysRemaining} ngày
                       </span>
-                      <span className="block text-[10px] text-slate-400">Hết hạn: {new Date(cert.expiryDate).toLocaleDateString('vi-VN')}</span>
+                      <span className="block text-[10px] text-slate-600">Hết hạn: {new Date(cert.expiryDate).toLocaleDateString('vi-VN')}</span>
                     </td>
                     <td className="px-6 py-4">
                       <span className={`px-2.5 py-1 rounded-full font-bold text-[10px] uppercase tracking-wider ${
@@ -347,21 +347,21 @@ export default function AdminSslCertificatesPage() {
                         </button>
                         <button
                           onClick={() => handleDownloadFullchain(cert)}
-                          className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                          className="p-1.5 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                           title="Tải Cert (Fullchain.pem)"
                         >
                           <Download className="w-3.5 h-3.5" />
                         </button>
                         <button
                           onClick={() => setConfirmKeyCert(cert)}
-                          className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+                          className="p-1.5 text-slate-600 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
                           title="Tải Private Key (Yêu cầu xác nhận Admin)"
                         >
                           <Key className="w-3.5 h-3.5 text-rose-500" />
                         </button>
                         <button
                           onClick={() => handleRevoke(cert.id, cert.domainName)}
-                          className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+                          className="p-1.5 text-slate-600 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
                           title="Thu hồi chứng chỉ"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
@@ -377,7 +377,7 @@ export default function AdminSslCertificatesPage() {
 
         {/* Confirmation Modal for Admin Private Key Download */}
         {confirmKeyCert && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-white/60 backdrop-blur-sm animate-in fade-in">
             <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100 space-y-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2.5 text-rose-600 font-black text-base">
@@ -386,7 +386,7 @@ export default function AdminSslCertificatesPage() {
                 </div>
                 <button 
                   onClick={() => setConfirmKeyCert(null)}
-                  className="p-1 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100"
+                  className="p-1 rounded-lg text-slate-600 hover:text-slate-600 hover:bg-slate-100"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -416,7 +416,7 @@ export default function AdminSslCertificatesPage() {
                   type="button"
                   onClick={handleConfirmDownloadPrivateKey}
                   disabled={downloadingKey}
-                  className="px-5 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shadow-md flex items-center gap-2"
+                  className="px-5 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-slate-900 font-bold text-xs shadow-md flex items-center gap-2"
                 >
                   {downloadingKey && <RefreshCw className="w-3.5 h-3.5 animate-spin" />}
                   Xác Nhận Quyền Admin &amp; Tải
@@ -428,11 +428,11 @@ export default function AdminSslCertificatesPage() {
 
         {/* Add Modal */}
         {showAddModal && (
-          <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="fixed inset-0 bg-white/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
             <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full border border-slate-200 shadow-2xl">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-base font-black text-slate-900">Yêu Cầu Cấp Chứng Chỉ SSL Mới</h3>
-                <button onClick={() => setShowAddModal(false)} className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100">
+                <button onClick={() => setShowAddModal(false)} className="p-1.5 text-slate-600 hover:text-slate-600 rounded-lg hover:bg-slate-100">
                   <X className="w-5 h-5" />
                 </button>
               </div>

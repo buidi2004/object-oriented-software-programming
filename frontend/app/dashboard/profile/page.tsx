@@ -157,7 +157,7 @@ export default function ProfilePage() {
 
             <div>
               <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 flex items-center gap-2">
-                <Phone className="w-4 h-4 text-slate-400" />
+                <Phone className="w-4 h-4 text-slate-600" />
                 Số điện thoại
               </label>
               <input
@@ -246,7 +246,7 @@ export default function ProfilePage() {
 
             <div>
               <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 flex items-center gap-2">
-                <FileText className="w-4 h-4 text-slate-400" />
+                <FileText className="w-4 h-4 text-slate-600" />
                 Mã số thuế
               </label>
               <input

@@ -88,7 +88,7 @@ export default function GlobalSearchPage() {
       <div className="bg-white border-b border-slate-200 sticky top-0 z-50">
         <div className="max-w-3xl mx-auto px-4 py-4">
           <div ref={searchRef} className="relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-600" />
             <input
               type="text"
               value={query}
@@ -102,7 +102,7 @@ export default function GlobalSearchPage() {
             {query && (
               <button
                 onClick={() => { setQuery(''); setShowResults(false); setError(null); }}
-                className="absolute right-4 top-1/2 -translate-y-1/2 p-1 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-600"
+                className="absolute right-4 top-1/2 -translate-y-1/2 p-1 rounded-full hover:bg-slate-100 text-slate-600 hover:text-slate-600"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -165,9 +165,9 @@ export default function GlobalSearchPage() {
                         {result.title}
                       </p>
                       <p className="text-sm text-slate-500 mt-1">{result.description}</p>
-                      <p className="text-xs text-slate-400 mt-2">{result.url}</p>
+                      <p className="text-xs text-slate-600 mt-2">{result.url}</p>
                     </div>
-                    <svg className="w-5 h-5 text-slate-300 group-hover:text-blue-400 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className="w-5 h-5 text-slate-700 group-hover:text-blue-400 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
                   </div>
@@ -175,9 +175,9 @@ export default function GlobalSearchPage() {
               ))
             ) : (
               <div className="text-center py-12 bg-white rounded-xl border border-slate-200">
-                <Search className="w-12 h-12 mx-auto mb-3 text-slate-300" />
+                <Search className="w-12 h-12 mx-auto mb-3 text-slate-700" />
                 <p className="font-medium text-slate-500">Không tìm thấy kết quả nào</p>
-                <p className="text-sm text-slate-400 mt-1">Thử với từ khóa khác</p>
+                <p className="text-sm text-slate-600 mt-1">Thử với từ khóa khác</p>
               </div>
             )}
           </div>
@@ -188,9 +188,9 @@ export default function GlobalSearchPage() {
       {!query && !showResults && (
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
-            <Search className="w-16 h-16 mx-auto mb-4 text-slate-200" />
+            <Search className="w-16 h-16 mx-auto mb-4 text-slate-800" />
             <p className="text-slate-500 text-lg font-medium">Tìm kiếm nhanh</p>
-            <p className="text-slate-400 text-sm mt-2">Nhập từ khóa để tìm kiếm</p>
+            <p className="text-slate-600 text-sm mt-2">Nhập từ khóa để tìm kiếm</p>
           </div>
         </div>
       )}

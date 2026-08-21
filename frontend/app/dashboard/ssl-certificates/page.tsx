@@ -117,7 +117,7 @@ export default function SslCertificatesPage() {
           </div>
         ) : certificates.length === 0 ? (
           <div className="bg-white rounded-3xl border border-slate-200 p-12 text-center shadow-sm">
-            <Shield className="w-16 h-16 text-slate-300 mx-auto mb-4" />
+            <Shield className="w-16 h-16 text-slate-700 mx-auto mb-4" />
             <h3 className="text-xl font-bold text-slate-900 mb-2">Bạn chưa có chứng chỉ SSL nào</h3>
             <p className="text-slate-500 mb-6 text-xs sm:text-sm">Tăng cường uy tín và mã hóa HTTPS cho tên miền của bạn ngay hôm nay.</p>
             <Link href="/services/ssl-certificates" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-emerald-600 text-white font-bold text-xs shadow-md hover:bg-emerald-700">
@@ -140,7 +140,7 @@ export default function SslCertificatesPage() {
 
       {/* Confirmation Modal for Private Key Download */}
       {confirmKeyCert && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-white/60 backdrop-blur-sm animate-in fade-in">
           <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100 space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2.5 text-rose-600 font-black text-base">
@@ -149,7 +149,7 @@ export default function SslCertificatesPage() {
               </div>
               <button 
                 onClick={() => setConfirmKeyCert(null)}
-                className="p-1 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100"
+                className="p-1 rounded-lg text-slate-600 hover:text-slate-600 hover:bg-slate-100"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -179,7 +179,7 @@ export default function SslCertificatesPage() {
                 type="button"
                 onClick={handleDownloadPrivateKey}
                 disabled={downloadingKey}
-                className="px-5 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shadow-md flex items-center gap-2"
+                className="px-5 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-slate-900 font-bold text-xs shadow-md flex items-center gap-2"
               >
                 {downloadingKey && <RefreshCw className="w-3.5 h-3.5 animate-spin" />}
                 Xác Nhận &amp; Tải Privkey.pem
@@ -281,7 +281,7 @@ function SslCertificateCard({
             <div className="col-span-2 flex gap-2 mt-2">
               <button
                 onClick={() => downloadPem(cert.certificate || '-----BEGIN CERTIFICATE-----\n...', `${domainName}-fullchain.pem`)}
-                className="flex-1 bg-slate-900 hover:bg-slate-800 text-white px-3 py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-colors"
+                className="flex-1 bg-white hover:bg-slate-100 text-slate-900 px-3 py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-colors"
               >
                 <Download className="w-3.5 h-3.5" /> Fullchain.pem
               </button>

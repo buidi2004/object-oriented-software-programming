@@ -78,7 +78,7 @@ export default function PaymentMethodsPage() {
       <header className="bg-white border-b border-slate-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2.5">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-cyan-400 flex items-center justify-center text-white">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-cyan-400 flex items-center justify-center text-slate-900">
               <CreditCard className="w-6 h-6" />
             </div>
             <span className="text-xl font-black text-slate-900">
@@ -174,7 +174,7 @@ export default function PaymentMethodsPage() {
 
         {methods.length === 0 ? (
           <div className="text-center py-20 bg-white rounded-2xl border border-slate-200">
-            <CreditCard className="w-16 h-16 text-slate-300 mx-auto mb-4" />
+            <CreditCard className="w-16 h-16 text-slate-700 mx-auto mb-4" />
             <h2 className="text-xl font-bold text-slate-900 mb-2">Chưa có phương thức thanh toán</h2>
             <p className="text-slate-500 mb-6">Thêm thẻ hoặc tài khoản ngân hàng để thanh toán nhanh hơn</p>
             <button
@@ -193,7 +193,7 @@ export default function PaymentMethodsPage() {
                 className="bg-white rounded-2xl p-6 border border-slate-200 hover:border-blue-200 transition-colors flex items-center justify-between"
               >
                 <div className="flex items-center gap-4">
-                  <div className="w-14 h-10 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 flex items-center justify-center text-white font-bold text-sm">
+                  <div className="w-14 h-10 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 flex items-center justify-center text-slate-900 font-bold text-sm">
                     VISA
                   </div>
                   <div>
@@ -222,7 +222,7 @@ export default function PaymentMethodsPage() {
                   )}
                   <button
                     onClick={() => deleteMethod(method.id)}
-                    className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                    className="p-2 text-slate-600 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
                     title="Xóa phương thức"
                   >
                     <Trash2 className="w-5 h-5" />

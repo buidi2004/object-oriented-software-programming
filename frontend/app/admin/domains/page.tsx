@@ -241,7 +241,7 @@ export default function AdminDomainsPage() {
 
           <div className="flex items-center gap-3">
             <div className="relative">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Search className="w-4 h-4 text-slate-600 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 placeholder="Tìm tên miền / email / registrar..."
@@ -319,7 +319,7 @@ export default function AdminDomainsPage() {
                     <td className="py-4 px-6 text-slate-600">{dom.registrar}</td>
                     <td className="py-4 px-6">
                       <div className="flex items-center gap-1.5 text-slate-700 font-medium">
-                        <Calendar className="w-3.5 h-3.5 text-slate-400" />
+                        <Calendar className="w-3.5 h-3.5 text-slate-600" />
                         {new Date(dom.expiryDate).toLocaleDateString('vi-VN')}
                       </div>
                     </td>
@@ -347,14 +347,14 @@ export default function AdminDomainsPage() {
                         </button>
                         <button
                           onClick={() => handleOpenEdit(dom)}
-                          className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                          className="p-1.5 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                           title="Sửa cấu hình"
                         >
                           <Edit2 className="w-3.5 h-3.5" />
                         </button>
                         <button
                           onClick={() => handleDelete(dom.id, dom.domainName)}
-                          className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+                          className="p-1.5 text-slate-600 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
                           title="Xóa tên miền"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
@@ -370,11 +370,11 @@ export default function AdminDomainsPage() {
 
         {/* EPP Modal */}
         {selectedEpp && (
-          <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="fixed inset-0 bg-white/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
             <div className="bg-white rounded-3xl p-6 max-w-sm w-full border border-slate-200 shadow-2xl">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-base font-black text-slate-900">Mã EPP Auth Code</h2>
-                <button onClick={() => setSelectedEpp(null)} className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100">
+                <button onClick={() => setSelectedEpp(null)} className="p-1.5 text-slate-600 hover:text-slate-600 rounded-lg hover:bg-slate-100">
                   <X className="w-4 h-4" />
                 </button>
               </div>
@@ -400,13 +400,13 @@ export default function AdminDomainsPage() {
 
         {/* Add / Edit Modal */}
         {(showAddModal || editingDomain) && (
-          <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="fixed inset-0 bg-white/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
             <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-lg w-full border border-slate-200 shadow-2xl">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-base font-black text-slate-900">
                   {editingDomain ? 'Cấu Hình Tên Miền' : 'Đăng Ký / Thêm Tên Miền Mới'}
                 </h2>
-                <button onClick={() => { setShowAddModal(false); setEditingDomain(null); }} className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100">
+                <button onClick={() => { setShowAddModal(false); setEditingDomain(null); }} className="p-1.5 text-slate-600 hover:text-slate-600 rounded-lg hover:bg-slate-100">
                   <X className="w-5 h-5" />
                 </button>
               </div>

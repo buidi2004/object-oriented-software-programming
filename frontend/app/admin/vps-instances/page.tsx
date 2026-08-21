@@ -181,7 +181,7 @@ export default function AdminVpsInstancesPage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="bg-white rounded-xl p-4 border border-slate-200 mb-6 flex flex-wrap gap-4 items-center">
           <div className="flex-1 min-w-[200px] relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-600" />
             <input
               type="text"
               placeholder="Tìm theo tên, email, container ID..."
@@ -213,7 +213,7 @@ export default function AdminVpsInstancesPage() {
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-3">
                     <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
-                      <Server className="w-6 h-6 text-white" />
+                      <Server className="w-6 h-6 text-slate-900" />
                     </div>
                     <div>
                       <h3 className="font-bold text-slate-900">{instance.containerName}</h3>
@@ -271,7 +271,7 @@ export default function AdminVpsInstancesPage() {
 
         {filteredInstances.length === 0 && (
           <div className="text-center py-12 text-slate-500">
-            <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-300" />
+            <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-700" />
             <p className="font-medium">Không tìm thấy instance nào</p>
           </div>
         )}

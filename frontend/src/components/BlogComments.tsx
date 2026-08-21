@@ -84,7 +84,7 @@ export const BlogComments: React.FC<{ articleId?: string; postSlug?: string }> =
                 <div className="bg-slate-50 rounded-2xl rounded-tl-none p-4 border border-slate-100">
                   <div className="flex items-center gap-2 mb-1">
                     <span className="font-bold text-slate-900 text-sm">{comment.author || 'Người dùng'}</span>
-                    <span className="text-xs text-slate-400 flex items-center gap-1">
+                    <span className="text-xs text-slate-600 flex items-center gap-1">
                       <Clock className="w-3 h-3" />
                       {new Date(comment.createdAt).toLocaleDateString('vi-VN')}
                     </span>

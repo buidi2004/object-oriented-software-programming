@@ -88,7 +88,7 @@ export default function ServicePageSections({ content, group = 'all', skipFaqs =
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {content.promotions.map((promo, i) => (
               <div key={i} className="bg-white rounded-2xl p-6 border-2 border-slate-100 hover:border-slate-200 hover:shadow-lg transition-all relative overflow-hidden">
-                <div className={`absolute top-4 right-4 px-3 py-1 rounded-full bg-gradient-to-r ${theme.gradient} text-white text-xs font-black`}>
+                <div className={`absolute top-4 right-4 px-3 py-1 rounded-full bg-gradient-to-r ${theme.gradient} text-slate-900 text-xs font-black`}>
                   {promo.discount}
                 </div>
                 <span className={`inline-block px-2.5 py-0.5 rounded-full ${theme.badge} text-[10px] font-bold uppercase mb-3`}>
@@ -141,20 +141,20 @@ export default function ServicePageSections({ content, group = 'all', skipFaqs =
       </section>
 
       {/* Use Cases */}
-      <section className="py-16 bg-slate-900 text-white">
+      <section className="py-16 bg-white text-slate-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-extrabold mb-3">Phù Hợp Cho Ai?</h2>
-            <p className="text-slate-400">Giải pháp tối ưu cho mọi nhu cầu và quy mô</p>
+            <p className="text-slate-600">Giải pháp tối ưu cho mọi nhu cầu và quy mô</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {content.useCases.map((uc, i) => (
               <div key={i} className="bg-white/5 border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-colors">
                 <h3 className="text-lg font-bold mb-2">{uc.title}</h3>
-                <p className="text-base text-slate-300 mb-4 leading-relaxed">{uc.description}</p>
+                <p className="text-base text-slate-700 mb-4 leading-relaxed">{uc.description}</p>
                 <div className="flex flex-wrap gap-1.5">
                   {uc.tags.map((tag, j) => (
-                    <span key={j} className="px-2 py-0.5 rounded-md bg-white/10 text-xs font-medium text-slate-300">
+                    <span key={j} className="px-2 py-0.5 rounded-md bg-white/10 text-xs font-medium text-slate-700">
                       {tag}
                     </span>
                   ))}
@@ -299,7 +299,7 @@ export default function ServicePageSections({ content, group = 'all', skipFaqs =
       </section>
 
       {/* Migration */}
-      <section className={`py-16 bg-gradient-to-r ${theme.gradient} text-white`}>
+      <section className={`py-16 bg-gradient-to-r ${theme.gradient} text-slate-900`}>
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
             <h2 className="text-3xl font-black mb-3">{content.migration.title}</h2>
@@ -308,7 +308,7 @@ export default function ServicePageSections({ content, group = 'all', skipFaqs =
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
             {content.migration.steps.map((step, i) => (
               <div key={i} className="bg-white/10 backdrop-blur rounded-2xl p-4 border border-white/20 text-center">
-                <div className="w-8 h-8 rounded-full bg-white/20 text-white font-black text-sm flex items-center justify-center mx-auto mb-3">
+                <div className="w-8 h-8 rounded-full bg-white/20 text-slate-900 font-black text-sm flex items-center justify-center mx-auto mb-3">
                   {i + 1}
                 </div>
                 <p className="text-sm leading-relaxed">{step}</p>
@@ -375,7 +375,7 @@ export default function ServicePageSections({ content, group = 'all', skipFaqs =
               >
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="font-bold text-slate-900 group-hover:text-blue-600 transition-colors">{svc.label}</h3>
-                  <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-blue-600 transition-colors" />
+                  <ArrowRight className="w-4 h-4 text-slate-600 group-hover:text-blue-600 transition-colors" />
                 </div>
                 <p className="text-xs text-slate-600">{svc.description}</p>
               </Link>
@@ -403,7 +403,7 @@ export default function ServicePageSections({ content, group = 'all', skipFaqs =
                     {openFaq === i ? (
                       <ChevronUp className={`w-5 h-5 ${theme.accentText} shrink-0`} />
                     ) : (
-                      <ChevronDown className="w-5 h-5 text-slate-400 shrink-0" />
+                      <ChevronDown className="w-5 h-5 text-slate-600 shrink-0" />
                     )}
                   </button>
                   {openFaq === i && (

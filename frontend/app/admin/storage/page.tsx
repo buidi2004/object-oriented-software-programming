@@ -81,7 +81,7 @@ export default function AdminStoragePage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
         <div className="bg-white rounded-2xl p-4 border border-slate-200 flex flex-wrap gap-4 items-center shadow-sm">
           <div className="flex-1 min-w-[200px] relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-600" />
             <input
               type="text"
               placeholder="Tìm theo tên bucket, email khách, ID..."
@@ -120,7 +120,7 @@ export default function AdminStoragePage() {
                   <tr key={b.id} className="hover:bg-slate-50/60 transition-colors">
                     <td className="px-6 py-4">
                       <div className="font-mono font-bold text-slate-900">{b.name}</div>
-                      <div className="text-[10px] font-mono text-slate-400 mt-0.5">ID: {b.id}</div>
+                      <div className="text-[10px] font-mono text-slate-600 mt-0.5">ID: {b.id}</div>
                     </td>
                     <td className="px-6 py-4 font-medium text-slate-700">{b.ownerEmail || 'customer@cloudhost.vn'}</td>
                     <td className="px-6 py-4 font-bold text-slate-700 uppercase">{b.region || 'us-east-1'}</td>
@@ -153,7 +153,7 @@ export default function AdminStoragePage() {
 
           {filteredBuckets.length === 0 && (
             <div className="text-center py-12 text-slate-500">
-              <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-300" />
+              <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-700" />
               <p className="font-medium">Không tìm thấy S3 bucket nào</p>
             </div>
           )}

@@ -120,7 +120,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
   return (
     <div className="fixed inset-0 z-50 overflow-hidden">
       <div 
-        className="absolute inset-0 bg-slate-950/60 backdrop-blur-xs transition-opacity" 
+        className="absolute inset-0 bg-slate-50/60 backdrop-blur-xs transition-opacity" 
         onClick={onClose} 
       />
 
@@ -139,7 +139,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
             <button
               onClick={onClose}
-              className="p-2 rounded-full text-slate-400 hover:text-slate-800 hover:bg-slate-200 transition-colors cursor-pointer"
+              className="p-2 rounded-full text-slate-600 hover:text-slate-800 hover:bg-slate-200 transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
@@ -165,7 +165,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               </div>
             ) : cartItems.length === 0 ? (
               <div className="flex-1 flex flex-col items-center justify-center p-6 text-center">
-                <div className="w-16 h-16 rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center mb-4">
+                <div className="w-16 h-16 rounded-2xl bg-slate-100 text-slate-600 flex items-center justify-center mb-4">
                   <ShoppingBag className="w-8 h-8 stroke-[1.5]" />
                 </div>
                 <p className="text-base font-bold text-slate-800">Giỏ hàng của bạn đang trống</p>
@@ -175,7 +175,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                 <button
                   type="button"
                   onClick={handleExploreServices}
-                  className="mt-6 inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white font-bold text-sm shadow-lg shadow-blue-500/20 transition-all cursor-pointer"
+                  className="mt-6 inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-slate-900 font-bold text-sm shadow-lg shadow-blue-500/20 transition-all cursor-pointer"
                 >
                   Khám phá dịch vụ
                   <ArrowRight className="w-4 h-4" />
@@ -202,7 +202,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                     <div className="text-right flex flex-col justify-between items-end h-full">
                       <button
                         onClick={() => onRemoveItem(item.id)}
-                        className="p-1 text-slate-400 hover:text-rose-600 transition-colors cursor-pointer"
+                        className="p-1 text-slate-600 hover:text-rose-600 transition-colors cursor-pointer"
                         title="Xóa khỏi giỏ"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -258,7 +258,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                   <button
                     type="button"
                     onClick={() => handleGoToTopUp(insufficientNotice)}
-                    className="w-full py-3 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2"
+                    className="w-full py-3 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-900 font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2"
                   >
                     <Wallet className="w-4 h-4" />
                     Nạp tiền vào ví ngay
@@ -286,7 +286,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               <button
                 onClick={handleCheckout}
                 disabled={isCheckingOut}
-                className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white font-extrabold text-sm shadow-xl shadow-blue-500/25 flex items-center justify-center gap-2 cursor-pointer transition-all disabled:opacity-70 disabled:cursor-not-allowed"
+                className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-slate-900 font-extrabold text-sm shadow-xl shadow-blue-500/25 flex items-center justify-center gap-2 cursor-pointer transition-all disabled:opacity-70 disabled:cursor-not-allowed"
               >
                 {isCheckingOut ? (
                   <>
@@ -312,7 +312,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                 <span>Xem Giỏ Hàng Chi Tiết</span>
               </button>
 
-              <div className="flex items-center justify-center gap-1.5 text-[11px] text-slate-400 pt-1">
+              <div className="flex items-center justify-center gap-1.5 text-[11px] text-slate-600 pt-1">
                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
                 Hỗ trợ thanh toán VietQR, MoMo, VNPAY &amp; Số Dư Ví
               </div>

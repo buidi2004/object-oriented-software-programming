@@ -145,7 +145,7 @@ export default function ComparePlansPage() {
                     return (
                       <td key={plan.id} className="p-4 border-b border-l border-slate-100 text-center text-slate-600">
                         {isBool ? (
-                          val === 'true' ? <Check className="w-5 h-5 text-emerald-500 mx-auto" /> : <X className="w-5 h-5 text-slate-300 mx-auto" />
+                          val === 'true' ? <Check className="w-5 h-5 text-emerald-500 mx-auto" /> : <X className="w-5 h-5 text-slate-700 mx-auto" />
                         ) : (
                           val || '-'
                         )}

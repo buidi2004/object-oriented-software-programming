@@ -60,7 +60,7 @@ export default function ReviewsDashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {reviews.length === 0 ? (
           <div className="col-span-full py-12 text-center text-slate-500 bg-white rounded-2xl border border-slate-200 shadow-sm">
-            <MessageSquare className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+            <MessageSquare className="w-12 h-12 text-slate-700 mx-auto mb-3" />
             <p className="font-medium">Bạn chưa viết đánh giá nào.</p>
           </div>
         ) : (
@@ -82,16 +82,16 @@ export default function ReviewsDashboard() {
                 </div>
                 <div className="flex gap-2">
                   {/* Backend currently doesn't support edit/delete for customers, so buttons are disabled */}
-                  <button disabled title="Chức năng sửa tạm thời chưa khả dụng" className="p-2 text-slate-300 rounded-lg cursor-not-allowed">
+                  <button disabled title="Chức năng sửa tạm thời chưa khả dụng" className="p-2 text-slate-700 rounded-lg cursor-not-allowed">
                     <Edit2 className="w-4 h-4" />
                   </button>
-                  <button disabled title="Chức năng xóa tạm thời chưa khả dụng" className="p-2 text-slate-300 rounded-lg cursor-not-allowed">
+                  <button disabled title="Chức năng xóa tạm thời chưa khả dụng" className="p-2 text-slate-700 rounded-lg cursor-not-allowed">
                     <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
               </div>
               <p className="text-slate-600 text-sm flex-1">{review.comment}</p>
-              <div className="mt-4 pt-4 border-t border-slate-100 text-xs text-slate-400 font-medium">
+              <div className="mt-4 pt-4 border-t border-slate-100 text-xs text-slate-600 font-medium">
                 Đã viết vào: {new Date(review.createdAt).toLocaleDateString('vi-VN')}
               </div>
             </div>

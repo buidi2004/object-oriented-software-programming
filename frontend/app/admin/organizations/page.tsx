@@ -136,7 +136,7 @@ export default function AdminOrganizationsPage() {
 
           <div className="flex items-center gap-3">
             <div className="relative">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Search className="w-4 h-4 text-slate-600 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 placeholder="Tìm tổ chức / email..."
@@ -156,7 +156,7 @@ export default function AdminOrganizationsPage() {
 
         {/* Create Modal */}
         {isCreating && (
-          <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="fixed inset-0 bg-white/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
             <div className="bg-white rounded-3xl p-6 max-w-md w-full border border-slate-200 shadow-2xl">
               <h2 className="text-base font-black text-slate-900 mb-4">Tạo Tổ Chức Doanh Nghiệp Mới</h2>
               <form onSubmit={handleCreate} className="space-y-4">
@@ -212,23 +212,23 @@ export default function AdminOrganizationsPage() {
                 }`}>
                   {org.tier}
                 </span>
-                <span className="text-[11px] text-slate-400 font-mono">
+                <span className="text-[11px] text-slate-600 font-mono">
                   {new Date(org.createdAt).toLocaleDateString('vi-VN')}
                 </span>
               </div>
               <h3 className="font-bold text-slate-900 text-sm mb-1">{org.name}</h3>
               <p className="text-xs text-slate-500 flex items-center gap-1.5 mb-4">
-                <Mail className="w-3 h-3 text-slate-400" /> {org.ownerEmail}
+                <Mail className="w-3 h-3 text-slate-600" /> {org.ownerEmail}
               </p>
 
               <div className="grid grid-cols-2 gap-2 pt-3 border-t border-slate-100 text-center">
                 <div className="bg-slate-50 p-2 rounded-xl">
                   <div className="text-base font-black text-slate-900">{org.memberCount}</div>
-                  <div className="text-[10px] text-slate-400 font-semibold">Thành viên</div>
+                  <div className="text-[10px] text-slate-600 font-semibold">Thành viên</div>
                 </div>
                 <div className="bg-slate-50 p-2 rounded-xl">
                   <div className="text-base font-black text-purple-600">{org.activeServices}</div>
-                  <div className="text-[10px] text-slate-400 font-semibold">Dịch vụ Cloud</div>
+                  <div className="text-[10px] text-slate-600 font-semibold">Dịch vụ Cloud</div>
                 </div>
               </div>
             </div>

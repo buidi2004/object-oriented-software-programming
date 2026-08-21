@@ -66,7 +66,7 @@ export const Hero: React.FC<HeroProps> = ({ onStartClick, onPriceClick }) => {
               {/* Primary Button */}
               <button
                 onClick={onStartClick}
-                className="px-8 py-3.5 rounded-full bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white font-bold text-base shadow-xl shadow-blue-500/25 hover:shadow-2xl hover:shadow-blue-500/35 transition-all duration-300 transform hover:-translate-y-0.5 flex items-center gap-2 group cursor-pointer"
+                className="px-8 py-3.5 rounded-full bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-slate-900 font-bold text-base shadow-xl shadow-blue-500/25 hover:shadow-2xl hover:shadow-blue-500/35 transition-all duration-300 transform hover:-translate-y-0.5 flex items-center gap-2 group cursor-pointer"
               >
                 <span>Bắt đầu ngay</span>
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -110,7 +110,7 @@ export const Hero: React.FC<HeroProps> = ({ onStartClick, onPriceClick }) => {
           <div className="lg:col-span-6 relative">
             
             {/* Main Rounded Datacenter Frame matching exact image */}
-            <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-white/80 bg-slate-900 group">
+            <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-white/80 bg-white group">
               
               <img
                 src={heroImage}
@@ -120,7 +120,7 @@ export const Hero: React.FC<HeroProps> = ({ onStartClick, onPriceClick }) => {
               />
 
               {/* Watermark Branding overlay top right corner */}
-              <div className="absolute top-4 right-5 flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-900/40 backdrop-blur-md border border-white/20 text-white/90 text-xs font-semibold">
+              <div className="absolute top-4 right-5 flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/40 backdrop-blur-md border border-white/20 text-white/90 text-xs font-semibold">
                 <Cloud className="w-3.5 h-3.5 text-cyan-300" />
                 <span>CloudHost VN</span>
               </div>

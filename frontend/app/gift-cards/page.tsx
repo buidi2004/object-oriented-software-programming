@@ -58,7 +58,7 @@ export default function GiftCardsPage() {
     <div className="max-w-3xl mx-auto py-12 px-4 sm:px-6">
       <div className="text-center mb-10">
         <div className="w-16 h-16 bg-gradient-to-tr from-emerald-500 to-teal-400 rounded-2xl mx-auto flex items-center justify-center shadow-lg shadow-emerald-500/30 mb-6">
-          <Gift className="w-8 h-8 text-white" />
+          <Gift className="w-8 h-8 text-slate-900" />
         </div>
         <h1 className="text-3xl font-black text-slate-900 tracking-tight">Thẻ Quà Tặng (Gift Cards)</h1>
         <p className="text-slate-500 mt-3 text-lg max-w-xl mx-auto">
@@ -86,7 +86,7 @@ export default function GiftCardsPage() {
                 <label className="block text-sm font-bold text-slate-900 mb-2">Mã Thẻ Quà Tặng</label>
                 <div className="flex gap-3">
                   <div className="relative flex-1">
-                    <Gift className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                    <Gift className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-600" />
                     <input
                       type="text"
                       value={code}
@@ -98,7 +98,7 @@ export default function GiftCardsPage() {
                   <button
                     onClick={handleCheck}
                     disabled={!code || isChecking}
-                    className="px-6 py-3 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl transition-all disabled:opacity-50 flex items-center gap-2 whitespace-nowrap"
+                    className="px-6 py-3 bg-white hover:bg-slate-100 text-slate-900 font-bold rounded-xl transition-all disabled:opacity-50 flex items-center gap-2 whitespace-nowrap"
                   >
                     {isChecking ? <Loader2 className="w-5 h-5 animate-spin" /> : <Search className="w-5 h-5" />}
                     <span className="hidden sm:inline">Kiểm tra</span>

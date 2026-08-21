@@ -256,7 +256,7 @@ export default function AdminNewslettersPage() {
         {/* Search */}
         <div className="bg-white rounded-2xl p-4 border border-slate-200 mb-6 flex items-center justify-between shadow-sm">
           <div className="relative w-full max-w-md">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-600" />
             <input
               type="text"
               placeholder="Tìm kiếm theo địa chỉ email..."
@@ -313,7 +313,7 @@ export default function AdminNewslettersPage() {
                       </button>
                       <button
                         onClick={() => handleDelete(sub.id, sub.email)}
-                        className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-colors"
+                        className="p-2 text-slate-600 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-colors"
                         title="Xóa email"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -327,9 +327,9 @@ export default function AdminNewslettersPage() {
 
           {filteredSubscribers.length === 0 && (
             <div className="text-center py-16 text-slate-500">
-              <Mail className="w-12 h-12 mx-auto mb-3 text-slate-300" />
+              <Mail className="w-12 h-12 mx-auto mb-3 text-slate-700" />
               <p className="font-bold text-slate-700">Không tìm thấy người đăng ký nào</p>
-              <p className="text-xs text-slate-400 mt-1">Bấm "Thêm Email" để bổ sung danh sách</p>
+              <p className="text-xs text-slate-600 mt-1">Bấm "Thêm Email" để bổ sung danh sách</p>
             </div>
           )}
         </div>
@@ -341,7 +341,7 @@ export default function AdminNewslettersPage() {
           <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-bold text-slate-900">Thêm Email Nhận Tin Mới</h3>
-              <button onClick={() => setShowAddModal(false)} className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100">
+              <button onClick={() => setShowAddModal(false)} className="p-1.5 text-slate-600 hover:text-slate-600 rounded-lg hover:bg-slate-100">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -390,7 +390,7 @@ export default function AdminNewslettersPage() {
                   Gửi thông báo cập nhật, khuyến mãi tới {subscribers.filter(s => s.isActive).length} email
                 </p>
               </div>
-              <button onClick={() => setShowSendModal(false)} className="p-2 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100">
+              <button onClick={() => setShowSendModal(false)} className="p-2 text-slate-600 hover:text-slate-600 rounded-lg hover:bg-slate-100">
                 <X className="w-5 h-5" />
               </button>
             </div>

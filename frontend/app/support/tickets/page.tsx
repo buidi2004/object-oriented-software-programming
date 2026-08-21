@@ -34,7 +34,7 @@ export default function TicketsListPage() {
   if (!user) {
     return (
       <div className="flex flex-col items-center justify-center h-[60vh]">
-        <AlertCircle className="w-12 h-12 text-slate-400 mb-4" />
+        <AlertCircle className="w-12 h-12 text-slate-600 mb-4" />
         <h2 className="text-xl font-bold mb-2">Vui lòng đăng nhập</h2>
         <p className="text-slate-500 mb-4">Bạn cần đăng nhập để xem các yêu cầu hỗ trợ.</p>
       </div>
@@ -84,7 +84,7 @@ export default function TicketsListPage() {
             </div>
           ) : tickets.length === 0 ? (
             <div className="bg-white rounded-xl border border-slate-200 p-12 flex flex-col items-center text-center">
-              <LifeBuoy className="w-12 h-12 text-slate-300 mb-4" />
+              <LifeBuoy className="w-12 h-12 text-slate-700 mb-4" />
               <h3 className="text-lg font-bold text-slate-700 mb-2">Chưa có Ticket nào</h3>
               <p className="text-slate-500 mb-6">Bạn chưa có yêu cầu hỗ trợ nào. Nếu cần giúp đỡ, hãy tạo mới một Ticket.</p>
               <Link href="/support/tickets/new" className="text-blue-600 font-semibold hover:underline">
@@ -111,7 +111,7 @@ export default function TicketsListPage() {
                         <span className={`px-2.5 py-0.5 rounded-full ${getPriorityColor(ticket.priority)}`}>
                           {ticket.priority?.toUpperCase() || 'NORMAL'}
                         </span>
-                        <span className="text-slate-400 flex items-center gap-1 font-normal">
+                        <span className="text-slate-600 flex items-center gap-1 font-normal">
                           <Clock className="w-3.5 h-3.5" />
                           {new Date(ticket.createdAt).toLocaleString('vi-VN')}
                         </span>

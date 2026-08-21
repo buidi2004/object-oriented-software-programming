@@ -95,7 +95,7 @@ export default function LoyaltyPage() {
       <header className="bg-white border-b border-slate-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2.5">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-cyan-400 flex items-center justify-center text-white">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-cyan-400 flex items-center justify-center text-slate-900">
               <Star className="w-6 h-6" />
             </div>
             <span className="text-xl font-black text-slate-900">
@@ -110,7 +110,7 @@ export default function LoyaltyPage() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Hero Section */}
-        <div className="bg-gradient-to-br from-slate-900 via-indigo-900 to-slate-900 rounded-3xl p-8 text-white mb-8 relative overflow-hidden">
+        <div className="bg-gradient-to-br from-slate-900 via-indigo-900 to-slate-900 rounded-3xl p-8 text-slate-900 mb-8 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
           <div className="absolute bottom-0 left-0 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl" />
           
@@ -123,24 +123,24 @@ export default function LoyaltyPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div>
                 <p className="text-blue-300 text-sm mb-1">Điểm thưởng hiện tại</p>
-                <p className="text-5xl font-black text-white">{loyalty?.points.toLocaleString() || 0}</p>
-                <p className="text-sm text-slate-400 mt-1">điểm</p>
+                <p className="text-5xl font-black text-slate-900">{loyalty?.points.toLocaleString() || 0}</p>
+                <p className="text-sm text-slate-600 mt-1">điểm</p>
               </div>
               
               <div>
                 <p className="text-blue-300 text-sm mb-1">Cấp độ hiện tại</p>
-                <p className="text-3xl font-black text-white">{loyalty?.tier || 'Bronze'}</p>
-                <p className="text-sm text-slate-400 mt-1">
+                <p className="text-3xl font-black text-slate-900">{loyalty?.tier || 'Bronze'}</p>
+                <p className="text-sm text-slate-600 mt-1">
                   {nextTier ? `Còn ${nextTier.minPoints - (loyalty?.points || 0)} điểm để lên ${nextTier.name}` : 'Đã đạt cấp cao nhất!'}
                 </p>
               </div>
               
               <div>
                 <p className="text-blue-300 text-sm mb-1">Tổng chi tiêu</p>
-                <p className="text-3xl font-black text-white">
+                <p className="text-3xl font-black text-slate-900">
                   {(loyalty?.totalSpent || 0).toLocaleString()}đ
                 </p>
-                <p className="text-sm text-slate-400 mt-1">
+                <p className="text-sm text-slate-600 mt-1">
                   Kể từ {loyalty?.membersSince || '2024'}
                 </p>
               </div>
@@ -149,7 +149,7 @@ export default function LoyaltyPage() {
             {/* Progress Bar */}
             {nextTier && (
               <div className="mt-8">
-                <div className="flex items-center justify-between text-sm text-slate-300 mb-2">
+                <div className="flex items-center justify-between text-sm text-slate-700 mb-2">
                   <span>{loyalty?.tier}</span>
                   <span>{nextTier.name} - {nextTier.minPoints.toLocaleString()} điểm</span>
                 </div>
@@ -224,7 +224,7 @@ export default function LoyaltyPage() {
               </div>
             ) : (
               <div className="text-center py-12 text-slate-500">
-                <Gift className="w-12 h-12 mx-auto mb-3 text-slate-300" />
+                <Gift className="w-12 h-12 mx-auto mb-3 text-slate-700" />
                 <p className="font-medium">Chưa có quà thưởng nào</p>
                 <p className="text-sm mt-1">Mua dịch vụ để tích điểm và đổi quà!</p>
               </div>

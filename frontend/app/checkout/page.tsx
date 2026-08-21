@@ -144,7 +144,7 @@ export default function CheckoutPage() {
             href={paymentUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full py-4 rounded-xl bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 text-white font-bold text-base shadow-lg hover:shadow-xl transition-all block mb-3"
+            className="w-full py-4 rounded-xl bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 text-slate-900 font-bold text-base shadow-lg hover:shadow-xl transition-all block mb-3"
           >
             Thanh Toán Ngay
           </a>
@@ -170,7 +170,7 @@ export default function CheckoutPage() {
           </p>
           <Link
             href="/services/cloud-vps"
-            className="w-full py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 text-white font-bold text-sm shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2"
+            className="w-full py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 text-slate-900 font-bold text-sm shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2"
           >
             Khám phá gói Cloud VPS
             <ArrowRight className="w-4 h-4" />
@@ -271,7 +271,7 @@ export default function CheckoutPage() {
               <button
                 onClick={handlePayment}
                 disabled={isLoading}
-                className="w-full py-4 rounded-xl bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 text-white font-bold text-base shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 disabled:opacity-70"
+                className="w-full py-4 rounded-xl bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 text-slate-900 font-bold text-base shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 disabled:opacity-70"
               >
                 {isLoading ? (
                   <Loader2 className="w-5 h-5 animate-spin" />

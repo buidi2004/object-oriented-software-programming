@@ -88,7 +88,7 @@ export default function WebsiteBuilderServicePage() {
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-slate-900 via-slate-900 to-pink-950 text-white pt-20 pb-28">
+      <section className="relative overflow-hidden bg-gradient-to-b from-slate-900 via-slate-900 to-pink-950 text-slate-900 pt-20 pb-28">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(236,72,153,0.15),rgba(255,255,255,0))]" />
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -97,19 +97,19 @@ export default function WebsiteBuilderServicePage() {
             Trình Tạo Trang Web Thông Minh Với Trợ Lý AI
           </div>
 
-          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white max-w-4xl mx-auto leading-tight mb-6">
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-slate-900 max-w-4xl mx-auto leading-tight mb-6">
             Tạo Website Chuyên Nghiệp Trong 5 Phút Với{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-rose-300 to-amber-300">
               AI Website Builder
             </span>
           </h1>
 
-          <p className="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto mb-10">
+          <p className="text-base sm:text-lg text-slate-700 max-w-2xl mx-auto mb-10">
             Không cần biết lập trình hay thiết kế. Trợ lý AI tự động tạo bố cục, viết bài giới thiệu, tối ưu chuẩn SEO và tích hợp giỏ hàng thanh toán đa kênh.
           </p>
 
           {/* Billing Switch */}
-          <div className="inline-flex items-center p-1.5 rounded-2xl bg-slate-800/80 backdrop-blur-md border border-slate-700">
+          <div className="inline-flex items-center p-1.5 rounded-2xl bg-white/80 backdrop-blur-md border border-slate-300">
             <button
               onClick={() => setBillingCycle('monthly')}
               className={`px-5 py-2.5 rounded-xl text-xs font-bold transition-all ${
@@ -154,7 +154,7 @@ export default function WebsiteBuilderServicePage() {
               >
                 {plan.badge && (
                   <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                    <span className="px-4 py-1.5 rounded-full bg-gradient-to-r from-pink-500 to-rose-600 text-white text-xs font-black uppercase tracking-wider shadow-md">
+                    <span className="px-4 py-1.5 rounded-full bg-gradient-to-r from-pink-500 to-rose-600 text-slate-900 text-xs font-black uppercase tracking-wider shadow-md">
                       {plan.badge}
                     </span>
                   </div>

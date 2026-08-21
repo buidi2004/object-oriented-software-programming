@@ -250,7 +250,7 @@ export default function AdminPromotionsPage() {
         {/* Search */}
         <div className="bg-white rounded-2xl p-4 border border-slate-200 mb-6 flex items-center justify-between shadow-sm">
           <div className="relative w-full max-w-md">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-600" />
             <input
               type="text"
               placeholder="Tìm kiếm theo tên gói dịch vụ hoặc mức giảm..."
@@ -285,7 +285,7 @@ export default function AdminPromotionsPage() {
                         </div>
                         <div>
                           <p className="font-bold text-slate-900">{getPlanName(promo.servicePlanId)}</p>
-                          <p className="text-xs text-slate-400 font-mono">
+                          <p className="text-xs text-slate-600 font-mono">
                             {promo.servicePlanId ? `ID: ${promo.servicePlanId}` : 'Flash Sale toàn sàn'}
                           </p>
                         </div>
@@ -300,10 +300,10 @@ export default function AdminPromotionsPage() {
                     <td className="px-6 py-4">
                       <div className="text-xs text-slate-500 space-y-0.5">
                         <div className="flex items-center gap-1.5 font-medium">
-                          <Calendar className="w-3.5 h-3.5 text-slate-400" />
+                          <Calendar className="w-3.5 h-3.5 text-slate-600" />
                           <span>Từ: {new Date(promo.startDate).toLocaleDateString('vi-VN')}</span>
                         </div>
-                        <div className="flex items-center gap-1.5 text-slate-400">
+                        <div className="flex items-center gap-1.5 text-slate-600">
                           <span>Đến: {promo.endDate ? new Date(promo.endDate).toLocaleDateString('vi-VN') : 'Vô thời hạn'}</span>
                         </div>
                       </div>
@@ -324,7 +324,7 @@ export default function AdminPromotionsPage() {
                         </button>
                         <button 
                           onClick={() => handleDelete(promo.id)}
-                          className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-colors"
+                          className="p-2 text-slate-600 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-colors"
                           title="Xóa khuyến mãi"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -339,9 +339,9 @@ export default function AdminPromotionsPage() {
 
           {filteredPromotions.length === 0 && (
             <div className="text-center py-16 text-slate-500">
-              <Percent className="w-12 h-12 mx-auto mb-3 text-slate-300" />
+              <Percent className="w-12 h-12 mx-auto mb-3 text-slate-700" />
               <p className="font-bold text-slate-700">Không có chương trình khuyến mãi nào</p>
-              <p className="text-xs text-slate-400 mt-1">Bấm "Tạo Khuyến Mãi Mới" để bắt đầu</p>
+              <p className="text-xs text-slate-600 mt-1">Bấm "Tạo Khuyến Mãi Mới" để bắt đầu</p>
             </div>
           )}
         </div>
@@ -358,7 +358,7 @@ export default function AdminPromotionsPage() {
                 </h3>
                 <p className="text-xs text-slate-500 mt-0.5">Thiết lập giảm giá dịch vụ theo % thời gian thực</p>
               </div>
-              <button onClick={() => setShowModal(false)} className="p-2 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100">
+              <button onClick={() => setShowModal(false)} className="p-2 text-slate-600 hover:text-slate-600 rounded-lg hover:bg-slate-100">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -392,7 +392,7 @@ export default function AdminPromotionsPage() {
                     onChange={(e) => setFormData({ ...formData, discountPercent: e.target.value })}
                     className="w-full pl-4 pr-10 py-2.5 rounded-xl border border-slate-200 text-sm font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-orange-500/20"
                   />
-                  <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-sm font-bold text-slate-400">%</span>
+                  <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-sm font-bold text-slate-600">%</span>
                 </div>
               </div>
 

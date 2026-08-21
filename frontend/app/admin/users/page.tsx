@@ -288,7 +288,7 @@ export default function AdminUsersPage() {
         {/* Filters */}
         <div className="bg-white rounded-2xl p-4 border border-slate-200 mb-6 flex flex-wrap gap-4 items-center justify-between shadow-sm">
           <div className="flex-1 min-w-[240px] relative">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-600" />
             <input
               type="text"
               placeholder="Tìm kiếm theo họ tên, email hoặc số điện thoại..."
@@ -298,7 +298,7 @@ export default function AdminUsersPage() {
             />
           </div>
           <div className="flex items-center gap-2">
-            <Filter className="w-4 h-4 text-slate-400" />
+            <Filter className="w-4 h-4 text-slate-600" />
             <select
               value={filterRole}
               onChange={(e) => setFilterRole(e.target.value)}
@@ -331,16 +331,16 @@ export default function AdminUsersPage() {
                   <tr key={user.id} className="hover:bg-slate-50/80 transition-colors">
                     <td className="py-3.5 px-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-white font-bold shadow-sm">
+                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-slate-900 font-bold shadow-sm">
                           {user.fullName[0]?.toUpperCase() || 'U'}
                         </div>
                         <div>
                           <p className="font-bold text-slate-900">{user.fullName}</p>
                           <p className="text-xs text-slate-500 flex items-center gap-1.5 mt-0.5">
-                            <Mail className="w-3 h-3 text-slate-400" />
+                            <Mail className="w-3 h-3 text-slate-600" />
                             {user.email}
                             {user.phoneNumber && (
-                              <span className="flex items-center gap-1 ml-2 text-slate-400">
+                              <span className="flex items-center gap-1 ml-2 text-slate-600">
                                 <Phone className="w-3 h-3" /> {user.phoneNumber}
                               </span>
                             )}
@@ -407,7 +407,7 @@ export default function AdminUsersPage() {
                         {/* Deactivate User Button */}
                         <button 
                           onClick={() => handleDeleteUser(user)}
-                          className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-colors"
+                          className="p-2 text-slate-600 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-colors"
                           title="Vô hiệu hóa tài khoản"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -422,9 +422,9 @@ export default function AdminUsersPage() {
           
           {filteredUsers.length === 0 && (
             <div className="text-center py-16 text-slate-500">
-              <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-300" />
+              <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-700" />
               <p className="font-bold text-slate-700">Không tìm thấy người dùng nào</p>
-              <p className="text-xs text-slate-400 mt-1">Thử thay đổi từ khóa tìm kiếm hoặc bộ lọc</p>
+              <p className="text-xs text-slate-600 mt-1">Thử thay đổi từ khóa tìm kiếm hoặc bộ lọc</p>
             </div>
           )}
         </div>
@@ -439,7 +439,7 @@ export default function AdminUsersPage() {
                 <h3 className="text-xl font-bold text-slate-900">Thêm Người Dùng Mới</h3>
                 <p className="text-xs text-slate-500 mt-0.5">Tạo tài khoản quản trị hoặc khách hàng mới</p>
               </div>
-              <button onClick={() => setShowAddModal(false)} className="p-2 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100">
+              <button onClick={() => setShowAddModal(false)} className="p-2 text-slate-600 hover:text-slate-600 rounded-lg hover:bg-slate-100">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -537,7 +537,7 @@ export default function AdminUsersPage() {
                 <h3 className="text-xl font-bold text-slate-900">Chỉnh Sửa Người Dùng</h3>
                 <p className="text-xs text-slate-500 mt-0.5">{editingUser.email}</p>
               </div>
-              <button onClick={() => setShowEditModal(false)} className="p-2 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100">
+              <button onClick={() => setShowEditModal(false)} className="p-2 text-slate-600 hover:text-slate-600 rounded-lg hover:bg-slate-100">
                 <X className="w-5 h-5" />
               </button>
             </div>

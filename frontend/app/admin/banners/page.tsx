@@ -360,7 +360,7 @@ export default function AdminBannersPage() {
         {banners.length > 0 && (
           <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs flex items-center gap-3">
             <div className="relative flex-1 max-w-md">
-              <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+              <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-600" />
               <input
                 type="text"
                 value={searchTerm}
@@ -418,7 +418,7 @@ export default function AdminBannersPage() {
                 }`}
               >
                 {/* Banner Image Preview */}
-                <div className="relative aspect-[16/9] bg-slate-900 overflow-hidden group">
+                <div className="relative aspect-[16/9] bg-white overflow-hidden group">
                   <img 
                     src={banner.imageUrl || '/banners/promo.svg'} 
                     alt="Banner" 
@@ -444,7 +444,7 @@ export default function AdminBannersPage() {
 
                   {/* Order Badge */}
                   <div className="absolute top-3 left-3">
-                    <span className="px-2.5 py-0.5 rounded-lg bg-black/60 backdrop-blur-sm text-white text-xs font-bold">
+                    <span className="px-2.5 py-0.5 rounded-lg bg-black/60 backdrop-blur-sm text-slate-900 text-xs font-bold">
                       Thứ tự: #{banner.displayOrder || 1}
                     </span>
                   </div>
@@ -491,7 +491,7 @@ export default function AdminBannersPage() {
                     
                     <button
                       onClick={() => handleDeleteBanner(banner.id)}
-                      className="p-2 rounded-xl text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors"
+                      className="p-2 rounded-xl text-slate-600 hover:text-red-600 hover:bg-red-50 transition-colors"
                       title="Xóa banner"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -515,7 +515,7 @@ export default function AdminBannersPage() {
               </h3>
               <button 
                 onClick={() => setShowModal(false)}
-                className="p-1.5 rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
+                className="p-1.5 rounded-full text-slate-600 hover:text-slate-600 hover:bg-slate-100 transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>

@@ -158,7 +158,7 @@ export default function AdminFAQsPage() {
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="bg-white rounded-xl p-4 border border-slate-200 mb-6">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-600" />
             <input
               type="text"
               placeholder="Tìm kiếm câu hỏi hoặc câu trả lời..."
@@ -184,7 +184,7 @@ export default function AdminFAQsPage() {
                       <span className="px-2 py-0.5 rounded-full bg-slate-100 text-xs font-medium text-slate-600">
                         {faq.category}
                       </span>
-                      <span className="text-xs text-slate-400">{faq.views} lượt xem</span>
+                      <span className="text-xs text-slate-600">{faq.views} lượt xem</span>
                     </div>
                   </div>
                 </div>
@@ -192,7 +192,7 @@ export default function AdminFAQsPage() {
                   <span className={`px-2 py-1 rounded-full text-xs font-bold ${faq.isActive ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-500'}`}>
                     {faq.isActive ? 'Hiển thị' : 'Ẩn'}
                   </span>
-                  {openId === faq.id ? <ChevronUp className="w-5 h-5 text-slate-400" /> : <ChevronDown className="w-5 h-5 text-slate-400" />}
+                  {openId === faq.id ? <ChevronUp className="w-5 h-5 text-slate-600" /> : <ChevronDown className="w-5 h-5 text-slate-600" />}
                 </div>
               </button>
               
@@ -218,7 +218,7 @@ export default function AdminFAQsPage() {
 
         {filteredFaqs.length === 0 && (
           <div className="text-center py-12 text-slate-500">
-            <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-300" />
+            <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-700" />
             <p className="font-medium">Không tìm thấy câu hỏi nào</p>
           </div>
         )}
@@ -226,13 +226,13 @@ export default function AdminFAQsPage() {
 
       {/* Modal Thêm FAQ */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-white/50 backdrop-blur-sm">
           <div className="bg-white rounded-2xl w-full max-w-lg overflow-hidden shadow-xl">
             <div className="p-6 border-b border-slate-100 flex items-center justify-between">
               <h2 className="text-xl font-bold text-slate-900">Thêm Câu Hỏi Mới</h2>
               <button 
                 onClick={() => setIsModalOpen(false)}
-                className="text-slate-400 hover:text-slate-600"
+                className="text-slate-600 hover:text-slate-600"
               >
                 &times;
               </button>
@@ -251,7 +251,7 @@ export default function AdminFAQsPage() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">
-                  Câu trả lời <span className="text-xs text-slate-400 font-normal">(tối thiểu 10 ký tự)</span>
+                  Câu trả lời <span className="text-xs text-slate-600 font-normal">(tối thiểu 10 ký tự)</span>
                 </label>
                 <textarea
                   required

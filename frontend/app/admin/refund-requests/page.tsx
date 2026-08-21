@@ -133,7 +133,7 @@ export default function AdminRefundRequestsPage() {
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-start gap-4">
                   <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-rose-500 to-pink-600 flex items-center justify-center shrink-0">
-                    <DollarSign className="w-6 h-6 text-white" />
+                    <DollarSign className="w-6 h-6 text-slate-900" />
                   </div>
                   <div>
                     <h3 className="font-bold text-slate-900 text-lg">Yêu cầu #{request.id.slice(0, 8)}</h3>
@@ -193,7 +193,7 @@ export default function AdminRefundRequestsPage() {
 
         {filteredRequests.length === 0 && (
           <div className="text-center py-12 text-slate-500">
-            <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-300" />
+            <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-700" />
             <p className="font-medium">Không có yêu cầu hoàn tiền nào</p>
           </div>
         )}

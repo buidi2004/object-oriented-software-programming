@@ -108,7 +108,7 @@ export const HomeTestimonials: React.FC = () => {
 
               {/* Author Info */}
               <div className="flex items-center gap-3 pt-4 border-t border-slate-100">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-600 to-indigo-600 text-white font-bold text-sm flex items-center justify-center shrink-0 shadow-md">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-600 to-indigo-600 text-slate-900 font-bold text-sm flex items-center justify-center shrink-0 shadow-md">
                   {item.customerName.charAt(0)}
                 </div>
                 <div>

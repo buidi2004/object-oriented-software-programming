@@ -159,7 +159,7 @@ export default function NotificationsPage() {
           <div className="px-6 py-5 flex items-center justify-between hover:bg-slate-50 transition-colors">
             <div className="flex items-start gap-4">
               <div className="mt-0.5">
-                <ShoppingBag className="w-5 h-5 text-slate-400" />
+                <ShoppingBag className="w-5 h-5 text-slate-600" />
               </div>
               <div>
                 <h3 className="text-sm font-bold text-slate-900">Cập nhật đơn hàng</h3>
@@ -175,7 +175,7 @@ export default function NotificationsPage() {
           <div className="px-6 py-5 flex items-center justify-between hover:bg-slate-50 transition-colors">
             <div className="flex items-start gap-4">
               <div className="mt-0.5">
-                <ShieldCheck className="w-5 h-5 text-slate-400" />
+                <ShieldCheck className="w-5 h-5 text-slate-600" />
               </div>
               <div>
                 <h3 className="text-sm font-bold text-slate-900">Cảnh báo bảo mật</h3>
@@ -191,7 +191,7 @@ export default function NotificationsPage() {
           <div className="px-6 py-5 flex items-center justify-between hover:bg-slate-50 transition-colors">
             <div className="flex items-start gap-4">
               <div className="mt-0.5">
-                <Gift className="w-5 h-5 text-slate-400" />
+                <Gift className="w-5 h-5 text-slate-600" />
               </div>
               <div>
                 <h3 className="text-sm font-bold text-slate-900">Chương trình khuyến mãi</h3>
@@ -219,7 +219,7 @@ export default function NotificationsPage() {
             ['smsOnExpiring','SMS khi dịch vụ sắp hết hạn',MessageSquare],
             ['zaloOnPromotion','Zalo khi có khuyến mãi',Gift],
             ['telegramOnAlert','Telegram khi có cảnh báo',Send],
-          ] as const).map(([key,label,Icon])=><div key={key} className="px-6 py-4 flex items-center justify-between"><span className="flex items-center gap-3 text-sm font-semibold"><Icon className="w-5 h-5 text-slate-400"/>{label}</span><label className="relative inline-flex items-center cursor-pointer"><input type="checkbox" className="sr-only peer" checked={Boolean(settings[key])} onChange={()=>handleToggle(key)}/><div className="w-11 h-6 bg-slate-200 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"/></label></div>)}
+          ] as const).map(([key,label,Icon])=><div key={key} className="px-6 py-4 flex items-center justify-between"><span className="flex items-center gap-3 text-sm font-semibold"><Icon className="w-5 h-5 text-slate-600"/>{label}</span><label className="relative inline-flex items-center cursor-pointer"><input type="checkbox" className="sr-only peer" checked={Boolean(settings[key])} onChange={()=>handleToggle(key)}/><div className="w-11 h-6 bg-slate-200 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"/></label></div>)}
         </div>
       </div>
     </div>

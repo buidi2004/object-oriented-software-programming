@@ -128,7 +128,7 @@ export default function WalletPage() {
       <header className="bg-white border-b border-slate-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2.5">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-cyan-400 flex items-center justify-center text-white">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-cyan-400 flex items-center justify-center text-slate-900">
               <Wallet className="w-6 h-6" />
             </div>
             <span className="text-xl font-black text-slate-900">
@@ -177,7 +177,7 @@ export default function WalletPage() {
         )}
 
         {/* Balance Card */}
-        <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-3xl p-8 mb-8 text-white relative overflow-hidden">
+        <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-3xl p-8 mb-8 text-slate-900 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl" />
           <div className="absolute bottom-0 left-0 w-48 h-48 bg-cyan-500/10 rounded-full blur-3xl" />
           
@@ -188,14 +188,14 @@ export default function WalletPage() {
                   <Wallet className="w-6 h-6 text-cyan-400" />
                 </div>
                 <div>
-                  <p className="text-sm text-slate-400">Số dư ví tiền</p>
+                  <p className="text-sm text-slate-600">Số dư ví tiền</p>
                   <p className="text-4xl font-black">{wallet.balance.toLocaleString('vi-VN')} đ</p>
                 </div>
               </div>
               
               <button
                 onClick={() => setShowTopUp(!showTopUp)}
-                className="px-5 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold text-sm hover:from-cyan-400 hover:to-blue-500 transition-all flex items-center gap-2"
+                className="px-5 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-900 font-bold text-sm hover:from-cyan-400 hover:to-blue-500 transition-all flex items-center gap-2"
               >
                 <Plus className="w-4 h-4" />
                 Nạp tiền
@@ -209,7 +209,7 @@ export default function WalletPage() {
                   value={topUpAmount}
                   onChange={(e) => setTopUpAmount(e.target.value)}
                   placeholder="Nhập số tiền nạp (VNĐ)"
-                  className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-slate-400 focus:outline-none focus:border-cyan-400 mb-3"
+                  className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-cyan-400 mb-3"
                 />
                 <div className="flex gap-2 mb-3">
                   {[100000, 200000, 500000, 1000000].map((amount) => (
@@ -245,7 +245,7 @@ export default function WalletPage() {
 
           {transactions.length === 0 ? (
             <div className="p-12 text-center text-slate-500">
-              <History className="w-12 h-12 mx-auto mb-3 text-slate-300" />
+              <History className="w-12 h-12 mx-auto mb-3 text-slate-700" />
               <p className="font-medium">Chưa có giao dịch nào</p>
               <p className="text-sm mt-1">Số dư ví của bạn hiện đang trống</p>
             </div>

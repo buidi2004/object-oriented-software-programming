@@ -103,7 +103,7 @@ export default function MarketplacePage() {
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-slate-900 via-slate-900 to-violet-950 text-white pt-20 pb-24">
+      <section className="relative overflow-hidden bg-gradient-to-b from-slate-900 via-slate-900 to-violet-950 text-slate-900 pt-20 pb-24">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(139,92,246,0.15),rgba(255,255,255,0))]" />
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -112,26 +112,26 @@ export default function MarketplacePage() {
             Chợ Bản Quyền Phần Mềm &amp; Tiện Ích Máy Chủ
           </div>
 
-          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white max-w-4xl mx-auto leading-tight mb-6">
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-slate-900 max-w-4xl mx-auto leading-tight mb-6">
             Bản Quyền Chính Hãng Cho Máy Chủ Tại{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-purple-300 to-pink-300">
               Cloud Marketplace
             </span>
           </h1>
 
-          <p className="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto mb-10">
+          <p className="text-base sm:text-lg text-slate-700 max-w-2xl mx-auto mb-10">
             Cung cấp License cPanel, DirectAdmin, LiteSpeed, CloudLinux OS, Imunify360 chính hãng với giá đại lý tốt nhất thị trường. Kích hoạt IP tức thì trong 3 phút.
           </p>
 
           {/* Search Box */}
           <div className="max-w-xl mx-auto relative">
-            <Search className="w-5 h-5 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
+            <Search className="w-5 h-5 text-slate-600 absolute left-4 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               placeholder="Tìm kiếm License (cPanel, LiteSpeed, Imunify360, DirectAdmin)..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-12 pr-4 py-3.5 rounded-2xl bg-slate-800/90 border border-slate-700 text-white placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500 shadow-xl"
+              className="w-full pl-12 pr-4 py-3.5 rounded-2xl bg-white/90 border border-slate-300 text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500 shadow-xl"
             />
           </div>
         </div>
@@ -174,7 +174,7 @@ export default function MarketplacePage() {
                   <div className="text-3xl p-3 rounded-2xl bg-violet-50 text-violet-600">
                     {p.icon}
                   </div>
-                  <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                  <span className="text-[11px] font-bold text-slate-600 uppercase tracking-wider">
                     {p.vendor}
                   </span>
                 </div>
@@ -211,7 +211,7 @@ export default function MarketplacePage() {
 
                 <button
                   onClick={() => handleBuy(p)}
-                  className="w-full py-3 rounded-xl bg-slate-900 group-hover:bg-violet-600 text-white text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-md"
+                  className="w-full py-3 rounded-xl bg-white group-hover:bg-violet-600 text-slate-900 text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-md"
                 >
                   <ShoppingCart className="w-3.5 h-3.5" />
                   Mua License Ngay

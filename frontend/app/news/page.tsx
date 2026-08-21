@@ -88,7 +88,7 @@ export default function PublicNewsPage() {
                             onError={(e) => { (e.currentTarget as HTMLElement).style.display = 'none'; }}
                           />
                         ) : (
-                          <div className="w-full h-[220px] sm:h-[300px] md:h-[400px] flex items-center justify-center text-slate-300">
+                          <div className="w-full h-[220px] sm:h-[300px] md:h-[400px] flex items-center justify-center text-slate-700">
                             <ImageIcon className="w-16 h-16" />
                           </div>
                         )}
@@ -135,7 +135,7 @@ export default function PublicNewsPage() {
                               onError={(e) => { (e.currentTarget as HTMLElement).style.display = 'none'; }}
                             />
                           ) : (
-                            <div className="w-full h-full flex items-center justify-center text-slate-300">
+                            <div className="w-full h-full flex items-center justify-center text-slate-700">
                               <ImageIcon className="w-10 h-10" />
                             </div>
                           )}

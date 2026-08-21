@@ -91,7 +91,7 @@ export default function AdminStaticSitesPage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
         <div className="bg-white rounded-2xl p-4 border border-slate-200 flex flex-wrap gap-4 items-center shadow-sm">
           <div className="flex-1 min-w-[200px] relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-600" />
             <input
               type="text"
               placeholder="Tìm theo tên dự án, email, ID..."
@@ -130,7 +130,7 @@ export default function AdminStaticSitesPage() {
                   <tr key={s.id} className="hover:bg-slate-50/60 transition-colors">
                     <td className="px-6 py-4">
                       <div className="font-bold text-slate-900">{s.name}</div>
-                      <div className="text-[10px] font-mono text-slate-400 mt-0.5">ID: {s.id}</div>
+                      <div className="text-[10px] font-mono text-slate-600 mt-0.5">ID: {s.id}</div>
                     </td>
                     <td className="px-6 py-4 font-medium text-slate-700">{s.ownerEmail || 'customer@cloudhost.vn'}</td>
                     <td className="px-6 py-4">
@@ -159,7 +159,7 @@ export default function AdminStaticSitesPage() {
 
           {filteredSites.length === 0 && (
             <div className="text-center py-12 text-slate-500">
-              <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-300" />
+              <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-700" />
               <p className="font-medium">Không tìm thấy static site nào</p>
             </div>
           )}

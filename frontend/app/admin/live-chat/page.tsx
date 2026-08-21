@@ -235,7 +235,7 @@ export default function AdminLiveChatPage() {
             {/* Chat Messages */}
             <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-4">
               {messages.length === 0 ? (
-                <div className="text-center text-slate-400 mt-10">Chưa có tin nhắn nào.</div>
+                <div className="text-center text-slate-600 mt-10">Chưa có tin nhắn nào.</div>
               ) : (
                 messages.map((msg) => {
                   const isMine = adminId ? normalizeId(msg.senderId) === normalizeId(adminId) : false;
@@ -244,7 +244,7 @@ export default function AdminLiveChatPage() {
                       <div className={`px-4 py-2.5 rounded-2xl text-[15px] ${isMine ? 'bg-emerald-500 text-white rounded-tr-sm' : 'bg-white border border-slate-200 text-slate-800 rounded-tl-sm shadow-sm'}`}>
                         {msg.message}
                       </div>
-                      <span className="text-[11px] text-slate-400 mt-1.5 px-1">
+                      <span className="text-[11px] text-slate-600 mt-1.5 px-1">
                         {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </span>
                     </div>
@@ -276,8 +276,8 @@ export default function AdminLiveChatPage() {
             </div>
           </>
         ) : (
-          <div className="flex-1 flex flex-col items-center justify-center text-slate-400">
-            <MessageCircle size={48} className="mb-4 text-slate-300 opacity-50" />
+          <div className="flex-1 flex flex-col items-center justify-center text-slate-600">
+            <MessageCircle size={48} className="mb-4 text-slate-700 opacity-50" />
             <p>Chọn một phiên hỗ trợ bên trái để bắt đầu trò chuyện</p>
           </div>
         )}

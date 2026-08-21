@@ -161,12 +161,12 @@ export default function VpsBackupsPage() {
               <div className="flex items-center gap-4">
                 <span className="text-sm text-slate-500">{backup.size} GB</span>
                 <div className="flex items-center gap-2">
-                  <button className="p-2 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-blue-600 transition-colors" title="Tải về">
+                  <button className="p-2 rounded-lg hover:bg-slate-100 text-slate-600 hover:text-blue-600 transition-colors" title="Tải về">
                     <Download className="w-4 h-4" />
                   </button>
                   <button
                     onClick={() => deleteBackup(backup.id)}
-                    className="p-2 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-red-600 transition-colors"
+                    className="p-2 rounded-lg hover:bg-slate-100 text-slate-600 hover:text-red-600 transition-colors"
                     title="Xóa"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -179,9 +179,9 @@ export default function VpsBackupsPage() {
 
         {backups.length === 0 && !error && (
           <div className="text-center py-12">
-            <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-300" />
+            <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-700" />
             <p className="font-medium text-slate-500">Chưa có backup nào</p>
-            <p className="text-sm text-slate-400 mt-1">Tạo backup để bảo vệ dữ liệu VPS của bạn</p>
+            <p className="text-sm text-slate-600 mt-1">Tạo backup để bảo vệ dữ liệu VPS của bạn</p>
           </div>
         )}
       </div>

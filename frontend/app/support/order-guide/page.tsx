@@ -18,7 +18,7 @@ export default function OrderGuidePage() {
         </nav>
 
         <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-          <div className="bg-gradient-to-r from-indigo-600 to-purple-700 p-8 text-white">
+          <div className="bg-gradient-to-r from-indigo-600 to-purple-700 p-8 text-slate-900">
             <h1 className="text-3xl font-black mb-2">Hướng Dẫn Đăng Ký & Khởi Tạo Dịch Vụ</h1>
             <p className="text-indigo-100">Khởi tạo nhanh chóng, sẵn sàng sử dụng chỉ sau vài cú click chuột.</p>
           </div>

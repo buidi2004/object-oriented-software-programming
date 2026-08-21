@@ -87,13 +87,13 @@ export default function CartPage() {
 
         {/* Guest Reminder Banner (When not logged in) */}
         {!isLoggedIn && cartItems.length > 0 && (
-          <div className="mb-8 p-5 bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 rounded-2xl border border-blue-800 text-white shadow-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div className="mb-8 p-5 bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 rounded-2xl border border-blue-800 text-slate-900 shadow-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div className="flex items-start gap-3.5">
               <div className="p-2.5 bg-blue-600/30 border border-blue-500/40 rounded-xl text-cyan-300 shrink-0">
                 <LogIn className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="text-base font-bold text-white flex items-center gap-2">
+                <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
                   Bạn đang đặt hàng với tư cách Khách
                   <span className="text-[11px] font-bold px-2 py-0.5 bg-amber-500/20 text-amber-300 border border-amber-500/30 rounded-full">
                     Chưa đăng nhập
@@ -113,7 +113,7 @@ export default function CartPage() {
               </button>
               <button
                 onClick={() => handleOpenAuth('register')}
-                className="flex-1 md:flex-initial px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-xl border border-slate-700 transition-all"
+                className="flex-1 md:flex-initial px-4 py-2.5 bg-white hover:bg-slate-200 text-slate-900 font-semibold text-xs rounded-xl border border-slate-300 transition-all"
               >
                 Đăng Ký
               </button>
@@ -146,7 +146,7 @@ export default function CartPage() {
               {cartItems.map((item) => (
                 <div key={item.id} className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm hover:shadow transition-all">
                   <div className="flex items-start gap-4">
-                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-600 via-indigo-600 to-cyan-500 flex items-center justify-center text-white font-black text-xl shadow-md shrink-0">
+                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-600 via-indigo-600 to-cyan-500 flex items-center justify-center text-slate-900 font-black text-xl shadow-md shrink-0">
                       {(item.title || item.name || 'C')[0]?.toUpperCase()}
                     </div>
                     
@@ -164,7 +164,7 @@ export default function CartPage() {
                           </div>
                           <h3 className="text-base font-bold text-slate-900">{item.title || item.name}</h3>
                           <p className="text-xs text-slate-500 mt-1">{item.details || 'Cấu hình tiêu chuẩn'}</p>
-                          <p className="text-xs text-slate-400 mt-1">
+                          <p className="text-xs text-slate-600 mt-1">
                             Chu kỳ: <span className="font-semibold text-slate-700">{item.billingCycle} tháng</span>
                           </p>
                         </div>
@@ -172,7 +172,7 @@ export default function CartPage() {
                         <div className="text-right flex flex-col items-end gap-3 shrink-0">
                           <button
                             onClick={() => removeItem(item.id)}
-                            className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-colors"
+                            className="p-2 text-slate-600 hover:text-red-500 hover:bg-red-50 rounded-xl transition-colors"
                             title="Xóa dịch vụ"
                           >
                             <Trash2 className="w-4 h-4" />
@@ -234,7 +234,7 @@ export default function CartPage() {
                 {/* Checkout Button */}
                 <button
                   onClick={handleCheckout}
-                  className="w-full py-4 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white font-extrabold text-base shadow-xl shadow-blue-500/25 hover:shadow-blue-500/40 transition-all flex items-center justify-center gap-2 group cursor-pointer"
+                  className="w-full py-4 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-slate-900 font-extrabold text-base shadow-xl shadow-blue-500/25 hover:shadow-blue-500/40 transition-all flex items-center justify-center gap-2 group cursor-pointer"
                 >
                   <span>{isLoggedIn ? 'Tiến Hành Thanh Toán' : 'Đăng Nhập Để Thanh Toán'}</span>
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />

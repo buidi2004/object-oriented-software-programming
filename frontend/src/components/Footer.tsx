@@ -144,7 +144,7 @@ export const Footer: React.FC = () => {
                   { id: 'yt', icon: Youtube },
                   { id: 'zl', icon: MessageCircle }
                 ].map((item) => (
-                  <div key={item.id} className="w-7 h-7 rounded-full bg-black text-white flex items-center justify-center hover:bg-red-600 cursor-pointer transition-colors">
+                  <div key={item.id} className="w-7 h-7 rounded-full bg-black text-slate-900 flex items-center justify-center hover:bg-red-600 cursor-pointer transition-colors">
                     <item.icon className="w-3.5 h-3.5" />
                   </div>
                 ))}

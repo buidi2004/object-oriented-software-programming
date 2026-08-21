@@ -142,7 +142,7 @@ export default function DashboardGameServersPage() {
           </div>
 
           {loading && servers.length === 0 ? (
-            <div className="p-12 text-center text-slate-400 text-sm flex items-center justify-center gap-2">
+            <div className="p-12 text-center text-slate-600 text-sm flex items-center justify-center gap-2">
               <RefreshCw className="w-5 h-5 animate-spin text-purple-600" />
               Đang tải danh sách game servers...
             </div>
@@ -174,7 +174,7 @@ export default function DashboardGameServersPage() {
 
       {/* Modal Create Game Server */}
       {isCreateOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-white/60 backdrop-blur-sm animate-in fade-in">
           <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100">
             <h3 className="text-lg font-black text-slate-900 mb-2 flex items-center gap-2">
               <Gamepad2 className="w-5 h-5 text-purple-600" /> Tạo Máy Chủ Game Mới

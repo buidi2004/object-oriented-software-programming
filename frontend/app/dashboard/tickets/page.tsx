@@ -155,7 +155,7 @@ export default function CustomerTicketsPage() {
                       <p className="font-bold text-slate-800">
                         #{t.id.length > 10 ? t.id.slice(0, 8).toUpperCase() : t.id} - {t.subject}
                       </p>
-                      <div className="flex items-center gap-2 text-[11px] text-slate-400 mt-1">
+                      <div className="flex items-center gap-2 text-[11px] text-slate-600 mt-1">
                         <span className="font-semibold text-slate-500">
                           {t.status === 'Closed' || t.status === 'closed' ? 'Đã đóng' : 'Đang xử lý'}
                         </span>
@@ -275,7 +275,7 @@ export default function CustomerTicketsPage() {
                 {/* Department Card 1: Phòng kỹ thuật */}
                 <div className="bg-[#f8fafc] border border-slate-200/80 rounded-xl p-5 shadow-xs space-y-3 hover:border-blue-300 transition-all">
                   <div className="flex items-center gap-2 text-slate-900 font-bold text-sm">
-                    <div className="w-5 h-4 bg-slate-800 rounded-xs flex items-center justify-center text-white text-[9px] font-mono">
+                    <div className="w-5 h-4 bg-white rounded-xs flex items-center justify-center text-slate-900 text-[9px] font-mono">
                       ✉
                     </div>
                     <span>Phòng kỹ thuật</span>
@@ -294,7 +294,7 @@ export default function CustomerTicketsPage() {
                 {/* Department Card 2: Phòng kinh doanh / thanh toán */}
                 <div className="bg-[#f8fafc] border border-slate-200/80 rounded-xl p-5 shadow-xs space-y-3 hover:border-blue-300 transition-all">
                   <div className="flex items-center gap-2 text-slate-900 font-bold text-sm">
-                    <div className="w-5 h-4 bg-slate-800 rounded-xs flex items-center justify-center text-white text-[9px] font-mono">
+                    <div className="w-5 h-4 bg-white rounded-xs flex items-center justify-center text-slate-900 text-[9px] font-mono">
                       ✉
                     </div>
                     <span>Phòng kinh doanh / thanh toán</span>
@@ -327,7 +327,7 @@ export default function CustomerTicketsPage() {
                     className="p-3 bg-slate-50 border border-slate-200 rounded-lg hover:border-blue-500 hover:bg-blue-50/30 transition-all block group"
                   >
                     <p className="font-bold text-slate-800 text-xs group-hover:text-blue-600 flex items-center justify-between">
-                      Hướng dẫn kết nối SSH vào VPS Linux <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-blue-600" />
+                      Hướng dẫn kết nối SSH vào VPS Linux <ChevronRight className="w-3.5 h-3.5 text-slate-600 group-hover:text-blue-600" />
                     </p>
                     <p className="text-slate-500 text-[11px] mt-0.5">Cách dùng Web terminal và phần mềm MobaXterm/PuTTY.</p>
                   </Link>
@@ -337,7 +337,7 @@ export default function CustomerTicketsPage() {
                     className="p-3 bg-slate-50 border border-slate-200 rounded-lg hover:border-blue-500 hover:bg-blue-50/30 transition-all block group"
                   >
                     <p className="font-bold text-slate-800 text-xs group-hover:text-blue-600 flex items-center justify-between">
-                      Cách cài đặt lại Hệ điều hành (Rebuild OS) <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-blue-600" />
+                      Cách cài đặt lại Hệ điều hành (Rebuild OS) <ChevronRight className="w-3.5 h-3.5 text-slate-600 group-hover:text-blue-600" />
                     </p>
                     <p className="text-slate-500 text-[11px] mt-0.5">Các bước tự động cài Ubuntu, Debian, Alpine.</p>
                   </Link>
@@ -364,7 +364,7 @@ export default function CustomerTicketsPage() {
 
               <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
                 {tickets.length === 0 ? (
-                  <div className="text-center py-12 text-slate-400 text-xs">
+                  <div className="text-center py-12 text-slate-600 text-xs">
                     Chưa có ticket nào được tạo.
                   </div>
                 ) : (
@@ -424,7 +424,7 @@ export default function CustomerTicketsPage() {
                   className="p-4 border border-slate-200 rounded-xl hover:border-blue-500 hover:bg-blue-50/20 transition-all block group"
                 >
                   <p className="font-bold text-slate-800 text-sm group-hover:text-blue-600 flex items-center justify-between">
-                    Hướng dẫn kết nối SSH vào VPS Linux <ExternalLink className="w-3.5 h-3.5 text-slate-400 group-hover:text-blue-600" />
+                    Hướng dẫn kết nối SSH vào VPS Linux <ExternalLink className="w-3.5 h-3.5 text-slate-600 group-hover:text-blue-600" />
                   </p>
                   <p className="text-slate-500 text-xs mt-1.5 leading-relaxed">
                     Cách dùng Web terminal trực tiếp, kết nối bằng MobaXterm, PuTTY, xác thực SSH Key và bảng lệnh Linux cơ bản.
@@ -437,7 +437,7 @@ export default function CustomerTicketsPage() {
                   className="p-4 border border-slate-200 rounded-xl hover:border-blue-500 hover:bg-blue-50/20 transition-all block group"
                 >
                   <p className="font-bold text-slate-800 text-sm group-hover:text-blue-600 flex items-center justify-between">
-                    Cách cài đặt lại Hệ điều hành (Rebuild OS) <ExternalLink className="w-3.5 h-3.5 text-slate-400 group-hover:text-blue-600" />
+                    Cách cài đặt lại Hệ điều hành (Rebuild OS) <ExternalLink className="w-3.5 h-3.5 text-slate-600 group-hover:text-blue-600" />
                   </p>
                   <p className="text-slate-500 text-xs mt-1.5 leading-relaxed">
                     Các bước tự động cài Ubuntu 24.04, Debian 12, Alpine Linux, phân tích ưu nhược điểm từng bản phân phối trong 30 giây.
@@ -477,14 +477,14 @@ export default function CustomerTicketsPage() {
 
       {/* CREATE TICKET MODAL */}
       {selectedDept && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 bg-white/60 backdrop-blur-xs flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 space-y-4 animate-in zoom-in-95">
             <div className="flex items-center justify-between border-b pb-3">
               <div className="flex items-center gap-2">
                 <Mail className="w-5 h-5 text-blue-600" />
                 <h3 className="font-bold text-slate-900 text-sm">Gửi phiếu hỗ trợ: {selectedDept}</h3>
               </div>
-              <button onClick={() => setSelectedDept(null)} className="text-slate-400 hover:text-slate-600">
+              <button onClick={() => setSelectedDept(null)} className="text-slate-600 hover:text-slate-600">
                 <X className="w-4 h-4" />
               </button>
             </div>

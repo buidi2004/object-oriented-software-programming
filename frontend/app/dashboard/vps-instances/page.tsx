@@ -332,25 +332,25 @@ export default function VpsInstancesPage() {
       )}
 
       {/* TOP HEADER SECTION (Exact layout from Screenshot 1 Top) */}
-      <div className="max-w-5xl mx-auto bg-[#101828] text-white rounded-2xl border border-slate-800 overflow-hidden shadow-lg">
+      <div className="max-w-5xl mx-auto bg-[#101828] text-slate-900 rounded-2xl border border-slate-200 overflow-hidden shadow-lg">
         <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
           {/* Left Column: Plan icon, Name, Status & Action buttons */}
           <div className="flex flex-col items-center md:items-start text-center md:text-left space-y-3">
-            <div className="w-16 h-16 rounded-full bg-slate-800 border-2 border-slate-700 flex items-center justify-center text-white shadow-inner">
+            <div className="w-16 h-16 rounded-full bg-white border-2 border-slate-300 flex items-center justify-center text-slate-900 shadow-inner">
               <Server className="w-8 h-8 text-blue-400" />
             </div>
             <div>
-              <h2 className="text-lg font-black text-white">{selected?.planName || 'Cheap 4'}</h2>
-              <p className="text-xs text-slate-400">VPS Giá Rẻ</p>
+              <h2 className="text-lg font-black text-slate-900">{selected?.planName || 'Cheap 4'}</h2>
+              <p className="text-xs text-slate-600">VPS Giá Rẻ</p>
             </div>
             <div className="w-full space-y-2 max-w-xs">
-              <div className="w-full py-1.5 px-3 rounded-lg font-bold text-xs uppercase tracking-wider text-center bg-[#16a34a] text-white">
+              <div className="w-full py-1.5 px-3 rounded-lg font-bold text-xs uppercase tracking-wider text-center bg-[#16a34a] text-slate-900">
                 ĐANG HOẠT ĐỘNG
               </div>
-              <button className="w-full py-1.5 px-3 bg-[#16a34a] hover:bg-[#15803d] text-white font-bold text-xs rounded-lg transition-colors flex items-center justify-center gap-1.5 shadow-sm">
+              <button className="w-full py-1.5 px-3 bg-[#16a34a] hover:bg-[#15803d] text-slate-900 font-bold text-xs rounded-lg transition-colors flex items-center justify-center gap-1.5 shadow-sm">
                 <span>⬆</span> Nâng cấp
               </button>
-              <button className="w-full py-1.5 px-3 bg-[#2563eb] hover:bg-[#1d4ed8] text-white font-bold text-xs rounded-lg transition-colors flex items-center justify-center gap-1.5 shadow-sm">
+              <button className="w-full py-1.5 px-3 bg-[#2563eb] hover:bg-[#1d4ed8] text-slate-900 font-bold text-xs rounded-lg transition-colors flex items-center justify-center gap-1.5 shadow-sm">
                 <span>🔁</span> Gia hạn dịch vụ
               </button>
             </div>
@@ -358,49 +358,49 @@ export default function VpsInstancesPage() {
 
           {/* Right Column: Billing Info & Quick Credentials */}
           <div className="md:col-span-2 space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs bg-[#0b1120] p-4 rounded-xl border border-slate-800/80">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs bg-[#0b1120] p-4 rounded-xl border border-slate-200/80">
               <div>
-                <p className="text-slate-400">Chu kỳ thanh toán</p>
-                <p className="font-bold text-white mt-0.5 text-sm">1 tháng</p>
+                <p className="text-slate-600">Chu kỳ thanh toán</p>
+                <p className="font-bold text-slate-900 mt-0.5 text-sm">1 tháng</p>
               </div>
               <div>
-                <p className="text-slate-400">Ngày hết hạn</p>
-                <p className="font-bold text-white mt-0.5 text-sm">
+                <p className="text-slate-600">Ngày hết hạn</p>
+                <p className="font-bold text-slate-900 mt-0.5 text-sm">
                   {selected?.expiresAt ? new Date(selected.expiresAt).toLocaleDateString('vi-VN') : '16/09/2026'}
                 </p>
               </div>
-              <div className="sm:col-span-2 pt-2 border-t border-slate-800/80">
-                <p className="text-slate-400">Phương thức thanh toán</p>
-                <p className="font-medium text-slate-300 mt-0.5">MBBANK Doanh Nghiệp (Dành cho K/H DN lấy hóa đơn GTGT)</p>
+              <div className="sm:col-span-2 pt-2 border-t border-slate-200/80">
+                <p className="text-slate-600">Phương thức thanh toán</p>
+                <p className="font-medium text-slate-700 mt-0.5">MBBANK Doanh Nghiệp (Dành cho K/H DN lấy hóa đơn GTGT)</p>
               </div>
             </div>
 
-            <div className="bg-[#0b1120] p-4 rounded-xl border border-slate-800/80 text-xs space-y-2">
-              <div className="flex justify-between items-center py-0.5 border-b border-slate-800/60">
-                <span className="text-slate-400">Hostname</span>
-                <span className="font-mono font-bold text-white">{hostname}</span>
+            <div className="bg-[#0b1120] p-4 rounded-xl border border-slate-200/80 text-xs space-y-2">
+              <div className="flex justify-between items-center py-0.5 border-b border-slate-200/60">
+                <span className="text-slate-600">Hostname</span>
+                <span className="font-mono font-bold text-slate-900">{hostname}</span>
               </div>
-              <div className="flex justify-between items-center py-0.5 border-b border-slate-800/60">
-                <span className="text-slate-400">IP chính</span>
+              <div className="flex justify-between items-center py-0.5 border-b border-slate-200/60">
+                <span className="text-slate-600">IP chính</span>
                 <div className="flex items-center gap-2">
-                  <span className="font-mono font-bold text-white">{ipAddress}</span>
-                  <button onClick={() => handleCopy(ipAddress, 'ip')} className="text-slate-400 hover:text-white" title="Copy IP">
+                  <span className="font-mono font-bold text-slate-900">{ipAddress}</span>
+                  <button onClick={() => handleCopy(ipAddress, 'ip')} className="text-slate-600 hover:text-slate-900" title="Copy IP">
                     {copiedField === 'ip' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
                   </button>
                 </div>
               </div>
-              <div className="flex justify-between items-center py-0.5 border-b border-slate-800/60">
-                <span className="text-slate-400">Username</span>
-                <span className="font-mono font-bold text-white">Administrator</span>
+              <div className="flex justify-between items-center py-0.5 border-b border-slate-200/60">
+                <span className="text-slate-600">Username</span>
+                <span className="font-mono font-bold text-slate-900">Administrator</span>
               </div>
               <div className="flex justify-between items-center py-0.5">
-                <span className="text-slate-400">Mật khẩu</span>
+                <span className="text-slate-600">Mật khẩu</span>
                 <div className="flex items-center gap-2 font-mono">
-                  <span className="font-bold text-white">{showPassword ? rootPasswordVal : '••••••••'}</span>
-                  <button onClick={() => setShowPassword(!showPassword)} className="text-slate-400 hover:text-white" title={showPassword ? 'Ẩn' : 'Hiện'}>
+                  <span className="font-bold text-slate-900">{showPassword ? rootPasswordVal : '••••••••'}</span>
+                  <button onClick={() => setShowPassword(!showPassword)} className="text-slate-600 hover:text-slate-900" title={showPassword ? 'Ẩn' : 'Hiện'}>
                     {showPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                   </button>
-                  <button onClick={() => handleCopy(rootPasswordVal, 'pass')} className="text-slate-400 hover:text-white" title="Copy Mật khẩu">
+                  <button onClick={() => handleCopy(rootPasswordVal, 'pass')} className="text-slate-600 hover:text-slate-900" title="Copy Mật khẩu">
                     {copiedField === 'pass' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
                   </button>
                 </div>
@@ -417,7 +417,7 @@ export default function VpsInstancesPage() {
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               {/* Ubuntu Logo Icon */}
-              <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-[#e95420] to-[#e95420]/80 flex items-center justify-center text-white shadow-sm font-bold text-xl">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-[#e95420] to-[#e95420]/80 flex items-center justify-center text-slate-900 shadow-sm font-bold text-xl">
                 <div className="w-7 h-7 rounded-full border-2 border-white flex items-center justify-center">
                   <div className="w-2 h-2 rounded-full bg-white" />
                 </div>
@@ -436,11 +436,11 @@ export default function VpsInstancesPage() {
                 Online
               </span>
 
-              <button className="p-2 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-colors" title="Dark mode">
+              <button className="p-2 text-slate-600 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-colors" title="Dark mode">
                 <Moon className="w-4 h-4" />
               </button>
 
-              <button onClick={() => { if (selected) fetchStats(selected.id); }} className="p-2 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-colors" title="Làm mới">
+              <button onClick={() => { if (selected) fetchStats(selected.id); }} className="p-2 text-slate-600 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-colors" title="Làm mới">
                 <RefreshCw className="w-4 h-4" />
               </button>
             </div>
@@ -466,7 +466,7 @@ export default function VpsInstancesPage() {
             </button>
             <button 
               onClick={() => setIsFullTerminalOpen(true)}
-              className="w-8 h-8 rounded border border-slate-700 bg-slate-900 text-white hover:bg-slate-800 flex items-center justify-center transition-colors shadow-sm"
+              className="w-8 h-8 rounded border border-slate-300 bg-white text-slate-900 hover:bg-slate-100 flex items-center justify-center transition-colors shadow-sm"
               title="Open Terminal"
             >
               <Terminal className="w-4 h-4" />
@@ -511,7 +511,7 @@ export default function VpsInstancesPage() {
             })}
           </div>
 
-          <button className="text-slate-400 hover:text-slate-600 p-1">
+          <button className="text-slate-600 hover:text-slate-600 p-1">
             <ChevronDown className="w-4 h-4 text-blue-500" />
           </button>
         </div>
@@ -528,7 +528,7 @@ export default function VpsInstancesPage() {
                 </div>
                 <div className="w-full bg-slate-100 rounded-md h-5 overflow-hidden p-0.5 border border-slate-200">
                   <div 
-                    className="bg-[#f59e0b] h-full rounded text-[10px] text-white font-bold flex items-center justify-center transition-all duration-500"
+                    className="bg-[#f59e0b] h-full rounded text-[10px] text-slate-900 font-bold flex items-center justify-center transition-all duration-500"
                     style={{ width: `${Math.min(stats?.diskUsagePercent ?? 49.36, 100)}%` }}
                   >
                     {stats?.diskUsagePercent ?? 49.36} %
@@ -545,7 +545,7 @@ export default function VpsInstancesPage() {
                 
                 {/* SVG Line Chart for CPU */}
                 <div className="h-28 w-full flex items-end pt-2">
-                  <div className="w-12 text-[9px] text-slate-400 font-mono flex flex-col justify-between h-full pr-1 text-right">
+                  <div className="w-12 text-[9px] text-slate-600 font-mono flex flex-col justify-between h-full pr-1 text-right">
                     <span>5.00 %</span>
                     <span>4.00 %</span>
                     <span>3.00 %</span>
@@ -573,7 +573,7 @@ export default function VpsInstancesPage() {
                   </div>
                 </div>
 
-                <div className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-300">
+                <div className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-700">
                   <ChevronLeft className="w-4 h-4" />
                 </div>
               </div>
@@ -585,7 +585,7 @@ export default function VpsInstancesPage() {
                   <span className="font-mono text-slate-500 font-bold">2.83 / ∞ GB</span>
                 </div>
                 <div className="space-y-1">
-                  <div className="flex justify-between text-[10px] text-slate-400 font-bold px-1">
+                  <div className="flex justify-between text-[10px] text-slate-600 font-bold px-1">
                     <span>IN</span>
                     <span>OUT</span>
                   </div>
@@ -604,7 +604,7 @@ export default function VpsInstancesPage() {
                 </div>
 
                 <div className="h-24 w-full flex items-end pt-1">
-                  <div className="w-14 text-[9px] text-slate-400 font-mono flex flex-col justify-between h-full pr-1 text-right">
+                  <div className="w-14 text-[9px] text-slate-600 font-mono flex flex-col justify-between h-full pr-1 text-right">
                     <span>2.0 KB/s</span>
                     <span>1.5 KB/s</span>
                     <span>1000 B/S</span>
@@ -639,39 +639,39 @@ export default function VpsInstancesPage() {
                 <div className="text-xs font-bold text-slate-800">Account</div>
                 <div className="pt-2 border-t border-slate-100 text-xs text-slate-500">
                   <p className="font-semibold text-slate-700">Last Login</p>
-                  <p className="font-mono text-slate-400 mt-1">{new Date().toLocaleString('en-US', { month: 'long', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
+                  <p className="font-mono text-slate-600 mt-1">{new Date().toLocaleString('en-US', { month: 'long', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
                 </div>
               </div>
             </div>
 
             {/* RESTORED EMBEDDED WEB TERMINAL CONSOLE */}
-            <div className="bg-slate-900 rounded-xl border border-slate-800 overflow-hidden shadow-inner mt-6">
-              <div className="flex items-center justify-between px-4 py-2.5 bg-slate-800 border-b border-slate-700 text-xs">
+            <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-inner mt-6">
+              <div className="flex items-center justify-between px-4 py-2.5 bg-white border-b border-slate-300 text-xs">
                 <div className="flex items-center gap-2">
                   <div className="flex gap-1.5">
                     <span className="w-2.5 h-2.5 rounded-full bg-red-500" />
                     <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
                     <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
                   </div>
-                  <span className="text-slate-300 font-mono font-bold ml-2">root@{hostname}:~#</span>
+                  <span className="text-slate-700 font-mono font-bold ml-2">root@{hostname}:~#</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-emerald-400 text-[10px] font-bold uppercase flex items-center gap-1">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> Live Terminal
                   </span>
-                  <button onClick={() => setIsFullTerminalOpen(true)} className="text-slate-400 hover:text-white text-xs font-mono ml-2">
+                  <button onClick={() => setIsFullTerminalOpen(true)} className="text-slate-600 hover:text-slate-900 text-xs font-mono ml-2">
                     [Phóng to]
                   </button>
                 </div>
               </div>
 
-              <div ref={consoleRef} className="p-4 font-mono text-xs text-emerald-400 bg-slate-950 h-44 overflow-y-auto space-y-1">
+              <div ref={consoleRef} className="p-4 font-mono text-xs text-emerald-400 bg-slate-50 h-44 overflow-y-auto space-y-1">
                 {consoleOutput.map((line, idx) => (
                   <div key={idx} className="whitespace-pre-wrap">{line}</div>
                 ))}
               </div>
 
-              <div className="p-2.5 bg-slate-800/90 border-t border-slate-700 flex items-center gap-2">
+              <div className="p-2.5 bg-white/90 border-t border-slate-300 flex items-center gap-2">
                 <span className="text-emerald-400 font-mono text-xs font-bold">$</span>
                 <input
                   type="text"
@@ -679,7 +679,7 @@ export default function VpsInstancesPage() {
                   onChange={(e) => setCommand(e.target.value)}
                   onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleExecCommand(); } }}
                   placeholder="Nhập lệnh Linux (ví dụ: free -m, top, df -h, uname -a, ps aux)..."
-                  className="flex-1 bg-slate-900 text-slate-100 text-xs font-mono px-3 py-1.5 rounded border border-slate-700 focus:outline-none focus:border-emerald-500"
+                  className="flex-1 bg-white text-slate-900 text-xs font-mono px-3 py-1.5 rounded border border-slate-300 focus:outline-none focus:border-emerald-500"
                 />
                 <button
                   onClick={handleExecCommand}
@@ -733,7 +733,7 @@ export default function VpsInstancesPage() {
                         <div className="w-full bg-amber-100 rounded-t overflow-hidden flex flex-col justify-end" style={{ height: '140px' }}>
                           <div className="bg-gradient-to-t from-amber-500 to-amber-300 w-full" style={{ height: `${heights[idx]}%` }} />
                         </div>
-                        <span className="text-[10px] text-slate-400 font-mono">{day}</span>
+                        <span className="text-[10px] text-slate-600 font-mono">{day}</span>
                       </div>
                     );
                   })}
@@ -748,7 +748,7 @@ export default function VpsInstancesPage() {
                       <div className="w-full bg-slate-100 rounded-t overflow-hidden flex flex-col justify-end" style={{ height: '140px' }}>
                         {m === 'Aug' && <div className="bg-blue-600 w-full" style={{ height: '80%' }} />}
                       </div>
-                      <span className="text-[9px] text-slate-400">{m}</span>
+                      <span className="text-[9px] text-slate-600">{m}</span>
                     </div>
                   ))}
                 </div>
@@ -904,7 +904,7 @@ export default function VpsInstancesPage() {
                           <Key className="w-4 h-4" />
                         </button>
                       </div>
-                      <p className="text-[10px] text-slate-400 mt-1">Strength Indicator: <span className="text-emerald-600 font-bold">Strong</span></p>
+                      <p className="text-[10px] text-slate-600 mt-1">Strength Indicator: <span className="text-emerald-600 font-bold">Strong</span></p>
                     </div>
 
                     <div>
@@ -973,7 +973,7 @@ export default function VpsInstancesPage() {
             </div>
 
             <div className="bg-white p-4 rounded-xl border border-slate-200 min-h-[220px] font-mono text-xs text-slate-700 space-y-2">
-              <div className="flex justify-between text-slate-400 text-[11px] border-b pb-2">
+              <div className="flex justify-between text-slate-600 text-[11px] border-b pb-2">
                 <span>Timestamp</span>
                 <span>Action</span>
                 <span>Status</span>
@@ -997,11 +997,11 @@ export default function VpsInstancesPage() {
           <div className="p-6 space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="bg-white p-4 rounded-xl border border-slate-200">
-                <span className="text-xs text-slate-400">IPv4 Address</span>
+                <span className="text-xs text-slate-600">IPv4 Address</span>
                 <p className="font-mono font-bold text-slate-900 text-sm mt-1">{ipAddress}</p>
               </div>
               <div className="bg-white p-4 rounded-xl border border-slate-200">
-                <span className="text-xs text-slate-400">Gateway</span>
+                <span className="text-xs text-slate-600">Gateway</span>
                 <p className="font-mono font-bold text-slate-900 text-sm mt-1">203.145.46.1</p>
               </div>
             </div>
@@ -1009,7 +1009,7 @@ export default function VpsInstancesPage() {
         )}
 
         {/* Footer info line identical to screenshot */}
-        <div className="p-4 bg-slate-50 border-t border-slate-100 text-center text-[10px] text-slate-400 font-mono">
+        <div className="p-4 bg-slate-50 border-t border-slate-100 text-center text-[10px] text-slate-600 font-mono">
           All times are GMT Asia/Ho_Chi_Minh. The time now is {new Date().toLocaleDateString('vi-VN')} {new Date().toLocaleTimeString('vi-VN')}
           <div className="font-bold mt-0.5 text-slate-600">AZVPS</div>
         </div>

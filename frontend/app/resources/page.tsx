@@ -96,7 +96,7 @@ export default function ResourcesPage() {
           </div>
           
           <div className="relative w-full md:w-64">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-600" />
             <input
               type="text"
               placeholder="Tìm kiếm tài nguyên..."
@@ -137,7 +137,7 @@ export default function ResourcesPage() {
                 </p>
                 
                 <div className="flex items-center justify-between mt-auto pt-4 border-t border-slate-50">
-                  <div className="text-xs text-slate-400">
+                  <div className="text-xs text-slate-600">
                     {formatFileSize(resource.fileSize)} • Cập nhật {formatDistanceToNow(new Date(resource.createdAt), { locale: vi })}
                   </div>
                   <a
@@ -155,7 +155,7 @@ export default function ResourcesPage() {
           </div>
         ) : (
           <div className="text-center py-20 bg-white rounded-2xl border border-slate-200">
-            <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-400">
+            <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-600">
               <File className="w-8 h-8" />
             </div>
             <h3 className="text-lg font-bold text-slate-700 mb-2">Không tìm thấy tài nguyên nào</h3>

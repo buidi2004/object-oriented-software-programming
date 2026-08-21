@@ -103,7 +103,7 @@ export default function BackupManager({ orderId }: { orderId: string }) {
       <div className="p-0">
         {backups.length === 0 && !isLoading ? (
           <div className="p-8 text-center text-slate-500">
-            <Archive className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+            <Archive className="w-12 h-12 text-slate-700 mx-auto mb-3" />
             <p>Chưa có bản sao lưu nào. Hãy tạo bản sao lưu đầu tiên để bảo vệ dữ liệu của bạn!</p>
           </div>
         ) : (
@@ -112,7 +112,7 @@ export default function BackupManager({ orderId }: { orderId: string }) {
               <div key={backup.id} className="p-4 sm:px-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-slate-50 transition-colors">
                 <div className="flex items-start gap-4">
                   <div className="mt-1">
-                    <Archive className="w-6 h-6 text-slate-400" />
+                    <Archive className="w-6 h-6 text-slate-600" />
                   </div>
                   <div>
                     <h3 className="text-sm font-bold text-slate-900">{backup.note || 'Bản sao lưu tự động'}</h3>

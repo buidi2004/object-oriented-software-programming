@@ -278,7 +278,7 @@ export default function AdminNewsPage() {
         {/* Filters & Search */}
         <div className="flex flex-col sm:flex-row gap-4 mb-6 items-center justify-between">
           <div className="relative w-full sm:max-w-md">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-600" />
             <input
               type="text"
               placeholder="Tìm kiếm theo tiêu đề, tags hoặc slug..."
@@ -325,7 +325,7 @@ export default function AdminNewsPage() {
                     }}
                   />
                 ) : (
-                  <div className="flex flex-col items-center gap-2 text-slate-400">
+                  <div className="flex flex-col items-center gap-2 text-slate-600">
                     <ImageIcon className="w-8 h-8 opacity-40" />
                     <span className="text-xs">Chưa có ảnh bìa</span>
                   </div>
@@ -338,7 +338,7 @@ export default function AdminNewsPage() {
               </div>
 
               <div className="p-5 flex-1 flex flex-col">
-                <div className="flex items-center gap-3 text-xs text-slate-400 mb-2">
+                <div className="flex items-center gap-3 text-xs text-slate-600 mb-2">
                   <span className="flex items-center gap-1">
                     <Eye className="w-3.5 h-3.5" />
                     {item.viewCount} lượt xem
@@ -386,7 +386,7 @@ export default function AdminNewsPage() {
                   </button>
                   <button 
                     onClick={() => handleDelete(item.id, item.title)} 
-                    className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors"
+                    className="p-2 text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors"
                     title="Xóa bài viết"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -399,9 +399,9 @@ export default function AdminNewsPage() {
 
         {filteredNews.length === 0 && (
           <div className="text-center py-16 bg-white rounded-2xl border border-slate-200 text-slate-500">
-            <Newspaper className="w-12 h-12 mx-auto mb-3 text-slate-300" />
+            <Newspaper className="w-12 h-12 mx-auto mb-3 text-slate-700" />
             <p className="font-semibold text-slate-700">Không tìm thấy bài viết nào</p>
-            <p className="text-xs text-slate-400 mt-1">Bấm "Viết bài mới" để tạo bài viết đầu tiên</p>
+            <p className="text-xs text-slate-600 mt-1">Bấm "Viết bài mới" để tạo bài viết đầu tiên</p>
           </div>
         )}
       </main>
@@ -421,7 +421,7 @@ export default function AdminNewsPage() {
               </div>
               <button 
                 onClick={() => setShowModal(false)}
-                className="p-2 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100"
+                className="p-2 text-slate-600 hover:text-slate-600 rounded-lg hover:bg-slate-100"
               >
                 <X className="w-5 h-5" />
               </button>

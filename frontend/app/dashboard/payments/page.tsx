@@ -169,7 +169,7 @@ export default function PaymentsPage() {
 
         {transactions.length === 0 && !error && (
           <div className="text-center py-12">
-            <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-300" />
+            <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-700" />
             <p className="font-medium text-slate-500">Chưa có giao dịch nào</p>
           </div>
         )}

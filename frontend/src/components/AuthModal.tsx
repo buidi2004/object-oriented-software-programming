@@ -201,7 +201,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ initialMode, onClose, onSu
   const passwordsMatch = confirmPassword.length > 0 && password === confirmPassword;
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-md flex items-center justify-center p-4 sm:p-6">
+    <div className="fixed inset-0 z-50 bg-slate-50/70 backdrop-blur-md flex items-center justify-center p-4 sm:p-6">
       <div
         className={`bg-white rounded-3xl w-full overflow-hidden shadow-2xl border border-slate-100 relative animate-in fade-in zoom-in duration-200 ${
           isRegister ? 'max-w-3xl lg:max-w-4xl' : 'max-w-md lg:max-w-lg'
@@ -209,14 +209,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({ initialMode, onClose, onSu
       >
         <button
           onClick={onClose}
-          className="absolute top-5 right-5 p-2 rounded-full text-slate-400 hover:text-slate-800 hover:bg-slate-100 transition-colors cursor-pointer z-10"
+          className="absolute top-5 right-5 p-2 rounded-full text-slate-600 hover:text-slate-800 hover:bg-slate-100 transition-colors cursor-pointer z-10"
         >
           <X className="w-5 h-5" />
         </button>
 
         <div className={`${isRegister ? 'p-6 sm:p-8 lg:p-10' : 'p-6 sm:p-8'}`}>
           <div className="text-center mb-6 sm:mb-8">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-cyan-500 via-blue-600 to-indigo-600 text-white flex items-center justify-center mx-auto mb-3 shadow-md shadow-blue-500/20">
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-cyan-500 via-blue-600 to-indigo-600 text-slate-900 flex items-center justify-center mx-auto mb-3 shadow-md shadow-blue-500/20">
               <Cloud className="w-7 h-7" />
             </div>
             <h3 className="text-2xl font-black text-slate-900">
@@ -258,7 +258,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ initialMode, onClose, onSu
                 <div>
                   <label className={labelClass}>Họ và Tên:</label>
                   <div className="relative">
-                    <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                    <User className="w-4 h-4 text-slate-600 absolute left-3.5 top-1/2 -translate-y-1/2" />
                     <input
                       type="text"
                       required
@@ -273,7 +273,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ initialMode, onClose, onSu
                 <div>
                   <label className={labelClass}>Số điện thoại:</label>
                   <div className="relative">
-                    <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                    <Phone className="w-4 h-4 text-slate-600 absolute left-3.5 top-1/2 -translate-y-1/2" />
                     <input
                       type="tel"
                       required
@@ -292,7 +292,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ initialMode, onClose, onSu
                 <div className={isRegister ? 'sm:col-span-2' : undefined}>
                   <label className={labelClass}>Địa chỉ Email:</label>
                 <div className="relative">
-                  <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <Mail className="w-4 h-4 text-slate-600 absolute left-3.5 top-1/2 -translate-y-1/2" />
                   <input
                     type="email"
                     required
@@ -307,7 +307,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ initialMode, onClose, onSu
               <div>
                 <label className={labelClass}>Mật khẩu:</label>
                 <div className="relative">
-                  <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <Lock className="w-4 h-4 text-slate-600 absolute left-3.5 top-1/2 -translate-y-1/2" />
                   <input
                     type={showPassword ? 'text' : 'password'}
                     required
@@ -320,7 +320,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ initialMode, onClose, onSu
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0.5"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-600 hover:text-slate-600 p-0.5"
                     aria-label={showPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -335,7 +335,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ initialMode, onClose, onSu
                     Xác nhận mật khẩu: <span className="text-red-500">*</span>
                   </label>
                   <div className="relative">
-                    <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                    <Lock className="w-4 h-4 text-slate-600 absolute left-3.5 top-1/2 -translate-y-1/2" />
                     <input
                       type={showConfirmPassword ? 'text' : 'password'}
                       required
@@ -347,7 +347,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ initialMode, onClose, onSu
                     <button
                       type="button"
                       onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0.5"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-600 hover:text-slate-600 p-0.5"
                       aria-label={showConfirmPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
                     >
                       {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -390,7 +390,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ initialMode, onClose, onSu
                           </option>
                         ))}
                       </select>
-                      <ChevronDown className="w-4 h-4 text-slate-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                      <ChevronDown className="w-4 h-4 text-slate-600 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                     </div>
                   </div>
 
@@ -402,7 +402,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ initialMode, onClose, onSu
                           <select
                             value={provinceId}
                             onChange={(e) => setProvinceId(e.target.value)}
-                            className={`${selectClass} ${!provinceId ? 'text-slate-400' : ''}`}
+                            className={`${selectClass} ${!provinceId ? 'text-slate-600' : ''}`}
                           >
                             <option value="">-- Chọn Tỉnh / Thành phố --</option>
                             {VIETNAM_PROVINCES.map((p) => (
@@ -411,7 +411,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ initialMode, onClose, onSu
                               </option>
                             ))}
                           </select>
-                          <ChevronDown className="w-4 h-4 text-slate-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                          <ChevronDown className="w-4 h-4 text-slate-600 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                         </>
                       ) : (
                         <input
@@ -464,7 +464,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ initialMode, onClose, onSu
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white font-bold text-sm shadow-lg shadow-blue-500/25 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-70"
+              className="w-full py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-slate-900 font-bold text-sm shadow-lg shadow-blue-500/25 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-70"
             >
               {isLoading ? (
                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -476,7 +476,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ initialMode, onClose, onSu
               <>
                 <div className="relative flex items-center py-2">
                   <div className="flex-grow border-t border-slate-200"></div>
-                  <span className="shrink-0 px-4 text-xs font-semibold text-slate-400 uppercase tracking-widest">HOẶC</span>
+                  <span className="shrink-0 px-4 text-xs font-semibold text-slate-600 uppercase tracking-widest">HOẶC</span>
                   <div className="flex-grow border-t border-slate-200"></div>
                 </div>
 

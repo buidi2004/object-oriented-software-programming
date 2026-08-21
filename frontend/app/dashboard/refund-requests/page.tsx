@@ -107,7 +107,7 @@ export default function RefundRequestsDashboard() {
                 {requests.length === 0 ? (
                   <tr>
                     <td colSpan={6} className="px-6 py-12 text-center text-slate-500">
-                      <FileText className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+                      <FileText className="w-12 h-12 text-slate-700 mx-auto mb-3" />
                       Bạn chưa có yêu cầu hoàn tiền nào.
                     </td>
                   </tr>
@@ -131,7 +131,7 @@ export default function RefundRequestsDashboard() {
 
       {/* Modal */}
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-white/50 backdrop-blur-sm">
           <div className="bg-white rounded-2xl w-full max-w-md overflow-hidden shadow-xl">
             <div className="p-6 border-b border-slate-100">
               <h2 className="text-xl font-bold text-slate-900">Tạo yêu cầu hoàn tiền</h2>

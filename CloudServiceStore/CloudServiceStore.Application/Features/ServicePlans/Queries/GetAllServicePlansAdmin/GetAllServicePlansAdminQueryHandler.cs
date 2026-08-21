@@ -37,7 +37,8 @@ public class GetAllServicePlansAdminQueryHandler : IRequestHandler<GetAllService
             Ssd = p.Ssd,
             Bandwidth = p.Bandwidth,
             ImageUrl = p.ImageUrl,
-            IsActive = p.IsActive
+            IsActive = p.IsActive,
+            Price = p.Prices.Any() ? p.Prices.OrderBy(pr => pr.BillingCycle).First().Price : null
         }).OrderBy(p => p.ServicePlanName).ToList();
     }
 }

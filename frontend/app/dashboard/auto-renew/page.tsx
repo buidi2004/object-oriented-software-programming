@@ -123,7 +123,7 @@ export default function AutoRenewPage() {
                   <h3 className="font-bold text-slate-900">{setting.serviceName}</h3>
                   <p className="text-sm text-slate-500">{setting.serviceType}</p>
                   {setting.nextBillingDate && (
-                    <p className="text-xs text-slate-400 mt-1 flex items-center gap-1">
+                    <p className="text-xs text-slate-600 mt-1 flex items-center gap-1">
                       <Clock className="w-3 h-3" />
                       Gia hạn vào: {new Date(setting.nextBillingDate).toLocaleDateString('vi-VN')}
                     </p>
@@ -159,7 +159,7 @@ export default function AutoRenewPage() {
 
       {autoRenewSettings.length === 0 && !error && (
         <div className="text-center py-12 bg-white rounded-2xl border border-slate-200">
-          <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-300" />
+          <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-700" />
           <p className="font-medium text-slate-500">Bạn chưa có dịch vụ nào cần tự động gia hạn</p>
         </div>
       )}

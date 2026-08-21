@@ -110,7 +110,7 @@ export default function RecentlyViewedPage() {
                   {item.title}
                 </Link>
                 <p className="text-sm text-slate-500 mt-1">{item.description}</p>
-                <p className="text-xs text-slate-400 mt-1 flex items-center gap-1">
+                <p className="text-xs text-slate-600 mt-1 flex items-center gap-1">
                   <Clock className="w-3 h-3" />
                   Đã xem: {new Date(item.viewedAt).toLocaleString('vi-VN')}
                 </p>
@@ -118,7 +118,7 @@ export default function RecentlyViewedPage() {
 
               <button
                 onClick={() => handleDeleteItem(item.id || "")}
-                className="p-2 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-red-600 transition-colors opacity-0 group-hover:opacity-100"
+                className="p-2 rounded-lg hover:bg-slate-100 text-slate-600 hover:text-red-600 transition-colors opacity-0 group-hover:opacity-100"
                 title="Xóa"
               >
                 <Trash2 className="w-4 h-4" />
@@ -130,9 +130,9 @@ export default function RecentlyViewedPage() {
 
       {items.length === 0 && !error && (
         <div className="text-center py-12 bg-white rounded-xl border border-slate-200">
-          <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-300" />
+          <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-700" />
           <p className="font-medium text-slate-500">Chưa có lịch sử xem</p>
-          <p className="text-sm text-slate-400 mt-1">Các trang bạn xem sẽ hiển thị ở đây</p>
+          <p className="text-sm text-slate-600 mt-1">Các trang bạn xem sẽ hiển thị ở đây</p>
           <Link
             href="/services"
             className="inline-flex items-center gap-2 mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors"

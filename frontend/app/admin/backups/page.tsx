@@ -188,7 +188,7 @@ export default function AdminBackupsPage() {
 
           <div className="flex items-center gap-3">
             <div className="relative">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Search className="w-4 h-4 text-slate-600 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 placeholder="Tìm máy chủ / email / storage..."
@@ -200,7 +200,7 @@ export default function AdminBackupsPage() {
             <button
               onClick={() => setShowAddModal(true)}
               disabled={isTriggering}
-              className="px-4 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs transition-colors flex items-center gap-1.5 shadow-sm disabled:opacity-50"
+              className="px-4 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-slate-900 font-bold text-xs transition-colors flex items-center gap-1.5 shadow-sm disabled:opacity-50"
             >
               {isTriggering ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
               {isTriggering ? 'Đang Sao Lưu...' : 'Tạo Bản Sao Lưu'}
@@ -252,7 +252,7 @@ export default function AdminBackupsPage() {
                         <FileArchive className="w-4 h-4 text-teal-600 shrink-0" />
                         <div>
                           <span>{bk.instanceName}</span>
-                          <span className="block text-[10px] text-slate-400 font-mono">{bk.id}</span>
+                          <span className="block text-[10px] text-slate-600 font-mono">{bk.id}</span>
                         </div>
                       </div>
                     </td>
@@ -273,21 +273,21 @@ export default function AdminBackupsPage() {
                       <div className="flex items-center justify-end gap-1.5">
                         <button
                           onClick={() => handleDownloadBackup(bk)}
-                          className="p-1.5 text-slate-400 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-colors"
+                          className="p-1.5 text-slate-600 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-colors"
                           title="Tải về tệp .tar.gz"
                         >
                           <Download className="w-3.5 h-3.5" />
                         </button>
                         <button
                           onClick={() => setRestoringBackup(bk)}
-                          className="p-1.5 text-slate-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors"
+                          className="p-1.5 text-slate-600 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors"
                           title="Khôi phục hệ thống"
                         >
                           <RotateCcw className="w-3.5 h-3.5" />
                         </button>
                         <button
                           onClick={() => handleDelete(bk.id, bk.instanceName)}
-                          className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+                          className="p-1.5 text-slate-600 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
                           title="Xóa bản sao lưu"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
@@ -303,11 +303,11 @@ export default function AdminBackupsPage() {
 
         {/* Create Backup Modal */}
         {showAddModal && (
-          <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="fixed inset-0 bg-white/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
             <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full border border-slate-200 shadow-2xl">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-base font-black text-slate-900">Tạo Bản Sao Lưu Thủ Công</h3>
-                <button onClick={() => setShowAddModal(false)} className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100">
+                <button onClick={() => setShowAddModal(false)} className="p-1.5 text-slate-600 hover:text-slate-600 rounded-lg hover:bg-slate-100">
                   <X className="w-5 h-5" />
                 </button>
               </div>
@@ -373,7 +373,7 @@ export default function AdminBackupsPage() {
                   </button>
                   <button
                     type="submit"
-                    className="px-5 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold shadow-md"
+                    className="px-5 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-slate-900 text-xs font-bold shadow-md"
                   >
                     Kích Hoạt Sao Lưu
                   </button>
@@ -385,7 +385,7 @@ export default function AdminBackupsPage() {
 
         {/* Restore Confirmation Modal */}
         {restoringBackup && (
-          <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="fixed inset-0 bg-white/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
             <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full border border-slate-200 shadow-2xl">
               <div className="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center mx-auto mb-4">
                 <AlertTriangle className="w-6 h-6" />

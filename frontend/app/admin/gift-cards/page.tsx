@@ -201,7 +201,7 @@ export default function AdminGiftCardsPage() {
         {/* Filters */}
         <div className="flex flex-col sm:flex-row gap-4 mb-6 items-center justify-between">
           <div className="relative w-full sm:max-w-md">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-600" />
             <input
               type="text"
               placeholder="Tìm kiếm theo mã thẻ quà tặng..."
@@ -261,7 +261,7 @@ export default function AdminGiftCardsPage() {
 
                     <button
                       onClick={() => handleDelete(card.id, card.code)}
-                      className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+                      className="p-1.5 text-slate-600 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
                       title="Vô hiệu hóa thẻ"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -289,23 +289,23 @@ export default function AdminGiftCardsPage() {
                   {/* Values */}
                   <div className="space-y-1.5 text-xs text-slate-600 mb-4">
                     <div className="flex justify-between">
-                      <span className="text-slate-400">Mệnh giá ban đầu:</span>
+                      <span className="text-slate-600">Mệnh giá ban đầu:</span>
                       <span className="font-bold text-slate-900">{card.amount.toLocaleString('vi-VN')} đ</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-slate-400">Số dư còn lại:</span>
+                      <span className="text-slate-600">Số dư còn lại:</span>
                       <span className="font-bold text-blue-600">{card.remainingAmount.toLocaleString('vi-VN')} đ</span>
                     </div>
                     {card.expiryDate && (
                       <div className="flex justify-between">
-                        <span className="text-slate-400">Hạn sử dụng:</span>
+                        <span className="text-slate-600">Hạn sử dụng:</span>
                         <span>{new Date(card.expiryDate).toLocaleDateString('vi-VN')}</span>
                       </div>
                     )}
                   </div>
                 </div>
 
-                <div className="pt-3 border-t border-slate-100 text-xs text-slate-400 flex items-center justify-between">
+                <div className="pt-3 border-t border-slate-100 text-xs text-slate-600 flex items-center justify-between">
                   <span>Tạo ngày {new Date(card.createdAt).toLocaleDateString('vi-VN')}</span>
                 </div>
               </div>
@@ -315,9 +315,9 @@ export default function AdminGiftCardsPage() {
 
         {filteredGiftCards.length === 0 && (
           <div className="text-center py-16 bg-white rounded-2xl border border-slate-200 text-slate-500">
-            <Gift className="w-12 h-12 mx-auto mb-3 text-slate-300" />
+            <Gift className="w-12 h-12 mx-auto mb-3 text-slate-700" />
             <p className="font-bold text-slate-700">Không tìm thấy thẻ quà tặng nào</p>
-            <p className="text-xs text-slate-400 mt-1">Bấm "Tạo Thẻ Mới" để phát hành mã thẻ</p>
+            <p className="text-xs text-slate-600 mt-1">Bấm "Tạo Thẻ Mới" để phát hành mã thẻ</p>
           </div>
         )}
       </main>
@@ -331,7 +331,7 @@ export default function AdminGiftCardsPage() {
                 <h3 className="text-xl font-bold text-slate-900">Phát Hành Thẻ Quà Tặng Mới</h3>
                 <p className="text-xs text-slate-500 mt-0.5">Tạo mã nạp tiền trực tiếp vào tài khoản</p>
               </div>
-              <button onClick={() => setShowAddModal(false)} className="p-2 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100">
+              <button onClick={() => setShowAddModal(false)} className="p-2 text-slate-600 hover:text-slate-600 rounded-lg hover:bg-slate-100">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -361,7 +361,7 @@ export default function AdminGiftCardsPage() {
                     onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
                     className="w-full pl-4 pr-12 py-2.5 rounded-xl border border-slate-200 text-sm font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                   />
-                  <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">
+                  <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-600">
                     VNĐ
                   </span>
                 </div>

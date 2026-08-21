@@ -144,7 +144,7 @@ export default function DashboardStoragePage() {
           </div>
 
           {loading && buckets.length === 0 ? (
-            <div className="p-12 text-center text-slate-400 text-sm flex items-center justify-center gap-2">
+            <div className="p-12 text-center text-slate-600 text-sm flex items-center justify-center gap-2">
               <RefreshCw className="w-5 h-5 animate-spin text-blue-600" />
               Đang tải danh sách Bucket...
             </div>
@@ -176,7 +176,7 @@ export default function DashboardStoragePage() {
 
       {/* Modal Create Bucket */}
       {isCreateOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-white/60 backdrop-blur-sm animate-in fade-in">
           <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100">
             <h3 className="text-lg font-black text-slate-900 mb-2 flex items-center gap-2">
               <Cloud className="w-5 h-5 text-blue-600" /> Tạo S3 Bucket Mới

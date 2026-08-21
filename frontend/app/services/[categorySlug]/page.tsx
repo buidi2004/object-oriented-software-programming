@@ -71,7 +71,7 @@ export default function CategoryLandingPage() {
     <div>
 
       {/* Hero */}
-      <section className="bg-gradient-to-br from-slate-900 via-blue-950 to-indigo-950 text-white py-20">
+      <section className="bg-gradient-to-br from-slate-900 via-blue-950 to-indigo-950 text-slate-900 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-blue-500/20 text-cyan-300 text-xs font-bold uppercase tracking-wider mb-4">
             <Server className="w-3.5 h-3.5" />
@@ -81,7 +81,7 @@ export default function CategoryLandingPage() {
           <p className="text-lg text-blue-200 max-w-2xl mx-auto mb-8">
             {category.description || 'Giải pháp tốt nhất cho nhu cầu của bạn, với hiệu năng cao và độ ổn định tuyệt đối.'}
           </p>
-          <a href="#pricing" className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold text-base shadow-xl hover:shadow-2xl transition-all">
+          <a href="#pricing" className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-900 font-bold text-base shadow-xl hover:shadow-2xl transition-all">
             <Zap className="w-5 h-5" />
             Xem Bảng Giá
           </a>
@@ -121,7 +121,7 @@ export default function CategoryLandingPage() {
         </div>
       </section>
       
-      <footer className="bg-slate-900 text-slate-400 py-8">
+      <footer className="bg-white text-slate-600 py-8">
         <div className="max-w-7xl mx-auto px-4 text-center text-sm">
           © 2024 CloudHost VN. Mọi quyền được bảo lưu.
         </div>

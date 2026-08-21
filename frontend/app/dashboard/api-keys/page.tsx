@@ -279,7 +279,7 @@ export default function ApiKeysPage() {
                   <div className="flex justify-end">
                     <button 
                       onClick={closeCreateModal}
-                      className="bg-gray-900 hover:bg-gray-800 text-white px-6 py-2 rounded-lg font-medium transition-colors w-full"
+                      className="bg-white hover:bg-gray-800 text-slate-900 px-6 py-2 rounded-lg font-medium transition-colors w-full"
                     >
                       Tôi đã lưu mã này
                     </button>

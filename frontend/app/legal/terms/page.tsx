@@ -16,9 +16,9 @@ export default function TermsPage() {
         </nav>
 
         <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-          <div className="bg-slate-900 p-8 text-white">
+          <div className="bg-white p-8 text-slate-900">
             <h1 className="text-3xl font-black mb-2">Thỏa Thuận Sử Dụng Dịch Vụ</h1>
-            <p className="text-slate-400">Cập nhật lần cuối: 20/08/2026</p>
+            <p className="text-slate-600">Cập nhật lần cuối: 20/08/2026</p>
           </div>
           
           <div className="p-8 prose prose-slate max-w-none text-sm text-slate-600">

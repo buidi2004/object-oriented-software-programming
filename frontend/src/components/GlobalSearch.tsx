@@ -110,11 +110,11 @@ export default function GlobalSearch() {
 
       {isOpen && (
         <div className="fixed inset-0 z-[100] flex items-start justify-center pt-20 px-4 sm:px-6">
-          <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={() => setIsOpen(false)} />
+          <div className="absolute inset-0 bg-white/40 backdrop-blur-sm" onClick={() => setIsOpen(false)} />
           
           <div className="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl overflow-hidden border border-slate-200 animate-in fade-in zoom-in-95 duration-200">
             <div className="flex items-center px-4 py-3 border-b border-slate-100">
-              <Search className="w-5 h-5 text-slate-400 mr-3 shrink-0" />
+              <Search className="w-5 h-5 text-slate-600 mr-3 shrink-0" />
               <input 
                 ref={inputRef}
                 value={query}
@@ -123,7 +123,7 @@ export default function GlobalSearch() {
                 className="flex-1 bg-transparent border-none outline-none text-slate-900 text-lg placeholder:text-slate-400"
               />
               {isLoading && <Loader2 className="w-5 h-5 text-blue-500 animate-spin ml-2 shrink-0" />}
-              <button onClick={() => setIsOpen(false)} className="p-1 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-colors ml-2">
+              <button onClick={() => setIsOpen(false)} className="p-1 text-slate-600 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-colors ml-2">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -163,7 +163,7 @@ export default function GlobalSearch() {
               )}
             </div>
             
-            <div className="bg-slate-50 px-4 py-3 border-t border-slate-100 text-xs text-slate-400 flex items-center gap-4">
+            <div className="bg-slate-50 px-4 py-3 border-t border-slate-100 text-xs text-slate-600 flex items-center gap-4">
               <span className="flex items-center gap-1"><kbd className="bg-white border border-slate-200 px-1.5 py-0.5 rounded shadow-sm">↑</kbd> <kbd className="bg-white border border-slate-200 px-1.5 py-0.5 rounded shadow-sm">↓</kbd> để chọn</span>
               <span className="flex items-center gap-1"><kbd className="bg-white border border-slate-200 px-1.5 py-0.5 rounded shadow-sm">Enter</kbd> để mở</span>
               <span className="flex items-center gap-1"><kbd className="bg-white border border-slate-200 px-1.5 py-0.5 rounded shadow-sm">Esc</kbd> để đóng</span>

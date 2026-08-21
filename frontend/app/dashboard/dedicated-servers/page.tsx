@@ -83,17 +83,17 @@ export default function CustomerDedicatedServersPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
             <Server className="w-6 h-6 text-cyan-400" /> Quản Lý Máy Chủ Vật Lý Riêng (Dedicated Server)
           </h1>
-          <p className="text-sm text-slate-400">
+          <p className="text-sm text-slate-600">
             Hạ tầng phần cứng máy chủ riêng biệt 100% tài nguyên, kết nối trực tiếp cổng mạng 1Gbps / 10Gbps trong Data Center Tier 3.
           </p>
         </div>
 
         <button 
           onClick={fetchServers}
-          className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white transition-colors self-start sm:self-auto"
+          className="p-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:text-slate-900 transition-colors self-start sm:self-auto"
         >
           <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
         </button>
@@ -102,17 +102,17 @@ export default function CustomerDedicatedServersPage() {
       {/* Server List */}
       <div className="space-y-6">
         {servers.map((srv) => (
-          <div key={srv.id} className="p-6 rounded-3xl bg-slate-900/60 border border-slate-800 shadow-2xl space-y-6">
-            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 border-b border-slate-800 pb-5">
+          <div key={srv.id} className="p-6 rounded-3xl bg-white/60 border border-slate-200 shadow-2xl space-y-6">
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 border-b border-slate-200 pb-5">
               <div>
                 <div className="flex items-center gap-3 mb-1.5">
-                  <h2 className="text-xl font-bold text-white">{srv.serverName}</h2>
+                  <h2 className="text-xl font-bold text-slate-900">{srv.serverName}</h2>
                   <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold ${srv.powerState === 'Running' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : srv.powerState === 'Restarting' ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'}`}>
                     <Activity className="w-3 h-3" /> {srv.powerState}
                   </span>
                 </div>
-                <p className="text-xs text-slate-400 font-mono">
-                  IP Chính: <span className="text-cyan-400">{srv.ipAddress}</span> • Data Center: <span className="text-slate-300">{srv.location}</span>
+                <p className="text-xs text-slate-600 font-mono">
+                  IP Chính: <span className="text-cyan-400">{srv.ipAddress}</span> • Data Center: <span className="text-slate-700">{srv.location}</span>
                 </p>
               </div>
 
@@ -141,21 +141,21 @@ export default function CustomerDedicatedServersPage() {
 
             {/* Hardware Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="p-4 rounded-2xl bg-slate-950/60 border border-slate-800/80">
-                <div className="text-xs text-slate-400 flex items-center gap-1.5 mb-1"><Cpu className="w-4 h-4 text-cyan-400" /> Vi Xử Lý (CPU)</div>
-                <div className="text-sm font-semibold text-white truncate">{srv.cpuSpec}</div>
+              <div className="p-4 rounded-2xl bg-slate-50/60 border border-slate-200/80">
+                <div className="text-xs text-slate-600 flex items-center gap-1.5 mb-1"><Cpu className="w-4 h-4 text-cyan-400" /> Vi Xử Lý (CPU)</div>
+                <div className="text-sm font-semibold text-slate-900 truncate">{srv.cpuSpec}</div>
               </div>
-              <div className="p-4 rounded-2xl bg-slate-950/60 border border-slate-800/80">
-                <div className="text-xs text-slate-400 flex items-center gap-1.5 mb-1"><Activity className="w-4 h-4 text-indigo-400" /> Bộ Nhớ (RAM)</div>
-                <div className="text-sm font-semibold text-white">{srv.ramSpec}</div>
+              <div className="p-4 rounded-2xl bg-slate-50/60 border border-slate-200/80">
+                <div className="text-xs text-slate-600 flex items-center gap-1.5 mb-1"><Activity className="w-4 h-4 text-indigo-400" /> Bộ Nhớ (RAM)</div>
+                <div className="text-sm font-semibold text-slate-900">{srv.ramSpec}</div>
               </div>
-              <div className="p-4 rounded-2xl bg-slate-950/60 border border-slate-800/80">
-                <div className="text-xs text-slate-400 flex items-center gap-1.5 mb-1"><HardDrive className="w-4 h-4 text-emerald-400" /> Ổ Cứng (Storage)</div>
-                <div className="text-sm font-semibold text-white truncate">{srv.diskSpec}</div>
+              <div className="p-4 rounded-2xl bg-slate-50/60 border border-slate-200/80">
+                <div className="text-xs text-slate-600 flex items-center gap-1.5 mb-1"><HardDrive className="w-4 h-4 text-emerald-400" /> Ổ Cứng (Storage)</div>
+                <div className="text-sm font-semibold text-slate-900 truncate">{srv.diskSpec}</div>
               </div>
-              <div className="p-4 rounded-2xl bg-slate-950/60 border border-slate-800/80">
-                <div className="text-xs text-slate-400 flex items-center gap-1.5 mb-1"><ShieldCheck className="w-4 h-4 text-amber-400" /> Băng Thông Mạng</div>
-                <div className="text-sm font-semibold text-white">{srv.bandwidth}</div>
+              <div className="p-4 rounded-2xl bg-slate-50/60 border border-slate-200/80">
+                <div className="text-xs text-slate-600 flex items-center gap-1.5 mb-1"><ShieldCheck className="w-4 h-4 text-amber-400" /> Băng Thông Mạng</div>
+                <div className="text-sm font-semibold text-slate-900">{srv.bandwidth}</div>
               </div>
             </div>
           </div>

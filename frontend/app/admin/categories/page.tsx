@@ -192,7 +192,7 @@ export default function AdminCategoriesPage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Search Bar */}
         <div className="mb-6 max-w-md relative">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-slate-600 absolute left-3.5 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             placeholder="Tìm kiếm danh mục theo tên hoặc slug..."
@@ -238,14 +238,14 @@ export default function AdminCategoriesPage() {
                       <div className="flex items-center justify-end gap-1.5">
                         <button 
                           onClick={() => handleEditClick(category)} 
-                          className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                          className="p-2 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                           title="Sửa danh mục"
                         >
                           <Edit2 className="w-4 h-4" />
                         </button>
                         <button 
                           onClick={() => handleDeleteCategory(category.id, category.name)} 
-                          className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                          className="p-2 text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                           title="Xóa danh mục"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -260,7 +260,7 @@ export default function AdminCategoriesPage() {
           
           {filteredCategories.length === 0 && (
             <div className="text-center py-12 text-slate-500">
-              <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-300" />
+              <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-700" />
               <p className="font-medium">Không tìm thấy danh mục nào phù hợp</p>
             </div>
           )}
@@ -273,7 +273,7 @@ export default function AdminCategoriesPage() {
           <div className="bg-white rounded-2xl p-6 max-w-md w-full shadow-2xl">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-bold text-slate-900">Thêm danh mục dịch vụ mới</h3>
-              <button onClick={() => setShowAddModal(false)} className="text-slate-400 hover:text-slate-600">
+              <button onClick={() => setShowAddModal(false)} className="text-slate-600 hover:text-slate-600">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -333,7 +333,7 @@ export default function AdminCategoriesPage() {
           <div className="bg-white rounded-2xl p-6 max-w-md w-full shadow-2xl">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-bold text-slate-900">Cập nhật danh mục</h3>
-              <button onClick={() => setShowEditModal(false)} className="text-slate-400 hover:text-slate-600">
+              <button onClick={() => setShowEditModal(false)} className="text-slate-600 hover:text-slate-600">
                 <X className="w-5 h-5" />
               </button>
             </div>

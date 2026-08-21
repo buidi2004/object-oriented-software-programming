@@ -121,10 +121,10 @@ export const Header: React.FC<HeaderProps> = ({
   return (
     <header className="sticky top-0 z-40 w-full flex flex-col">
       {/* Top Bar (Secondary Actions) */}
-      <div className="w-full bg-[#333333] text-slate-300 py-1.5 text-xs font-medium hidden sm:block">
+      <div className="w-full bg-[#333333] text-slate-700 py-1.5 text-xs font-medium hidden sm:block">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-end gap-6">
-          <Link href="/careers" className="hover:text-white transition-colors">Tuyển dụng</Link>
-          <div className="flex items-center gap-1.5 cursor-pointer hover:text-white transition-colors">
+          <Link href="/careers" className="hover:text-slate-900 transition-colors">Tuyển dụng</Link>
+          <div className="flex items-center gap-1.5 cursor-pointer hover:text-slate-900 transition-colors">
             <Globe className="w-3.5 h-3.5" />
             <span>Tiếng Việt</span>
             <ChevronDown className="w-3.5 h-3.5" />
@@ -186,7 +186,7 @@ export const Header: React.FC<HeaderProps> = ({
                       {/* Left Sidebar */}
                       <div className="w-[280px] bg-slate-50/80 border-r border-slate-200/80 py-5 flex flex-col justify-between shrink-0">
                         <div className="space-y-1 px-3">
-                          <div className="text-[11px] font-black uppercase tracking-wider text-slate-400 px-3 pb-2">
+                          <div className="text-[11px] font-black uppercase tracking-wider text-slate-600 px-3 pb-2">
                             Danh Mục Dịch Vụ ({serviceCategories.length})
                           </div>
                           {serviceCategories.map((cat, idx) => (
@@ -395,7 +395,7 @@ export const Header: React.FC<HeaderProps> = ({
             {(user?.role === 'Admin' || user?.role === 'Editor') && (
               <Link
                 href="/admin"
-                className="px-3.5 py-2 rounded-xl text-xs font-black bg-gradient-to-r from-red-600 to-rose-600 text-white shadow-xs hover:shadow-red-500/20 hover:from-red-500 hover:to-rose-500 transition-all flex items-center gap-1.5 shrink-0"
+                className="px-3.5 py-2 rounded-xl text-xs font-black bg-gradient-to-r from-red-600 to-rose-600 text-slate-900 shadow-xs hover:shadow-red-500/20 hover:from-red-500 hover:to-rose-500 transition-all flex items-center gap-1.5 shrink-0"
               >
                 <Shield className="w-3.5 h-3.5" />
                 <span>Admin Panel</span>
@@ -414,7 +414,7 @@ export const Header: React.FC<HeaderProps> = ({
             >
               <ShoppingCart className="w-5 h-5" />
               {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-gradient-to-r from-rose-500 to-red-600 text-white text-[10px] font-black w-4 h-4 rounded-full flex items-center justify-center border-2 border-white animate-pulse">
+                <span className="absolute -top-1 -right-1 bg-gradient-to-r from-rose-500 to-red-600 text-slate-900 text-[10px] font-black w-4 h-4 rounded-full flex items-center justify-center border-2 border-white animate-pulse">
                   {cartCount}
                 </span>
               )}
@@ -451,7 +451,7 @@ export const Header: React.FC<HeaderProps> = ({
 
                 <button
                   onClick={logout}
-                  className="p-2 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-full transition-colors shrink-0"
+                  className="p-2 text-slate-600 hover:text-rose-500 hover:bg-rose-50 rounded-full transition-colors shrink-0"
                   title="Đăng xuất"
                   aria-label="Đăng xuất"
                 >
@@ -468,7 +468,7 @@ export const Header: React.FC<HeaderProps> = ({
                 </button>
                 <button
                   onClick={() => handleOpenAuth('register')}
-                  className="px-3 sm:px-4 py-2 text-sm font-bold text-white rounded-full bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 shadow-md shadow-blue-500/20 transition-all whitespace-nowrap shrink-0"
+                  className="px-3 sm:px-4 py-2 text-sm font-bold text-slate-900 rounded-full bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 shadow-md shadow-blue-500/20 transition-all whitespace-nowrap shrink-0"
                 >
                   Đăng ký
                 </button>
@@ -505,7 +505,7 @@ export const Header: React.FC<HeaderProps> = ({
 
             {/* Quick Mobile Services Grid for all 12 services */}
             <div className="p-3 bg-slate-50 rounded-2xl border border-slate-100">
-              <div className="text-[11px] font-black uppercase tracking-wider text-slate-400 mb-2.5 px-1 flex items-center justify-between">
+              <div className="text-[11px] font-black uppercase tracking-wider text-slate-600 mb-2.5 px-1 flex items-center justify-between">
                 <span>Toàn bộ 12 Dịch Vụ Cloud</span>
                 <Link href="/services" onClick={() => setMobileMenuOpen(false)} className="text-blue-600 font-bold lowercase">
                   xem tất cả →

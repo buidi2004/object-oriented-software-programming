@@ -105,7 +105,7 @@ export const HomeLatestNews: React.FC = () => {
                   <span className="px-3 py-1 rounded-full bg-white border border-slate-200 text-xs font-bold text-slate-700">
                     {art.categoryTag || 'Tin Tức'}
                   </span>
-                  <span className="text-[11px] font-medium text-slate-400 flex items-center gap-1">
+                  <span className="text-[11px] font-medium text-slate-600 flex items-center gap-1">
                     <Calendar className="w-3 h-3" />
                     {new Date(art.publishedAt || art.createdAt || Date.now()).toLocaleDateString('vi-VN')}
                   </span>

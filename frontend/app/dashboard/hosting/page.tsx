@@ -94,10 +94,10 @@ export default function HostingManagementPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
             <Server className="w-6 h-6 text-cyan-400" /> Quản Lý Shared Web Hosting (cPanel / DirectAdmin)
           </h1>
-          <p className="text-sm text-slate-400">
+          <p className="text-sm text-slate-600">
             Quản lý các gói lưu trữ web tốc độ cao với ổ cứng NVMe Enterprise và chứng chỉ SSL miễn phí.
           </p>
         </div>
@@ -105,7 +105,7 @@ export default function HostingManagementPage() {
         <div className="flex items-center gap-3">
           <button 
             onClick={fetchAccounts}
-            className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white transition-colors"
+            className="p-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:text-slate-900 transition-colors"
           >
             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
           </button>
@@ -121,30 +121,30 @@ export default function HostingManagementPage() {
       {/* Hosting Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {accounts.map((acc) => (
-          <div key={acc.id} className="p-6 rounded-2xl bg-slate-900/60 border border-slate-800 hover:border-cyan-500/30 transition-all space-y-5 shadow-xl">
+          <div key={acc.id} className="p-6 rounded-2xl bg-white/60 border border-slate-200 hover:border-cyan-500/30 transition-all space-y-5 shadow-xl">
             <div className="flex items-start justify-between">
               <div>
                 <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 mb-2">
                   <CheckCircle2 className="w-3 h-3" /> {acc.status}
                 </span>
-                <h3 className="text-lg font-bold text-white flex items-center gap-1.5">
+                <h3 className="text-lg font-bold text-slate-900 flex items-center gap-1.5">
                   <Globe className="w-4 h-4 text-cyan-400" /> {acc.domain}
                 </h3>
-                <p className="text-xs text-slate-400">{acc.planName}</p>
+                <p className="text-xs text-slate-600">{acc.planName}</p>
               </div>
             </div>
 
-            <div className="space-y-3 py-3 border-y border-slate-800/80 text-sm">
-              <div className="flex justify-between text-slate-300">
-                <span className="flex items-center gap-1.5 text-slate-400 text-xs"><HardDrive className="w-3.5 h-3.5" /> Dung lượng đĩa:</span>
-                <span className="font-semibold text-white text-xs">{acc.diskUsage}</span>
+            <div className="space-y-3 py-3 border-y border-slate-200/80 text-sm">
+              <div className="flex justify-between text-slate-700">
+                <span className="flex items-center gap-1.5 text-slate-600 text-xs"><HardDrive className="w-3.5 h-3.5" /> Dung lượng đĩa:</span>
+                <span className="font-semibold text-slate-900 text-xs">{acc.diskUsage}</span>
               </div>
-              <div className="flex justify-between text-slate-300">
-                <span className="flex items-center gap-1.5 text-slate-400 text-xs"><Activity className="w-3.5 h-3.5" /> Băng thông tháng:</span>
-                <span className="font-semibold text-white text-xs">{acc.bandwidthUsage}</span>
+              <div className="flex justify-between text-slate-700">
+                <span className="flex items-center gap-1.5 text-slate-600 text-xs"><Activity className="w-3.5 h-3.5" /> Băng thông tháng:</span>
+                <span className="font-semibold text-slate-900 text-xs">{acc.bandwidthUsage}</span>
               </div>
-              <div className="flex justify-between text-slate-300">
-                <span className="flex items-center gap-1.5 text-slate-400 text-xs"><ShieldCheck className="w-3.5 h-3.5 text-emerald-400" /> Địa chỉ IP Hosting:</span>
+              <div className="flex justify-between text-slate-700">
+                <span className="flex items-center gap-1.5 text-slate-600 text-xs"><ShieldCheck className="w-3.5 h-3.5 text-emerald-400" /> Địa chỉ IP Hosting:</span>
                 <span className="font-mono text-cyan-400 text-xs">{acc.ipAddress}</span>
               </div>
             </div>
@@ -154,7 +154,7 @@ export default function HostingManagementPage() {
                 href={`https://${acc.domain}:2083`}
                 target="_blank"
                 rel="noreferrer"
-                className="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors"
+                className="px-3 py-2 rounded-xl bg-white hover:bg-slate-200 text-slate-800 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors"
               >
                 <ExternalLink className="w-3.5 h-3.5" /> Vào cPanel
               </a>
@@ -172,29 +172,29 @@ export default function HostingManagementPage() {
       {/* Modal Đăng Ký Hosting */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-          <div className="w-full max-w-md p-6 rounded-3xl bg-slate-900 border border-slate-800 shadow-2xl space-y-5">
-            <h2 className="text-xl font-bold text-white flex items-center gap-2">
+          <div className="w-full max-w-md p-6 rounded-3xl bg-white border border-slate-200 shadow-2xl space-y-5">
+            <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
               <FolderLock className="w-5 h-5 text-cyan-400" /> Khởi Tạo Web Hosting Mới
             </h2>
             <form onSubmit={handleCreate} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Tên miền chính (Primary Domain)</label>
+                <label className="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1.5">Tên miền chính (Primary Domain)</label>
                 <input 
                   type="text" 
                   required
                   placeholder="domaincuaban.vn"
                   value={newDomain}
                   onChange={(e) => setNewDomain(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 text-sm"
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-500 focus:outline-none focus:border-cyan-500 text-sm"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Gói dịch vụ lưu trữ</label>
+                <label className="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1.5">Gói dịch vụ lưu trữ</label>
                 <select 
                   value={selectedPlan}
                   onChange={(e) => setSelectedPlan(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white focus:outline-none focus:border-cyan-500 text-sm"
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:border-cyan-500 text-sm"
                 >
                   <option value="Cloud NVMe Starter (5GB)">Cloud NVMe Starter (5GB SSD) - 49.000đ/th</option>
                   <option value="Cloud NVMe Business (20GB)">Cloud NVMe Business (20GB NVMe) - 149.000đ/th</option>
@@ -206,7 +206,7 @@ export default function HostingManagementPage() {
                 <button 
                   type="button" 
                   onClick={() => setShowModal(false)}
-                  className="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 text-sm font-semibold hover:bg-slate-700"
+                  className="px-4 py-2 rounded-xl bg-white text-slate-700 text-sm font-semibold hover:bg-slate-200"
                 >
                   Hủy
                 </button>

@@ -18,7 +18,7 @@ export default function PaymentMethodsPage() {
         </nav>
 
         <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-          <div className="bg-gradient-to-r from-blue-600 to-indigo-700 p-8 text-white">
+          <div className="bg-gradient-to-r from-blue-600 to-indigo-700 p-8 text-slate-900">
             <h1 className="text-3xl font-black mb-2">Các Hình Thức Thanh Toán</h1>
             <p className="text-blue-100">Đa dạng, tiện lợi và an toàn cho mọi giao dịch của bạn.</p>
           </div>

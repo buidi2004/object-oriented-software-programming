@@ -36,7 +36,8 @@ export default function MigrationsServicePage() {
     loadPlans();
   }, []);
 
-  const defaultPlans = [
+  const [defaultPlans, setDefaultPlans] = useState([
+
     {
       id: 'migration-standard',
       name: 'Di Dời Website Tiêu Chuẩn',
@@ -94,7 +95,7 @@ export default function MigrationsServicePage() {
       ],
       popular: false,
     },
-  ];
+  ]);
 
   const plans = defaultPlans.map((dp, idx) => {
     const matchingDb = dbPlans[idx];
@@ -104,6 +105,27 @@ export default function MigrationsServicePage() {
       price: matchingDb?.price ?? dp.price,
     };
   });
+
+
+  useEffect(() => {
+    import('@/src/lib/api').then(({ api }) => {
+      api.get('/categories/cloud-migration/plans').then(res => {
+        const dbPlans = res.data?.plans || [];
+        if (dbPlans.length > 0) {
+          setDefaultPlans(prev => prev.map((p, index) => {
+            const dbP = dbPlans[index] || dbPlans[dbPlans.length - 1];
+            return {
+              ...p,
+              id: dbP.id || p.id,
+              monthlyPrice: dbP.monthlyPrice || Math.round((dbP.yearlyPrice || 0) / 12),
+              yearlyPrice: dbP.yearlyPrice || ((dbP.monthlyPrice || 0) * 12),
+              price: dbP.monthlyPrice || Math.round((dbP.yearlyPrice || 0) / 12)
+            };
+          }));
+        }
+      });
+    });
+  }, []);
 
   const handleOrder = async (plan: typeof plans[0]) => {
     await addItem(plan.id, 1, false, {
@@ -167,10 +189,10 @@ export default function MigrationsServicePage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#090d16] text-slate-100 selection:bg-teal-500 selection:text-white font-sans">
+    <div className="min-h-screen bg-slate-50 text-slate-900 selection:bg-teal-500 selection:text-white font-sans">
       
       {/* 1. HERO SECTION: ZERO-DOWNTIME MIGRATION TELEMETRY */}
-      <section className="relative pt-16 pb-20 border-b border-slate-800/80 overflow-hidden">
+      <section className="relative pt-16 pb-20 border-b border-slate-200/80 overflow-hidden">
         {/* Technical Grid Blueprint */}
         <div 
           className="absolute inset-0 opacity-[0.06] pointer-events-none" 
@@ -184,21 +206,21 @@ export default function MigrationsServicePage() {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           {/* Engineering Status Bar */}
-          <div className="flex flex-wrap items-center justify-between gap-4 p-3.5 mb-10 rounded-2xl bg-[#0d1424] border border-slate-800 text-xs font-mono">
+          <div className="flex flex-wrap items-center justify-between gap-4 p-3.5 mb-10 rounded-2xl bg-[#0d1424] border border-slate-200 text-xs font-mono">
             <div className="flex items-center gap-3">
               <span className="flex items-center gap-1.5 text-teal-400 font-bold">
                 <RefreshCw className="w-3.5 h-3.5 text-teal-400 animate-spin" />
                 MIGRATION ENGINE: ZERO-DOWNTIME LIVE SYNC
               </span>
               <span className="text-slate-600 hidden sm:inline">|</span>
-              <span className="text-slate-300 hidden sm:inline">
+              <span className="text-slate-700 hidden sm:inline">
                 DATA INTEGRITY: <strong className="text-emerald-400 font-mono">100% Guaranteed</strong>
               </span>
             </div>
 
-            <div className="flex items-center gap-4 text-slate-400">
+            <div className="flex items-center gap-4 text-slate-600">
               <span>SERVICE DOWNTIME: <strong className="text-emerald-400 font-mono">0 Giây</strong></span>
-              <span>ENGINEER SUPPORT: <strong className="text-white font-mono">1-1 Chuyên Trách 24/7</strong></span>
+              <span>ENGINEER SUPPORT: <strong className="text-slate-900 font-mono">1-1 Chuyên Trách 24/7</strong></span>
             </div>
           </div>
 
@@ -211,42 +233,42 @@ export default function MigrationsServicePage() {
                 ZERO-DOWNTIME CLOUD MIGRATION SERVICE
               </div>
 
-              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.15]">
+              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 leading-[1.15]">
                 Di Dời Dữ Liệu An Toàn Với{' '}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 via-emerald-400 to-cyan-300 font-mono">
                   Zero-Downtime Live Sync
                 </span>
               </h1>
 
-              <p className="text-slate-300 text-base sm:text-lg leading-relaxed max-w-2xl font-normal">
+              <p className="text-slate-700 text-base sm:text-lg leading-relaxed max-w-2xl font-normal">
                 Không gián đoạn người dùng, không thất thoát đơn hàng. Đội ngũ kỹ sư cấp cao của SEN CloudHost trực tiếp 
                 chuyển đổi toàn bộ website, cơ sở dữ liệu và cụm máy chủ sang hạ tầng mới hoàn toàn MIỄN PHÍ.
               </p>
 
               {/* Supported Platforms */}
               <div className="flex flex-wrap items-center gap-3 pt-2">
-                <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0f172a] border border-slate-800 text-xs font-mono text-slate-300">
+                <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0f172a] border border-slate-200 text-xs font-mono text-slate-700">
                   <SiCpanel className="w-4 h-4 text-amber-500" />
                   <span>cPanel / DirectAdmin</span>
                 </div>
-                <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0f172a] border border-slate-800 text-xs font-mono text-slate-300">
+                <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0f172a] border border-slate-200 text-xs font-mono text-slate-700">
                   <SiProxmox className="w-4 h-4 text-orange-500" />
                   <span>Proxmox / VMware KVM</span>
                 </div>
-                <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0f172a] border border-slate-800 text-xs font-mono text-slate-300">
+                <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0f172a] border border-slate-200 text-xs font-mono text-slate-700">
                   <SiDocker className="w-4 h-4 text-sky-400" />
                   <span>Docker Containers</span>
                 </div>
               </div>
 
               {/* Free Guarantee Notice */}
-              <div className="p-4 rounded-xl bg-[#0c1322] border border-slate-800 text-xs font-mono space-y-2">
-                <div className="flex items-center justify-between text-slate-400">
+              <div className="p-4 rounded-xl bg-white border border-slate-200 text-xs font-mono space-y-2">
+                <div className="flex items-center justify-between text-slate-600">
                   <span>Promotion: <strong className="text-emerald-400">MIỄN PHÍ 100%</strong></span>
-                  <span>Guarantee: <strong className="text-white">Bảo toàn dữ liệu 100%</strong></span>
+                  <span>Guarantee: <strong className="text-slate-900">Bảo toàn dữ liệu 100%</strong></span>
                 </div>
-                <div className="text-slate-400">
-                  Scope: <span className="text-slate-300">Áp dụng cho mọi đơn hàng Hosting / VPS / Database / Dedicated từ 6 tháng.</span>
+                <div className="text-slate-600">
+                  Scope: <span className="text-slate-700">Áp dụng cho mọi đơn hàng Hosting / VPS / Database / Dedicated từ 6 tháng.</span>
                 </div>
               </div>
 
@@ -254,13 +276,13 @@ export default function MigrationsServicePage() {
 
             {/* Right 4-Step Interactive Timeline Inspector */}
             <div className="lg:col-span-5">
-              <div className="rounded-2xl bg-[#0b1320] border border-slate-800 p-6 shadow-2xl space-y-5">
-                <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+              <div className="rounded-2xl bg-[#0b1320] border border-slate-200 p-6 shadow-2xl space-y-5">
+                <div className="flex items-center justify-between pb-3 border-b border-slate-200">
                   <div className="flex items-center gap-2">
                     <span className="w-3 h-3 rounded-full bg-rose-500/80" />
                     <span className="w-3 h-3 rounded-full bg-amber-500/80" />
                     <span className="w-3 h-3 rounded-full bg-emerald-500/80" />
-                    <span className="text-xs font-mono text-slate-400 ml-2">migration-orchestrator.sen</span>
+                    <span className="text-xs font-mono text-slate-600 ml-2">migration-orchestrator.sen</span>
                   </div>
                   <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-teal-950/80 text-teal-400 border border-teal-800/60">
                     LIVE SYNCING
@@ -279,7 +301,7 @@ export default function MigrationsServicePage() {
                       }`}
                     >
                       <div className="flex items-center justify-between mb-1">
-                        <span className={`font-bold ${activeStep === idx ? 'text-white' : 'text-slate-300'}`}>
+                        <span className={`font-bold ${activeStep === idx ? 'text-slate-900' : 'text-slate-300'}`}>
                           Bước {s.step}: {s.title}
                         </span>
                         <span className={`text-[10px] px-2 py-0.5 rounded font-bold ${
@@ -292,12 +314,12 @@ export default function MigrationsServicePage() {
                           {s.status}
                         </span>
                       </div>
-                      <p className="text-[11px] text-slate-400">{s.desc}</p>
+                      <p className="text-[11px] text-slate-600">{s.desc}</p>
                     </div>
                   ))}
                 </div>
 
-                <div className="p-3 rounded-xl bg-[#060a12] border border-slate-800 text-[11px] font-mono text-teal-300">
+                <div className="p-3 rounded-xl bg-slate-100 border border-slate-200 text-[11px] font-mono text-teal-300">
                   <div className="text-slate-500 text-[10px] uppercase mb-1">// Active Step Log:</div>
                   <div>{migrationSteps[activeStep].log}</div>
                 </div>
@@ -305,7 +327,7 @@ export default function MigrationsServicePage() {
                 <div className="pt-2">
                   <a
                     href="#spec-matrix"
-                    className="w-full py-3.5 rounded-xl bg-teal-600 hover:bg-teal-500 text-white font-bold text-xs font-mono flex items-center justify-center gap-2 transition-all shadow-lg shadow-teal-600/20"
+                    className="w-full py-3.5 rounded-xl bg-teal-600 hover:bg-teal-500 text-slate-900 font-bold text-xs font-mono flex items-center justify-center gap-2 transition-all shadow-lg shadow-teal-600/20"
                   >
                     <span>XEM BẢNG GÓI DỊCH VỤ VÀ ĐẶT LỊCH</span>
                     <ArrowRight className="w-4 h-4" />
@@ -320,7 +342,7 @@ export default function MigrationsServicePage() {
       </section>
 
       {/* 2. THREE CORE MIGRATION ARCHITECTURE SCHEMATICS */}
-      <section className="py-24 bg-[#070b12] border-b border-slate-800">
+      <section className="py-24 bg-white border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="text-center max-w-3xl mx-auto mb-16">
@@ -328,10 +350,10 @@ export default function MigrationsServicePage() {
               <ShieldCheck className="w-3.5 h-3.5" />
               MIGRATION GUARANTEE STANDARDS
             </div>
-            <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
+            <h2 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight">
               3 Cam Kết Kỹ Thuật Khi Di Dời Dữ Liệu
             </h2>
-            <p className="text-slate-400 text-sm sm:text-base mt-3 leading-relaxed font-normal">
+            <p className="text-slate-600 text-sm sm:text-base mt-3 leading-relaxed font-normal">
               Được thực hiện bởi các kỹ sư giàu kinh nghiệm, đảm bảo an toàn tuyệt đối cho cơ sở dữ liệu.
             </p>
           </div>
@@ -339,111 +361,111 @@ export default function MigrationsServicePage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             
             {/* Schematic 1: Zero-Downtime Live Sync */}
-            <div className="p-6 rounded-3xl bg-[#0c1322] border border-slate-800 flex flex-col justify-between space-y-6">
+            <div className="p-6 rounded-3xl bg-white border border-slate-200 flex flex-col justify-between space-y-6">
               <div>
-                <div className="p-4 rounded-2xl bg-[#060a12] border border-slate-800 mb-6 font-mono text-xs">
+                <div className="p-4 rounded-2xl bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
                   <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
                     <span>LIVE SYNC STREAMING</span>
                     <span className="text-emerald-400">0s DOWNTIME</span>
                   </div>
-                  <div className="space-y-2 text-slate-300 text-[11px]">
-                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                  <div className="space-y-2 text-slate-700 text-[11px]">
+                    <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>Source Old Server</span>
                       <span className="text-emerald-400 font-bold">100% Online</span>
                     </div>
-                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                    <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>Background Data Sync</span>
                       <span className="text-sky-400">rsync + WAL Replication</span>
                     </div>
-                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                    <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>Cutover Switch</span>
                       <span className="text-teal-300 font-bold">Instant DNS Update</span>
                     </div>
                   </div>
                 </div>
 
-                <h3 className="text-lg font-bold text-white mb-2">Đồng Bộ Nền Không Gián Đoạn (Zero-Downtime)</h3>
-                <p className="text-xs text-slate-400 leading-relaxed">
+                <h3 className="text-lg font-bold text-slate-900 mb-2">Đồng Bộ Nền Không Gián Đoạn (Zero-Downtime)</h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
                   Máy chủ cũ tiếp tục phục vụ người dùng bình thường trong suốt quá trình truyền tải dữ liệu. 
                   Mọi đơn hàng hay bài viết mới phát sinh đều được đồng bộ tức thời trước khi trỏ tên miền chính thức.
                 </p>
               </div>
 
-              <div className="pt-4 border-t border-slate-800/80 text-xs font-mono text-slate-300 flex items-center justify-between">
+              <div className="pt-4 border-t border-slate-200/80 text-xs font-mono text-slate-700 flex items-center justify-between">
                 <span>Business Interruption:</span>
                 <strong className="text-emerald-400">0 Giây Downtime</strong>
               </div>
             </div>
 
             {/* Schematic 2: Staging Inspection */}
-            <div className="p-6 rounded-3xl bg-[#0c1322] border border-slate-800 flex flex-col justify-between space-y-6">
+            <div className="p-6 rounded-3xl bg-white border border-slate-200 flex flex-col justify-between space-y-6">
               <div>
-                <div className="p-4 rounded-2xl bg-[#060a12] border border-slate-800 mb-6 font-mono text-xs">
+                <div className="p-4 rounded-2xl bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
                   <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
                     <span>STAGING PREVIEW ENVIRONMENT</span>
                     <span className="text-sky-400">VERIFY FIRST</span>
                   </div>
-                  <div className="space-y-2 text-slate-300 text-[11px]">
-                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                  <div className="space-y-2 text-slate-700 text-[11px]">
+                    <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>Staging Host IP</span>
                       <span className="text-sky-400">Isolated Container</span>
                     </div>
-                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                    <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>User Acceptance Test</span>
                       <span className="text-amber-400 font-bold">Checkout &amp; DB Verify</span>
                     </div>
-                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                    <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>Customer Approval</span>
                       <span className="text-emerald-400 font-bold">Confirmed Go-Live</span>
                     </div>
                   </div>
                 </div>
 
-                <h3 className="text-lg font-bold text-white mb-2">Kiểm Thử Staging Trước Khi Go-Live</h3>
-                <p className="text-xs text-slate-400 leading-relaxed">
+                <h3 className="text-lg font-bold text-slate-900 mb-2">Kiểm Thử Staging Trước Khi Go-Live</h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
                   Chúng tôi khởi tạo môi trường Staging riêng biệt để bạn trực tiếp kiểm tra mọi tính năng 
                   (thanh toán, đăng nhập, tải ảnh, gửi mail) hoạt động hoàn hảo trước khi đổi bản ghi DNS.
                 </p>
               </div>
 
-              <div className="pt-4 border-t border-slate-800/80 text-xs font-mono text-slate-300 flex items-center justify-between">
+              <div className="pt-4 border-t border-slate-200/80 text-xs font-mono text-slate-700 flex items-center justify-between">
                 <span>Approval Process:</span>
                 <strong className="text-sky-400">Khách Hàng Duyệt 100%</strong>
               </div>
             </div>
 
             {/* Schematic 3: Rollback Guarantee */}
-            <div className="p-6 rounded-3xl bg-[#0c1322] border border-slate-800 flex flex-col justify-between space-y-6">
+            <div className="p-6 rounded-3xl bg-white border border-slate-200 flex flex-col justify-between space-y-6">
               <div>
-                <div className="p-4 rounded-2xl bg-[#060a12] border border-slate-800 mb-6 font-mono text-xs">
+                <div className="p-4 rounded-2xl bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
                   <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
                     <span>FAILSAFE &amp; ROLLBACK PLAN</span>
                     <span className="text-teal-400">100% SAFE</span>
                   </div>
-                  <div className="space-y-2 text-slate-300 text-[11px]">
-                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                  <div className="space-y-2 text-slate-700 text-[11px]">
+                    <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>Pre-migration Snapshot</span>
-                      <span className="text-slate-300">Full Backup S3</span>
+                      <span className="text-slate-700">Full Backup S3</span>
                     </div>
-                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                    <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>Old Server Retention</span>
                       <span className="text-emerald-400 font-bold">Giữ nguyên 7 ngày</span>
                     </div>
-                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                    <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>Emergency Rollback</span>
                       <span className="text-teal-300 font-bold">&lt; 1 Phút Phục hồi</span>
                     </div>
                   </div>
                 </div>
 
-                <h3 className="text-lg font-bold text-white mb-2">Kế Hoạch Dự Phòng Rollback An Toàn</h3>
-                <p className="text-xs text-slate-400 leading-relaxed">
+                <h3 className="text-lg font-bold text-slate-900 mb-2">Kế Hoạch Dự Phòng Rollback An Toàn</h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
                   Máy chủ cũ và toàn bộ dữ liệu gốc luôn được giữ nguyên vẹn trong suốt quá trình. 
                   Nếu có bất kỳ sự cố bất ngờ nào xảy ra, hệ thống có thể khôi phục lại trạng thái cũ ngay lập tức.
                 </p>
               </div>
 
-              <div className="pt-4 border-t border-slate-800/80 text-xs font-mono text-slate-300 flex items-center justify-between">
+              <div className="pt-4 border-t border-slate-200/80 text-xs font-mono text-slate-700 flex items-center justify-between">
                 <span>Data Risk:</span>
                 <strong className="text-emerald-400">0% Rủi Ro Mất Dữ Liệu</strong>
               </div>
@@ -455,7 +477,7 @@ export default function MigrationsServicePage() {
       </section>
 
       {/* 3. TECHNICAL SPECIFICATION MATRIX & PRICING */}
-      <section id="spec-matrix" className="py-24 bg-[#090d16] border-b border-slate-800">
+      <section id="spec-matrix" className="py-24 bg-slate-50 border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
@@ -464,68 +486,68 @@ export default function MigrationsServicePage() {
                 <Sliders className="w-3.5 h-3.5" />
                 MIGRATION SERVICE SPEC SHEET
               </div>
-              <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
+              <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
                 Bảng So Sánh Các Gói Dịch Vụ Di Dời Dữ Liệu
               </h2>
-              <p className="text-slate-400 text-xs sm:text-sm mt-1 font-normal">
+              <p className="text-slate-600 text-xs sm:text-sm mt-1 font-normal">
                 Miễn phí 100% khi thuê dịch vụ lưu trữ từ 6 tháng tại SEN CloudHost.
               </p>
             </div>
           </div>
 
           {/* Matrix Table */}
-          <div className="rounded-2xl border border-slate-800 bg-[#0c1322] overflow-hidden shadow-2xl">
+          <div className="rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-2xl">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs font-mono">
                 <thead>
-                  <tr className="border-b border-slate-800 bg-[#080d17] text-slate-400">
+                  <tr className="border-b border-slate-200 bg-[#080d17] text-slate-600">
                     <th className="p-5 font-bold uppercase text-[11px] w-1/4">Thông Số Dịch Vụ</th>
                     {plans.map((p) => (
-                      <th key={p.id} className="p-5 text-white border-l border-slate-800/80 w-1/4">
-                        <div className="text-sm font-extrabold text-white">{p.name}</div>
-                        <div className="text-[11px] text-slate-400 font-sans font-normal">{p.tier}</div>
+                      <th key={p.id} className="p-5 text-slate-900 border-l border-slate-200/80 w-1/4">
+                        <div className="text-sm font-extrabold text-slate-900">{p.name}</div>
+                        <div className="text-[11px] text-slate-600 font-sans font-normal">{p.tier}</div>
                         <div className="text-lg font-black text-teal-400 mt-2">
-                          {p.price.toLocaleString('vi-VN')} <span className="text-xs font-normal text-slate-400">đ/lần</span>
+                          {p.price.toLocaleString('vi-VN')} <span className="text-xs font-normal text-slate-600">đ/lần</span>
                         </div>
                       </th>
                     ))}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-800/60 text-slate-300">
+                <tbody className="divide-y divide-slate-800/60 text-slate-700">
                   <tr className="hover:bg-slate-900/40">
-                    <td className="p-4 font-bold text-slate-400">Thời Gian Hoàn Tất</td>
+                    <td className="p-4 font-bold text-slate-600">Thời Gian Hoàn Tất</td>
                     {plans.map((p) => (
-                      <td key={p.id} className="p-4 border-l border-slate-800/60 text-white font-bold">{p.turnaround}</td>
+                      <td key={p.id} className="p-4 border-l border-slate-200/60 text-slate-900 font-bold">{p.turnaround}</td>
                     ))}
                   </tr>
                   <tr className="hover:bg-slate-900/40">
-                    <td className="p-4 font-bold text-slate-400">Thời Gian Gián Đoạn (Downtime)</td>
+                    <td className="p-4 font-bold text-slate-600">Thời Gian Gián Đoạn (Downtime)</td>
                     {plans.map((p) => (
-                      <td key={p.id} className="p-4 border-l border-slate-800/60 text-emerald-400 font-bold">{p.downtime}</td>
+                      <td key={p.id} className="p-4 border-l border-slate-200/60 text-emerald-400 font-bold">{p.downtime}</td>
                     ))}
                   </tr>
                   <tr className="hover:bg-slate-900/40">
-                    <td className="p-4 font-bold text-slate-400">Cấp Độ Kỹ Sư Phụ Trách</td>
+                    <td className="p-4 font-bold text-slate-600">Cấp Độ Kỹ Sư Phụ Trách</td>
                     {plans.map((p) => (
-                      <td key={p.id} className="p-4 border-l border-slate-800/60 text-sky-400 font-bold">{p.support}</td>
+                      <td key={p.id} className="p-4 border-l border-slate-200/60 text-sky-400 font-bold">{p.support}</td>
                     ))}
                   </tr>
                   <tr className="hover:bg-slate-900/40">
-                    <td className="p-4 font-bold text-slate-400">Chính Sách Khuyến Mãi</td>
+                    <td className="p-4 font-bold text-slate-600">Chính Sách Khuyến Mãi</td>
                     {plans.map((p) => (
-                      <td key={p.id} className="p-4 border-l border-slate-800/60 text-emerald-400 font-bold">{p.promoNote}</td>
+                      <td key={p.id} className="p-4 border-l border-slate-200/60 text-emerald-400 font-bold">{p.promoNote}</td>
                     ))}
                   </tr>
                   <tr className="hover:bg-slate-900/40">
-                    <td className="p-4 font-bold text-slate-400">Môi Trường Kiểm Thử Staging</td>
+                    <td className="p-4 font-bold text-slate-600">Môi Trường Kiểm Thử Staging</td>
                     {plans.map((p) => (
-                      <td key={p.id} className="p-4 border-l border-slate-800/60 text-slate-200">Bàn giao trước khi trỏ DNS</td>
+                      <td key={p.id} className="p-4 border-l border-slate-200/60 text-slate-800">Bàn giao trước khi trỏ DNS</td>
                     ))}
                   </tr>
                   <tr className="bg-[#080d17]">
-                    <td className="p-5 font-bold text-slate-400">Hành Động Khởi Tạo</td>
+                    <td className="p-5 font-bold text-slate-600">Hành Động Khởi Tạo</td>
                     {plans.map((p) => (
-                      <td key={p.id} className="p-5 border-l border-slate-800/60">
+                      <td key={p.id} className="p-5 border-l border-slate-200/60">
                         <button
                           onClick={() => handleOrder(p)}
                           className={`w-full py-3 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-2 ${
@@ -549,22 +571,22 @@ export default function MigrationsServicePage() {
       </section>
 
       {/* 4. FAQ SECTION */}
-      <section className="py-20 bg-[#090d16] border-b border-slate-800">
+      <section className="py-20 bg-slate-50 border-b border-slate-200">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-white">Câu Hỏi Thường Gặp Về Di Dời Dữ Liệu</h2>
-            <p className="text-slate-400 text-xs sm:text-sm mt-2 font-mono">SEN CLOUDHOST MIGRATION FAQ</p>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900">Câu Hỏi Thường Gặp Về Di Dời Dữ Liệu</h2>
+            <p className="text-slate-600 text-xs sm:text-sm mt-2 font-mono">SEN CLOUDHOST MIGRATION FAQ</p>
           </div>
 
           <div className="space-y-3">
             {faqs.map((faq, idx) => (
               <div
                 key={idx}
-                className="bg-[#0c1322] rounded-2xl border border-slate-800 overflow-hidden transition-all"
+                className="bg-white rounded-2xl border border-slate-200 overflow-hidden transition-all"
               >
                 <button
                   onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
-                  className="w-full p-5 text-left font-bold text-sm text-white flex items-center justify-between gap-4 hover:text-teal-400 transition-colors"
+                  className="w-full p-5 text-left font-bold text-sm text-slate-900 flex items-center justify-between gap-4 hover:text-teal-400 transition-colors"
                 >
                   <span>{faq.q}</span>
                   {openFaq === idx ? (
@@ -574,7 +596,7 @@ export default function MigrationsServicePage() {
                   )}
                 </button>
                 {openFaq === idx && (
-                  <div className="px-5 pb-5 text-xs text-slate-300 leading-relaxed border-t border-slate-800/60 pt-3 font-normal">
+                  <div className="px-5 pb-5 text-xs text-slate-700 leading-relaxed border-t border-slate-200/60 pt-3 font-normal">
                     {faq.a}
                   </div>
                 )}
@@ -613,7 +635,7 @@ export default function MigrationsServicePage() {
               </button>
               <Link
                 href="/contact"
-                className="px-8 py-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs font-mono border border-slate-700 transition-all"
+                className="px-8 py-3.5 rounded-xl bg-white hover:bg-slate-200 text-slate-900 font-bold text-xs font-mono border border-slate-300 transition-all"
               >
                 Liên Hệ Kỹ Sư Trưởng
               </Link>

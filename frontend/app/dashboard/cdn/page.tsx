@@ -135,7 +135,7 @@ export default function DashboardCdnPage() {
           </div>
 
           {loading ? (
-            <div className="p-12 text-center text-slate-400 text-sm flex items-center justify-center gap-2">
+            <div className="p-12 text-center text-slate-600 text-sm flex items-center justify-center gap-2">
               <RefreshCw className="w-5 h-5 animate-spin text-amber-600" />
               Đang tải danh sách CDN...
             </div>
@@ -203,7 +203,7 @@ export default function DashboardCdnPage() {
 
       {/* Modal Create CDN */}
       {isCreateOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-white/60 backdrop-blur-sm animate-in fade-in">
           <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100">
             <h3 className="text-lg font-black text-slate-900 mb-2 flex items-center gap-2">
               <Zap className="w-5 h-5 text-amber-600" /> Tạo Mạng Phân Phối CDN Mới
@@ -294,7 +294,7 @@ function CdnCnameCell({ dist }: { dist: CdnDistribution }) {
   const status = useResourceProvisioning('CdnDistribution', dist.id, dist.status || 'Provisioning');
   
   if (status === 'Provisioning' || status === 'Deploying') {
-    return <span className="text-slate-400 italic">Đang khởi tạo mạng lưới...</span>;
+    return <span className="text-slate-600 italic">Đang khởi tạo mạng lưới...</span>;
   }
   
   return (

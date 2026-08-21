@@ -227,7 +227,7 @@ export default function AdminReferralsPage() {
 
           <div className="flex items-center gap-3">
             <div className="relative">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <Search className="w-4 h-4 text-slate-600 absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 placeholder="Tìm mã / đối tác / email..."
@@ -289,7 +289,7 @@ export default function AdminReferralsPage() {
                   <tr key={r.id} className="hover:bg-slate-50/60 transition-colors">
                     <td className="px-6 py-4 font-bold text-slate-900">
                       <div>{r.userName}</div>
-                      <div className="text-[11px] text-slate-400 font-normal">{r.userEmail}</div>
+                      <div className="text-[11px] text-slate-600 font-normal">{r.userEmail}</div>
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
@@ -324,19 +324,19 @@ export default function AdminReferralsPage() {
                             </button>
                             <button
                               onClick={() => handleRejectPayout(r.id)}
-                              className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+                              className="p-1.5 text-slate-600 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
                               title="Hủy yêu cầu"
                             >
                               <Ban className="w-3.5 h-3.5" />
                             </button>
                           </>
                         ) : (
-                          <span className="text-[11px] font-semibold text-slate-400 mr-2">Đã thanh toán</span>
+                          <span className="text-[11px] font-semibold text-slate-600 mr-2">Đã thanh toán</span>
                         )}
 
                         <button
                           onClick={() => handleOpenEdit(r)}
-                          className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                          className="p-1.5 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                           title="Sửa mã giới thiệu"
                         >
                           <Edit2 className="w-3.5 h-3.5" />
@@ -361,13 +361,13 @@ export default function AdminReferralsPage() {
 
         {/* Add / Edit Modal */}
         {(showAddModal || editingItem) && (
-          <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="fixed inset-0 bg-white/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
             <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full border border-slate-200 shadow-2xl">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-base font-black text-slate-900">
                   {editingItem ? 'Chỉnh Sửa Mã Giới Thiệu' : 'Tạo Mã Đối Tác Mới'}
                 </h3>
-                <button onClick={() => { setShowAddModal(false); setEditingItem(null); }} className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100">
+                <button onClick={() => { setShowAddModal(false); setEditingItem(null); }} className="p-1.5 text-slate-600 hover:text-slate-600 rounded-lg hover:bg-slate-100">
                   <X className="w-5 h-5" />
                 </button>
               </div>

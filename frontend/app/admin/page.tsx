@@ -228,7 +228,7 @@ export default function AdminDashboardPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center">
-              <Shield className="w-5 h-5 text-white" />
+              <Shield className="w-5 h-5 text-slate-900" />
             </div>
             <div>
               <h1 className="text-lg font-bold text-slate-900">Admin Control Center</h1>
@@ -241,7 +241,7 @@ export default function AdminDashboardPage() {
               ← Về trang chủ
             </Link>
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white text-xs font-bold">
+              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-slate-900 text-xs font-bold">
                 {user?.fullName?.[0]?.toUpperCase()}
               </div>
               <span className="text-xs font-bold text-slate-700">{user?.fullName}</span>
@@ -278,14 +278,14 @@ export default function AdminDashboardPage() {
         </div>
 
         {/* QUICK ACCESS: PRICING & HARDWARE SPECS MANAGER FOR 11 SERVICES */}
-        <div className="bg-gradient-to-r from-indigo-900 via-blue-900 to-slate-900 rounded-3xl p-6 text-white shadow-xl mb-8 relative overflow-hidden">
+        <div className="bg-gradient-to-r from-indigo-900 via-blue-900 to-slate-900 rounded-3xl p-6 text-slate-900 shadow-xl mb-8 relative overflow-hidden">
           <div className="relative z-10 space-y-4">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div>
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-indigo-500/30 border border-indigo-400/30 rounded-full text-indigo-200 text-xs font-bold mb-2">
                   <DollarSign className="w-3.5 h-3.5 text-emerald-400" /> Trung Tâm Bảng Giá & Gói Cước 11 Dịch Vụ
                 </div>
-                <h2 className="text-lg md:text-xl font-black text-white">
+                <h2 className="text-lg md:text-xl font-black text-slate-900">
                   Tùy Chỉnh Giá Bán & Cấu Hình Máy Chủ Toàn Diện
                 </h2>
                 <p className="text-xs text-indigo-200/80 mt-1 max-w-2xl">
@@ -320,7 +320,7 @@ export default function AdminDashboardPage() {
                 <Link
                   key={idx}
                   href={`/admin/service-plans?category=${svc.slug}`}
-                  className={`p-2.5 bg-white/10 hover:bg-white/20 border border-white/10 rounded-xl transition-all flex items-center gap-2 text-xs font-bold text-white group`}
+                  className={`p-2.5 bg-white/10 hover:bg-white/20 border border-white/10 rounded-xl transition-all flex items-center gap-2 text-xs font-bold text-slate-900 group`}
                 >
                   <svc.icon className="w-4 h-4 text-indigo-300 group-hover:text-emerald-400 transition-colors flex-shrink-0" />
                   <span className="truncate">{svc.label}</span>
@@ -337,7 +337,7 @@ export default function AdminDashboardPage() {
             <p className="text-xs text-slate-500">Truy cập nhanh mọi tính năng và cấu hình của hệ thống Cloud.</p>
           </div>
           <div className="relative w-full sm:w-80">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-slate-600 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               placeholder="Tìm kiếm phân hệ quản trị..."
@@ -352,7 +352,7 @@ export default function AdminDashboardPage() {
         <div className="space-y-8">
           {filteredCategories.map((group, groupIdx) => (
             <div key={groupIdx}>
-              <h3 className="text-xs font-black uppercase tracking-wider text-slate-400 mb-3 px-1">
+              <h3 className="text-xs font-black uppercase tracking-wider text-slate-600 mb-3 px-1">
                 {group.category} ({group.items.length})
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3">
@@ -376,7 +376,7 @@ export default function AdminDashboardPage() {
                       <p className="text-xs font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
                         {item.label}
                       </p>
-                      <p className="text-[11px] text-slate-400 mt-1 leading-snug">
+                      <p className="text-[11px] text-slate-600 mt-1 leading-snug">
                         {item.desc}
                       </p>
                     </div>
@@ -391,10 +391,10 @@ export default function AdminDashboardPage() {
         </div>
 
         {/* System Status Footer */}
-        <div className="mt-10 bg-slate-900 rounded-3xl p-6 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="mt-10 bg-white rounded-3xl p-6 text-slate-900 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h3 className="font-bold text-sm mb-1">Trạng Thái Toàn Bộ Cụm Hạ Tầng</h3>
-            <div className="flex items-center gap-4 text-xs text-slate-400">
+            <div className="flex items-center gap-4 text-xs text-slate-600">
               <span className="flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" /> API WebApi .NET 10 Online
               </span>

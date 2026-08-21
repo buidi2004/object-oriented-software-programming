@@ -217,14 +217,14 @@ export default function AdminJobsPage() {
 
         {/* Live Execution Logs */}
         {logs.length > 0 && (
-          <div className="bg-slate-900 rounded-3xl p-6 mb-8 text-white shadow-xl">
-            <div className="flex items-center justify-between mb-3 text-xs font-bold text-slate-400">
+          <div className="bg-white rounded-3xl p-6 mb-8 text-slate-900 shadow-xl">
+            <div className="flex items-center justify-between mb-3 text-xs font-bold text-slate-600">
               <span className="flex items-center gap-2 text-indigo-400">
                 <Terminal className="w-4 h-4" /> Nhật Ký Thực Thi Tác Vụ Trực Tiếp (Live Console Logs)
               </span>
               <button 
                 onClick={() => setLogs([])}
-                className="text-[10px] hover:text-white underline cursor-pointer"
+                className="text-[10px] hover:text-slate-900 underline cursor-pointer"
               >
                 Xóa màn hình log
               </button>
@@ -264,7 +264,7 @@ export default function AdminJobsPage() {
                   <p className="text-xs text-slate-500 max-w-2xl leading-relaxed">
                     {job.description}
                   </p>
-                  <div className="flex flex-wrap items-center gap-3 mt-3 text-[11px] text-slate-400 font-semibold">
+                  <div className="flex flex-wrap items-center gap-3 mt-3 text-[11px] text-slate-600 font-semibold">
                     <span className="flex items-center gap-1 text-slate-600">
                       <Clock className="w-3 h-3 text-indigo-500" /> {job.schedule}
                     </span>
@@ -275,7 +275,7 @@ export default function AdminJobsPage() {
                       POST {job.endpoint}
                     </span>
                     {job.lastRun && (
-                      <span className="text-slate-400">
+                      <span className="text-slate-600">
                         Lần chạy cuối: {new Date(job.lastRun).toLocaleString('vi-VN')}
                       </span>
                     )}
@@ -293,7 +293,7 @@ export default function AdminJobsPage() {
                 </button>
                 <button
                   onClick={() => handleDeleteJob(job.id, job.name)}
-                  className="p-2.5 rounded-xl border border-slate-200 text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
+                  className="p-2.5 rounded-xl border border-slate-200 text-slate-600 hover:text-rose-600 hover:bg-rose-50 transition-colors"
                   title="Xóa job"
                 >
                   <Trash2 className="w-4 h-4" />
@@ -320,11 +320,11 @@ export default function AdminJobsPage() {
 
         {/* Add Modal */}
         {showAddModal && (
-          <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="fixed inset-0 bg-white/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
             <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full border border-slate-200 shadow-2xl">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-base font-black text-slate-900">Lập Lịch Cron Job Mới</h3>
-                <button onClick={() => setShowAddModal(false)} className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100">
+                <button onClick={() => setShowAddModal(false)} className="p-1.5 text-slate-600 hover:text-slate-600 rounded-lg hover:bg-slate-100">
                   <X className="w-5 h-5" />
                 </button>
               </div>

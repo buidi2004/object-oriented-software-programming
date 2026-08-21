@@ -55,7 +55,7 @@ export const HomeHeroBanner = () => {
   return (
     <div className="relative w-full group">
       {/* Background Banner */}
-      <div className="relative w-full h-[460px] sm:h-[500px] md:h-[600px] bg-slate-900 overflow-hidden">
+      <div className="relative w-full h-[460px] sm:h-[500px] md:h-[600px] bg-white overflow-hidden">
         
         {/* Render Slides */}
         {slides.map((slide, idx) => (
@@ -77,13 +77,13 @@ export const HomeHeroBanner = () => {
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col justify-center pointer-events-none">
           <div className="grid md:grid-cols-2 gap-6 md:gap-10 items-center">
             {/* Text Content */}
-            <div className="text-white space-y-4 md:space-y-6 pointer-events-auto">
+            <div className="text-slate-900 space-y-4 md:space-y-6 pointer-events-auto">
               <h3 className="text-sm sm:text-base md:text-xl font-bold tracking-wider text-blue-300">CLOUDHOST VN TỰ HÀO</h3>
               <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black leading-tight tracking-tight">
                 Chương trình phát triển đối tác <br className="hidden sm:inline" />
                 Cloud khu vực Đông Nam Á
               </h1>
-              <p className="text-sm sm:text-base md:text-lg text-slate-300 max-w-xl line-clamp-3 sm:line-clamp-none">
+              <p className="text-sm sm:text-base md:text-lg text-slate-700 max-w-xl line-clamp-3 sm:line-clamp-none">
                 Mở rộng hệ sinh thái, hợp tác vươn xa cùng nền tảng điện toán đám mây số 1 Việt Nam.
               </p>
               <div className="pt-2 md:pt-4">
@@ -95,12 +95,12 @@ export const HomeHeroBanner = () => {
 
             {/* Right Card/Image (Simulating the BROADCOM partner badge in the screenshot) */}
             <div className="hidden md:flex justify-end pointer-events-auto">
-              <div className="bg-white/10 backdrop-blur-md border border-white/20 p-8 rounded-2xl w-80 text-center text-white shadow-2xl">
+              <div className="bg-white/10 backdrop-blur-md border border-white/20 p-8 rounded-2xl w-80 text-center text-slate-900 shadow-2xl">
                 <div className="w-20 h-20 bg-white rounded-xl flex items-center justify-center mx-auto mb-6">
                   <Server className="w-10 h-10 text-blue-600" />
                 </div>
                 <h4 className="text-2xl font-black mb-2">PARTNER</h4>
-                <p className="text-slate-300 text-sm">Welcome to the Partner Network</p>
+                <p className="text-slate-700 text-sm">Welcome to the Partner Network</p>
               </div>
             </div>
           </div>
@@ -109,14 +109,14 @@ export const HomeHeroBanner = () => {
         {/* Navigation Arrows */}
         <button 
           onClick={prevSlide}
-          className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-11 sm:h-11 md:w-12 md:h-12 rounded-full bg-black/30 hover:bg-black/50 text-white flex items-center justify-center backdrop-blur-sm transition-all opacity-80 md:opacity-0 md:group-hover:opacity-100 z-20"
+          className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-11 sm:h-11 md:w-12 md:h-12 rounded-full bg-black/30 hover:bg-black/50 text-slate-900 flex items-center justify-center backdrop-blur-sm transition-all opacity-80 md:opacity-0 md:group-hover:opacity-100 z-20"
           aria-label="Previous Slide"
         >
           <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
         </button>
         <button 
           onClick={nextSlide}
-          className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-11 sm:h-11 md:w-12 md:h-12 rounded-full bg-black/30 hover:bg-black/50 text-white flex items-center justify-center backdrop-blur-sm transition-all opacity-80 md:opacity-0 md:group-hover:opacity-100 z-20"
+          className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-11 sm:h-11 md:w-12 md:h-12 rounded-full bg-black/30 hover:bg-black/50 text-slate-900 flex items-center justify-center backdrop-blur-sm transition-all opacity-80 md:opacity-0 md:group-hover:opacity-100 z-20"
           aria-label="Next Slide"
         >
           <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />

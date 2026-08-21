@@ -128,15 +128,15 @@ export default function VpsCustomConfiguratorPage() {
       )}
 
       {/* Hero Banner */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 text-white pt-16 pb-24 border-b border-blue-900/30">
+      <section className="relative overflow-hidden bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 text-slate-900 pt-16 pb-24 border-b border-blue-900/30">
         <div className="absolute inset-0 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] [background-size:24px_24px] opacity-15" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <nav className="flex items-center gap-2 text-xs font-semibold text-blue-300 mb-6">
-            <Link href="/" className="hover:text-white transition-colors">Trang chủ</Link>
+            <Link href="/" className="hover:text-slate-900 transition-colors">Trang chủ</Link>
             <span>/</span>
-            <Link href="/services" className="hover:text-white transition-colors">Dịch vụ</Link>
+            <Link href="/services" className="hover:text-slate-900 transition-colors">Dịch vụ</Link>
             <span>/</span>
-            <Link href="/services/cloud-vps" className="hover:text-white transition-colors">Cloud VPS</Link>
+            <Link href="/services/cloud-vps" className="hover:text-slate-900 transition-colors">Cloud VPS</Link>
             <span>/</span>
             <span className="text-cyan-400">Tùy Chỉnh Cấu Hình</span>
           </nav>
@@ -201,7 +201,7 @@ export default function VpsCustomConfiguratorPage() {
                   onChange={(e) => setCpu(Number(e.target.value))}
                   className="w-full h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-blue-600"
                 />
-                <div className="flex justify-between text-[11px] font-bold text-slate-400">
+                <div className="flex justify-between text-[11px] font-bold text-slate-600">
                   <span>1 vCPU</span>
                   <span>4 vCPU</span>
                   <span>8 vCPU</span>
@@ -246,7 +246,7 @@ export default function VpsCustomConfiguratorPage() {
                   onChange={(e) => setRam(Number(e.target.value))}
                   className="w-full h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-purple-600"
                 />
-                <div className="flex justify-between text-[11px] font-bold text-slate-400">
+                <div className="flex justify-between text-[11px] font-bold text-slate-600">
                   <span>1 GB</span>
                   <span>8 GB</span>
                   <span>16 GB</span>
@@ -291,7 +291,7 @@ export default function VpsCustomConfiguratorPage() {
                   onChange={(e) => setDisk(Number(e.target.value))}
                   className="w-full h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-emerald-600"
                 />
-                <div className="flex justify-between text-[11px] font-bold text-slate-400">
+                <div className="flex justify-between text-[11px] font-bold text-slate-600">
                   <span>20 GB</span>
                   <span>80 GB</span>
                   <span>160 GB</span>
@@ -344,7 +344,7 @@ export default function VpsCustomConfiguratorPage() {
                         <span className="text-2xl">{os.icon}</span>
                         <div>
                           <div className="text-xs font-black text-slate-900">{os.name}</div>
-                          <div className="text-[11px] font-bold text-slate-400">{os.category}</div>
+                          <div className="text-[11px] font-bold text-slate-600">{os.category}</div>
                         </div>
                       </div>
                       {os.surcharge ? (
@@ -436,7 +436,7 @@ export default function VpsCustomConfiguratorPage() {
                         </div>
                       </div>
                       <span className="text-xs font-black text-slate-900">
-                        +{addon.price.toLocaleString('vi-VN')} đ<span className="text-[10px] font-normal text-slate-400">/th</span>
+                        +{addon.price.toLocaleString('vi-VN')} đ<span className="text-[10px] font-normal text-slate-600">/th</span>
                       </span>
                     </div>
                   );
@@ -448,41 +448,41 @@ export default function VpsCustomConfiguratorPage() {
 
           {/* Sticky Summary Card (Right Column) */}
           <div className="lg:col-span-4 sticky top-20 space-y-6">
-            <div className="bg-slate-900 text-white rounded-3xl p-6 sm:p-7 border border-slate-800 shadow-2xl space-y-6">
+            <div className="bg-white text-slate-900 rounded-3xl p-6 sm:p-7 border border-slate-200 shadow-2xl space-y-6">
               
               <div>
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/20 text-cyan-400 text-xs font-bold mb-3">
                   <Server className="w-3.5 h-3.5" />
                   Cấu Hình VPS Đã Chọn
                 </div>
-                <h3 className="text-xl font-black text-white">Cloud VPS Custom</h3>
-                <p className="text-xs text-slate-400 mt-1">Hạ tầng AMD EPYC &bull; NVMe Enterprise</p>
+                <h3 className="text-xl font-black text-slate-900">Cloud VPS Custom</h3>
+                <p className="text-xs text-slate-600 mt-1">Hạ tầng AMD EPYC &bull; NVMe Enterprise</p>
               </div>
 
               {/* Specs Breakdown */}
-              <div className="bg-slate-800/80 rounded-2xl p-4 space-y-2.5 border border-slate-700/60 text-xs">
-                <div className="flex justify-between items-center text-slate-300">
+              <div className="bg-white/80 rounded-2xl p-4 space-y-2.5 border border-slate-700/60 text-xs">
+                <div className="flex justify-between items-center text-slate-700">
                   <span className="flex items-center gap-1.5"><Cpu className="w-3.5 h-3.5 text-blue-400" /> CPU:</span>
-                  <span className="font-bold text-white">{cpu} vCPU Core</span>
+                  <span className="font-bold text-slate-900">{cpu} vCPU Core</span>
                 </div>
-                <div className="flex justify-between items-center text-slate-300">
+                <div className="flex justify-between items-center text-slate-700">
                   <span className="flex items-center gap-1.5"><Layers className="w-3.5 h-3.5 text-purple-400" /> RAM:</span>
-                  <span className="font-bold text-white">{ram} GB DDR5</span>
+                  <span className="font-bold text-slate-900">{ram} GB DDR5</span>
                 </div>
-                <div className="flex justify-between items-center text-slate-300">
+                <div className="flex justify-between items-center text-slate-700">
                   <span className="flex items-center gap-1.5"><HardDrive className="w-3.5 h-3.5 text-emerald-400" /> SSD:</span>
-                  <span className="font-bold text-white">{disk} GB NVMe</span>
+                  <span className="font-bold text-slate-900">{disk} GB NVMe</span>
                 </div>
-                <div className="flex justify-between items-center text-slate-300">
+                <div className="flex justify-between items-center text-slate-700">
                   <span className="flex items-center gap-1.5"><Globe className="w-3.5 h-3.5 text-amber-400" /> Datacenter:</span>
-                  <span className="font-bold text-white">{selectedDc.flag} {selectedDc.name.split(' - ')[0]}</span>
+                  <span className="font-bold text-slate-900">{selectedDc.flag} {selectedDc.name.split(' - ')[0]}</span>
                 </div>
-                <div className="flex justify-between items-center text-slate-300">
+                <div className="flex justify-between items-center text-slate-700">
                   <span className="flex items-center gap-1.5"><Terminal className="w-3.5 h-3.5 text-cyan-400" /> OS:</span>
-                  <span className="font-bold text-white">{selectedOs.name}</span>
+                  <span className="font-bold text-slate-900">{selectedOs.name}</span>
                 </div>
                 {selectedAddons.length > 0 && (
-                  <div className="flex justify-between items-center text-slate-300 pt-1 border-t border-slate-700">
+                  <div className="flex justify-between items-center text-slate-700 pt-1 border-t border-slate-300">
                     <span>Dịch vụ cộng thêm:</span>
                     <span className="font-bold text-emerald-400">+{selectedAddons.length} mục</span>
                   </div>
@@ -491,7 +491,7 @@ export default function VpsCustomConfiguratorPage() {
 
               {/* Billing Cycle Picker */}
               <div className="space-y-2">
-                <label className="text-xs font-bold text-slate-300 flex items-center justify-between">
+                <label className="text-xs font-bold text-slate-700 flex items-center justify-between">
                   <span>Chu Kỳ Thanh Toán:</span>
                   {billingCycle.discount > 0 && (
                     <span className="text-emerald-400 text-[11px] font-extrabold">{billingCycle.tag}</span>
@@ -515,7 +515,7 @@ export default function VpsCustomConfiguratorPage() {
                         {cycle.discount > 0 ? (
                           <div className="text-[10px] text-emerald-300 font-extrabold">-{cycle.discount * 100}%</div>
                         ) : (
-                          <div className="text-[10px] text-slate-400">Chuẩn</div>
+                          <div className="text-[10px] text-slate-600">Chuẩn</div>
                         )}
                       </button>
                     );
@@ -524,18 +524,18 @@ export default function VpsCustomConfiguratorPage() {
               </div>
 
               {/* Price Calculation */}
-              <div className="pt-4 border-t border-slate-800 space-y-2">
-                <div className="flex justify-between items-center text-xs text-slate-400">
+              <div className="pt-4 border-t border-slate-200 space-y-2">
+                <div className="flex justify-between items-center text-xs text-slate-600">
                   <span>Giá gốc theo tháng:</span>
                   <span className="line-through">{monthlyPreDiscount.toLocaleString('vi-VN')} đ</span>
                 </div>
                 <div className="flex justify-between items-baseline">
-                  <span className="text-xs font-bold text-slate-300">Giá sau chiết khấu:</span>
+                  <span className="text-xs font-bold text-slate-700">Giá sau chiết khấu:</span>
                   <div className="text-right">
                     <span className="text-2xl font-black text-cyan-400">
                       {discountedMonthly.toLocaleString('vi-VN')} đ
                     </span>
-                    <span className="text-xs text-slate-400 font-normal">/tháng</span>
+                    <span className="text-xs text-slate-600 font-normal">/tháng</span>
                   </div>
                 </div>
 
@@ -545,9 +545,9 @@ export default function VpsCustomConfiguratorPage() {
                   </div>
                 )}
 
-                <div className="flex justify-between items-center text-xs text-slate-300 pt-2 border-t border-slate-800">
+                <div className="flex justify-between items-center text-xs text-slate-700 pt-2 border-t border-slate-200">
                   <span>Tổng tiền ({billingCycle.months} tháng):</span>
-                  <span className="text-lg font-black text-white">
+                  <span className="text-lg font-black text-slate-900">
                     {totalAmount.toLocaleString('vi-VN')} đ
                   </span>
                 </div>
@@ -558,7 +558,7 @@ export default function VpsCustomConfiguratorPage() {
                 <button
                   type="button"
                   onClick={() => handleAddToCart(true)}
-                  className="w-full py-4 rounded-2xl bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white font-black text-base shadow-xl shadow-blue-500/25 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full py-4 rounded-2xl bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-slate-900 font-black text-base shadow-xl shadow-blue-500/25 transition-all flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <Zap className="w-5 h-5" />
                   <span>Khởi Tạo &amp; Thanh Toán Ngay</span>
@@ -567,13 +567,13 @@ export default function VpsCustomConfiguratorPage() {
                 <button
                   type="button"
                   onClick={() => handleAddToCart(false)}
-                  className="w-full py-3.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs transition-colors flex items-center justify-center gap-2 border border-slate-700 cursor-pointer"
+                  className="w-full py-3.5 rounded-2xl bg-white hover:bg-slate-200 text-slate-800 font-bold text-xs transition-colors flex items-center justify-center gap-2 border border-slate-300 cursor-pointer"
                 >
                   <ShoppingCart className="w-4 h-4" />
                   <span>Thêm Vào Giỏ Hàng</span>
                 </button>
 
-                <div className="text-center text-[11px] text-slate-400 flex items-center justify-center gap-1.5 pt-1">
+                <div className="text-center text-[11px] text-slate-600 flex items-center justify-center gap-1.5 pt-1">
                   <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
                   Cam kết hoàn tiền 100% trong 7 ngày nếu không hài lòng
                 </div>

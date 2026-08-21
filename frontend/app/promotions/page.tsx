@@ -58,9 +58,9 @@ export default function PromotionsPage() {
             </div>
           ) : promotions.map((promo) => (
             <div key={promo.id} className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden group hover:shadow-xl transition-all duration-300">
-              <div className="relative h-48 overflow-hidden bg-slate-100 flex items-center justify-center text-slate-400">
+              <div className="relative h-48 overflow-hidden bg-slate-100 flex items-center justify-center text-slate-600">
                 <Zap className="w-12 h-12" />
-                <div className="absolute top-4 right-4 bg-rose-500 text-white font-black px-4 py-2 rounded-xl shadow-lg transform rotate-3">
+                <div className="absolute top-4 right-4 bg-rose-500 text-slate-900 font-black px-4 py-2 rounded-xl shadow-lg transform rotate-3">
                   GIẢM {promo.discountPercent}%
                 </div>
               </div>

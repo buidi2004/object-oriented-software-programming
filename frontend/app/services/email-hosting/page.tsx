@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { 
@@ -14,7 +14,8 @@ export default function EmailHostingPage() {
   const addItem = useCartStore((state) => state.addItem);
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('yearly');
 
-  const plans = [
+  const [plans, setPlans] = useState([
+
     {
       id: 'email-10',
       name: 'Email Doanh Nghiệp 10',
@@ -73,7 +74,27 @@ export default function EmailHostingPage() {
       badge: 'Doanh nghiệp lớn',
       popular: false,
     },
-  ];
+  ]);
+
+
+  useEffect(() => {
+    import('@/src/lib/api').then(({ api }) => {
+      api.get('/categories/email-server/plans').then(res => {
+        const dbPlans = res.data?.plans || [];
+        if (dbPlans.length > 0) {
+          setPlans(prev => prev.map((p, index) => {
+            const dbP = dbPlans[index] || dbPlans[dbPlans.length - 1];
+            return {
+              ...p,
+              id: dbP.id,
+              monthlyPrice: dbP.monthlyPrice || Math.round((dbP.yearlyPrice || 0) / 12),
+              yearlyPrice: dbP.yearlyPrice || ((dbP.monthlyPrice || 0) * 12)
+            };
+          }));
+        }
+      });
+    });
+  }, []);
 
   const handleOrder = async (plan: typeof plans[0]) => {
     const cycleMonths = billingCycle === 'yearly' ? 12 : 1;
@@ -89,7 +110,7 @@ export default function EmailHostingPage() {
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-slate-900 via-slate-900 to-indigo-950 text-white pt-20 pb-28">
+      <section className="relative overflow-hidden bg-gradient-to-b from-slate-900 via-slate-900 to-indigo-950 text-slate-900 pt-20 pb-28">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(244,63,94,0.15),rgba(255,255,255,0))]" />
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -98,19 +119,19 @@ export default function EmailHostingPage() {
             Email Doanh Nghiệp Theo Tên Miền Riêng
           </div>
 
-          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white max-w-4xl mx-auto leading-tight mb-6">
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-slate-900 max-w-4xl mx-auto leading-tight mb-6">
             Khẳng Định Uy Tín Thương Hiệu Với{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-400 via-pink-400 to-amber-300">
               Email Doanh Nghiệp 100% Vào Inbox
             </span>
           </h1>
 
-          <p className="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto mb-10">
+          <p className="text-base sm:text-lg text-slate-700 max-w-2xl mx-auto mb-10">
             Hệ thống máy chủ gửi nhận thư chuyên dụng với IP sạch, bộ lọc Anti-Spam AI thông minh, bảo mật DKIM/SPF/DMARC chuẩn quốc tế.
           </p>
 
           {/* Billing Cycle Switch */}
-          <div className="inline-flex items-center p-1.5 rounded-2xl bg-slate-800/80 backdrop-blur-md border border-slate-700">
+          <div className="inline-flex items-center p-1.5 rounded-2xl bg-white/80 backdrop-blur-md border border-slate-300">
             <button
               onClick={() => setBillingCycle('monthly')}
               className={`px-5 py-2.5 rounded-xl text-xs font-bold transition-all ${
@@ -155,7 +176,7 @@ export default function EmailHostingPage() {
               >
                 {plan.badge && (
                   <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                    <span className="px-4 py-1.5 rounded-full bg-gradient-to-r from-rose-600 to-pink-600 text-white text-xs font-black uppercase tracking-wider shadow-md">
+                    <span className="px-4 py-1.5 rounded-full bg-gradient-to-r from-rose-600 to-pink-600 text-slate-900 text-xs font-black uppercase tracking-wider shadow-md">
                       {plan.badge}
                     </span>
                   </div>

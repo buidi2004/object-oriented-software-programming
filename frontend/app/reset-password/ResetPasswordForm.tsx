@@ -75,7 +75,7 @@ export default function ResetPasswordForm() {
               <div>
                 <label className="block text-sm font-semibold mb-1">Mật khẩu mới</label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-600" />
                   <input type="password" required minLength={8} value={password} onChange={(e) => setPassword(e.target.value)}
                     className="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl" />
                 </div>

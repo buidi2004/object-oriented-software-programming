@@ -160,10 +160,10 @@ export default function AppMarketplacePage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#090d16] text-slate-100 selection:bg-indigo-500 selection:text-white font-sans">
+    <div className="min-h-screen bg-slate-50 text-slate-900 selection:bg-indigo-500 selection:text-white font-sans">
       
       {/* 1. HERO SECTION: 1-CLICK MARKETPLACE TELEMETRY */}
-      <section className="relative pt-16 pb-20 border-b border-slate-800/80 overflow-hidden">
+      <section className="relative pt-16 pb-20 border-b border-slate-200/80 overflow-hidden">
         {/* Technical Grid Blueprint */}
         <div 
           className="absolute inset-0 opacity-[0.06] pointer-events-none" 
@@ -177,21 +177,21 @@ export default function AppMarketplacePage() {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           {/* Status Bar */}
-          <div className="flex flex-wrap items-center justify-between gap-4 p-3.5 mb-10 rounded-2xl bg-[#0d1424] border border-slate-800 text-xs font-mono">
+          <div className="flex flex-wrap items-center justify-between gap-4 p-3.5 mb-10 rounded-2xl bg-[#0d1424] border border-slate-200 text-xs font-mono">
             <div className="flex items-center gap-3">
               <span className="flex items-center gap-1.5 text-indigo-400 font-bold">
                 <Boxes className="w-3.5 h-3.5 text-indigo-400" />
                 APP MARKETPLACE: 1-CLICK DOCKER &amp; NATIVE ENGINE
               </span>
               <span className="text-slate-600 hidden sm:inline">|</span>
-              <span className="text-slate-300 hidden sm:inline">
+              <span className="text-slate-700 hidden sm:inline">
                 DEPLOY SPEED: <strong className="text-emerald-400 font-mono">&lt; 60 Giây Tự Động</strong>
               </span>
             </div>
 
-            <div className="flex items-center gap-4 text-slate-400">
+            <div className="flex items-center gap-4 text-slate-600">
               <span>SSL HTTPS: <strong className="text-emerald-400 font-mono">Auto Let&apos;s Encrypt</strong></span>
-              <span>ACCESS: <strong className="text-white font-mono">Root SSH 100%</strong></span>
+              <span>ACCESS: <strong className="text-slate-900 font-mono">Root SSH 100%</strong></span>
             </div>
           </div>
 
@@ -201,27 +201,27 @@ export default function AppMarketplacePage() {
               1-CLICK AUTOMATED APP PROVISIONING
             </div>
 
-            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.15]">
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 leading-[1.15]">
               Triển Khai Ứng Dụng Trong{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-cyan-400 to-emerald-400 font-mono">
                 60 Giây Với 1-Click
               </span>
             </h1>
 
-            <p className="text-slate-300 text-base sm:text-lg leading-relaxed max-w-2xl mx-auto font-normal">
+            <p className="text-slate-700 text-base sm:text-lg leading-relaxed max-w-2xl mx-auto font-normal">
               Không cần gõ dòng lệnh phức tạp. Tự động cấp phát container độc lập, thiết lập Nginx Reverse Proxy, 
               kích hoạt SSL HTTPS và cấu hình cơ sở dữ liệu hoàn chỉnh.
             </p>
 
             {/* Search Box */}
             <div className="max-w-xl mx-auto relative pt-2">
-              <Search className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
+              <Search className="w-4 h-4 text-slate-600 absolute left-4 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 placeholder="Tìm kiếm ứng dụng (WordPress, Docker, Nextcloud, Ollama AI...)..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-11 pr-4 py-3.5 rounded-xl bg-[#0c1322] border border-slate-800 text-white placeholder-slate-500 text-xs font-mono focus:outline-none focus:border-indigo-500 shadow-xl transition-all"
+                className="w-full pl-11 pr-4 py-3.5 rounded-xl bg-white border border-slate-200 text-slate-900 placeholder-slate-500 text-xs font-mono focus:outline-none focus:border-indigo-500 shadow-xl transition-all"
               />
             </div>
 
@@ -258,11 +258,11 @@ export default function AppMarketplacePage() {
           {filteredApps.map((app) => (
             <div
               key={app.id}
-              className="p-6 rounded-2xl bg-[#0c1322] border border-slate-800 flex flex-col justify-between hover:border-indigo-500/60 transition-all group"
+              className="p-6 rounded-2xl bg-white border border-slate-200 flex flex-col justify-between hover:border-indigo-500/60 transition-all group"
             >
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <div className="w-12 h-12 rounded-xl bg-[#060a12] border border-slate-800 flex items-center justify-center group-hover:scale-105 transition-transform">
+                  <div className="w-12 h-12 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center group-hover:scale-105 transition-transform">
                     <app.Logo className="w-7 h-7" style={{ color: app.brandColor }} />
                   </div>
                   <span className="px-2 py-0.5 rounded bg-indigo-950/80 border border-indigo-800/60 text-indigo-400 text-[10px] font-mono font-bold">
@@ -270,19 +270,19 @@ export default function AppMarketplacePage() {
                   </span>
                 </div>
 
-                <h3 className="text-base font-bold text-white mb-1 group-hover:text-indigo-400 transition-colors font-mono">
+                <h3 className="text-base font-bold text-slate-900 mb-1 group-hover:text-indigo-400 transition-colors font-mono">
                   {app.name}
                 </h3>
-                <p className="text-xs text-slate-400 line-clamp-3 mb-6 leading-relaxed font-normal">
+                <p className="text-xs text-slate-600 line-clamp-3 mb-6 leading-relaxed font-normal">
                   {app.description}
                 </p>
               </div>
 
               <div>
-                <div className="space-y-1.5 font-mono text-[11px] text-slate-400 mb-4 pt-3 border-t border-slate-800">
+                <div className="space-y-1.5 font-mono text-[11px] text-slate-600 mb-4 pt-3 border-t border-slate-200">
                   <div className="flex justify-between">
                     <span className="text-slate-500">Khuyến nghị:</span>
-                    <span className="text-slate-300 font-bold">{app.specs}</span>
+                    <span className="text-slate-700 font-bold">{app.specs}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-slate-500">Port mặc định:</span>
@@ -304,7 +304,7 @@ export default function AppMarketplacePage() {
       </section>
 
       {/* 3. THREE CORE APPLICATION PROVISIONING SCHEMATICS */}
-      <section className="py-24 bg-[#070b12] border-t border-b border-slate-800">
+      <section className="py-24 bg-white border-t border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="text-center max-w-3xl mx-auto mb-16">
@@ -312,10 +312,10 @@ export default function AppMarketplacePage() {
               <Zap className="w-3.5 h-3.5" />
               1-CLICK CONTAINER ENGINE
             </div>
-            <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
+            <h2 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight">
               3 Ưu Thế Của Hạ Tầng 1-Click Installer
             </h2>
-            <p className="text-slate-400 text-sm sm:text-base mt-3 leading-relaxed font-normal">
+            <p className="text-slate-600 text-sm sm:text-base mt-3 leading-relaxed font-normal">
               Được tự động hóa từ hạ tầng phần cứng tới tầng mạng và chứng chỉ bảo mật.
             </p>
           </div>
@@ -323,111 +323,111 @@ export default function AppMarketplacePage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             
             {/* Schematic 1: 60s Provisioning Flow */}
-            <div className="p-6 rounded-3xl bg-[#0c1322] border border-slate-800 flex flex-col justify-between space-y-6">
+            <div className="p-6 rounded-3xl bg-white border border-slate-200 flex flex-col justify-between space-y-6">
               <div>
-                <div className="p-4 rounded-2xl bg-[#060a12] border border-slate-800 mb-6 font-mono text-xs">
+                <div className="p-4 rounded-2xl bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
                   <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
                     <span>60S AUTO-PROVISIONING FLOW</span>
                     <span className="text-emerald-400">READY TO USE</span>
                   </div>
-                  <div className="space-y-2 text-slate-300 text-[11px]">
-                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                  <div className="space-y-2 text-slate-700 text-[11px]">
+                    <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>1. Cloud-Init OS Setup</span>
                       <span className="text-sky-400">Ubuntu 24.04 LTS</span>
                     </div>
-                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                    <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>2. Container Compose Run</span>
                       <span className="text-indigo-400 font-bold">App Stack Injected</span>
                     </div>
-                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                    <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>3. Credential Dispatch</span>
                       <span className="text-emerald-400 font-bold">Root &amp; Web Login</span>
                     </div>
                   </div>
                 </div>
 
-                <h3 className="text-lg font-bold text-white mb-2">Khởi Tạo Trọn Gói Trong 60 Giây</h3>
-                <p className="text-xs text-slate-400 leading-relaxed">
+                <h3 className="text-lg font-bold text-slate-900 mb-2">Khởi Tạo Trọn Gói Trong 60 Giây</h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
                   Tự động biên dịch cấu hình, khởi tạo database và phân quyền bảo mật chỉ trong 1 phút, 
                   bàn giao đầy đủ link đăng nhập admin và mật khẩu ngẫu nhiên an toàn.
                 </p>
               </div>
 
-              <div className="pt-4 border-t border-slate-800/80 text-xs font-mono text-slate-300 flex items-center justify-between">
+              <div className="pt-4 border-t border-slate-200/80 text-xs font-mono text-slate-700 flex items-center justify-between">
                 <span>Setup Duration:</span>
                 <strong className="text-emerald-400">&lt; 60 Giây Hoàn Tất</strong>
               </div>
             </div>
 
             {/* Schematic 2: Reverse Proxy & Auto SSL */}
-            <div className="p-6 rounded-3xl bg-[#0c1322] border border-slate-800 flex flex-col justify-between space-y-6">
+            <div className="p-6 rounded-3xl bg-white border border-slate-200 flex flex-col justify-between space-y-6">
               <div>
-                <div className="p-4 rounded-2xl bg-[#060a12] border border-slate-800 mb-6 font-mono text-xs">
+                <div className="p-4 rounded-2xl bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
                   <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
                     <span>NGINX REVERSE PROXY &amp; SSL</span>
                     <span className="text-sky-400">AUTO-HTTPS</span>
                   </div>
-                  <div className="space-y-2 text-slate-300 text-[11px]">
-                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                  <div className="space-y-2 text-slate-700 text-[11px]">
+                    <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>Port Forwarding</span>
-                      <span className="text-slate-300">Internal Port to 443</span>
+                      <span className="text-slate-700">Internal Port to 443</span>
                     </div>
-                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                    <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>SSL Auto-Renewal</span>
                       <span className="text-emerald-400 font-bold">Let&apos;s Encrypt Certbot</span>
                     </div>
-                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                    <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>Custom Domain</span>
                       <span className="text-sky-400 font-bold">1-Click CNAME Bind</span>
                     </div>
                   </div>
                 </div>
 
-                <h3 className="text-lg font-bold text-white mb-2">Tự Động Cấu Hình Nginx &amp; SSL HTTPS</h3>
-                <p className="text-xs text-slate-400 leading-relaxed">
+                <h3 className="text-lg font-bold text-slate-900 mb-2">Tự Động Cấu Hình Nginx &amp; SSL HTTPS</h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
                   Không cần cấu hình Nginx hay mở port thủ công. Hệ thống tự động thiết lập Reverse Proxy 
                   và cấp phát chứng chỉ SSL HTTPS Let&apos;s Encrypt miễn phí vĩnh viễn.
                 </p>
               </div>
 
-              <div className="pt-4 border-t border-slate-800/80 text-xs font-mono text-slate-300 flex items-center justify-between">
+              <div className="pt-4 border-t border-slate-200/80 text-xs font-mono text-slate-700 flex items-center justify-between">
                 <span>Domain Support:</span>
                 <strong className="text-sky-400">Gắn Tên Miền Riêng Dễ Dàng</strong>
               </div>
             </div>
 
             {/* Schematic 3: Dedicated NVMe & Root Access */}
-            <div className="p-6 rounded-3xl bg-[#0c1322] border border-slate-800 flex flex-col justify-between space-y-6">
+            <div className="p-6 rounded-3xl bg-white border border-slate-200 flex flex-col justify-between space-y-6">
               <div>
-                <div className="p-4 rounded-2xl bg-[#060a12] border border-slate-800 mb-6 font-mono text-xs">
+                <div className="p-4 rounded-2xl bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
                   <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
                     <span>KERNEL ISOLATION &amp; SSH</span>
                     <span className="text-purple-400">ROOT PRIVILEGES</span>
                   </div>
-                  <div className="space-y-2 text-slate-300 text-[11px]">
-                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                  <div className="space-y-2 text-slate-700 text-[11px]">
+                    <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>Root SSH Access</span>
                       <span className="text-emerald-400 font-bold">Port 22 Full Root</span>
                     </div>
-                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                    <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>NVMe Gen4 Storage</span>
                       <span className="text-purple-400 font-bold">Hardware RAID-10</span>
                     </div>
-                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                    <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>RAM Allocation</span>
                       <span className="text-sky-400">100% Dedicated ECC</span>
                     </div>
                   </div>
                 </div>
 
-                <h3 className="text-lg font-bold text-white mb-2">Tài Nguyên Cô Lập &amp; Toàn Quyền Root</h3>
-                <p className="text-xs text-slate-400 leading-relaxed">
+                <h3 className="text-lg font-bold text-slate-900 mb-2">Tài Nguyên Cô Lập &amp; Toàn Quyền Root</h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
                   Mỗi ứng dụng chạy trong môi trường máy chủ ảo cô lập hoàn toàn. 
                   Bạn nhận toàn quyền Root SSH để tùy chỉnh file cấu hình, cài đặt thêm package hoặc tích hợp CI/CD.
                 </p>
               </div>
 
-              <div className="pt-4 border-t border-slate-800/80 text-xs font-mono text-slate-300 flex items-center justify-between">
+              <div className="pt-4 border-t border-slate-200/80 text-xs font-mono text-slate-700 flex items-center justify-between">
                 <span>Access Level:</span>
                 <strong className="text-purple-400">Toàn Quyền Root / Sudo 100%</strong>
               </div>
@@ -439,22 +439,22 @@ export default function AppMarketplacePage() {
       </section>
 
       {/* 4. FAQ SECTION */}
-      <section className="py-20 bg-[#090d16] border-b border-slate-800">
+      <section className="py-20 bg-slate-50 border-b border-slate-200">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-white">Câu Hỏi Thường Gặp Về 1-Click Apps</h2>
-            <p className="text-slate-400 text-xs sm:text-sm mt-2 font-mono">SEN CLOUDHOST APP INSTALLER FAQ</p>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900">Câu Hỏi Thường Gặp Về 1-Click Apps</h2>
+            <p className="text-slate-600 text-xs sm:text-sm mt-2 font-mono">SEN CLOUDHOST APP INSTALLER FAQ</p>
           </div>
 
           <div className="space-y-3">
             {faqs.map((faq, idx) => (
               <div
                 key={idx}
-                className="bg-[#0c1322] rounded-2xl border border-slate-800 overflow-hidden transition-all"
+                className="bg-white rounded-2xl border border-slate-200 overflow-hidden transition-all"
               >
                 <button
                   onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
-                  className="w-full p-5 text-left font-bold text-sm text-white flex items-center justify-between gap-4 hover:text-indigo-400 transition-colors"
+                  className="w-full p-5 text-left font-bold text-sm text-slate-900 flex items-center justify-between gap-4 hover:text-indigo-400 transition-colors"
                 >
                   <span>{faq.q}</span>
                   {openFaq === idx ? (
@@ -464,7 +464,7 @@ export default function AppMarketplacePage() {
                   )}
                 </button>
                 {openFaq === idx && (
-                  <div className="px-5 pb-5 text-xs text-slate-300 leading-relaxed border-t border-slate-800/60 pt-3 font-normal">
+                  <div className="px-5 pb-5 text-xs text-slate-700 leading-relaxed border-t border-slate-200/60 pt-3 font-normal">
                     {faq.a}
                   </div>
                 )}
@@ -483,11 +483,11 @@ export default function AppMarketplacePage() {
               DEPLOY ANY APP IN 60 SECONDS
             </div>
             
-            <h3 className="text-2xl sm:text-4xl font-extrabold text-white">
+            <h3 className="text-2xl sm:text-4xl font-extrabold text-slate-900">
               Khởi Tạo Ứng Dụng Đám Mây Của Bạn Ngay Hôm Nay
             </h3>
             
-            <p className="text-slate-300 text-xs sm:text-base leading-relaxed font-normal">
+            <p className="text-slate-700 text-xs sm:text-base leading-relaxed font-normal">
               Chỉ với 1 cú click. Toàn quyền Root SSH, tự động cấp phát SSL HTTPS và hỗ trợ kỹ thuật 24/7.
             </p>
             
@@ -500,7 +500,7 @@ export default function AppMarketplacePage() {
               </Link>
               <Link
                 href="/contact"
-                className="px-8 py-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs font-mono border border-slate-700 transition-all"
+                className="px-8 py-3.5 rounded-xl bg-white hover:bg-slate-200 text-slate-900 font-bold text-xs font-mono border border-slate-300 transition-all"
               >
                 Yêu Cầu Tích Hợp App Mới
               </Link>

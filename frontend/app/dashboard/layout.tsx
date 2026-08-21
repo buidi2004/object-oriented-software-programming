@@ -188,7 +188,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               <div className="h-full max-h-[calc(100vh-6rem)] overflow-y-auto p-3.5 space-y-4">
                 {menuGroups.map((group, gIdx) => (
                   <div key={group.title} className={gIdx > 0 ? 'pt-3 border-t border-slate-100' : ''}>
-                    <div className="text-[10px] font-black text-slate-400 uppercase tracking-wider px-3 pb-2">
+                    <div className="text-[10px] font-black text-slate-600 uppercase tracking-wider px-3 pb-2">
                       {group.title}
                     </div>
 

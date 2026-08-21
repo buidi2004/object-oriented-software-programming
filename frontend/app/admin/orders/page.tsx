@@ -133,7 +133,7 @@ export default function AdminOrdersPage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="bg-white rounded-xl p-4 border border-slate-200 mb-6 flex flex-wrap gap-4 items-center">
           <div className="flex-1 min-w-[200px] relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-600" />
             <input
               type="text"
               placeholder="Tìm kiếm theo mã đơn hoặc tên khách hàng..."
@@ -200,7 +200,7 @@ export default function AdminOrdersPage() {
                       {new Date(order.createdAt).toLocaleDateString('vi-VN')}
                     </td>
                     <td className="py-3 px-4 text-right">
-                      <Link href={`/orders/${order.id}`} className="inline-flex p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
+                      <Link href={`/orders/${order.id}`} className="inline-flex p-2 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
                         <Eye className="w-4 h-4" />
                       </Link>
                     </td>
@@ -212,7 +212,7 @@ export default function AdminOrdersPage() {
           
           {filteredOrders.length === 0 && (
             <div className="text-center py-12 text-slate-500">
-              <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-300" />
+              <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-700" />
               <p className="font-medium">Không tìm thấy đơn hàng nào</p>
             </div>
           )}

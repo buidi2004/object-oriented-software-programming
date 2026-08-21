@@ -154,7 +154,7 @@ export default function DashboardStaticSitesPage() {
           </div>
 
           {loading && sites.length === 0 ? (
-            <div className="p-12 text-center text-slate-400 text-sm flex items-center justify-center gap-2">
+            <div className="p-12 text-center text-slate-600 text-sm flex items-center justify-center gap-2">
               <RefreshCw className="w-5 h-5 animate-spin text-emerald-600" />
               Đang tải danh sách static sites...
             </div>
@@ -186,7 +186,7 @@ export default function DashboardStaticSitesPage() {
 
       {/* Modal Create Static Site */}
       {isCreateOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-white/60 backdrop-blur-sm animate-in fade-in">
           <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100">
             <h3 className="text-lg font-black text-slate-900 mb-2 flex items-center gap-2">
               <Globe className="w-5 h-5 text-emerald-600" /> Tạo Dự Án Static Site Mới

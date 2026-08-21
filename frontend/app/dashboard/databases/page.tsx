@@ -136,7 +136,7 @@ export default function DashboardDatabasesPage() {
             </button>
             <button
               onClick={() => setIsCreateOpen(true)}
-              className="px-5 py-2.5 rounded-2xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs sm:text-sm transition-all shadow-lg shadow-teal-500/25 flex items-center gap-2"
+              className="px-5 py-2.5 rounded-2xl bg-teal-600 hover:bg-teal-700 text-slate-900 font-bold text-xs sm:text-sm transition-all shadow-lg shadow-teal-500/25 flex items-center gap-2"
             >
               <Plus className="w-4 h-4" />
               Tạo Database Mới
@@ -160,7 +160,7 @@ export default function DashboardDatabasesPage() {
           </div>
 
           {loading && databases.length === 0 ? (
-            <div className="p-12 text-center text-slate-400 text-sm flex items-center justify-center gap-2">
+            <div className="p-12 text-center text-slate-600 text-sm flex items-center justify-center gap-2">
               <RefreshCw className="w-5 h-5 animate-spin text-teal-600" />
               Đang tải danh sách database...
             </div>
@@ -175,7 +175,7 @@ export default function DashboardDatabasesPage() {
               </p>
               <button
                 onClick={() => setIsCreateOpen(true)}
-                className="px-5 py-2.5 rounded-2xl bg-teal-600 text-white font-bold text-xs shadow-md"
+                className="px-5 py-2.5 rounded-2xl bg-teal-600 text-slate-900 font-bold text-xs shadow-md"
               >
                 + Tạo Database Đầu Tiên
               </button>
@@ -192,7 +192,7 @@ export default function DashboardDatabasesPage() {
 
       {/* Modal Create DB */}
       {isCreateOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-white/60 backdrop-blur-sm animate-in fade-in">
           <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100">
             <h3 className="text-lg font-black text-slate-900 mb-2 flex items-center gap-2">
               <Database className="w-5 h-5 text-teal-600" /> Khởi Tạo Managed Database Mới
@@ -272,7 +272,7 @@ export default function DashboardDatabasesPage() {
                 <button
                   type="submit"
                   disabled={creating}
-                  className="px-5 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs shadow-md flex items-center gap-2"
+                  className="px-5 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-slate-900 font-bold text-xs shadow-md flex items-center gap-2"
                 >
                   {creating && <RefreshCw className="w-3.5 h-3.5 animate-spin" />}
                   Khởi Tạo Ngay

@@ -51,7 +51,8 @@ export default function SecurityWafServicePage() {
     setTimeout(() => setIsScanning(false), 300);
   };
 
-  const defaultPlans = [
+  const [defaultPlans, setDefaultPlans] = useState([
+
     {
       id: 'waf-basic',
       name: 'WAF Shield Starter',
@@ -114,7 +115,7 @@ export default function SecurityWafServicePage() {
       ],
       popular: false,
     },
-  ];
+  ]);
 
   const plans = defaultPlans.map((dp, idx) => {
     const matchingDb = dbPlans[idx];
@@ -125,6 +126,27 @@ export default function SecurityWafServicePage() {
       yearlyPrice: matchingDb?.yearlyPrice || dp.yearlyPrice,
     };
   });
+
+
+  useEffect(() => {
+    import('@/src/lib/api').then(({ api }) => {
+      api.get('/categories/security-waf/plans').then(res => {
+        const dbPlans = res.data?.plans || [];
+        if (dbPlans.length > 0) {
+          setDefaultPlans(prev => prev.map((p, index) => {
+            const dbP = dbPlans[index] || dbPlans[dbPlans.length - 1];
+            return {
+              ...p,
+              id: dbP.id || p.id,
+              monthlyPrice: dbP.monthlyPrice || Math.round((dbP.yearlyPrice || 0) / 12),
+              yearlyPrice: dbP.yearlyPrice || ((dbP.monthlyPrice || 0) * 12),
+              price: dbP.monthlyPrice || Math.round((dbP.yearlyPrice || 0) / 12)
+            };
+          }));
+        }
+      });
+    });
+  }, []);
 
   const handleOrder = async (plan: typeof plans[0]) => {
     const cycleMonths = billingCycle === 'yearly' ? 12 : 1;
@@ -159,10 +181,10 @@ export default function SecurityWafServicePage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#090d16] text-slate-100 selection:bg-rose-500 selection:text-white font-sans">
+    <div className="min-h-screen bg-slate-50 text-slate-900 selection:bg-rose-500 selection:text-white font-sans">
       
       {/* 1. HERO SECTION: WAF THREAT TELEMETRY CONSOLE */}
-      <section className="relative pt-16 pb-20 border-b border-slate-800/80 overflow-hidden">
+      <section className="relative pt-16 pb-20 border-b border-slate-200/80 overflow-hidden">
         {/* Technical Grid Blueprint */}
         <div 
           className="absolute inset-0 opacity-[0.06] pointer-events-none" 
@@ -176,21 +198,21 @@ export default function SecurityWafServicePage() {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           {/* Engineering Status Bar */}
-          <div className="flex flex-wrap items-center justify-between gap-4 p-3.5 mb-10 rounded-2xl bg-[#0d1424] border border-slate-800 text-xs font-mono">
+          <div className="flex flex-wrap items-center justify-between gap-4 p-3.5 mb-10 rounded-2xl bg-[#0d1424] border border-slate-200 text-xs font-mono">
             <div className="flex items-center gap-3">
               <span className="flex items-center gap-1.5 text-emerald-400 font-bold">
                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
                 WAF ENGINE: AI ANOMALY DETECTION ACTIVE
               </span>
               <span className="text-slate-600 hidden sm:inline">|</span>
-              <span className="text-slate-300 hidden sm:inline">
+              <span className="text-slate-700 hidden sm:inline">
                 INSPECTION TIME: <strong className="text-emerald-400 font-mono">&lt; 0.4ms</strong>
               </span>
             </div>
 
-            <div className="flex items-center gap-4 text-slate-400">
+            <div className="flex items-center gap-4 text-slate-600">
               <span>OWASP COVERAGE: <strong className="text-rose-400 font-mono">100% Top 10</strong></span>
-              <span>L7 ANTI-DDOS: <strong className="text-white font-mono">100Gbps+ Filter</strong></span>
+              <span>L7 ANTI-DDOS: <strong className="text-slate-900 font-mono">100Gbps+ Filter</strong></span>
             </div>
           </div>
 
@@ -203,42 +225,42 @@ export default function SecurityWafServicePage() {
                 ENTERPRISE WEB APPLICATION FIREWALL
               </div>
 
-              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.15]">
+              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 leading-[1.15]">
                 Lá Chắn Bảo Mật Với{' '}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-400 via-pink-400 to-amber-300 font-mono">
                   AI WAF Shield
                 </span>
               </h1>
 
-              <p className="text-slate-300 text-base sm:text-lg leading-relaxed max-w-2xl font-normal">
+              <p className="text-slate-700 text-base sm:text-lg leading-relaxed max-w-2xl font-normal">
                 Bảo vệ toàn diện website và API backend trước các cuộc tấn công khai thác lỗ hổng OWASP Top 10, 
                 botnet cào dữ liệu và tấn công từ chối dịch vụ Layer 7 mà không làm tăng độ trễ truy cập.
               </p>
 
               {/* Security Standards Badges */}
               <div className="flex flex-wrap items-center gap-3 pt-2">
-                <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0f172a] border border-slate-800 text-xs font-mono text-slate-300">
+                <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0f172a] border border-slate-200 text-xs font-mono text-slate-700">
                   <ShieldCheck className="w-4 h-4 text-rose-400" />
                   <span>OWASP Top 10 Ruleset</span>
                 </div>
-                <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0f172a] border border-slate-800 text-xs font-mono text-slate-300">
+                <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0f172a] border border-slate-200 text-xs font-mono text-slate-700">
                   <Cpu className="w-4 h-4 text-sky-400" />
                   <span>AI Zero-Day Heuristics</span>
                 </div>
-                <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0f172a] border border-slate-800 text-xs font-mono text-slate-300">
+                <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0f172a] border border-slate-200 text-xs font-mono text-slate-700">
                   <Lock className="w-4 h-4 text-emerald-400" />
                   <span>Origin IP Cloaking</span>
                 </div>
               </div>
 
               {/* Quick Spec Readout */}
-              <div className="p-4 rounded-xl bg-[#0c1322] border border-slate-800 text-xs font-mono space-y-2">
-                <div className="flex items-center justify-between text-slate-400">
-                  <span>Inspection Speed: <strong className="text-white">0.42 ms (No latency impact)</strong></span>
+              <div className="p-4 rounded-xl bg-white border border-slate-200 text-xs font-mono space-y-2">
+                <div className="flex items-center justify-between text-slate-600">
+                  <span>Inspection Speed: <strong className="text-slate-900">0.42 ms (No latency impact)</strong></span>
                   <span>Setup: <strong className="text-emerald-400">2-Minute DNS Change</strong></span>
                 </div>
-                <div className="text-slate-400">
-                  Mitigation: <span className="text-slate-300">SQLi, XSS, RCE, SSRF, LFI, Layer 7 HTTP Floods, Bad Bots</span>
+                <div className="text-slate-600">
+                  Mitigation: <span className="text-slate-700">SQLi, XSS, RCE, SSRF, LFI, Layer 7 HTTP Floods, Bad Bots</span>
                 </div>
               </div>
 
@@ -246,13 +268,13 @@ export default function SecurityWafServicePage() {
 
             {/* Right Interactive Threat Inspector Simulator */}
             <div className="lg:col-span-5">
-              <div className="rounded-2xl bg-[#0b1320] border border-slate-800 p-6 shadow-2xl space-y-5">
-                <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+              <div className="rounded-2xl bg-[#0b1320] border border-slate-200 p-6 shadow-2xl space-y-5">
+                <div className="flex items-center justify-between pb-3 border-b border-slate-200">
                   <div className="flex items-center gap-2">
                     <span className="w-3 h-3 rounded-full bg-rose-500/80" />
                     <span className="w-3 h-3 rounded-full bg-amber-500/80" />
                     <span className="w-3 h-3 rounded-full bg-emerald-500/80" />
-                    <span className="text-xs font-mono text-slate-400 ml-2">waf-threat-inspector.sen</span>
+                    <span className="text-xs font-mono text-slate-600 ml-2">waf-threat-inspector.sen</span>
                   </div>
                   <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-rose-950/80 text-rose-400 border border-rose-800/60 animate-pulse">
                     THREAT DETECTED
@@ -266,30 +288,30 @@ export default function SecurityWafServicePage() {
                   <div className="flex gap-2">
                     <button
                       onClick={() => handlePayloadSelect('sqli')}
-                      className={`px-3 py-1.5 rounded-lg border ${attackType === 'sqli' ? 'bg-rose-950 border-rose-500 text-rose-300 font-bold' : 'bg-slate-900 border-slate-800 text-slate-400'}`}
+                      className={`px-3 py-1.5 rounded-lg border ${attackType === 'sqli' ? 'bg-rose-950 border-rose-500 text-rose-300 font-bold' : 'bg-white border-slate-200 text-slate-400'}`}
                     >
                       SQL Injection
                     </button>
                     <button
                       onClick={() => handlePayloadSelect('xss')}
-                      className={`px-3 py-1.5 rounded-lg border ${attackType === 'xss' ? 'bg-rose-950 border-rose-500 text-rose-300 font-bold' : 'bg-slate-900 border-slate-800 text-slate-400'}`}
+                      className={`px-3 py-1.5 rounded-lg border ${attackType === 'xss' ? 'bg-rose-950 border-rose-500 text-rose-300 font-bold' : 'bg-white border-slate-200 text-slate-400'}`}
                     >
                       Cross-Site XSS
                     </button>
                     <button
                       onClick={() => handlePayloadSelect('rce')}
-                      className={`px-3 py-1.5 rounded-lg border ${attackType === 'rce' ? 'bg-rose-950 border-rose-500 text-rose-300 font-bold' : 'bg-slate-900 border-slate-800 text-slate-400'}`}
+                      className={`px-3 py-1.5 rounded-lg border ${attackType === 'rce' ? 'bg-rose-950 border-rose-500 text-rose-300 font-bold' : 'bg-white border-slate-200 text-slate-400'}`}
                     >
                       Command RCE
                     </button>
                   </div>
 
-                  <div className="p-3.5 rounded-xl bg-[#060a12] border border-slate-800 text-rose-300 break-all select-all font-mono text-[11px] leading-relaxed">
+                  <div className="p-3.5 rounded-xl bg-slate-100 border border-slate-200 text-rose-300 break-all select-all font-mono text-[11px] leading-relaxed">
                     {testPayload}
                   </div>
                 </div>
 
-                <div className="p-3.5 rounded-xl bg-[#0e1627] border border-slate-800 font-mono text-xs space-y-1.5">
+                <div className="p-3.5 rounded-xl bg-[#0e1627] border border-slate-200 font-mono text-xs space-y-1.5">
                   <div className="flex justify-between">
                     <span className="text-slate-500">WAF Rule Triggered:</span>
                     <span className="text-rose-400 font-bold">CRS-942100 (SQLi Signature)</span>
@@ -307,7 +329,7 @@ export default function SecurityWafServicePage() {
                 <div className="pt-2">
                   <a
                     href="#spec-matrix"
-                    className="w-full py-3.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs font-mono flex items-center justify-center gap-2 transition-all shadow-lg shadow-rose-600/20"
+                    className="w-full py-3.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-slate-900 font-bold text-xs font-mono flex items-center justify-center gap-2 transition-all shadow-lg shadow-rose-600/20"
                   >
                     <span>XEM BẢNG GÓI BẢO MẬT VÀ ĐẶT MUA</span>
                     <ArrowRight className="w-4 h-4" />
@@ -322,7 +344,7 @@ export default function SecurityWafServicePage() {
       </section>
 
       {/* 2. THREE CORE WAF ARCHITECTURE SCHEMATICS */}
-      <section className="py-24 bg-[#070b12] border-b border-slate-800">
+      <section className="py-24 bg-white border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="text-center max-w-3xl mx-auto mb-16">
@@ -330,10 +352,10 @@ export default function SecurityWafServicePage() {
               <ShieldCheck className="w-3.5 h-3.5" />
               CYBER DEFENSE ARCHITECTURE
             </div>
-            <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
+            <h2 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight">
               3 Lớp Phòng Thủ Toàn Diện Của WAF Shield
             </h2>
-            <p className="text-slate-400 text-sm sm:text-base mt-3 leading-relaxed font-normal">
+            <p className="text-slate-600 text-sm sm:text-base mt-3 leading-relaxed font-normal">
               Bảo vệ website và máy chủ ứng dụng trước mọi đòn tấn công mạng tinh vi.
             </p>
           </div>
@@ -341,111 +363,111 @@ export default function SecurityWafServicePage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             
             {/* Schematic 1: Reverse Proxy & Origin Cloaking */}
-            <div className="p-6 rounded-3xl bg-[#0c1322] border border-slate-800 flex flex-col justify-between space-y-6">
+            <div className="p-6 rounded-3xl bg-white border border-slate-200 flex flex-col justify-between space-y-6">
               <div>
-                <div className="p-4 rounded-2xl bg-[#060a12] border border-slate-800 mb-6 font-mono text-xs">
+                <div className="p-4 rounded-2xl bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
                   <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
                     <span>ORIGIN CLOAKING FLOW</span>
                     <span className="text-emerald-400">100% INVISIBLE</span>
                   </div>
-                  <div className="space-y-2 text-slate-300 text-[11px]">
-                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                  <div className="space-y-2 text-slate-700 text-[11px]">
+                    <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>1. Public DNS Query</span>
                       <span className="text-sky-400">WAF Anycast IP</span>
                     </div>
-                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                    <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>2. Threat Inspection</span>
                       <span className="text-rose-400 font-bold">Filtered &lt; 0.4ms</span>
                     </div>
-                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                    <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>3. Clean Traffic to Origin</span>
                       <span className="text-emerald-400 font-bold">Origin IP Hidden</span>
                     </div>
                   </div>
                 </div>
 
-                <h3 className="text-lg font-bold text-white mb-2">Ẩn Địa Chỉ IP Máy Chủ Gốc (Origin Cloaking)</h3>
-                <p className="text-xs text-slate-400 leading-relaxed">
+                <h3 className="text-lg font-bold text-slate-900 mb-2">Ẩn Địa Chỉ IP Máy Chủ Gốc (Origin Cloaking)</h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
                   Địa chỉ IP thực của máy chủ hosting/VPS được giấu hoàn toàn phía sau lớp khiên WAF. 
                   Kẻ tấn công không thể dò quét cổng hoặc tấn công DDoS trực diện vào máy chủ của bạn.
                 </p>
               </div>
 
-              <div className="pt-4 border-t border-slate-800/80 text-xs font-mono text-slate-300 flex items-center justify-between">
+              <div className="pt-4 border-t border-slate-200/80 text-xs font-mono text-slate-700 flex items-center justify-between">
                 <span>Origin IP Protection:</span>
                 <strong className="text-emerald-400">Hoàn Toàn Vô Hình</strong>
               </div>
             </div>
 
             {/* Schematic 2: AI Zero-Day Threat Filter */}
-            <div className="p-6 rounded-3xl bg-[#0c1322] border border-slate-800 flex flex-col justify-between space-y-6">
+            <div className="p-6 rounded-3xl bg-white border border-slate-200 flex flex-col justify-between space-y-6">
               <div>
-                <div className="p-4 rounded-2xl bg-[#060a12] border border-slate-800 mb-6 font-mono text-xs">
+                <div className="p-4 rounded-2xl bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
                   <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
                     <span>AI HEURISTIC SCANNER</span>
                     <span className="text-sky-400">ZERO-DAY DEFENSE</span>
                   </div>
-                  <div className="space-y-2 text-slate-300 text-[11px]">
-                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                  <div className="space-y-2 text-slate-700 text-[11px]">
+                    <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>Signature Matching</span>
-                      <span className="text-slate-300">10,000+ CRS Rules</span>
+                      <span className="text-slate-700">10,000+ CRS Rules</span>
                     </div>
-                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                    <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>Behavioral AI Model</span>
                       <span className="text-sky-400 font-bold">Anomaly Score 99%</span>
                     </div>
-                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                    <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>Automated Block</span>
                       <span className="text-rose-400 font-bold">Instant Drop 0.4ms</span>
                     </div>
                   </div>
                 </div>
 
-                <h3 className="text-lg font-bold text-white mb-2">Trí Tuệ Nhân Tạo Chặn Mã Độc Zero-Day</h3>
-                <p className="text-xs text-slate-400 leading-relaxed">
+                <h3 className="text-lg font-bold text-slate-900 mb-2">Trí Tuệ Nhân Tạo Chặn Mã Độc Zero-Day</h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
                   Kết hợp giữa chữ ký bảo mật OWASP CRS và mô hình máy học AI nhận diện mẫu hình tấn công bất thường. 
                   Bảo vệ an toàn ứng dụng ngay cả khi lỗ hổng vừa mới xuất hiện và chưa có bản vá từ nhà sản xuất.
                 </p>
               </div>
 
-              <div className="pt-4 border-t border-slate-800/80 text-xs font-mono text-slate-300 flex items-center justify-between">
+              <div className="pt-4 border-t border-slate-200/80 text-xs font-mono text-slate-700 flex items-center justify-between">
                 <span>Threat Coverage:</span>
                 <strong className="text-sky-400">SQLi, XSS, RCE, LFI, SSRF</strong>
               </div>
             </div>
 
             {/* Schematic 3: Rate Limiting & Botnet Shield */}
-            <div className="p-6 rounded-3xl bg-[#0c1322] border border-slate-800 flex flex-col justify-between space-y-6">
+            <div className="p-6 rounded-3xl bg-white border border-slate-200 flex flex-col justify-between space-y-6">
               <div>
-                <div className="p-4 rounded-2xl bg-[#060a12] border border-slate-800 mb-6 font-mono text-xs">
+                <div className="p-4 rounded-2xl bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
                   <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
                     <span>RATE LIMIT &amp; BOT SHIELD</span>
                     <span className="text-purple-400">ANTI-SCRAPING</span>
                   </div>
-                  <div className="space-y-2 text-slate-300 text-[11px]">
-                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                  <div className="space-y-2 text-slate-700 text-[11px]">
+                    <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>Brute-force / Login Spam</span>
                       <span className="text-rose-400 font-bold">Max 5 req/min</span>
                     </div>
-                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                    <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>Headless Browser Bot</span>
                       <span className="text-purple-400 font-bold">JS Challenge Block</span>
                     </div>
-                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                    <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>Legitimate Users</span>
                       <span className="text-emerald-400 font-bold">Seamless 0ms</span>
                     </div>
                   </div>
                 </div>
 
-                <h3 className="text-lg font-bold text-white mb-2">Chống Cào Dữ Liệu &amp; Vét Cạn Mật Khẩu</h3>
-                <p className="text-xs text-slate-400 leading-relaxed">
+                <h3 className="text-lg font-bold text-slate-900 mb-2">Chống Cào Dữ Liệu &amp; Vét Cạn Mật Khẩu</h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
                   Thiết lập giới hạn tần suất request thông minh cho từng endpoint nhạy cảm (/login, /api, /checkout). 
                   Tự động phân biệt người dùng thật với botnet tự động giúp máy chủ luôn mượt mà.
                 </p>
               </div>
 
-              <div className="pt-4 border-t border-slate-800/80 text-xs font-mono text-slate-300 flex items-center justify-between">
+              <div className="pt-4 border-t border-slate-200/80 text-xs font-mono text-slate-700 flex items-center justify-between">
                 <span>Bot Mitigation:</span>
                 <strong className="text-purple-400">Tự Động Xác Thực JavaScript</strong>
               </div>
@@ -457,7 +479,7 @@ export default function SecurityWafServicePage() {
       </section>
 
       {/* 3. TECHNICAL SPECIFICATION MATRIX & PRICING */}
-      <section id="spec-matrix" className="py-24 bg-[#090d16] border-b border-slate-800">
+      <section id="spec-matrix" className="py-24 bg-slate-50 border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
@@ -466,16 +488,16 @@ export default function SecurityWafServicePage() {
                 <Sliders className="w-3.5 h-3.5" />
                 SECURITY SPEC SHEET
               </div>
-              <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
+              <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
                 Bảng So Sánh Các Gói WAF Shield
               </h2>
-              <p className="text-slate-400 text-xs sm:text-sm mt-1 font-normal">
+              <p className="text-slate-600 text-xs sm:text-sm mt-1 font-normal">
                 Bảo vệ toàn diện trước mọi nguy cơ an ninh mạng hiện đại.
               </p>
             </div>
 
             {/* Billing Switch */}
-            <div className="inline-flex items-center p-1 rounded-xl bg-[#0c1322] border border-slate-800 font-mono text-xs">
+            <div className="inline-flex items-center p-1 rounded-xl bg-white border border-slate-200 font-mono text-xs">
               <button
                 onClick={() => setBillingCycle('monthly')}
                 className={`px-4 py-2 rounded-lg font-bold transition-all ${
@@ -503,67 +525,67 @@ export default function SecurityWafServicePage() {
           </div>
 
           {/* Matrix Table */}
-          <div className="rounded-2xl border border-slate-800 bg-[#0c1322] overflow-hidden shadow-2xl">
+          <div className="rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-2xl">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs font-mono">
                 <thead>
-                  <tr className="border-b border-slate-800 bg-[#080d17] text-slate-400">
+                  <tr className="border-b border-slate-200 bg-[#080d17] text-slate-600">
                     <th className="p-5 font-bold uppercase text-[11px] w-1/4">Thông Số Kỹ Thuật</th>
                     {plans.map((p) => {
                       const displayPrice = billingCycle === 'yearly' ? Math.round(p.yearlyPrice / 12) : p.monthlyPrice;
                       return (
-                        <th key={p.id} className="p-5 text-white border-l border-slate-800/80 w-1/4">
-                          <div className="text-sm font-extrabold text-white">{p.name}</div>
-                          <div className="text-[11px] text-slate-400 font-sans font-normal">{p.tier}</div>
+                        <th key={p.id} className="p-5 text-slate-900 border-l border-slate-200/80 w-1/4">
+                          <div className="text-sm font-extrabold text-slate-900">{p.name}</div>
+                          <div className="text-[11px] text-slate-600 font-sans font-normal">{p.tier}</div>
                           <div className="text-lg font-black text-rose-400 mt-2">
-                            {displayPrice.toLocaleString('vi-VN')} <span className="text-xs font-normal text-slate-400">đ/tháng</span>
+                            {displayPrice.toLocaleString('vi-VN')} <span className="text-xs font-normal text-slate-600">đ/tháng</span>
                           </div>
                         </th>
                       );
                     })}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-800/60 text-slate-300">
+                <tbody className="divide-y divide-slate-800/60 text-slate-700">
                   <tr className="hover:bg-slate-900/40">
-                    <td className="p-4 font-bold text-slate-400">Số Lượng Domain Bảo Vệ</td>
+                    <td className="p-4 font-bold text-slate-600">Số Lượng Domain Bảo Vệ</td>
                     {plans.map((p) => (
-                      <td key={p.id} className="p-4 border-l border-slate-800/60 text-white font-bold">{p.domains}</td>
+                      <td key={p.id} className="p-4 border-l border-slate-200/60 text-slate-900 font-bold">{p.domains}</td>
                     ))}
                   </tr>
                   <tr className="hover:bg-slate-900/40">
-                    <td className="p-4 font-bold text-slate-400">Băng Thông Sạch (Clean Bandwidth)</td>
+                    <td className="p-4 font-bold text-slate-600">Băng Thông Sạch (Clean Bandwidth)</td>
                     {plans.map((p) => (
-                      <td key={p.id} className="p-4 border-l border-slate-800/60 text-sky-400 font-bold">{p.bandwidth}</td>
+                      <td key={p.id} className="p-4 border-l border-slate-200/60 text-sky-400 font-bold">{p.bandwidth}</td>
                     ))}
                   </tr>
                   <tr className="hover:bg-slate-900/40">
-                    <td className="p-4 font-bold text-slate-400">Bộ Quy Tắc An Ninh (Ruleset)</td>
+                    <td className="p-4 font-bold text-slate-600">Bộ Quy Tắc An Ninh (Ruleset)</td>
                     {plans.map((p) => (
-                      <td key={p.id} className="p-4 border-l border-slate-800/60 text-emerald-400 font-bold">{p.ruleset}</td>
+                      <td key={p.id} className="p-4 border-l border-slate-200/60 text-emerald-400 font-bold">{p.ruleset}</td>
                     ))}
                   </tr>
                   <tr className="hover:bg-slate-900/40">
-                    <td className="p-4 font-bold text-slate-400">Lá Chắn Anti-DDoS Layer 7</td>
+                    <td className="p-4 font-bold text-slate-600">Lá Chắn Anti-DDoS Layer 7</td>
                     {plans.map((p) => (
-                      <td key={p.id} className="p-4 border-l border-slate-800/60 text-rose-400 font-bold">{p.ddos}</td>
+                      <td key={p.id} className="p-4 border-l border-slate-200/60 text-rose-400 font-bold">{p.ddos}</td>
                     ))}
                   </tr>
                   <tr className="hover:bg-slate-900/40">
-                    <td className="p-4 font-bold text-slate-400">Ẩn Địa Chỉ IP Gốc (Origin Cloaking)</td>
+                    <td className="p-4 font-bold text-slate-600">Ẩn Địa Chỉ IP Gốc (Origin Cloaking)</td>
                     {plans.map((p) => (
-                      <td key={p.id} className="p-4 border-l border-slate-800/60 text-emerald-400 font-bold">100% Hoạt động</td>
+                      <td key={p.id} className="p-4 border-l border-slate-200/60 text-emerald-400 font-bold">100% Hoạt động</td>
                     ))}
                   </tr>
                   <tr className="hover:bg-slate-900/40">
-                    <td className="p-4 font-bold text-slate-400">Thời Gian Kích Hoạt Bảo Vệ</td>
+                    <td className="p-4 font-bold text-slate-600">Thời Gian Kích Hoạt Bảo Vệ</td>
                     {plans.map((p) => (
-                      <td key={p.id} className="p-4 border-l border-slate-800/60 text-slate-200">Dưới 2 Phút (Đổi DNS)</td>
+                      <td key={p.id} className="p-4 border-l border-slate-200/60 text-slate-800">Dưới 2 Phút (Đổi DNS)</td>
                     ))}
                   </tr>
                   <tr className="bg-[#080d17]">
-                    <td className="p-5 font-bold text-slate-400">Hành Động Khởi Tạo</td>
+                    <td className="p-5 font-bold text-slate-600">Hành Động Khởi Tạo</td>
                     {plans.map((p) => (
-                      <td key={p.id} className="p-5 border-l border-slate-800/60">
+                      <td key={p.id} className="p-5 border-l border-slate-200/60">
                         <button
                           onClick={() => handleOrder(p)}
                           className={`w-full py-3 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-2 ${
@@ -587,22 +609,22 @@ export default function SecurityWafServicePage() {
       </section>
 
       {/* 4. FAQ SECTION */}
-      <section className="py-20 bg-[#090d16] border-b border-slate-800">
+      <section className="py-20 bg-slate-50 border-b border-slate-200">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-white">Câu Hỏi Thường Gặp Về WAF Shield</h2>
-            <p className="text-slate-400 text-xs sm:text-sm mt-2 font-mono">SEN CLOUDHOST WAF DEFENSE FAQ</p>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900">Câu Hỏi Thường Gặp Về WAF Shield</h2>
+            <p className="text-slate-600 text-xs sm:text-sm mt-2 font-mono">SEN CLOUDHOST WAF DEFENSE FAQ</p>
           </div>
 
           <div className="space-y-3">
             {faqs.map((faq, idx) => (
               <div
                 key={idx}
-                className="bg-[#0c1322] rounded-2xl border border-slate-800 overflow-hidden transition-all"
+                className="bg-white rounded-2xl border border-slate-200 overflow-hidden transition-all"
               >
                 <button
                   onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
-                  className="w-full p-5 text-left font-bold text-sm text-white flex items-center justify-between gap-4 hover:text-rose-400 transition-colors"
+                  className="w-full p-5 text-left font-bold text-sm text-slate-900 flex items-center justify-between gap-4 hover:text-rose-400 transition-colors"
                 >
                   <span>{faq.q}</span>
                   {openFaq === idx ? (
@@ -612,7 +634,7 @@ export default function SecurityWafServicePage() {
                   )}
                 </button>
                 {openFaq === idx && (
-                  <div className="px-5 pb-5 text-xs text-slate-300 leading-relaxed border-t border-slate-800/60 pt-3 font-normal">
+                  <div className="px-5 pb-5 text-xs text-slate-700 leading-relaxed border-t border-slate-200/60 pt-3 font-normal">
                     {faq.a}
                   </div>
                 )}
@@ -651,7 +673,7 @@ export default function SecurityWafServicePage() {
               </button>
               <Link
                 href="/contact"
-                className="px-8 py-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs font-mono border border-slate-700 transition-all"
+                className="px-8 py-3.5 rounded-xl bg-white hover:bg-slate-200 text-slate-900 font-bold text-xs font-mono border border-slate-300 transition-all"
               >
                 Tư Vấn An Ninh Mạng
               </Link>

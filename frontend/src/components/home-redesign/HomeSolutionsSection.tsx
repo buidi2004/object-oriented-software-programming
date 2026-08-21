@@ -147,9 +147,9 @@ export const HomeSolutionsSection = () => {
                 style={{ background: 'linear-gradient(to top, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.4) 60%, transparent 100%)' }}
               />
               
-              <div className="absolute inset-0 p-5 sm:p-8 flex flex-col justify-end text-white">
+              <div className="absolute inset-0 p-5 sm:p-8 flex flex-col justify-end text-slate-900">
                 <h3 className="text-lg sm:text-xl font-bold mb-1.5 sm:mb-2">{sol.title}</h3>
-                <p className="text-xs sm:text-sm text-slate-300 line-clamp-2 mb-3 sm:mb-4">{sol.desc}</p>
+                <p className="text-xs sm:text-sm text-slate-700 line-clamp-2 mb-3 sm:mb-4">{sol.desc}</p>
                 <div>
                   <span className="inline-flex items-center px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-lg bg-blue-600/90 hover:bg-blue-600 text-xs sm:text-sm font-bold backdrop-blur-sm transition-colors">
                     Xem chi tiết

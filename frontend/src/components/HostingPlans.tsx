@@ -99,7 +99,7 @@ export const HostingPlans: React.FC<HostingPlansProps> = ({ onAddToCart, onViewD
 
                 <div>
                   <h3 className="text-2xl font-extrabold tracking-tight">{pkg.name}</h3>
-                  <p className={`text-sm mt-2 leading-relaxed min-h-[32px] ${pkg.isPopular ? 'text-slate-300' : 'text-slate-500'}`}>
+                  <p className={`text-sm mt-2 leading-relaxed min-h-[32px] ${pkg.isPopular ? 'text-slate-700' : 'text-slate-500'}`}>
                     {pkg.tagline}
                   </p>
 
@@ -109,7 +109,7 @@ export const HostingPlans: React.FC<HostingPlansProps> = ({ onAddToCart, onViewD
                       <span className="text-3xl sm:text-4xl font-black tracking-tight text-blue-500">
                         {displayPrice.toLocaleString('vi-VN')} đ
                       </span>
-                      <span className={`text-sm font-bold ${pkg.isPopular ? 'text-slate-300' : 'text-slate-500'}`}>
+                      <span className={`text-sm font-bold ${pkg.isPopular ? 'text-slate-700' : 'text-slate-500'}`}>
                         /tháng
                       </span>
                     </div>

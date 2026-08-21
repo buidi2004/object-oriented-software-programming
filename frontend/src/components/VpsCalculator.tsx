@@ -216,55 +216,55 @@ export const VpsCalculator: React.FC<VpsCalculatorProps> = ({ onAddToCart, onVie
             </div>
           </div>
 
-          <div className="lg:col-span-4 bg-slate-900 text-white p-6 sm:p-8 rounded-3xl shadow-2xl border border-slate-800 space-y-6 sticky top-28">
-            <div className="flex items-center justify-between pb-4 border-b border-slate-800">
+          <div className="lg:col-span-4 bg-white text-slate-900 p-6 sm:p-8 rounded-3xl shadow-2xl border border-slate-200 space-y-6 sticky top-28">
+            <div className="flex items-center justify-between pb-4 border-b border-slate-200">
               <span className="text-xs font-extrabold tracking-wider uppercase text-cyan-400 flex items-center gap-1.5">
                 <Zap className="w-4 h-4 fill-cyan-400" />
                 Cấu Hình Đã Chọn
               </span>
-              <span className="text-xs text-slate-400">Khởi tạo 30s</span>
+              <span className="text-xs text-slate-600">Khởi tạo 30s</span>
             </div>
 
-            <ul className="space-y-3 text-sm text-slate-300 font-medium">
+            <ul className="space-y-3 text-sm text-slate-700 font-medium">
               <li className="flex justify-between items-center gap-2">
-                <span className="text-slate-400 flex items-center gap-1.5"><ResourceIcon type="cpu" className="!w-7 !h-7 !rounded-lg" /> CPU:</span>
-                <span className="font-bold text-white">{cpu} vCPU Core</span>
+                <span className="text-slate-600 flex items-center gap-1.5"><ResourceIcon type="cpu" className="!w-7 !h-7 !rounded-lg" /> CPU:</span>
+                <span className="font-bold text-slate-900">{cpu} vCPU Core</span>
               </li>
               <li className="flex justify-between items-center gap-2">
-                <span className="text-slate-400 flex items-center gap-1.5"><ResourceIcon type="ram" className="!w-7 !h-7 !rounded-lg" /> RAM:</span>
-                <span className="font-bold text-white">{ram} GB DDR5</span>
+                <span className="text-slate-600 flex items-center gap-1.5"><ResourceIcon type="ram" className="!w-7 !h-7 !rounded-lg" /> RAM:</span>
+                <span className="font-bold text-slate-900">{ram} GB DDR5</span>
               </li>
               <li className="flex justify-between items-center gap-2">
-                <span className="text-slate-400 flex items-center gap-1.5"><ResourceIcon type="disk" className="!w-7 !h-7 !rounded-lg" /> SSD:</span>
-                <span className="font-bold text-white">{disk} GB NVMe</span>
+                <span className="text-slate-600 flex items-center gap-1.5"><ResourceIcon type="disk" className="!w-7 !h-7 !rounded-lg" /> SSD:</span>
+                <span className="font-bold text-slate-900">{disk} GB NVMe</span>
               </li>
               <li className="flex justify-between items-center gap-2">
-                <span className="text-slate-400 flex items-center gap-1.5"><ResourceIcon type="network" className="!w-7 !h-7 !rounded-lg" /> BW:</span>
+                <span className="text-slate-600 flex items-center gap-1.5"><ResourceIcon type="network" className="!w-7 !h-7 !rounded-lg" /> BW:</span>
                 <span className="font-bold text-cyan-400 flex items-center gap-1">
                   <Wifi className="w-3.5 h-3.5" /> Không giới hạn
                 </span>
               </li>
               <li className="flex justify-between items-center gap-2">
-                <span className="text-slate-400 flex items-center gap-1.5">
+                <span className="text-slate-600 flex items-center gap-1.5">
                   {selectedOs && <OsTemplateIcon os={selectedOs.osKey} size="sm" className="!rounded-lg" />}
                   OS:
                 </span>
-                <span className="font-bold text-white truncate max-w-[140px] text-right">{os}</span>
+                <span className="font-bold text-slate-900 truncate max-w-[140px] text-right">{os}</span>
               </li>
               <li className="flex justify-between items-center gap-2">
-                <span className="text-slate-400 flex items-center gap-1.5">
+                <span className="text-slate-600 flex items-center gap-1.5">
                   {selectedDc && <DatacenterLocationIcon region={selectedDc.region} />}
                   DC:
                 </span>
-                <span className="font-bold text-white text-right">{selectedDc?.shortLabel ?? datacenter}</span>
+                <span className="font-bold text-slate-900 text-right">{selectedDc?.shortLabel ?? datacenter}</span>
               </li>
             </ul>
 
             <div className="pt-2">
-              <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">
+              <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-3">
                 Chu Kỳ Thanh Toán:
               </label>
-              <div className="grid grid-cols-4 gap-1.5 p-1.5 pt-3 bg-slate-800 rounded-xl">
+              <div className="grid grid-cols-4 gap-1.5 p-1.5 pt-3 bg-white rounded-xl">
                 {[
                   { m: 1, label: '1 T' },
                   { m: 6, label: '6 T', badge: '-10%' },
@@ -293,12 +293,12 @@ export const VpsCalculator: React.FC<VpsCalculatorProps> = ({ onAddToCart, onVie
               </div>
             </div>
 
-            <div className="pt-4 border-t border-slate-800 space-y-1">
+            <div className="pt-4 border-t border-slate-200 space-y-1">
               <div className="flex items-baseline justify-between">
-                <span className="text-xs text-slate-400 font-semibold">Giá mỗi tháng:</span>
+                <span className="text-xs text-slate-600 font-semibold">Giá mỗi tháng:</span>
                 <span className="text-2xl font-black text-cyan-300">
                   {discountedMonthlyPrice.toLocaleString('vi-VN')} đ
-                  <span className="text-xs text-slate-400 font-normal">/tháng</span>
+                  <span className="text-xs text-slate-600 font-normal">/tháng</span>
                 </span>
               </div>
 
@@ -308,9 +308,9 @@ export const VpsCalculator: React.FC<VpsCalculatorProps> = ({ onAddToCart, onVie
                 </div>
               )}
 
-              <div className="flex justify-between items-center text-xs text-slate-400 pt-2">
+              <div className="flex justify-between items-center text-xs text-slate-600 pt-2">
                 <span>Tổng thanh toán ({billingMonths} tháng):</span>
-                <span className="font-bold text-white text-sm">
+                <span className="font-bold text-slate-900 text-sm">
                   {finalTotalPrice.toLocaleString('vi-VN')} đ
                 </span>
               </div>
@@ -325,13 +325,13 @@ export const VpsCalculator: React.FC<VpsCalculatorProps> = ({ onAddToCart, onVie
               </button>
               <button
                 onClick={handleOrder}
-                className="w-full py-4 rounded-2xl bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white font-extrabold text-base shadow-xl shadow-blue-500/25 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full py-4 rounded-2xl bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-slate-900 font-extrabold text-base shadow-xl shadow-blue-500/25 transition-all flex items-center justify-center gap-2 cursor-pointer"
               >
                 <span>Khởi Tạo Cloud VPS Ngay</span>
                 <ArrowRight className="w-5 h-5" />
               </button>
 
-              <div className="text-center text-[11px] text-slate-400 flex items-center justify-center gap-1.5">
+              <div className="text-center text-[11px] text-slate-600 flex items-center justify-center gap-1.5">
                 <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
                 Cam kết hoàn tiền trong 7 ngày nếu không hài lòng
               </div>

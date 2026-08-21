@@ -64,7 +64,7 @@ export default function ForgotPasswordPage() {
                 <div>
                   <label htmlFor="email" className="block text-sm font-semibold text-slate-700 mb-1">Email</label>
                   <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-600" />
                     <input
                       id="email"
                       type="email"

@@ -170,7 +170,7 @@ export default function AffiliatesPage() {
               <button
                 type="submit"
                 disabled={!applyCode.trim()}
-                className="bg-gray-900 hover:bg-gray-800 text-white px-6 py-2.5 rounded-lg font-medium transition-colors disabled:opacity-50"
+                className="bg-white hover:bg-gray-800 text-slate-900 px-6 py-2.5 rounded-lg font-medium transition-colors disabled:opacity-50"
               >
                 Áp dụng
               </button>

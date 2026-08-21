@@ -181,7 +181,7 @@ function PlanDetailInner() {
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-12">
         <div className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
-          <div className="bg-gradient-to-br from-blue-900 to-indigo-950 p-10 text-white relative overflow-hidden">
+          <div className="bg-gradient-to-br from-blue-900 to-indigo-950 p-10 text-slate-900 relative overflow-hidden">
             <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
               <Server className="w-64 h-64" />
             </div>

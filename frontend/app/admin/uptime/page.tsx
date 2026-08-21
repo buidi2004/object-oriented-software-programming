@@ -267,19 +267,19 @@ export default function AdminUptimePage() {
             <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
               <div className="text-xs text-slate-500 font-bold uppercase mb-1">Tỷ Lệ Uptime Toàn Mạng</div>
               <div className="text-2xl font-black text-slate-900">{systemStatus.uptime}%</div>
-              <div className="text-[10px] text-slate-400 mt-1">Cam kết SLA: 99.9%</div>
+              <div className="text-[10px] text-slate-600 mt-1">Cam kết SLA: 99.9%</div>
             </div>
 
             <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
               <div className="text-xs text-slate-500 font-bold uppercase mb-1">Độ Trễ Trung Bình</div>
               <div className="text-2xl font-black text-blue-600">{systemStatus.avgResponseTime} ms</div>
-              <div className="text-[10px] text-slate-400 mt-1">Đo đạc từ 3 miền Bắc - Trung - Nam</div>
+              <div className="text-[10px] text-slate-600 mt-1">Đo đạc từ 3 miền Bắc - Trung - Nam</div>
             </div>
 
             <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
               <div className="text-xs text-slate-500 font-bold uppercase mb-1">Lượt Yêu Cầu 24h</div>
               <div className="text-2xl font-black text-purple-600">{systemStatus.totalRequests.toLocaleString('vi-VN')}</div>
-              <div className="text-[10px] text-slate-400 mt-1">100% Requests được bảo vệ qua WAF</div>
+              <div className="text-[10px] text-slate-600 mt-1">100% Requests được bảo vệ qua WAF</div>
             </div>
           </div>
         )}
@@ -306,7 +306,7 @@ export default function AdminUptimePage() {
                       </div>
                       <div>
                         <p className="font-bold text-slate-900 text-sm">{svc.name}</p>
-                        <p className="text-xs text-slate-400 font-mono">{svc.url}</p>
+                        <p className="text-xs text-slate-600 font-mono">{svc.url}</p>
                       </div>
                     </div>
                   </td>
@@ -352,21 +352,21 @@ export default function AdminUptimePage() {
                       </button>
                       <button
                         onClick={() => handleTogglePause(svc.id)}
-                        className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors"
+                        className="p-1.5 text-slate-600 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors"
                         title={svc.isPaused ? 'Tiếp tục giám sát' : 'Tạm dừng giám sát'}
                       >
                         {svc.isPaused ? <Play className="w-3.5 h-3.5" /> : <Pause className="w-3.5 h-3.5" />}
                       </button>
                       <button
                         onClick={() => handleOpenEdit(svc)}
-                        className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                        className="p-1.5 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                         title="Sửa endpoint"
                       >
                         <Edit2 className="w-3.5 h-3.5" />
                       </button>
                       <button
                         onClick={() => handleDeleteService(svc.id, svc.name)}
-                        className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+                        className="p-1.5 text-slate-600 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
                         title="Xóa endpoint"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -387,7 +387,7 @@ export default function AdminUptimePage() {
                 <h3 className="text-base font-black text-slate-900">
                   {editingService ? 'Chỉnh Sửa Endpoint Giám Sát' : 'Thêm Endpoint Giám Sát Mới'}
                 </h3>
-                <button onClick={() => { setShowAddModal(false); setEditingService(null); }} className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100">
+                <button onClick={() => { setShowAddModal(false); setEditingService(null); }} className="p-1.5 text-slate-600 hover:text-slate-600 rounded-lg hover:bg-slate-100">
                   <X className="w-5 h-5" />
                 </button>
               </div>

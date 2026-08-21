@@ -38,7 +38,8 @@ export default function StaticSitesServicePage() {
     loadPlans();
   }, []);
 
-  const defaultPlans = [
+  const [defaultPlans, setDefaultPlans] = useState([
+
     {
       id: 'c4f880e1-52b6-4313-a0b7-aa0fe24ed8ba',
       name: 'Static Starter',
@@ -82,7 +83,7 @@ export default function StaticSitesServicePage() {
       ],
       popular: true,
     },
-  ];
+  ]);
 
   const plans = defaultPlans.map((dp, idx) => {
     const matchingDb = dbPlans[idx];
@@ -93,6 +94,27 @@ export default function StaticSitesServicePage() {
       yearlyPrice: matchingDb?.yearlyPrice ?? dp.yearlyPrice,
     };
   });
+
+
+  useEffect(() => {
+    import('@/src/lib/api').then(({ api }) => {
+      api.get('/categories/static-sites/plans').then(res => {
+        const dbPlans = res.data?.plans || [];
+        if (dbPlans.length > 0) {
+          setDefaultPlans(prev => prev.map((p, index) => {
+            const dbP = dbPlans[index] || dbPlans[dbPlans.length - 1];
+            return {
+              ...p,
+              id: dbP.id || p.id,
+              monthlyPrice: dbP.monthlyPrice || Math.round((dbP.yearlyPrice || 0) / 12),
+              yearlyPrice: dbP.yearlyPrice || ((dbP.monthlyPrice || 0) * 12),
+              price: dbP.monthlyPrice || Math.round((dbP.yearlyPrice || 0) / 12)
+            };
+          }));
+        }
+      });
+    });
+  }, []);
 
   const handleOrder = async (plan: typeof plans[0]) => {
     const cycleMonths = billingCycle === 'yearly' ? 12 : 1;
@@ -152,10 +174,10 @@ server {
   ];
 
   return (
-    <div className="min-h-screen bg-[#090d16] text-slate-100 selection:bg-cyan-500 selection:text-white font-sans">
+    <div className="min-h-screen bg-slate-50 text-slate-900 selection:bg-cyan-500 selection:text-white font-sans">
       
       {/* 1. HERO SECTION: NGINX CONTAINER TELEMETRY */}
-      <section className="relative pt-16 pb-20 border-b border-slate-800/80 overflow-hidden">
+      <section className="relative pt-16 pb-20 border-b border-slate-200/80 overflow-hidden">
         {/* Technical Grid Blueprint */}
         <div 
           className="absolute inset-0 opacity-[0.06] pointer-events-none" 
@@ -169,19 +191,19 @@ server {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           {/* Engineering Status Bar */}
-          <div className="flex flex-wrap items-center justify-between gap-4 p-3.5 mb-10 rounded-2xl bg-[#0d1424] border border-slate-800 text-xs font-mono">
+          <div className="flex flex-wrap items-center justify-between gap-4 p-3.5 mb-10 rounded-2xl bg-[#0d1424] border border-slate-200 text-xs font-mono">
             <div className="flex items-center gap-3">
               <span className="flex items-center gap-1.5 text-cyan-400 font-bold">
                 <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
                 WEB ENGINE: ISOLATED NGINX CONTAINER
               </span>
               <span className="text-slate-600 hidden sm:inline">|</span>
-              <span className="text-slate-300 hidden sm:inline">
+              <span className="text-slate-700 hidden sm:inline">
                 TTFB LATENCY: <strong className="text-emerald-400 font-mono">&lt; 15ms</strong>
               </span>
             </div>
 
-            <div className="flex items-center gap-4 text-slate-400">
+            <div className="flex items-center gap-4 text-slate-600">
               <span>COMPRESSION: <strong className="text-cyan-400 font-mono">Brotli 11</strong></span>
               <span>CI/CD: <strong className="text-emerald-400 font-mono">Git Webhook Ready</strong></span>
             </div>
@@ -196,42 +218,42 @@ server {
                 ULTRA LOW-LATENCY STATIC &amp; SPA HOSTING
               </div>
 
-              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.15]">
+              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 leading-[1.15]">
                 Lưu Trữ Web Tĩnh Trên{' '}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-teal-300 to-emerald-400 font-mono">
                   Container Nginx
                 </span>
               </h1>
 
-              <p className="text-slate-300 text-base sm:text-lg leading-relaxed max-w-2xl font-normal">
+              <p className="text-slate-700 text-base sm:text-lg leading-relaxed max-w-2xl font-normal">
                 Thời gian phản hồi TTFB dưới 15ms, đạt điểm 100/100 Google PageSpeed. 
                 Tự động hóa toàn bộ quy trình cấu hình Nginx SPA Rewrite, cấp phát SSL HTTPS và đồng bộ Git Webhook.
               </p>
 
               {/* Supported Tech Badges */}
               <div className="flex flex-wrap items-center gap-3 pt-2">
-                <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0f172a] border border-slate-800 text-xs font-mono text-slate-300">
+                <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0f172a] border border-slate-200 text-xs font-mono text-slate-700">
                   <SiNginx className="w-4 h-4 text-emerald-500" />
                   <span>Nginx Engine v1.26</span>
                 </div>
-                <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0f172a] border border-slate-800 text-xs font-mono text-slate-300">
+                <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0f172a] border border-slate-200 text-xs font-mono text-slate-700">
                   <SiReact className="w-4 h-4 text-sky-400" />
                   <span>React / Vite SPA</span>
                 </div>
-                <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0f172a] border border-slate-800 text-xs font-mono text-slate-300">
-                  <SiNextdotjs className="w-4 h-4 text-white" />
+                <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0f172a] border border-slate-200 text-xs font-mono text-slate-700">
+                  <SiNextdotjs className="w-4 h-4 text-slate-900" />
                   <span>Next.js Export</span>
                 </div>
               </div>
 
               {/* Quick Spec Details */}
-              <div className="p-4 rounded-xl bg-[#0c1322] border border-slate-800 text-xs font-mono space-y-2">
-                <div className="flex items-center justify-between text-slate-400">
-                  <span>Routing Engine: <strong className="text-white">SPA try_files Fallback (No 404)</strong></span>
+              <div className="p-4 rounded-xl bg-white border border-slate-200 text-xs font-mono space-y-2">
+                <div className="flex items-center justify-between text-slate-600">
+                  <span>Routing Engine: <strong className="text-slate-900">SPA try_files Fallback (No 404)</strong></span>
                   <span>SSL: <strong className="text-emerald-400">Auto Let&apos;s Encrypt</strong></span>
                 </div>
-                <div className="text-slate-400">
-                  Compression: <span className="text-slate-300">Brotli 11 + Gzip (Giảm 80% dung lượng JS/CSS)</span>
+                <div className="text-slate-600">
+                  Compression: <span className="text-slate-700">Brotli 11 + Gzip (Giảm 80% dung lượng JS/CSS)</span>
                 </div>
               </div>
 
@@ -239,13 +261,13 @@ server {
 
             {/* Right Nginx Config Engine Simulator */}
             <div className="lg:col-span-5">
-              <div className="rounded-2xl bg-[#0b1320] border border-slate-800 p-6 shadow-2xl space-y-5">
-                <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+              <div className="rounded-2xl bg-[#0b1320] border border-slate-200 p-6 shadow-2xl space-y-5">
+                <div className="flex items-center justify-between pb-3 border-b border-slate-200">
                   <div className="flex items-center gap-2">
                     <span className="w-3 h-3 rounded-full bg-rose-500/80" />
                     <span className="w-3 h-3 rounded-full bg-amber-500/80" />
                     <span className="w-3 h-3 rounded-full bg-emerald-500/80" />
-                    <span className="text-xs font-mono text-slate-400 ml-2">/etc/nginx/conf.d/site.conf</span>
+                    <span className="text-xs font-mono text-slate-600 ml-2">/etc/nginx/conf.d/site.conf</span>
                   </div>
                   <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-emerald-950/80 text-emerald-400 border border-emerald-800/60">
                     TEST PASSED
@@ -254,16 +276,16 @@ server {
 
                 <div className="flex items-center justify-between gap-3 font-mono text-xs">
                   <div className="flex items-center gap-2">
-                    <span className="text-slate-400">Preset:</span>
+                    <span className="text-slate-600">Preset:</span>
                     <button
                       onClick={() => setSpaFramework('react')}
-                      className={`px-2.5 py-1 rounded-lg border ${spaFramework === 'react' ? 'bg-cyan-950 border-cyan-500 text-cyan-300' : 'bg-slate-900 border-slate-800 text-slate-400'}`}
+                      className={`px-2.5 py-1 rounded-lg border ${spaFramework === 'react' ? 'bg-cyan-950 border-cyan-500 text-cyan-300' : 'bg-white border-slate-200 text-slate-400'}`}
                     >
                       React/Vite
                     </button>
                     <button
                       onClick={() => setSpaFramework('html')}
-                      className={`px-2.5 py-1 rounded-lg border ${spaFramework === 'html' ? 'bg-cyan-950 border-cyan-500 text-cyan-300' : 'bg-slate-900 border-slate-800 text-slate-400'}`}
+                      className={`px-2.5 py-1 rounded-lg border ${spaFramework === 'html' ? 'bg-cyan-950 border-cyan-500 text-cyan-300' : 'bg-white border-slate-200 text-slate-400'}`}
                     >
                       HTML Static
                     </button>
@@ -271,13 +293,13 @@ server {
 
                   <button
                     onClick={() => setBrotliEnabled(!brotliEnabled)}
-                    className="text-[11px] text-slate-400 hover:text-cyan-400 underline"
+                    className="text-[11px] text-slate-600 hover:text-cyan-400 underline"
                   >
                     {brotliEnabled ? 'Brotli ON' : 'Brotli OFF'}
                   </button>
                 </div>
 
-                <div className="p-3.5 rounded-xl bg-[#060a12] border border-slate-800/90 text-cyan-300 font-mono text-[11px] max-h-48 overflow-y-auto leading-relaxed whitespace-pre">
+                <div className="p-3.5 rounded-xl bg-slate-100 border border-slate-200/90 text-cyan-300 font-mono text-[11px] max-h-48 overflow-y-auto leading-relaxed whitespace-pre">
                   {nginxSnippet}
                 </div>
 
@@ -299,7 +321,7 @@ server {
       </section>
 
       {/* 2. THREE CORE NGINX ARCHITECTURE SCHEMATICS */}
-      <section className="py-24 bg-[#070b12] border-b border-slate-800">
+      <section className="py-24 bg-white border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="text-center max-w-3xl mx-auto mb-16">
@@ -307,10 +329,10 @@ server {
               <Zap className="w-3.5 h-3.5" />
               HIGH PERFORMANCE ARCHITECTURE
             </div>
-            <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
+            <h2 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight">
               3 Ưu Thế Của Container Nginx Cô Lập
             </h2>
-            <p className="text-slate-400 text-sm sm:text-base mt-3 leading-relaxed font-normal">
+            <p className="text-slate-600 text-sm sm:text-base mt-3 leading-relaxed font-normal">
               Được tinh chỉnh đặc thù cho website tĩnh và Single Page Applications (SPA).
             </p>
           </div>
@@ -318,111 +340,111 @@ server {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             
             {/* Schematic 1: TTFB < 15ms */}
-            <div className="p-6 rounded-3xl bg-[#0c1322] border border-slate-800 flex flex-col justify-between space-y-6">
+            <div className="p-6 rounded-3xl bg-white border border-slate-200 flex flex-col justify-between space-y-6">
               <div>
-                <div className="p-4 rounded-2xl bg-[#060a12] border border-slate-800 mb-6 font-mono text-xs">
+                <div className="p-4 rounded-2xl bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
                   <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
                     <span>TIME TO FIRST BYTE (TTFB)</span>
                     <span className="text-emerald-400">&lt; 15MS</span>
                   </div>
-                  <div className="space-y-2 text-slate-300 text-[11px]">
-                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                  <div className="space-y-2 text-slate-700 text-[11px]">
+                    <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>DNS Lookup</span>
                       <span className="text-sky-400">1.2 ms</span>
                     </div>
-                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                    <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>TLS 1.3 Handshake</span>
                       <span className="text-emerald-400">3.8 ms</span>
                     </div>
-                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                    <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>Nginx Direct File Serve</span>
                       <span className="text-cyan-400 font-bold">4.5 ms</span>
                     </div>
                   </div>
                 </div>
 
-                <h3 className="text-lg font-bold text-white mb-2">Tốc Độ Tải Trang Tức Thì (TTFB &lt; 15ms)</h3>
-                <p className="text-xs text-slate-400 leading-relaxed">
+                <h3 className="text-lg font-bold text-slate-900 mb-2">Tốc Độ Tải Trang Tức Thì (TTFB &lt; 15ms)</h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
                   Loại bỏ hoàn toàn tầng thông dịch PHP/Python/Database nặng nề. 
                   Nginx phục vụ tệp tĩnh trực tiếp từ bộ nhớ đệm RAM Cache và ổ cứng NVMe Gen4 với độ trễ cực thấp.
                 </p>
               </div>
 
-              <div className="pt-4 border-t border-slate-800/80 text-xs font-mono text-slate-300 flex items-center justify-between">
+              <div className="pt-4 border-t border-slate-200/80 text-xs font-mono text-slate-700 flex items-center justify-between">
                 <span>Google PageSpeed:</span>
                 <strong className="text-emerald-400">100 / 100 Điểm Tối Đa</strong>
               </div>
             </div>
 
             {/* Schematic 2: SPA Rewrite Fallback */}
-            <div className="p-6 rounded-3xl bg-[#0c1322] border border-slate-800 flex flex-col justify-between space-y-6">
+            <div className="p-6 rounded-3xl bg-white border border-slate-200 flex flex-col justify-between space-y-6">
               <div>
-                <div className="p-4 rounded-2xl bg-[#060a12] border border-slate-800 mb-6 font-mono text-xs">
+                <div className="p-4 rounded-2xl bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
                   <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
                     <span>SPA TRY_FILES FALLBACK</span>
                     <span className="text-sky-400">NO 404 ERRORS</span>
                   </div>
-                  <div className="space-y-2 text-slate-300 text-[11px]">
-                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                  <div className="space-y-2 text-slate-700 text-[11px]">
+                    <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>User F5 Reload /dashboard</span>
-                      <span className="text-slate-400">Request URI</span>
+                      <span className="text-slate-600">Request URI</span>
                     </div>
-                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                    <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>Nginx try_files $uri</span>
                       <span className="text-emerald-400 font-bold">Rewrite /index.html</span>
                     </div>
-                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                    <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>React Router Handles</span>
                       <span className="text-cyan-400 font-bold">Client Route Render</span>
                     </div>
                   </div>
                 </div>
 
-                <h3 className="text-lg font-bold text-white mb-2">Tương Thích Tuyệt Đối React &amp; Vue SPA</h3>
-                <p className="text-xs text-slate-400 leading-relaxed">
+                <h3 className="text-lg font-bold text-slate-900 mb-2">Tương Thích Tuyệt Đối React &amp; Vue SPA</h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
                   Tự động thiết lập luật định tuyến fallback Nginx chuẩn xác. 
                   Người dùng có thể thoải mái chia sẻ link con hoặc tải lại trang F5 mà không bao giờ gặp lỗi 404 Not Found.
                 </p>
               </div>
 
-              <div className="pt-4 border-t border-slate-800/80 text-xs font-mono text-slate-300 flex items-center justify-between">
+              <div className="pt-4 border-t border-slate-200/80 text-xs font-mono text-slate-700 flex items-center justify-between">
                 <span>Routing Support:</span>
                 <strong className="text-sky-400">React, Vue, Angular, Svelte</strong>
               </div>
             </div>
 
             {/* Schematic 3: Git Webhook CI/CD */}
-            <div className="p-6 rounded-3xl bg-[#0c1322] border border-slate-800 flex flex-col justify-between space-y-6">
+            <div className="p-6 rounded-3xl bg-white border border-slate-200 flex flex-col justify-between space-y-6">
               <div>
-                <div className="p-4 rounded-2xl bg-[#060a12] border border-slate-800 mb-6 font-mono text-xs">
+                <div className="p-4 rounded-2xl bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
                   <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
                     <span>ATOMIC GIT WEBHOOK CI/CD</span>
                     <span className="text-purple-400">ZERO DOWNTIME</span>
                   </div>
-                  <div className="space-y-2 text-slate-300 text-[11px]">
-                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                  <div className="space-y-2 text-slate-700 text-[11px]">
+                    <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>git push origin main</span>
                       <span className="text-sky-400">GitHub / GitLab</span>
                     </div>
-                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                    <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>Webhook Dispatch</span>
                       <span className="text-emerald-400 font-bold">Re-sync Files</span>
                     </div>
-                    <div className="p-2 rounded bg-slate-900 border border-slate-800 flex items-center justify-between">
+                    <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>Symlink Swap</span>
                       <span className="text-purple-400 font-bold">Instant &lt; 1s</span>
                     </div>
                   </div>
                 </div>
 
-                <h3 className="text-lg font-bold text-white mb-2">Tự Động Triển Khai Qua Git Webhook</h3>
-                <p className="text-xs text-slate-400 leading-relaxed">
+                <h3 className="text-lg font-bold text-slate-900 mb-2">Tự Động Triển Khai Qua Git Webhook</h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
                   Kết nối trực tiếp repository GitHub/GitLab. Mỗi khi bạn đẩy commit mới, 
                   hệ thống sẽ tự động cập nhật bản build mới nhất lên website trong vòng vài giây mà không làm gián đoạn người dùng.
                 </p>
               </div>
 
-              <div className="pt-4 border-t border-slate-800/80 text-xs font-mono text-slate-300 flex items-center justify-between">
+              <div className="pt-4 border-t border-slate-200/80 text-xs font-mono text-slate-700 flex items-center justify-between">
                 <span>Deploy Speed:</span>
                 <strong className="text-emerald-400">Tự động kích hoạt 0s</strong>
               </div>
@@ -434,7 +456,7 @@ server {
       </section>
 
       {/* 3. TECHNICAL SPECIFICATION MATRIX & PRICING */}
-      <section id="spec-matrix" className="py-24 bg-[#090d16] border-b border-slate-800">
+      <section id="spec-matrix" className="py-24 bg-slate-50 border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
@@ -443,16 +465,16 @@ server {
                 <Sliders className="w-3.5 h-3.5" />
                 STATIC SITE SPEC SHEET
               </div>
-              <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
+              <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
                 Bảng So Sánh Gói Nginx Static Sites
               </h2>
-              <p className="text-slate-400 text-xs sm:text-sm mt-1 font-normal">
+              <p className="text-slate-600 text-xs sm:text-sm mt-1 font-normal">
                 Không giới hạn lượt truy cập, không nghẽn băng thông.
               </p>
             </div>
 
             {/* Billing Switch */}
-            <div className="inline-flex items-center p-1 rounded-xl bg-[#0c1322] border border-slate-800 font-mono text-xs">
+            <div className="inline-flex items-center p-1 rounded-xl bg-white border border-slate-200 font-mono text-xs">
               <button
                 onClick={() => setBillingCycle('monthly')}
                 className={`px-4 py-2 rounded-lg font-bold transition-all ${
@@ -480,18 +502,18 @@ server {
           </div>
 
           {/* Matrix Table */}
-          <div className="rounded-2xl border border-slate-800 bg-[#0c1322] overflow-hidden shadow-2xl">
+          <div className="rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-2xl">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs font-mono">
                 <thead>
-                  <tr className="border-b border-slate-800 bg-[#080d17] text-slate-400">
+                  <tr className="border-b border-slate-200 bg-[#080d17] text-slate-600">
                     <th className="p-5 font-bold uppercase text-[11px] w-1/4">Thông Số Kỹ Thuật</th>
                     {plans.map((p) => {
                       const displayPrice = billingCycle === 'yearly' ? Math.round(p.yearlyPrice / 12) : p.monthlyPrice;
                       return (
-                        <th key={p.id} className="p-5 text-white border-l border-slate-800/80 w-1/3">
-                          <div className="text-sm font-extrabold text-white">{p.name}</div>
-                          <div className="text-[11px] text-slate-400 font-sans font-normal">{p.tier}</div>
+                        <th key={p.id} className="p-5 text-slate-900 border-l border-slate-200/80 w-1/3">
+                          <div className="text-sm font-extrabold text-slate-900">{p.name}</div>
+                          <div className="text-[11px] text-slate-600 font-sans font-normal">{p.tier}</div>
                           <div className="text-lg font-black text-cyan-400 mt-2">
                             {displayPrice === 0 ? 'Miễn Phí' : `${displayPrice.toLocaleString('vi-VN')} đ/tháng`}
                           </div>
@@ -500,47 +522,47 @@ server {
                     })}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-800/60 text-slate-300">
+                <tbody className="divide-y divide-slate-800/60 text-slate-700">
                   <tr className="hover:bg-slate-900/40">
-                    <td className="p-4 font-bold text-slate-400">Số Lượng Website Độc Lập</td>
+                    <td className="p-4 font-bold text-slate-600">Số Lượng Website Độc Lập</td>
                     {plans.map((p) => (
-                      <td key={p.id} className="p-4 border-l border-slate-800/60 text-white font-bold">{p.sites}</td>
+                      <td key={p.id} className="p-4 border-l border-slate-200/60 text-slate-900 font-bold">{p.sites}</td>
                     ))}
                   </tr>
                   <tr className="hover:bg-slate-900/40">
-                    <td className="p-4 font-bold text-slate-400">Băng Thông Hàng Tháng</td>
+                    <td className="p-4 font-bold text-slate-600">Băng Thông Hàng Tháng</td>
                     {plans.map((p) => (
-                      <td key={p.id} className="p-4 border-l border-slate-800/60 text-cyan-400 font-bold">{p.bandwidth}</td>
+                      <td key={p.id} className="p-4 border-l border-slate-200/60 text-cyan-400 font-bold">{p.bandwidth}</td>
                     ))}
                   </tr>
                   <tr className="hover:bg-slate-900/40">
-                    <td className="p-4 font-bold text-slate-400">Dung Lượng NVMe Storage</td>
+                    <td className="p-4 font-bold text-slate-600">Dung Lượng NVMe Storage</td>
                     {plans.map((p) => (
-                      <td key={p.id} className="p-4 border-l border-slate-800/60 text-emerald-400 font-bold">{p.storage}</td>
+                      <td key={p.id} className="p-4 border-l border-slate-200/60 text-emerald-400 font-bold">{p.storage}</td>
                     ))}
                   </tr>
                   <tr className="hover:bg-slate-900/40">
-                    <td className="p-4 font-bold text-slate-400">Tên Miền Riêng (Custom Domain)</td>
+                    <td className="p-4 font-bold text-slate-600">Tên Miền Riêng (Custom Domain)</td>
                     {plans.map((p) => (
-                      <td key={p.id} className="p-4 border-l border-slate-800/60 text-slate-200">{p.customDomain}</td>
+                      <td key={p.id} className="p-4 border-l border-slate-200/60 text-slate-800">{p.customDomain}</td>
                     ))}
                   </tr>
                   <tr className="hover:bg-slate-900/40">
-                    <td className="p-4 font-bold text-slate-400">Thời Gian Phản Hồi (TTFB)</td>
+                    <td className="p-4 font-bold text-slate-600">Thời Gian Phản Hồi (TTFB)</td>
                     {plans.map((p) => (
-                      <td key={p.id} className="p-4 border-l border-slate-800/60 text-emerald-400 font-bold">{p.ttfb}</td>
+                      <td key={p.id} className="p-4 border-l border-slate-200/60 text-emerald-400 font-bold">{p.ttfb}</td>
                     ))}
                   </tr>
                   <tr className="hover:bg-slate-900/40">
-                    <td className="p-4 font-bold text-slate-400">Nén Brotli 11 &amp; HTTP/3</td>
+                    <td className="p-4 font-bold text-slate-600">Nén Brotli 11 &amp; HTTP/3</td>
                     {plans.map((p) => (
-                      <td key={p.id} className="p-4 border-l border-slate-800/60 text-slate-200">Tích hợp sẵn 100%</td>
+                      <td key={p.id} className="p-4 border-l border-slate-200/60 text-slate-800">Tích hợp sẵn 100%</td>
                     ))}
                   </tr>
                   <tr className="bg-[#080d17]">
-                    <td className="p-5 font-bold text-slate-400">Hành Động Khởi Tạo</td>
+                    <td className="p-5 font-bold text-slate-600">Hành Động Khởi Tạo</td>
                     {plans.map((p) => (
-                      <td key={p.id} className="p-5 border-l border-slate-800/60">
+                      <td key={p.id} className="p-5 border-l border-slate-200/60">
                         <button
                           onClick={() => handleOrder(p)}
                           className={`w-full py-3 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-2 ${
@@ -564,22 +586,22 @@ server {
       </section>
 
       {/* 4. FAQ SECTION */}
-      <section className="py-20 bg-[#090d16] border-b border-slate-800">
+      <section className="py-20 bg-slate-50 border-b border-slate-200">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-white">Câu Hỏi Thường Gặp Về Web Tĩnh Nginx</h2>
-            <p className="text-slate-400 text-xs sm:text-sm mt-2 font-mono">SEN CLOUDHOST STATIC SITES FAQ</p>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900">Câu Hỏi Thường Gặp Về Web Tĩnh Nginx</h2>
+            <p className="text-slate-600 text-xs sm:text-sm mt-2 font-mono">SEN CLOUDHOST STATIC SITES FAQ</p>
           </div>
 
           <div className="space-y-3">
             {faqs.map((faq, idx) => (
               <div
                 key={idx}
-                className="bg-[#0c1322] rounded-2xl border border-slate-800 overflow-hidden transition-all"
+                className="bg-white rounded-2xl border border-slate-200 overflow-hidden transition-all"
               >
                 <button
                   onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
-                  className="w-full p-5 text-left font-bold text-sm text-white flex items-center justify-between gap-4 hover:text-cyan-400 transition-colors"
+                  className="w-full p-5 text-left font-bold text-sm text-slate-900 flex items-center justify-between gap-4 hover:text-cyan-400 transition-colors"
                 >
                   <span>{faq.q}</span>
                   {openFaq === idx ? (
@@ -589,7 +611,7 @@ server {
                   )}
                 </button>
                 {openFaq === idx && (
-                  <div className="px-5 pb-5 text-xs text-slate-300 leading-relaxed border-t border-slate-800/60 pt-3 font-normal">
+                  <div className="px-5 pb-5 text-xs text-slate-700 leading-relaxed border-t border-slate-200/60 pt-3 font-normal">
                     {faq.a}
                   </div>
                 )}
@@ -628,7 +650,7 @@ server {
               </button>
               <Link
                 href="/contact"
-                className="px-8 py-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs font-mono border border-slate-700 transition-all"
+                className="px-8 py-3.5 rounded-xl bg-white hover:bg-slate-200 text-slate-900 font-bold text-xs font-mono border border-slate-300 transition-all"
               >
                 Tư Vấn Miễn Phí
               </Link>

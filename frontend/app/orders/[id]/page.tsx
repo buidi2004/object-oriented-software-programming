@@ -340,7 +340,7 @@ export default function OrderDetailPage() {
             </div>
 
             {/* Support */}
-            <div className="bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl p-6 text-white">
+            <div className="bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl p-6 text-slate-900">
               <h3 className="font-bold text-lg mb-2">Cần hỗ trợ?</h3>
               <p className="text-sm text-blue-100 mb-4">
                 Đội ngũ kỹ thuật sẵn sàng hỗ trợ 24/7

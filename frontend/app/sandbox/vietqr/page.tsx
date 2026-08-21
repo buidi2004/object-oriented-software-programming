@@ -231,7 +231,7 @@ function VietQRSandboxContent() {
           <div className="space-y-3">
             <Link
               href="/dashboard/vps-instances"
-              className="w-full py-4 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white font-bold text-base shadow-lg shadow-blue-500/20 hover:shadow-xl transition-all flex items-center justify-center gap-2"
+              className="w-full py-4 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-slate-900 font-bold text-base shadow-lg shadow-blue-500/20 hover:shadow-xl transition-all flex items-center justify-center gap-2"
             >
               Truy Cập Máy Chủ VPS Của Bạn
               <ArrowRight className="w-5 h-5" />
@@ -249,11 +249,11 @@ function VietQRSandboxContent() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-900 py-10 px-4 flex items-center justify-center">
+    <div className="min-h-screen bg-white py-10 px-4 flex items-center justify-center">
       <div className="max-w-4xl w-full bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-100">
         
         {/* Header Bar */}
-        <div className="bg-gradient-to-r from-blue-700 via-indigo-700 to-blue-900 text-white p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="bg-gradient-to-r from-blue-700 via-indigo-700 to-blue-900 text-slate-900 p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center p-1.5 shadow-md">
               <span className="font-black text-blue-700 text-lg tracking-tighter">MB</span>
@@ -319,7 +319,7 @@ function VietQRSandboxContent() {
                   <QrCode className="w-4 h-4 text-blue-600" />
                   Mở App Ngân hàng bất kỳ để quét mã
                 </p>
-                <p className="text-[11px] text-slate-400">
+                <p className="text-[11px] text-slate-600">
                   Chuẩn NAPAS 24/7 — {currentBankObj.name} — STK: {customAccNumber}
                 </p>
                 <div className="mt-3 pt-3 border-t border-slate-200 w-full flex items-center justify-center gap-2 text-xs font-bold text-blue-600">
@@ -403,7 +403,7 @@ function VietQRSandboxContent() {
             </div>
 
             <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-3">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">
                 Thông Tin Chuyển Khoản Thủ Công
               </h3>
 
@@ -475,7 +475,7 @@ function VietQRSandboxContent() {
                 <p className="text-xs text-amber-600 mt-1">Sau khi chuyển khoản, VPS sẽ được kích hoạt tự động trong vài giây</p>
               </div>
 
-              <div className="flex items-center justify-between text-xs text-slate-400 px-1">
+              <div className="flex items-center justify-between text-xs text-slate-600 px-1">
                 <span className="flex items-center gap-1">
                   <ShieldCheck className="w-4 h-4 text-emerald-500" />
                   Mã hóa bảo mật SePay Gateway
@@ -497,7 +497,7 @@ function VietQRSandboxContent() {
 
 export default function VietQRSandboxPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-slate-900 flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-white" /></div>}>
+    <Suspense fallback={<div className="min-h-screen bg-white flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-slate-900" /></div>}>
       <VietQRSandboxContent />
     </Suspense>
   );

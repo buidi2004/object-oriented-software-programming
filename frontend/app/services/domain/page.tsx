@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import {
   Search, Globe, Shield, Zap, Cloud, CheckCircle2, Star, ShoppingCart, ArrowRight
@@ -10,7 +10,7 @@ import { Header } from '@/src/components/Header';
 import ServicePageSections from '@/src/components/service-landing/ServicePageSections';
 import { SERVICE_PAGE_CONTENT } from '@/src/data/servicePages';
 
-const DOMAIN_PRICING = [
+const initialDomains = [
   { ext: '.com', price: 290000, originalPrice: 350000, desc: 'Phổ biến nhất thế giới', isPopular: true },
   { ext: '.vn', price: 750000, originalPrice: 850000, desc: 'Uy tín Thương hiệu Việt', isPopular: true },
   { ext: '.net', price: 320000, originalPrice: 380000, desc: 'Cho doanh nghiệp mạng' },
@@ -32,7 +32,30 @@ const PROCESS_STEPS = [
   { step: '4', title: 'Quản lý DNS', desc: 'Trỏ tên miền về hosting/VPS với công cụ DNS quản lý miễn phí.' },
 ];
 
+
 export default function DomainPage() {
+  const [domainPricing, setDomainPricing] = useState(initialDomains);
+  useEffect(() => {
+    import('@/src/lib/api').then(({ api }) => {
+      api.get('/categories/ten-mien/plans').then(res => {
+        const dbPlans = res.data?.plans || [];
+        if (dbPlans.length > 0) {
+          setDomainPricing(prev => prev.map(d => {
+            const extUpper = d.ext.toUpperCase();
+            const dbP = dbPlans.find((p: any) => p.name.toUpperCase().includes(extUpper));
+            if (dbP) {
+              return {
+                ...d,
+                price: dbP.yearlyPrice || dbP.monthlyPrice
+              };
+            }
+            return d;
+          }));
+        }
+      });
+    });
+  }, []);
+
   const pageContent = SERVICE_PAGE_CONTENT.domain;
   const [searchTerm, setSearchTerm] = useState('');
   const [isSearching, setIsSearching] = useState(false);
@@ -59,14 +82,14 @@ export default function DomainPage() {
     <div>
 
       {/* Hero with Search */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-cyan-950 via-teal-950 to-slate-900 text-white py-20 sm:py-28">
+      <section className="relative overflow-hidden bg-gradient-to-br from-cyan-950 via-teal-950 to-slate-900 text-slate-900 py-20 sm:py-28">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <nav className="flex items-center gap-2 text-sm text-cyan-300 mb-8">
-            <Link href="/" className="hover:text-white">Trang chủ</Link>
+            <Link href="/" className="hover:text-slate-900">Trang chủ</Link>
             <span>/</span>
-            <Link href="/services" className="hover:text-white">Dịch vụ</Link>
+            <Link href="/services" className="hover:text-slate-900">Dịch vụ</Link>
             <span>/</span>
-            <span className="text-white font-medium">Tên Miền</span>
+            <span className="text-slate-900 font-medium">Tên Miền</span>
           </nav>
           <div className="max-w-3xl mx-auto text-center">
             <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-cyan-500/20 border border-cyan-400/30 text-emerald-300 text-xs font-bold uppercase tracking-wider mb-4">
@@ -85,7 +108,7 @@ export default function DomainPage() {
             <form onSubmit={handleSearch} className="max-w-2xl mx-auto">
               <div className="flex bg-white rounded-2xl p-2 shadow-2xl shadow-black/20">
                 <div className="flex-1 flex items-center gap-3 px-4">
-                  <Search className="w-5 h-5 text-slate-400 shrink-0" />
+                  <Search className="w-5 h-5 text-slate-600 shrink-0" />
                   <input
                     type="text"
                     value={searchTerm}
@@ -97,7 +120,7 @@ export default function DomainPage() {
                 <button
                   type="submit"
                   disabled={isSearching}
-                  className="px-8 py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-emerald-500 text-white font-bold text-sm shadow-md hover:shadow-lg transition-all disabled:opacity-70 flex items-center gap-2"
+                  className="px-8 py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-emerald-500 text-slate-900 font-bold text-sm shadow-md hover:shadow-lg transition-all disabled:opacity-70 flex items-center gap-2"
                 >
                   {isSearching ? (
                     <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -123,8 +146,8 @@ export default function DomainPage() {
                         <Shield className="w-6 h-6 text-rose-400" />
                       )}
                       <div className="text-left">
-                        <p className="font-bold text-white text-lg">{searchResult.domain}</p>
-                        <p className="text-sm text-slate-300">
+                        <p className="font-bold text-slate-900 text-lg">{searchResult.domain}</p>
+                        <p className="text-sm text-slate-700">
                           {searchResult.available ? 'Tên miền có sẵn!' : 'Tên miền đã được đăng ký'}
                         </p>
                       </div>
@@ -132,7 +155,7 @@ export default function DomainPage() {
                     {searchResult.available && (
                       <div className="text-right">
                         <p className="text-xl font-black text-emerald-400">{searchResult.price.toLocaleString('vi-VN')} đ/năm</p>
-                        <Link href="/" className="inline-flex items-center gap-1 text-sm font-bold text-white hover:text-cyan-300 mt-1">
+                        <Link href="/" className="inline-flex items-center gap-1 text-sm font-bold text-slate-900 hover:text-cyan-300 mt-1">
                           <ShoppingCart className="w-4 h-4" /> Đăng ký ngay
                         </Link>
                       </div>
@@ -166,7 +189,7 @@ export default function DomainPage() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {DOMAIN_PRICING.map((d, i) => (
+            {domainPricing.map((d, i) => (
               <div key={i} className={`rounded-2xl p-6 border-2 transition-all hover:shadow-lg ${
                 d.isPopular ? 'border-cyan-400 bg-cyan-50/50 shadow-md' : 'border-slate-200 bg-white hover:border-cyan-300'
               }`}>
@@ -180,11 +203,11 @@ export default function DomainPage() {
                 <div className="flex items-end gap-2 mb-4">
                   <span className="text-xl font-black text-cyan-600">{d.price.toLocaleString('vi-VN')} đ</span>
                   {d.originalPrice && (
-                    <span className="text-sm text-slate-400 line-through">{d.originalPrice.toLocaleString('vi-VN')} đ</span>
+                    <span className="text-sm text-slate-600 line-through">{d.originalPrice.toLocaleString('vi-VN')} đ</span>
                   )}
                 </div>
                 <div className="text-[11px] text-slate-500 mb-4">/năm đầu tiên</div>
-                <Link href="/" className="block w-full py-2.5 rounded-xl bg-slate-900 text-white text-sm font-bold text-center hover:bg-slate-800 transition-colors">
+                <Link href="/" className="block w-full py-2.5 rounded-xl bg-white text-slate-900 text-sm font-bold text-center hover:bg-slate-100 transition-colors">
                   Đăng Ký
                 </Link>
               </div>
@@ -203,13 +226,13 @@ export default function DomainPage() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {PROCESS_STEPS.map((s, i) => (
               <div key={i} className="text-center relative">
-                <div className="w-14 h-14 rounded-2xl bg-gradient-to-r from-cyan-500 to-emerald-500 text-white font-black text-xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-r from-cyan-500 to-emerald-500 text-slate-900 font-black text-xl flex items-center justify-center mx-auto mb-4 shadow-lg">
                   {s.step}
                 </div>
                 <h3 className="font-bold text-slate-900 mb-2">{s.title}</h3>
                 <p className="text-sm text-slate-600">{s.desc}</p>
                 {i < PROCESS_STEPS.length - 1 && (
-                  <ArrowRight className="hidden md:block absolute top-7 -right-3 w-6 h-6 text-slate-300" />
+                  <ArrowRight className="hidden md:block absolute top-7 -right-3 w-6 h-6 text-slate-700" />
                 )}
               </div>
             ))}
@@ -247,7 +270,7 @@ export default function DomainPage() {
       <ServicePageSections content={pageContent} group="post" />
 
       {/* CTA */}
-      <section className="py-16 bg-gradient-to-r from-cyan-600 to-emerald-600 text-white text-center">
+      <section className="py-16 bg-gradient-to-r from-cyan-600 to-emerald-600 text-slate-900 text-center">
         <div className="max-w-3xl mx-auto px-4">
           <h2 className="text-3xl font-black mb-4">Sở Hữu Tên Miền Ngay Hôm Nay</h2>
           <p className="text-cyan-100 mb-8">Giá chỉ từ 99.000đ/năm. Bao gồm DNS, WHOIS Privacy miễn phí.</p>
@@ -258,7 +281,7 @@ export default function DomainPage() {
         </div>
       </section>
 
-      <footer className="bg-slate-900 text-slate-400 py-8">
+      <footer className="bg-white text-slate-600 py-8">
         <div className="max-w-7xl mx-auto px-4 text-center text-sm">
           © 2024 CloudHost VN. Mọi quyền được bảo lưu.
         </div>

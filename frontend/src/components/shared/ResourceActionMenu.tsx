@@ -38,7 +38,7 @@ export function ResourceActionMenu({ status, onSuspend, onResume, onTerminate }:
                 className="w-full px-4 py-2 text-left text-sm text-slate-700 hover:bg-slate-50 flex items-center gap-2"
                 onClick={() => { setIsOpen(false); onSuspend(); }}
               >
-                <Pause className="w-4 h-4 text-slate-400" />
+                <Pause className="w-4 h-4 text-slate-600" />
                 Suspend Resource
               </button>
             )}

@@ -67,7 +67,7 @@ export default function TicketDetailPage() {
   if (!user) {
     return (
       <div className="flex flex-col items-center justify-center h-[60vh]">
-        <AlertCircle className="w-12 h-12 text-slate-400 mb-4" />
+        <AlertCircle className="w-12 h-12 text-slate-600 mb-4" />
         <h2 className="text-xl font-bold mb-2">Vui lòng đăng nhập</h2>
       </div>
     );
@@ -182,7 +182,7 @@ export default function TicketDetailPage() {
               <div key={msg.id} className={`flex flex-col ${isMe ? 'items-end' : 'items-start'}`}>
                 <div className="flex items-center gap-2 mb-1.5 px-1">
                   <span className="text-xs font-bold text-slate-700">{isMe ? 'Bạn' : (msg.senderName || 'Kỹ thuật viên')}</span>
-                  <span className="text-[10px] text-slate-400 font-medium flex items-center gap-1">
+                  <span className="text-[10px] text-slate-600 font-medium flex items-center gap-1">
                     <Clock className="w-3 h-3" />
                     {new Date(msg.createdAt || (msg as any).timestamp || new Date()).toLocaleString('vi-VN')}
                   </span>
@@ -206,7 +206,7 @@ export default function TicketDetailPage() {
         <div className="bg-white rounded-b-2xl border border-t-0 border-slate-200 p-4 shrink-0">
           {isClosed ? (
             <div className="text-center py-3 text-slate-500 text-sm flex items-center justify-center gap-2">
-              <CheckCircle className="w-5 h-5 text-slate-400" />
+              <CheckCircle className="w-5 h-5 text-slate-600" />
               Ticket này đã đóng. Nếu bạn gặp vấn đề mới, vui lòng tạo Ticket khác.
             </div>
           ) : (

@@ -157,7 +157,7 @@ function MomoSandboxContent() {
           <div className="space-y-3">
             <Link
               href="/orders"
-              className="w-full py-4 rounded-xl bg-gradient-to-r from-[#a50064] to-[#d82d8b] hover:opacity-95 text-white font-bold text-base shadow-lg shadow-pink-500/20 hover:shadow-xl transition-all flex items-center justify-center gap-2"
+              className="w-full py-4 rounded-xl bg-gradient-to-r from-[#a50064] to-[#d82d8b] hover:opacity-95 text-slate-900 font-bold text-base shadow-lg shadow-pink-500/20 hover:shadow-xl transition-all flex items-center justify-center gap-2"
             >
               Xem Đơn Hàng Đã Kích Hoạt
               <ArrowRight className="w-5 h-5" />
@@ -175,11 +175,11 @@ function MomoSandboxContent() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 py-10 px-4 flex items-center justify-center">
+    <div className="min-h-screen bg-slate-50 py-10 px-4 flex items-center justify-center">
       <div className="max-w-md w-full bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-100">
         
         {/* MoMo Header */}
-        <div className="bg-gradient-to-r from-[#a50064] via-[#c21875] to-[#d82d8b] p-6 text-white text-center relative">
+        <div className="bg-gradient-to-r from-[#a50064] via-[#c21875] to-[#d82d8b] p-6 text-slate-900 text-center relative">
           <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg p-2">
             <span className="text-[#a50064] font-black text-2xl tracking-tighter">momo</span>
           </div>
@@ -227,7 +227,7 @@ function MomoSandboxContent() {
               <Smartphone className="w-4 h-4 text-[#a50064]" />
               Mở App MoMo Quét Mã QR
             </p>
-            <p className="text-[11px] text-slate-400">
+            <p className="text-[11px] text-slate-600">
               Hoặc bấm nút xác nhận thanh toán giả lập bên dưới
             </p>
           </div>
@@ -237,7 +237,7 @@ function MomoSandboxContent() {
             <button
               onClick={handlePaySuccess}
               disabled={isLoading}
-              className="w-full py-4 rounded-2xl bg-gradient-to-r from-[#a50064] to-[#d82d8b] hover:from-[#8f0056] hover:to-[#be1d75] text-white font-bold text-base shadow-lg shadow-pink-600/30 hover:shadow-xl transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-70"
+              className="w-full py-4 rounded-2xl bg-gradient-to-r from-[#a50064] to-[#d82d8b] hover:from-[#8f0056] hover:to-[#be1d75] text-slate-900 font-bold text-base shadow-lg shadow-pink-600/30 hover:shadow-xl transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-70"
             >
               {isLoading ? (
                 <Loader2 className="w-5 h-5 animate-spin" />
@@ -254,12 +254,12 @@ function MomoSandboxContent() {
               disabled={isLoading}
               className="w-full py-3 rounded-2xl border border-slate-300 text-slate-600 font-semibold text-xs hover:bg-slate-50 transition-all flex items-center justify-center gap-1.5 cursor-pointer"
             >
-              <XCircle className="w-4 h-4 text-slate-400" />
+              <XCircle className="w-4 h-4 text-slate-600" />
               Huỷ Giao Dịch & Quay Lại
             </button>
           </div>
 
-          <div className="text-center text-[11px] text-slate-400 flex items-center justify-center gap-1">
+          <div className="text-center text-[11px] text-slate-600 flex items-center justify-center gap-1">
             <Lock className="w-3.5 h-3.5 text-emerald-500" />
             Chứng thực SSL 256-bit MoMo Partner Sandbox
           </div>
@@ -272,7 +272,7 @@ function MomoSandboxContent() {
 
 export default function MomoSandboxPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-slate-950 flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-white" /></div>}>
+    <Suspense fallback={<div className="min-h-screen bg-slate-50 flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-slate-900" /></div>}>
       <MomoSandboxContent />
     </Suspense>
   );

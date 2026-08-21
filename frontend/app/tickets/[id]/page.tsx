@@ -229,7 +229,7 @@ export default function TicketDetailPage() {
                 }`}
               >
                 <div className="flex items-center gap-2 mb-2">
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white text-xs font-bold">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-slate-900 text-xs font-bold">
                     {msg.sender === 'customer' ? 'U' : 'A'}
                   </div>
                   <div>
@@ -258,7 +258,7 @@ export default function TicketDetailPage() {
                 className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 resize-none"
               />
               <div className="flex items-center justify-between mt-3">
-                <button className="p-2 text-slate-400 hover:text-slate-600 transition-colors">
+                <button className="p-2 text-slate-600 hover:text-slate-600 transition-colors">
                   <Paperclip className="w-5 h-5" />
                 </button>
                 <button
@@ -318,7 +318,7 @@ export default function TicketDetailPage() {
             </div>
 
             {/* Support Info */}
-            <div className="bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl p-6 text-white">
+            <div className="bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl p-6 text-slate-900">
               <h3 className="font-bold text-lg mb-2">Cần hỗ trợ thêm?</h3>
               <div className="space-y-3 text-sm text-blue-100">
                 <p>📞 Hotline: 1900 6888</p>

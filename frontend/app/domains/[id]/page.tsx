@@ -180,7 +180,7 @@ export default function DomainDetailPage() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Domain Header Card */}
-        <div className="bg-gradient-to-br from-slate-900 via-indigo-900 to-slate-900 rounded-3xl p-8 text-white mb-8 relative overflow-hidden">
+        <div className="bg-gradient-to-br from-slate-900 via-indigo-900 to-slate-900 rounded-3xl p-8 text-slate-900 mb-8 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
           
           <div className="relative z-10 flex items-start justify-between">
@@ -199,7 +199,7 @@ export default function DomainDetailPage() {
                     {domain.status === 'active' ? 'Đang hoạt động' : 
                      domain.status === 'expired' ? 'Đã hết hạn' : 'Chờ xác thực'}
                   </span>
-                  <span className="text-sm text-slate-400">
+                  <span className="text-sm text-slate-600">
                     Hết hạn: {new Date(domain.expiryDate).toLocaleDateString('vi-VN')}
                   </span>
                 </div>
@@ -207,11 +207,11 @@ export default function DomainDetailPage() {
             </div>
 
             <div className="text-right">
-              <div className="flex items-center gap-2 text-sm text-slate-400 mb-1">
+              <div className="flex items-center gap-2 text-sm text-slate-600 mb-1">
                 <ShieldCheck className="w-4 h-4 text-emerald-400" />
                 Bảo vệ WHOIS Privacy
               </div>
-              <div className="flex items-center gap-2 text-sm text-slate-400">
+              <div className="flex items-center gap-2 text-sm text-slate-600">
                 <Clock className="w-4 h-4" />
                 Auto-renew: {domain.autoRenew ? 'Bật' : 'Tắt'}
               </div>
@@ -239,7 +239,7 @@ export default function DomainDetailPage() {
                     <span className="font-mono text-sm text-slate-700">{ns}</span>
                     <button
                       onClick={() => copyToClipboard(ns)}
-                      className="p-2 text-slate-400 hover:text-blue-600 transition-colors"
+                      className="p-2 text-slate-600 hover:text-blue-600 transition-colors"
                       title="Sao chép"
                     >
                       <Copy className="w-4 h-4" />
@@ -337,7 +337,7 @@ export default function DomainDetailPage() {
 
               {domain.dnsRecords.length === 0 ? (
                 <div className="text-center py-12 text-slate-500">
-                  <Settings className="w-12 h-12 mx-auto mb-3 text-slate-300" />
+                  <Settings className="w-12 h-12 mx-auto mb-3 text-slate-700" />
                   <p className="font-medium">Chưa có bản ghi DNS nào</p>
                   <p className="text-sm mt-1">Thêm bản ghi để cấu hình tên miền</p>
                 </div>
@@ -368,14 +368,14 @@ export default function DomainDetailPage() {
                             <div className="flex items-center justify-end gap-2">
                               <button
                                 onClick={() => copyToClipboard(`${record.name} ${record.ttl} ${record.type} ${record.value}`)}
-                                className="p-1.5 text-slate-400 hover:text-blue-600 transition-colors"
+                                className="p-1.5 text-slate-600 hover:text-blue-600 transition-colors"
                                 title="Sao chép"
                               >
                                 <Copy className="w-4 h-4" />
                               </button>
                               <button
                                 onClick={() => handleDeleteDnsRecord(record.id)}
-                                className="p-1.5 text-slate-400 hover:text-red-600 transition-colors"
+                                className="p-1.5 text-slate-600 hover:text-red-600 transition-colors"
                                 title="Xóa"
                               >
                                 <Trash2 className="w-4 h-4" />
@@ -459,7 +459,7 @@ export default function DomainDetailPage() {
             </div>
 
             {/* Support CTA */}
-            <div className="bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl p-6 text-white">
+            <div className="bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl p-6 text-slate-900">
               <h3 className="font-bold text-lg mb-2">Cần hỗ trợ?</h3>
               <p className="text-sm text-blue-100 mb-4">
                 Đội ngũ kỹ thuật sẵn sàng hỗ trợ bạn 24/7

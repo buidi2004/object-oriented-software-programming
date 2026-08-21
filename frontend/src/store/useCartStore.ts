@@ -98,7 +98,7 @@ async function resolvePlanGuid(planIdOrSlug: string, itemName?: string): Promise
 }
 
 export const useCartStore = create<CartState>((set, get) => ({
-  items: typeof window !== 'undefined' ? getLocalGuestCart() : [],
+  items: [],
   isLoading: false,
 
   fetchCart: async () => {

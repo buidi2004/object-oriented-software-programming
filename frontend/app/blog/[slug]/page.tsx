@@ -86,7 +86,7 @@ export default function BlogPostPage() {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
         <div className="text-center">
-          <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-300" />
+          <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-700" />
           <p className="font-medium text-slate-500">Không tìm thấy bài viết</p>
           <Link href="/news" className="text-blue-600 hover:text-blue-700 mt-2 inline-block">
             Quay lại danh sách bài viết

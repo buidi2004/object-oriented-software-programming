@@ -105,7 +105,7 @@ export default function DashboardEmailHostingPage() {
             </button>
             <button
               onClick={() => setIsCreateOpen(true)}
-              className="px-5 py-2.5 rounded-2xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs sm:text-sm transition-all shadow-lg shadow-rose-500/25 flex items-center gap-2"
+              className="px-5 py-2.5 rounded-2xl bg-rose-600 hover:bg-rose-700 text-slate-900 font-bold text-xs sm:text-sm transition-all shadow-lg shadow-rose-500/25 flex items-center gap-2"
             >
               <Plus className="w-4 h-4" />
               Tạo Hòm Thư Mới
@@ -129,7 +129,7 @@ export default function DashboardEmailHostingPage() {
           </div>
 
           {loading ? (
-            <div className="p-12 text-center text-slate-400 text-sm flex items-center justify-center gap-2">
+            <div className="p-12 text-center text-slate-600 text-sm flex items-center justify-center gap-2">
               <RefreshCw className="w-5 h-5 animate-spin text-rose-600" />
               Đang tải danh sách hòm thư...
             </div>
@@ -144,7 +144,7 @@ export default function DashboardEmailHostingPage() {
               </p>
               <button
                 onClick={() => setIsCreateOpen(true)}
-                className="px-5 py-2.5 rounded-2xl bg-rose-600 text-white font-bold text-xs shadow-md"
+                className="px-5 py-2.5 rounded-2xl bg-rose-600 text-slate-900 font-bold text-xs shadow-md"
               >
                 + Tạo Hòm Thư Đầu Tiên
               </button>
@@ -198,7 +198,7 @@ export default function DashboardEmailHostingPage() {
 
       {/* Modal Create Email */}
       {isCreateOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-white/60 backdrop-blur-sm animate-in fade-in">
           <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100">
             <h3 className="text-lg font-black text-slate-900 mb-2 flex items-center gap-2">
               <Mail className="w-5 h-5 text-rose-600" /> Tạo Hòm Thư Doanh Nghiệp Mới
@@ -268,7 +268,7 @@ export default function DashboardEmailHostingPage() {
                 <button
                   type="submit"
                   disabled={creating}
-                  className="px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shadow-md flex items-center gap-2"
+                  className="px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-slate-900 font-bold text-xs shadow-md flex items-center gap-2"
                 >
                   {creating && <RefreshCw className="w-3.5 h-3.5 animate-spin" />}
                   Xác Nhận Tạo

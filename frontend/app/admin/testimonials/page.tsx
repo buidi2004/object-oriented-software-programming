@@ -187,7 +187,7 @@ export default function AdminTestimonialsPage() {
             <div key={testimonial.id} className="bg-white rounded-xl border border-slate-200 p-6">
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-slate-900 font-bold text-lg">
                     {testimonial.customerName.charAt(0).toUpperCase()}
                   </div>
                   <div>
@@ -220,7 +220,7 @@ export default function AdminTestimonialsPage() {
                   </button>
                   <button
                     onClick={() => handleDelete(testimonial.id)}
-                    className="p-1 text-slate-400 hover:text-red-600 rounded"
+                    className="p-1 text-slate-600 hover:text-red-600 rounded"
                     title="Xóa đánh giá"
                   >
                     <XCircle className="w-4 h-4" />
@@ -255,7 +255,7 @@ export default function AdminTestimonialsPage() {
 
         {filteredTestimonials.length === 0 && (
           <div className="text-center py-12">
-            <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-300" />
+            <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-700" />
             <p className="font-medium text-slate-500">Không có đánh giá nào</p>
           </div>
         )}

@@ -60,25 +60,25 @@ export default function KnowledgebaseDetailPage() {
             </p>
 
             {/* Visual Illustration of Web Terminal */}
-            <div className="bg-slate-900 text-slate-100 rounded-xl overflow-hidden shadow-lg border border-slate-800 my-4">
-              <div className="bg-slate-800 px-4 py-2 flex items-center justify-between text-xs text-slate-400">
+            <div className="bg-white text-slate-900 rounded-xl overflow-hidden shadow-lg border border-slate-200 my-4">
+              <div className="bg-white px-4 py-2 flex items-center justify-between text-xs text-slate-600">
                 <div className="flex items-center gap-2">
                   <div className="flex gap-1.5">
                     <span className="w-2.5 h-2.5 rounded-full bg-red-500" />
                     <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
                     <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
                   </div>
-                  <span className="font-mono text-slate-300">root@azvps-1786899581:~# Web Terminal</span>
+                  <span className="font-mono text-slate-700">root@azvps-1786899581:~# Web Terminal</span>
                 </div>
                 <span className="text-emerald-400 font-mono text-[10px]">🟢 Live Connected</span>
               </div>
-              <div className="p-4 font-mono text-xs text-emerald-400 space-y-1 bg-slate-950">
+              <div className="p-4 font-mono text-xs text-emerald-400 space-y-1 bg-slate-50">
                 <p>Welcome to Ubuntu 24.04 LTS (GNU/Linux 6.8.0-40-generic x86_64)</p>
-                <p className="text-slate-400"> * Documentation:  https://help.ubuntu.com</p>
-                <p className="text-slate-400"> * Management:     https://landscape.canonical.com</p>
-                <p className="pt-2 text-white">root@azvps-1786899581:~# <span className="text-emerald-400">uname -a</span></p>
-                <p className="text-slate-300">Linux azvps-1786899581 6.8.0 #40-Ubuntu SMP PREEMPT_DYNAMIC x86_64 GNU/Linux</p>
-                <p className="text-white">root@azvps-1786899581:~# <span className="animate-pulse">_</span></p>
+                <p className="text-slate-600"> * Documentation:  https://help.ubuntu.com</p>
+                <p className="text-slate-600"> * Management:     https://landscape.canonical.com</p>
+                <p className="pt-2 text-slate-900">root@azvps-1786899581:~# <span className="text-emerald-400">uname -a</span></p>
+                <p className="text-slate-700">Linux azvps-1786899581 6.8.0 #40-Ubuntu SMP PREEMPT_DYNAMIC x86_64 GNU/Linux</p>
+                <p className="text-slate-900">root@azvps-1786899581:~# <span className="animate-pulse">_</span></p>
               </div>
             </div>
 
@@ -99,11 +99,11 @@ export default function KnowledgebaseDetailPage() {
               Mở ứng dụng <strong>Command Prompt</strong>, <strong>PowerShell</strong> hoặc <strong>Terminal</strong> trên máy của bạn và chạy dòng lệnh sau:
             </p>
 
-            <div className="relative bg-slate-900 text-emerald-400 font-mono text-xs p-4 rounded-xl border border-slate-800 flex items-center justify-between">
+            <div className="relative bg-white text-emerald-400 font-mono text-xs p-4 rounded-xl border border-slate-200 flex items-center justify-between">
               <code>ssh root@203.145.46.200 -p 22</code>
               <button
                 onClick={() => handleCopy('ssh root@203.145.46.200 -p 22', 'cmd1')}
-                className="text-slate-400 hover:text-white px-2 py-1 bg-slate-800 rounded text-xs flex items-center gap-1 transition-colors"
+                className="text-slate-600 hover:text-slate-900 px-2 py-1 bg-white rounded text-xs flex items-center gap-1 transition-colors"
               >
                 {copiedCode === 'cmd1' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
                 <span>{copiedCode === 'cmd1' ? 'Đã sao chép' : 'Copy'}</span>
@@ -348,7 +348,7 @@ export default function KnowledgebaseDetailPage() {
             <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-slate-900 tracking-tight leading-snug">
               {currentArticle.title}
             </h1>
-            <div className="flex flex-wrap items-center gap-4 text-xs text-slate-400 mt-4 pt-4 border-t border-slate-100">
+            <div className="flex flex-wrap items-center gap-4 text-xs text-slate-600 mt-4 pt-4 border-t border-slate-100">
               <span>Tác giả: <strong className="text-slate-700">{currentArticle.author}</strong></span>
               <span>•</span>
               <span>Cập nhật: <strong className="text-slate-700">{currentArticle.updatedAt}</strong></span>
@@ -366,7 +366,7 @@ export default function KnowledgebaseDetailPage() {
           <div className="p-6 bg-slate-50 border-t border-slate-100 flex flex-wrap items-center justify-between gap-4">
             <div className="text-xs text-slate-600">
               <p className="font-bold text-slate-800">Bài viết này có hữu ích với bạn không?</p>
-              <p className="text-slate-400 mt-0.5">Phản hồi của bạn giúp chúng tôi cải thiện tài liệu tốt hơn.</p>
+              <p className="text-slate-600 mt-0.5">Phản hồi của bạn giúp chúng tôi cải thiện tài liệu tốt hơn.</p>
             </div>
             <div className="flex items-center gap-2">
               <button 

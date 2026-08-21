@@ -55,7 +55,7 @@ export const InfrastructureFeatures: React.FC = () => {
   ];
 
   return (
-    <section id="infrastructure-section" className="py-20 bg-slate-900 text-white relative overflow-hidden">
+    <section id="infrastructure-section" className="py-20 bg-white text-slate-900 relative overflow-hidden">
       
       {/* Soft Background Orbs */}
       <div className="absolute top-0 right-1/4 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
@@ -69,10 +69,10 @@ export const InfrastructureFeatures: React.FC = () => {
             <ShieldCheck className="w-4 h-4" />
             Hạ Tầng Doanh Nghiệp
           </div>
-          <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-white">
+          <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-slate-900">
             Công Nghệ Dẫn Đầu Cho Sự Tăng Trưởng
           </h2>
-          <p className="text-slate-400 text-sm sm:text-base mt-3 leading-relaxed">
+          <p className="text-slate-600 text-sm sm:text-base mt-3 leading-relaxed">
             Chúng tôi đầu tư đồng bộ phần cứng doanh nghiệp cao cấp cùng giải pháp bảo mật toàn diện giúp hệ thống của bạn luôn vận hành liên tục.
           </p>
         </div>
@@ -82,16 +82,16 @@ export const InfrastructureFeatures: React.FC = () => {
           {features.map((feat, i) => (
             <div
               key={i}
-              className="flex h-full p-7 rounded-3xl bg-slate-800/60 border border-slate-700/60 hover:border-blue-500/50 hover:bg-slate-800 transition-all duration-300 group"
+              className="flex h-full p-7 rounded-3xl bg-white/60 border border-slate-700/60 hover:border-blue-500/50 hover:bg-slate-100 transition-all duration-300 group"
             >
               <div className="flex flex-col h-full w-full min-h-0">
-                <div className="w-12 h-12 shrink-0 rounded-2xl bg-slate-900 border border-slate-700 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+                <div className="w-12 h-12 shrink-0 rounded-2xl bg-white border border-slate-300 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
                   {feat.icon}
                 </div>
-                <h3 className="text-xl font-bold text-white mb-3 min-h-[3.5rem] leading-snug">
+                <h3 className="text-xl font-bold text-slate-900 mb-3 min-h-[3.5rem] leading-snug">
                   {feat.title}
                 </h3>
-                <p className="text-sm text-slate-400 leading-relaxed line-clamp-3">
+                <p className="text-sm text-slate-600 leading-relaxed line-clamp-3">
                   {feat.description}
                 </p>
               </div>
@@ -100,12 +100,12 @@ export const InfrastructureFeatures: React.FC = () => {
         </div>
 
         {/* Customer Reviews Sub-section */}
-        <div className="mt-24 pt-16 border-t border-slate-800">
+        <div className="mt-24 pt-16 border-t border-slate-200">
           <div className="text-center max-w-xl mx-auto mb-12">
-            <h3 className="text-2xl sm:text-3xl font-extrabold text-white">
+            <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
               Được Hơn 15,000+ Khách Hàng Tin Dùng
             </h3>
-            <p className="text-slate-400 text-sm mt-1">
+            <p className="text-slate-600 text-sm mt-1">
               Đánh giá từ các Doanh nghiệp, Cửa hàng E-commerce & Developer tại Việt Nam
             </p>
           </div>
@@ -114,7 +114,7 @@ export const InfrastructureFeatures: React.FC = () => {
             {REVIEWS.map((rev, idx) => (
               <div
                 key={idx}
-                className="p-6 rounded-3xl bg-slate-800/40 border border-slate-700/50 flex flex-col justify-between"
+                className="p-6 rounded-3xl bg-white/40 border border-slate-700/50 flex flex-col justify-between"
               >
                 <div>
                   <div className="flex items-center gap-1 text-amber-400 mb-4">
@@ -122,7 +122,7 @@ export const InfrastructureFeatures: React.FC = () => {
                       <Star key={s} className="w-4 h-4 fill-amber-400" />
                     ))}
                   </div>
-                  <p className="text-slate-300 text-sm italic leading-relaxed mb-6">
+                  <p className="text-slate-700 text-sm italic leading-relaxed mb-6">
                     "{rev.comment}"
                   </p>
                 </div>
@@ -135,8 +135,8 @@ export const InfrastructureFeatures: React.FC = () => {
                     referrerPolicy="no-referrer"
                   />
                   <div>
-                    <div className="text-sm font-bold text-white">{rev.name}</div>
-                    <div className="text-xs text-slate-400">{rev.role}</div>
+                    <div className="text-sm font-bold text-slate-900">{rev.name}</div>
+                    <div className="text-xs text-slate-600">{rev.role}</div>
                   </div>
                 </div>
               </div>

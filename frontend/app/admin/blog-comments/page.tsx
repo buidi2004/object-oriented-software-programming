@@ -122,7 +122,7 @@ export default function AdminBlogCommentsPage() {
 
         <div className="bg-white rounded-xl p-4 border border-slate-200 mb-6">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-600" />
             <input
               type="text"
               placeholder="Tìm kiếm theo người đăng, email, nội dung bình luận..."
@@ -141,7 +141,7 @@ export default function AdminBlogCommentsPage() {
                   <div className="space-y-1.5 flex-1">
                     <div className="flex items-center gap-3">
                       <span className="font-semibold text-slate-900 flex items-center gap-1.5">
-                        <User className="w-4 h-4 text-slate-400" />
+                        <User className="w-4 h-4 text-slate-600" />
                         {comment.authorName || 'Ẩn danh'}
                       </span>
                       {comment.authorEmail && (
@@ -152,7 +152,7 @@ export default function AdminBlogCommentsPage() {
                       <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold ${comment.isApproved ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>
                         {comment.isApproved ? 'Đã duyệt' : 'Chờ duyệt'}
                       </span>
-                      <span className="text-xs text-slate-400 flex items-center gap-1">
+                      <span className="text-xs text-slate-600 flex items-center gap-1">
                         <Clock className="w-3.5 h-3.5" />
                         {new Date(comment.createdAt).toLocaleString('vi-VN')}
                       </span>
@@ -176,7 +176,7 @@ export default function AdminBlogCommentsPage() {
                     )}
                     <button
                       onClick={() => handleDelete(comment.id)}
-                      className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                      className="p-2 text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                       title="Xóa bình luận"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -189,7 +189,7 @@ export default function AdminBlogCommentsPage() {
 
           {filteredComments.length === 0 && (
             <div className="text-center py-12 text-slate-500">
-              <MessageSquare className="w-12 h-12 mx-auto mb-3 text-slate-300" />
+              <MessageSquare className="w-12 h-12 mx-auto mb-3 text-slate-700" />
               <p className="font-medium">Chưa có bình luận nào</p>
             </div>
           )}

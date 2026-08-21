@@ -18,7 +18,7 @@ export default function RenewalGuidePage() {
         </nav>
 
         <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-          <div className="bg-gradient-to-r from-emerald-600 to-teal-700 p-8 text-white">
+          <div className="bg-gradient-to-r from-emerald-600 to-teal-700 p-8 text-slate-900">
             <h1 className="text-3xl font-black mb-2">Hướng Dẫn Gia Hạn Dịch Vụ</h1>
             <p className="text-emerald-100">Đảm bảo dịch vụ của bạn hoạt động liên tục, không bị gián đoạn.</p>
           </div>

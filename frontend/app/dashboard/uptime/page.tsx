@@ -191,9 +191,9 @@ export default function DashboardUptimePage() {
                     {incident.resolved ? 'Đã khắc phục' : 'Đang xử lý'}
                   </span>
                   {expandedId === incident.id ? (
-                    <ChevronUp className="w-5 h-5 text-slate-400" />
+                    <ChevronUp className="w-5 h-5 text-slate-600" />
                   ) : (
-                    <ChevronDown className="w-5 h-5 text-slate-400" />
+                    <ChevronDown className="w-5 h-5 text-slate-600" />
                   )}
                 </div>
               </button>
@@ -209,9 +209,9 @@ export default function DashboardUptimePage() {
 
         {incidents.length === 0 && !error && (
           <div className="text-center py-12">
-            <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-300" />
+            <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-700" />
             <p className="font-medium text-slate-500">Không có sự cố nào được ghi nhận</p>
-            <p className="text-sm text-slate-400 mt-1">Hệ thống hoạt động ổn định</p>
+            <p className="text-sm text-slate-600 mt-1">Hệ thống hoạt động ổn định</p>
           </div>
         )}
       </div>

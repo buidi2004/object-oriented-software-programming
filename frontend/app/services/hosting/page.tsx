@@ -18,14 +18,14 @@ export default function HostingPage() {
     <div>
 
       {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-indigo-950 via-purple-950 to-slate-900 text-white py-20 sm:py-28">
+      <section className="relative overflow-hidden bg-gradient-to-br from-indigo-950 via-purple-950 to-slate-900 text-slate-900 py-20 sm:py-28">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <nav className="flex items-center gap-2 text-sm text-indigo-300 mb-8">
-            <Link href="/" className="hover:text-white">Trang chủ</Link>
+            <Link href="/" className="hover:text-slate-900">Trang chủ</Link>
             <span>/</span>
-            <Link href="/services" className="hover:text-white">Dịch vụ</Link>
+            <Link href="/services" className="hover:text-slate-900">Dịch vụ</Link>
             <span>/</span>
-            <span className="text-white font-medium">Web Hosting</span>
+            <span className="text-slate-900 font-medium">Web Hosting</span>
           </nav>
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-indigo-500/20 border border-indigo-400/30 text-purple-300 text-xs font-bold uppercase tracking-wider mb-4">
@@ -39,7 +39,7 @@ export default function HostingPage() {
             <p className="text-lg text-indigo-200 max-w-2xl mb-8">
               Tối ưu 100% cho WordPress, WooCommerce & Laravel. LiteSpeed Web Server + LSCache tăng tốc gấp 10 lần so với hosting truyền thống.
             </p>
-            <a href="#pricing" className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl bg-gradient-to-r from-purple-500 to-indigo-600 text-white font-bold shadow-xl hover:shadow-2xl transition-all">
+            <a href="#pricing" className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl bg-gradient-to-r from-purple-500 to-indigo-600 text-slate-900 font-bold shadow-xl hover:shadow-2xl transition-all">
               <Zap className="w-5 h-5" />
               Xem Bảng Giá
             </a>
@@ -81,7 +81,7 @@ export default function HostingPage() {
           <div className="text-center mb-10">
             <h2 className="text-3xl font-extrabold text-slate-900 mb-3">Chọn Gói Hosting Phù Hợp</h2>
             <div className="inline-flex bg-white rounded-full p-1 border border-slate-200 shadow-sm mt-4">
-              <button onClick={() => setIsYearly(false)} className={`px-5 py-2 rounded-full text-sm font-bold transition-all ${!isYearly ? 'bg-slate-900 text-white' : 'text-slate-500'}`}>
+              <button onClick={() => setIsYearly(false)} className={`px-5 py-2 rounded-full text-sm font-bold transition-all ${!isYearly ? 'bg-white text-slate-900' : 'text-slate-500'}`}>
                 Hàng Tháng
               </button>
               <button onClick={() => setIsYearly(true)} className={`px-5 py-2 rounded-full text-sm font-bold transition-all flex items-center gap-1.5 ${isYearly ? 'bg-indigo-600 text-white' : 'text-slate-500'}`}>
@@ -103,7 +103,7 @@ export default function HostingPage() {
       <ServicePageSections content={pageContent} group="post" />
 
       {/* CTA */}
-      <section className="py-16 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-center">
+      <section className="py-16 bg-gradient-to-r from-indigo-600 to-purple-600 text-slate-900 text-center">
         <div className="max-w-3xl mx-auto px-4">
           <h2 className="text-3xl font-black mb-4">Bắt Đầu Xây Dựng Website Ngay Hôm Nay</h2>
           <p className="text-indigo-200 mb-8">Đăng ký hosting chỉ mất 2 phút. Hỗ trợ chuyển dữ liệu miễn phí.</p>
@@ -114,7 +114,7 @@ export default function HostingPage() {
         </div>
       </section>
 
-      <footer className="bg-slate-900 text-slate-400 py-8">
+      <footer className="bg-white text-slate-600 py-8">
         <div className="max-w-7xl mx-auto px-4 text-center text-sm">
           © 2024 CloudHost VN. Mọi quyền được bảo lưu.
         </div>

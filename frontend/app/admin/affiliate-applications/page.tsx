@@ -106,7 +106,7 @@ export default function AdminAffiliateApplicationsPage() {
                 <tr key={app.id} className="hover:bg-gray-50/50 transition-colors">
                   <td className="px-6 py-4 font-medium text-gray-900">
                     {app.companyName}
-                    <div className="text-xs text-gray-400 font-normal mt-1">User ID: {app.userId.substring(0, 8)}...</div>
+                    <div className="text-xs text-gray-600 font-normal mt-1">User ID: {app.userId.substring(0, 8)}...</div>
                   </td>
                   <td className="px-6 py-4">
                     <span className="font-bold text-indigo-600">{app.commissionRate}%</span>

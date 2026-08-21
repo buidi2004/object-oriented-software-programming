@@ -23,7 +23,7 @@ export default function NewTicketPage() {
   if (!user) {
     return (
       <div className="flex flex-col items-center justify-center h-[60vh]">
-        <AlertCircle className="w-12 h-12 text-slate-400 mb-4" />
+        <AlertCircle className="w-12 h-12 text-slate-600 mb-4" />
         <h2 className="text-xl font-bold mb-2">Vui lòng đăng nhập</h2>
       </div>
     );

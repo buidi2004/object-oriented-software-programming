@@ -164,7 +164,7 @@ export default function CustomerOrdersPage() {
       <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
         {orders.length === 0 ? (
           <div className="text-center py-12">
-            <ShoppingCart className="w-12 h-12 mx-auto mb-3 text-slate-300" />
+            <ShoppingCart className="w-12 h-12 mx-auto mb-3 text-slate-700" />
             <p className="font-medium text-slate-500">Chưa có đơn hàng nào</p>
             <Link href="/services" className="inline-block mt-4 text-blue-600 font-semibold hover:text-blue-700">
               Khám phá dịch vụ

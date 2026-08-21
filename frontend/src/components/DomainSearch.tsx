@@ -97,7 +97,7 @@ export const DomainSearch: React.FC<DomainSearchProps> = ({ onAddToCart }) => {
         <div className="max-w-3xl mx-auto">
           <form onSubmit={handleSearch} className="relative flex flex-col sm:flex-row gap-2 bg-white p-2 rounded-2xl sm:rounded-full shadow-xl shadow-blue-500/10 border border-slate-200">
             <div className="relative flex-1 flex items-center pl-4">
-              <Search className="w-5 h-5 text-slate-400 mr-2" />
+              <Search className="w-5 h-5 text-slate-600 mr-2" />
               <input
                 type="text"
                 value={searchTerm}
@@ -139,7 +139,7 @@ export const DomainSearch: React.FC<DomainSearchProps> = ({ onAddToCart }) => {
                       <CheckCircle2 className="w-6 h-6" />
                     </div>
                   ) : (
-                    <div className="p-2.5 rounded-xl bg-rose-500 text-white shadow-md">
+                    <div className="p-2.5 rounded-xl bg-rose-500 text-slate-900 shadow-md">
                       <AlertCircle className="w-6 h-6" />
                     </div>
                   )}
@@ -192,10 +192,10 @@ export const DomainSearch: React.FC<DomainSearchProps> = ({ onAddToCart }) => {
                   <div className="text-xl font-black text-slate-900">{item.extension}</div>
                   <div className="text-sm font-extrabold text-blue-600 mt-2">
                     {item.pricePerYear.toLocaleString('vi-VN')} đ
-                    <span className="text-[10px] font-semibold text-slate-400">/năm</span>
+                    <span className="text-[10px] font-semibold text-slate-600">/năm</span>
                   </div>
                   {item.originalPrice && (
-                    <div className="text-[11px] text-slate-400 line-through mt-0.5">
+                    <div className="text-[11px] text-slate-600 line-through mt-0.5">
                       {item.originalPrice.toLocaleString('vi-VN')} đ
                     </div>
                   )}

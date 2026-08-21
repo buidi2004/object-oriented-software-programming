@@ -194,7 +194,7 @@ export default function GiftCardsPage() {
               ) : result.balance > 0 ? (
                 <Gift className="w-6 h-6 text-blue-600" />
               ) : (
-                <XCircle className="w-6 h-6 text-slate-400" />
+                <XCircle className="w-6 h-6 text-slate-600" />
               )}
             </div>
             

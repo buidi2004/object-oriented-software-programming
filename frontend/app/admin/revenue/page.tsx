@@ -193,7 +193,7 @@ export default function AdminRevenuePage() {
               </span>
             </div>
             <p className="text-2xl font-black text-slate-900">{stats.totalRevenue.toLocaleString('vi-VN')} đ</p>
-            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mt-1">Tổng Doanh Thu ({dateRange})</p>
+            <p className="text-xs font-bold text-slate-600 uppercase tracking-wider mt-1">Tổng Doanh Thu ({dateRange})</p>
           </div>
 
           <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm">
@@ -201,7 +201,7 @@ export default function AdminRevenuePage() {
               <ShoppingCart className="w-6 h-6" />
             </div>
             <p className="text-2xl font-black text-slate-900">{stats.totalOrders.toLocaleString()} đơn</p>
-            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mt-1">Đơn Hàng Đã Thanh Toán</p>
+            <p className="text-xs font-bold text-slate-600 uppercase tracking-wider mt-1">Đơn Hàng Đã Thanh Toán</p>
           </div>
 
           <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm">
@@ -209,7 +209,7 @@ export default function AdminRevenuePage() {
               <Users className="w-6 h-6" />
             </div>
             <p className="text-2xl font-black text-slate-900">{stats.totalUsers.toLocaleString()} khách</p>
-            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mt-1">Khách Hàng Mua Sắm</p>
+            <p className="text-xs font-bold text-slate-600 uppercase tracking-wider mt-1">Khách Hàng Mua Sắm</p>
           </div>
 
           <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm">
@@ -217,7 +217,7 @@ export default function AdminRevenuePage() {
               <TrendingUp className="w-6 h-6" />
             </div>
             <p className="text-2xl font-black text-slate-900">{Math.round(stats.averageOrderValue).toLocaleString('vi-VN')} đ</p>
-            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mt-1">Giá Trị Trung Bình / Đơn</p>
+            <p className="text-xs font-bold text-slate-600 uppercase tracking-wider mt-1">Giá Trị Trung Bình / Đơn</p>
           </div>
         </div>
 

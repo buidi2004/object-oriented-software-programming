@@ -386,7 +386,7 @@ export default function ServicesPage() {
                 ))}
               </div>
 
-              <div className={`w-full py-3.5 rounded-2xl bg-gradient-to-r ${svc.color} text-white font-bold text-sm text-center flex items-center justify-center gap-2 group-hover:shadow-lg transition-all`}>
+              <div className={`w-full py-3.5 rounded-2xl bg-gradient-to-r ${svc.color} text-slate-900 font-bold text-sm text-center flex items-center justify-center gap-2 group-hover:shadow-lg transition-all`}>
                 <span>Xem Chi Tiết</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </div>
@@ -411,7 +411,7 @@ export default function ServicesPage() {
         </div>
       </main>
 
-      <footer className="bg-slate-900 text-slate-400 py-8 mt-16">
+      <footer className="bg-white text-slate-600 py-8 mt-16">
         <div className="max-w-7xl mx-auto px-4 text-center text-sm">
           © 2024 CloudHost VN. Mọi quyền được bảo lưu.
         </div>

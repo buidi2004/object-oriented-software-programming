@@ -102,14 +102,14 @@ export default function AdminMigrationsPage() {
                     <td className="px-6 py-4">
                       <div className="font-medium text-gray-900">User: {mig.userId.substring(0, 8)}...</div>
                       <div className="text-xs text-gray-500 font-mono mt-1">Order: {mig.orderRequestId.substring(0, 8)}...</div>
-                      <div className="text-xs text-gray-400 mt-1">{new Date(mig.createdAt).toLocaleString('vi-VN')}</div>
+                      <div className="text-xs text-gray-600 mt-1">{new Date(mig.createdAt).toLocaleString('vi-VN')}</div>
                     </td>
                     <td className="px-6 py-4 font-medium text-gray-900">
                       {mig.fromProvider}
                     </td>
                     <td className="px-6 py-4">
                       <div className="text-sm text-gray-600 bg-gray-50 p-3 rounded-lg border border-gray-200 min-h-[60px] whitespace-pre-wrap font-mono">
-                        {mig.note || <span className="italic text-gray-400">Không có ghi chú</span>}
+                        {mig.note || <span className="italic text-gray-600">Không có ghi chú</span>}
                       </div>
                     </td>
                     <td className="px-6 py-4">

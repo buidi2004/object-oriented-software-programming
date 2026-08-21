@@ -251,7 +251,7 @@ export default function AdminAuditLogsPage() {
         {/* Search & Filters */}
         <div className="bg-white rounded-2xl p-4 border border-slate-200 mb-6 flex flex-col sm:flex-row gap-4 items-center justify-between shadow-sm">
           <div className="relative w-full sm:max-w-md">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-600" />
             <input
               type="text"
               placeholder="Tìm theo email, hành động, IP hoặc mã thực thể..."
@@ -312,7 +312,7 @@ export default function AdminAuditLogsPage() {
                       </div>
                       <div>
                         <p className="font-bold text-slate-900">{log.userEmail || 'Hệ Thống Tự Động'}</p>
-                        <p className="text-[10px] text-slate-400 font-mono">{log.userId || 'system'}</p>
+                        <p className="text-[10px] text-slate-600 font-mono">{log.userId || 'system'}</p>
                       </div>
                     </div>
                   </td>
@@ -324,7 +324,7 @@ export default function AdminAuditLogsPage() {
                   <td className="px-6 py-4">
                     <div>
                       <span className="font-semibold text-slate-900">{log.entityName}</span>
-                      <span className="block text-[11px] text-slate-400 font-mono">{log.entityId}</span>
+                      <span className="block text-[11px] text-slate-600 font-mono">{log.entityId}</span>
                     </div>
                   </td>
                   <td className="px-6 py-4">
@@ -338,7 +338,7 @@ export default function AdminAuditLogsPage() {
                   <td className="px-6 py-4 text-right">
                     <button
                       onClick={() => setSelectedLog(log)}
-                      className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                      className="p-1.5 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                       title="Xem chi tiết Payload"
                     >
                       <Eye className="w-4 h-4" />
@@ -351,9 +351,9 @@ export default function AdminAuditLogsPage() {
 
           {filteredLogs.length === 0 && (
             <div className="text-center py-16 text-slate-500">
-              <ShieldAlert className="w-12 h-12 mx-auto mb-3 text-slate-300" />
+              <ShieldAlert className="w-12 h-12 mx-auto mb-3 text-slate-700" />
               <p className="font-bold text-slate-700">Không tìm thấy bản ghi nhật ký nào</p>
-              <p className="text-xs text-slate-400 mt-1">Thử thay đổi bộ lọc tìm kiếm</p>
+              <p className="text-xs text-slate-600 mt-1">Thử thay đổi bộ lọc tìm kiếm</p>
             </div>
           )}
 
@@ -387,7 +387,7 @@ export default function AdminAuditLogsPage() {
             <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-base font-black text-slate-900">Chi Tiết Payload Nhật Ký</h3>
-                <button onClick={() => setSelectedLog(null)} className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100">
+                <button onClick={() => setSelectedLog(null)} className="p-1.5 text-slate-600 hover:text-slate-600 rounded-lg hover:bg-slate-100">
                   <X className="w-5 h-5" />
                 </button>
               </div>
@@ -397,7 +397,7 @@ export default function AdminAuditLogsPage() {
                 <p><strong>Người thực hiện:</strong> {selectedLog.userEmail} (IP: {selectedLog.ipAddress})</p>
                 <p><strong>Thời gian:</strong> {new Date(selectedLog.timestamp).toLocaleString('vi-VN')}</p>
               </div>
-              <div className="bg-slate-900 text-slate-100 p-4 rounded-2xl font-mono text-xs overflow-x-auto max-h-60">
+              <div className="bg-white text-slate-900 p-4 rounded-2xl font-mono text-xs overflow-x-auto max-h-60">
                 <pre>{selectedLog.details || '{\n  "status": "No additional payload recorded"\n}'}</pre>
               </div>
               <div className="mt-4 flex justify-end">

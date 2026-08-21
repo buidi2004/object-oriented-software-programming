@@ -58,7 +58,7 @@ export function ResourceFailureAlert({
               <button
                 onClick={handleRetryClick}
                 disabled={retrying}
-                className="px-3 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold transition-colors flex items-center gap-1.5 text-[11px] shadow-sm disabled:opacity-50"
+                className="px-3 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-slate-900 font-bold transition-colors flex items-center gap-1.5 text-[11px] shadow-sm disabled:opacity-50"
               >
                 <RefreshCw className={`w-3.5 h-3.5 ${retrying ? 'animate-spin' : ''}`} />
                 Force Retry
@@ -86,7 +86,7 @@ export function ResourceFailureAlert({
               {showTechnical ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
             </button>
             {showTechnical && (
-              <pre className="p-3 bg-slate-900 text-rose-300 rounded-xl font-mono text-[10px] overflow-x-auto whitespace-pre-wrap max-h-48">
+              <pre className="p-3 bg-white text-rose-300 rounded-xl font-mono text-[10px] overflow-x-auto whitespace-pre-wrap max-h-48">
                 {technicalDetails}
               </pre>
             )}

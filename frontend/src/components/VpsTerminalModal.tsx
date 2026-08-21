@@ -143,9 +143,9 @@ export default function VpsTerminalModal({ isOpen, onClose, vpsInstanceId }: Vps
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-      <div className="bg-[#1e1e1e] w-full max-w-4xl rounded-xl shadow-2xl overflow-hidden flex flex-col h-[80vh] border border-slate-700">
-        <div className="flex items-center justify-between px-4 py-3 bg-slate-900 border-b border-slate-700">
-          <div className="flex items-center gap-2 text-slate-300 font-medium">
+      <div className="bg-[#1e1e1e] w-full max-w-4xl rounded-xl shadow-2xl overflow-hidden flex flex-col h-[80vh] border border-slate-300">
+        <div className="flex items-center justify-between px-4 py-3 bg-white border-b border-slate-300">
+          <div className="flex items-center gap-2 text-slate-700 font-medium">
             <TerminalIcon className="w-4 h-4" />
             VPS Terminal
             {isConnected ? (
@@ -160,7 +160,7 @@ export default function VpsTerminalModal({ isOpen, onClose, vpsInstanceId }: Vps
           </div>
           <button 
             onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+            className="p-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
           >
             <X className="w-5 h-5" />
           </button>

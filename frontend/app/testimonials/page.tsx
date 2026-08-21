@@ -66,7 +66,7 @@ export default function TestimonialsPage() {
                 key={testimonial.id} 
                 className={`bg-white rounded-3xl p-8 border border-slate-200 shadow-sm relative overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1`}
               >
-                <Quote className="absolute top-6 right-6 w-12 h-12 text-slate-100 -z-0 transform rotate-180" />
+                <Quote className="absolute top-6 right-6 w-12 h-12 text-slate-900 -z-0 transform rotate-180" />
                 <div className="relative z-10">
                   <div className="flex items-center gap-1 mb-6">
                     {[...Array(5)].map((_, i) => (
@@ -77,7 +77,7 @@ export default function TestimonialsPage() {
                     "{testimonial.content}"
                   </p>
                   <div className="flex items-center gap-4">
-                    <div className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg ${idx % 2 === 0 ? 'bg-gradient-to-tr from-blue-600 to-indigo-600 text-white' : 'bg-gradient-to-tr from-emerald-500 to-teal-500 text-white'}`}>
+                    <div className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg ${idx % 2 === 0 ? 'bg-gradient-to-tr from-blue-600 to-indigo-600 text-slate-900' : 'bg-gradient-to-tr from-emerald-500 to-teal-500 text-white'}`}>
                       {testimonial.customerName.charAt(0).toUpperCase()}
                     </div>
                     <div>
@@ -94,7 +94,7 @@ export default function TestimonialsPage() {
         )}
 
         <div className="mt-16 text-center">
-          <Link href="/services" className="inline-block bg-slate-900 hover:bg-slate-800 text-white font-bold py-3.5 px-8 rounded-xl transition-all shadow-lg shadow-slate-900/20">
+          <Link href="/services" className="inline-block bg-white hover:bg-slate-100 text-slate-900 font-bold py-3.5 px-8 rounded-xl transition-all shadow-lg shadow-slate-900/20">
             Trải nghiệm dịch vụ ngay
           </Link>
         </div>

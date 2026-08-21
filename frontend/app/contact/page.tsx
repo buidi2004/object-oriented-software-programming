@@ -119,7 +119,7 @@ function ContactFormInner() {
   };
 
   return (
-    <div className="min-h-screen bg-[#090d16] text-slate-100 font-sans selection:bg-blue-500 selection:text-white">
+    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-blue-500 selection:text-white">
       
       {/* Toast Notification */}
       {toast && (
@@ -132,7 +132,7 @@ function ContactFormInner() {
       )}
 
       {/* 1. COMPACT FUNCTIONAL SUPPORT HEADER (ZERO MARKETING FLUFF) */}
-      <section className="pt-10 pb-12 bg-[#060a12] border-b border-slate-800">
+      <section className="pt-10 pb-12 bg-slate-100 border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           {/* Breadcrumb */}
@@ -148,21 +148,21 @@ function ContactFormInner() {
                 <Headphones className="w-3.5 h-3.5" />
                 24/7 TECHNICAL SUPPORT CENTER
               </div>
-              <h1 className="text-2xl sm:text-4xl font-black text-white tracking-tight">
+              <h1 className="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight">
                 Liên Hệ &amp; Trung Tâm Hỗ Trợ Kỹ Thuật
               </h1>
-              <p className="text-slate-400 text-xs sm:text-sm mt-1 font-normal">
+              <p className="text-slate-600 text-xs sm:text-sm mt-1 font-normal">
                 Kênh tiếp nhận sự cố, tư vấn kiến trúc hạ tầng và giải đáp thắc mắc dịch vụ trực tiếp từ kỹ sư SEN CloudHost.
               </p>
             </div>
 
             {/* Live Operations Telemetry Status */}
-            <div className="p-3.5 rounded-2xl bg-[#0c1322] border border-slate-800 font-mono text-xs space-y-1.5 shrink-0">
+            <div className="p-3.5 rounded-2xl bg-white border border-slate-200 font-mono text-xs space-y-1.5 shrink-0">
               <div className="flex items-center gap-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" />
-                <span className="text-white font-bold text-[11px]">HỆ THỐNG VẬN HÀNH BÌNH THƯỜNG</span>
+                <span className="text-slate-900 font-bold text-[11px]">HỆ THỐNG VẬN HÀNH BÌNH THƯỜNG</span>
               </div>
-              <div className="text-[10px] text-slate-400 flex items-center justify-between gap-4">
+              <div className="text-[10px] text-slate-600 flex items-center justify-between gap-4">
                 <span>NOC Response SLA:</span>
                 <span className="text-emerald-400 font-bold">&lt; 5 Phút</span>
               </div>
@@ -173,13 +173,13 @@ function ContactFormInner() {
       </section>
 
       {/* 2. PRIMARY CONTACT CHANNELS (SINGLE SOURCE FOR HOTLINE) */}
-      <section className="py-10 bg-[#090d16] border-b border-slate-800">
+      <section className="py-10 bg-slate-50 border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 font-mono text-xs">
             
             {/* Channel 1: Primary Hotline (Only place printing full number) */}
-            <div className="p-5 rounded-2xl bg-[#0c1322] border border-slate-800 hover:border-blue-500/50 transition-all flex flex-col justify-between space-y-4 group">
+            <div className="p-5 rounded-2xl bg-white border border-slate-200 hover:border-blue-500/50 transition-all flex flex-col justify-between space-y-4 group">
               <div className="flex items-center justify-between">
                 <div className="w-10 h-10 rounded-xl bg-blue-950 text-blue-400 border border-blue-900 flex items-center justify-center">
                   <Phone className="w-5 h-5" />
@@ -189,8 +189,8 @@ function ContactFormInner() {
                 </span>
               </div>
               <div>
-                <div className="text-slate-400 text-[11px]">Tổng Đài Khẩn Cấp (Hotline):</div>
-                <a href="tel:19006888" className="text-lg font-black text-white hover:text-blue-400 transition-colors block mt-0.5">
+                <div className="text-slate-600 text-[11px]">Tổng Đài Khẩn Cấp (Hotline):</div>
+                <a href="tel:19006888" className="text-lg font-black text-slate-900 hover:text-blue-400 transition-colors block mt-0.5">
                   1900 6888
                 </a>
                 <div className="text-[10px] text-slate-500 mt-1">Hỗ trợ kỹ thuật &amp; cứu hộ server tức thì</div>
@@ -198,7 +198,7 @@ function ContactFormInner() {
             </div>
 
             {/* Channel 2: Official Support Email */}
-            <div className="p-5 rounded-2xl bg-[#0c1322] border border-slate-800 hover:border-sky-500/50 transition-all flex flex-col justify-between space-y-4 group">
+            <div className="p-5 rounded-2xl bg-white border border-slate-200 hover:border-sky-500/50 transition-all flex flex-col justify-between space-y-4 group">
               <div className="flex items-center justify-between">
                 <div className="w-10 h-10 rounded-xl bg-sky-950 text-sky-400 border border-sky-900 flex items-center justify-center">
                   <Mail className="w-5 h-5" />
@@ -208,7 +208,7 @@ function ContactFormInner() {
                 </span>
               </div>
               <div>
-                <div className="text-slate-400 text-[11px]">Hộp Thư Kỹ Thuật (Email):</div>
+                <div className="text-slate-600 text-[11px]">Hộp Thư Kỹ Thuật (Email):</div>
                 <a href="mailto:support@cloudhost.vn" className="text-sm font-bold text-sky-400 hover:underline block mt-0.5 truncate">
                   support@cloudhost.vn
                 </a>
@@ -217,7 +217,7 @@ function ContactFormInner() {
             </div>
 
             {/* Channel 3: Technical Ticket System */}
-            <div className="p-5 rounded-2xl bg-[#0c1322] border border-slate-800 hover:border-amber-500/50 transition-all flex flex-col justify-between space-y-4 group">
+            <div className="p-5 rounded-2xl bg-white border border-slate-200 hover:border-amber-500/50 transition-all flex flex-col justify-between space-y-4 group">
               <div className="flex items-center justify-between">
                 <div className="w-10 h-10 rounded-xl bg-amber-950 text-amber-400 border border-amber-900 flex items-center justify-center">
                   <MessageSquare className="w-5 h-5" />
@@ -227,7 +227,7 @@ function ContactFormInner() {
                 </span>
               </div>
               <div>
-                <div className="text-slate-400 text-[11px]">Hệ Thống Yêu Cầu (Ticket):</div>
+                <div className="text-slate-600 text-[11px]">Hệ Thống Yêu Cầu (Ticket):</div>
                 <Link href="/support/tickets" className="text-sm font-bold text-amber-400 hover:text-amber-300 flex items-center gap-1 mt-0.5">
                   <span>Mở Ticket Kỹ Thuật</span>
                   <ArrowRight className="w-3.5 h-3.5" />
@@ -237,7 +237,7 @@ function ContactFormInner() {
             </div>
 
             {/* Channel 4: VIP Direct Messaging */}
-            <div className="p-5 rounded-2xl bg-[#0c1322] border border-slate-800 hover:border-purple-500/50 transition-all flex flex-col justify-between space-y-4 group">
+            <div className="p-5 rounded-2xl bg-white border border-slate-200 hover:border-purple-500/50 transition-all flex flex-col justify-between space-y-4 group">
               <div className="flex items-center justify-between">
                 <div className="w-10 h-10 rounded-xl bg-purple-950 text-purple-400 border border-purple-900 flex items-center justify-center">
                   <MessageCircle className="w-5 h-5" />
@@ -247,7 +247,7 @@ function ContactFormInner() {
                 </span>
               </div>
               <div>
-                <div className="text-slate-400 text-[11px]">Kênh Telegram / Zalo VIP:</div>
+                <div className="text-slate-600 text-[11px]">Kênh Telegram / Zalo VIP:</div>
                 <a href="https://t.me" target="_blank" rel="noreferrer" className="text-sm font-bold text-purple-400 hover:text-purple-300 flex items-center gap-1 mt-0.5">
                   <span>@sencloud_support</span>
                   <ExternalLink className="w-3 h-3" />
@@ -262,23 +262,23 @@ function ContactFormInner() {
       </section>
 
       {/* 3. MAIN INTERACTIVE FORM & VIP CONSULTATION CHANNELS */}
-      <section className="py-16 bg-[#070b12] border-b border-slate-800">
+      <section className="py-16 bg-white border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             
             {/* Left Column (7 Cols): Dynamic Contact & Inquiry Form */}
-            <div className="lg:col-span-7 p-6 sm:p-8 rounded-3xl bg-[#0c1322] border border-slate-800 shadow-xl space-y-6">
+            <div className="lg:col-span-7 p-6 sm:p-8 rounded-3xl bg-white border border-slate-200 shadow-xl space-y-6">
               
               <div>
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-blue-950 text-blue-400 text-xs font-mono uppercase mb-2 border border-blue-900">
                   <SendHorizontal className="w-3.5 h-3.5" />
                   YÊU CẦU TƯ VẤN &amp; HỖ TRỢ DỰ ÁN
                 </div>
-                <h2 className="text-xl sm:text-2xl font-black text-white">
+                <h2 className="text-xl sm:text-2xl font-black text-slate-900">
                   Gửi Thông Tin Nhu Cầu Của Bạn
                 </h2>
-                <p className="text-xs text-slate-400 mt-1 font-normal">
+                <p className="text-xs text-slate-600 mt-1 font-normal">
                   Chuyên viên giải pháp hạ tầng sẽ phân tích yêu cầu và liên hệ lại trong vòng 15 phút.
                 </p>
               </div>
@@ -287,51 +287,51 @@ function ContactFormInner() {
                 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1.5">
-                    <label className="text-slate-300 font-bold uppercase text-[10px]">Họ và Tên *</label>
+                    <label className="text-slate-700 font-bold uppercase text-[10px]">Họ và Tên *</label>
                     <input
                       type="text"
                       required
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder="Nguyễn Văn A"
-                      className="w-full px-4 py-3 rounded-xl bg-[#060a12] border border-slate-800 text-white font-sans text-xs focus:outline-none focus:border-blue-500 transition-all"
+                      className="w-full px-4 py-3 rounded-xl bg-slate-100 border border-slate-200 text-slate-900 font-sans text-xs focus:outline-none focus:border-blue-500 transition-all"
                     />
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-slate-300 font-bold uppercase text-[10px]">Email Công Việc *</label>
+                    <label className="text-slate-700 font-bold uppercase text-[10px]">Email Công Việc *</label>
                     <input
                       type="email"
                       required
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="ten@doanhnghiep.com"
-                      className="w-full px-4 py-3 rounded-xl bg-[#060a12] border border-slate-800 text-white font-sans text-xs focus:outline-none focus:border-blue-500 transition-all"
+                      className="w-full px-4 py-3 rounded-xl bg-slate-100 border border-slate-200 text-slate-900 font-sans text-xs focus:outline-none focus:border-blue-500 transition-all"
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1.5">
-                    <label className="text-slate-300 font-bold uppercase text-[10px]">Số Điện Thoại</label>
+                    <label className="text-slate-700 font-bold uppercase text-[10px]">Số Điện Thoại</label>
                     <input
                       type="tel"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
                       placeholder="0987 654 321"
-                      className="w-full px-4 py-3 rounded-xl bg-[#060a12] border border-slate-800 text-white font-sans text-xs focus:outline-none focus:border-blue-500 transition-all"
+                      className="w-full px-4 py-3 rounded-xl bg-slate-100 border border-slate-200 text-slate-900 font-sans text-xs focus:outline-none focus:border-blue-500 transition-all"
                     />
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-slate-300 font-bold uppercase text-[10px]">Chủ Đề Quan Tâm</label>
+                    <label className="text-slate-700 font-bold uppercase text-[10px]">Chủ Đề Quan Tâm</label>
                     <select
                       value={serviceTopic}
                       onChange={(e) => setServiceTopic(e.target.value)}
-                      className="w-full px-4 py-3 rounded-xl bg-[#060a12] border border-slate-800 text-blue-400 font-bold text-xs focus:outline-none focus:border-blue-500 transition-all"
+                      className="w-full px-4 py-3 rounded-xl bg-slate-100 border border-slate-200 text-blue-400 font-bold text-xs focus:outline-none focus:border-blue-500 transition-all"
                     >
                       {Object.entries(SERVICE_TOPICS).map(([key, label]) => (
-                        <option key={key} value={key} className="bg-[#0c1322] text-slate-200">
+                        <option key={key} value={key} className="bg-white text-slate-800">
                           {label}
                         </option>
                       ))}
@@ -340,14 +340,14 @@ function ContactFormInner() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-slate-300 font-bold uppercase text-[10px]">Nội Dung Chi Tiết Hoặc Câu Hỏi *</label>
+                  <label className="text-slate-700 font-bold uppercase text-[10px]">Nội Dung Chi Tiết Hoặc Câu Hỏi *</label>
                   <textarea
                     required
                     rows={4}
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     placeholder="Mô tả cấu hình mong muốn, lưu lượng truy cập dự kiến, bài toán kỹ thuật cần xử lý..."
-                    className="w-full px-4 py-3 rounded-xl bg-[#060a12] border border-slate-800 text-white font-sans text-xs focus:outline-none focus:border-blue-500 transition-all resize-none leading-relaxed"
+                    className="w-full px-4 py-3 rounded-xl bg-slate-100 border border-slate-200 text-slate-900 font-sans text-xs focus:outline-none focus:border-blue-500 transition-all resize-none leading-relaxed"
                   />
                 </div>
 
@@ -379,9 +379,9 @@ function ContactFormInner() {
             <div className="lg:col-span-5 space-y-6">
               
               {/* VIP Direct Channels (Replaces duplicate box with high-value actions) */}
-              <div className="p-6 rounded-3xl bg-[#0c1322] border border-slate-800 space-y-4 font-mono text-xs">
-                <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-                  <span className="font-bold text-white uppercase flex items-center gap-2">
+              <div className="p-6 rounded-3xl bg-white border border-slate-200 space-y-4 font-mono text-xs">
+                <div className="flex items-center justify-between pb-3 border-b border-slate-200">
+                  <span className="font-bold text-slate-900 uppercase flex items-center gap-2">
                     <Zap className="w-4 h-4 text-amber-400" />
                     KÊNH KẾT NỐI KỸ SƯ 1-1
                   </span>
@@ -390,7 +390,7 @@ function ContactFormInner() {
                   </span>
                 </div>
 
-                <p className="text-slate-400 text-[11px] leading-relaxed font-sans font-normal">
+                <p className="text-slate-600 text-[11px] leading-relaxed font-sans font-normal">
                   Dành cho các doanh nghiệp, dự án cần tư vấn thiết kế cụm máy chủ chuyên biệt hoặc xử lý cứu hộ dữ liệu khẩn cấp.
                 </p>
 
@@ -399,12 +399,12 @@ function ContactFormInner() {
                     href="https://t.me"
                     target="_blank"
                     rel="noreferrer"
-                    className="p-3 rounded-xl bg-[#060a12] border border-slate-800 hover:border-sky-500/50 transition-all flex items-center justify-between group"
+                    className="p-3 rounded-xl bg-slate-100 border border-slate-200 hover:border-sky-500/50 transition-all flex items-center justify-between group"
                   >
                     <div className="flex items-center gap-3">
                       <FaTelegram className="w-5 h-5 text-sky-400" />
                       <div>
-                        <div className="font-bold text-white text-xs">Telegram Support VIP</div>
+                        <div className="font-bold text-slate-900 text-xs">Telegram Support VIP</div>
                         <div className="text-[10px] text-slate-500">@sencloud_support</div>
                       </div>
                     </div>
@@ -415,12 +415,12 @@ function ContactFormInner() {
                     href="https://zalo.me"
                     target="_blank"
                     rel="noreferrer"
-                    className="p-3 rounded-xl bg-[#060a12] border border-slate-800 hover:border-blue-500/50 transition-all flex items-center justify-between group"
+                    className="p-3 rounded-xl bg-slate-100 border border-slate-200 hover:border-blue-500/50 transition-all flex items-center justify-between group"
                   >
                     <div className="flex items-center gap-3">
                       <SiZalo className="w-5 h-5 text-blue-400" />
                       <div>
-                        <div className="font-bold text-white text-xs">Zalo Official Account</div>
+                        <div className="font-bold text-slate-900 text-xs">Zalo Official Account</div>
                         <div className="text-[10px] text-slate-500">SEN CloudHost Vietnam</div>
                       </div>
                     </div>
@@ -430,30 +430,30 @@ function ContactFormInner() {
               </div>
 
               {/* Physical Office Details (Without repeating full numbers 4 times) */}
-              <div className="p-6 rounded-3xl bg-[#0c1322] border border-slate-800 space-y-4 font-mono text-xs">
-                <div className="text-white font-bold uppercase pb-2 border-b border-slate-800 flex items-center gap-2">
+              <div className="p-6 rounded-3xl bg-white border border-slate-200 space-y-4 font-mono text-xs">
+                <div className="text-slate-900 font-bold uppercase pb-2 border-b border-slate-200 flex items-center gap-2">
                   <Building2 className="w-4 h-4 text-blue-400" />
                   ĐỊA ĐIỂM VĂN PHÒNG &amp; PHÒNG MÁY
                 </div>
 
                 {/* Hanoi */}
                 <div className="space-y-1">
-                  <div className="font-bold text-white text-[11px] flex items-center justify-between">
+                  <div className="font-bold text-slate-900 text-[11px] flex items-center justify-between">
                     <span>Trụ Sở Chính (Hà Nội):</span>
                     <a href="tel:19006888" className="text-blue-400 text-[10px] hover:underline">Gọi ngay →</a>
                   </div>
-                  <p className="text-slate-400 text-[11px] font-sans">
+                  <p className="text-slate-600 text-[11px] font-sans">
                     Tầng 12, Tòa nhà HITC, 239 Xuân Thủy, Cầu Giấy, TP. Hà Nội
                   </p>
                 </div>
 
                 {/* HCM */}
-                <div className="space-y-1 pt-2 border-t border-slate-800/60">
-                  <div className="font-bold text-white text-[11px] flex items-center justify-between">
+                <div className="space-y-1 pt-2 border-t border-slate-200/60">
+                  <div className="font-bold text-slate-900 text-[11px] flex items-center justify-between">
                     <span>Chi Nhánh (TP. Hồ Chí Minh):</span>
                     <a href="tel:19006888" className="text-indigo-400 text-[10px] hover:underline">Gọi ngay →</a>
                   </div>
-                  <p className="text-slate-400 text-[11px] font-sans">
+                  <p className="text-slate-600 text-[11px] font-sans">
                     Tòa nhà Viettel Complex, 285 Cách Mạng Tháng Tám, Quận 10, TP.HCM
                   </p>
                 </div>
@@ -467,21 +467,21 @@ function ContactFormInner() {
       </section>
 
       {/* 4. INTERACTIVE EMBEDDED MAP & FAQS (NO EMPTY GRAY BOXES) */}
-      <section className="py-16 bg-[#090d16] border-b border-slate-800">
+      <section className="py-16 bg-slate-50 border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             
             {/* Left: Interactive Real Embedded Map (7 Cols) */}
-            <div className="lg:col-span-7 p-6 rounded-3xl bg-[#0c1322] border border-slate-800 space-y-4">
-              <div className="flex items-center justify-between pb-2 border-b border-slate-800 font-mono text-xs">
+            <div className="lg:col-span-7 p-6 rounded-3xl bg-white border border-slate-200 space-y-4">
+              <div className="flex items-center justify-between pb-2 border-b border-slate-200 font-mono text-xs">
                 <div className="flex items-center gap-2">
                   <MapPin className="w-4 h-4 text-emerald-400" />
-                  <span className="font-bold text-white uppercase">BẢN ĐỒ VĂN PHÒNG</span>
+                  <span className="font-bold text-slate-900 uppercase">BẢN ĐỒ VĂN PHÒNG</span>
                 </div>
                 
                 {/* Location Switch Tabs */}
-                <div className="flex items-center gap-1.5 p-1 rounded-xl bg-[#060a12] border border-slate-800">
+                <div className="flex items-center gap-1.5 p-1 rounded-xl bg-slate-100 border border-slate-200">
                   <button
                     onClick={() => setActiveMapTab('hn')}
                     className={`px-3 py-1 rounded-lg text-[10px] font-bold transition-all ${
@@ -506,7 +506,7 @@ function ContactFormInner() {
               </div>
 
               {/* Real Google Maps iframe embed */}
-              <div className="w-full h-[320px] rounded-2xl overflow-hidden border border-slate-800 relative bg-[#060a12]">
+              <div className="w-full h-[320px] rounded-2xl overflow-hidden border border-slate-200 relative bg-slate-100">
                 {activeMapTab === 'hn' ? (
                   <iframe
                     title="Hanoi Office Map"
@@ -528,8 +528,8 @@ function ContactFormInner() {
             </div>
 
             {/* Right: Technical Support FAQ Accordion (5 Cols) */}
-            <div className="lg:col-span-5 p-6 rounded-3xl bg-[#0c1322] border border-slate-800 space-y-4">
-              <div className="font-mono text-xs text-white font-bold uppercase pb-2 border-b border-slate-800 flex items-center gap-2">
+            <div className="lg:col-span-5 p-6 rounded-3xl bg-white border border-slate-200 space-y-4">
+              <div className="font-mono text-xs text-slate-900 font-bold uppercase pb-2 border-b border-slate-200 flex items-center gap-2">
                 <HelpCircle className="w-4 h-4 text-blue-400" />
                 CÂU HỎI THƯỜNG GẶP KHI LIÊN HỆ
               </div>
@@ -538,20 +538,20 @@ function ContactFormInner() {
                 {FAQS.map((faq, idx) => (
                   <div
                     key={idx}
-                    className="rounded-xl bg-[#060a12] border border-slate-800 overflow-hidden transition-all"
+                    className="rounded-xl bg-slate-100 border border-slate-200 overflow-hidden transition-all"
                   >
                     <button
                       onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
                       className="w-full p-3.5 text-left flex items-center justify-between gap-3 focus:outline-none"
                     >
-                      <span className="font-bold text-xs text-slate-200">{faq.question}</span>
-                      <div className="w-5 h-5 rounded bg-slate-900 border border-slate-800 flex items-center justify-center shrink-0 text-blue-400">
+                      <span className="font-bold text-xs text-slate-800">{faq.question}</span>
+                      <div className="w-5 h-5 rounded bg-white border border-slate-200 flex items-center justify-center shrink-0 text-blue-400">
                         {openFaq === idx ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
                       </div>
                     </button>
 
                     {openFaq === idx && (
-                      <div className="px-3.5 pb-3.5 text-[11px] text-slate-400 leading-relaxed border-t border-slate-800/80 pt-2.5">
+                      <div className="px-3.5 pb-3.5 text-[11px] text-slate-600 leading-relaxed border-t border-slate-200/80 pt-2.5">
                         {faq.answer}
                       </div>
                     )}
@@ -571,7 +571,7 @@ function ContactFormInner() {
 
 export default function ContactPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#090d16] flex items-center justify-center text-slate-400 font-mono">Loading Contact Center...</div>}>
+    <Suspense fallback={<div className="min-h-screen bg-slate-50 flex items-center justify-center text-slate-600 font-mono">Loading Contact Center...</div>}>
       <ContactFormInner />
     </Suspense>
   );
