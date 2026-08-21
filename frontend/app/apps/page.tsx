@@ -9,10 +9,16 @@ import {
   DownloadCloud, Layers, Activity, ChevronDown, ChevronUp,
   Sparkles, Terminal, HardDrive, Lock
 } from 'lucide-react';
-import { 
-  WordpressLogo, GhostLogo, NextcloudLogo, N8nLogo, 
-  DockerLogo, MysqlLogo 
-} from '@/src/components/icons/BrandLogos';
+import {
+  SiWordpress,
+  SiGhost,
+  SiNextcloud,
+  SiN8N,
+  SiDocker,
+  SiOllama,
+  SiStrapi,
+  SiAdminer,
+} from 'react-icons/si';
 import { useAuthStore } from '@/src/store/useAuthStore';
 import { useUIStore } from '@/src/store/useUIStore';
 
@@ -32,7 +38,8 @@ export default function AppMarketplacePage() {
       description: 'Nền tảng CMS hàng đầu thế giới tích hợp sẵn LiteSpeed Web Server, PHP 8.3 & MariaDB. Tối ưu 100/100 PageSpeed.',
       tag: 'Phổ biến nhất',
       version: '6.5 (Mới nhất)',
-      Logo: WordpressLogo,
+      Logo: SiWordpress,
+      brandColor: '#21759B',
       color: 'from-blue-600 to-indigo-600',
       specs: '1 vCPU • 1GB RAM',
     },
@@ -43,7 +50,8 @@ export default function AppMarketplacePage() {
       description: 'Nền tảng xuất bản nội dung, newsletter & blog hiện đại viết bằng Node.js. Siêu tốc và tối ưu chuẩn SEO.',
       tag: 'Blogging & News',
       version: '5.82',
-      Logo: GhostLogo,
+      Logo: SiGhost,
+      brandColor: '#FFFFFF',
       color: 'from-zinc-600 to-slate-800',
       specs: '1 vCPU • 1GB RAM',
     },
@@ -54,7 +62,8 @@ export default function AppMarketplacePage() {
       description: 'Đám mây lưu trữ dữ liệu riêng tư chuẩn Enterprise, đồng bộ ảnh, danh bạ, tài liệu văn phòng và bảo mật E2EE.',
       tag: 'Lưu trữ riêng tư',
       version: '28.0.4',
-      Logo: NextcloudLogo,
+      Logo: SiNextcloud,
+      brandColor: '#0082C9',
       color: 'from-blue-500 to-cyan-500',
       specs: '2 vCPU • 2GB RAM',
     },
@@ -65,7 +74,8 @@ export default function AppMarketplacePage() {
       description: 'Công cụ tự động hóa quy trình làm việc kéo thả mã nguồn mở kết nối hơn 400+ ứng dụng & AI LLM Nodes.',
       tag: 'Tự động hóa & AI',
       version: '1.38',
-      Logo: N8nLogo,
+      Logo: SiN8N,
+      brandColor: '#EA4B71',
       color: 'from-amber-600 to-orange-600',
       specs: '1 vCPU • 2GB RAM',
     },
@@ -76,7 +86,8 @@ export default function AppMarketplacePage() {
       description: 'Môi trường Docker Container Engine cài sẵn Portainer GUI quản lý container, volumes và stacks trực quan.',
       tag: 'DevOps & Container',
       version: '26.0 / 2.20',
-      Logo: DockerLogo,
+      Logo: SiDocker,
+      brandColor: '#2496ED',
       color: 'from-cyan-600 to-blue-600',
       specs: '1 vCPU • 1GB RAM',
     },
@@ -87,7 +98,8 @@ export default function AppMarketplacePage() {
       description: 'Chạy các mô hình ngôn ngữ lớn Llama 3, Mistral, Gemma, Phi-3 cục bộ riêng tư với REST API tương thích OpenAI.',
       tag: 'AI & Machine Learning',
       version: '0.1.32',
-      Logo: Cpu,
+      Logo: SiOllama,
+      brandColor: '#FFFFFF',
       color: 'from-purple-600 to-pink-600',
       specs: '4 vCPU • 8GB RAM',
     },
@@ -98,7 +110,8 @@ export default function AppMarketplacePage() {
       description: 'Headless CMS mã nguồn mở số 1 cho React, Vue, Next.js và Mobile Apps với REST & GraphQL API tự động.',
       tag: 'Headless CMS',
       version: '4.24',
-      Logo: Boxes,
+      Logo: SiStrapi,
+      brandColor: '#4945FF',
       color: 'from-indigo-600 to-violet-600',
       specs: '2 vCPU • 2GB RAM',
     },
@@ -109,7 +122,8 @@ export default function AppMarketplacePage() {
       description: 'Trình quản trị cơ sở dữ liệu MySQL, PostgreSQL, SQLite siêu nhẹ chỉ 1 file PHP an toàn và tốc độ.',
       tag: 'Database GUI',
       version: '4.8.1',
-      Logo: MysqlLogo,
+      Logo: SiAdminer,
+      brandColor: '#F46E26',
       color: 'from-emerald-600 to-teal-600',
       specs: '0.5 vCPU • 512MB RAM',
     },
@@ -217,7 +231,7 @@ export default function AppMarketplacePage() {
               <div>
                 <div className="flex items-center justify-between mb-4">
                   <div className="p-3 rounded-2xl bg-slate-900/80 border border-slate-700/60 group-hover:scale-110 transition-transform">
-                    <app.Logo className="w-8 h-8" />
+                    <app.Logo className="w-8 h-8" style={{ color: app.brandColor }} />
                   </div>
                   <span className="px-2.5 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-[10px] font-extrabold uppercase">
                     {app.tag}

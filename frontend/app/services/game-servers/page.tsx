@@ -189,7 +189,7 @@ export default function GameServersServicePage() {
                     : 'bg-slate-800/80 text-slate-300 hover:text-white border-slate-700 hover:border-slate-600'
                 }`}
               >
-                <div className="p-1 rounded-lg bg-white/10 shrink-0">
+                <div className="p-2 rounded-xl bg-slate-900/90 border border-slate-700/60 shrink-0 flex items-center justify-center">
                   <game.Logo className="w-6 h-6" />
                 </div>
                 <div className="text-left">
