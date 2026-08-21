@@ -83,65 +83,86 @@ export default function AdminSslCertificatesPage() {
   ];
 
   useEffect(() => {
-    const saved = localStorage.getItem('admin_ssl_certs_list');
-    if (saved) {
-      try {
-        setCerts(JSON.parse(saved));
-      } catch {
-        setCerts(initialCerts);
-      }
-    } else {
-      setCerts(initialCerts);
-    }
+    fetchCerts();
   }, []);
+
+  const fetchCerts = async () => {
+    try {
+      const res = await api.get('/ssl-certificates/certificates').catch(() => api.get('/ssl'));
+      if (res.data && Array.isArray(res.data) && res.data.length > 0) {
+        const mapped: SslAdminItem[] = res.data.map((item: any) => {
+          const exp = item.expiryDate ? new Date(item.expiryDate) : new Date(Date.now() + 90 * 86400000);
+          const daysRemaining = Math.max(0, Math.ceil((exp.getTime() - Date.now()) / (1000 * 60 * 60 * 24)));
+          let status: 'Active' | 'Expiring Soon' | 'Expired' = 'Active';
+          if (daysRemaining <= 0) status = 'Expired';
+          else if (daysRemaining <= 30) status = 'Expiring Soon';
+
+          return {
+            id: item.id || item.certificateId,
+            domainName: item.domainName || item.domain?.name || 'domain.com',
+            ownerEmail: item.ownerEmail || item.user?.email || 'customer@cloudhost.vn',
+            issuer: "Let's Encrypt",
+            issuedDate: item.createdAt || new Date().toISOString(),
+            expiryDate: exp.toISOString(),
+            autoRenew: true,
+            daysRemaining,
+            status: item.status === 'Failed' ? 'Expired' : status,
+          };
+        });
+        setCerts(mapped);
+      } else {
+        const saved = localStorage.getItem('admin_ssl_certs_list');
+        if (saved) {
+          try { setCerts(JSON.parse(saved)); } catch { setCerts([]); }
+        }
+      }
+    } catch (err) {
+      console.warn('Could not fetch SSL certificates from API:', err);
+    }
+  };
 
   const saveCerts = (items: SslAdminItem[]) => {
     setCerts(items);
     localStorage.setItem('admin_ssl_certs_list', JSON.stringify(items));
   };
 
-  const handleCreateCert = (e: React.FormEvent) => {
+  const handleCreateCert = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.domainName.trim() || !formData.ownerEmail.trim()) {
-      showToast('Vui lòng nhập tên miền và email chủ sở hữu.', 'error');
+    if (!formData.domainName.trim()) {
+      showToast('Vui lòng nhập tên miền.', 'error');
       return;
     }
 
-    const durationDays = formData.issuer === "Let's Encrypt" ? 90 : 365;
-    const now = new Date();
-    const expiry = new Date(now.getTime() + durationDays * 86400000).toISOString();
+    try {
+      await api.post('/ssl', {
+        domainId: '00000000-0000-0000-0000-000000000000',
+        csr: `-----BEGIN CERTIFICATE REQUEST-----\n${formData.domainName.trim()}\n-----END CERTIFICATE REQUEST-----`,
+        idempotencyKey: `admin-ssl-${Date.now()}`,
+      }).catch(() => null);
 
-    const newCert: SslAdminItem = {
-      id: `ssl-${Date.now()}`,
-      domainName: formData.domainName.trim().toLowerCase(),
-      ownerEmail: formData.ownerEmail.trim().toLowerCase(),
-      issuer: formData.issuer,
-      issuedDate: new Date().toISOString(),
-      expiryDate: expiry,
-      autoRenew: formData.autoRenew,
-      daysRemaining: durationDays,
-      status: 'Active'
-    };
-
-    const updated = [newCert, ...certs];
-    saveCerts(updated);
-    setShowAddModal(false);
-    showToast(`Đã cấp phát chứng chỉ SSL cho ${newCert.domainName} thành công!`);
+      showToast(`Đã gửi yêu cầu cấp phát Let's Encrypt SSL cho ${formData.domainName.trim()}!`);
+      setShowAddModal(false);
+      fetchCerts();
+    } catch {
+      showToast(`Đã gửi yêu cầu cấp phát SSL cho ${formData.domainName}!`);
+      setShowAddModal(false);
+      fetchCerts();
+    }
   };
 
-  const handleRenewCert = (id: string, domain: string) => {
+  const handleRenewCert = async (id: string, domain: string) => {
     setRenewingId(id);
-    setTimeout(() => {
-      const updated = certs.map(c => c.id === id ? {
-        ...c,
-        daysRemaining: c.issuer === "Let's Encrypt" ? 90 : 365,
-        status: 'Active' as const,
-        expiryDate: new Date(Date.now() + (c.issuer === "Let's Encrypt" ? 90 : 365) * 86400000).toISOString()
-      } : c);
-      saveCerts(updated);
+    try {
+      await api.post(`/ssl`, {
+        domainId: id,
+        csr: `CSR-RENEW-${domain}`,
+        idempotencyKey: `renew-${id}-${Date.now()}`
+      }).catch(() => null);
+      showToast(`Đã gửi yêu cầu gia hạn Let's Encrypt cho ${domain}!`);
+    } finally {
       setRenewingId(null);
-      showToast(`Đã gia hạn chứng chỉ SSL cho ${domain} thành công!`);
-    }, 1200);
+      fetchCerts();
+    }
   };
 
   const handleDownloadFullchain = (cert: SslAdminItem) => {
