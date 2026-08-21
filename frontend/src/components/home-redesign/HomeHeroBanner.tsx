@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { Network, ShieldCheck, Zap, Server, ChevronLeft, ChevronRight } from 'lucide-react';
-import Link from 'next/link';
 import { api } from '@/src/lib/api';
 
 export const HomeHeroBanner = () => {
@@ -73,38 +72,6 @@ export const HomeHeroBanner = () => {
             <div className="absolute inset-0 bg-blue-900/60 mix-blend-multiply pointer-events-none" />
           </div>
         ))}
-        
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col justify-center pointer-events-none">
-          <div className="grid md:grid-cols-2 gap-6 md:gap-10 items-center">
-            {/* Text Content */}
-            <div className="text-slate-900 space-y-4 md:space-y-6 pointer-events-auto">
-              <h3 className="text-sm sm:text-base md:text-xl font-bold tracking-wider text-blue-300">CLOUDHOST VN TỰ HÀO</h3>
-              <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black leading-tight tracking-tight">
-                Chương trình phát triển đối tác <br className="hidden sm:inline" />
-                Cloud khu vực Đông Nam Á
-              </h1>
-              <p className="text-sm sm:text-base md:text-lg text-slate-700 max-w-xl line-clamp-3 sm:line-clamp-none">
-                Mở rộng hệ sinh thái, hợp tác vươn xa cùng nền tảng điện toán đám mây số 1 Việt Nam.
-              </p>
-              <div className="pt-2 md:pt-4">
-                <Link href="/partners" className="inline-block px-6 py-3 sm:px-8 sm:py-4 bg-white text-blue-900 font-bold rounded-xl hover:bg-slate-100 transition-colors shadow-lg text-sm sm:text-base">
-                  Tìm hiểu thêm
-                </Link>
-              </div>
-            </div>
-
-            {/* Right Card/Image (Simulating the BROADCOM partner badge in the screenshot) */}
-            <div className="hidden md:flex justify-end pointer-events-auto">
-              <div className="bg-white/10 backdrop-blur-md border border-white/20 p-8 rounded-2xl w-80 text-center text-slate-900 shadow-2xl">
-                <div className="w-20 h-20 bg-white rounded-xl flex items-center justify-center mx-auto mb-6">
-                  <Server className="w-10 h-10 text-blue-600" />
-                </div>
-                <h4 className="text-2xl font-black mb-2">PARTNER</h4>
-                <p className="text-slate-700 text-sm">Welcome to the Partner Network</p>
-              </div>
-            </div>
-          </div>
-        </div>
 
         {/* Navigation Arrows */}
         <button 
