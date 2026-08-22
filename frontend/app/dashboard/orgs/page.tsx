@@ -90,7 +90,7 @@ export default function CustomerOrganizationsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
-            <Building2 className="w-6 h-6 text-cyan-400" /> Quản Trị Tổ Chức Doanh Nghiệp & Nhóm (Team)
+            <Building2 className="w-6 h-6 text-[#1F1F1F]" /> Quản Trị Tổ Chức Doanh Nghiệp & Nhóm (Team)
           </h1>
           <p className="text-sm text-slate-600">
             Quản lý các tài khoản con (Sub-accounts), phân quyền quản trị máy chủ VPS, hạ tầng mạng và chia sẻ hạn mức tín dụng thanh toán.
@@ -117,7 +117,7 @@ export default function CustomerOrganizationsPage() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="p-6 rounded-2xl bg-white/60 border border-slate-200 shadow-xl space-y-2">
           <div className="text-xs text-slate-600 font-semibold uppercase tracking-wider flex items-center gap-1.5">
-            <Building2 className="w-4 h-4 text-cyan-400" /> Tên Tổ Chức / Doanh Nghiệp
+            <Building2 className="w-4 h-4 text-[#1F1F1F]" /> Tên Tổ Chức / Doanh Nghiệp
           </div>
           <div className="text-lg font-bold text-slate-900 truncate">{orgName}</div>
           <div className="text-xs text-slate-600 font-mono">Mã số thuế: {taxCode}</div>
@@ -135,7 +135,7 @@ export default function CustomerOrganizationsPage() {
 
         <div className="p-6 rounded-2xl bg-white/60 border border-slate-200 shadow-xl space-y-2">
           <div className="text-xs text-slate-600 font-semibold uppercase tracking-wider flex items-center gap-1.5">
-            <Users className="w-4 h-4 text-indigo-400" /> Tổng Số Thành Viên
+            <Users className="w-4 h-4 text-slate-200" /> Tổng Số Thành Viên
           </div>
           <div className="text-lg font-bold text-slate-900">{members.length} Tài khoản</div>
           <div className="text-xs text-slate-600">1 Chủ sở hữu • {members.filter(m => m.role === 'Admin').length} Quản trị viên</div>
@@ -146,7 +146,7 @@ export default function CustomerOrganizationsPage() {
       <div className="rounded-3xl bg-white/60 border border-slate-200 shadow-2xl overflow-hidden">
         <div className="p-5 border-b border-slate-200 flex items-center justify-between">
           <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
-            <Users className="w-4 h-4 text-cyan-400" /> Danh Sách Thành Viên & Quyền Hạn
+            <Users className="w-4 h-4 text-[#1F1F1F]" /> Danh Sách Thành Viên & Quyền Hạn
           </h2>
         </div>
 
@@ -168,7 +168,7 @@ export default function CustomerOrganizationsPage() {
                     <div className="text-xs text-slate-600 font-mono">{m.email}</div>
                   </td>
                   <td className="px-6 py-4">
-                    <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold ${m.role === 'Owner' ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' : m.role === 'Admin' ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/20' : 'bg-white text-slate-300'}`}>
+                    <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold ${m.role === 'Owner' ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' : m.role === 'Admin' ? 'bg-cyan-500/10 text-[#1F1F1F] border border-cyan-500/20' : 'bg-white text-slate-300'}`}>
                       <ShieldCheck className="w-3 h-3" /> {m.role}
                     </span>
                   </td>
@@ -198,7 +198,7 @@ export default function CustomerOrganizationsPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
           <div className="w-full max-w-md p-6 rounded-3xl bg-white border border-slate-200 shadow-2xl space-y-5">
             <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
-              <UserPlus className="w-5 h-5 text-cyan-400" /> Mời Thành Viên Vào Tổ Chức
+              <UserPlus className="w-5 h-5 text-[#1F1F1F]" /> Mời Thành Viên Vào Tổ Chức
             </h2>
             <form onSubmit={handleInvite} className="space-y-4">
               <div>

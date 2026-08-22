@@ -42,8 +42,8 @@ export default function RecentlyViewed() {
 
   const getIcon = (category: string) => {
     switch (category) {
-      case 'VPS': return <Server className="w-5 h-5 text-blue-600" />;
-      case 'Hosting': return <Database className="w-5 h-5 text-indigo-600" />;
+      case 'VPS': return <Server className="w-5 h-5 text-[#1F1F1F]" />;
+      case 'Hosting': return <Database className="w-5 h-5 text-[#1F1F1F]" />;
       case 'Domain': return <Globe className="w-5 h-5 text-emerald-600" />;
       default: return <Server className="w-5 h-5 text-slate-600" />;
     }
@@ -53,7 +53,7 @@ export default function RecentlyViewed() {
     <div className="bg-white rounded-3xl p-6 border border-slate-200 mt-8">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-          <Clock className="w-5 h-5 text-blue-600" />
+          <Clock className="w-5 h-5 text-[#1F1F1F]" />
           Dịch vụ đã xem gần đây
         </h3>
       </div>
@@ -65,14 +65,14 @@ export default function RecentlyViewed() {
               {getIcon(item.category)}
             </div>
             <div className="flex-1 min-w-0">
-              <h4 className="font-bold text-slate-900 truncate group-hover:text-blue-600 transition-colors">
+              <h4 className="font-bold text-slate-900 truncate group-hover:text-[#1F1F1F] transition-colors">
                 {item.serviceName}
               </h4>
               <p className="text-xs text-slate-500">
                 Xem {new Date(item.viewedAt).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}
               </p>
             </div>
-            <ArrowRight className="w-4 h-4 text-slate-600 group-hover:text-blue-600 group-hover:translate-x-1 transition-all" />
+            <ArrowRight className="w-4 h-4 text-slate-600 group-hover:text-[#1F1F1F] group-hover:translate-x-1 transition-all" />
           </Link>
         ))}
       </div>

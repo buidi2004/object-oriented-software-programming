@@ -58,7 +58,7 @@ export default function SslCertificateDetailPage() {
       <div className="text-center py-20">
         <AlertCircle className="w-12 h-12 mx-auto mb-3 text-red-400" />
         <p className="text-slate-600">{error || 'Không tìm thấy chứng chỉ'}</p>
-        <Link href="/dashboard/ssl-certificates" className="inline-block mt-4 text-blue-600 font-semibold">
+        <Link href="/dashboard/ssl-certificates" className="inline-block mt-4 text-[#1F1F1F] font-semibold">
           Quay lại danh sách
         </Link>
       </div>
@@ -97,7 +97,7 @@ export default function SslCertificateDetailPage() {
           <div className="bg-slate-50 rounded-xl p-4 mb-4 border border-slate-100">
             <div className="flex justify-between items-center mb-2">
               <span className="text-xs font-semibold text-slate-500 uppercase">CSR</span>
-              <button onClick={() => copyToClipboard(cert.csr)} className="text-slate-600 hover:text-blue-600">
+              <button onClick={() => copyToClipboard(cert.csr)} className="text-slate-600 hover:text-[#1F1F1F]">
                 <Copy className="w-4 h-4" />
               </button>
             </div>

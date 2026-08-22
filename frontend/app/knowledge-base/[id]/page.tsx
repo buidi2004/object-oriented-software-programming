@@ -44,7 +44,7 @@ export default function KnowledgeBaseDetailPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-[60vh]">
-        <Loader className="w-8 h-8 text-blue-600 animate-spin" />
+        <Loader className="w-8 h-8 text-[#1F1F1F] animate-spin" />
       </div>
     );
   }
@@ -54,7 +54,7 @@ export default function KnowledgeBaseDetailPage() {
       <div className="flex flex-col items-center justify-center h-[60vh]">
         <AlertCircle className="w-12 h-12 text-red-400 mb-3" />
         <p className="text-slate-600">{error}</p>
-        <Link href="/knowledge-base" className="mt-4 text-blue-600 font-semibold">
+        <Link href="/knowledge-base" className="mt-4 text-[#1F1F1F] font-semibold">
           Về trang thư viện
         </Link>
       </div>
@@ -70,8 +70,8 @@ export default function KnowledgeBaseDetailPage() {
 
         <article className="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm">
           <div className="flex items-center gap-2 mb-4">
-            <FileText className="w-5 h-5 text-blue-600" />
-            <span className="text-xs font-bold text-blue-600 uppercase">{article.categoryTag}</span>
+            <FileText className="w-5 h-5 text-[#1F1F1F]" />
+            <span className="text-xs font-bold text-[#1F1F1F] uppercase">{article.categoryTag}</span>
           </div>
           <h1 className="text-3xl font-black text-slate-900 mb-6">{article.title}</h1>
           <div

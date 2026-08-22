@@ -15,7 +15,7 @@ interface MigrationApp {
 
 const statusMap = {
   0: { label: 'Đang chờ xử lý', icon: <Clock className="w-4 h-4" />, color: 'bg-amber-50 text-amber-700' },
-  1: { label: 'Đang chuyển đổi', icon: <ArrowRightLeft className="w-4 h-4" />, color: 'bg-blue-50 text-blue-700' },
+  1: { label: 'Đang chuyển đổi', icon: <ArrowRightLeft className="w-4 h-4" />, color: 'bg-blue-50 text-[#1F1F1F]' },
   2: { label: 'Hoàn tất', icon: <CheckCircle2 className="w-4 h-4" />, color: 'bg-green-50 text-green-700' },
   3: { label: 'Thất bại', icon: <XCircle className="w-4 h-4" />, color: 'bg-red-50 text-red-700' },
 };
@@ -73,7 +73,7 @@ export default function MigrationsPage() {
     <div className="p-8 max-w-5xl mx-auto space-y-8">
       <div>
         <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
-          <ArrowRightLeft className="w-8 h-8 text-indigo-600" />
+          <ArrowRightLeft className="w-8 h-8 text-[#1F1F1F]" />
           Yêu cầu Chuyển đổi (Migration)
         </h1>
         <p className="text-gray-500 mt-2">Yêu cầu chuyển website, mã nguồn hoặc cơ sở dữ liệu từ nhà cung cấp khác về hệ thống của chúng tôi hoàn toàn miễn phí.</p>

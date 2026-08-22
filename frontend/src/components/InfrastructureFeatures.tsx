@@ -13,12 +13,12 @@ type FeatureItem = {
 export const InfrastructureFeatures: React.FC = () => {
   const features: FeatureItem[] = [
     {
-      icon: <Building2 className="w-6 h-6 text-blue-600" />,
+      icon: <Building2 className="w-6 h-6 text-[#1F1F1F]" />,
       title: 'Datacenter Tier III Tại Việt Nam',
       description: 'Hạ tầng máy chủ đặt tại Viettel IDC & FPT Datacenter tiêu chuẩn quốc tế Tier III với hệ thống nguồn điện Redundant 2N và làm mát chính xác.'
     },
     {
-      icon: <Cpu className="w-6 h-6 text-indigo-600" />,
+      icon: <Cpu className="w-6 h-6 text-[#1F1F1F]" />,
       title: (
         <>
           Vi Xử Lý AMD EPYC{' '}
@@ -28,7 +28,7 @@ export const InfrastructureFeatures: React.FC = () => {
       description: 'Trang bị 100% chip xử lý thế hệ mới nhất cho tốc độ xử lý đa luồng ấn tượng, khả năng tối ưu hóa tính toán ứng dụng cao cấp.'
     },
     {
-      icon: <HardDrive className="w-6 h-6 text-cyan-600" />,
+      icon: <HardDrive className="w-6 h-6 text-[#1F1F1F]" />,
       title: (
         <>
           100% Enterprise NVMe SSD{' '}
@@ -65,7 +65,7 @@ export const InfrastructureFeatures: React.FC = () => {
         
         {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-blue-500/10 text-cyan-400 border border-blue-500/20 text-xs font-bold uppercase tracking-wider mb-3">
+          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-blue-500/10 text-[#1F1F1F] border border-blue-500/20 text-xs font-bold uppercase tracking-wider mb-3">
             <ShieldCheck className="w-4 h-4" />
             Hạ Tầng Doanh Nghiệp
           </div>

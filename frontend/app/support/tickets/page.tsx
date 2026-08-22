@@ -44,7 +44,7 @@ export default function TicketsListPage() {
   const getStatusColor = (status: string) => {
     switch (status?.toLowerCase()) {
       case 'open': return 'bg-emerald-100 text-emerald-700 border-emerald-200';
-      case 'inprogress': return 'bg-blue-100 text-blue-700 border-blue-200';
+      case 'inprogress': return 'bg-blue-100 text-[#1F1F1F] border-blue-200';
       case 'closed': return 'bg-slate-100 text-slate-700 border-slate-200';
       default: return 'bg-slate-100 text-slate-700 border-slate-200';
     }
@@ -54,7 +54,7 @@ export default function TicketsListPage() {
     switch (priority?.toLowerCase()) {
       case 'urgent': return 'text-red-600 bg-red-50';
       case 'high': return 'text-orange-600 bg-orange-50';
-      case 'normal': return 'text-blue-600 bg-blue-50';
+      case 'normal': return 'text-[#1F1F1F] bg-blue-50';
       case 'low': return 'text-slate-600 bg-slate-50';
       default: return 'text-slate-600 bg-slate-50';
     }
@@ -66,7 +66,7 @@ export default function TicketsListPage() {
           <div className="flex items-center justify-between mb-8">
             <div>
               <h1 className="text-2xl font-black text-slate-900 flex items-center gap-2">
-                <LifeBuoy className="w-6 h-6 text-blue-600" /> Hỗ trợ (Tickets)
+                <LifeBuoy className="w-6 h-6 text-[#1F1F1F]" /> Hỗ trợ (Tickets)
               </h1>
               <p className="text-slate-500 mt-1">Quản lý các yêu cầu hỗ trợ kỹ thuật của bạn.</p>
             </div>
@@ -80,14 +80,14 @@ export default function TicketsListPage() {
 
           {loading ? (
             <div className="flex justify-center py-12">
-              <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+              <Loader2 className="w-8 h-8 text-[#1F1F1F] animate-spin" />
             </div>
           ) : tickets.length === 0 ? (
             <div className="bg-white rounded-xl border border-slate-200 p-12 flex flex-col items-center text-center">
               <LifeBuoy className="w-12 h-12 text-slate-700 mb-4" />
               <h3 className="text-lg font-bold text-slate-700 mb-2">Chưa có Ticket nào</h3>
               <p className="text-slate-500 mb-6">Bạn chưa có yêu cầu hỗ trợ nào. Nếu cần giúp đỡ, hãy tạo mới một Ticket.</p>
-              <Link href="/support/tickets/new" className="text-blue-600 font-semibold hover:underline">
+              <Link href="/support/tickets/new" className="text-[#1F1F1F] font-semibold hover:underline">
                 Tạo Ticket ngay &rarr;
               </Link>
             </div>
@@ -101,7 +101,7 @@ export default function TicketsListPage() {
                 >
                   <div className="flex items-start justify-between">
                     <div>
-                      <h3 className="font-bold text-slate-900 group-hover:text-blue-600 text-lg mb-2">
+                      <h3 className="font-bold text-slate-900 group-hover:text-[#1F1F1F] text-lg mb-2">
                         {ticket.subject}
                       </h3>
                       <div className="flex items-center gap-3 text-xs font-semibold">

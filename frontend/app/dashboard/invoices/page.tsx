@@ -156,7 +156,7 @@ export default function InvoicesPage() {
                       name="statusFilter"
                       checked={statusFilter === 'all' || statusFilter === 'paid'}
                       onChange={() => setStatusFilter('paid')}
-                      className="w-3.5 h-3.5 text-blue-600"
+                      className="w-3.5 h-3.5 text-[#1F1F1F]"
                     />
                     <span>Đã thanh toán</span>
                   </div>
@@ -170,7 +170,7 @@ export default function InvoicesPage() {
                       name="statusFilter"
                       checked={statusFilter === 'pending'}
                       onChange={() => setStatusFilter('pending')}
-                      className="w-3.5 h-3.5 text-blue-600"
+                      className="w-3.5 h-3.5 text-[#1F1F1F]"
                     />
                     <span>Chưa thanh toán</span>
                   </div>
@@ -184,7 +184,7 @@ export default function InvoicesPage() {
                       name="statusFilter"
                       checked={statusFilter === 'cancelled'}
                       onChange={() => setStatusFilter('cancelled')}
-                      className="w-3.5 h-3.5 text-blue-600"
+                      className="w-3.5 h-3.5 text-[#1F1F1F]"
                     />
                     <span>Đã hủy</span>
                   </div>
@@ -198,7 +198,7 @@ export default function InvoicesPage() {
                       name="statusFilter"
                       checked={statusFilter === 'refunded'}
                       onChange={() => setStatusFilter('refunded')}
-                      className="w-3.5 h-3.5 text-blue-600"
+                      className="w-3.5 h-3.5 text-[#1F1F1F]"
                     />
                     <span>Đã hoàn tiền</span>
                   </div>
@@ -226,7 +226,7 @@ export default function InvoicesPage() {
                   onClick={() => setActiveMenu('invoices')}
                   className={`w-full text-left px-4 py-2.5 transition-colors font-medium ${
                     activeMenu === 'invoices' 
-                      ? 'border-l-4 border-blue-600 text-blue-600 bg-blue-50/50 font-bold' 
+                      ? 'border-l-4 border-blue-600 text-[#1F1F1F] bg-blue-50/50 font-bold' 
                       : 'text-slate-700 hover:bg-slate-50'
                   }`}
                 >
@@ -236,7 +236,7 @@ export default function InvoicesPage() {
                   onClick={() => setActiveMenu('quotes')}
                   className={`w-full text-left px-4 py-2.5 transition-colors font-medium ${
                     activeMenu === 'quotes' 
-                      ? 'border-l-4 border-blue-600 text-blue-600 bg-blue-50/50 font-bold' 
+                      ? 'border-l-4 border-blue-600 text-[#1F1F1F] bg-blue-50/50 font-bold' 
                       : 'text-slate-700 hover:bg-slate-50'
                   }`}
                 >
@@ -308,7 +308,7 @@ export default function InvoicesPage() {
                   <tr>
                     <td colSpan={5} className="py-8 text-center text-slate-600">
                       <div className="flex items-center justify-center gap-2">
-                        <RefreshCw className="w-4 h-4 animate-spin text-blue-600" />
+                        <RefreshCw className="w-4 h-4 animate-spin text-[#1F1F1F]" />
                         <span>Đang tải danh sách hóa đơn...</span>
                       </div>
                     </td>
@@ -323,7 +323,7 @@ export default function InvoicesPage() {
                   paginatedInvoices.map((inv) => (
                     <tr key={inv.id} className="hover:bg-slate-50/80 transition-colors">
                       <td className="py-3 px-4 font-bold text-slate-900 font-mono">
-                        <Link href={`/dashboard/invoices/${inv.orderId}`} className="hover:text-blue-600 hover:underline">
+                        <Link href={`/dashboard/invoices/${inv.orderId}`} className="hover:text-[#1F1F1F] hover:underline">
                           {inv.invoiceNumber}
                         </Link>
                       </td>

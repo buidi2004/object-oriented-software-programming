@@ -678,7 +678,7 @@ export default function AdminLandingContentPage() {
             onClick={() => setActiveSection('banners')}
             className={`px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 ${
               activeSection === 'banners' 
-                ? 'bg-white text-blue-600 shadow-sm' 
+                ? 'bg-white text-[#1F1F1F] shadow-sm' 
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
@@ -689,7 +689,7 @@ export default function AdminLandingContentPage() {
             onClick={() => setActiveSection('about')}
             className={`px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 ${
               activeSection === 'about' 
-                ? 'bg-white text-blue-600 shadow-sm' 
+                ? 'bg-white text-[#1F1F1F] shadow-sm' 
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
@@ -700,7 +700,7 @@ export default function AdminLandingContentPage() {
             onClick={() => setActiveSection('solutions')}
             className={`px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 ${
               activeSection === 'solutions' 
-                ? 'bg-white text-blue-600 shadow-sm' 
+                ? 'bg-white text-[#1F1F1F] shadow-sm' 
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
@@ -711,7 +711,7 @@ export default function AdminLandingContentPage() {
             onClick={() => setActiveSection('footer')}
             className={`px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 ${
               activeSection === 'footer' 
-                ? 'bg-white text-blue-600 shadow-sm' 
+                ? 'bg-white text-[#1F1F1F] shadow-sm' 
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
@@ -756,7 +756,7 @@ export default function AdminLandingContentPage() {
             {/* Banners Grid */}
             {filteredBanners.length === 0 ? (
               <div className="text-center py-16 bg-white rounded-3xl border border-slate-200 shadow-sm max-w-md mx-auto">
-                <div className="w-14 h-14 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mx-auto mb-3">
+                <div className="w-14 h-14 rounded-2xl bg-blue-50 text-[#1F1F1F] flex items-center justify-center mx-auto mb-3">
                   <ImageIcon className="w-7 h-7" />
                 </div>
                 <h3 className="text-base font-bold text-slate-900 mb-1">Không tìm thấy banner</h3>
@@ -805,7 +805,7 @@ export default function AdminLandingContentPage() {
                     <div className="p-4 flex-1 flex flex-col justify-between">
                       <div>
                         <div className="flex items-center gap-2 text-xs text-slate-600 mb-2">
-                          <ExternalLink className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                          <ExternalLink className="w-3.5 h-3.5 text-[#1F1F1F] shrink-0" />
                           <span className="font-mono truncate">{b.linkUrl || 'Không có liên kết'}</span>
                         </div>
                       </div>
@@ -857,7 +857,7 @@ export default function AdminLandingContentPage() {
                         setAboutData(DEFAULT_ABOUT);
                       }
                     }}
-                    className="text-xs font-bold text-slate-500 hover:text-blue-600 flex items-center gap-1"
+                    className="text-xs font-bold text-slate-500 hover:text-[#1F1F1F] flex items-center gap-1"
                   >
                     <RotateCcw className="w-3.5 h-3.5" /> Mặc định
                   </button>
@@ -938,7 +938,7 @@ export default function AdminLandingContentPage() {
                   </div>
                   <button
                     onClick={handleAddStat}
-                    className="px-3 py-1.5 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-600 text-xs font-bold flex items-center gap-1 transition-colors"
+                    className="px-3 py-1.5 rounded-xl bg-blue-50 hover:bg-blue-100 text-[#1F1F1F] text-xs font-bold flex items-center gap-1 transition-colors"
                   >
                     <Plus className="w-3.5 h-3.5" /> Thêm Số Liệu
                   </button>
@@ -962,7 +962,7 @@ export default function AdminLandingContentPage() {
                           value={st.title}
                           onChange={(e) => handleStatChange(idx, 'title', e.target.value)}
                           placeholder="Số 1, 26.000+..."
-                          className="w-full px-3 py-1.5 bg-white rounded-lg border border-slate-300 text-sm font-bold text-blue-600 focus:outline-none focus:border-blue-500"
+                          className="w-full px-3 py-1.5 bg-white rounded-lg border border-slate-300 text-sm font-bold text-[#1F1F1F] focus:outline-none focus:border-blue-500"
                         />
                       </div>
                       <div>
@@ -986,7 +986,7 @@ export default function AdminLandingContentPage() {
               <div className="sticky top-24 bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
                 <div className="flex items-center justify-between pb-2 border-b border-slate-100">
                   <span className="text-xs font-bold uppercase tracking-wider text-slate-600 flex items-center gap-1.5">
-                    <Eye className="w-4 h-4 text-blue-600" /> Xem Trước Trực Quan
+                    <Eye className="w-4 h-4 text-[#1F1F1F]" /> Xem Trước Trực Quan
                   </span>
                   <span className="text-xs text-slate-600">Trang chủ</span>
                 </div>
@@ -1009,7 +1009,7 @@ export default function AdminLandingContentPage() {
                   <div className="grid grid-cols-2 gap-3 pt-2">
                     {aboutData.stats.slice(0, 4).map((st, idx) => (
                       <div key={idx} className="p-3 bg-slate-50 rounded-xl border border-slate-100">
-                        <div className="text-lg font-black text-blue-600">{st.title}</div>
+                        <div className="text-lg font-black text-[#1F1F1F]">{st.title}</div>
                         <div className="text-[11px] text-slate-500 leading-tight">{st.desc}</div>
                       </div>
                     ))}
@@ -1034,7 +1034,7 @@ export default function AdminLandingContentPage() {
                       setSelectedTabId('chinh-phu');
                     }
                   }}
-                  className="text-xs font-bold text-slate-500 hover:text-blue-600 flex items-center gap-1"
+                  className="text-xs font-bold text-slate-500 hover:text-[#1F1F1F] flex items-center gap-1"
                 >
                   <RotateCcw className="w-3.5 h-3.5" /> Mặc định
                 </button>
@@ -1080,7 +1080,7 @@ export default function AdminLandingContentPage() {
                 </div>
                 <button
                   onClick={() => setIsAddingTab(true)}
-                  className="px-3.5 py-2 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-600 text-xs font-bold flex items-center gap-1.5 transition-colors"
+                  className="px-3.5 py-2 rounded-xl bg-blue-50 hover:bg-blue-100 text-[#1F1F1F] text-xs font-bold flex items-center gap-1.5 transition-colors"
                 >
                   <Plus className="w-4 h-4" /> Thêm Tab Ngành Mới
                 </button>
@@ -1130,7 +1130,7 @@ export default function AdminLandingContentPage() {
               <div className="flex items-center justify-between pb-3 border-b border-slate-100">
                 <div>
                   <h3 className="font-bold text-slate-900 text-lg">
-                    Thẻ Giải Pháp Cho Ngành: <span className="text-blue-600">{solutionsData.tabs.find(t => t.id === selectedTabId)?.label}</span>
+                    Thẻ Giải Pháp Cho Ngành: <span className="text-[#1F1F1F]">{solutionsData.tabs.find(t => t.id === selectedTabId)?.label}</span>
                   </h3>
                   <p className="text-xs text-slate-500">Mỗi ngành nên có từ 3 đến 6 thẻ giải pháp</p>
                 </div>
@@ -1147,7 +1147,7 @@ export default function AdminLandingContentPage() {
                   <p className="text-sm text-slate-500 mb-3">Chưa có thẻ giải pháp nào trong ngành này.</p>
                   <button
                     onClick={handleOpenAddCard}
-                    className="px-4 py-2 bg-blue-50 hover:bg-blue-100 text-blue-600 text-xs font-bold rounded-xl"
+                    className="px-4 py-2 bg-blue-50 hover:bg-blue-100 text-[#1F1F1F] text-xs font-bold rounded-xl"
                   >
                     + Tạo Thẻ Đầu Tiên
                   </button>
@@ -1170,7 +1170,7 @@ export default function AdminLandingContentPage() {
                       <div className="absolute top-3 right-3 flex items-center gap-1.5 z-20">
                         <button
                           onClick={() => handleOpenEditCard(idx)}
-                          className="p-2 rounded-xl bg-white/90 text-slate-700 hover:bg-white hover:text-blue-600 backdrop-blur-sm shadow-sm transition-all"
+                          className="p-2 rounded-xl bg-white/90 text-slate-700 hover:bg-white hover:text-[#1F1F1F] backdrop-blur-sm shadow-sm transition-all"
                           title="Sửa thẻ này"
                         >
                           <Edit2 className="w-3.5 h-3.5" />
@@ -1186,7 +1186,7 @@ export default function AdminLandingContentPage() {
 
                       {/* Content */}
                       <div className="relative p-5 text-slate-900 z-10 space-y-2">
-                        <h4 className="font-bold text-lg text-slate-900 group-hover:text-blue-300 transition-colors">
+                        <h4 className="font-bold text-lg text-slate-900 group-hover:text-slate-200 transition-colors">
                           {sol.title}
                         </h4>
                         <p className="text-xs text-slate-700 line-clamp-2 leading-relaxed">
@@ -1224,7 +1224,7 @@ export default function AdminLandingContentPage() {
                         setFooterData(DEFAULT_FOOTER);
                       }
                     }}
-                    className="text-xs font-bold text-slate-500 hover:text-blue-600 flex items-center gap-1"
+                    className="text-xs font-bold text-slate-500 hover:text-[#1F1F1F] flex items-center gap-1"
                   >
                     <RotateCcw className="w-3.5 h-3.5" /> Mặc định
                   </button>
@@ -1292,7 +1292,7 @@ export default function AdminLandingContentPage() {
                       value={footerData.support_email}
                       onChange={(e) => setFooterData({ ...footerData, support_email: e.target.value })}
                       placeholder="support@cloudhost.vn"
-                      className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm font-bold text-blue-600 focus:outline-none focus:border-blue-500"
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm font-bold text-[#1F1F1F] focus:outline-none focus:border-blue-500"
                     />
                   </div>
                 </div>
@@ -1304,7 +1304,7 @@ export default function AdminLandingContentPage() {
               <div className="sticky top-24 bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
                 <div className="flex items-center justify-between pb-2 border-b border-slate-100">
                   <span className="text-xs font-bold uppercase tracking-wider text-slate-600 flex items-center gap-1.5">
-                    <Eye className="w-4 h-4 text-blue-600" /> Xem Trước Ở Chân Trang (Footer)
+                    <Eye className="w-4 h-4 text-[#1F1F1F]" /> Xem Trước Ở Chân Trang (Footer)
                   </span>
                   <span className="text-xs text-slate-600">Chân trang</span>
                 </div>
@@ -1427,7 +1427,7 @@ export default function AdminLandingContentPage() {
                       type="checkbox"
                       checked={bannerFormData.isActive}
                       onChange={(e) => setBannerFormData({ ...bannerFormData, isActive: e.target.checked })}
-                      className="w-4 h-4 text-blue-600 rounded"
+                      className="w-4 h-4 text-[#1F1F1F] rounded"
                     />
                     <span className="text-xs font-bold text-slate-700">Kích hoạt hiển thị</span>
                   </label>

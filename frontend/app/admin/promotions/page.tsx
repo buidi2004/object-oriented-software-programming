@@ -178,7 +178,7 @@ export default function AdminPromotionsPage() {
     const start = new Date(promo.startDate);
     const end = new Date(promo.endDate);
     
-    if (now < start) return { text: 'Sắp diễn ra', class: 'bg-blue-100 text-blue-700' };
+    if (now < start) return { text: 'Sắp diễn ra', class: 'bg-blue-100 text-[#1F1F1F]' };
     if (now > end) return { text: 'Đã kết thúc', class: 'bg-slate-100 text-slate-500' };
     return { text: 'Đang diễn ra', class: 'bg-emerald-100 text-emerald-700' };
   };

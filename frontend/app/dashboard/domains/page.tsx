@@ -84,7 +84,7 @@ export default function CustomerDomainsDashboardPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
-            <Globe className="w-6 h-6 text-cyan-400" /> Quản Lý Tên Miền Của Tôi
+            <Globe className="w-6 h-6 text-[#1F1F1F]" /> Quản Lý Tên Miền Của Tôi
           </h1>
           <p className="text-sm text-slate-600">
             Quản trị bản ghi DNS, chuyển đổi Nameserver, gia hạn tự động và bảo mật khóa tên miền (Domain Lock).
@@ -137,7 +137,7 @@ export default function CustomerDomainsDashboardPage() {
                 <tr key={dom.id} className="hover:bg-slate-800/30 transition-colors">
                   <td className="px-6 py-4">
                     <div className="font-bold text-slate-900 flex items-center gap-2">
-                      <Globe className="w-4 h-4 text-cyan-400" /> {dom.name}
+                      <Globe className="w-4 h-4 text-[#1F1F1F]" /> {dom.name}
                     </div>
                     <div className="text-xs text-slate-600 font-mono mt-0.5">
                       NS: {dom.nameservers.join(', ')}
@@ -149,7 +149,7 @@ export default function CustomerDomainsDashboardPage() {
                     </span>
                   </td>
                   <td className="px-6 py-4">
-                    <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${dom.autoRenew ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/20' : 'bg-white text-slate-400'}`}>
+                    <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${dom.autoRenew ? 'bg-cyan-500/10 text-[#1F1F1F] border border-cyan-500/20' : 'bg-white text-slate-400'}`}>
                       {dom.autoRenew ? 'Bật' : 'Tắt'}
                     </span>
                   </td>
@@ -163,7 +163,7 @@ export default function CustomerDomainsDashboardPage() {
                         onClick={() => alert(`Cấu hình bản ghi DNS (A, CNAME, MX, TXT) cho tên miền: ${dom.name}`)}
                         className="px-3 py-1.5 rounded-xl bg-white hover:bg-slate-200 text-slate-800 text-xs font-semibold flex items-center gap-1.5 transition-colors"
                       >
-                        <Layers className="w-3.5 h-3.5 text-cyan-400" /> DNS Records
+                        <Layers className="w-3.5 h-3.5 text-[#1F1F1F]" /> DNS Records
                       </button>
                       <button 
                         onClick={() => alert(`Cấu hình Nameserver & Khóa Tên Miền cho ${dom.name}`)}

@@ -59,7 +59,7 @@ export const BlogComments: React.FC<{ articleId?: string; postSlug?: string }> =
   return (
     <div className="mt-12 bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
       <div className="flex items-center gap-3 mb-8">
-        <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+        <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-[#1F1F1F]">
           <MessageCircle className="w-5 h-5" />
         </div>
         <h2 className="text-xl font-bold text-slate-900">
@@ -70,7 +70,7 @@ export const BlogComments: React.FC<{ articleId?: string; postSlug?: string }> =
       <div className="space-y-6 mb-8">
         {loading ? (
           <div className="flex justify-center py-6">
-            <Loader2 className="w-6 h-6 text-blue-600 animate-spin" />
+            <Loader2 className="w-6 h-6 text-[#1F1F1F] animate-spin" />
           </div>
         ) : comments.length === 0 ? (
           <p className="text-slate-500 text-sm text-center py-4">Chưa có bình luận nào. Hãy là người đầu tiên!</p>

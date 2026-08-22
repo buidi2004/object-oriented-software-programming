@@ -85,7 +85,7 @@ export default function AdminOrdersPage() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'pending': return 'bg-amber-100 text-amber-700';
-      case 'processing': return 'bg-blue-100 text-blue-700';
+      case 'processing': return 'bg-blue-100 text-[#1F1F1F]';
       case 'completed': return 'bg-emerald-100 text-emerald-700';
       case 'cancelled': return 'bg-red-100 text-red-700';
       default: return 'bg-slate-100 text-slate-700';
@@ -200,7 +200,7 @@ export default function AdminOrdersPage() {
                       {new Date(order.createdAt).toLocaleDateString('vi-VN')}
                     </td>
                     <td className="py-3 px-4 text-right">
-                      <Link href={`/orders/${order.id}`} className="inline-flex p-2 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
+                      <Link href={`/orders/${order.id}`} className="inline-flex p-2 text-slate-600 hover:text-[#1F1F1F] hover:bg-blue-50 rounded-lg transition-colors">
                         <Eye className="w-4 h-4" />
                       </Link>
                     </td>

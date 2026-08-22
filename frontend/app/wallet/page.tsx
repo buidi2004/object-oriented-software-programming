@@ -132,10 +132,10 @@ export default function WalletPage() {
               <Wallet className="w-6 h-6" />
             </div>
             <span className="text-xl font-black text-slate-900">
-              CloudHost<span className="text-blue-600"> VN</span>
+              CloudHost<span className="text-[#1F1F1F]"> VN</span>
             </span>
           </Link>
-          <Link href="/dashboard" className="text-sm font-semibold text-slate-600 hover:text-blue-600">
+          <Link href="/dashboard" className="text-sm font-semibold text-slate-600 hover:text-[#1F1F1F]">
             ← Quay lại Dashboard
           </Link>
         </div>
@@ -144,10 +144,10 @@ export default function WalletPage() {
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {checkoutContext && (
           <div className="mb-6 rounded-2xl border border-blue-200 bg-blue-50 p-4 flex items-start gap-3">
-            <AlertCircle className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
+            <AlertCircle className="w-5 h-5 text-[#1F1F1F] shrink-0 mt-0.5" />
             <div className="min-w-0">
-              <p className="text-sm font-bold text-blue-900">Hoàn tất thanh toán đơn hàng</p>
-              <p className="text-sm text-blue-800/90 mt-1 leading-relaxed">
+              <p className="text-sm font-bold text-[#1F1F1F]">Hoàn tất thanh toán đơn hàng</p>
+              <p className="text-sm text-[#1F1F1F]/90 mt-1 leading-relaxed">
                 Số dư ví chưa đủ. Nạp thêm credit
                 {checkoutContext.suggestedAmount
                   ? ` (gợi ý ${checkoutContext.suggestedAmount.toLocaleString('vi-VN')} đ)`
@@ -185,7 +185,7 @@ export default function WalletPage() {
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 rounded-2xl bg-white/10 backdrop-blur flex items-center justify-center">
-                  <Wallet className="w-6 h-6 text-cyan-400" />
+                  <Wallet className="w-6 h-6 text-[#1F1F1F]" />
                 </div>
                 <div>
                   <p className="text-sm text-slate-600">Số dư ví tiền</p>
@@ -237,7 +237,7 @@ export default function WalletPage() {
         <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
           <div className="p-6 border-b border-slate-200 flex items-center justify-between">
             <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-              <History className="w-5 h-5 text-blue-600" />
+              <History className="w-5 h-5 text-[#1F1F1F]" />
               Lịch sử giao dịch
             </h2>
             <span className="text-sm text-slate-500">{transactions.length} giao dịch</span>
@@ -255,7 +255,7 @@ export default function WalletPage() {
                 <div key={tx.id} className="p-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
                   <div className="flex items-center gap-3">
                     <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
-                      tx.type === 'credit' ? 'bg-emerald-100 text-emerald-600' : 'bg-blue-100 text-blue-600'
+                      tx.type === 'credit' ? 'bg-emerald-100 text-emerald-600' : 'bg-blue-100 text-[#1F1F1F]'
                     }`}>
                       {tx.type === 'credit' ? (
                         <ArrowDownLeft className="w-5 h-5" />

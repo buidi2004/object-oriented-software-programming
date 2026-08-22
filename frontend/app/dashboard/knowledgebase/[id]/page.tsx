@@ -43,7 +43,7 @@ export default function KnowledgebaseDetailPage() {
       content: (
         <div className="space-y-8 text-slate-700 leading-relaxed text-sm">
           {/* Intro callout */}
-          <div className="p-4 bg-blue-50/80 border-l-4 border-blue-600 rounded-r-xl text-blue-950">
+          <div className="p-4 bg-blue-50/80 border-l-4 border-blue-600 rounded-r-xl text-[#1F1F1F]">
             <p className="font-semibold text-xs sm:text-sm">
               💡 <strong>SSH (Secure Shell)</strong> là giao thức mạng mật mã được sử dụng rộng rãi nhất để vận hành các dịch vụ mạng một cách an toàn qua một mạng không an toàn. Tất cả máy chủ VPS tại hệ thống đều được kích hoạt sẵn SSH Port 22 với quyền Root.
             </p>
@@ -83,7 +83,7 @@ export default function KnowledgebaseDetailPage() {
             </div>
 
             <ol className="list-decimal list-inside space-y-2 pl-2">
-              <li>Truy cập vào menu <strong><Link href="/dashboard/vps-instances" className="text-blue-600 underline">Quản lý VPS</Link></strong>.</li>
+              <li>Truy cập vào menu <strong><Link href="/dashboard/vps-instances" className="text-[#1F1F1F] underline">Quản lý VPS</Link></strong>.</li>
               <li>Tại Tab <strong>Overview</strong>, kéo xuống dưới để thấy khung terminal gõ lệnh trực tiếp.</li>
               <li>Hoặc bấm nút <strong>[ 💻 Terminal ]</strong> ở thanh công cụ đầu trang để mở giao diện toàn màn hình.</li>
             </ol>
@@ -128,15 +128,15 @@ export default function KnowledgebaseDetailPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-2">
               <div className="p-4 bg-white border border-slate-200 rounded-xl shadow-xs space-y-2">
                 <div className="flex items-center gap-2 font-bold text-slate-900">
-                  <Terminal className="w-5 h-5 text-blue-600" /> MobaXterm (Khuyên Dùng)
+                  <Terminal className="w-5 h-5 text-[#1F1F1F]" /> MobaXterm (Khuyên Dùng)
                 </div>
                 <p className="text-xs text-slate-500">
                   Tích hợp sẵn quản lý File SFTP kéo thả, hỗ trợ nhiều tab và tự động lưu mật khẩu phiên làm việc.
                 </p>
                 <ol className="text-xs list-decimal list-inside space-y-1 text-slate-600 pt-1">
                   <li>Nhấn <strong>Session</strong> &gt; Chọn <strong>SSH</strong>.</li>
-                  <li><strong>Remote host:</strong> Nhập IP VPS (ví dụ: <code className="font-mono text-blue-600">203.145.46.200</code>).</li>
-                  <li>Tích chọn <strong>Specify username</strong> và nhập <code className="font-mono text-blue-600">root</code>.</li>
+                  <li><strong>Remote host:</strong> Nhập IP VPS (ví dụ: <code className="font-mono text-[#1F1F1F]">203.145.46.200</code>).</li>
+                  <li>Tích chọn <strong>Specify username</strong> và nhập <code className="font-mono text-[#1F1F1F]">root</code>.</li>
                   <li><strong>Port:</strong> <code className="font-mono">22</code>. Nhấn <strong>OK</strong>.</li>
                 </ol>
               </div>
@@ -176,27 +176,27 @@ export default function KnowledgebaseDetailPage() {
                 </thead>
                 <tbody className="divide-y divide-slate-100 font-mono">
                   <tr className="hover:bg-slate-50">
-                    <td className="py-2.5 px-4 font-bold text-blue-600">htop / top</td>
+                    <td className="py-2.5 px-4 font-bold text-[#1F1F1F]">htop / top</td>
                     <td className="py-2.5 px-4 font-sans text-slate-600">Kiểm tra CPU, RAM và tiến trình realtime</td>
                     <td className="py-2.5 px-4 text-slate-500">htop</td>
                   </tr>
                   <tr className="hover:bg-slate-50">
-                    <td className="py-2.5 px-4 font-bold text-blue-600">df -h</td>
+                    <td className="py-2.5 px-4 font-bold text-[#1F1F1F]">df -h</td>
                     <td className="py-2.5 px-4 font-sans text-slate-600">Kiểm tra dung lượng ổ cứng NVMe còn trống</td>
                     <td className="py-2.5 px-4 text-slate-500">df -h /</td>
                   </tr>
                   <tr className="hover:bg-slate-50">
-                    <td className="py-2.5 px-4 font-bold text-blue-600">free -m</td>
+                    <td className="py-2.5 px-4 font-bold text-[#1F1F1F]">free -m</td>
                     <td className="py-2.5 px-4 font-sans text-slate-600">Kiểm tra dung lượng RAM đang sử dụng theo MB</td>
                     <td className="py-2.5 px-4 text-slate-500">free -h</td>
                   </tr>
                   <tr className="hover:bg-slate-50">
-                    <td className="py-2.5 px-4 font-bold text-blue-600">ufw status</td>
+                    <td className="py-2.5 px-4 font-bold text-[#1F1F1F]">ufw status</td>
                     <td className="py-2.5 px-4 font-sans text-slate-600">Kiểm tra các Port đang được mở tường lửa</td>
                     <td className="py-2.5 px-4 text-slate-500">ufw allow 80/tcp</td>
                   </tr>
                   <tr className="hover:bg-slate-50">
-                    <td className="py-2.5 px-4 font-bold text-blue-600">passwd</td>
+                    <td className="py-2.5 px-4 font-bold text-[#1F1F1F]">passwd</td>
                     <td className="py-2.5 px-4 font-sans text-slate-600">Đổi mật khẩu Root trực tiếp bằng dòng lệnh</td>
                     <td className="py-2.5 px-4 text-slate-500">passwd</td>
                   </tr>
@@ -329,7 +329,7 @@ export default function KnowledgebaseDetailPage() {
       <div className="max-w-4xl mx-auto space-y-6">
         {/* Navigation Breadcrumbs */}
         <div className="flex items-center gap-2 text-xs font-semibold text-slate-500">
-          <Link href="/dashboard/tickets" className="hover:text-blue-600 flex items-center gap-1 transition-colors">
+          <Link href="/dashboard/tickets" className="hover:text-[#1F1F1F] flex items-center gap-1 transition-colors">
             <ArrowLeft className="w-3.5 h-3.5" /> Hỗ trợ &amp; Ticket
           </Link>
           <span>/</span>
@@ -342,7 +342,7 @@ export default function KnowledgebaseDetailPage() {
         <article className="bg-white rounded-2xl border border-slate-200/80 shadow-xl overflow-hidden">
           {/* Article Header */}
           <div className="p-6 sm:p-8 border-b border-slate-100 bg-gradient-to-b from-slate-50/50 to-white">
-            <div className="inline-block px-3 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-full text-xs font-bold mb-3">
+            <div className="inline-block px-3 py-1 bg-blue-50 text-[#1F1F1F] border border-blue-200 rounded-full text-xs font-bold mb-3">
               {currentArticle.category}
             </div>
             <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-slate-900 tracking-tight leading-snug">
@@ -393,7 +393,7 @@ export default function KnowledgebaseDetailPage() {
               href="/dashboard/knowledgebase/ssh-guide"
               className="p-4 bg-white border border-slate-200 rounded-xl hover:border-blue-500 hover:shadow-md transition-all group"
             >
-              <p className="font-bold text-slate-900 text-xs group-hover:text-blue-600">
+              <p className="font-bold text-slate-900 text-xs group-hover:text-[#1F1F1F]">
                 Hướng dẫn kết nối SSH vào VPS Linux
               </p>
               <p className="text-[11px] text-slate-500 mt-1">Cách dùng terminal và phần mềm MobaXterm/Putty.</p>
@@ -403,7 +403,7 @@ export default function KnowledgebaseDetailPage() {
               href="/dashboard/knowledgebase/reinstall-os"
               className="p-4 bg-white border border-slate-200 rounded-xl hover:border-blue-500 hover:shadow-md transition-all group"
             >
-              <p className="font-bold text-slate-900 text-xs group-hover:text-blue-600">
+              <p className="font-bold text-slate-900 text-xs group-hover:text-[#1F1F1F]">
                 Cách cài đặt lại Hệ điều hành (Rebuild OS)
               </p>
               <p className="text-[11px] text-slate-500 mt-1">Các bước tự động cài Ubuntu, Debian, Alpine.</p>

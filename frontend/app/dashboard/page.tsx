@@ -21,16 +21,16 @@ interface DashboardStats {
 }
 
 const colorClasses: Record<string, string> = {
-  blue: 'text-blue-600',
+  blue: 'text-[#1F1F1F]',
   emerald: 'text-emerald-600',
   amber: 'text-amber-600',
-  cyan: 'text-cyan-600',
+  cyan: 'text-[#1F1F1F]',
   purple: 'text-purple-600',
   rose: 'text-rose-600',
-  indigo: 'text-indigo-600',
+  indigo: 'text-[#1F1F1F]',
   violet: 'text-violet-600',
   teal: 'text-teal-600',
-  sky: 'text-sky-600',
+  sky: 'text-[#1F1F1F]',
 };
 
 export default function DashboardPage() {
@@ -165,7 +165,7 @@ export default function DashboardPage() {
             <action.icon className={`w-8 h-8 ${colorClasses[action.colorKey]} mb-3 group-hover:scale-110 transition-transform`} />
             <h3 className="font-bold text-slate-900 mb-1">{action.title}</h3>
             <p className="text-sm text-slate-500 mb-3">{action.desc}</p>
-            <span className="text-sm font-semibold text-blue-600 flex items-center gap-1 group-hover:gap-2 transition-all">
+            <span className="text-sm font-semibold text-[#1F1F1F] flex items-center gap-1 group-hover:gap-2 transition-all">
               Vào ngay <ArrowRight className="w-4 h-4" />
             </span>
           </Link>

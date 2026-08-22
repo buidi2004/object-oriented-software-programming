@@ -197,7 +197,7 @@ export default function AdminRevenuePage() {
           </div>
 
           <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm">
-            <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold mb-3">
+            <div className="w-12 h-12 rounded-2xl bg-blue-50 text-[#1F1F1F] flex items-center justify-center font-bold mb-3">
               <ShoppingCart className="w-6 h-6" />
             </div>
             <p className="text-2xl font-black text-slate-900">{stats.totalOrders.toLocaleString()} đơn</p>

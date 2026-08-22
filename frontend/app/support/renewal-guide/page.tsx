@@ -10,9 +10,9 @@ export default function RenewalGuidePage() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <nav className="flex items-center gap-2 text-sm text-slate-500 mb-8">
-          <Link href="/" className="hover:text-blue-600">Trang chủ</Link>
+          <Link href="/" className="hover:text-[#1F1F1F]">Trang chủ</Link>
           <ChevronRight className="w-4 h-4" />
-          <Link href="/support" className="hover:text-blue-600">Trợ giúp</Link>
+          <Link href="/support" className="hover:text-[#1F1F1F]">Trợ giúp</Link>
           <ChevronRight className="w-4 h-4" />
           <span className="text-slate-900 font-medium">Hướng dẫn gia hạn dịch vụ</span>
         </nav>
@@ -42,7 +42,7 @@ export default function RenewalGuidePage() {
 
             <section>
               <div className="flex items-center gap-3 mb-4 text-slate-900">
-                <div className="p-2 bg-blue-100 rounded-lg text-blue-600"><Clock className="w-6 h-6" /></div>
+                <div className="p-2 bg-blue-100 rounded-lg text-[#1F1F1F]"><Clock className="w-6 h-6" /></div>
                 <h2 className="text-xl font-bold">2. Gia hạn thủ công</h2>
               </div>
               <p className="text-slate-600 leading-relaxed mb-4">

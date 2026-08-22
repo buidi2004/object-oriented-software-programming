@@ -79,12 +79,12 @@ export function ResourceIcon({
   className?: string;
 }) {
   const styles = {
-    cpu: 'text-blue-600 bg-blue-50',
-    ram: 'text-blue-600 bg-blue-50',
-    disk: 'text-blue-600 bg-blue-50',
-    network: 'text-blue-600 bg-blue-50',
-    os: 'text-blue-600 bg-blue-50',
-    datacenter: 'text-blue-600 bg-blue-50',
+    cpu: 'text-[#1F1F1F] bg-blue-50',
+    ram: 'text-[#1F1F1F] bg-blue-50',
+    disk: 'text-[#1F1F1F] bg-blue-50',
+    network: 'text-[#1F1F1F] bg-blue-50',
+    os: 'text-[#1F1F1F] bg-blue-50',
+    datacenter: 'text-[#1F1F1F] bg-blue-50',
   };
 
   const icons = {

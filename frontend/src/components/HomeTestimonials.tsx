@@ -64,7 +64,7 @@ export const HomeTestimonials: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
           <div>
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-blue-100 text-blue-700 text-xs font-bold uppercase tracking-wider mb-3">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-blue-100 text-[#1F1F1F] text-xs font-bold uppercase tracking-wider mb-3">
               <ShieldCheck className="w-3.5 h-3.5" />
               Khách Hàng &amp; Đối Tác Tin Dùng
             </div>
@@ -78,7 +78,7 @@ export const HomeTestimonials: React.FC = () => {
 
           <Link
             href="/testimonials"
-            className="mt-4 md:mt-0 inline-flex items-center gap-2 text-sm font-bold text-blue-600 hover:text-blue-700 group shrink-0"
+            className="mt-4 md:mt-0 inline-flex items-center gap-2 text-sm font-bold text-[#1F1F1F] hover:text-[#1F1F1F] group shrink-0"
           >
             <span>Xem tất cả 500+ đánh giá</span>
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />

@@ -62,7 +62,7 @@ export default function AdminAppInstallationsPage() {
             </Link>
             <div>
               <h1 className="text-xl font-black text-slate-900 flex items-center gap-2">
-                <Package className="w-6 h-6 text-indigo-600" />
+                <Package className="w-6 h-6 text-[#1F1F1F]" />
                 Quản lý 1-Click App Installations (Admin)
               </h1>
               <p className="text-xs text-slate-500">{apps.length} ứng dụng đã triển khai</p>
@@ -127,12 +127,12 @@ export default function AdminAppInstallationsPage() {
                       </td>
                       <td className="px-6 py-4 font-medium text-slate-700">{a.ownerEmail || 'customer@cloudhost.vn'}</td>
                       <td className="px-6 py-4">
-                        <span className="font-bold text-indigo-700">{displayName}</span>
+                        <span className="font-bold text-[#1F1F1F]">{displayName}</span>
                         <div className="font-mono text-[11px] text-slate-600 mt-0.5">Port: {a.port || '-'}</div>
                       </td>
                       <td className="px-6 py-4 font-mono text-[11px]">
                         {liveUrl !== '#' ? (
-                          <a href={liveUrl} target="_blank" rel="noreferrer" className="text-indigo-600 hover:underline flex items-center gap-1">
+                          <a href={liveUrl} target="_blank" rel="noreferrer" className="text-[#1F1F1F] hover:underline flex items-center gap-1">
                             {liveUrl} <ExternalLink className="w-3 h-3" />
                           </a>
                         ) : (

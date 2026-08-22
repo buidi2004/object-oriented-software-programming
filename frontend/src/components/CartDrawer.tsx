@@ -130,9 +130,9 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
           {/* Header */}
           <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50 shrink-0">
             <div className="flex items-center gap-2 min-w-0">
-              <ShoppingBag className="w-5 h-5 text-blue-600 shrink-0" />
+              <ShoppingBag className="w-5 h-5 text-[#1F1F1F] shrink-0" />
               <h3 className="text-lg font-black text-slate-900 whitespace-nowrap">Giỏ Hàng Của Bạn</h3>
-              <span className="ml-3 shrink-0 text-xs font-bold px-2.5 py-0.5 bg-blue-100 text-blue-700 rounded-full">
+              <span className="ml-3 shrink-0 text-xs font-bold px-2.5 py-0.5 bg-blue-100 text-[#1F1F1F] rounded-full">
                 {cartItems.length} dịch vụ
               </span>
             </div>
@@ -189,13 +189,13 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                     className="p-4 rounded-2xl border border-slate-200 bg-slate-50/50 flex items-start justify-between gap-3"
                   >
                     <div>
-                      <div className="text-xs font-bold text-blue-600 uppercase tracking-wider">
+                      <div className="text-xs font-bold text-[#1F1F1F] uppercase tracking-wider">
                         {item.type === 'vps' ? 'Cloud VPS' : item.type === 'hosting' ? 'Web Hosting' : 'Tên miền'}
                       </div>
                       <div className="text-sm font-extrabold text-slate-900 mt-0.5">{item.title}</div>
                       <div className="text-xs text-slate-500 mt-1">{item.details}</div>
                       <div className="text-xs font-semibold text-slate-700 mt-2">
-                        Chu kỳ: <span className="font-bold text-blue-600">{item.billingCycle}</span>
+                        Chu kỳ: <span className="font-bold text-[#1F1F1F]">{item.billingCycle}</span>
                       </div>
                     </div>
 
@@ -278,7 +278,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
               <div className="flex justify-between items-center text-slate-900">
                 <span className="text-sm font-bold">Tổng Thanh Toán:</span>
-                <span className="text-2xl font-black text-blue-600">
+                <span className="text-2xl font-black text-[#1F1F1F]">
                   {totalAmount.toLocaleString('vi-VN')} đ
                 </span>
               </div>

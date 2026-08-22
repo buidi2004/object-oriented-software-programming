@@ -70,7 +70,7 @@ export default function NewTicketPage() {
 
           <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm">
             <div className="flex items-center gap-3 mb-6 border-b border-slate-100 pb-6">
-              <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600">
+              <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-[#1F1F1F]">
                 <LifeBuoy className="w-6 h-6" />
               </div>
               <div>

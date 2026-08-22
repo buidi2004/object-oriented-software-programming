@@ -81,7 +81,7 @@ export default function VpsBackupsPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+        <Loader2 className="w-8 h-8 text-[#1F1F1F] animate-spin" />
       </div>
     );
   }
@@ -135,7 +135,7 @@ export default function VpsBackupsPage() {
                   {backup.status === 'completed' ? (
                     <CheckCircle className="w-5 h-5 text-emerald-600" />
                   ) : backup.status === 'processing' ? (
-                    <Loader2 className="w-5 h-5 text-blue-600 animate-spin" />
+                    <Loader2 className="w-5 h-5 text-[#1F1F1F] animate-spin" />
                   ) : (
                     <AlertCircle className="w-5 h-5 text-red-600" />
                   )}
@@ -149,7 +149,7 @@ export default function VpsBackupsPage() {
                     </span>
                     <span className={`text-xs px-2 py-0.5 rounded-full ${
                       backup.type === 'manual'
-                        ? 'bg-blue-100 text-blue-700'
+                        ? 'bg-blue-100 text-[#1F1F1F]'
                         : 'bg-slate-100 text-slate-600'
                     }`}>
                       {backup.type === 'manual' ? 'Thủ công' : 'Tự động'}
@@ -161,7 +161,7 @@ export default function VpsBackupsPage() {
               <div className="flex items-center gap-4">
                 <span className="text-sm text-slate-500">{backup.size} GB</span>
                 <div className="flex items-center gap-2">
-                  <button className="p-2 rounded-lg hover:bg-slate-100 text-slate-600 hover:text-blue-600 transition-colors" title="Tải về">
+                  <button className="p-2 rounded-lg hover:bg-slate-100 text-slate-600 hover:text-[#1F1F1F] transition-colors" title="Tải về">
                     <Download className="w-4 h-4" />
                   </button>
                   <button

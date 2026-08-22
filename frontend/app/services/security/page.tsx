@@ -244,7 +244,7 @@ export default function SecurityWafServicePage() {
                   <span>OWASP Top 10 Ruleset</span>
                 </div>
                 <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0f172a] border border-slate-200 text-xs font-mono text-slate-700">
-                  <Cpu className="w-4 h-4 text-sky-400" />
+                  <Cpu className="w-4 h-4 text-slate-200" />
                   <span>AI Zero-Day Heuristics</span>
                 </div>
                 <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0f172a] border border-slate-200 text-xs font-mono text-slate-700">
@@ -322,7 +322,7 @@ export default function SecurityWafServicePage() {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-slate-500">Origin Server Impact:</span>
-                    <span className="text-sky-400">0 Request (Saved CPU)</span>
+                    <span className="text-slate-200">0 Request (Saved CPU)</span>
                   </div>
                 </div>
 
@@ -373,7 +373,7 @@ export default function SecurityWafServicePage() {
                   <div className="space-y-2 text-slate-700 text-[11px]">
                     <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>1. Public DNS Query</span>
-                      <span className="text-sky-400">WAF Anycast IP</span>
+                      <span className="text-slate-200">WAF Anycast IP</span>
                     </div>
                     <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>2. Threat Inspection</span>
@@ -405,7 +405,7 @@ export default function SecurityWafServicePage() {
                 <div className="p-4 rounded-2xl bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
                   <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
                     <span>AI HEURISTIC SCANNER</span>
-                    <span className="text-sky-400">ZERO-DAY DEFENSE</span>
+                    <span className="text-slate-200">ZERO-DAY DEFENSE</span>
                   </div>
                   <div className="space-y-2 text-slate-700 text-[11px]">
                     <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
@@ -414,7 +414,7 @@ export default function SecurityWafServicePage() {
                     </div>
                     <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>Behavioral AI Model</span>
-                      <span className="text-sky-400 font-bold">Anomaly Score 99%</span>
+                      <span className="text-slate-200 font-bold">Anomaly Score 99%</span>
                     </div>
                     <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>Automated Block</span>
@@ -432,7 +432,7 @@ export default function SecurityWafServicePage() {
 
               <div className="pt-4 border-t border-slate-200/80 text-xs font-mono text-slate-700 flex items-center justify-between">
                 <span>Threat Coverage:</span>
-                <strong className="text-sky-400">SQLi, XSS, RCE, LFI, SSRF</strong>
+                <strong className="text-slate-200">SQLi, XSS, RCE, LFI, SSRF</strong>
               </div>
             </div>
 
@@ -555,7 +555,7 @@ export default function SecurityWafServicePage() {
                   <tr className="hover:bg-slate-900/40">
                     <td className="p-4 font-bold text-slate-600">Băng Thông Sạch (Clean Bandwidth)</td>
                     {plans.map((p) => (
-                      <td key={p.id} className="p-4 border-l border-slate-200/60 text-sky-400 font-bold">{p.bandwidth}</td>
+                      <td key={p.id} className="p-4 border-l border-slate-200/60 text-slate-200 font-bold">{p.bandwidth}</td>
                     ))}
                   </tr>
                   <tr className="hover:bg-slate-900/40">

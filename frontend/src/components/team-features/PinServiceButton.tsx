@@ -18,5 +18,5 @@ export function PinServiceButton({ serviceType, serviceId, displayName }: { serv
       setBusy(false);
     }
   };
-  return <button type="button" onClick={toggle} disabled={busy} title={pinned ? 'Bỏ ghim' : 'Ghim vào Quick Access'} className={'p-2 rounded-lg border transition-colors ' + (pinned ? 'bg-blue-600 border-blue-600 text-white' : 'bg-white border-slate-200 text-slate-500 hover:text-blue-600')}><Pin className={'w-4 h-4 ' + (pinned ? 'fill-current' : '')}/></button>;
+  return <button type="button" onClick={toggle} disabled={busy} title={pinned ? 'Bỏ ghim' : 'Ghim vào Quick Access'} className={'p-2 rounded-lg border transition-colors ' + (pinned ? 'bg-blue-600 border-blue-600 text-white' : 'bg-white border-slate-200 text-slate-500 hover:text-[#1F1F1F]')}><Pin className={'w-4 h-4 ' + (pinned ? 'fill-current' : '')}/></button>;
 }

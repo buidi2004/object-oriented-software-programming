@@ -80,10 +80,10 @@ export default function WishlistPage() {
               <Heart className="w-6 h-6" />
             </div>
             <span className="text-xl font-black text-slate-900">
-              CloudHost<span className="text-blue-600"> VN</span>
+              CloudHost<span className="text-[#1F1F1F]"> VN</span>
             </span>
           </Link>
-          <Link href="/dashboard" className="text-sm font-semibold text-slate-600 hover:text-blue-600">
+          <Link href="/dashboard" className="text-sm font-semibold text-slate-600 hover:text-[#1F1F1F]">
             ← Quay lại Dashboard
           </Link>
         </div>
@@ -124,20 +124,20 @@ export default function WishlistPage() {
               >
                 <div className="h-48 bg-gradient-to-br from-blue-50 to-indigo-50 flex items-center justify-center">
                   {item.type === 'vps' ? (
-                    <Server className="w-16 h-16 text-blue-500" />
+                    <Server className="w-16 h-16 text-[#1F1F1F]" />
                   ) : item.type === 'hosting' ? (
-                    <ShieldCheck className="w-16 h-16 text-indigo-500" />
+                    <ShieldCheck className="w-16 h-16 text-[#1F1F1F]" />
                   ) : (
-                    <Globe className="w-16 h-16 text-cyan-500" />
+                    <Globe className="w-16 h-16 text-[#1F1F1F]" />
                   )}
                 </div>
                 
                 <div className="p-6">
                   <div className="flex items-start justify-between mb-3">
                     <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${
-                      item.type === 'vps' ? 'bg-blue-100 text-blue-700' :
-                      item.type === 'hosting' ? 'bg-indigo-100 text-indigo-700' :
-                      'bg-cyan-100 text-cyan-700'
+                      item.type === 'vps' ? 'bg-blue-100 text-[#1F1F1F]' :
+                      item.type === 'hosting' ? 'bg-indigo-100 text-[#1F1F1F]' :
+                      'bg-cyan-100 text-[#1F1F1F]'
                     }`}>
                       {item.type === 'vps' ? 'Cloud VPS' : item.type === 'hosting' ? 'Web Hosting' : 'Tên miền'}
                     </span>
@@ -154,7 +154,7 @@ export default function WishlistPage() {
                   <p className="text-sm text-slate-500 mb-4 line-clamp-2">{item.description}</p>
                   
                   <div className="flex items-center justify-between">
-                    <span className="text-xl font-black text-blue-600">
+                    <span className="text-xl font-black text-[#1F1F1F]">
                       {item.price.toLocaleString('vi-VN')} đ
                     </span>
                     <button

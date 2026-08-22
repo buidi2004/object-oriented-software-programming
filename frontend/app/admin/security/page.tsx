@@ -37,7 +37,7 @@ export default function AdminSecurityAddonsPage() {
 
   const getStatusBadge = (status: number) => {
     switch (status) {
-      case 1: return <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-700"><RefreshCw className="w-3 h-3 animate-spin"/> Scanning</span>;
+      case 1: return <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold bg-blue-100 text-[#1F1F1F]"><RefreshCw className="w-3 h-3 animate-spin"/> Scanning</span>;
       case 2: return <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700"><CheckCircle className="w-3 h-3"/> Clean</span>;
       case 3: return <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-700"><AlertTriangle className="w-3 h-3"/> Threats Found</span>;
       default: return <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-700">Unknown</span>;
@@ -46,7 +46,7 @@ export default function AdminSecurityAddonsPage() {
 
   const getTypeBadge = (type: number) => {
     switch (type) {
-      case 1: return <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold bg-indigo-100 text-indigo-700"><Shield className="w-3 h-3"/> WAF</span>;
+      case 1: return <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold bg-indigo-100 text-[#1F1F1F]"><Shield className="w-3 h-3"/> WAF</span>;
       case 2: return <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-700"><AlertTriangle className="w-3 h-3"/> Malware Scan</span>;
       default: return <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-700">Unknown</span>;
     }
@@ -59,7 +59,7 @@ export default function AdminSecurityAddonsPage() {
         <div className="max-w-6xl mx-auto space-y-6">
           <div className="flex items-center justify-between">
             <div>
-              <Link href="/admin" className="text-sm text-slate-500 hover:text-blue-600 flex items-center gap-1 mb-2">
+              <Link href="/admin" className="text-sm text-slate-500 hover:text-[#1F1F1F] flex items-center gap-1 mb-2">
                 <ArrowLeft className="w-4 h-4" /> Quay lại Dashboard
               </Link>
               <h1 className="text-2xl font-black text-slate-900 flex items-center gap-2">

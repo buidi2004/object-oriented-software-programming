@@ -220,8 +220,8 @@ export default function ObjectStorageServicePage() {
             
             {/* Left Headline */}
             <div className="lg:col-span-7 space-y-6">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-sky-950/60 border border-sky-800/60 text-sky-300 text-xs font-mono">
-                <DownloadCloud className="w-3.5 h-3.5 text-sky-400" />
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-sky-950/60 border border-sky-800/60 text-slate-200 text-xs font-mono">
+                <DownloadCloud className="w-3.5 h-3.5 text-slate-200" />
                 HIGH-PERFORMANCE MINIO &amp; AWS S3 API COMPATIBLE
               </div>
 
@@ -257,7 +257,7 @@ export default function ObjectStorageServicePage() {
               <div className="p-4 rounded-xl bg-white border border-slate-200 text-xs font-mono space-y-2">
                 <div className="flex items-center justify-between text-slate-600">
                   <span>S3 Endpoint: <strong className="text-slate-900">https://s3.sencloudhost.vn</strong></span>
-                  <span>Region: <strong className="text-sky-400">ap-southeast-1</strong></span>
+                  <span>Region: <strong className="text-slate-200">ap-southeast-1</strong></span>
                 </div>
                 <div className="text-slate-600">
                   Toolchain: <span className="text-slate-700">AWS CLI, Boto3, AWS-SDK Node.js, Cyberduck, rclone, Nextcloud</span>
@@ -276,7 +276,7 @@ export default function ObjectStorageServicePage() {
                     <span className="w-3 h-3 rounded-full bg-emerald-500/80" />
                     <span className="text-xs font-mono text-slate-600 ml-2">s3-presigned-generator.sen</span>
                   </div>
-                  <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-sky-950/80 text-sky-400 border border-sky-800/60">
+                  <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-sky-950/80 text-slate-200 border border-sky-800/60">
                     HMAC-SHA256
                   </span>
                 </div>
@@ -319,11 +319,11 @@ export default function ObjectStorageServicePage() {
                 <div className="space-y-2 font-mono text-xs">
                   <div className="text-slate-500 flex items-center justify-between">
                     <span>// Generated Secure Pre-signed URL:</span>
-                    <button onClick={handleCopy} className="text-sky-400 hover:underline flex items-center gap-1">
+                    <button onClick={handleCopy} className="text-slate-200 hover:underline flex items-center gap-1">
                       <Copy className="w-3 h-3" /> {copied ? 'Đã sao chép!' : 'Copy URL'}
                     </button>
                   </div>
-                  <div className="p-3 rounded-xl bg-slate-100 border border-slate-200/90 text-sky-300 break-all select-all font-mono text-[11px] max-h-20 overflow-y-auto leading-relaxed">
+                  <div className="p-3 rounded-xl bg-slate-100 border border-slate-200/90 text-slate-200 break-all select-all font-mono text-[11px] max-h-20 overflow-y-auto leading-relaxed">
                     {presignedUrl}
                   </div>
                 </div>
@@ -350,7 +350,7 @@ export default function ObjectStorageServicePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-sky-950 text-sky-400 text-xs font-mono mb-3 border border-sky-800">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-sky-950 text-slate-200 text-xs font-mono mb-3 border border-sky-800">
               <Layers className="w-3.5 h-3.5" />
               S3 DISTRIBUTED ARCHITECTURE
             </div>
@@ -375,7 +375,7 @@ export default function ObjectStorageServicePage() {
                   <div className="space-y-2 text-slate-700 text-[11px]">
                     <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>Data Chunks</span>
-                      <span className="text-sky-400 font-bold">12 Mảnh dữ liệu</span>
+                      <span className="text-slate-200 font-bold">12 Mảnh dữ liệu</span>
                     </div>
                     <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>Parity Chunks</span>
@@ -407,7 +407,7 @@ export default function ObjectStorageServicePage() {
                 <div className="p-4 rounded-2xl bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
                   <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
                     <span>ZERO EGRESS TRAFFIC COST</span>
-                    <span className="text-sky-400">SAVE 90% COST</span>
+                    <span className="text-slate-200">SAVE 90% COST</span>
                   </div>
                   <div className="space-y-2 text-slate-700 text-[11px]">
                     <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
@@ -420,7 +420,7 @@ export default function ObjectStorageServicePage() {
                     </div>
                     <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>Domestic Bandwidth</span>
-                      <span className="text-sky-400 font-bold">10Gbps Không giới hạn</span>
+                      <span className="text-slate-200 font-bold">10Gbps Không giới hạn</span>
                     </div>
                   </div>
                 </div>
@@ -449,7 +449,7 @@ export default function ObjectStorageServicePage() {
                   <div className="space-y-2 text-slate-700 text-[11px]">
                     <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>Custom Domain</span>
-                      <span className="text-sky-400 font-bold">cdn.yourdomain.com</span>
+                      <span className="text-slate-200 font-bold">cdn.yourdomain.com</span>
                     </div>
                     <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>Auto SSL HTTPS</span>
@@ -484,7 +484,7 @@ export default function ObjectStorageServicePage() {
       <section className="py-24 bg-slate-50 border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-sky-950 text-sky-400 text-xs font-mono mb-3 border border-sky-800">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-sky-950 text-slate-200 text-xs font-mono mb-3 border border-sky-800">
               <Code className="w-3.5 h-3.5" />
               100% S3 API COMPATIBLE
             </div>
@@ -492,7 +492,7 @@ export default function ObjectStorageServicePage() {
               Tương Thích Tuyệt Đối AWS S3 SDK &amp; CLI
             </h2>
             <p className="text-slate-600 text-sm sm:text-base mt-3 leading-relaxed font-normal">
-              Chỉ cần thay đổi <code className="text-sky-400 font-mono">endpoint_url</code>, giữ nguyên 100% codebase và thư viện S3 hiện có của bạn.
+              Chỉ cần thay đổi <code className="text-slate-200 font-mono">endpoint_url</code>, giữ nguyên 100% codebase và thư viện S3 hiện có của bạn.
             </p>
           </div>
 
@@ -532,7 +532,7 @@ export default function ObjectStorageServicePage() {
                   setCodeCopied(true);
                   setTimeout(() => setCodeCopied(false), 2000);
                 }}
-                className="flex items-center gap-1.5 px-3 py-1 rounded bg-white border border-slate-200 text-xs text-sky-400 hover:text-slate-900 hover:bg-slate-100 transition-all"
+                className="flex items-center gap-1.5 px-3 py-1 rounded bg-white border border-slate-200 text-xs text-slate-200 hover:text-slate-900 hover:bg-slate-100 transition-all"
               >
                 {codeCopied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
                 <span>{codeCopied ? 'Đã sao chép!' : 'Sao chép Code'}</span>
@@ -635,7 +635,7 @@ func main() {
           
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
             <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-sky-950 text-sky-400 text-xs font-mono mb-3 border border-sky-800">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-sky-950 text-slate-200 text-xs font-mono mb-3 border border-sky-800">
                 <Sliders className="w-3.5 h-3.5" />
                 OBJECT STORAGE SPEC SHEET
               </div>
@@ -688,7 +688,7 @@ func main() {
                         <th key={p.id} className="p-5 text-slate-900 border-l border-slate-200/80 w-1/4">
                           <div className="text-sm font-extrabold text-slate-900">{p.name}</div>
                           <div className="text-[11px] text-slate-600 font-sans font-normal">{p.tier}</div>
-                          <div className="text-lg font-black text-sky-400 mt-2">
+                          <div className="text-lg font-black text-slate-200 mt-2">
                             {displayPrice.toLocaleString('vi-VN')} <span className="text-xs font-normal text-slate-600">đ/tháng</span>
                           </div>
                         </th>
@@ -706,7 +706,7 @@ func main() {
                   <tr className="hover:bg-slate-900/40">
                     <td className="p-4 font-bold text-slate-600">Băng Thông Tải Ra (Egress Traffic)</td>
                     {plans.map((p) => (
-                      <td key={p.id} className="p-4 border-l border-slate-200/60 text-sky-400 font-bold">{p.egress}</td>
+                      <td key={p.id} className="p-4 border-l border-slate-200/60 text-slate-200 font-bold">{p.egress}</td>
                     ))}
                   </tr>
                   <tr className="hover:bg-slate-900/40">
@@ -775,11 +775,11 @@ func main() {
               >
                 <button
                   onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
-                  className="w-full p-5 text-left font-bold text-sm text-slate-900 flex items-center justify-between gap-4 hover:text-sky-400 transition-colors"
+                  className="w-full p-5 text-left font-bold text-sm text-slate-900 flex items-center justify-between gap-4 hover:text-slate-200 transition-colors"
                 >
                   <span>{faq.q}</span>
                   {openFaq === idx ? (
-                    <ChevronUp className="w-5 h-5 text-sky-400 shrink-0" />
+                    <ChevronUp className="w-5 h-5 text-slate-200 shrink-0" />
                   ) : (
                     <ChevronDown className="w-5 h-5 text-slate-500 shrink-0" />
                   )}
@@ -799,7 +799,7 @@ func main() {
       <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="rounded-3xl bg-gradient-to-r from-[#0d182e] via-[#091122] to-[#0d182e] p-8 sm:p-12 border border-sky-600/30 text-center relative overflow-hidden shadow-2xl">
           <div className="relative z-10 max-w-3xl mx-auto space-y-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-sky-950 border border-sky-800 text-sky-400 text-xs font-mono">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-sky-950 border border-sky-800 text-slate-200 text-xs font-mono">
               <Zap className="w-3.5 h-3.5" />
               S3 ACCESS KEYS IN 60 SECONDS
             </div>

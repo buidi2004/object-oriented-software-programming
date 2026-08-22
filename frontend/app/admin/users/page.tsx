@@ -354,7 +354,7 @@ export default function AdminUsersPage() {
                         onChange={(e) => handleChangeRole(user.id, e.target.value)}
                         className={`px-2.5 py-1 rounded-lg border text-xs font-bold focus:outline-none focus:ring-2 focus:ring-blue-500/20 ${
                           user.role === 'Admin' ? 'bg-purple-50 text-purple-700 border-purple-200' :
-                          user.role === 'Staff' ? 'bg-blue-50 text-blue-700 border-blue-200' :
+                          user.role === 'Staff' ? 'bg-blue-50 text-[#1F1F1F] border-blue-200' :
                           user.role === 'Editor' ? 'bg-teal-50 text-teal-700 border-teal-200' :
                           'bg-slate-50 text-slate-700 border-slate-200'
                         }`}
@@ -398,7 +398,7 @@ export default function AdminUsersPage() {
                         {/* Edit User Button */}
                         <button
                           onClick={() => handleOpenEdit(user)}
-                          className="p-2 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-colors"
+                          className="p-2 text-slate-500 hover:text-[#1F1F1F] hover:bg-blue-50 rounded-xl transition-colors"
                           title="Chỉnh sửa thông tin"
                         >
                           <Edit2 className="w-4 h-4" />

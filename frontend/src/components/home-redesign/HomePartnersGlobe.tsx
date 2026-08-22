@@ -42,7 +42,7 @@ export const HomePartnersGlobe = () => {
               <LogoImage src="https://icon.horse/icon/shopee.vn" alt="Shopee" />
               <LogoImage src="https://icon.horse/icon/fpt.com.vn" alt="FPT" />
               <LogoImage src="https://icon.horse/icon/vingroup.net" alt="Vingroup" />
-              <div className="h-14 sm:h-16 bg-blue-50 border border-blue-100 rounded-xl flex items-center justify-center text-sm font-black text-blue-600 shadow-xs cursor-pointer hover:scale-105 transition-transform">
+              <div className="h-14 sm:h-16 bg-blue-50 border border-blue-100 rounded-xl flex items-center justify-center text-sm font-black text-[#1F1F1F] shadow-xs cursor-pointer hover:scale-105 transition-transform">
                 25,000+
               </div>
             </div>

@@ -228,11 +228,11 @@ export default function AdminDomainsPage() {
         {/* Navigation */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div>
-            <Link href="/admin" className="text-xs font-bold text-slate-500 hover:text-blue-600 flex items-center gap-1 mb-2">
+            <Link href="/admin" className="text-xs font-bold text-slate-500 hover:text-[#1F1F1F] flex items-center gap-1 mb-2">
               <ArrowLeft className="w-3.5 h-3.5" /> Quay lại Admin Panel
             </Link>
             <h1 className="text-2xl font-black text-slate-900 flex items-center gap-2.5">
-              <Globe className="w-6 h-6 text-blue-600" /> Quản Lý Tên Miền &amp; Bản Ghi DNS (Domains)
+              <Globe className="w-6 h-6 text-[#1F1F1F]" /> Quản Lý Tên Miền &amp; Bản Ghi DNS (Domains)
             </h1>
             <p className="text-xs text-slate-500 mt-0.5">
               Quản lý danh sách tên miền khách hàng, ngày hết hạn, mã EPP Auth Code và khóa chuyển nhượng.
@@ -311,7 +311,7 @@ export default function AdminDomainsPage() {
                   <tr key={dom.id} className="hover:bg-slate-50/80 transition-colors">
                     <td className="py-4 px-6 font-bold text-slate-900">
                       <div className="flex items-center gap-2">
-                        <Globe className="w-4 h-4 text-blue-600" />
+                        <Globe className="w-4 h-4 text-[#1F1F1F]" />
                         <span>{dom.domainName}</span>
                       </div>
                     </td>
@@ -347,7 +347,7 @@ export default function AdminDomainsPage() {
                         </button>
                         <button
                           onClick={() => handleOpenEdit(dom)}
-                          className="p-1.5 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                          className="p-1.5 text-slate-600 hover:text-[#1F1F1F] hover:bg-blue-50 rounded-lg transition-colors"
                           title="Sửa cấu hình"
                         >
                           <Edit2 className="w-3.5 h-3.5" />
@@ -383,7 +383,7 @@ export default function AdminDomainsPage() {
                 <span>{selectedEpp.code}</span>
                 <button
                   onClick={() => copyEpp(selectedEpp.code)}
-                  className="p-1 text-slate-500 hover:text-blue-600 rounded-lg hover:bg-white transition-colors"
+                  className="p-1 text-slate-500 hover:text-[#1F1F1F] rounded-lg hover:bg-white transition-colors"
                 >
                   {copiedCode ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
                 </button>
@@ -484,7 +484,7 @@ export default function AdminDomainsPage() {
                       type="checkbox"
                       checked={formData.autoRenew}
                       onChange={e => setFormData({ ...formData, autoRenew: e.target.checked })}
-                      className="rounded text-blue-600 focus:ring-blue-500"
+                      className="rounded text-[#1F1F1F] focus:ring-blue-500"
                     />
                     Tự động gia hạn (Auto-Renew)
                   </label>
@@ -493,7 +493,7 @@ export default function AdminDomainsPage() {
                       type="checkbox"
                       checked={formData.transferLock}
                       onChange={e => setFormData({ ...formData, transferLock: e.target.checked })}
-                      className="rounded text-blue-600 focus:ring-blue-500"
+                      className="rounded text-[#1F1F1F] focus:ring-blue-500"
                     />
                     Khóa chuyển nhượng (Transfer Lock)
                   </label>

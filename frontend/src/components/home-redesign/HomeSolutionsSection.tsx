@@ -114,7 +114,7 @@ export const HomeSolutionsSection = () => {
               className={`relative whitespace-nowrap px-4 sm:px-6 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-bold transition-colors outline-none border shrink-0 ${
                 activeTab === tab.id
                   ? 'text-white border-transparent'
-                  : 'bg-white border-slate-200 text-slate-600 hover:border-blue-300 hover:text-blue-600'
+                  : 'bg-white border-slate-200 text-slate-600 hover:border-blue-300 hover:text-[#1F1F1F]'
               }`}
             >
               <span className="relative z-10">{tab.label}</span>

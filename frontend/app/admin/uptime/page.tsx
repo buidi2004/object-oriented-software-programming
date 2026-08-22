@@ -272,7 +272,7 @@ export default function AdminUptimePage() {
 
             <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
               <div className="text-xs text-slate-500 font-bold uppercase mb-1">Độ Trễ Trung Bình</div>
-              <div className="text-2xl font-black text-blue-600">{systemStatus.avgResponseTime} ms</div>
+              <div className="text-2xl font-black text-[#1F1F1F]">{systemStatus.avgResponseTime} ms</div>
               <div className="text-[10px] text-slate-600 mt-1">Đo đạc từ 3 miền Bắc - Trung - Nam</div>
             </div>
 
@@ -334,7 +334,7 @@ export default function AdminUptimePage() {
                   <td className="px-6 py-4">
                     <span className={`font-mono font-bold ${
                       svc.responseTime < 50 ? 'text-emerald-600' :
-                      svc.responseTime < 200 ? 'text-blue-600' : 'text-amber-600'
+                      svc.responseTime < 200 ? 'text-[#1F1F1F]' : 'text-amber-600'
                     }`}>
                       {svc.responseTime} ms
                     </span>
@@ -359,7 +359,7 @@ export default function AdminUptimePage() {
                       </button>
                       <button
                         onClick={() => handleOpenEdit(svc)}
-                        className="p-1.5 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                        className="p-1.5 text-slate-600 hover:text-[#1F1F1F] hover:bg-blue-50 rounded-lg transition-colors"
                         title="Sửa endpoint"
                       >
                         <Edit2 className="w-3.5 h-3.5" />

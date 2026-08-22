@@ -190,7 +190,7 @@ export default function AdminAuditLogsPage() {
   const getActionBadgeClass = (action: string) => {
     const a = action.toUpperCase();
     if (a.includes('CREATE') || a.includes('ADD') || a.includes('SUCCESS')) return 'bg-emerald-50 text-emerald-700 border-emerald-200';
-    if (a.includes('UPDATE') || a.includes('EDIT')) return 'bg-blue-50 text-blue-700 border-blue-200';
+    if (a.includes('UPDATE') || a.includes('EDIT')) return 'bg-blue-50 text-[#1F1F1F] border-blue-200';
     if (a.includes('DELETE') || a.includes('LOCK') || a.includes('FAIL')) return 'bg-rose-50 text-rose-700 border-rose-200';
     return 'bg-purple-50 text-purple-700 border-purple-200';
   };
@@ -338,7 +338,7 @@ export default function AdminAuditLogsPage() {
                   <td className="px-6 py-4 text-right">
                     <button
                       onClick={() => setSelectedLog(log)}
-                      className="p-1.5 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                      className="p-1.5 text-slate-600 hover:text-[#1F1F1F] hover:bg-blue-50 rounded-lg transition-colors"
                       title="Xem chi tiết Payload"
                     >
                       <Eye className="w-4 h-4" />

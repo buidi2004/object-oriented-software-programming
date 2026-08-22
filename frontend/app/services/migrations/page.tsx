@@ -256,7 +256,7 @@ export default function MigrationsServicePage() {
                   <span>Proxmox / VMware KVM</span>
                 </div>
                 <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0f172a] border border-slate-200 text-xs font-mono text-slate-700">
-                  <SiDocker className="w-4 h-4 text-sky-400" />
+                  <SiDocker className="w-4 h-4 text-slate-200" />
                   <span>Docker Containers</span>
                 </div>
               </div>
@@ -375,7 +375,7 @@ export default function MigrationsServicePage() {
                     </div>
                     <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>Background Data Sync</span>
-                      <span className="text-sky-400">rsync + WAL Replication</span>
+                      <span className="text-slate-200">rsync + WAL Replication</span>
                     </div>
                     <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>Cutover Switch</span>
@@ -403,12 +403,12 @@ export default function MigrationsServicePage() {
                 <div className="p-4 rounded-2xl bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
                   <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
                     <span>STAGING PREVIEW ENVIRONMENT</span>
-                    <span className="text-sky-400">VERIFY FIRST</span>
+                    <span className="text-slate-200">VERIFY FIRST</span>
                   </div>
                   <div className="space-y-2 text-slate-700 text-[11px]">
                     <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>Staging Host IP</span>
-                      <span className="text-sky-400">Isolated Container</span>
+                      <span className="text-slate-200">Isolated Container</span>
                     </div>
                     <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>User Acceptance Test</span>
@@ -430,7 +430,7 @@ export default function MigrationsServicePage() {
 
               <div className="pt-4 border-t border-slate-200/80 text-xs font-mono text-slate-700 flex items-center justify-between">
                 <span>Approval Process:</span>
-                <strong className="text-sky-400">Khách Hàng Duyệt 100%</strong>
+                <strong className="text-slate-200">Khách Hàng Duyệt 100%</strong>
               </div>
             </div>
 
@@ -529,7 +529,7 @@ export default function MigrationsServicePage() {
                   <tr className="hover:bg-slate-900/40">
                     <td className="p-4 font-bold text-slate-600">Cấp Độ Kỹ Sư Phụ Trách</td>
                     {plans.map((p) => (
-                      <td key={p.id} className="p-4 border-l border-slate-200/60 text-sky-400 font-bold">{p.support}</td>
+                      <td key={p.id} className="p-4 border-l border-slate-200/60 text-slate-200 font-bold">{p.support}</td>
                     ))}
                   </tr>
                   <tr className="hover:bg-slate-900/40">

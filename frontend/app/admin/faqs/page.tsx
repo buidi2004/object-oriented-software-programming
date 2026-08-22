@@ -177,7 +177,7 @@ export default function AdminFAQsPage() {
                 className="w-full p-4 flex items-center justify-between text-left hover:bg-slate-50 transition-colors"
               >
                 <div className="flex items-center gap-3 flex-1">
-                  <HelpCircle className="w-5 h-5 text-blue-600 shrink-0" />
+                  <HelpCircle className="w-5 h-5 text-[#1F1F1F] shrink-0" />
                   <div className="flex-1 min-w-0">
                     <h3 className="font-semibold text-slate-900">{faq.question}</h3>
                     <div className="flex items-center gap-2 mt-1">
@@ -203,7 +203,7 @@ export default function AdminFAQsPage() {
                     <button onClick={() => toggleStatus(faq.id)} className="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 text-xs font-semibold hover:bg-slate-200 transition-colors">
                       {faq.isActive ? 'Ẩn câu hỏi' : 'Hiển thị câu hỏi'}
                     </button>
-                    <button disabled className="opacity-50 cursor-not-allowed px-3 py-1.5 rounded-lg bg-blue-100 text-blue-700 text-xs font-semibold flex items-center gap-1">
+                    <button disabled className="opacity-50 cursor-not-allowed px-3 py-1.5 rounded-lg bg-blue-100 text-[#1F1F1F] text-xs font-semibold flex items-center gap-1">
                       <Edit2 className="w-3 h-3" /> Sửa
                     </button>
                     <button disabled className="opacity-50 cursor-not-allowed px-3 py-1.5 rounded-lg bg-red-100 text-red-700 text-xs font-semibold flex items-center gap-1">

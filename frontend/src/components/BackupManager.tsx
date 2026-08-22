@@ -75,7 +75,7 @@ export default function BackupManager({ orderId }: { orderId: string }) {
         </div>
         <button
           onClick={fetchBackups}
-          className="p-2 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+          className="p-2 text-slate-500 hover:text-[#1F1F1F] hover:bg-blue-50 rounded-lg transition-colors"
           title="Làm mới"
         >
           <RefreshCw className={`w-5 h-5 ${isLoading ? 'animate-spin' : ''}`} />
@@ -126,7 +126,7 @@ export default function BackupManager({ orderId }: { orderId: string }) {
                   </div>
                 </div>
                 {backup.status === 'Completed' && (
-                  <button className="text-sm font-bold text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 px-4 py-2 rounded-lg transition-colors flex items-center gap-2">
+                  <button className="text-sm font-bold text-[#1F1F1F] hover:text-[#1F1F1F] bg-blue-50 hover:bg-blue-100 px-4 py-2 rounded-lg transition-colors flex items-center gap-2">
                     <PlayCircle className="w-4 h-4" /> Khôi phục
                   </button>
                 )}

@@ -61,7 +61,7 @@ export default function AdminRefundDetailPage() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <Loader className="w-8 h-8 text-blue-600 animate-spin" />
+        <Loader className="w-8 h-8 text-[#1F1F1F] animate-spin" />
       </div>
     );
   }
@@ -71,7 +71,7 @@ export default function AdminRefundDetailPage() {
       <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center">
         <AlertCircle className="w-12 h-12 text-red-400 mb-3" />
         <p className="text-slate-600">{error}</p>
-        <Link href="/admin/refund-requests" className="mt-4 text-blue-600 font-semibold">Quay lại</Link>
+        <Link href="/admin/refund-requests" className="mt-4 text-[#1F1F1F] font-semibold">Quay lại</Link>
       </div>
     );
   }

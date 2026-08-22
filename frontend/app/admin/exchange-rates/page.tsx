@@ -220,7 +220,7 @@ export default function AdminExchangeRatesPage() {
         {/* Quick Converter Tool */}
         {selectedRate && (
           <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-3xl p-6 sm:p-8 text-slate-900 mb-8 shadow-xl">
-            <div className="flex items-center gap-2 text-blue-200 text-xs font-bold uppercase tracking-wider mb-2">
+            <div className="flex items-center gap-2 text-slate-200 text-xs font-bold uppercase tracking-wider mb-2">
               <TrendingUp className="w-4 h-4" /> Công cụ quy đổi nhanh thời gian thực
             </div>
             <h2 className="text-2xl font-black mb-6">
@@ -229,7 +229,7 @@ export default function AdminExchangeRatesPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-center">
               <div>
-                <label className="block text-xs font-semibold text-blue-200 mb-1">Số tiền quy đổi ({selectedRate.fromCurrency})</label>
+                <label className="block text-xs font-semibold text-slate-200 mb-1">Số tiền quy đổi ({selectedRate.fromCurrency})</label>
                 <input
                   type="number"
                   value={convertAmount}
@@ -239,7 +239,7 @@ export default function AdminExchangeRatesPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-blue-200 mb-1">Cặp tỷ giá</label>
+                <label className="block text-xs font-semibold text-slate-200 mb-1">Cặp tỷ giá</label>
                 <select
                   value={selectedRateId}
                   onChange={(e) => setSelectedRateId(e.target.value)}
@@ -252,7 +252,7 @@ export default function AdminExchangeRatesPage() {
               </div>
 
               <div className="bg-white/10 border border-white/20 rounded-xl p-3 sm:mt-5 text-center">
-                <div className="text-xs text-blue-200 font-semibold">Kết quả quy đổi tương đương</div>
+                <div className="text-xs text-slate-200 font-semibold">Kết quả quy đổi tương đương</div>
                 <div className="text-xl font-black text-slate-900 mt-0.5">
                   {((parseFloat(convertAmount) || 0) * selectedRate.rate).toLocaleString('vi-VN')} {selectedRate.toCurrency}
                 </div>
@@ -277,7 +277,7 @@ export default function AdminExchangeRatesPage() {
                 <tr key={rateItem.id} className="hover:bg-slate-50 transition-colors">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
+                      <div className="w-10 h-10 rounded-xl bg-blue-50 text-[#1F1F1F] flex items-center justify-center font-bold">
                         <ArrowRightLeft className="w-5 h-5" />
                       </div>
                       <div>
@@ -299,7 +299,7 @@ export default function AdminExchangeRatesPage() {
                     <div className="flex items-center justify-end gap-1.5">
                       <button 
                         onClick={() => handleOpenEdit(rateItem)}
-                        className="p-2 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-colors"
+                        className="p-2 text-slate-500 hover:text-[#1F1F1F] hover:bg-blue-50 rounded-xl transition-colors"
                         title="Sửa tỷ giá"
                       >
                         <Edit2 className="w-4 h-4" />

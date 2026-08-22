@@ -25,7 +25,7 @@ export const CookieConsent = () => {
       <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
         <p className="text-sm text-slate-600 font-medium leading-relaxed flex-1">
           Chúng tôi sử dụng cookies nhằm nâng cao trải nghiệm của bạn. Bằng cách nhấn "Đồng ý", bạn chấp thuận việc sử dụng cookie theo{' '}
-          <Link href="/privacy" className="text-blue-600 hover:underline">
+          <Link href="/privacy" className="text-[#1F1F1F] hover:underline">
             Chính sách bảo mật
           </Link>.
         </p>

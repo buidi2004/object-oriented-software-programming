@@ -66,7 +66,7 @@ export default function CartPage() {
         
         {/* Breadcrumb & Title */}
         <div className="mb-6">
-          <Link href="/services" className="text-sm font-semibold text-blue-600 hover:text-blue-700 mb-2 inline-flex items-center gap-1">
+          <Link href="/services" className="text-sm font-semibold text-[#1F1F1F] hover:text-[#1F1F1F] mb-2 inline-flex items-center gap-1">
             ← Tiếp tục khám phá dịch vụ
           </Link>
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -89,7 +89,7 @@ export default function CartPage() {
         {!isLoggedIn && cartItems.length > 0 && (
           <div className="mb-8 p-5 bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 rounded-2xl border border-blue-800 text-slate-900 shadow-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div className="flex items-start gap-3.5">
-              <div className="p-2.5 bg-blue-600/30 border border-blue-500/40 rounded-xl text-cyan-300 shrink-0">
+              <div className="p-2.5 bg-blue-600/30 border border-blue-500/40 rounded-xl text-slate-200 shrink-0">
                 <LogIn className="w-6 h-6" />
               </div>
               <div>
@@ -99,7 +99,7 @@ export default function CartPage() {
                     Chưa đăng nhập
                   </span>
                 </h3>
-                <p className="text-xs text-blue-200 mt-1 max-w-xl leading-relaxed">
+                <p className="text-xs text-slate-200 mt-1 max-w-xl leading-relaxed">
                   Đăng nhập hoặc đăng ký để hệ thống tự động lưu giỏ hàng của bạn, áp dụng chiết khấu thành viên và kích hoạt dịch vụ Cloud VPS / Hosting tức thì sau khi thanh toán.
                 </p>
               </div>
@@ -123,7 +123,7 @@ export default function CartPage() {
 
         {cartItems.length === 0 ? (
           <div className="text-center py-20 bg-white rounded-3xl border border-slate-200 shadow-sm">
-            <div className="w-20 h-20 rounded-2xl bg-blue-50 text-blue-500 flex items-center justify-center mx-auto mb-4">
+            <div className="w-20 h-20 rounded-2xl bg-blue-50 text-[#1F1F1F] flex items-center justify-center mx-auto mb-4">
               <ShoppingCart className="w-10 h-10" />
             </div>
             <h2 className="text-2xl font-black text-slate-900 mb-2">Giỏ hàng của bạn đang trống</h2>
@@ -155,9 +155,9 @@ export default function CartPage() {
                         <div>
                           <div className="flex items-center gap-2 mb-1.5">
                             <span className={`text-[11px] font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-wider ${
-                              item.type === 'hosting' ? 'bg-indigo-100 text-indigo-700' :
-                              item.type === 'domain' ? 'bg-cyan-100 text-cyan-700' :
-                              'bg-blue-100 text-blue-700'
+                              item.type === 'hosting' ? 'bg-indigo-100 text-[#1F1F1F]' :
+                              item.type === 'domain' ? 'bg-cyan-100 text-[#1F1F1F]' :
+                              'bg-blue-100 text-[#1F1F1F]'
                             }`}>
                               {item.type === 'hosting' ? 'Web Hosting' : item.type === 'domain' ? 'Tên Miền' : 'Cloud VPS'}
                             </span>
@@ -177,7 +177,7 @@ export default function CartPage() {
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>
-                          <div className="text-lg font-black text-blue-600">
+                          <div className="text-lg font-black text-[#1F1F1F]">
                             {item.price.toLocaleString('vi-VN')} đ
                           </div>
                         </div>
@@ -225,7 +225,7 @@ export default function CartPage() {
                   
                   <div className="border-t border-slate-200 pt-4 flex items-baseline justify-between">
                     <span className="font-bold text-slate-900 text-base">Tổng thanh toán:</span>
-                    <span className="text-2xl font-black text-blue-600 tracking-tight">
+                    <span className="text-2xl font-black text-[#1F1F1F] tracking-tight">
                       {total.toLocaleString('vi-VN')} đ
                     </span>
                   </div>
@@ -254,7 +254,7 @@ export default function CartPage() {
                     <span>Bảo mật chuẩn mã hóa SSL 256-bit</span>
                   </div>
                   <div className="flex items-center gap-2 text-xs text-slate-500 font-medium">
-                    <Clock className="w-4 h-4 text-blue-500 shrink-0" />
+                    <Clock className="w-4 h-4 text-[#1F1F1F] shrink-0" />
                     <span>Kích hoạt Cloud tự động trong 30 giây</span>
                   </div>
                 </div>

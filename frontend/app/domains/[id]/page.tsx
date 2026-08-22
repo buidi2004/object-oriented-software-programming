@@ -125,7 +125,7 @@ export default function DomainDetailPage() {
 
   const getTypeColor = (type: string) => {
     switch (type) {
-      case 'A': return 'bg-blue-100 text-blue-700';
+      case 'A': return 'bg-blue-100 text-[#1F1F1F]';
       case 'AAAA': return 'bg-purple-100 text-purple-700';
       case 'CNAME': return 'bg-green-100 text-green-700';
       case 'MX': return 'bg-yellow-100 text-yellow-700';
@@ -149,7 +149,7 @@ export default function DomainDetailPage() {
         <div className="text-center">
           <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
           <h2 className="text-xl font-bold text-slate-900 mb-2">Domain not found</h2>
-          <Link href="/domains" className="text-blue-600 hover:underline">
+          <Link href="/domains" className="text-[#1F1F1F] hover:underline">
             ← Back to My Domains
           </Link>
         </div>
@@ -162,7 +162,7 @@ export default function DomainDetailPage() {
       {/* Header */}
       <header className="bg-white border-b border-slate-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-          <Link href="/domains" className="flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-blue-600">
+          <Link href="/domains" className="flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-[#1F1F1F]">
             <ArrowLeft className="w-4 h-4" />
             Quay lại danh sách tên miền
           </Link>
@@ -186,7 +186,7 @@ export default function DomainDetailPage() {
           <div className="relative z-10 flex items-start justify-between">
             <div className="flex items-center gap-4">
               <div className="w-16 h-16 rounded-2xl bg-white/10 backdrop-blur flex items-center justify-center">
-                <Globe className="w-8 h-8 text-cyan-400" />
+                <Globe className="w-8 h-8 text-[#1F1F1F]" />
               </div>
               <div>
                 <h1 className="text-3xl font-black">{domain.name}</h1>
@@ -226,10 +226,10 @@ export default function DomainDetailPage() {
             <div className="bg-white rounded-2xl p-6 border border-slate-200">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-                  <Settings className="w-5 h-5 text-blue-600" />
+                  <Settings className="w-5 h-5 text-[#1F1F1F]" />
                   Nameservers
                 </h2>
-                <button className="text-sm font-semibold text-blue-600 hover:text-blue-700">
+                <button className="text-sm font-semibold text-[#1F1F1F] hover:text-[#1F1F1F]">
                   Sửa
                 </button>
               </div>
@@ -239,7 +239,7 @@ export default function DomainDetailPage() {
                     <span className="font-mono text-sm text-slate-700">{ns}</span>
                     <button
                       onClick={() => copyToClipboard(ns)}
-                      className="p-2 text-slate-600 hover:text-blue-600 transition-colors"
+                      className="p-2 text-slate-600 hover:text-[#1F1F1F] transition-colors"
                       title="Sao chép"
                     >
                       <Copy className="w-4 h-4" />
@@ -253,7 +253,7 @@ export default function DomainDetailPage() {
             <div className="bg-white rounded-2xl p-6 border border-slate-200">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-                  <Settings className="w-5 h-5 text-blue-600" />
+                  <Settings className="w-5 h-5 text-[#1F1F1F]" />
                   Bản ghi DNS ({domain.dnsRecords.length})
                 </h2>
                 <button
@@ -368,7 +368,7 @@ export default function DomainDetailPage() {
                             <div className="flex items-center justify-end gap-2">
                               <button
                                 onClick={() => copyToClipboard(`${record.name} ${record.ttl} ${record.type} ${record.value}`)}
-                                className="p-1.5 text-slate-600 hover:text-blue-600 transition-colors"
+                                className="p-1.5 text-slate-600 hover:text-[#1F1F1F] transition-colors"
                                 title="Sao chép"
                               >
                                 <Copy className="w-4 h-4" />
@@ -450,7 +450,7 @@ export default function DomainDetailPage() {
                   <Link
                     key={idx}
                     href={link.href}
-                    className="block py-2 px-3 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-blue-600 transition-colors"
+                    className="block py-2 px-3 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-[#1F1F1F] transition-colors"
                   >
                     {link.label}
                   </Link>
@@ -461,12 +461,12 @@ export default function DomainDetailPage() {
             {/* Support CTA */}
             <div className="bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl p-6 text-slate-900">
               <h3 className="font-bold text-lg mb-2">Cần hỗ trợ?</h3>
-              <p className="text-sm text-blue-100 mb-4">
+              <p className="text-sm text-slate-200 mb-4">
                 Đội ngũ kỹ thuật sẵn sàng hỗ trợ bạn 24/7
               </p>
               <Link
                 href="/tickets"
-                className="block w-full py-3 rounded-xl bg-white text-blue-600 font-bold text-sm text-center hover:bg-blue-50 transition-colors"
+                className="block w-full py-3 rounded-xl bg-white text-[#1F1F1F] font-bold text-sm text-center hover:bg-blue-50 transition-colors"
               >
                 Tạo ticket hỗ trợ
               </Link>

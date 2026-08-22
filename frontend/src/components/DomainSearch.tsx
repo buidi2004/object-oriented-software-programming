@@ -78,7 +78,7 @@ export const DomainSearch: React.FC<DomainSearchProps> = ({ onAddToCart }) => {
         
         {/* Title */}
         <div className="text-center max-w-2xl mx-auto mb-8">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-blue-600 text-xs font-bold uppercase tracking-wider mb-2">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-[#1F1F1F] text-xs font-bold uppercase tracking-wider mb-2">
             <Globe className="w-3.5 h-3.5" />
             Kiểm tra Tên miền
           </div>
@@ -88,7 +88,7 @@ export const DomainSearch: React.FC<DomainSearchProps> = ({ onAddToCart }) => {
           <p className="text-slate-500 text-sm mt-1">
             Tra cứu khởi tạo ngay lập tức. Miễn phí quản lý DNS & Bảo vệ thông tin WHOIS Privacy.
           </p>
-          <a href="/services/domain" className="inline-flex items-center gap-1.5 mt-3 text-sm font-bold text-blue-600 hover:text-blue-700 transition-colors">
+          <a href="/services/domain" className="inline-flex items-center gap-1.5 mt-3 text-sm font-bold text-[#1F1F1F] hover:text-[#1F1F1F] transition-colors">
             Xem bảng giá đầy đủ tất cả đuôi tên miền →
           </a>
         </div>
@@ -190,7 +190,7 @@ export const DomainSearch: React.FC<DomainSearchProps> = ({ onAddToCart }) => {
                 )}
                 <div>
                   <div className="text-xl font-black text-slate-900">{item.extension}</div>
-                  <div className="text-sm font-extrabold text-blue-600 mt-2">
+                  <div className="text-sm font-extrabold text-[#1F1F1F] mt-2">
                     {item.pricePerYear.toLocaleString('vi-VN')} đ
                     <span className="text-[10px] font-semibold text-slate-600">/năm</span>
                   </div>
@@ -202,7 +202,7 @@ export const DomainSearch: React.FC<DomainSearchProps> = ({ onAddToCart }) => {
                 </div>
                 <button
                   onClick={() => handleRegisterDomain(`mybrand${item.extension}`, item.pricePerYear)}
-                  className="mt-4 w-full py-2 rounded-xl bg-slate-100 hover:bg-blue-50 text-slate-700 hover:text-blue-600 font-bold text-sm transition-colors cursor-pointer"
+                  className="mt-4 w-full py-2 rounded-xl bg-slate-100 hover:bg-blue-50 text-slate-700 hover:text-[#1F1F1F] font-bold text-sm transition-colors cursor-pointer"
                 >
                   Đăng ký
                 </button>

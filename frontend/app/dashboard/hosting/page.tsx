@@ -95,7 +95,7 @@ export default function HostingManagementPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
-            <Server className="w-6 h-6 text-cyan-400" /> Quản Lý Shared Web Hosting (cPanel / DirectAdmin)
+            <Server className="w-6 h-6 text-[#1F1F1F]" /> Quản Lý Shared Web Hosting (cPanel / DirectAdmin)
           </h1>
           <p className="text-sm text-slate-600">
             Quản lý các gói lưu trữ web tốc độ cao với ổ cứng NVMe Enterprise và chứng chỉ SSL miễn phí.
@@ -128,7 +128,7 @@ export default function HostingManagementPage() {
                   <CheckCircle2 className="w-3 h-3" /> {acc.status}
                 </span>
                 <h3 className="text-lg font-bold text-slate-900 flex items-center gap-1.5">
-                  <Globe className="w-4 h-4 text-cyan-400" /> {acc.domain}
+                  <Globe className="w-4 h-4 text-[#1F1F1F]" /> {acc.domain}
                 </h3>
                 <p className="text-xs text-slate-600">{acc.planName}</p>
               </div>
@@ -145,7 +145,7 @@ export default function HostingManagementPage() {
               </div>
               <div className="flex justify-between text-slate-700">
                 <span className="flex items-center gap-1.5 text-slate-600 text-xs"><ShieldCheck className="w-3.5 h-3.5 text-emerald-400" /> Địa chỉ IP Hosting:</span>
-                <span className="font-mono text-cyan-400 text-xs">{acc.ipAddress}</span>
+                <span className="font-mono text-[#1F1F1F] text-xs">{acc.ipAddress}</span>
               </div>
             </div>
 
@@ -160,7 +160,7 @@ export default function HostingManagementPage() {
               </a>
               <button 
                 onClick={() => alert(`Thông tin FTP & Database cho tên miền: ${acc.domain}\nServer: ${acc.ipAddress}\nPort: 21`)}
-                className="px-3 py-2 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors border border-cyan-500/20"
+                className="px-3 py-2 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 text-[#1F1F1F] text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors border border-cyan-500/20"
               >
                 <Key className="w-3.5 h-3.5" /> Thông tin FTP
               </button>
@@ -174,7 +174,7 @@ export default function HostingManagementPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
           <div className="w-full max-w-md p-6 rounded-3xl bg-white border border-slate-200 shadow-2xl space-y-5">
             <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
-              <FolderLock className="w-5 h-5 text-cyan-400" /> Khởi Tạo Web Hosting Mới
+              <FolderLock className="w-5 h-5 text-[#1F1F1F]" /> Khởi Tạo Web Hosting Mới
             </h2>
             <form onSubmit={handleCreate} className="space-y-4">
               <div>

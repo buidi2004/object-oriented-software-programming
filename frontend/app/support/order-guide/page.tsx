@@ -10,9 +10,9 @@ export default function OrderGuidePage() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <nav className="flex items-center gap-2 text-sm text-slate-500 mb-8">
-          <Link href="/" className="hover:text-blue-600">Trang chủ</Link>
+          <Link href="/" className="hover:text-[#1F1F1F]">Trang chủ</Link>
           <ChevronRight className="w-4 h-4" />
-          <Link href="/support" className="hover:text-blue-600">Trợ giúp</Link>
+          <Link href="/support" className="hover:text-[#1F1F1F]">Trợ giúp</Link>
           <ChevronRight className="w-4 h-4" />
           <span className="text-slate-900 font-medium">Hướng dẫn đăng ký dịch vụ</span>
         </nav>
@@ -20,14 +20,14 @@ export default function OrderGuidePage() {
         <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
           <div className="bg-gradient-to-r from-indigo-600 to-purple-700 p-8 text-slate-900">
             <h1 className="text-3xl font-black mb-2">Hướng Dẫn Đăng Ký & Khởi Tạo Dịch Vụ</h1>
-            <p className="text-indigo-100">Khởi tạo nhanh chóng, sẵn sàng sử dụng chỉ sau vài cú click chuột.</p>
+            <p className="text-slate-200">Khởi tạo nhanh chóng, sẵn sàng sử dụng chỉ sau vài cú click chuột.</p>
           </div>
           
           <div className="p-8 space-y-12">
             
             <section>
               <div className="flex items-center gap-3 mb-4 text-slate-900">
-                <div className="p-2 bg-indigo-100 rounded-lg text-indigo-600"><ShoppingCart className="w-6 h-6" /></div>
+                <div className="p-2 bg-indigo-100 rounded-lg text-[#1F1F1F]"><ShoppingCart className="w-6 h-6" /></div>
                 <h2 className="text-xl font-bold">1. Lựa chọn và Đặt hàng</h2>
               </div>
               <ul className="list-decimal list-inside text-sm text-slate-600 space-y-3 ml-2">

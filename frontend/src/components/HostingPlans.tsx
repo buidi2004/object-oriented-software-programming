@@ -40,7 +40,7 @@ export const HostingPlans: React.FC<HostingPlansProps> = ({ onAddToCart, onViewD
         
         {/* Header Title */}
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-indigo-50 text-indigo-600 text-sm font-bold uppercase tracking-wider mb-2">
+          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-indigo-50 text-[#1F1F1F] text-sm font-bold uppercase tracking-wider mb-2">
             <Globe className="w-3.5 h-3.5" />
             NVMe Web Hosting
           </div>
@@ -106,7 +106,7 @@ export const HostingPlans: React.FC<HostingPlansProps> = ({ onAddToCart, onViewD
                   {/* Price */}
                   <div className="mt-6 mb-6 pb-6 border-b border-slate-200/20">
                     <div className="flex items-baseline gap-1">
-                      <span className="text-3xl sm:text-4xl font-black tracking-tight text-blue-500">
+                      <span className="text-3xl sm:text-4xl font-black tracking-tight text-[#1F1F1F]">
                         {displayPrice.toLocaleString('vi-VN')} đ
                       </span>
                       <span className={`text-sm font-bold ${pkg.isPopular ? 'text-slate-700' : 'text-slate-500'}`}>
@@ -123,15 +123,15 @@ export const HostingPlans: React.FC<HostingPlansProps> = ({ onAddToCart, onViewD
                   {/* Core Specs */}
                   <div className="space-y-3 mb-6 text-base font-semibold">
                     <div className="flex items-center gap-2.5">
-                      <Zap className="w-4 h-4 text-cyan-400 shrink-0" />
+                      <Zap className="w-4 h-4 text-[#1F1F1F] shrink-0" />
                       <span>{pkg.specs.storage}</span>
                     </div>
                     <div className="flex items-center gap-2.5">
-                      <Globe className="w-4 h-4 text-blue-400 shrink-0" />
+                      <Globe className="w-4 h-4 text-slate-200 shrink-0" />
                       <span>{pkg.specs.domains}</span>
                     </div>
                     <div className="flex items-center gap-2.5">
-                      <Server className="w-4 h-4 text-indigo-400 shrink-0" />
+                      <Server className="w-4 h-4 text-slate-200 shrink-0" />
                       <span>{pkg.specs.ram} • {pkg.specs.cpu}</span>
                     </div>
                     <div className="flex items-center gap-2.5">
@@ -144,7 +144,7 @@ export const HostingPlans: React.FC<HostingPlansProps> = ({ onAddToCart, onViewD
                   <div className="space-y-3 border-t pt-6 border-slate-200/20 text-sm font-medium leading-relaxed">
                     {pkg.features.map((feat, idx) => (
                       <div key={idx} className="flex items-start gap-2">
-                        <CheckCircle2 className={`w-4 h-4 shrink-0 mt-0.5 ${pkg.isPopular ? 'text-cyan-400' : 'text-blue-600'}`} />
+                        <CheckCircle2 className={`w-4 h-4 shrink-0 mt-0.5 ${pkg.isPopular ? 'text-[#1F1F1F]' : 'text-[#1F1F1F]'}`} />
                         <span className={pkg.isPopular ? 'text-slate-300' : 'text-slate-600'}>{feat}</span>
                       </div>
                     ))}

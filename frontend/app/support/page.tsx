@@ -74,7 +74,7 @@ export default function SupportCenterPage() {
         
         {/* Header Hero */}
         <div className="text-center space-y-4">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-semibold uppercase tracking-wider">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-[#1F1F1F] text-xs font-semibold uppercase tracking-wider">
             <Headphones className="w-4 h-4" /> Trung Tâm Hỗ Trợ 24/7/365
           </div>
           <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-sky-300 to-indigo-400">
@@ -88,23 +88,23 @@ export default function SupportCenterPage() {
         {/* 3 Quick Channels */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="p-6 rounded-2xl bg-white/60 border border-slate-200 hover:border-cyan-500/40 transition-all shadow-xl group">
-            <div className="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 mb-4 group-hover:scale-110 transition-transform">
+            <div className="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-[#1F1F1F] mb-4 group-hover:scale-110 transition-transform">
               <MessageSquare className="w-6 h-6" />
             </div>
             <h3 className="text-lg font-bold text-slate-900 mb-2">Live Chat Trực Tuyến</h3>
             <p className="text-sm text-slate-600 mb-4">Trò chuyện ngay với kỹ thuật viên trực ca để giải quyết sự cố tức thì.</p>
-            <div className="flex items-center text-cyan-400 text-sm font-semibold gap-1">
+            <div className="flex items-center text-[#1F1F1F] text-sm font-semibold gap-1">
               Phản hồi: &lt; 2 phút <Zap className="w-4 h-4 text-amber-400" />
             </div>
           </div>
 
           <Link href="/knowledge-base" className="p-6 rounded-2xl bg-white/60 border border-slate-200 hover:border-indigo-500/40 transition-all shadow-xl group block">
-            <div className="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-center text-indigo-400 mb-4 group-hover:scale-110 transition-transform">
+            <div className="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-center text-slate-200 mb-4 group-hover:scale-110 transition-transform">
               <FileText className="w-6 h-6" />
             </div>
             <h3 className="text-lg font-bold text-slate-900 mb-2">Knowledge Base</h3>
             <p className="text-sm text-slate-600 mb-4">Hơn 500+ tài liệu hướng dẫn kỹ thuật, cấu hình VPS, Web Server và bảo mật.</p>
-            <div className="flex items-center text-indigo-400 text-sm font-semibold gap-1 group-hover:translate-x-1 transition-transform">
+            <div className="flex items-center text-slate-200 text-sm font-semibold gap-1 group-hover:translate-x-1 transition-transform">
               Xem tài liệu <ChevronRight className="w-4 h-4" />
             </div>
           </Link>
@@ -125,7 +125,7 @@ export default function SupportCenterPage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           <div className="lg:col-span-8 p-8 rounded-3xl bg-white/70 border border-slate-200 shadow-2xl">
             <h2 className="text-2xl font-bold text-slate-900 mb-2 flex items-center gap-2">
-              <ShieldCheck className="w-6 h-6 text-cyan-400" /> Gửi Yêu Cầu Hỗ Trợ Kỹ Thuật (Ticket)
+              <ShieldCheck className="w-6 h-6 text-[#1F1F1F]" /> Gửi Yêu Cầu Hỗ Trợ Kỹ Thuật (Ticket)
             </h2>
             <p className="text-slate-600 text-sm mb-6">Điền thông tin sự cố bên dưới để nhận hỗ trợ chuyên sâu từ kỹ sư hệ thống.</p>
 
@@ -209,10 +209,10 @@ export default function SupportCenterPage() {
               <h3 className="text-lg font-bold text-slate-900">Đường Dây Nóng Khẩn Cấp</h3>
               <div className="space-y-3 text-sm">
                 <div className="flex items-center gap-3 text-slate-700">
-                  <PhoneCall className="w-4 h-4 text-cyan-400" /> Hotline: <strong className="text-slate-900">1900 8888 99</strong>
+                  <PhoneCall className="w-4 h-4 text-[#1F1F1F]" /> Hotline: <strong className="text-slate-900">1900 8888 99</strong>
                 </div>
                 <div className="flex items-center gap-3 text-slate-700">
-                  <Mail className="w-4 h-4 text-cyan-400" /> Email: <strong className="text-slate-900">support@system.local</strong>
+                  <Mail className="w-4 h-4 text-[#1F1F1F]" /> Email: <strong className="text-slate-900">support@system.local</strong>
                 </div>
               </div>
             </div>

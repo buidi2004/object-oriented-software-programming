@@ -76,7 +76,7 @@ export default function DomainSearchPage() {
             </button>
             <h1 className="text-xl font-bold text-slate-900">Tìm Kiếm Tên Miền</h1>
           </div>
-          <Link href="/services/domain" className="text-sm font-semibold text-blue-600 hover:underline">
+          <Link href="/services/domain" className="text-sm font-semibold text-[#1F1F1F] hover:underline">
             Bảng giá tên miền
           </Link>
         </div>
@@ -84,7 +84,7 @@ export default function DomainSearchPage() {
 
       <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mt-12">
         <div className="text-center mb-10">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-100 text-blue-600 mb-6">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-100 text-[#1F1F1F] mb-6">
             <Globe className="w-8 h-8" />
           </div>
           <h1 className="text-4xl font-black text-slate-900 mb-4">Khởi Đầu Với Một Tên Miền Hoàn Hảo</h1>

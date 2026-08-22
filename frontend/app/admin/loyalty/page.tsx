@@ -174,7 +174,7 @@ export default function AdminLoyaltyPage() {
         {/* Navigation */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div>
-            <Link href="/admin" className="text-xs font-bold text-slate-500 hover:text-blue-600 flex items-center gap-1 mb-2">
+            <Link href="/admin" className="text-xs font-bold text-slate-500 hover:text-[#1F1F1F] flex items-center gap-1 mb-2">
               <ArrowLeft className="w-3.5 h-3.5" /> Quay lại Admin Panel
             </Link>
             <h1 className="text-2xl font-black text-slate-900 flex items-center gap-2.5">
@@ -326,7 +326,7 @@ export default function AdminLoyaltyPage() {
                       />
                     </div>
                     <div>
-                      <label className="block font-bold text-cyan-600 mb-1">Kim Cương (Diamond)</label>
+                      <label className="block font-bold text-[#1F1F1F] mb-1">Kim Cương (Diamond)</label>
                       <input
                         type="number"
                         value={rateConfig.diamondThreshold}
@@ -380,7 +380,7 @@ export default function AdminLoyaltyPage() {
                     </td>
                     <td className="px-6 py-4">
                       <span className={`px-2.5 py-1 rounded-full font-extrabold text-[10px] uppercase tracking-wider ${
-                        u.tier === 'Diamond' ? 'bg-cyan-100 text-cyan-800' :
+                        u.tier === 'Diamond' ? 'bg-cyan-100 text-[#1F1F1F]' :
                         u.tier === 'Platinum' ? 'bg-purple-100 text-purple-800' :
                         u.tier === 'Gold' ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-700'
                       }`}>

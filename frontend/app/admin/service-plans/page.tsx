@@ -43,15 +43,15 @@ interface Category {
 // Category Icon & Color Mapping
 const getCategoryIcon = (name: string, slug?: string) => {
   const n = (name + ' ' + (slug || '')).toLowerCase();
-  if (n.includes('vps')) return <Server className="w-4 h-4 text-blue-500" />;
+  if (n.includes('vps')) return <Server className="w-4 h-4 text-[#1F1F1F]" />;
   if (n.includes('dedicated')) return <Server className="w-4 h-4 text-purple-500" />;
   if (n.includes('database')) return <Database className="w-4 h-4 text-emerald-500" />;
   if (n.includes('game')) return <Gamepad2 className="w-4 h-4 text-rose-500" />;
   if (n.includes('app') || n.includes('1click')) return <Layers className="w-4 h-4 text-amber-500" />;
-  if (n.includes('static')) return <Globe className="w-4 h-4 text-cyan-500" />;
-  if (n.includes('storage') || n.includes('s3')) return <HardDrive className="w-4 h-4 text-indigo-500" />;
+  if (n.includes('static')) return <Globe className="w-4 h-4 text-[#1F1F1F]" />;
+  if (n.includes('storage') || n.includes('s3')) return <HardDrive className="w-4 h-4 text-[#1F1F1F]" />;
   if (n.includes('ssl')) return <Shield className="w-4 h-4 text-teal-500" />;
-  if (n.includes('miền') || n.includes('domain')) return <Globe className="w-4 h-4 text-blue-600" />;
+  if (n.includes('miền') || n.includes('domain')) return <Globe className="w-4 h-4 text-[#1F1F1F]" />;
   if (n.includes('bảo mật') || n.includes('security') || n.includes('waf')) return <Shield className="w-4 h-4 text-red-500" />;
   if (n.includes('chuyển') || n.includes('migration')) return <RefreshCw className="w-4 h-4 text-orange-500" />;
   return <Package className="w-4 h-4 text-slate-500" />;
@@ -403,7 +403,7 @@ function AdminServicePlansContent() {
                 <h1 className="text-xl md:text-2xl font-black text-slate-900 tracking-tight">
                   Quản lý Bảng Giá & Gói Dịch Vụ
                 </h1>
-                <span className="px-2.5 py-0.5 bg-indigo-50 text-indigo-700 border border-indigo-200 rounded-full text-xs font-bold">
+                <span className="px-2.5 py-0.5 bg-indigo-50 text-[#1F1F1F] border border-indigo-200 rounded-full text-xs font-bold">
                   {plans.length} Sản phẩm
                 </span>
               </div>
@@ -461,7 +461,7 @@ function AdminServicePlansContent() {
                   <span>{cat.name}</span>
                   {count > 0 && (
                     <span className={`px-1.5 py-0.2 rounded-full text-[10px] ${
-                      isSelected ? 'bg-indigo-700 text-indigo-100' : 'bg-slate-200 text-slate-600'
+                      isSelected ? 'bg-indigo-700 text-slate-200' : 'bg-slate-200 text-slate-600'
                     }`}>
                       {count}
                     </span>
@@ -543,7 +543,7 @@ function AdminServicePlansContent() {
                         </div>
                       </td>
                       <td className="p-4">
-                        <div className="font-bold text-slate-900 text-sm group-hover:text-indigo-600 transition-colors">
+                        <div className="font-bold text-slate-900 text-sm group-hover:text-[#1F1F1F] transition-colors">
                           {plan.servicePlanName}
                         </div>
                         <div className="text-[11px] text-slate-600 font-mono mt-0.5" title={plan.servicePlanId}>
@@ -551,7 +551,7 @@ function AdminServicePlansContent() {
                         </div>
                       </td>
                       <td className="p-4">
-                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-100">
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-indigo-50 text-[#1F1F1F] border border-indigo-100">
                           {getCategoryIcon(plan.categoryName)}
                           <span>{plan.categoryName || 'Chưa phân loại'}</span>
                         </span>
@@ -562,7 +562,7 @@ function AdminServicePlansContent() {
                         </div>
                         <button
                           onClick={() => openPricingModal(plan)}
-                          className="text-[11px] font-bold text-indigo-600 hover:text-indigo-800 underline mt-0.5 block"
+                          className="text-[11px] font-bold text-[#1F1F1F] hover:text-[#1F1F1F] underline mt-0.5 block"
                         >
                           Quản lý đa chu kỳ &gt;
                         </button>
@@ -619,7 +619,7 @@ function AdminServicePlansContent() {
                           </button>
                           <button
                             onClick={() => openEditModal(plan)}
-                            className="p-2 text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 rounded-lg transition-colors font-bold text-xs"
+                            className="p-2 text-[#1F1F1F] bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 rounded-lg transition-colors font-bold text-xs"
                             title="Sửa thông số gói"
                           >
                             <Edit2 className="w-3.5 h-3.5" />
@@ -656,7 +656,7 @@ function AdminServicePlansContent() {
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-slate-200 animate-in zoom-in-95">
             <div className="p-6 border-b border-slate-100 flex items-center justify-between sticky top-0 bg-white z-10">
               <div className="flex items-center gap-2">
-                <Package className="w-5 h-5 text-indigo-600" />
+                <Package className="w-5 h-5 text-[#1F1F1F]" />
                 <h2 className="text-lg font-black text-slate-900">
                   {editingPlan ? `Sửa thông tin: ${editingPlan.servicePlanName}` : 'Thêm Gói Sản Phẩm Mới'}
                 </h2>
@@ -702,7 +702,7 @@ function AdminServicePlansContent() {
               {/* Hardware Specs */}
               <div className="bg-slate-50 p-4 rounded-xl border border-slate-200/80 space-y-3">
                 <h3 className="text-xs font-bold text-slate-800 flex items-center gap-2 uppercase tracking-wider">
-                  <Cpu className="w-4 h-4 text-indigo-500" />
+                  <Cpu className="w-4 h-4 text-[#1F1F1F]" />
                   Thông số phần cứng / Cấu hình (Tùy chọn)
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -815,7 +815,7 @@ function AdminServicePlansContent() {
                       type="file"
                       accept="image/*"
                       onChange={handleFileChange}
-                      className="block w-full text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer"
+                      className="block w-full text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-indigo-50 file:text-[#1F1F1F] hover:file:bg-indigo-100 cursor-pointer"
                     />
                     <p className="text-[11px] text-slate-600 mt-1">PNG, JPG, WEBP tối đa 2MB</p>
                   </div>
@@ -870,7 +870,7 @@ function AdminServicePlansContent() {
               {/* Form Add / Edit Price */}
               <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-4">
                 <h3 className="font-bold text-slate-900 uppercase tracking-wider text-[11px] flex items-center gap-1.5">
-                  <Tag className="w-3.5 h-3.5 text-indigo-600" />
+                  <Tag className="w-3.5 h-3.5 text-[#1F1F1F]" />
                   {priceFormId ? 'Cập nhật mức giá đã chọn' : 'Thêm Mức Giá Chu Kỳ Mới'}
                 </h3>
                 <form onSubmit={handleSavePrice} className="grid grid-cols-1 sm:grid-cols-3 gap-3 items-end">
@@ -967,7 +967,7 @@ function AdminServicePlansContent() {
                             <div className="flex items-center justify-end gap-1.5">
                               <button
                                 onClick={() => handleEditPrice(p)}
-                                className="p-1.5 text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
+                                className="p-1.5 text-[#1F1F1F] hover:bg-indigo-50 rounded-lg transition-colors"
                                 title="Sửa giá này"
                               >
                                 <Edit2 className="w-3.5 h-3.5" />

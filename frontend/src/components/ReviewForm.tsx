@@ -51,7 +51,7 @@ export default function ReviewForm({ orderId }: ReviewFormProps) {
   return (
     <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm mt-6">
       <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2 mb-4">
-        <MessageSquare className="w-5 h-5 text-blue-600" />
+        <MessageSquare className="w-5 h-5 text-[#1F1F1F]" />
         Đánh giá dịch vụ
       </h3>
       <p className="text-sm text-slate-500 mb-6">Bạn cảm thấy dịch vụ này như thế nào? Xin hãy chia sẻ cảm nhận của bạn.</p>

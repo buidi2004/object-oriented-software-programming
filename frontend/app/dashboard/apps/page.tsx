@@ -96,11 +96,11 @@ export default function UserAppInstallationsPage() {
         {/* Top Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div>
-            <Link href="/dashboard" className="text-xs font-bold text-slate-500 hover:text-blue-600 flex items-center gap-1 mb-2">
+            <Link href="/dashboard" className="text-xs font-bold text-slate-500 hover:text-[#1F1F1F] flex items-center gap-1 mb-2">
               <ArrowLeft className="w-3.5 h-3.5" /> Quay lại Dashboard
             </Link>
             <h1 className="text-2xl sm:text-3xl font-black text-slate-900 flex items-center gap-3">
-              <div className="p-2.5 rounded-2xl bg-indigo-100 text-indigo-600">
+              <div className="p-2.5 rounded-2xl bg-indigo-100 text-[#1F1F1F]">
                 <Package className="w-7 h-7" />
               </div>
               Quản Lý 1-Click App Installer
@@ -113,7 +113,7 @@ export default function UserAppInstallationsPage() {
           <div className="flex items-center gap-3">
             <button
               onClick={fetchApps}
-              className="p-2.5 rounded-2xl bg-white border border-slate-200 text-slate-600 hover:text-indigo-600 hover:border-indigo-300 transition-all shadow-sm"
+              className="p-2.5 rounded-2xl bg-white border border-slate-200 text-slate-600 hover:text-[#1F1F1F] hover:border-indigo-300 transition-all shadow-sm"
               title="Làm mới"
             >
               <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
@@ -145,12 +145,12 @@ export default function UserAppInstallationsPage() {
 
           {isLoading && apps.length === 0 ? (
             <div className="p-12 text-center text-slate-600 text-sm flex items-center justify-center gap-2">
-              <RefreshCw className="w-5 h-5 animate-spin text-indigo-600" />
+              <RefreshCw className="w-5 h-5 animate-spin text-[#1F1F1F]" />
               Đang tải danh sách ứng dụng...
             </div>
           ) : apps.length === 0 ? (
             <div className="p-12 text-center">
-              <div className="w-16 h-16 rounded-3xl bg-indigo-50 text-indigo-500 flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 rounded-3xl bg-indigo-50 text-[#1F1F1F] flex items-center justify-center mx-auto mb-4">
                 <Package className="w-8 h-8" />
               </div>
               <h3 className="text-base font-bold text-slate-900 mb-1">Chưa Cài Đặt Ứng Dụng Nào</h3>
@@ -179,7 +179,7 @@ export default function UserAppInstallationsPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-white/60 backdrop-blur-sm animate-in fade-in">
           <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100">
             <h3 className="text-lg font-black text-slate-900 mb-2 flex items-center gap-2">
-              <Package className="w-5 h-5 text-indigo-600" /> Cài Đặt Ứng Dụng Tự Động (1-Click)
+              <Package className="w-5 h-5 text-[#1F1F1F]" /> Cài Đặt Ứng Dụng Tự Động (1-Click)
             </h3>
             <p className="text-xs text-slate-500 mb-6">
               Chọn ứng dụng mẫu được đóng gói an toàn và tối ưu tài nguyên.
@@ -257,20 +257,20 @@ function AppRowItem({ app, onRefresh }: { app: AppInstallationItem; onRefresh: (
     <div className="p-6 hover:bg-slate-50/60 transition-colors space-y-4">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-start sm:items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-indigo-100 text-indigo-600 flex items-center justify-center flex-shrink-0">
+          <div className="w-10 h-10 rounded-2xl bg-indigo-100 text-[#1F1F1F] flex items-center justify-center flex-shrink-0">
             <LayoutTemplate className="w-5 h-5" />
           </div>
           <div>
             <div className="flex items-center gap-2">
               <span className="font-black text-slate-900 text-sm">{displayName}</span>
-              <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-md bg-indigo-50 text-indigo-700">
+              <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-md bg-indigo-50 text-[#1F1F1F]">
                 Docker Container
               </span>
             </div>
             <p className="text-xs text-slate-500 font-mono mt-0.5">
               URL:{' '}
               {liveUrl !== '#' ? (
-                <a href={liveUrl} target="_blank" rel="noreferrer" className="text-indigo-600 hover:underline">
+                <a href={liveUrl} target="_blank" rel="noreferrer" className="text-[#1F1F1F] hover:underline">
                   {liveUrl}
                 </a>
               ) : (
@@ -287,7 +287,7 @@ function AppRowItem({ app, onRefresh }: { app: AppInstallationItem; onRefresh: (
               href={liveUrl}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-indigo-50 text-slate-700 hover:text-indigo-700 font-bold text-xs transition-colors"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-indigo-50 text-slate-700 hover:text-[#1F1F1F] font-bold text-xs transition-colors"
             >
               <ExternalLink className="w-3.5 h-3.5" />
               Mở App

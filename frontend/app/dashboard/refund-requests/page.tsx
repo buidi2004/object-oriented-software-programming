@@ -68,11 +68,11 @@ export default function RefundRequestsDashboard() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <Link href="/dashboard" className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-blue-600 mb-2 transition-colors">
+          <Link href="/dashboard" className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-[#1F1F1F] mb-2 transition-colors">
             <ArrowLeft className="w-4 h-4" /> Quay lại Dashboard
           </Link>
           <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 flex items-center gap-3">
-            <Receipt className="w-8 h-8 text-blue-600" />
+            <Receipt className="w-8 h-8 text-[#1F1F1F]" />
             Yêu cầu hoàn tiền
           </h1>
         </div>
@@ -87,7 +87,7 @@ export default function RefundRequestsDashboard() {
 
       {loading ? (
         <div className="flex justify-center py-12">
-          <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+          <Loader2 className="w-8 h-8 text-[#1F1F1F] animate-spin" />
         </div>
       ) : (
         <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">

@@ -190,7 +190,7 @@ export default function CdnServicePage() {
                       {plan.bandwidth}
                     </div>
                     <div className="p-3 rounded-xl bg-slate-50 text-slate-800 font-bold flex items-center gap-2">
-                      <Globe className="w-4 h-4 text-blue-500" />
+                      <Globe className="w-4 h-4 text-[#1F1F1F]" />
                       {plan.pops}
                     </div>
 

@@ -382,7 +382,7 @@ export default function AdminBannersPage() {
 
         {banners.length === 0 ? (
           <div className="text-center py-20 bg-white rounded-3xl border border-slate-200 shadow-sm max-w-xl mx-auto">
-            <div className="w-16 h-16 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mx-auto mb-4">
+            <div className="w-16 h-16 rounded-2xl bg-blue-50 text-[#1F1F1F] flex items-center justify-center mx-auto mb-4">
               <ImageIcon className="w-8 h-8" />
             </div>
             <h2 className="text-xl font-bold text-slate-900 mb-2">Chưa có banner nào</h2>
@@ -454,7 +454,7 @@ export default function AdminBannersPage() {
                 <div className="p-5 flex-1 flex flex-col justify-between">
                   <div>
                     <div className="flex items-center gap-2 text-xs text-slate-500 mb-2">
-                      <ExternalLink className="w-3.5 h-3.5 text-blue-600" />
+                      <ExternalLink className="w-3.5 h-3.5 text-[#1F1F1F]" />
                       <span className="font-mono truncate">{banner.linkUrl || 'Không có liên kết'}</span>
                     </div>
 
@@ -483,7 +483,7 @@ export default function AdminBannersPage() {
                     
                     <button
                       onClick={() => handleOpenEdit(banner)}
-                      className="p-2 rounded-xl text-slate-600 hover:text-blue-600 hover:bg-blue-50 transition-colors"
+                      className="p-2 rounded-xl text-slate-600 hover:text-[#1F1F1F] hover:bg-blue-50 transition-colors"
                       title="Chỉnh sửa banner"
                     >
                       <Edit2 className="w-4 h-4" />

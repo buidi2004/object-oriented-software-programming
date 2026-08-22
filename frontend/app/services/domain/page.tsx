@@ -84,7 +84,7 @@ export default function DomainPage() {
       {/* Hero with Search */}
       <section className="relative overflow-hidden bg-gradient-to-br from-cyan-950 via-teal-950 to-slate-900 text-slate-900 py-20 sm:py-28">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-          <nav className="flex items-center gap-2 text-sm text-cyan-300 mb-8">
+          <nav className="flex items-center gap-2 text-sm text-slate-200 mb-8">
             <Link href="/" className="hover:text-slate-900">Trang chủ</Link>
             <span>/</span>
             <Link href="/services" className="hover:text-slate-900">Dịch vụ</Link>
@@ -100,7 +100,7 @@ export default function DomainPage() {
               Tìm Kiếm & Đăng Ký
               <span className="bg-gradient-to-r from-cyan-400 to-emerald-400 bg-clip-text text-transparent"> Tên Miền</span>
             </h1>
-            <p className="text-lg text-cyan-200 max-w-2xl mx-auto mb-10">
+            <p className="text-lg text-slate-200 max-w-2xl mx-auto mb-10">
               Sở hữu tên miền hoàn hảo cho thương hiệu của bạn. Hỗ trợ .com, .vn, .net, .ai và hàng trăm đuôi khác.
             </p>
 
@@ -155,7 +155,7 @@ export default function DomainPage() {
                     {searchResult.available && (
                       <div className="text-right">
                         <p className="text-xl font-black text-emerald-400">{searchResult.price.toLocaleString('vi-VN')} đ/năm</p>
-                        <Link href="/" className="inline-flex items-center gap-1 text-sm font-bold text-slate-900 hover:text-cyan-300 mt-1">
+                        <Link href="/" className="inline-flex items-center gap-1 text-sm font-bold text-slate-900 hover:text-slate-200 mt-1">
                           <ShoppingCart className="w-4 h-4" /> Đăng ký ngay
                         </Link>
                       </div>
@@ -194,14 +194,14 @@ export default function DomainPage() {
                 d.isPopular ? 'border-cyan-400 bg-cyan-50/50 shadow-md' : 'border-slate-200 bg-white hover:border-cyan-300'
               }`}>
                 {d.isPopular && (
-                  <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-cyan-100 text-cyan-700 text-[10px] font-bold uppercase mb-2">
+                  <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-cyan-100 text-[#1F1F1F] text-[10px] font-bold uppercase mb-2">
                     <Star className="w-3 h-3" /> Phổ biến
                   </div>
                 )}
                 <div className="text-2xl font-black text-slate-900 mb-1">{d.ext}</div>
                 <p className="text-xs text-slate-500 mb-3">{d.desc}</p>
                 <div className="flex items-end gap-2 mb-4">
-                  <span className="text-xl font-black text-cyan-600">{d.price.toLocaleString('vi-VN')} đ</span>
+                  <span className="text-xl font-black text-[#1F1F1F]">{d.price.toLocaleString('vi-VN')} đ</span>
                   {d.originalPrice && (
                     <span className="text-sm text-slate-600 line-through">{d.originalPrice.toLocaleString('vi-VN')} đ</span>
                   )}
@@ -273,8 +273,8 @@ export default function DomainPage() {
       <section className="py-16 bg-gradient-to-r from-cyan-600 to-emerald-600 text-slate-900 text-center">
         <div className="max-w-3xl mx-auto px-4">
           <h2 className="text-3xl font-black mb-4">Sở Hữu Tên Miền Ngay Hôm Nay</h2>
-          <p className="text-cyan-100 mb-8">Giá chỉ từ 99.000đ/năm. Bao gồm DNS, WHOIS Privacy miễn phí.</p>
-          <a href="#top" className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl bg-white text-cyan-600 font-bold shadow-xl hover:shadow-2xl transition-all">
+          <p className="text-slate-200 mb-8">Giá chỉ từ 99.000đ/năm. Bao gồm DNS, WHOIS Privacy miễn phí.</p>
+          <a href="#top" className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl bg-white text-[#1F1F1F] font-bold shadow-xl hover:shadow-2xl transition-all">
             <Search className="w-5 h-5" />
             Tìm Tên Miền
           </a>

@@ -193,7 +193,7 @@ server {
           {/* Engineering Status Bar */}
           <div className="flex flex-wrap items-center justify-between gap-4 p-3.5 mb-10 rounded-2xl bg-[#0d1424] border border-slate-200 text-xs font-mono">
             <div className="flex items-center gap-3">
-              <span className="flex items-center gap-1.5 text-cyan-400 font-bold">
+              <span className="flex items-center gap-1.5 text-[#1F1F1F] font-bold">
                 <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
                 WEB ENGINE: ISOLATED NGINX CONTAINER
               </span>
@@ -204,7 +204,7 @@ server {
             </div>
 
             <div className="flex items-center gap-4 text-slate-600">
-              <span>COMPRESSION: <strong className="text-cyan-400 font-mono">Brotli 11</strong></span>
+              <span>COMPRESSION: <strong className="text-[#1F1F1F] font-mono">Brotli 11</strong></span>
               <span>CI/CD: <strong className="text-emerald-400 font-mono">Git Webhook Ready</strong></span>
             </div>
           </div>
@@ -213,8 +213,8 @@ server {
             
             {/* Left Headline */}
             <div className="lg:col-span-7 space-y-6">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-cyan-950/60 border border-cyan-800/60 text-cyan-300 text-xs font-mono">
-                <Globe className="w-3.5 h-3.5 text-cyan-400" />
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-cyan-950/60 border border-cyan-800/60 text-slate-200 text-xs font-mono">
+                <Globe className="w-3.5 h-3.5 text-[#1F1F1F]" />
                 ULTRA LOW-LATENCY STATIC &amp; SPA HOSTING
               </div>
 
@@ -237,7 +237,7 @@ server {
                   <span>Nginx Engine v1.26</span>
                 </div>
                 <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0f172a] border border-slate-200 text-xs font-mono text-slate-700">
-                  <SiReact className="w-4 h-4 text-sky-400" />
+                  <SiReact className="w-4 h-4 text-slate-200" />
                   <span>React / Vite SPA</span>
                 </div>
                 <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0f172a] border border-slate-200 text-xs font-mono text-slate-700">
@@ -279,13 +279,13 @@ server {
                     <span className="text-slate-600">Preset:</span>
                     <button
                       onClick={() => setSpaFramework('react')}
-                      className={`px-2.5 py-1 rounded-lg border ${spaFramework === 'react' ? 'bg-cyan-950 border-cyan-500 text-cyan-300' : 'bg-white border-slate-200 text-slate-400'}`}
+                      className={`px-2.5 py-1 rounded-lg border ${spaFramework === 'react' ? 'bg-cyan-950 border-cyan-500 text-slate-200' : 'bg-white border-slate-200 text-slate-400'}`}
                     >
                       React/Vite
                     </button>
                     <button
                       onClick={() => setSpaFramework('html')}
-                      className={`px-2.5 py-1 rounded-lg border ${spaFramework === 'html' ? 'bg-cyan-950 border-cyan-500 text-cyan-300' : 'bg-white border-slate-200 text-slate-400'}`}
+                      className={`px-2.5 py-1 rounded-lg border ${spaFramework === 'html' ? 'bg-cyan-950 border-cyan-500 text-slate-200' : 'bg-white border-slate-200 text-slate-400'}`}
                     >
                       HTML Static
                     </button>
@@ -293,13 +293,13 @@ server {
 
                   <button
                     onClick={() => setBrotliEnabled(!brotliEnabled)}
-                    className="text-[11px] text-slate-600 hover:text-cyan-400 underline"
+                    className="text-[11px] text-slate-600 hover:text-[#1F1F1F] underline"
                   >
                     {brotliEnabled ? 'Brotli ON' : 'Brotli OFF'}
                   </button>
                 </div>
 
-                <div className="p-3.5 rounded-xl bg-slate-100 border border-slate-200/90 text-cyan-300 font-mono text-[11px] max-h-48 overflow-y-auto leading-relaxed whitespace-pre">
+                <div className="p-3.5 rounded-xl bg-slate-100 border border-slate-200/90 text-slate-200 font-mono text-[11px] max-h-48 overflow-y-auto leading-relaxed whitespace-pre">
                   {nginxSnippet}
                 </div>
 
@@ -325,7 +325,7 @@ server {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-cyan-950 text-cyan-400 text-xs font-mono mb-3 border border-cyan-800">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-cyan-950 text-[#1F1F1F] text-xs font-mono mb-3 border border-cyan-800">
               <Zap className="w-3.5 h-3.5" />
               HIGH PERFORMANCE ARCHITECTURE
             </div>
@@ -350,7 +350,7 @@ server {
                   <div className="space-y-2 text-slate-700 text-[11px]">
                     <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>DNS Lookup</span>
-                      <span className="text-sky-400">1.2 ms</span>
+                      <span className="text-slate-200">1.2 ms</span>
                     </div>
                     <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>TLS 1.3 Handshake</span>
@@ -358,7 +358,7 @@ server {
                     </div>
                     <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>Nginx Direct File Serve</span>
-                      <span className="text-cyan-400 font-bold">4.5 ms</span>
+                      <span className="text-[#1F1F1F] font-bold">4.5 ms</span>
                     </div>
                   </div>
                 </div>
@@ -382,7 +382,7 @@ server {
                 <div className="p-4 rounded-2xl bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
                   <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
                     <span>SPA TRY_FILES FALLBACK</span>
-                    <span className="text-sky-400">NO 404 ERRORS</span>
+                    <span className="text-slate-200">NO 404 ERRORS</span>
                   </div>
                   <div className="space-y-2 text-slate-700 text-[11px]">
                     <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
@@ -395,7 +395,7 @@ server {
                     </div>
                     <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>React Router Handles</span>
-                      <span className="text-cyan-400 font-bold">Client Route Render</span>
+                      <span className="text-[#1F1F1F] font-bold">Client Route Render</span>
                     </div>
                   </div>
                 </div>
@@ -409,7 +409,7 @@ server {
 
               <div className="pt-4 border-t border-slate-200/80 text-xs font-mono text-slate-700 flex items-center justify-between">
                 <span>Routing Support:</span>
-                <strong className="text-sky-400">React, Vue, Angular, Svelte</strong>
+                <strong className="text-slate-200">React, Vue, Angular, Svelte</strong>
               </div>
             </div>
 
@@ -424,7 +424,7 @@ server {
                   <div className="space-y-2 text-slate-700 text-[11px]">
                     <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>git push origin main</span>
-                      <span className="text-sky-400">GitHub / GitLab</span>
+                      <span className="text-slate-200">GitHub / GitLab</span>
                     </div>
                     <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>Webhook Dispatch</span>
@@ -461,7 +461,7 @@ server {
           
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
             <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-cyan-950 text-cyan-400 text-xs font-mono mb-3 border border-cyan-800">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-cyan-950 text-[#1F1F1F] text-xs font-mono mb-3 border border-cyan-800">
                 <Sliders className="w-3.5 h-3.5" />
                 STATIC SITE SPEC SHEET
               </div>
@@ -514,7 +514,7 @@ server {
                         <th key={p.id} className="p-5 text-slate-900 border-l border-slate-200/80 w-1/3">
                           <div className="text-sm font-extrabold text-slate-900">{p.name}</div>
                           <div className="text-[11px] text-slate-600 font-sans font-normal">{p.tier}</div>
-                          <div className="text-lg font-black text-cyan-400 mt-2">
+                          <div className="text-lg font-black text-[#1F1F1F] mt-2">
                             {displayPrice === 0 ? 'Miễn Phí' : `${displayPrice.toLocaleString('vi-VN')} đ/tháng`}
                           </div>
                         </th>
@@ -532,7 +532,7 @@ server {
                   <tr className="hover:bg-slate-900/40">
                     <td className="p-4 font-bold text-slate-600">Băng Thông Hàng Tháng</td>
                     {plans.map((p) => (
-                      <td key={p.id} className="p-4 border-l border-slate-200/60 text-cyan-400 font-bold">{p.bandwidth}</td>
+                      <td key={p.id} className="p-4 border-l border-slate-200/60 text-[#1F1F1F] font-bold">{p.bandwidth}</td>
                     ))}
                   </tr>
                   <tr className="hover:bg-slate-900/40">
@@ -601,11 +601,11 @@ server {
               >
                 <button
                   onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
-                  className="w-full p-5 text-left font-bold text-sm text-slate-900 flex items-center justify-between gap-4 hover:text-cyan-400 transition-colors"
+                  className="w-full p-5 text-left font-bold text-sm text-slate-900 flex items-center justify-between gap-4 hover:text-[#1F1F1F] transition-colors"
                 >
                   <span>{faq.q}</span>
                   {openFaq === idx ? (
-                    <ChevronUp className="w-5 h-5 text-cyan-400 shrink-0" />
+                    <ChevronUp className="w-5 h-5 text-[#1F1F1F] shrink-0" />
                   ) : (
                     <ChevronDown className="w-5 h-5 text-slate-500 shrink-0" />
                   )}
@@ -625,7 +625,7 @@ server {
       <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="rounded-3xl bg-gradient-to-r from-[#0d182e] via-[#091122] to-[#0d182e] p-8 sm:p-12 border border-cyan-600/30 text-center relative overflow-hidden shadow-2xl">
           <div className="relative z-10 max-w-3xl mx-auto space-y-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-cyan-950 border border-cyan-800 text-cyan-400 text-xs font-mono">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-cyan-950 border border-cyan-800 text-[#1F1F1F] text-xs font-mono">
               <Zap className="w-3.5 h-3.5" />
               DEPLOY IN 60 SECONDS
             </div>

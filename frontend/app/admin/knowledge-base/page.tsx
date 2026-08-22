@@ -232,7 +232,7 @@ export default function AdminKnowledgeBasePage() {
                       <div className="flex items-center justify-end gap-2">
                         <button 
                           onClick={() => handleOpenEditModal(article)}
-                          className="p-2 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                          className="p-2 text-slate-600 hover:text-[#1F1F1F] hover:bg-blue-50 rounded-lg transition-colors"
                           title="Chỉnh sửa"
                         >
                           <Edit2 className="w-4 h-4" />
@@ -343,7 +343,7 @@ export default function AdminKnowledgeBasePage() {
                   id="isPublished"
                   checked={isPublished}
                   onChange={(e) => setIsPublished(e.target.checked)}
-                  className="rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                  className="rounded border-slate-300 text-[#1F1F1F] focus:ring-blue-500"
                 />
                 <label htmlFor="isPublished" className="text-sm font-medium text-slate-700 cursor-pointer">
                   Xuất bản công khai ngay cho khách hàng xem

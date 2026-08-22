@@ -71,7 +71,7 @@ export default function AdminAffiliateApplicationsPage() {
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
-            <Users className="w-8 h-8 text-indigo-600" />
+            <Users className="w-8 h-8 text-[#1F1F1F]" />
             Xét duyệt Đối tác (Affiliates)
           </h1>
           <p className="text-gray-500 mt-2">Quản lý và xét duyệt các yêu cầu đăng ký tham gia chương trình Affiliate.</p>
@@ -109,7 +109,7 @@ export default function AdminAffiliateApplicationsPage() {
                     <div className="text-xs text-gray-600 font-normal mt-1">User ID: {app.userId.substring(0, 8)}...</div>
                   </td>
                   <td className="px-6 py-4">
-                    <span className="font-bold text-indigo-600">{app.commissionRate}%</span>
+                    <span className="font-bold text-[#1F1F1F]">{app.commissionRate}%</span>
                   </td>
                   <td className="px-6 py-4">
                     {getStatusBadge(app.status)}

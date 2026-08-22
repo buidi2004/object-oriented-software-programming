@@ -162,7 +162,7 @@ export default function AdminTicketsPage() {
     if (p === 'urgent' || p === '4') return 'bg-rose-100 text-rose-700 border border-rose-200';
     if (p === 'high' || p === '3') return 'bg-red-100 text-red-700 border border-red-200';
     if (p === 'medium' || p === 'normal' || p === '2') return 'bg-amber-100 text-amber-700 border border-amber-200';
-    return 'bg-blue-100 text-blue-700 border border-blue-200';
+    return 'bg-blue-100 text-[#1F1F1F] border border-blue-200';
   };
 
   const getStatusLabel = (status: string | number) => {
@@ -268,7 +268,7 @@ export default function AdminTicketsPage() {
               <tbody className="divide-y divide-slate-100">
                 {filteredTickets.map((ticket) => (
                   <tr key={ticket.id} className="hover:bg-slate-50 transition-colors">
-                    <td className="py-3 px-4 font-mono text-xs text-blue-600 font-bold">#{ticket.id.slice(0, 8)}</td>
+                    <td className="py-3 px-4 font-mono text-xs text-[#1F1F1F] font-bold">#{ticket.id.slice(0, 8)}</td>
                     <td className="py-3 px-4">
                       <p className="font-semibold text-slate-900 line-clamp-1">{ticket.subject}</p>
                       <p className="text-xs text-slate-500 mt-0.5">{ticket.messageCount || 1} tin nhắn</p>
@@ -314,7 +314,7 @@ export default function AdminTicketsPage() {
                       >
                         <Mail className="w-4 h-4" />
                       </button>
-                      <Link href={`/tickets/${ticket.id}`} className="inline-flex p-2 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
+                      <Link href={`/tickets/${ticket.id}`} className="inline-flex p-2 text-slate-600 hover:text-[#1F1F1F] hover:bg-blue-50 rounded-lg transition-colors">
                         <ChevronRight className="w-4 h-4" />
                       </Link>
                     </td>
@@ -339,7 +339,7 @@ export default function AdminTicketsPage() {
           <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl overflow-hidden flex flex-col">
             <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
               <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-                <Mail className="w-5 h-5 text-blue-600" />
+                <Mail className="w-5 h-5 text-[#1F1F1F]" />
                 Gửi Email cho khách hàng
               </h2>
               <button 

@@ -70,7 +70,7 @@ function VNPaySandboxContent() {
               </div>
               <div className="flex justify-between items-center pt-2 border-t border-slate-200">
                 <span className="text-slate-600 text-sm">Số tiền</span>
-                <span className="text-xl font-black text-blue-600">
+                <span className="text-xl font-black text-[#1F1F1F]">
                   {Number(amount).toLocaleString('vi-VN')} đ
                 </span>
               </div>
@@ -128,7 +128,7 @@ function VNPaySandboxContent() {
 
 export default function VNPaySandbox() {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-slate-50"><Loader2 className="w-8 h-8 animate-spin text-blue-600" /></div>}>
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-slate-50"><Loader2 className="w-8 h-8 animate-spin text-[#1F1F1F]" /></div>}>
       <VNPaySandboxContent />
     </Suspense>
   );

@@ -29,7 +29,7 @@ const CATEGORY_META: Record<string, {
     icon: Server,
     color: 'from-blue-600 to-cyan-500',
     bgLight: 'bg-blue-50',
-    textColor: 'text-blue-600',
+    textColor: 'text-[#1F1F1F]',
     borderColor: 'border-blue-200',
     features: ['NVMe SSD Enterprise', 'Root Access đầy đủ', 'Anti-DDoS 500Gbps', 'Snapshot & Backup tự động'],
   },
@@ -41,7 +41,7 @@ const CATEGORY_META: Record<string, {
     icon: LayoutTemplate,
     color: 'from-indigo-600 to-purple-500',
     bgLight: 'bg-indigo-50',
-    textColor: 'text-indigo-600',
+    textColor: 'text-[#1F1F1F]',
     borderColor: 'border-indigo-200',
     features: ['LiteSpeed + LSCache', 'cPanel quản trị', 'Imunify360 AI Shield', 'SSL miễn phí'],
   },
@@ -53,7 +53,7 @@ const CATEGORY_META: Record<string, {
     icon: Compass,
     color: 'from-cyan-500 to-emerald-500',
     bgLight: 'bg-cyan-50',
-    textColor: 'text-cyan-600',
+    textColor: 'text-[#1F1F1F]',
     borderColor: 'border-cyan-200',
     features: ['DNS Management miễn phí', 'WHOIS Privacy Protection', 'Chuyển tên miền dễ dàng', 'Auto-renew thông minh'],
   },
@@ -125,7 +125,7 @@ const CATEGORY_META: Record<string, {
     icon: HardDrive,
     color: 'from-blue-600 to-indigo-600',
     bgLight: 'bg-blue-50',
-    textColor: 'text-blue-600',
+    textColor: 'text-[#1F1F1F]',
     borderColor: 'border-blue-200',
     features: ['100% S3 Compatible API', 'Độ bền 11 số 9 (99.999999999%)', 'Miễn phí Egress Bandwidth', 'Pre-signed URL HMAC-SHA256'],
   },
@@ -149,7 +149,7 @@ const CATEGORY_META: Record<string, {
     icon: Boxes,
     color: 'from-sky-600 to-blue-600',
     bgLight: 'bg-sky-50',
-    textColor: 'text-sky-600',
+    textColor: 'text-[#1F1F1F]',
     borderColor: 'border-sky-200',
     features: ['100+ Ứng dụng phổ biến', 'Tự động cấu hình Nginx & SSL', 'Toàn quyền Root SSH 100%', 'Môi trường Container cô lập'],
   },
@@ -339,7 +339,7 @@ export default function ServicesPage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <div className="flex items-center justify-center gap-3 mb-4">
-            <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-blue-50 text-blue-600 text-xs font-bold uppercase tracking-wider">
+            <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-blue-50 text-[#1F1F1F] text-xs font-bold uppercase tracking-wider">
               <Zap className="w-3.5 h-3.5" />
               Dịch Vụ Cloud
             </div>
@@ -403,7 +403,7 @@ export default function ServicesPage() {
               { label: 'Hỗ trợ kỹ thuật', value: '24/7/365' },
             ].map((stat, i) => (
               <div key={i} className="bg-white rounded-2xl p-6 border border-slate-200">
-                <div className="text-3xl font-black text-blue-600 mb-1">{stat.value}</div>
+                <div className="text-3xl font-black text-[#1F1F1F] mb-1">{stat.value}</div>
                 <div className="text-sm text-slate-500 font-semibold">{stat.label}</div>
               </div>
             ))}

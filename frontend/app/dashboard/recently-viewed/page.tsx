@@ -16,7 +16,7 @@ interface RecentlyViewed {
 }
 
 const colorMap: Record<string, string> = {
-  blue: 'text-blue-600 bg-blue-100',
+  blue: 'text-[#1F1F1F] bg-blue-100',
   emerald: 'text-emerald-600 bg-emerald-100',
   purple: 'text-purple-600 bg-purple-100',
   amber: 'text-amber-600 bg-amber-100',
@@ -106,7 +106,7 @@ export default function RecentlyViewedPage() {
               </div>
 
               <div className="flex-1 min-w-0">
-                <Link href={item.url} className="font-semibold text-slate-900 hover:text-blue-600 transition-colors">
+                <Link href={item.url} className="font-semibold text-slate-900 hover:text-[#1F1F1F] transition-colors">
                   {item.title}
                 </Link>
                 <p className="text-sm text-slate-500 mt-1">{item.description}</p>

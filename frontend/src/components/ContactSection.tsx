@@ -86,7 +86,7 @@ export const ContactSection: React.FC = () => {
         {/* FAQ Accordion Subsection */}
         <div>
           <div className="text-center max-w-2xl mx-auto mb-10">
-            <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-blue-100 text-blue-700 text-xs font-bold uppercase tracking-wider mb-2">
+            <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-blue-100 text-[#1F1F1F] text-xs font-bold uppercase tracking-wider mb-2">
               <HelpCircle className="w-3.5 h-3.5" />
               Hỏi Đáp Dịch Vụ
             </div>
@@ -103,10 +103,10 @@ export const ContactSection: React.FC = () => {
               >
                 <button
                   onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
-                  className="w-full p-5 text-left flex justify-between items-center gap-4 font-bold text-slate-900 text-base hover:text-blue-600 transition-colors cursor-pointer"
+                  className="w-full p-5 text-left flex justify-between items-center gap-4 font-bold text-slate-900 text-base hover:text-[#1F1F1F] transition-colors cursor-pointer"
                 >
                   <span>{faq.question}</span>
-                  <ChevronDown className={`w-5 h-5 shrink-0 text-slate-600 transition-transform ${openFaq === idx ? 'rotate-180 text-blue-600' : ''}`} />
+                  <ChevronDown className={`w-5 h-5 shrink-0 text-slate-600 transition-transform ${openFaq === idx ? 'rotate-180 text-[#1F1F1F]' : ''}`} />
                 </button>
 
                 {openFaq === idx && (
@@ -125,7 +125,7 @@ export const ContactSection: React.FC = () => {
           {/* Left Info */}
           <div className="lg:col-span-5 space-y-6">
             <div>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-50 text-cyan-700 text-xs font-bold uppercase tracking-wider mb-3">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-50 text-[#1F1F1F] text-xs font-bold uppercase tracking-wider mb-3">
                 <MessageSquare className="w-3.5 h-3.5" />
                 Hỗ Trợ 24/7/365
               </div>
@@ -139,7 +139,7 @@ export const ContactSection: React.FC = () => {
 
             <div className="space-y-4 pt-2">
               <div className="flex items-start gap-4">
-                <div className="p-3 rounded-2xl bg-blue-50 text-blue-600">
+                <div className="p-3 rounded-2xl bg-blue-50 text-[#1F1F1F]">
                   <MapPin className="w-5 h-5" />
                 </div>
                 <div>
@@ -151,7 +151,7 @@ export const ContactSection: React.FC = () => {
               </div>
 
               <div className="flex items-start gap-4">
-                <div className="p-3 rounded-2xl bg-indigo-50 text-indigo-600">
+                <div className="p-3 rounded-2xl bg-indigo-50 text-[#1F1F1F]">
                   <Phone className="w-5 h-5" />
                 </div>
                 <div>
@@ -163,7 +163,7 @@ export const ContactSection: React.FC = () => {
               </div>
 
               <div className="flex items-start gap-4">
-                <div className="p-3 rounded-2xl bg-cyan-50 text-cyan-600">
+                <div className="p-3 rounded-2xl bg-cyan-50 text-[#1F1F1F]">
                   <Mail className="w-5 h-5" />
                 </div>
                 <div>

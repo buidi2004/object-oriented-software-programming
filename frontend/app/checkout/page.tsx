@@ -137,7 +137,7 @@ export default function CheckoutPage() {
           
           <div className="bg-slate-50 rounded-xl p-4 mb-6">
             <p className="text-sm text-slate-600 mb-1">Tổng thanh toán</p>
-            <p className="text-3xl font-black text-blue-600">{finalAmount.toLocaleString('vi-VN')} đ</p>
+            <p className="text-3xl font-black text-[#1F1F1F]">{finalAmount.toLocaleString('vi-VN')} đ</p>
           </div>
 
           <a
@@ -149,7 +149,7 @@ export default function CheckoutPage() {
             Thanh Toán Ngay
           </a>
           
-          <Link href="/dashboard/orders" className="text-sm text-slate-500 hover:text-blue-600">
+          <Link href="/dashboard/orders" className="text-sm text-slate-500 hover:text-[#1F1F1F]">
             Xem đơn hàng của tôi →
           </Link>
         </div>
@@ -161,7 +161,7 @@ export default function CheckoutPage() {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center py-12 px-4">
         <div className="max-w-md w-full bg-white rounded-3xl p-8 shadow-xl border border-slate-100 text-center">
-          <div className="w-16 h-16 rounded-full bg-blue-50 flex items-center justify-center mx-auto mb-4 text-blue-600">
+          <div className="w-16 h-16 rounded-full bg-blue-50 flex items-center justify-center mx-auto mb-4 text-[#1F1F1F]">
             <ShoppingCart className="w-8 h-8" />
           </div>
           <h1 className="text-2xl font-black text-slate-900 mb-2">Giỏ Hàng Trống</h1>
@@ -205,7 +205,7 @@ export default function CheckoutPage() {
                       <p className="font-bold text-sm sm:text-base text-slate-900 leading-snug">{item.title}</p>
                       <p className="text-xs text-slate-500">{item.type === 'vps' ? 'Cloud VPS' : item.type === 'hosting' ? 'Web Hosting' : 'Tên miền'}</p>
                     </div>
-                    <span className="font-extrabold text-sm sm:text-base text-blue-600 sm:text-slate-900 shrink-0">{item.price.toLocaleString('vi-VN')} đ</span>
+                    <span className="font-extrabold text-sm sm:text-base text-[#1F1F1F] sm:text-slate-900 shrink-0">{item.price.toLocaleString('vi-VN')} đ</span>
                   </div>
                 ))}
               </div>
@@ -230,15 +230,15 @@ export default function CheckoutPage() {
                       value={method.id}
                       checked={selectedMethod === method.id}
                       onChange={(e) => setSelectedMethod(e.target.value)}
-                      className="w-4 h-4 text-blue-600 focus:ring-blue-500"
+                      className="w-4 h-4 text-[#1F1F1F] focus:ring-blue-500"
                     />
-                    <method.icon className={`w-6 h-6 ${selectedMethod === method.id ? 'text-blue-600' : 'text-slate-400'}`} />
+                    <method.icon className={`w-6 h-6 ${selectedMethod === method.id ? 'text-[#1F1F1F]' : 'text-slate-400'}`} />
                     <div className="flex-1">
                       <p className="font-bold text-slate-900">{method.name}</p>
                       <p className="text-sm text-slate-500">{method.description}</p>
                     </div>
                     {selectedMethod === method.id && (
-                      <CheckCircle className="w-5 h-5 text-blue-600" />
+                      <CheckCircle className="w-5 h-5 text-[#1F1F1F]" />
                     )}
                   </label>
                 ))}
@@ -262,7 +262,7 @@ export default function CheckoutPage() {
                 </div>
                 <div className="border-t border-slate-200 pt-3 flex justify-between">
                   <span className="font-bold text-slate-900">Tổng cộng</span>
-                  <span className="text-2xl font-black text-blue-600">
+                  <span className="text-2xl font-black text-[#1F1F1F]">
                     {finalAmount.toLocaleString('vi-VN')} đ
                   </span>
                 </div>

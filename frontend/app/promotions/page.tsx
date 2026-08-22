@@ -27,7 +27,7 @@ export default function PromotionsPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+        <Loader2 className="w-8 h-8 text-[#1F1F1F] animate-spin" />
       </div>
     );
   }
@@ -38,12 +38,12 @@ export default function PromotionsPage() {
         
         {/* Header */}
         <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-100 text-blue-700 font-semibold text-sm mb-6">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-100 text-[#1F1F1F] font-semibold text-sm mb-6">
             <Tag className="w-4 h-4" />
             Chương Trình Khuyến Mãi
           </div>
           <h1 className="text-4xl md:text-5xl font-black text-slate-900 mb-6 tracking-tight">
-            Ưu Đãi Đặc Biệt Từ <span className="text-blue-600">CloudHost VN</span>
+            Ưu Đãi Đặc Biệt Từ <span className="text-[#1F1F1F]">CloudHost VN</span>
           </h1>
           <p className="text-lg text-slate-600 max-w-2xl mx-auto">
             Tổng hợp các chương trình giảm giá và ưu đãi mới nhất dành cho khách hàng đăng ký dịch vụ Cloud VPS, Hosting và Tên miền.
@@ -71,7 +71,7 @@ export default function PromotionsPage() {
                   {new Date(promo.startDate).toLocaleDateString('vi-VN')} - {new Date(promo.endDate).toLocaleDateString('vi-VN')}
                 </div>
                 
-                <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-blue-600 transition-colors line-clamp-2">
+                <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-[#1F1F1F] transition-colors line-clamp-2">
                   Ưu đãi gói dịch vụ
                 </h3>
                 
@@ -81,7 +81,7 @@ export default function PromotionsPage() {
 
                 <Link 
                   href="/services" 
-                  className="inline-flex items-center gap-2 font-bold text-blue-600 hover:text-blue-700 transition-colors"
+                  className="inline-flex items-center gap-2 font-bold text-[#1F1F1F] hover:text-[#1F1F1F] transition-colors"
                 >
                   Đăng ký ngay <ChevronRight className="w-4 h-4" />
                 </Link>

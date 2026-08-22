@@ -273,7 +273,7 @@ export default function SslCertificatesPage() {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-slate-500">Issued By:</span>
-                    <span className="text-sky-400">Sectigo RSA Domain Validation Secure Server CA</span>
+                    <span className="text-slate-200">Sectigo RSA Domain Validation Secure Server CA</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-slate-500">Key Exchange:</span>
@@ -294,7 +294,7 @@ export default function SslCertificatesPage() {
 
                   <div className="p-3 rounded-xl bg-[#0e1627] border border-slate-200">
                     <div className="text-[10px] text-slate-500 uppercase">Browser Trust</div>
-                    <div className="text-base font-extrabold text-sky-400 mt-0.5">100% Verified</div>
+                    <div className="text-base font-extrabold text-slate-200 mt-0.5">100% Verified</div>
                     <div className="text-[10px] text-slate-500">Chrome, Safari, iOS</div>
                   </div>
                 </div>
@@ -354,7 +354,7 @@ export default function SslCertificatesPage() {
                     </div>
                     <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>0-RTT Reconnection</span>
-                      <span className="text-sky-400 font-bold">&lt; 5ms Tức thì</span>
+                      <span className="text-slate-200 font-bold">&lt; 5ms Tức thì</span>
                     </div>
                   </div>
                 </div>
@@ -378,7 +378,7 @@ export default function SslCertificatesPage() {
                 <div className="p-4 rounded-2xl bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
                   <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
                     <span>FINANCIAL WARRANTY</span>
-                    <span className="text-sky-400">$1,750,000 USD</span>
+                    <span className="text-slate-200">$1,750,000 USD</span>
                   </div>
                   <div className="space-y-2 text-slate-700 text-[11px]">
                     <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
@@ -405,7 +405,7 @@ export default function SslCertificatesPage() {
 
               <div className="pt-4 border-t border-slate-200/80 text-xs font-mono text-slate-700 flex items-center justify-between">
                 <span>Underwritten By:</span>
-                <strong className="text-sky-400">Sectigo &amp; DigiCert Global</strong>
+                <strong className="text-slate-200">Sectigo &amp; DigiCert Global</strong>
               </div>
             </div>
 
@@ -534,7 +534,7 @@ export default function SslCertificatesPage() {
                   <tr className="hover:bg-slate-900/40">
                     <td className="p-4 font-bold text-slate-600">Mức Bảo Hiểm Sự Cố</td>
                     {plans.map((p) => (
-                      <td key={p.id} className="p-4 border-l border-slate-200/60 text-sky-400 font-bold">{p.warranty}</td>
+                      <td key={p.id} className="p-4 border-l border-slate-200/60 text-slate-200 font-bold">{p.warranty}</td>
                     ))}
                   </tr>
                   <tr className="hover:bg-slate-900/40">

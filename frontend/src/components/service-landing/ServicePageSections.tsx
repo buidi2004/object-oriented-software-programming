@@ -17,27 +17,27 @@ const THEMES: Record<ServicePageVariant, {
   iconBg: string;
 }> = {
   vps: {
-    accentText: 'text-blue-600',
+    accentText: 'text-[#1F1F1F]',
     gradient: 'from-cyan-500 to-blue-600',
-    badge: 'bg-blue-100 text-blue-700',
+    badge: 'bg-blue-100 text-[#1F1F1F]',
     highlightBg: 'bg-blue-50/50',
-    highlightText: 'text-blue-700',
+    highlightText: 'text-[#1F1F1F]',
     iconBg: 'bg-blue-50',
   },
   hosting: {
-    accentText: 'text-indigo-600',
+    accentText: 'text-[#1F1F1F]',
     gradient: 'from-purple-500 to-indigo-600',
-    badge: 'bg-indigo-100 text-indigo-700',
+    badge: 'bg-indigo-100 text-[#1F1F1F]',
     highlightBg: 'bg-indigo-50/50',
-    highlightText: 'text-indigo-700',
+    highlightText: 'text-[#1F1F1F]',
     iconBg: 'bg-indigo-50',
   },
   domain: {
-    accentText: 'text-cyan-600',
+    accentText: 'text-[#1F1F1F]',
     gradient: 'from-cyan-500 to-emerald-500',
-    badge: 'bg-cyan-100 text-cyan-700',
+    badge: 'bg-cyan-100 text-[#1F1F1F]',
     highlightBg: 'bg-cyan-50/50',
-    highlightText: 'text-cyan-700',
+    highlightText: 'text-[#1F1F1F]',
     iconBg: 'bg-cyan-50',
   },
 };
@@ -374,8 +374,8 @@ export default function ServicePageSections({ content, group = 'all', skipFaqs =
                 className="group p-5 rounded-2xl border border-slate-200 hover:border-slate-300 hover:shadow-md transition-all"
               >
                 <div className="flex items-center justify-between mb-2">
-                  <h3 className="font-bold text-slate-900 group-hover:text-blue-600 transition-colors">{svc.label}</h3>
-                  <ArrowRight className="w-4 h-4 text-slate-600 group-hover:text-blue-600 transition-colors" />
+                  <h3 className="font-bold text-slate-900 group-hover:text-[#1F1F1F] transition-colors">{svc.label}</h3>
+                  <ArrowRight className="w-4 h-4 text-slate-600 group-hover:text-[#1F1F1F] transition-colors" />
                 </div>
                 <p className="text-xs text-slate-600">{svc.description}</p>
               </Link>
