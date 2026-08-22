@@ -32,7 +32,6 @@ public class GetActiveSessionsQueryHandlerTests
     {
         // Arrange
         // var request = new GetActiveSessionsQuery();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

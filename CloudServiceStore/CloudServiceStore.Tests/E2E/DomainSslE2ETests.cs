@@ -116,7 +116,7 @@ public class DomainSslE2ETests : BaseE2ETest
         var reqCertRes = await Client.PostAsJsonAsync("/api/ssl-certificates/certificates", requestCertCmd);
         reqCertRes.EnsureSuccessStatusCode();
         var reqCertJson = await reqCertRes.Content.ReadFromJsonAsync<dynamic>();
-        string certId = reqCertJson?.GetProperty("certificateId").GetString();
+        string? certId = reqCertJson?.GetProperty("certificateId").GetString();
 
         // 13. Customer gets all certificates
         var getCertsRes = await Client.GetAsync("/api/ssl-certificates/certificates");

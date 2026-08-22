@@ -32,7 +32,6 @@ public class SearchAllQueryHandlerTests
     {
         // Arrange
         // var request = new SearchAllQuery();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

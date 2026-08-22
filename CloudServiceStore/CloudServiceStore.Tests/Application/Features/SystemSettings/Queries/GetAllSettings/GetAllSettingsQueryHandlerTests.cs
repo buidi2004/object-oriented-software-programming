@@ -30,7 +30,6 @@ public class GetAllSettingsQueryHandlerTests
     {
         // Arrange
         // var request = new GetAllSettingsQuery();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

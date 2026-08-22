@@ -37,7 +37,6 @@ public class UpdateSeoCommandHandlerTests
     {
         // Arrange
         // var request = new UpdateSeoCommand();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

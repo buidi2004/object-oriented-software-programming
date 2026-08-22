@@ -32,7 +32,6 @@ public class ChangeUserRoleCommandHandlerTests
     {
         // Arrange
         // var request = new ChangeUserRoleCommand();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

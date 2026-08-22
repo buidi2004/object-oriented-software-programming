@@ -32,7 +32,6 @@ public class GetAuditLogsQueryHandlerTests
     {
         // Arrange
         // var request = new GetAuditLogsQuery();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

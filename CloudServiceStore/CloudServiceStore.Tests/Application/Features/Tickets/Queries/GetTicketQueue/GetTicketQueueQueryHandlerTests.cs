@@ -34,7 +34,6 @@ public class GetTicketQueueQueryHandlerTests
     {
         // Arrange
         // var request = new GetTicketQueueQuery();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

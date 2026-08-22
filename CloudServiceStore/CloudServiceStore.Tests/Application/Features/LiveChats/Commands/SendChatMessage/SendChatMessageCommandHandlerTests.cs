@@ -38,7 +38,6 @@ public class SendChatMessageCommandHandlerTests
     {
         // Arrange
         // var request = new SendChatMessageCommand();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

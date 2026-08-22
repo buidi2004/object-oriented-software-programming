@@ -94,36 +94,6 @@ public class SupportLoyaltyE2ETests : BaseE2ETest
         public Guid Id { get; set; }
     }
 
-    private async Task<string> RegisterAndLoginAdminAsync(string email, string password)
-    {
-        // Register standard user
-        var registerCommand = new CloudServiceStore.Application.Features.Auth.Commands.Register.RegisterCommand("Admin User", email, password, "0987654321");
-        await Client.PostAsJsonAsync("/api/auth/register", registerCommand);
-
-        // Promote to admin in DB
-        using (var scope = Factory.Services.CreateScope())
-        {
-            var db = scope.ServiceProvider.GetRequiredService<CloudServiceStore.Infrastructure.Persistence.AppDbContext>();
-            var user = await Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.FirstAsync(db.AppUsers, u => u.Email == email);
-            var adminRole = await Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.FirstAsync(db.Roles, r => r.Name == "Admin");
-            user.RoleId = adminRole.Id;
-            await db.SaveChangesAsync();
-        }
-
-        // Login as admin
-        var loginCommand = new CloudServiceStore.Application.Features.Auth.Commands.Login.LoginCommand(email, password, "127.0.0.1", "E2E Test", "Test Device");
-        var loginResponse = await Client.PostAsJsonAsync("/api/auth/login", loginCommand);
-        loginResponse.EnsureSuccessStatusCode();
-
-        var authResult = await loginResponse.Content.ReadFromJsonAsync<AuthResultDto>();
-        return authResult!.AccessToken;
-    }
-
-    private class AuthResultDto
-    {
-        public string AccessToken { get; set; } = string.Empty;
-    }
-
     private async Task<AppUser> GetUserByEmailAsync(string email)
     {
         using var scope = Factory.Services.CreateScope();

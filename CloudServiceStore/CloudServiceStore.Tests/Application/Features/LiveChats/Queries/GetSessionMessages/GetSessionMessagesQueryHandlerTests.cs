@@ -34,7 +34,6 @@ public class GetSessionMessagesQueryHandlerTests
     {
         // Arrange
         // var request = new GetSessionMessagesQuery();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

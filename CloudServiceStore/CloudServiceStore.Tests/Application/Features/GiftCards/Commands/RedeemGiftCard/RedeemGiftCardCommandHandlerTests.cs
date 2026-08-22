@@ -32,7 +32,6 @@ public class RedeemGiftCardCommandHandlerTests
     {
         // Arrange
         // var request = new RedeemGiftCardCommand();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

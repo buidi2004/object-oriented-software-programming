@@ -30,7 +30,6 @@ public class CreateRoleCommandHandlerTests
     {
         // Arrange
         // var request = new CreateRoleCommand();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

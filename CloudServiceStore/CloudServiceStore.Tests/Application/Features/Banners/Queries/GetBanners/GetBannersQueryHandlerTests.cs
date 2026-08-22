@@ -30,7 +30,6 @@ public class GetBannersQueryHandlerTests
     {
         // Arrange
         // var request = new GetBannersQuery();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

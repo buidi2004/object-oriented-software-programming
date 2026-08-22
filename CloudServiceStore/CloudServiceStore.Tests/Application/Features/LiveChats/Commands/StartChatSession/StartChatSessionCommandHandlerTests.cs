@@ -34,7 +34,6 @@ public class StartChatSessionCommandHandlerTests
     {
         // Arrange
         // var request = new StartChatSessionCommand();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

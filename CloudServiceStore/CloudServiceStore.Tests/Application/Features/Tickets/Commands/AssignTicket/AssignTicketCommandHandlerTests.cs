@@ -32,7 +32,6 @@ public class AssignTicketCommandHandlerTests
     {
         // Arrange
         // var request = new AssignTicketCommand();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

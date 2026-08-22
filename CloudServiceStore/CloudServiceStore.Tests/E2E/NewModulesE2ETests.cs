@@ -263,7 +263,7 @@ public class NewModulesE2ETests : BaseE2ETest
                 var response = await Client.GetAsync(endpoint);
                 return (endpoint, response.IsSuccessStatusCode);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return (endpoint, false);
             }

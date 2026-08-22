@@ -34,7 +34,6 @@ public class GetReviewsByServicePlanQueryHandlerTests
     {
         // Arrange
         // var request = new GetReviewsByServicePlanQuery();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

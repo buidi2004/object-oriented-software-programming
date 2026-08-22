@@ -32,7 +32,6 @@ public class UpdateSettingCommandHandlerTests
     {
         // Arrange
         // var request = new UpdateSettingCommand();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

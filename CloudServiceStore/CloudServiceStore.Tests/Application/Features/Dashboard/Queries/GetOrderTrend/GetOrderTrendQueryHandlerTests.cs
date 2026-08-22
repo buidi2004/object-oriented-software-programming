@@ -30,7 +30,6 @@ public class GetOrderTrendQueryHandlerTests
     {
         // Arrange
         // var request = new GetOrderTrendQuery();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

@@ -23,8 +23,7 @@ public class E2EWebApplicationFactory : WebApplicationFactory<Program>, IAsyncLi
 
     public E2EWebApplicationFactory()
     {
-        _dbContainer = new MsSqlBuilder()
-            .WithImage("mcr.microsoft.com/mssql/server:2022-latest")
+        _dbContainer = new MsSqlBuilder("mcr.microsoft.com/mssql/server:2022-latest")
             .WithPassword("Password123!")
             .Build();
     }

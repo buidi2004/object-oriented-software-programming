@@ -36,7 +36,6 @@ public class GetMyCartQueryHandlerTests
     {
         // Arrange
         // var request = new GetMyCartQuery();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

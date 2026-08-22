@@ -36,7 +36,6 @@ public class AddCommentCommandHandlerTests
     {
         // Arrange
         // var request = new AddCommentCommand();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

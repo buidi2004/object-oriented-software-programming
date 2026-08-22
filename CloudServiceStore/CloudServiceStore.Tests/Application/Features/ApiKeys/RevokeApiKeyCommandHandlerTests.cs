@@ -23,7 +23,7 @@ public class RevokeApiKeyCommandHandlerTests
     public async Task Handle_KeyNotFound_ThrowsNotFoundException()
     {
         _currentUserMock.Setup(c => c.UserId).Returns(Guid.NewGuid());
-        _apiKeyRepoMock.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync((ApiKey)null);
+        _apiKeyRepoMock.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync((ApiKey?)null);
         
         await Assert.ThrowsAsync<NotFoundException>(() => CreateHandler().Handle(new RevokeApiKeyCommand(Guid.NewGuid()), CancellationToken.None));
     }

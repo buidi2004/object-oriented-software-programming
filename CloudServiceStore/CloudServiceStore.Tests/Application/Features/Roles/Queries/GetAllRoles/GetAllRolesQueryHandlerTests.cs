@@ -30,7 +30,6 @@ public class GetAllRolesQueryHandlerTests
     {
         // Arrange
         // var request = new GetAllRolesQuery();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

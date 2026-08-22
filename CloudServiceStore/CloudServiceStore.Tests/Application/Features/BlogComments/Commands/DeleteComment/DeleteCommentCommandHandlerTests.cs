@@ -34,7 +34,6 @@ public class DeleteCommentCommandHandlerTests
     {
         // Arrange
         // var request = new DeleteCommentCommand();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

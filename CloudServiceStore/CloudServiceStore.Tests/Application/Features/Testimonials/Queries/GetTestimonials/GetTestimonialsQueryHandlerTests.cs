@@ -30,7 +30,6 @@ public class GetTestimonialsQueryHandlerTests
     {
         // Arrange
         // var request = new GetTestimonialsQuery();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

@@ -32,7 +32,6 @@ public class GetMyPaymentMethodsQueryHandlerTests
     {
         // Arrange
         // var request = new GetMyPaymentMethodsQuery();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

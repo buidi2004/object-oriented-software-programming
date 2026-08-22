@@ -34,7 +34,6 @@ public class DeletePaymentMethodCommandHandlerTests
     {
         // Arrange
         // var request = new DeletePaymentMethodCommand();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

@@ -34,7 +34,6 @@ public class RemoveFromWishlistCommandHandlerTests
     {
         // Arrange
         // var request = new RemoveFromWishlistCommand();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

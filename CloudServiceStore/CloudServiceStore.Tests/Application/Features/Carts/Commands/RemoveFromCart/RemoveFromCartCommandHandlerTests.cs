@@ -34,7 +34,6 @@ public class RemoveFromCartCommandHandlerTests
     {
         // Arrange
         // var request = new RemoveFromCartCommand();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

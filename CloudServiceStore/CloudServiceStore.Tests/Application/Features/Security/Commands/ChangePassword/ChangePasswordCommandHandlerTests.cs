@@ -36,7 +36,6 @@ public class ChangePasswordCommandHandlerTests
     {
         // Arrange
         // var request = new ChangePasswordCommand();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

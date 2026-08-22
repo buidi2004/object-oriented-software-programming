@@ -34,7 +34,6 @@ public class CreateAffiliateApplicationCommandHandlerTests
     {
         // Arrange
         // var request = new CreateAffiliateApplicationCommand();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

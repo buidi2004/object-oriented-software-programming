@@ -34,7 +34,6 @@ public class UpdateProfileCommandHandlerTests
     {
         // Arrange
         // var request = new UpdateProfileCommand();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

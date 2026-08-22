@@ -34,7 +34,6 @@ public class RevokeSessionCommandHandlerTests
     {
         // Arrange
         // var request = new RevokeSessionCommand();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

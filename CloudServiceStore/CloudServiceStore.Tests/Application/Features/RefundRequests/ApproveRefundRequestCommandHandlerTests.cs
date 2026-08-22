@@ -26,7 +26,7 @@ public class ApproveRefundRequestCommandHandlerTests
     [Fact]
     public async Task Handle_RefundNotFound_ThrowsNotFoundException()
     {
-        _refundRepoMock.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>(), It.IsAny<System.Linq.Expressions.Expression<Func<RefundRequest, object>>[]>())).ReturnsAsync((RefundRequest)null);
+        _refundRepoMock.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>(), It.IsAny<System.Linq.Expressions.Expression<Func<RefundRequest, object>>[]>())).ReturnsAsync((RefundRequest?)null);
         await Assert.ThrowsAsync<NotFoundException>(() => CreateHandler().Handle(new ApproveRefundRequestCommand(Guid.NewGuid()), CancellationToken.None));
     }
 

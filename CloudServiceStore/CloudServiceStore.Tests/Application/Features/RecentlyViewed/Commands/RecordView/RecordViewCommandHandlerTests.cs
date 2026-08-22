@@ -34,7 +34,6 @@ public class RecordViewCommandHandlerTests
     {
         // Arrange
         // var request = new RecordViewCommand();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

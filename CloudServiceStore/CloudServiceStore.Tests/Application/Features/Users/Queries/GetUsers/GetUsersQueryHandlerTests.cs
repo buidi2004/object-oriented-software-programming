@@ -30,7 +30,6 @@ public class GetUsersQueryHandlerTests
     {
         // Arrange
         // var request = new GetUsersQuery();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

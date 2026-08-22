@@ -32,7 +32,6 @@ public class UpdateMigrationStatusCommandHandlerTests
     {
         // Arrange
         // var request = new UpdateMigrationStatusCommand();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

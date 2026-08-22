@@ -37,8 +37,8 @@ namespace CloudServiceStore.Tests.Application.Features.GroupC
             var orderId = Guid.NewGuid();
 
             var order = new OrderRequest(userId, new List<OrderItem>(), null, 0m, 100m, false);
-            typeof(OrderRequest).GetProperty("Id").SetValue(order, orderId);
-            typeof(OrderRequest).GetProperty("Status").SetValue(order, OrderStatus.Paid);
+            typeof(OrderRequest).GetProperty("Id")!.SetValue(order, orderId);
+            typeof(OrderRequest).GetProperty("Status")!.SetValue(order, OrderStatus.Paid);
 
             repo.Setup(x => x.GetByIdAsync(orderId, It.IsAny<CancellationToken>())).ReturnsAsync(order);
             userSvc.Setup(x => x.UserId).Returns(userId);

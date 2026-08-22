@@ -26,7 +26,7 @@ public class GetOrderUptimeQueryHandlerTests
     {
         _currentUserMock.Setup(c => c.UserId).Returns(Guid.NewGuid());
         _orderRepoMock.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync((OrderRequest)null);
+            .ReturnsAsync((OrderRequest?)null);
 
         await Assert.ThrowsAsync<NotFoundException>(() => CreateHandler().Handle(new GetOrderUptimeQuery(Guid.NewGuid()), CancellationToken.None));
     }
