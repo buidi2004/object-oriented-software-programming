@@ -332,75 +332,7 @@ function VietQRSandboxContent() {
 
           {/* Right: Transfer Information & 1-Click Copy */}
           <div className="lg:col-span-7 space-y-4">
-            {/* Account Configuration Panel */}
-            <div className={`rounded-2xl p-4 text-xs space-y-2 border-2 ${
-              isFakeAccount 
-                ? 'bg-red-50 border-red-300 text-red-900' 
-                : 'bg-emerald-50 border-emerald-300 text-emerald-900'
-            }`}>
-              <div className="flex items-center justify-between">
-                <span className={`font-bold flex items-center gap-1.5 ${isFakeAccount ? 'text-red-700' : 'text-emerald-700'}`}>
-                  {isFakeAccount ? (
-                    <><AlertCircle className="w-4 h-4 text-red-500" /> ⚠️ BẮT BUỘC: Nhập STK Ngân Hàng Thật Của Bạn</>
-                  ) : (
-                    <><CheckCircle className="w-4 h-4 text-emerald-500" /> ✅ Đã cấu hình STK thật — Quét QR bên trái!</>
-                  )}
-                </span>
-                <button
-                  onClick={() => setShowConfig(!showConfig)}
-                  className={`px-2.5 py-1 rounded-lg text-white font-bold text-[11px] transition-colors ${
-                    isFakeAccount ? 'bg-red-600 hover:bg-red-700' : 'bg-emerald-600 hover:bg-emerald-700'
-                  }`}
-                >
-                  {showConfig ? 'Thu gọn' : '⚙️ Chỉnh STK'}
-                </button>
-              </div>
 
-              {showConfig && (
-                <div className="pt-2 border-t border-current/20 space-y-3 mt-2">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    <div>
-                      <label className="block text-[11px] font-semibold text-slate-700 mb-1">🏦 Chọn Ngân Hàng</label>
-                      <select 
-                        value={selectedBank}
-                        onChange={(e) => setSelectedBank(e.target.value)}
-                        className="w-full px-2.5 py-1.5 rounded-lg border border-blue-300 bg-white text-slate-900 text-xs font-semibold focus:outline-none focus:border-blue-600"
-                      >
-                        {VIETNAMESE_BANKS.map((b) => (
-                          <option key={b.code} value={b.code}>
-                            {b.name} ({b.code})
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-[11px] font-semibold text-slate-700 mb-1">💳 Số Tài Khoản Nhận (THẬT)</label>
-                      <input 
-                        type="text"
-                        value={customAccNumber}
-                        onChange={(e) => setCustomAccNumber(e.target.value.replace(/\s/g, ''))}
-                        placeholder="VD: 0347894561 (STK thật của bạn)"
-                        className={`w-full px-2.5 py-1.5 rounded-lg border bg-white text-slate-900 text-xs font-mono font-bold focus:outline-none ${
-                          isFakeAccount ? 'border-red-400 focus:border-red-600' : 'border-emerald-400 focus:border-emerald-600'
-                        }`}
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-[11px] font-semibold text-slate-700 mb-1">👤 Tên Chủ Tài Khoản (In Hoa Không Dấu)</label>
-                    <input 
-                      type="text"
-                      value={customAccName}
-                      onChange={(e) => setCustomAccName(e.target.value.toUpperCase())}
-                      placeholder="VD: BUI DI hoặc NGUYEN VAN A"
-                      className="w-full px-2.5 py-1.5 rounded-lg border border-blue-300 bg-white text-slate-900 text-xs font-bold focus:outline-none focus:border-blue-600"
-                    />
-                  </div>
-                </div>
-              )}
-            </div>
 
             <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-3">
               <h3 className="text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">
