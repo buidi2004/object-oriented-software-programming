@@ -644,12 +644,13 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
                   value={command}
                   onChange={(e) => setCommand(e.target.value)}
                   onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleExecCommand(); } }}
-                  placeholder="Nhập lệnh Linux (ví dụ: free -m, top, df -h, uname -a, ps aux)..."
-                  className="flex-1 bg-white text-slate-900 text-xs font-mono px-3 py-1.5 rounded border border-slate-300 focus:outline-none focus:border-emerald-500"
+                  placeholder={vps?.status === 'Running' ? "Nhập lệnh Linux (ví dụ: free -m, top, df -h)..." : (vps?.status === 'Provisioning' ? "VPS đang khởi tạo, vui lòng chờ..." : "VPS đang tắt. Vui lòng khởi động lại để dùng Terminal.")}
+                  disabled={vps?.status !== 'Running'}
+                  className="flex-1 bg-white text-slate-900 text-xs font-mono px-3 py-1.5 rounded border border-slate-300 focus:outline-none focus:border-emerald-500 disabled:bg-slate-100 disabled:text-slate-500"
                 />
                 <button
                   onClick={handleExecCommand}
-                  disabled={!isTerminalConnected || isExecRunning || !command.trim()}
+                  disabled={!isTerminalConnected || isExecRunning || !command.trim() || vps?.status !== 'Running'}
                   className="px-4 py-1.5 bg-emerald-600 text-white text-xs font-bold rounded hover:bg-emerald-700 disabled:opacity-50 transition-colors shadow-sm"
                 >
                   Chạy
