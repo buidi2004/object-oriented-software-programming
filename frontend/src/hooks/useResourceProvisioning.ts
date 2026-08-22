@@ -4,8 +4,8 @@ import { realtimeClient } from '../lib/realtimeClient';
 export type ResourceStatus = 'Pending' | 'Provisioning' | 'Deploying' | 'Running' | 'Active' | 'Ready' | 'Failed' | 'Suspended' | 'Terminated' | string;
 
 export const SERVICE_TIMEOUT_SECONDS: Record<string, number> = {
-  ManagedDatabaseInstance: 60,
-  DatabaseInstance: 60,
+  ManagedDatabaseInstance: 300,
+  DatabaseInstance: 300,
   Databases: 60,
   ObjectStorageBucket: 60,
   StorageBucket: 60,
