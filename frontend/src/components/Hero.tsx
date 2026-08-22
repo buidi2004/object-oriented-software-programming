@@ -120,9 +120,8 @@ export const Hero: React.FC<HeroProps> = ({ onStartClick, onPriceClick }) => {
               />
 
               {/* Watermark Branding overlay top right corner */}
-              <div className="absolute top-4 right-5 flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/40 backdrop-blur-md border border-white/20 text-white/90 text-xs font-semibold">
-                <Cloud className="w-3.5 h-3.5 text-cyan-300" />
-                <span>CloudHost VN</span>
+              <div className="absolute top-4 right-5 bg-white/40 backdrop-blur-md border border-white/20 p-2 rounded-xl text-white/90 shadow-sm">
+                <img src="/images/logo.png" alt="CloudHost VN" className="h-4 w-auto object-contain" />
               </div>
 
               {/* Glassmorphism Floating Pill Badge bottom right matching exact picture */}

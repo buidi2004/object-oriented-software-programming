@@ -75,7 +75,7 @@ export const Footer: React.FC = () => {
                 { id: 'zl', icon: MessageCircle },
                 { id: 'tg', icon: Send }
               ].map((item) => (
-                <div key={item.id} className="w-8 h-8 rounded-full bg-red-600 text-white flex items-center justify-center font-bold text-sm hover:scale-110 cursor-pointer transition-transform shadow-md">
+                <div key={item.id} className="w-8 h-8 rounded-full bg-[#1F1F1F] text-white flex items-center justify-center font-bold text-sm hover:scale-110 cursor-pointer transition-transform shadow-md">
                   <item.icon className="w-4 h-4" />
                 </div>
               ))}
@@ -95,8 +95,7 @@ export const Footer: React.FC = () => {
               />
               <button 
                 type="submit" 
-                disabled={loading}
-                className="bg-red-600 hover:bg-red-700 text-white px-6 sm:px-8 py-2.5 rounded-r-xl font-bold text-sm transition-colors disabled:opacity-50 shrink-0"
+                className="bg-[#1F1F1F] hover:bg-black text-white px-6 sm:px-8 py-2.5 rounded-r-xl font-bold text-sm transition-colors disabled:opacity-50 shrink-0"
               >
                 {loading ? <Loader2 className="w-4 h-4 animate-spin mx-auto" /> : 'Gửi'}
               </button>
@@ -118,7 +117,6 @@ export const Footer: React.FC = () => {
                   src="/images/logo.png" 
                   alt="Logo" 
                   className="h-10 w-auto object-contain drop-shadow-sm" 
-                  style={{ filter: 'grayscale(100%) brightness(0.2) sepia(1) hue-rotate(-50deg) saturate(5)' }} // make it red/black if needed, or just let original
                 />
               </div>
               <p className="text-[13px] text-slate-700 leading-relaxed">
@@ -132,8 +130,8 @@ export const Footer: React.FC = () => {
               </p>
               
               <div className="pt-2 text-[14px] text-slate-700">
-                <div>Hotline: <strong className="text-red-600">{brandInfo.hotline}</strong></div>
-                <div>Email: <a href={`mailto:${brandInfo.email}`} className="text-red-600 hover:underline">{brandInfo.email}</a></div>
+                <div>Hotline: <strong className="text-[#1F1F1F]">{brandInfo.hotline}</strong></div>
+                <div>Email: <a href={`mailto:${brandInfo.email}`} className="text-[#1F1F1F] hover:underline">{brandInfo.email}</a></div>
               </div>
 
               <div className="flex gap-2 pt-2">
@@ -144,7 +142,7 @@ export const Footer: React.FC = () => {
                   { id: 'yt', icon: Youtube },
                   { id: 'zl', icon: MessageCircle }
                 ].map((item) => (
-                  <div key={item.id} className="w-7 h-7 rounded-full bg-black text-slate-900 flex items-center justify-center hover:bg-red-600 cursor-pointer transition-colors">
+                  <div key={item.id} className="w-7 h-7 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center hover:bg-[#1F1F1F] hover:text-white cursor-pointer transition-colors">
                     <item.icon className="w-3.5 h-3.5" />
                   </div>
                 ))}
