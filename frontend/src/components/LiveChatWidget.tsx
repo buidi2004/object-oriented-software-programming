@@ -71,74 +71,124 @@ export const LiveChatWidget: React.FC = () => {
     }
   }, [isOpen, sessionId]);
 
+  const pollIntervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  const clearPolling = () => {
+    if (pollIntervalRef.current) {
+      clearInterval(pollIntervalRef.current);
+      pollIntervalRef.current = null;
+    }
+  };
+
+  const syncMessages = async (sId: string, uId: string) => {
+    try {
+      const res = await api.get(`/chats/${sId}/messages`);
+      if (res.data && res.data.length > 0) {
+        const history = res.data.map((m: any) => ({
+          sender: m.senderId?.toLowerCase() !== uId?.toLowerCase() ? 'bot' : 'user',
+          text: m.message
+        }));
+        setMessages(history);
+        return history;
+      }
+    } catch (e) {
+      console.error("Lỗi đồng bộ tin nhắn:", e);
+    }
+    return null;
+  };
+
   useEffect(() => {
     if (!sessionId || !userId) return;
 
-    // Load history
-    api.get(`/chats/${sessionId}/messages`)
-      .then(res => {
-        if (res.data && res.data.length > 0) {
-           const history = res.data.map((m: any) => ({
-             sender: m.senderId?.toLowerCase() !== userId?.toLowerCase() ? 'bot' : 'user',
-             text: m.message
-           }));
-           // Prepend the welcome messages if they aren't in history
-           setMessages(history);
-        }
-      })
-      .catch(console.error);
+    // Initial load history
+    syncMessages(sessionId, userId);
 
-    // Setup SignalR
+    // Setup SignalR with direct backend URL if available
     const token = localStorage.getItem('accessToken');
+    const hubUrl = process.env.NEXT_PUBLIC_API_URL
+      ? `${process.env.NEXT_PUBLIC_API_URL.replace(/\/$/, '')}/hubs/chat`
+      : '/hubs/chat';
+
     const connection = new signalR.HubConnectionBuilder()
-      .withUrl('/hubs/chat', {
-        accessTokenFactory: () => token || ''
+      .withUrl(hubUrl, {
+        accessTokenFactory: () => token || '',
+        skipNegotiation: false,
+        transport: signalR.HttpTransportType.WebSockets | signalR.HttpTransportType.ServerSentEvents | signalR.HttpTransportType.LongPolling
       })
       .withAutomaticReconnect()
       .build();
 
     connection.on('ReceiveMessage', (data: any) => {
+      clearPolling();
+      setLoading(false);
       if (data.senderId?.toLowerCase() !== userId?.toLowerCase()) {
-         setMessages(prev => {
-            // Ignore duplicates
-            if (prev.some(m => m.text === data.message && m.sender === 'bot')) return prev;
-            return [...prev, { sender: 'bot', text: data.message }];
-         });
+        setMessages(prev => {
+          if (prev.some(m => m.text === data.message && m.sender === 'bot')) return prev;
+          return [...prev, { sender: 'bot', text: data.message }];
+        });
+      }
+    });
+
+    connection.onreconnected(() => {
+      if (sessionId) {
+        connection.invoke('JoinChat', sessionId).catch(console.error);
+        syncMessages(sessionId, userId);
       }
     });
 
     connection.start()
       .then(() => {
-        connection.invoke('JoinChat', sessionId);
+        connection.invoke('JoinChat', sessionId).catch(console.error);
       })
-      .catch(console.error);
+      .catch((err) => {
+        console.warn("SignalR live chat connection notice:", err);
+      });
 
     return () => {
-      connection.stop();
+      clearPolling();
+      connection.stop().catch(() => {});
     };
   }, [sessionId, userId]);
 
   const handleSend = async (e: React.FormEvent, textOverride?: string) => {
     if (e) e.preventDefault();
     const userText = (textOverride || input).trim();
-    if (!userText) return;
+    if (!userText || !sessionId || !userId) return;
     
     setMessages(prev => [...prev, { sender: 'user', text: userText }]);
     setInput('');
     setShowSuggestions(false);
+    setLoading(true);
+    clearPolling();
 
-    if (sessionId) {
-      setLoading(true);
-      try {
-        await api.post(`/chats/${sessionId}/messages`, `"${userText}"`, {
-          headers: { 'Content-Type': 'application/json' }
-        });
-        // Real-time reply will come through SignalR
-      } catch (err) {
-        console.error("Lỗi gửi tin nhắn:", err);
-      } finally {
-        setLoading(false);
-      }
+    try {
+      await api.post(`/chats/${sessionId}/messages`, `"${userText}"`, {
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      // Fallback polling in case SignalR is not connected or blocked on proxy/production
+      let attempts = 0;
+      const initialMsgCount = messages.length + 1; // including current user msg
+
+      pollIntervalRef.current = setInterval(async () => {
+        attempts++;
+        const currentHistory = await syncMessages(sessionId, userId);
+        if (currentHistory && currentHistory.length > initialMsgCount) {
+          const lastMsg = currentHistory[currentHistory.length - 1];
+          if (lastMsg.sender === 'bot') {
+            clearPolling();
+            setLoading(false);
+          }
+        }
+        if (attempts >= 10) {
+          clearPolling();
+          setLoading(false);
+        }
+      }, 1500);
+
+    } catch (err) {
+      console.error("Lỗi gửi tin nhắn:", err);
+      setLoading(false);
     }
   };
 
@@ -206,6 +256,19 @@ export const LiveChatWidget: React.FC = () => {
                 </div>
               );
             })}
+
+            {loading && (
+              <div className="flex items-start gap-2 justify-start">
+                <div className="w-8 h-8 shrink-0 rounded-full bg-[#1F1F1F] flex items-center justify-center text-white">
+                  <Bot className="w-4 h-4" />
+                </div>
+                <div className="bg-[#f4f4f5] text-slate-500 rounded-md rounded-tl-sm p-3 text-[13px] flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-slate-400 animate-bounce" style={{ animationDelay: '0ms' }} />
+                  <span className="w-1.5 h-1.5 rounded-full bg-slate-400 animate-bounce" style={{ animationDelay: '150ms' }} />
+                  <span className="w-1.5 h-1.5 rounded-full bg-slate-400 animate-bounce" style={{ animationDelay: '300ms' }} />
+                </div>
+              </div>
+            )}
             
             {showSuggestions && messages.length <= 2 && (
               <div className="pl-10 pr-4 flex flex-wrap gap-2 mt-2">
