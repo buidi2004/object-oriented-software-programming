@@ -20,6 +20,31 @@ function parseUserIdFromToken(token: string): string | null {
   }
 }
 
+function formatChatText(text: string, isUser: boolean) {
+  if (!text) return null;
+  const lines = text.split('\n');
+  return lines.map((line, lineIdx) => {
+    const segments = line.split(/(\*\*.*?\*\*)/g);
+    const content = segments.map((seg, segIdx) => {
+      if (seg.startsWith('**') && seg.endsWith('**') && seg.length > 4) {
+        return (
+          <strong key={segIdx} className={isUser ? 'font-bold text-white' : 'font-bold text-slate-900'}>
+            {seg.slice(2, -2)}
+          </strong>
+        );
+      }
+      return seg;
+    });
+
+    return (
+      <React.Fragment key={lineIdx}>
+        {content}
+        {lineIdx < lines.length - 1 && <br />}
+      </React.Fragment>
+    );
+  });
+}
+
 export const LiveChatWidget: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
@@ -246,12 +271,12 @@ export const LiveChatWidget: React.FC = () => {
                     </div>
                   )}
                   
-                  <div className={`max-w-[75%] p-3 text-[13px] font-medium leading-relaxed ${
+                  <div className={`max-w-[80%] p-3 text-[13px] font-medium leading-relaxed ${
                     isUser
                       ? 'bg-[#1F1F1F] text-white rounded-md rounded-tr-sm'
                       : 'bg-[#f4f4f5] text-slate-800 rounded-md rounded-tl-sm'
                   }`}>
-                    {m.text}
+                    {formatChatText(m.text, isUser)}
                   </div>
                 </div>
               );

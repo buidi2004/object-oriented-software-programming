@@ -150,10 +150,23 @@ public class TriggerChatBotReplyCommandHandler : IRequestHandler<TriggerChatBotR
             reply = await _chatBot.AskAsync(request.UserMessage, sb.ToString());
         }
 
-        var botUser = await _userRepo.FirstOrDefaultAsync(u => u.Email.Contains("admin") || u.IsActive, ct);
+        // 4. Resolve distinct Bot User so SenderId is never the customer's UserId
+        var botUser = await _userRepo.FirstOrDefaultAsync(u => (session == null || u.Id != session.UserId) && (u.Email.Contains("admin") || u.Email.Contains("bot") || u.IsActive), ct);
+        if (botUser == null && session != null)
+        {
+            var existingUser = await _userRepo.GetByIdAsync(session.UserId, ct);
+            botUser = new AppUser(
+                fullName: "CloudHost AI Assistant",
+                email: "ai-assistant@cloudhost.vn",
+                passwordHash: "SYSTEM_BOT_ACCOUNT",
+                roleId: existingUser?.RoleId ?? Guid.Empty
+            );
+            await _userRepo.AddAsync(botUser, ct);
+            await _uow.SaveChangesAsync(ct);
+        }
         var botId = botUser?.Id ?? Guid.Empty;
 
-        // 4. Save Bot Message
+        // 5. Save Bot Message
         var botMessage = new ChatMessage
         {
             Id = Guid.NewGuid(),
