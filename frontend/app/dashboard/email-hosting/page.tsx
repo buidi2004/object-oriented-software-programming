@@ -81,7 +81,7 @@ export default function DashboardEmailHostingPage() {
         {/* Top Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div>
-            <Link href="/dashboard" className="text-xs font-bold text-slate-500 hover:text-blue-600 flex items-center gap-1 mb-2">
+            <Link href="/dashboard" className="text-xs font-bold text-slate-500 hover:text-[#1F1F1F] flex items-center gap-1 mb-2">
               <ArrowLeft className="w-3.5 h-3.5" /> Quay lại Dashboard
             </Link>
             <h1 className="text-2xl sm:text-3xl font-black text-slate-900 flex items-center gap-3">

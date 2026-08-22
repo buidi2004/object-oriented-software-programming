@@ -45,7 +45,7 @@ export default function PublicNewsPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
         <div className="mb-6 flex items-center text-sm text-slate-500 gap-2">
-          <Link href="/" className="hover:text-blue-600 transition-colors">Trang chủ</Link>
+          <Link href="/" className="hover:text-[#1F1F1F] transition-colors">Trang chủ</Link>
           <span>/</span>
           <span className="text-slate-900 font-medium">Tin tức & Blog</span>
         </div>
@@ -57,7 +57,7 @@ export default function PublicNewsPage() {
 
         {isLoading && (
           <div className="flex justify-center py-20">
-            <Loader className="w-8 h-8 text-blue-600 animate-spin" />
+            <Loader className="w-8 h-8 text-[#1F1F1F] animate-spin" />
           </div>
         )}
 
@@ -100,7 +100,7 @@ export default function PublicNewsPage() {
                             {new Date(news[0].publishedAt).toLocaleDateString('vi-VN')}
                           </span>
                         )}
-                        <h2 className="text-xl sm:text-2xl lg:text-3xl font-black text-slate-900 group-hover:text-blue-600 transition-colors leading-tight mb-3 sm:mb-4">
+                        <h2 className="text-xl sm:text-2xl lg:text-3xl font-black text-slate-900 group-hover:text-[#1F1F1F] transition-colors leading-tight mb-3 sm:mb-4">
                           {news[0].title}
                         </h2>
                         {news[0].content && (
@@ -148,7 +148,7 @@ export default function PublicNewsPage() {
                               {new Date(item.publishedAt).toLocaleDateString('vi-VN')}
                             </span>
                           )}
-                          <h2 className="text-base sm:text-lg font-bold text-slate-900 group-hover:text-blue-600 transition-colors line-clamp-2 sm:line-clamp-3 flex-1 leading-snug">
+                          <h2 className="text-base sm:text-lg font-bold text-slate-900 group-hover:text-[#1F1F1F] transition-colors line-clamp-2 sm:line-clamp-3 flex-1 leading-snug">
                             {item.title}
                           </h2>
                           {item.content && (

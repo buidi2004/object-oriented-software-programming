@@ -55,7 +55,7 @@ export default function AdminMigrationDetailPage() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <Loader className="w-8 h-8 text-blue-600 animate-spin" />
+        <Loader className="w-8 h-8 text-[#1F1F1F] animate-spin" />
       </div>
     );
   }
@@ -65,7 +65,7 @@ export default function AdminMigrationDetailPage() {
       <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center">
         <AlertCircle className="w-12 h-12 text-red-400 mb-3" />
         <p className="text-slate-600">{error}</p>
-        <Link href="/admin/migrations" className="mt-4 text-blue-600 font-semibold">Quay lại</Link>
+        <Link href="/admin/migrations" className="mt-4 text-[#1F1F1F] font-semibold">Quay lại</Link>
       </div>
     );
   }
@@ -84,7 +84,7 @@ export default function AdminMigrationDetailPage() {
       <main className="max-w-3xl mx-auto px-4 py-8">
         <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
           <div className="flex items-center gap-3">
-            <Database className="w-8 h-8 text-indigo-600" />
+            <Database className="w-8 h-8 text-[#1F1F1F]" />
             <div>
               <h2 className="text-lg font-bold">{migration.fromProvider}</h2>
               <p className="text-sm text-slate-500">Order: {migration.orderRequestId}</p>

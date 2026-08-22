@@ -72,7 +72,7 @@ export default function AutoRenewPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+        <Loader2 className="w-8 h-8 text-[#1F1F1F] animate-spin" />
       </div>
     );
   }
@@ -86,10 +86,10 @@ export default function AutoRenewPage() {
 
       {/* Info Banner */}
       <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 flex items-start gap-3">
-        <AlertCircle className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
+        <AlertCircle className="w-5 h-5 text-[#1F1F1F] shrink-0 mt-0.5" />
         <div>
-          <p className="font-semibold text-blue-900">Tự động gia hạn là gì?</p>
-          <p className="text-sm text-blue-700 mt-1">
+          <p className="font-semibold text-[#1F1F1F]">Tự động gia hạn là gì?</p>
+          <p className="text-sm text-[#1F1F1F] mt-1">
             Khi kích hoạt, dịch vụ của bạn sẽ tự động được gia hạn trước khi hết hạn.
             Thanh toán sẽ được thực hiện từ ví của bạn hoặc phương thức thanh toán đã lưu.
           </p>

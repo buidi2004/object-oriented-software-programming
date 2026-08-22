@@ -137,14 +137,14 @@ function ContactFormInner() {
           
           {/* Breadcrumb */}
           <nav className="flex items-center gap-2 text-xs font-mono text-slate-500 mb-6">
-            <Link href="/" className="hover:text-blue-400 transition-colors">HOME</Link>
+            <Link href="/" className="hover:text-slate-200 transition-colors">HOME</Link>
             <span>/</span>
-            <span className="text-blue-400 font-bold">CONTACT &amp; SUPPORT</span>
+            <span className="text-slate-200 font-bold">CONTACT &amp; SUPPORT</span>
           </nav>
 
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-blue-950 text-blue-400 text-xs font-mono mb-3 border border-blue-800">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-blue-950 text-slate-200 text-xs font-mono mb-3 border border-blue-800">
                 <Headphones className="w-3.5 h-3.5" />
                 24/7 TECHNICAL SUPPORT CENTER
               </div>
@@ -181,7 +181,7 @@ function ContactFormInner() {
             {/* Channel 1: Primary Hotline (Only place printing full number) */}
             <div className="p-5 rounded-2xl bg-white border border-slate-200 hover:border-blue-500/50 transition-all flex flex-col justify-between space-y-4 group">
               <div className="flex items-center justify-between">
-                <div className="w-10 h-10 rounded-xl bg-blue-950 text-blue-400 border border-blue-900 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-xl bg-blue-950 text-slate-200 border border-blue-900 flex items-center justify-center">
                   <Phone className="w-5 h-5" />
                 </div>
                 <span className="text-[10px] px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-900 font-bold">
@@ -190,7 +190,7 @@ function ContactFormInner() {
               </div>
               <div>
                 <div className="text-slate-600 text-[11px]">Tổng Đài Khẩn Cấp (Hotline):</div>
-                <a href="tel:19006888" className="text-lg font-black text-slate-900 hover:text-blue-400 transition-colors block mt-0.5">
+                <a href="tel:19006888" className="text-lg font-black text-slate-900 hover:text-slate-200 transition-colors block mt-0.5">
                   1900 6888
                 </a>
                 <div className="text-[10px] text-slate-500 mt-1">Hỗ trợ kỹ thuật &amp; cứu hộ server tức thì</div>
@@ -200,16 +200,16 @@ function ContactFormInner() {
             {/* Channel 2: Official Support Email */}
             <div className="p-5 rounded-2xl bg-white border border-slate-200 hover:border-sky-500/50 transition-all flex flex-col justify-between space-y-4 group">
               <div className="flex items-center justify-between">
-                <div className="w-10 h-10 rounded-xl bg-sky-950 text-sky-400 border border-sky-900 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-xl bg-sky-950 text-slate-200 border border-sky-900 flex items-center justify-center">
                   <Mail className="w-5 h-5" />
                 </div>
-                <span className="text-[10px] px-2 py-0.5 rounded bg-sky-950 text-sky-400 border border-sky-900 font-bold">
+                <span className="text-[10px] px-2 py-0.5 rounded bg-sky-950 text-slate-200 border border-sky-900 font-bold">
                   SLA &lt; 15M
                 </span>
               </div>
               <div>
                 <div className="text-slate-600 text-[11px]">Hộp Thư Kỹ Thuật (Email):</div>
-                <a href="mailto:support@cloudhost.vn" className="text-sm font-bold text-sky-400 hover:underline block mt-0.5 truncate">
+                <a href="mailto:support@cloudhost.vn" className="text-sm font-bold text-slate-200 hover:underline block mt-0.5 truncate">
                   support@cloudhost.vn
                 </a>
                 <div className="text-[10px] text-slate-500 mt-1">Lưu vết và tiếp nhận yêu cầu có biên bản</div>
@@ -271,7 +271,7 @@ function ContactFormInner() {
             <div className="lg:col-span-7 p-6 sm:p-8 rounded-3xl bg-white border border-slate-200 shadow-xl space-y-6">
               
               <div>
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-blue-950 text-blue-400 text-xs font-mono uppercase mb-2 border border-blue-900">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-blue-950 text-slate-200 text-xs font-mono uppercase mb-2 border border-blue-900">
                   <SendHorizontal className="w-3.5 h-3.5" />
                   YÊU CẦU TƯ VẤN &amp; HỖ TRỢ DỰ ÁN
                 </div>
@@ -328,7 +328,7 @@ function ContactFormInner() {
                     <select
                       value={serviceTopic}
                       onChange={(e) => setServiceTopic(e.target.value)}
-                      className="w-full px-4 py-3 rounded-xl bg-slate-100 border border-slate-200 text-blue-400 font-bold text-xs focus:outline-none focus:border-blue-500 transition-all"
+                      className="w-full px-4 py-3 rounded-xl bg-slate-100 border border-slate-200 text-slate-200 font-bold text-xs focus:outline-none focus:border-blue-500 transition-all"
                     >
                       {Object.entries(SERVICE_TOPICS).map(([key, label]) => (
                         <option key={key} value={key} className="bg-white text-slate-800">
@@ -402,13 +402,13 @@ function ContactFormInner() {
                     className="p-3 rounded-xl bg-slate-100 border border-slate-200 hover:border-sky-500/50 transition-all flex items-center justify-between group"
                   >
                     <div className="flex items-center gap-3">
-                      <FaTelegram className="w-5 h-5 text-sky-400" />
+                      <FaTelegram className="w-5 h-5 text-slate-200" />
                       <div>
                         <div className="font-bold text-slate-900 text-xs">Telegram Support VIP</div>
                         <div className="text-[10px] text-slate-500">@sencloud_support</div>
                       </div>
                     </div>
-                    <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-sky-400 transition-colors" />
+                    <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-slate-200 transition-colors" />
                   </a>
 
                   <a
@@ -418,13 +418,13 @@ function ContactFormInner() {
                     className="p-3 rounded-xl bg-slate-100 border border-slate-200 hover:border-blue-500/50 transition-all flex items-center justify-between group"
                   >
                     <div className="flex items-center gap-3">
-                      <SiZalo className="w-5 h-5 text-blue-400" />
+                      <SiZalo className="w-5 h-5 text-slate-200" />
                       <div>
                         <div className="font-bold text-slate-900 text-xs">Zalo Official Account</div>
                         <div className="text-[10px] text-slate-500">SEN CloudHost Vietnam</div>
                       </div>
                     </div>
-                    <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-blue-400 transition-colors" />
+                    <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-slate-200 transition-colors" />
                   </a>
                 </div>
               </div>
@@ -432,7 +432,7 @@ function ContactFormInner() {
               {/* Physical Office Details (Without repeating full numbers 4 times) */}
               <div className="p-6 rounded-3xl bg-white border border-slate-200 space-y-4 font-mono text-xs">
                 <div className="text-slate-900 font-bold uppercase pb-2 border-b border-slate-200 flex items-center gap-2">
-                  <Building2 className="w-4 h-4 text-blue-400" />
+                  <Building2 className="w-4 h-4 text-slate-200" />
                   ĐỊA ĐIỂM VĂN PHÒNG &amp; PHÒNG MÁY
                 </div>
 
@@ -440,7 +440,7 @@ function ContactFormInner() {
                 <div className="space-y-1">
                   <div className="font-bold text-slate-900 text-[11px] flex items-center justify-between">
                     <span>Trụ Sở Chính (Hà Nội):</span>
-                    <a href="tel:19006888" className="text-blue-400 text-[10px] hover:underline">Gọi ngay →</a>
+                    <a href="tel:19006888" className="text-slate-200 text-[10px] hover:underline">Gọi ngay →</a>
                   </div>
                   <p className="text-slate-600 text-[11px] font-sans">
                     Tầng 12, Tòa nhà HITC, 239 Xuân Thủy, Cầu Giấy, TP. Hà Nội
@@ -451,7 +451,7 @@ function ContactFormInner() {
                 <div className="space-y-1 pt-2 border-t border-slate-200/60">
                   <div className="font-bold text-slate-900 text-[11px] flex items-center justify-between">
                     <span>Chi Nhánh (TP. Hồ Chí Minh):</span>
-                    <a href="tel:19006888" className="text-indigo-400 text-[10px] hover:underline">Gọi ngay →</a>
+                    <a href="tel:19006888" className="text-slate-200 text-[10px] hover:underline">Gọi ngay →</a>
                   </div>
                   <p className="text-slate-600 text-[11px] font-sans">
                     Tòa nhà Viettel Complex, 285 Cách Mạng Tháng Tám, Quận 10, TP.HCM
@@ -530,7 +530,7 @@ function ContactFormInner() {
             {/* Right: Technical Support FAQ Accordion (5 Cols) */}
             <div className="lg:col-span-5 p-6 rounded-3xl bg-white border border-slate-200 space-y-4">
               <div className="font-mono text-xs text-slate-900 font-bold uppercase pb-2 border-b border-slate-200 flex items-center gap-2">
-                <HelpCircle className="w-4 h-4 text-blue-400" />
+                <HelpCircle className="w-4 h-4 text-slate-200" />
                 CÂU HỎI THƯỜNG GẶP KHI LIÊN HỆ
               </div>
 
@@ -545,7 +545,7 @@ function ContactFormInner() {
                       className="w-full p-3.5 text-left flex items-center justify-between gap-3 focus:outline-none"
                     >
                       <span className="font-bold text-xs text-slate-800">{faq.question}</span>
-                      <div className="w-5 h-5 rounded bg-white border border-slate-200 flex items-center justify-center shrink-0 text-blue-400">
+                      <div className="w-5 h-5 rounded bg-white border border-slate-200 flex items-center justify-center shrink-0 text-slate-200">
                         {openFaq === idx ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
                       </div>
                     </button>

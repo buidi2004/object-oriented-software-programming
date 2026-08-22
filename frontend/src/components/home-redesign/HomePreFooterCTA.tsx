@@ -14,7 +14,7 @@ export const HomePreFooterCTA = () => {
               <h3 className="text-lg sm:text-xl font-black tracking-tight mb-1.5 sm:mb-2 flex items-center gap-2">
                 Đăng ký <span className="text-lg">›</span>
               </h3>
-              <p className="text-xs sm:text-sm text-blue-100/90 leading-relaxed">
+              <p className="text-xs sm:text-sm text-slate-200/90 leading-relaxed">
                 Đăng ký tài khoản ngay hôm nay để trải nghiệm dịch vụ Cloud tiêu chuẩn quốc tế.
               </p>
             </div>
@@ -26,7 +26,7 @@ export const HomePreFooterCTA = () => {
               <h3 className="text-lg sm:text-xl font-black tracking-tight mb-1.5 sm:mb-2 flex items-center gap-2">
                 Liên hệ hỗ trợ khách hàng <span className="text-lg">›</span>
               </h3>
-              <p className="text-xs sm:text-sm text-blue-100/90 leading-relaxed">
+              <p className="text-xs sm:text-sm text-slate-200/90 leading-relaxed">
                 Đội ngũ kỹ thuật chuyên môn cao luôn sẵn sàng hỗ trợ bạn 24/7.
               </p>
             </div>
@@ -38,7 +38,7 @@ export const HomePreFooterCTA = () => {
               <h3 className="text-lg sm:text-xl font-black tracking-tight mb-1.5 sm:mb-2 flex items-center gap-2">
                 Hợp tác <span className="text-lg">›</span>
               </h3>
-              <p className="text-xs sm:text-sm text-blue-100/90 leading-relaxed">
+              <p className="text-xs sm:text-sm text-slate-200/90 leading-relaxed">
                 Cùng CloudHost VN xây dựng hệ sinh thái công nghệ, mở rộng cơ hội kinh doanh.
               </p>
             </div>

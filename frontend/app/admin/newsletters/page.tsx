@@ -283,7 +283,7 @@ export default function AdminNewslettersPage() {
                 <tr key={sub.id} className="hover:bg-slate-50 transition-colors">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
+                      <div className="w-8 h-8 rounded-xl bg-blue-50 text-[#1F1F1F] flex items-center justify-center font-bold">
                         <Mail className="w-4 h-4" />
                       </div>
                       <span className="font-bold text-slate-900">{sub.email}</span>

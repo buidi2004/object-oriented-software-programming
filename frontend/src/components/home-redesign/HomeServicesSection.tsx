@@ -32,7 +32,7 @@ export const HomeServicesSection = () => {
           <h2 className="text-3xl font-black text-slate-900 tracking-tight">
             Dịch vụ của CloudHost VN
           </h2>
-          <Link href="/services" className="text-sm font-bold text-slate-500 hover:text-blue-600 transition-colors">
+          <Link href="/services" className="text-sm font-bold text-slate-500 hover:text-[#1F1F1F] transition-colors">
             Xem tất cả dịch vụ →
           </Link>
         </div>
@@ -46,7 +46,7 @@ export const HomeServicesSection = () => {
                 onClick={() => setActiveTab(tab.id)}
                 className={`whitespace-nowrap lg:whitespace-normal text-left px-4 py-2.5 lg:py-3 rounded-xl text-xs sm:text-sm font-bold transition-all shrink-0 lg:shrink ${
                   activeTab === tab.id
-                    ? 'bg-blue-600 text-white lg:bg-blue-50 lg:text-blue-600 shadow-sm lg:shadow-none'
+                    ? 'bg-blue-600 text-white lg:bg-blue-50 lg:text-[#1F1F1F] shadow-sm lg:shadow-none'
                     : 'text-slate-600 bg-white lg:bg-transparent border lg:border-none border-slate-200 hover:bg-slate-100'
                 }`}
               >
@@ -64,16 +64,16 @@ export const HomeServicesSection = () => {
                   <div key={idx} className="bg-white rounded-2xl p-5 sm:p-6 border border-slate-100 shadow-xs hover:shadow-md transition-shadow group flex flex-col justify-between">
                     <div>
                       <div className="flex items-start gap-3.5 sm:gap-4 mb-3 sm:mb-4">
-                        <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+                        <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-blue-50 text-[#1F1F1F] flex items-center justify-center shrink-0">
                           <Icon className="w-5 h-5 sm:w-6 sm:h-6" />
                         </div>
                         <div>
-                          <h3 className="text-base sm:text-lg font-bold text-slate-900 mb-1 group-hover:text-blue-600 transition-colors">{service.title}</h3>
+                          <h3 className="text-base sm:text-lg font-bold text-slate-900 mb-1 group-hover:text-[#1F1F1F] transition-colors">{service.title}</h3>
                           <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">{service.desc}</p>
                         </div>
                       </div>
                     </div>
-                    <Link href={service.href} className="text-xs sm:text-sm font-bold text-blue-600 hover:text-blue-700 mt-3 sm:mt-4 inline-flex items-center gap-1 w-max">
+                    <Link href={service.href} className="text-xs sm:text-sm font-bold text-[#1F1F1F] hover:text-[#1F1F1F] mt-3 sm:mt-4 inline-flex items-center gap-1 w-max">
                       Xem chi tiết <span className="text-base sm:text-lg leading-none">›</span>
                     </Link>
                   </div>

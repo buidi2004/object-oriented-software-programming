@@ -216,7 +216,7 @@ export default function AdminCouponsPage() {
                 <div className="space-y-2 text-sm mb-4">
                   <div className="flex justify-between">
                     <span className="text-slate-500">Giảm giá</span>
-                    <span className="font-bold text-blue-600">{displayDiscount}</span>
+                    <span className="font-bold text-[#1F1F1F]">{displayDiscount}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-slate-500">Đơn tối thiểu</span>
@@ -239,7 +239,7 @@ export default function AdminCouponsPage() {
                   >
                     {coupon.isActive ? 'Khóa' : 'Kích hoạt'}
                   </button>
-                  <button className="p-2 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
+                  <button className="p-2 text-slate-600 hover:text-[#1F1F1F] hover:bg-blue-50 rounded-lg transition-colors">
                     <Edit2 className="w-4 h-4" />
                   </button>
                   <button onClick={() => handleDeleteCoupon(coupon.id)} className="p-2 text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">

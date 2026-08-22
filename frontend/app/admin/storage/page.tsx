@@ -62,7 +62,7 @@ export default function AdminStoragePage() {
             </Link>
             <div>
               <h1 className="text-xl font-black text-slate-900 flex items-center gap-2">
-                <Cloud className="w-6 h-6 text-blue-600" />
+                <Cloud className="w-6 h-6 text-[#1F1F1F]" />
                 Quản lý MinIO S3 Storage Buckets (Admin)
               </h1>
               <p className="text-xs text-slate-500">{buckets.length} buckets trên hệ thống MinIO</p>
@@ -139,7 +139,7 @@ export default function AdminStoragePage() {
                         href={`http://localhost:9001/browser/${b.name}`}
                         target="_blank"
                         rel="noreferrer"
-                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-blue-50 text-slate-700 hover:text-blue-700 font-bold transition-colors text-[11px]"
+                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-blue-50 text-slate-700 hover:text-[#1F1F1F] font-bold transition-colors text-[11px]"
                       >
                         <ExternalLink className="w-3.5 h-3.5" />
                         MinIO Console

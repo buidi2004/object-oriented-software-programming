@@ -186,7 +186,7 @@ export default function CustomerTicketsPage() {
                   onClick={() => setActiveMenu('my_tickets')}
                   className={`w-full text-left px-4 py-2.5 flex items-center gap-2.5 transition-colors font-medium ${
                     activeMenu === 'my_tickets' 
-                      ? 'border-l-4 border-blue-600 text-blue-600 bg-blue-50/50 font-bold' 
+                      ? 'border-l-4 border-blue-600 text-[#1F1F1F] bg-blue-50/50 font-bold' 
                       : 'text-slate-700 hover:bg-slate-50'
                   }`}
                 >
@@ -198,7 +198,7 @@ export default function CustomerTicketsPage() {
                   onClick={() => setActiveMenu('announcements')}
                   className={`w-full text-left px-4 py-2.5 flex items-center gap-2.5 transition-colors font-medium ${
                     activeMenu === 'announcements' 
-                      ? 'border-l-4 border-blue-600 text-blue-600 bg-blue-50/50 font-bold' 
+                      ? 'border-l-4 border-blue-600 text-[#1F1F1F] bg-blue-50/50 font-bold' 
                       : 'text-slate-700 hover:bg-slate-50'
                   }`}
                 >
@@ -210,7 +210,7 @@ export default function CustomerTicketsPage() {
                   onClick={() => setActiveMenu('knowledge')}
                   className={`w-full text-left px-4 py-2.5 flex items-center gap-2.5 transition-colors font-medium ${
                     activeMenu === 'knowledge' 
-                      ? 'border-l-4 border-blue-600 text-blue-600 bg-blue-50/50 font-bold' 
+                      ? 'border-l-4 border-blue-600 text-[#1F1F1F] bg-blue-50/50 font-bold' 
                       : 'text-slate-700 hover:bg-slate-50'
                   }`}
                 >
@@ -222,7 +222,7 @@ export default function CustomerTicketsPage() {
                   onClick={() => setActiveMenu('downloads')}
                   className={`w-full text-left px-4 py-2.5 flex items-center gap-2.5 transition-colors font-medium ${
                     activeMenu === 'downloads' 
-                      ? 'border-l-4 border-blue-600 text-blue-600 bg-blue-50/50 font-bold' 
+                      ? 'border-l-4 border-blue-600 text-[#1F1F1F] bg-blue-50/50 font-bold' 
                       : 'text-slate-700 hover:bg-slate-50'
                   }`}
                 >
@@ -234,7 +234,7 @@ export default function CustomerTicketsPage() {
                   onClick={() => setActiveMenu('network')}
                   className={`w-full text-left px-4 py-2.5 flex items-center gap-2.5 transition-colors font-medium ${
                     activeMenu === 'network' 
-                      ? 'border-l-4 border-blue-600 text-blue-600 bg-blue-50/50 font-bold' 
+                      ? 'border-l-4 border-blue-600 text-[#1F1F1F] bg-blue-50/50 font-bold' 
                       : 'text-slate-700 hover:bg-slate-50'
                   }`}
                 >
@@ -246,11 +246,11 @@ export default function CustomerTicketsPage() {
                   onClick={() => setActiveMenu('open_ticket')}
                   className={`w-full text-left px-4 py-2.5 flex items-center gap-2.5 transition-colors font-medium ${
                     activeMenu === 'open_ticket' 
-                      ? 'border-l-4 border-blue-600 text-blue-600 bg-blue-50/50 font-bold' 
+                      ? 'border-l-4 border-blue-600 text-[#1F1F1F] bg-blue-50/50 font-bold' 
                       : 'text-slate-700 hover:bg-slate-50'
                   }`}
                 >
-                  <MessageSquare className="w-4 h-4 text-blue-600" />
+                  <MessageSquare className="w-4 h-4 text-[#1F1F1F]" />
                   <span>Mở phiếu hỗ trợ</span>
                 </button>
               </div>
@@ -284,7 +284,7 @@ export default function CustomerTicketsPage() {
                   <div>
                     <button
                       onClick={() => handleOpenDept('Phòng kỹ thuật')}
-                      className="inline-flex items-center gap-1 text-xs font-bold text-blue-600 hover:text-blue-700 transition-colors"
+                      className="inline-flex items-center gap-1 text-xs font-bold text-[#1F1F1F] hover:text-[#1F1F1F] transition-colors"
                     >
                       Open Ticket <ChevronRight className="w-3.5 h-3.5" />
                     </button>
@@ -303,7 +303,7 @@ export default function CustomerTicketsPage() {
                   <div>
                     <button
                       onClick={() => handleOpenDept('Phòng kinh doanh / thanh toán')}
-                      className="inline-flex items-center gap-1 text-xs font-bold text-blue-600 hover:text-blue-700 transition-colors"
+                      className="inline-flex items-center gap-1 text-xs font-bold text-[#1F1F1F] hover:text-[#1F1F1F] transition-colors"
                     >
                       Open Ticket <ChevronRight className="w-3.5 h-3.5" />
                     </button>
@@ -315,9 +315,9 @@ export default function CustomerTicketsPage() {
               <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-xs space-y-3">
                 <div className="flex items-center justify-between">
                   <h3 className="font-bold text-slate-900 text-xs flex items-center gap-1.5">
-                    <Info className="w-4 h-4 text-blue-600" /> Cơ sở kiến thức & Hướng dẫn nhanh
+                    <Info className="w-4 h-4 text-[#1F1F1F]" /> Cơ sở kiến thức & Hướng dẫn nhanh
                   </h3>
-                  <button onClick={() => setActiveMenu('knowledge')} className="text-[11px] text-blue-600 hover:underline">
+                  <button onClick={() => setActiveMenu('knowledge')} className="text-[11px] text-[#1F1F1F] hover:underline">
                     Xem tất cả &gt;
                   </button>
                 </div>
@@ -326,8 +326,8 @@ export default function CustomerTicketsPage() {
                     href="/dashboard/knowledgebase/ssh-guide"
                     className="p-3 bg-slate-50 border border-slate-200 rounded-lg hover:border-blue-500 hover:bg-blue-50/30 transition-all block group"
                   >
-                    <p className="font-bold text-slate-800 text-xs group-hover:text-blue-600 flex items-center justify-between">
-                      Hướng dẫn kết nối SSH vào VPS Linux <ChevronRight className="w-3.5 h-3.5 text-slate-600 group-hover:text-blue-600" />
+                    <p className="font-bold text-slate-800 text-xs group-hover:text-[#1F1F1F] flex items-center justify-between">
+                      Hướng dẫn kết nối SSH vào VPS Linux <ChevronRight className="w-3.5 h-3.5 text-slate-600 group-hover:text-[#1F1F1F]" />
                     </p>
                     <p className="text-slate-500 text-[11px] mt-0.5">Cách dùng Web terminal và phần mềm MobaXterm/PuTTY.</p>
                   </Link>
@@ -336,8 +336,8 @@ export default function CustomerTicketsPage() {
                     href="/dashboard/knowledgebase/reinstall-os"
                     className="p-3 bg-slate-50 border border-slate-200 rounded-lg hover:border-blue-500 hover:bg-blue-50/30 transition-all block group"
                   >
-                    <p className="font-bold text-slate-800 text-xs group-hover:text-blue-600 flex items-center justify-between">
-                      Cách cài đặt lại Hệ điều hành (Rebuild OS) <ChevronRight className="w-3.5 h-3.5 text-slate-600 group-hover:text-blue-600" />
+                    <p className="font-bold text-slate-800 text-xs group-hover:text-[#1F1F1F] flex items-center justify-between">
+                      Cách cài đặt lại Hệ điều hành (Rebuild OS) <ChevronRight className="w-3.5 h-3.5 text-slate-600 group-hover:text-[#1F1F1F]" />
                     </p>
                     <p className="text-slate-500 text-[11px] mt-0.5">Các bước tự động cài Ubuntu, Debian, Alpine.</p>
                   </Link>
@@ -402,9 +402,9 @@ export default function CustomerTicketsPage() {
           {activeMenu === 'announcements' && (
             <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm text-xs space-y-4">
               <h2 className="text-base font-bold text-slate-900">Thông báo hệ thống</h2>
-              <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg text-blue-800 space-y-1">
+              <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg text-[#1F1F1F] space-y-1">
                 <p className="font-bold">Bảo trì nâng cấp hạ tầng mạng máy chủ Cloud VPS</p>
-                <p className="text-[11px] text-blue-600">Đăng ngày 20/08/2026 bởi Ban Quản Trị</p>
+                <p className="text-[11px] text-[#1F1F1F]">Đăng ngày 20/08/2026 bởi Ban Quản Trị</p>
                 <p className="pt-1">Hệ thống đã hoàn tất nâng cấp đường truyền băng thông quốc tế 10Gbps.</p>
               </div>
             </div>
@@ -423,26 +423,26 @@ export default function CustomerTicketsPage() {
                   href="/dashboard/knowledgebase/ssh-guide"
                   className="p-4 border border-slate-200 rounded-xl hover:border-blue-500 hover:bg-blue-50/20 transition-all block group"
                 >
-                  <p className="font-bold text-slate-800 text-sm group-hover:text-blue-600 flex items-center justify-between">
-                    Hướng dẫn kết nối SSH vào VPS Linux <ExternalLink className="w-3.5 h-3.5 text-slate-600 group-hover:text-blue-600" />
+                  <p className="font-bold text-slate-800 text-sm group-hover:text-[#1F1F1F] flex items-center justify-between">
+                    Hướng dẫn kết nối SSH vào VPS Linux <ExternalLink className="w-3.5 h-3.5 text-slate-600 group-hover:text-[#1F1F1F]" />
                   </p>
                   <p className="text-slate-500 text-xs mt-1.5 leading-relaxed">
                     Cách dùng Web terminal trực tiếp, kết nối bằng MobaXterm, PuTTY, xác thực SSH Key và bảng lệnh Linux cơ bản.
                   </p>
-                  <span className="inline-block text-blue-600 font-bold text-[11px] mt-3">Đọc bài viết chi tiết &gt;</span>
+                  <span className="inline-block text-[#1F1F1F] font-bold text-[11px] mt-3">Đọc bài viết chi tiết &gt;</span>
                 </Link>
 
                 <Link
                   href="/dashboard/knowledgebase/reinstall-os"
                   className="p-4 border border-slate-200 rounded-xl hover:border-blue-500 hover:bg-blue-50/20 transition-all block group"
                 >
-                  <p className="font-bold text-slate-800 text-sm group-hover:text-blue-600 flex items-center justify-between">
-                    Cách cài đặt lại Hệ điều hành (Rebuild OS) <ExternalLink className="w-3.5 h-3.5 text-slate-600 group-hover:text-blue-600" />
+                  <p className="font-bold text-slate-800 text-sm group-hover:text-[#1F1F1F] flex items-center justify-between">
+                    Cách cài đặt lại Hệ điều hành (Rebuild OS) <ExternalLink className="w-3.5 h-3.5 text-slate-600 group-hover:text-[#1F1F1F]" />
                   </p>
                   <p className="text-slate-500 text-xs mt-1.5 leading-relaxed">
                     Các bước tự động cài Ubuntu 24.04, Debian 12, Alpine Linux, phân tích ưu nhược điểm từng bản phân phối trong 30 giây.
                   </p>
-                  <span className="inline-block text-blue-600 font-bold text-[11px] mt-3">Đọc bài viết chi tiết &gt;</span>
+                  <span className="inline-block text-[#1F1F1F] font-bold text-[11px] mt-3">Đọc bài viết chi tiết &gt;</span>
                 </Link>
               </div>
             </div>
@@ -481,7 +481,7 @@ export default function CustomerTicketsPage() {
           <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 space-y-4 animate-in zoom-in-95">
             <div className="flex items-center justify-between border-b pb-3">
               <div className="flex items-center gap-2">
-                <Mail className="w-5 h-5 text-blue-600" />
+                <Mail className="w-5 h-5 text-[#1F1F1F]" />
                 <h3 className="font-bold text-slate-900 text-sm">Gửi phiếu hỗ trợ: {selectedDept}</h3>
               </div>
               <button onClick={() => setSelectedDept(null)} className="text-slate-600 hover:text-slate-600">

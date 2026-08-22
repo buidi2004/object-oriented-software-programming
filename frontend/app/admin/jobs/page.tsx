@@ -194,11 +194,11 @@ export default function AdminJobsPage() {
         {/* Navigation */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div>
-            <Link href="/admin" className="text-xs font-bold text-slate-500 hover:text-blue-600 flex items-center gap-1 mb-2">
+            <Link href="/admin" className="text-xs font-bold text-slate-500 hover:text-[#1F1F1F] flex items-center gap-1 mb-2">
               <ArrowLeft className="w-3.5 h-3.5" /> Quay lại Admin Panel
             </Link>
             <h1 className="text-2xl font-black text-slate-900 flex items-center gap-2.5">
-              <Clock className="w-6 h-6 text-indigo-600" /> Quản Lý Tác Vụ Nền &amp; Cron Jobs (Hangfire)
+              <Clock className="w-6 h-6 text-[#1F1F1F]" /> Quản Lý Tác Vụ Nền &amp; Cron Jobs (Hangfire)
             </h1>
             <p className="text-xs text-slate-500 mt-0.5">
               Kích hoạt thủ công, lập lịch và giám sát các cron jobs định kỳ của hệ thống Backend.
@@ -219,7 +219,7 @@ export default function AdminJobsPage() {
         {logs.length > 0 && (
           <div className="bg-white rounded-3xl p-6 mb-8 text-slate-900 shadow-xl">
             <div className="flex items-center justify-between mb-3 text-xs font-bold text-slate-600">
-              <span className="flex items-center gap-2 text-indigo-400">
+              <span className="flex items-center gap-2 text-slate-200">
                 <Terminal className="w-4 h-4" /> Nhật Ký Thực Thi Tác Vụ Trực Tiếp (Live Console Logs)
               </span>
               <button 
@@ -245,7 +245,7 @@ export default function AdminJobsPage() {
               className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200 shadow-sm hover:shadow-md transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4"
             >
               <div className="flex items-start gap-4">
-                <div className="p-3.5 rounded-2xl bg-indigo-50 text-indigo-600 shrink-0">
+                <div className="p-3.5 rounded-2xl bg-indigo-50 text-[#1F1F1F] shrink-0">
                   <Activity className="w-6 h-6" />
                 </div>
                 <div>
@@ -266,7 +266,7 @@ export default function AdminJobsPage() {
                   </p>
                   <div className="flex flex-wrap items-center gap-3 mt-3 text-[11px] text-slate-600 font-semibold">
                     <span className="flex items-center gap-1 text-slate-600">
-                      <Clock className="w-3 h-3 text-indigo-500" /> {job.schedule}
+                      <Clock className="w-3 h-3 text-[#1F1F1F]" /> {job.schedule}
                     </span>
                     <span className="font-mono bg-slate-100 text-slate-700 px-2 py-0.5 rounded">
                       Cron: {job.cronExpr}

@@ -112,7 +112,7 @@ export default function AdminResourcesPage() {
     if (ext === 'pdf') return <FileText className="w-5 h-5 text-rose-500" />;
     if (['zip', 'rar', 'tar', 'gz'].includes(ext || '')) return <FileArchive className="w-5 h-5 text-amber-500" />;
     if (['exe', 'msi', 'sh'].includes(ext || '')) return <Settings className="w-5 h-5 text-slate-500" />;
-    return <File className="w-5 h-5 text-blue-500" />;
+    return <File className="w-5 h-5 text-[#1F1F1F]" />;
   };
 
   return (
@@ -254,7 +254,7 @@ export default function AdminResourcesPage() {
                   />
                   <Upload className="w-8 h-8 text-slate-600 mx-auto mb-2" />
                   {file ? (
-                    <div className="text-sm font-bold text-blue-600">{file.name} ({formatFileSize(file.size)})</div>
+                    <div className="text-sm font-bold text-[#1F1F1F]">{file.name} ({formatFileSize(file.size)})</div>
                   ) : (
                     <>
                       <div className="text-sm font-medium text-slate-700">Click hoặc kéo thả file vào đây</div>

@@ -30,8 +30,8 @@ export function DashboardLoyaltyWidgets() {
       <p className="text-xs text-slate-500 mt-2">{vip?.nextTierName ? 'Còn ' + vip.amountToNextTier.toLocaleString('vi-VN') + 'đ để lên ' + vip.nextTierName : 'Bạn đang ở hạng cao nhất'}</p>
     </section>
     <section className="lg:col-span-2 bg-white border border-slate-200 rounded-lg p-5">
-      <div className="flex items-center gap-2 mb-3"><Pin className="w-5 h-5 text-blue-600"/><h2 className="font-bold">Dịch vụ đã ghim · Quick Access</h2></div>
-      {pins.length === 0 ? <p className="text-sm text-slate-500">Ghim VPS, Domain hoặc SSL từ trang quản lý để truy cập nhanh.</p> : <div className="grid sm:grid-cols-2 gap-2">{pins.map(item => <Link key={item.id} href={hrefFor(item)} className="flex items-center gap-3 border rounded-lg p-3 hover:border-blue-400"><Server className="w-4 h-4 text-blue-600"/><div><p className="text-sm font-semibold">{item.displayName}</p><p className="text-xs text-slate-500">{item.serviceType}</p></div></Link>)}</div>}
+      <div className="flex items-center gap-2 mb-3"><Pin className="w-5 h-5 text-[#1F1F1F]"/><h2 className="font-bold">Dịch vụ đã ghim · Quick Access</h2></div>
+      {pins.length === 0 ? <p className="text-sm text-slate-500">Ghim VPS, Domain hoặc SSL từ trang quản lý để truy cập nhanh.</p> : <div className="grid sm:grid-cols-2 gap-2">{pins.map(item => <Link key={item.id} href={hrefFor(item)} className="flex items-center gap-3 border rounded-lg p-3 hover:border-blue-400"><Server className="w-4 h-4 text-[#1F1F1F]"/><div><p className="text-sm font-semibold">{item.displayName}</p><p className="text-xs text-slate-500">{item.serviceType}</p></div></Link>)}</div>}
     </section>
   </div>;
 }

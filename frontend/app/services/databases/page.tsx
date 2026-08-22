@@ -284,8 +284,8 @@ export default function DatabasesServicePage() {
             
             {/* Left Headline & Value Proposition */}
             <div className="lg:col-span-7 space-y-6">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-sky-950/60 border border-sky-800/60 text-sky-300 text-xs font-mono">
-                <Terminal className="w-3.5 h-3.5 text-sky-400" />
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-sky-950/60 border border-sky-800/60 text-slate-200 text-xs font-mono">
+                <Terminal className="w-3.5 h-3.5 text-slate-200" />
                 SEN MANAGED CLOUD DATABASES
               </div>
 
@@ -347,7 +347,7 @@ export default function DatabasesServicePage() {
               <div className="p-4 rounded-xl bg-white border border-slate-200 text-xs font-mono space-y-2">
                 <div className="flex items-center justify-between text-slate-600">
                   <span>Engine: <strong className="text-slate-900">{currentEngine.name}</strong></span>
-                  <span>Version: <strong className="text-sky-400">{currentEngine.version}</strong></span>
+                  <span>Version: <strong className="text-slate-200">{currentEngine.version}</strong></span>
                 </div>
                 <div className="text-slate-600">
                   Features: <span className="text-slate-700">{currentEngine.specs}</span>
@@ -373,7 +373,7 @@ export default function DatabasesServicePage() {
 
                 <div className="space-y-2 font-mono text-xs">
                   <div className="text-slate-500">// 1-Click Connection String Ready</div>
-                  <div className="p-3.5 rounded-xl bg-slate-100 border border-slate-200/90 text-sky-300 break-all select-all font-mono leading-relaxed">
+                  <div className="p-3.5 rounded-xl bg-slate-100 border border-slate-200/90 text-slate-200 break-all select-all font-mono leading-relaxed">
                     {currentEngine.uriExample}
                   </div>
                 </div>
@@ -387,7 +387,7 @@ export default function DatabasesServicePage() {
 
                   <div className="p-3 rounded-xl bg-[#0e1627] border border-slate-200">
                     <div className="text-[10px] text-slate-600 uppercase">WAL Sync Status</div>
-                    <div className="text-base font-extrabold text-sky-400 mt-0.5">Synchronous</div>
+                    <div className="text-base font-extrabold text-slate-200 mt-0.5">Synchronous</div>
                     <div className="text-[10px] text-slate-500">Lag: 0 bytes</div>
                   </div>
                 </div>
@@ -456,7 +456,7 @@ export default function DatabasesServicePage() {
             <div className="mb-8 p-4 rounded-xl bg-[#070c16] border border-slate-200 flex flex-wrap items-center justify-between gap-4 font-mono text-xs">
               <div className="flex items-center gap-3">
                 <span className="text-slate-600">CLUSTER CONSENSUS:</span>
-                <span className="text-sky-400 font-bold">Raft / Patroni HA Protocol</span>
+                <span className="text-slate-200 font-bold">Raft / Patroni HA Protocol</span>
               </div>
               <div className="flex items-center gap-4">
                 <span className="text-slate-600">FAILOVER TIMER:</span>
@@ -499,7 +499,7 @@ export default function DatabasesServicePage() {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-slate-500">WAL Stream:</span>
-                    <span className="text-sky-400">{node1Status === 'primary' ? 'LSN 0/18A42B0' : 'Disconnected'}</span>
+                    <span className="text-slate-200">{node1Status === 'primary' ? 'LSN 0/18A42B0' : 'Disconnected'}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-slate-500">Disk Engine:</span>
@@ -516,13 +516,13 @@ export default function DatabasesServicePage() {
               }`}>
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2">
-                    <Server className="w-5 h-5 text-sky-400" />
+                    <Server className="w-5 h-5 text-slate-200" />
                     <span className="font-mono font-bold text-slate-900 text-sm">Node 02: HCM-DC2</span>
                   </div>
                   <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded ${
                     node1Status === 'failed'
                       ? 'bg-emerald-950 text-emerald-400 border border-emerald-800 font-bold animate-pulse'
-                      : 'bg-sky-950 text-sky-400 border border-sky-800'
+                      : 'bg-sky-950 text-slate-200 border border-sky-800'
                   }`}>
                     {node1Status === 'failed' ? 'PROMOTED PRIMARY (RW)' : 'STANDBY REPLICA (RO)'}
                   </span>
@@ -567,7 +567,7 @@ export default function DatabasesServicePage() {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-slate-500">Split-Brain:</span>
-                    <span className="text-sky-400">Guaranteed Protected</span>
+                    <span className="text-slate-200">Guaranteed Protected</span>
                   </div>
                 </div>
               </div>
@@ -584,7 +584,7 @@ export default function DatabasesServicePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-sky-950 text-sky-400 text-xs font-mono mb-3 border border-sky-800">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-sky-950 text-slate-200 text-xs font-mono mb-3 border border-sky-800">
               <ShieldCheck className="w-3.5 h-3.5" />
               INFRASTRUCTURE MECHANICS
             </div>
@@ -615,7 +615,7 @@ export default function DatabasesServicePage() {
                     <div className="text-center text-slate-600">↓</div>
                     <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span className="text-slate-600">2. Raft Quorum Vote</span>
-                      <span className="text-sky-400 font-bold">Witness Confirmed</span>
+                      <span className="text-slate-200 font-bold">Witness Confirmed</span>
                     </div>
                     <div className="text-center text-slate-600">↓</div>
                     <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
@@ -645,7 +645,7 @@ export default function DatabasesServicePage() {
                 <div className="p-4 rounded-2xl bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
                   <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
                     <span>WAL LOG CONTINUOUS STREAM</span>
-                    <span className="text-sky-400">PITR 14-30 DAYS</span>
+                    <span className="text-slate-200">PITR 14-30 DAYS</span>
                   </div>
                   
                   <div className="relative py-3 space-y-3">
@@ -674,7 +674,7 @@ export default function DatabasesServicePage() {
 
               <div className="pt-4 border-t border-slate-200/80 text-xs font-mono text-slate-700 flex items-center justify-between">
                 <span>Granularity:</span>
-                <strong className="text-sky-400">Tới Từng Giây (Exact Second)</strong>
+                <strong className="text-slate-200">Tới Từng Giây (Exact Second)</strong>
               </div>
             </div>
 
@@ -685,7 +685,7 @@ export default function DatabasesServicePage() {
                 <div className="p-4 rounded-2xl bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
                   <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
                     <span>ISOLATED VPC &amp; TLS 1.3</span>
-                    <span className="text-indigo-400">AES-256</span>
+                    <span className="text-slate-200">AES-256</span>
                   </div>
                   <div className="space-y-2 text-slate-700 text-[11px]">
                     <div className="flex items-center justify-between p-1.5 rounded bg-white border border-slate-200">
@@ -698,7 +698,7 @@ export default function DatabasesServicePage() {
                     </div>
                     <div className="flex items-center justify-between p-1.5 rounded bg-white border border-slate-200">
                       <span>3. NVMe Storage</span>
-                      <span className="text-indigo-400 font-bold">AES-256 at Rest</span>
+                      <span className="text-slate-200 font-bold">AES-256 at Rest</span>
                     </div>
                   </div>
                 </div>
@@ -712,7 +712,7 @@ export default function DatabasesServicePage() {
 
               <div className="pt-4 border-t border-slate-200/80 text-xs font-mono text-slate-700 flex items-center justify-between">
                 <span>Compliance:</span>
-                <strong className="text-indigo-400">SOC2 &amp; ISO 27001 Ready</strong>
+                <strong className="text-slate-200">SOC2 &amp; ISO 27001 Ready</strong>
               </div>
             </div>
 
@@ -727,7 +727,7 @@ export default function DatabasesServicePage() {
           
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
             <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-sky-950 text-sky-400 text-xs font-mono mb-3 border border-sky-800">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-sky-950 text-slate-200 text-xs font-mono mb-3 border border-sky-800">
                 <Sliders className="w-3.5 h-3.5" />
                 ARCHITECTURE SPEC SHEET
               </div>
@@ -780,7 +780,7 @@ export default function DatabasesServicePage() {
                         <th key={p.id} className="p-5 text-slate-900 border-l border-slate-200/80 w-1/4">
                           <div className="text-sm font-extrabold text-slate-900">{p.name}</div>
                           <div className="text-[11px] text-slate-600 font-sans font-normal">{p.tier}</div>
-                          <div className="text-lg font-black text-sky-400 mt-2">
+                          <div className="text-lg font-black text-slate-200 mt-2">
                             {displayPrice.toLocaleString('vi-VN')} <span className="text-xs font-normal text-slate-600">đ/tháng</span>
                           </div>
                         </th>
@@ -810,7 +810,7 @@ export default function DatabasesServicePage() {
                   <tr className="hover:bg-slate-900/40">
                     <td className="p-4 font-bold text-slate-600">Băng Thông Đọc Ghi IOPS</td>
                     {plans.map((p) => (
-                      <td key={p.id} className="p-4 border-l border-slate-200/60 text-sky-400 font-bold">{p.iops}</td>
+                      <td key={p.id} className="p-4 border-l border-slate-200/60 text-slate-200 font-bold">{p.iops}</td>
                     ))}
                   </tr>
                   <tr className="hover:bg-slate-900/40">
@@ -836,7 +836,7 @@ export default function DatabasesServicePage() {
                     {plans.map((p) => (
                       <td key={p.id} className="p-4 border-l border-slate-200/60 text-[11px]">
                         <div>Read: <span className="text-emerald-400">{p.metrics.readLoad}</span></div>
-                        <div>Write: <span className="text-sky-400">{p.metrics.writeLoad}</span></div>
+                        <div>Write: <span className="text-slate-200">{p.metrics.writeLoad}</span></div>
                         <div>p99 Latency: <span className="text-amber-400">{p.metrics.p99}</span></div>
                       </td>
                     ))}
@@ -883,11 +883,11 @@ export default function DatabasesServicePage() {
               >
                 <button
                   onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
-                  className="w-full p-5 text-left font-bold text-sm text-slate-900 flex items-center justify-between gap-4 hover:text-sky-400 transition-colors"
+                  className="w-full p-5 text-left font-bold text-sm text-slate-900 flex items-center justify-between gap-4 hover:text-slate-200 transition-colors"
                 >
                   <span>{faq.q}</span>
                   {openFaq === idx ? (
-                    <ChevronUp className="w-4 h-4 text-sky-400 shrink-0" />
+                    <ChevronUp className="w-4 h-4 text-slate-200 shrink-0" />
                   ) : (
                     <ChevronDown className="w-4 h-4 text-slate-500 shrink-0" />
                   )}
@@ -907,7 +907,7 @@ export default function DatabasesServicePage() {
       <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="rounded-3xl bg-gradient-to-r from-[#0d182e] via-[#091122] to-[#0d182e] p-8 sm:p-12 border border-sky-600/30 text-center relative overflow-hidden shadow-2xl">
           <div className="relative z-10 max-w-3xl mx-auto space-y-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-sky-950 border border-sky-800 text-sky-400 text-xs font-mono">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-sky-950 border border-sky-800 text-slate-200 text-xs font-mono">
               <Zap className="w-3.5 h-3.5" />
               DEPLOY INSTANTLY IN 60 SECONDS
             </div>

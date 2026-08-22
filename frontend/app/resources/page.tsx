@@ -59,7 +59,7 @@ export default function ResourcesPage() {
     if (ext === 'pdf') return <FileText className="w-8 h-8 text-rose-500" />;
     if (['zip', 'rar', 'tar', 'gz'].includes(ext || '')) return <FileArchive className="w-8 h-8 text-amber-500" />;
     if (['exe', 'msi', 'sh'].includes(ext || '')) return <Settings className="w-8 h-8 text-slate-500" />;
-    return <File className="w-8 h-8 text-blue-500" />;
+    return <File className="w-8 h-8 text-[#1F1F1F]" />;
   };
 
   return (

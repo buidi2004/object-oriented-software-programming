@@ -266,9 +266,9 @@ export default function SecurityPage() {
         {/* Info Sidebar */}
         <div className="space-y-6">
           <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl p-6 text-slate-900 shadow-lg">
-            <Shield className="w-8 h-8 mb-4 text-blue-200" />
+            <Shield className="w-8 h-8 mb-4 text-slate-200" />
             <h3 className="text-lg font-bold mb-2">Bảo mật 2 Lớp (2FA)</h3>
-            <p className="text-blue-100 text-sm mb-4">
+            <p className="text-slate-200 text-sm mb-4">
               Bảo vệ tài khoản của bạn bằng mã xác thực 6 số trên ứng dụng Google Authenticator.
             </p>
             
@@ -276,7 +276,7 @@ export default function SecurityPage() {
               <button 
                 onClick={handleSetup2FA}
                 disabled={is2faLoading}
-                className="w-full py-2.5 bg-white text-blue-700 hover:bg-blue-50 rounded-xl text-sm font-bold shadow-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+                className="w-full py-2.5 bg-white text-[#1F1F1F] hover:bg-blue-50 rounded-xl text-sm font-bold shadow-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
               >
                 {is2faLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Key className="w-4 h-4" />}
                 Bật Xác Thực 2FA
@@ -319,7 +319,7 @@ export default function SecurityPage() {
           <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
             <div className="p-6 border-b border-slate-200 dark:border-slate-800">
               <h3 className="font-semibold text-slate-900 dark:text-white flex items-center gap-2">
-                <Laptop className="w-5 h-5 text-indigo-500" />
+                <Laptop className="w-5 h-5 text-[#1F1F1F]" />
                 Phiên Đăng Nhập
               </h3>
             </div>

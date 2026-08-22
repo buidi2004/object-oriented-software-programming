@@ -83,7 +83,7 @@ export default function AdminReviewsPage() {
           </Link>
           <div>
             <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
-              <MessageSquare className="w-8 h-8 text-indigo-600" />
+              <MessageSquare className="w-8 h-8 text-[#1F1F1F]" />
               Đánh Giá Khách Hàng (Reviews)
             </h1>
             <p className="text-gray-500 mt-2">Duyệt và chọn các đánh giá nổi bật để đưa lên trang chủ.</p>
@@ -123,7 +123,7 @@ export default function AdminReviewsPage() {
                     <div className="text-xs text-gray-600 mt-1">{new Date(review.createdAt).toLocaleString('vi-VN')}</div>
                   </td>
                   <td className="px-6 py-4">
-                    <div className="font-medium text-indigo-600">{review.servicePlanName}</div>
+                    <div className="font-medium text-[#1F1F1F]">{review.servicePlanName}</div>
                     <div className="flex items-center gap-0.5 mt-1">
                       {[...Array(5)].map((_, i) => (
                         <Star key={i} className={`w-3.5 h-3.5 ${i < review.rating ? 'text-amber-400 fill-amber-400' : 'text-gray-200'}`} />
@@ -145,7 +145,7 @@ export default function AdminReviewsPage() {
                         </span>
                       )}
                       {review.isFeatured && (
-                        <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200">
+                        <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium bg-blue-50 text-[#1F1F1F] border border-blue-200">
                           <Star className="w-3.5 h-3.5 fill-blue-700" /> Featured
                         </span>
                       )}
@@ -170,7 +170,7 @@ export default function AdminReviewsPage() {
                           className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-colors disabled:opacity-50 border ${
                             review.isFeatured 
                               ? 'bg-gray-100 hover:bg-gray-200 text-gray-700 border-gray-200' 
-                              : 'bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border-indigo-200'
+                              : 'bg-indigo-50 hover:bg-indigo-100 text-[#1F1F1F] border-indigo-200'
                           }`}
                         >
                           {review.isFeatured ? 'Gỡ khỏi Trang chủ' : 'Đưa lên Trang chủ'}

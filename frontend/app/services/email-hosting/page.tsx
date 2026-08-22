@@ -212,7 +212,7 @@ export default function EmailHostingPage() {
                       {plan.users}
                     </div>
                     <div className="p-3 rounded-xl bg-slate-50 text-slate-800 font-bold flex items-center gap-2">
-                      <Server className="w-4 h-4 text-blue-500" />
+                      <Server className="w-4 h-4 text-[#1F1F1F]" />
                       {plan.storage}
                     </div>
 
@@ -268,7 +268,7 @@ export default function EmailHostingPage() {
             </div>
 
             <div className="p-8 rounded-3xl bg-slate-50 border border-slate-100 hover:border-blue-200 transition-all">
-              <div className="w-12 h-12 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center mb-6">
+              <div className="w-12 h-12 rounded-2xl bg-blue-100 text-[#1F1F1F] flex items-center justify-center mb-6">
                 <Globe className="w-6 h-6" />
               </div>
               <h3 className="text-lg font-bold text-slate-900 mb-2">Tỷ Lệ Vào Inbox 100%</h3>

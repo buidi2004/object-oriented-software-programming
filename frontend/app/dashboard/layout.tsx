@@ -221,7 +221,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                   <Link
                     href="/services"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold text-blue-600 bg-blue-50/70 hover:bg-blue-100/70 transition-all"
+                    className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold text-[#1F1F1F] bg-blue-50/70 hover:bg-blue-100/70 transition-all"
                   >
                     <Server className="w-3.5 h-3.5 shrink-0" />
                     <span>Mua thêm dịch vụ →</span>

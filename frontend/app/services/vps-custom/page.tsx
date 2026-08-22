@@ -131,19 +131,19 @@ export default function VpsCustomConfiguratorPage() {
       <section className="relative overflow-hidden bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 text-slate-900 pt-16 pb-24 border-b border-blue-900/30">
         <div className="absolute inset-0 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] [background-size:24px_24px] opacity-15" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-          <nav className="flex items-center gap-2 text-xs font-semibold text-blue-300 mb-6">
+          <nav className="flex items-center gap-2 text-xs font-semibold text-slate-200 mb-6">
             <Link href="/" className="hover:text-slate-900 transition-colors">Trang chủ</Link>
             <span>/</span>
             <Link href="/services" className="hover:text-slate-900 transition-colors">Dịch vụ</Link>
             <span>/</span>
             <Link href="/services/cloud-vps" className="hover:text-slate-900 transition-colors">Cloud VPS</Link>
             <span>/</span>
-            <span className="text-cyan-400">Tùy Chỉnh Cấu Hình</span>
+            <span className="text-[#1F1F1F]">Tùy Chỉnh Cấu Hình</span>
           </nav>
 
           <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-400/30 text-cyan-300 text-xs font-black uppercase tracking-wider mb-4">
-              <Zap className="w-4 h-4 text-cyan-400" />
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-400/30 text-slate-200 text-xs font-black uppercase tracking-wider mb-4">
+              <Zap className="w-4 h-4 text-[#1F1F1F]" />
               Custom Cloud VPS Configurator
             </div>
             <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight mb-4 leading-tight">
@@ -152,7 +152,7 @@ export default function VpsCustomConfiguratorPage() {
                 Cloud VPS Theo Nhu Cầu
               </span>
             </h1>
-            <p className="text-base sm:text-lg text-blue-100/80 max-w-2xl leading-relaxed">
+            <p className="text-base sm:text-lg text-slate-200/80 max-w-2xl leading-relaxed">
               Tự do lựa chọn vi xử lý AMD EPYC Gen 4, bộ nhớ RAM DDR5 và ổ cứng Enterprise NVMe. Thanh toán linh hoạt, khởi tạo tức thì trong 30 giây.
             </p>
           </div>
@@ -170,7 +170,7 @@ export default function VpsCustomConfiguratorPage() {
             <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-8">
               <div className="flex items-center justify-between border-b border-slate-100 pb-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center font-black">1</div>
+                  <div className="w-10 h-10 rounded-2xl bg-blue-50 text-[#1F1F1F] flex items-center justify-center font-black">1</div>
                   <div>
                     <h2 className="text-lg font-black text-slate-900">Tài Nguyên Phần Cứng (Hardware Specs)</h2>
                     <p className="text-xs text-slate-500">Kéo thanh trượt hoặc chọn các mốc định mức phù hợp</p>
@@ -185,10 +185,10 @@ export default function VpsCustomConfiguratorPage() {
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
                   <label className="text-sm font-bold text-slate-800 flex items-center gap-2">
-                    <Cpu className="w-4 h-4 text-blue-600" />
+                    <Cpu className="w-4 h-4 text-[#1F1F1F]" />
                     Vi Xử Lý (CPU Cores):
                   </label>
-                  <span className="text-base font-black text-blue-600 bg-blue-50 px-3 py-1 rounded-xl">
+                  <span className="text-base font-black text-[#1F1F1F] bg-blue-50 px-3 py-1 rounded-xl">
                     {cpu} vCPU Core
                   </span>
                 </div>
@@ -320,7 +320,7 @@ export default function VpsCustomConfiguratorPage() {
             {/* Step 2: OS Selection */}
             <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6">
               <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
-                <div className="w-10 h-10 rounded-2xl bg-cyan-50 text-cyan-600 flex items-center justify-center font-black">2</div>
+                <div className="w-10 h-10 rounded-2xl bg-cyan-50 text-[#1F1F1F] flex items-center justify-center font-black">2</div>
                 <div>
                   <h2 className="text-lg font-black text-slate-900">Hệ Điều Hành &amp; Template (OS Image)</h2>
                   <p className="text-xs text-slate-500">Tự động cài đặt sạch 100% bản quyền và cập nhật mới nhất</p>
@@ -451,7 +451,7 @@ export default function VpsCustomConfiguratorPage() {
             <div className="bg-white text-slate-900 rounded-3xl p-6 sm:p-7 border border-slate-200 shadow-2xl space-y-6">
               
               <div>
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/20 text-cyan-400 text-xs font-bold mb-3">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/20 text-[#1F1F1F] text-xs font-bold mb-3">
                   <Server className="w-3.5 h-3.5" />
                   Cấu Hình VPS Đã Chọn
                 </div>
@@ -462,7 +462,7 @@ export default function VpsCustomConfiguratorPage() {
               {/* Specs Breakdown */}
               <div className="bg-white/80 rounded-2xl p-4 space-y-2.5 border border-slate-700/60 text-xs">
                 <div className="flex justify-between items-center text-slate-700">
-                  <span className="flex items-center gap-1.5"><Cpu className="w-3.5 h-3.5 text-blue-400" /> CPU:</span>
+                  <span className="flex items-center gap-1.5"><Cpu className="w-3.5 h-3.5 text-slate-200" /> CPU:</span>
                   <span className="font-bold text-slate-900">{cpu} vCPU Core</span>
                 </div>
                 <div className="flex justify-between items-center text-slate-700">
@@ -478,7 +478,7 @@ export default function VpsCustomConfiguratorPage() {
                   <span className="font-bold text-slate-900">{selectedDc.flag} {selectedDc.name.split(' - ')[0]}</span>
                 </div>
                 <div className="flex justify-between items-center text-slate-700">
-                  <span className="flex items-center gap-1.5"><Terminal className="w-3.5 h-3.5 text-cyan-400" /> OS:</span>
+                  <span className="flex items-center gap-1.5"><Terminal className="w-3.5 h-3.5 text-[#1F1F1F]" /> OS:</span>
                   <span className="font-bold text-slate-900">{selectedOs.name}</span>
                 </div>
                 {selectedAddons.length > 0 && (
@@ -532,7 +532,7 @@ export default function VpsCustomConfiguratorPage() {
                 <div className="flex justify-between items-baseline">
                   <span className="text-xs font-bold text-slate-700">Giá sau chiết khấu:</span>
                   <div className="text-right">
-                    <span className="text-2xl font-black text-cyan-400">
+                    <span className="text-2xl font-black text-[#1F1F1F]">
                       {discountedMonthly.toLocaleString('vi-VN')} đ
                     </span>
                     <span className="text-xs text-slate-600 font-normal">/tháng</span>
@@ -585,7 +585,7 @@ export default function VpsCustomConfiguratorPage() {
             <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-3">
               <h4 className="text-xs font-black text-slate-900 uppercase tracking-wider">Cần Tham Khảo Thêm?</h4>
               <div className="space-y-2 text-xs">
-                <Link href="/services/cloud-vps" className="flex items-center justify-between text-blue-600 font-bold hover:underline">
+                <Link href="/services/cloud-vps" className="flex items-center justify-between text-[#1F1F1F] font-bold hover:underline">
                   <span>Xem các gói Cloud VPS cấu hình sẵn</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
@@ -607,7 +607,7 @@ export default function VpsCustomConfiguratorPage() {
         {/* Feature Highlights */}
         <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm">
-            <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mb-4">
+            <div className="w-12 h-12 rounded-2xl bg-blue-50 text-[#1F1F1F] flex items-center justify-center mb-4">
               <Cpu className="w-6 h-6" />
             </div>
             <h3 className="text-base font-black text-slate-900 mb-2">AMD EPYC 9654 Zen 4</h3>

@@ -225,7 +225,7 @@ export default function AdminSettingsPage() {
                         value={settings.support_email || ''} 
                         onChange={(e) => handleValueChange('support_email', e.target.value)}
                         placeholder="support@cloudhost.vn"
-                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 font-semibold text-blue-600" 
+                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 font-semibold text-[#1F1F1F]" 
                       />
                     </div>
                   </div>
@@ -300,12 +300,12 @@ export default function AdminSettingsPage() {
             {activeTab === 'payment' && (
               <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
                 <h2 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
-                  <Database className="w-5 h-5 text-blue-600" /> Cấu Hình Cổng Thanh Toán VietQR (SePay)
+                  <Database className="w-5 h-5 text-[#1F1F1F]" /> Cấu Hình Cổng Thanh Toán VietQR (SePay)
                 </h2>
                 
                 <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6">
-                  <p className="text-sm font-semibold text-blue-900">🔔 Kết nối với tài khoản SePay của bạn</p>
-                  <p className="text-xs text-blue-700 mt-1 leading-relaxed">
+                  <p className="text-sm font-semibold text-[#1F1F1F]">🔔 Kết nối với tài khoản SePay của bạn</p>
+                  <p className="text-xs text-[#1F1F1F] mt-1 leading-relaxed">
                     Đảm bảo bạn đã thêm tài khoản ngân hàng thật trên <strong>my.sepay.vn</strong>. 
                     Sau đó, điền đúng Số tài khoản và Mã ngân hàng đó vào đây để hệ thống tạo mã QR chính xác. 
                     Nếu điền sai, khi quét mã bằng điện thoại sẽ báo lỗi "Mã QR không hợp lệ".
@@ -447,7 +447,7 @@ export default function AdminSettingsPage() {
                   <h2 className="text-lg font-bold text-slate-900">Danh sách Cấu hình Tùy biến</h2>
                   <button 
                     onClick={() => setShowAddCustom(!showAddCustom)}
-                    className="px-3 py-1.5 rounded-lg bg-blue-50 text-blue-600 font-semibold text-xs hover:bg-blue-100 flex items-center gap-1.5"
+                    className="px-3 py-1.5 rounded-lg bg-blue-50 text-[#1F1F1F] font-semibold text-xs hover:bg-blue-100 flex items-center gap-1.5"
                   >
                     <Plus className="w-4 h-4" />
                     Thêm Key Tùy Biến

@@ -20,7 +20,7 @@ export default function HostingPage() {
       {/* Hero */}
       <section className="relative overflow-hidden bg-gradient-to-br from-indigo-950 via-purple-950 to-slate-900 text-slate-900 py-20 sm:py-28">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-          <nav className="flex items-center gap-2 text-sm text-indigo-300 mb-8">
+          <nav className="flex items-center gap-2 text-sm text-slate-200 mb-8">
             <Link href="/" className="hover:text-slate-900">Trang chủ</Link>
             <span>/</span>
             <Link href="/services" className="hover:text-slate-900">Dịch vụ</Link>
@@ -36,7 +36,7 @@ export default function HostingPage() {
               NVMe Web Hosting
               <span className="bg-gradient-to-r from-purple-400 to-indigo-400 bg-clip-text text-transparent"> Tốc Độ Cao</span>
             </h1>
-            <p className="text-lg text-indigo-200 max-w-2xl mb-8">
+            <p className="text-lg text-slate-200 max-w-2xl mb-8">
               Tối ưu 100% cho WordPress, WooCommerce & Laravel. LiteSpeed Web Server + LSCache tăng tốc gấp 10 lần so với hosting truyền thống.
             </p>
             <a href="#pricing" className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl bg-gradient-to-r from-purple-500 to-indigo-600 text-slate-900 font-bold shadow-xl hover:shadow-2xl transition-all">
@@ -58,7 +58,7 @@ export default function HostingPage() {
             {[
               { icon: Zap, title: 'LiteSpeed + LSCache', desc: 'Tăng tốc x10 so với Apache/Nginx', color: 'bg-amber-100 text-amber-600' },
               { icon: Shield, title: 'Imunify360 AI', desc: 'Chống hacker & mã độc tự động', color: 'bg-rose-100 text-rose-600' },
-              { icon: Globe, title: 'cPanel Pro', desc: 'Quản trị website dễ dàng', color: 'bg-blue-100 text-blue-600' },
+              { icon: Globe, title: 'cPanel Pro', desc: 'Quản trị website dễ dàng', color: 'bg-blue-100 text-[#1F1F1F]' },
               { icon: Clock, title: 'Backup Tự Động', desc: 'Sao lưu hàng ngày, khôi phục 1 click', color: 'bg-emerald-100 text-emerald-600' },
             ].map((f, i) => (
               <div key={i} className="bg-slate-50 rounded-2xl p-6 border border-slate-100 text-center hover:shadow-md transition-all">
@@ -106,8 +106,8 @@ export default function HostingPage() {
       <section className="py-16 bg-gradient-to-r from-indigo-600 to-purple-600 text-slate-900 text-center">
         <div className="max-w-3xl mx-auto px-4">
           <h2 className="text-3xl font-black mb-4">Bắt Đầu Xây Dựng Website Ngay Hôm Nay</h2>
-          <p className="text-indigo-200 mb-8">Đăng ký hosting chỉ mất 2 phút. Hỗ trợ chuyển dữ liệu miễn phí.</p>
-          <Link href="/" className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl bg-white text-indigo-600 font-bold shadow-xl hover:shadow-2xl transition-all">
+          <p className="text-slate-200 mb-8">Đăng ký hosting chỉ mất 2 phút. Hỗ trợ chuyển dữ liệu miễn phí.</p>
+          <Link href="/" className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl bg-white text-[#1F1F1F] font-bold shadow-xl hover:shadow-2xl transition-all">
             <Zap className="w-5 h-5" />
             Đăng Ký Hosting
           </Link>

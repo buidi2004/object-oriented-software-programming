@@ -179,8 +179,8 @@ export default function AppMarketplacePage() {
           {/* Status Bar */}
           <div className="flex flex-wrap items-center justify-between gap-4 p-3.5 mb-10 rounded-2xl bg-[#0d1424] border border-slate-200 text-xs font-mono">
             <div className="flex items-center gap-3">
-              <span className="flex items-center gap-1.5 text-indigo-400 font-bold">
-                <Boxes className="w-3.5 h-3.5 text-indigo-400" />
+              <span className="flex items-center gap-1.5 text-slate-200 font-bold">
+                <Boxes className="w-3.5 h-3.5 text-slate-200" />
                 APP MARKETPLACE: 1-CLICK DOCKER &amp; NATIVE ENGINE
               </span>
               <span className="text-slate-600 hidden sm:inline">|</span>
@@ -196,8 +196,8 @@ export default function AppMarketplacePage() {
           </div>
 
           <div className="text-center max-w-4xl mx-auto space-y-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-indigo-950/60 border border-indigo-800/60 text-indigo-300 text-xs font-mono">
-              <Zap className="w-3.5 h-3.5 text-indigo-400" />
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-indigo-950/60 border border-indigo-800/60 text-slate-200 text-xs font-mono">
+              <Zap className="w-3.5 h-3.5 text-slate-200" />
               1-CLICK AUTOMATED APP PROVISIONING
             </div>
 
@@ -265,12 +265,12 @@ export default function AppMarketplacePage() {
                   <div className="w-12 h-12 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center group-hover:scale-105 transition-transform">
                     <app.Logo className="w-7 h-7" style={{ color: app.brandColor }} />
                   </div>
-                  <span className="px-2 py-0.5 rounded bg-indigo-950/80 border border-indigo-800/60 text-indigo-400 text-[10px] font-mono font-bold">
+                  <span className="px-2 py-0.5 rounded bg-indigo-950/80 border border-indigo-800/60 text-slate-200 text-[10px] font-mono font-bold">
                     {app.version}
                   </span>
                 </div>
 
-                <h3 className="text-base font-bold text-slate-900 mb-1 group-hover:text-indigo-400 transition-colors font-mono">
+                <h3 className="text-base font-bold text-slate-900 mb-1 group-hover:text-slate-200 transition-colors font-mono">
                   {app.name}
                 </h3>
                 <p className="text-xs text-slate-600 line-clamp-3 mb-6 leading-relaxed font-normal">
@@ -286,7 +286,7 @@ export default function AppMarketplacePage() {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-slate-500">Port mặc định:</span>
-                    <span className="text-indigo-400 font-bold">{app.port}</span>
+                    <span className="text-slate-200 font-bold">{app.port}</span>
                   </div>
                 </div>
 
@@ -308,7 +308,7 @@ export default function AppMarketplacePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-indigo-950 text-indigo-400 text-xs font-mono mb-3 border border-indigo-800">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-indigo-950 text-slate-200 text-xs font-mono mb-3 border border-indigo-800">
               <Zap className="w-3.5 h-3.5" />
               1-CLICK CONTAINER ENGINE
             </div>
@@ -333,11 +333,11 @@ export default function AppMarketplacePage() {
                   <div className="space-y-2 text-slate-700 text-[11px]">
                     <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>1. Cloud-Init OS Setup</span>
-                      <span className="text-sky-400">Ubuntu 24.04 LTS</span>
+                      <span className="text-slate-200">Ubuntu 24.04 LTS</span>
                     </div>
                     <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>2. Container Compose Run</span>
-                      <span className="text-indigo-400 font-bold">App Stack Injected</span>
+                      <span className="text-slate-200 font-bold">App Stack Injected</span>
                     </div>
                     <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>3. Credential Dispatch</span>
@@ -365,7 +365,7 @@ export default function AppMarketplacePage() {
                 <div className="p-4 rounded-2xl bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
                   <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
                     <span>NGINX REVERSE PROXY &amp; SSL</span>
-                    <span className="text-sky-400">AUTO-HTTPS</span>
+                    <span className="text-slate-200">AUTO-HTTPS</span>
                   </div>
                   <div className="space-y-2 text-slate-700 text-[11px]">
                     <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
@@ -378,7 +378,7 @@ export default function AppMarketplacePage() {
                     </div>
                     <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>Custom Domain</span>
-                      <span className="text-sky-400 font-bold">1-Click CNAME Bind</span>
+                      <span className="text-slate-200 font-bold">1-Click CNAME Bind</span>
                     </div>
                   </div>
                 </div>
@@ -392,7 +392,7 @@ export default function AppMarketplacePage() {
 
               <div className="pt-4 border-t border-slate-200/80 text-xs font-mono text-slate-700 flex items-center justify-between">
                 <span>Domain Support:</span>
-                <strong className="text-sky-400">Gắn Tên Miền Riêng Dễ Dàng</strong>
+                <strong className="text-slate-200">Gắn Tên Miền Riêng Dễ Dàng</strong>
               </div>
             </div>
 
@@ -415,7 +415,7 @@ export default function AppMarketplacePage() {
                     </div>
                     <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>RAM Allocation</span>
-                      <span className="text-sky-400">100% Dedicated ECC</span>
+                      <span className="text-slate-200">100% Dedicated ECC</span>
                     </div>
                   </div>
                 </div>
@@ -454,11 +454,11 @@ export default function AppMarketplacePage() {
               >
                 <button
                   onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
-                  className="w-full p-5 text-left font-bold text-sm text-slate-900 flex items-center justify-between gap-4 hover:text-indigo-400 transition-colors"
+                  className="w-full p-5 text-left font-bold text-sm text-slate-900 flex items-center justify-between gap-4 hover:text-slate-200 transition-colors"
                 >
                   <span>{faq.q}</span>
                   {openFaq === idx ? (
-                    <ChevronUp className="w-5 h-5 text-indigo-400 shrink-0" />
+                    <ChevronUp className="w-5 h-5 text-slate-200 shrink-0" />
                   ) : (
                     <ChevronDown className="w-5 h-5 text-slate-500 shrink-0" />
                   )}
@@ -478,7 +478,7 @@ export default function AppMarketplacePage() {
       <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="rounded-3xl bg-gradient-to-r from-[#14122e] via-[#0b0a1a] to-[#14122e] p-8 sm:p-12 border border-indigo-600/30 text-center relative overflow-hidden shadow-2xl">
           <div className="relative z-10 max-w-3xl mx-auto space-y-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-indigo-950 border border-indigo-800 text-indigo-400 text-xs font-mono">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-indigo-950 border border-indigo-800 text-slate-200 text-xs font-mono">
               <Zap className="w-3.5 h-3.5" />
               DEPLOY ANY APP IN 60 SECONDS
             </div>

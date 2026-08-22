@@ -220,7 +220,7 @@ export default function AdminCategoriesPage() {
                   <tr key={category.id} className="hover:bg-slate-50/80 transition-colors">
                     <td className="py-3.5 px-4">
                       <div className="flex items-center gap-2.5">
-                        <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
+                        <div className="w-8 h-8 rounded-lg bg-blue-50 text-[#1F1F1F] flex items-center justify-center font-bold">
                           <FolderTree className="w-4 h-4" />
                         </div>
                         <span className="font-semibold text-slate-900">{category.name}</span>
@@ -238,7 +238,7 @@ export default function AdminCategoriesPage() {
                       <div className="flex items-center justify-end gap-1.5">
                         <button 
                           onClick={() => handleEditClick(category)} 
-                          className="p-2 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                          className="p-2 text-slate-600 hover:text-[#1F1F1F] hover:bg-blue-50 rounded-lg transition-colors"
                           title="Sửa danh mục"
                         >
                           <Edit2 className="w-4 h-4" />

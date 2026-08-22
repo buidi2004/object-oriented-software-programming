@@ -10,9 +10,9 @@ export default function PaymentMethodsPage() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <nav className="flex items-center gap-2 text-sm text-slate-500 mb-8">
-          <Link href="/" className="hover:text-blue-600">Trang chủ</Link>
+          <Link href="/" className="hover:text-[#1F1F1F]">Trang chủ</Link>
           <ChevronRight className="w-4 h-4" />
-          <Link href="/support" className="hover:text-blue-600">Trợ giúp</Link>
+          <Link href="/support" className="hover:text-[#1F1F1F]">Trợ giúp</Link>
           <ChevronRight className="w-4 h-4" />
           <span className="text-slate-900 font-medium">Các hình thức thanh toán</span>
         </nav>
@@ -20,14 +20,14 @@ export default function PaymentMethodsPage() {
         <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
           <div className="bg-gradient-to-r from-blue-600 to-indigo-700 p-8 text-slate-900">
             <h1 className="text-3xl font-black mb-2">Các Hình Thức Thanh Toán</h1>
-            <p className="text-blue-100">Đa dạng, tiện lợi và an toàn cho mọi giao dịch của bạn.</p>
+            <p className="text-slate-200">Đa dạng, tiện lợi và an toàn cho mọi giao dịch của bạn.</p>
           </div>
           
           <div className="p-8 space-y-12">
             
             <section>
               <div className="flex items-center gap-3 mb-4 text-slate-900">
-                <div className="p-2 bg-blue-100 rounded-lg text-blue-600"><QrCode className="w-6 h-6" /></div>
+                <div className="p-2 bg-blue-100 rounded-lg text-[#1F1F1F]"><QrCode className="w-6 h-6" /></div>
                 <h2 className="text-xl font-bold">1. Chuyển khoản ngân hàng & quét mã VietQR (Khuyên dùng)</h2>
               </div>
               <p className="text-slate-600 leading-relaxed mb-4">
@@ -38,7 +38,7 @@ export default function PaymentMethodsPage() {
                   <li>Ngân hàng: <strong className="text-slate-900">Techcombank</strong></li>
                   <li>Chủ tài khoản: <strong className="text-slate-900">CTCP CONG NGHE HA TANG SO VN</strong></li>
                   <li>Số tài khoản: <strong className="text-slate-900">19039328221019</strong></li>
-                  <li className="pt-2 text-blue-600 italic">Nội dung chuyển khoản vui lòng ghi đúng cú pháp hệ thống cung cấp khi tạo đơn hàng.</li>
+                  <li className="pt-2 text-[#1F1F1F] italic">Nội dung chuyển khoản vui lòng ghi đúng cú pháp hệ thống cung cấp khi tạo đơn hàng.</li>
                 </ul>
               </div>
             </section>

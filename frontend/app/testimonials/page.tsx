@@ -45,7 +45,7 @@ export default function TestimonialsPage() {
     <div className="min-h-screen bg-slate-50 py-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <h2 className="text-sm font-bold text-blue-600 uppercase tracking-widest mb-2">Đánh Giá Từ Khách Hàng</h2>
+          <h2 className="text-sm font-bold text-[#1F1F1F] uppercase tracking-widest mb-2">Đánh Giá Từ Khách Hàng</h2>
           <h1 className="text-4xl sm:text-5xl font-black text-slate-900 mb-6 tracking-tight">
             Khách hàng nói gì về <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">CloudStore</span>
           </h1>
@@ -57,7 +57,7 @@ export default function TestimonialsPage() {
 
         {isLoading ? (
           <div className="flex justify-center items-center py-20">
-            <Loader2 className="w-10 h-10 animate-spin text-blue-600" />
+            <Loader2 className="w-10 h-10 animate-spin text-[#1F1F1F]" />
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

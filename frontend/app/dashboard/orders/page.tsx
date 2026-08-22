@@ -42,7 +42,7 @@ const statusColors: Record<string, string> = {
   Refunded: 'bg-slate-100 text-slate-700',
   pending: 'bg-amber-100 text-amber-700',
   completed: 'bg-emerald-100 text-emerald-700',
-  processing: 'bg-blue-100 text-blue-700',
+  processing: 'bg-blue-100 text-[#1F1F1F]',
   cancelled: 'bg-red-100 text-red-700',
 };
 
@@ -166,7 +166,7 @@ export default function CustomerOrdersPage() {
           <div className="text-center py-12">
             <ShoppingCart className="w-12 h-12 mx-auto mb-3 text-slate-700" />
             <p className="font-medium text-slate-500">Chưa có đơn hàng nào</p>
-            <Link href="/services" className="inline-block mt-4 text-blue-600 font-semibold hover:text-blue-700">
+            <Link href="/services" className="inline-block mt-4 text-[#1F1F1F] font-semibold hover:text-[#1F1F1F]">
               Khám phá dịch vụ
             </Link>
           </div>
@@ -194,7 +194,7 @@ export default function CustomerOrdersPage() {
                   <p className="font-bold text-slate-900">{order.totalAmount.toLocaleString('vi-VN')}₫</p>
                   <Link
                     href={`/orders/${order.id}`}
-                    className="p-2 rounded-lg bg-slate-100 hover:bg-blue-50 text-slate-600 hover:text-blue-600 transition-colors"
+                    className="p-2 rounded-lg bg-slate-100 hover:bg-blue-50 text-slate-600 hover:text-[#1F1F1F] transition-colors"
                   >
                     <Eye className="w-4 h-4" />
                   </Link>

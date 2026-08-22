@@ -49,7 +49,7 @@ interface UptimeData {
 
 const statusConfig: Record<string, { label: string; color: string; icon: typeof Clock }> = {
   pending: { label: 'Chờ thanh toán', color: 'bg-amber-100 text-amber-700', icon: Clock },
-  processing: { label: 'Đang xử lý', color: 'bg-blue-100 text-blue-700', icon: RefreshCw },
+  processing: { label: 'Đang xử lý', color: 'bg-blue-100 text-[#1F1F1F]', icon: RefreshCw },
   completed: { label: 'Hoàn thành', color: 'bg-emerald-100 text-emerald-700', icon: CheckCircle2 },
   cancelled: { label: 'Đã hủy', color: 'bg-red-100 text-red-700', icon: AlertCircle },
 };
@@ -146,7 +146,7 @@ export default function OrderDetailPage() {
         <div className="text-center">
           <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
           <h2 className="text-xl font-bold text-slate-900 mb-2">Không tìm thấy đơn hàng</h2>
-          <Link href="/dashboard/orders" className="text-blue-600 hover:underline">
+          <Link href="/dashboard/orders" className="text-[#1F1F1F] hover:underline">
             ← Quay lại danh sách đơn hàng
           </Link>
         </div>
@@ -163,11 +163,11 @@ export default function OrderDetailPage() {
       {/* Header */}
       <header className="bg-white border-b border-slate-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-          <Link href="/dashboard/orders" className="flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-blue-600">
+          <Link href="/dashboard/orders" className="flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-[#1F1F1F]">
             <ArrowLeft className="w-4 h-4" />
             Quay lại đơn hàng
           </Link>
-          <Link href="/dashboard" className="text-sm font-semibold text-slate-600 hover:text-blue-600">
+          <Link href="/dashboard" className="text-sm font-semibold text-slate-600 hover:text-[#1F1F1F]">
             Dashboard
           </Link>
         </div>
@@ -191,7 +191,7 @@ export default function OrderDetailPage() {
             </div>
             <div className="text-right">
               <p className="text-sm text-slate-500 mb-1">Tổng thanh toán</p>
-              <p className="text-3xl font-black text-blue-600">
+              <p className="text-3xl font-black text-[#1F1F1F]">
                 {order.totalAmount.toLocaleString('vi-VN')} đ
               </p>
             </div>
@@ -204,7 +204,7 @@ export default function OrderDetailPage() {
             <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
               <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
                 <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-                  <Package className="w-5 h-5 text-blue-600" />
+                  <Package className="w-5 h-5 text-[#1F1F1F]" />
                   Dịch vụ đã đặt
                 </h2>
               </div>
@@ -342,12 +342,12 @@ export default function OrderDetailPage() {
             {/* Support */}
             <div className="bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl p-6 text-slate-900">
               <h3 className="font-bold text-lg mb-2">Cần hỗ trợ?</h3>
-              <p className="text-sm text-blue-100 mb-4">
+              <p className="text-sm text-slate-200 mb-4">
                 Đội ngũ kỹ thuật sẵn sàng hỗ trợ 24/7
               </p>
               <Link
                 href="/tickets"
-                className="block w-full py-3 rounded-xl bg-white text-blue-600 font-bold text-sm text-center hover:bg-blue-50 transition-colors"
+                className="block w-full py-3 rounded-xl bg-white text-[#1F1F1F] font-bold text-sm text-center hover:bg-blue-50 transition-colors"
               >
                 Tạo ticket hỗ trợ
               </Link>

@@ -92,7 +92,7 @@ export default function GiftCardsPage() {
         <div>
           <Link 
             href="/dashboard" 
-            className="inline-flex items-center gap-2 text-sm text-slate-600 hover:text-blue-600 transition-colors mb-2"
+            className="inline-flex items-center gap-2 text-sm text-slate-600 hover:text-[#1F1F1F] transition-colors mb-2"
           >
             <ArrowLeft className="w-4 h-4" />
             Quay lại dashboard
@@ -147,7 +147,7 @@ export default function GiftCardsPage() {
 
         {/* Info */}
         <div className="mt-4 p-4 bg-blue-50 border border-blue-100 rounded-xl">
-          <p className="text-sm text-blue-700">
+          <p className="text-sm text-[#1F1F1F]">
             💡 <strong>Mẹo:</strong> Mã thẻ quà tặng thường có dạng 12-16 ký tự, ví dụ: GIFT2024-VN-CLOU
           </p>
         </div>
@@ -156,7 +156,7 @@ export default function GiftCardsPage() {
       {/* Loading State */}
       {isLoading && (
         <div className="flex items-center justify-center py-12">
-          <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+          <Loader2 className="w-8 h-8 text-[#1F1F1F] animate-spin" />
           <span className="ml-3 text-slate-600">Đang xử lý...</span>
         </div>
       )}
@@ -192,7 +192,7 @@ export default function GiftCardsPage() {
               {result.isRedeemed ? (
                 <CheckCircle className="w-6 h-6 text-emerald-600" />
               ) : result.balance > 0 ? (
-                <Gift className="w-6 h-6 text-blue-600" />
+                <Gift className="w-6 h-6 text-[#1F1F1F]" />
               ) : (
                 <XCircle className="w-6 h-6 text-slate-600" />
               )}
@@ -207,7 +207,7 @@ export default function GiftCardsPage() {
               </p>
               
               {result.balance > 0 && (
-                <p className="text-2xl font-black text-blue-600 mt-2">
+                <p className="text-2xl font-black text-[#1F1F1F] mt-2">
                   {result.balance.toLocaleString('vi-VN')} đ
                 </p>
               )}

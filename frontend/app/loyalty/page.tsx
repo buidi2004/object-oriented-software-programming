@@ -99,10 +99,10 @@ export default function LoyaltyPage() {
               <Star className="w-6 h-6" />
             </div>
             <span className="text-xl font-black text-slate-900">
-              CloudHost<span className="text-blue-600"> VN</span>
+              CloudHost<span className="text-[#1F1F1F]"> VN</span>
             </span>
           </Link>
-          <Link href="/dashboard" className="text-sm font-semibold text-slate-600 hover:text-blue-600">
+          <Link href="/dashboard" className="text-sm font-semibold text-slate-600 hover:text-[#1F1F1F]">
             ← Quay lại Dashboard
           </Link>
         </div>
@@ -117,18 +117,18 @@ export default function LoyaltyPage() {
           <div className="relative z-10">
             <div className="flex items-center gap-3 mb-4">
               <Award className="w-8 h-8 text-amber-400" />
-              <span className="text-sm font-bold text-blue-300 uppercase tracking-wider">Chương trình thành viên</span>
+              <span className="text-sm font-bold text-slate-200 uppercase tracking-wider">Chương trình thành viên</span>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div>
-                <p className="text-blue-300 text-sm mb-1">Điểm thưởng hiện tại</p>
+                <p className="text-slate-200 text-sm mb-1">Điểm thưởng hiện tại</p>
                 <p className="text-5xl font-black text-slate-900">{loyalty?.points.toLocaleString() || 0}</p>
                 <p className="text-sm text-slate-600 mt-1">điểm</p>
               </div>
               
               <div>
-                <p className="text-blue-300 text-sm mb-1">Cấp độ hiện tại</p>
+                <p className="text-slate-200 text-sm mb-1">Cấp độ hiện tại</p>
                 <p className="text-3xl font-black text-slate-900">{loyalty?.tier || 'Bronze'}</p>
                 <p className="text-sm text-slate-600 mt-1">
                   {nextTier ? `Còn ${nextTier.minPoints - (loyalty?.points || 0)} điểm để lên ${nextTier.name}` : 'Đã đạt cấp cao nhất!'}
@@ -136,7 +136,7 @@ export default function LoyaltyPage() {
               </div>
               
               <div>
-                <p className="text-blue-300 text-sm mb-1">Tổng chi tiêu</p>
+                <p className="text-slate-200 text-sm mb-1">Tổng chi tiêu</p>
                 <p className="text-3xl font-black text-slate-900">
                   {(loyalty?.totalSpent || 0).toLocaleString()}đ
                 </p>
@@ -183,7 +183,7 @@ export default function LoyaltyPage() {
         <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
           <div className="p-6 border-b border-slate-200">
             <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-              <Gift className="w-5 h-5 text-blue-600" />
+              <Gift className="w-5 h-5 text-[#1F1F1F]" />
               Đổi quà thưởng
             </h2>
           </div>
@@ -210,7 +210,7 @@ export default function LoyaltyPage() {
                     </div>
                     <p className="text-sm text-slate-500 mb-3">{reward.description}</p>
                     <div className="flex items-center justify-between">
-                      <span className="font-bold text-blue-600">{reward.cost} điểm</span>
+                      <span className="font-bold text-[#1F1F1F]">{reward.cost} điểm</span>
                       <button
                         onClick={() => !reward.claimed && redeemReward(reward.id, reward.cost)}
                         disabled={reward.claimed || (loyalty?.points || 0) < reward.cost}

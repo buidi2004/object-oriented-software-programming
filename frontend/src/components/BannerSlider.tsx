@@ -85,7 +85,7 @@ export const BannerSlider: React.FC = () => {
 
         {/* Banner Content */}
         <div className="absolute inset-0 p-6 sm:p-10 lg:p-12 flex flex-col justify-center max-w-xl z-10">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-blue-500/20 border border-blue-400/30 text-cyan-300 text-xs font-extrabold uppercase tracking-wider mb-3 w-fit backdrop-blur-md">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-blue-500/20 border border-blue-400/30 text-slate-200 text-xs font-extrabold uppercase tracking-wider mb-3 w-fit backdrop-blur-md">
             <Sparkles className="w-3.5 h-3.5" />
             Khuyến Mãi Đặc Biệt Cloud 2026
           </div>

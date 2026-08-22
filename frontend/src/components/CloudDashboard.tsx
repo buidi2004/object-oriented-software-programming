@@ -145,7 +145,7 @@ export const CloudDashboard: React.FC<CloudDashboardProps> = ({ onClose }) => {
         {/* Modal Top Header */}
         <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-white/90">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-blue-600/20 text-cyan-400 border border-blue-500/30">
+            <div className="p-2 rounded-xl bg-blue-600/20 text-[#1F1F1F] border border-blue-500/30">
               <Cpu className="w-5 h-5" />
             </div>
             <div>
@@ -230,7 +230,7 @@ export const CloudDashboard: React.FC<CloudDashboardProps> = ({ onClose }) => {
               <div>
                 <div className="flex items-center gap-2">
                   <h4 className="text-xl font-extrabold text-slate-900">{activeInstance.name}</h4>
-                  <span className="text-xs font-mono px-2 py-0.5 rounded bg-slate-700 text-cyan-300">
+                  <span className="text-xs font-mono px-2 py-0.5 rounded bg-slate-700 text-slate-200">
                     {activeInstance.ip}
                   </span>
                 </div>
@@ -276,14 +276,14 @@ export const CloudDashboard: React.FC<CloudDashboardProps> = ({ onClose }) => {
             <div className="bg-white/40 border border-slate-200 p-5 rounded-2xl">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2 text-sm font-bold text-slate-800">
-                  <Activity className="w-4 h-4 text-cyan-400" />
+                  <Activity className="w-4 h-4 text-[#1F1F1F]" />
                   Hiệu Năng Real-time (vCPU & Memory)
                 </div>
                 <div className="flex items-center gap-4 text-xs font-semibold">
-                  <span className="flex items-center gap-1.5 text-cyan-400">
+                  <span className="flex items-center gap-1.5 text-[#1F1F1F]">
                     <span className="w-2.5 h-2.5 rounded-full bg-cyan-400" /> CPU (%)
                   </span>
-                  <span className="flex items-center gap-1.5 text-indigo-400">
+                  <span className="flex items-center gap-1.5 text-slate-200">
                     <span className="w-2.5 h-2.5 rounded-full bg-indigo-400" /> RAM (%)
                   </span>
                 </div>
@@ -331,7 +331,7 @@ export const CloudDashboard: React.FC<CloudDashboardProps> = ({ onClose }) => {
                 </div>
 
                 <form onSubmit={handleTerminalSubmit} className="mt-3 flex items-center gap-2 pt-2 border-t border-slate-200">
-                  <span className="text-cyan-400">root@cloudhost:~#</span>
+                  <span className="text-[#1F1F1F]">root@cloudhost:~#</span>
                   <input
                     type="text"
                     value={commandInput}

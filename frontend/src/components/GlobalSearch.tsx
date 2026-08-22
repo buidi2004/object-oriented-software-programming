@@ -89,7 +89,7 @@ export default function GlobalSearch() {
 
   const getIcon = (type: string) => {
     switch (type) {
-      case 'ServicePlan': return <Server className="w-5 h-5 text-blue-500" />;
+      case 'ServicePlan': return <Server className="w-5 h-5 text-[#1F1F1F]" />;
       case 'News': return <FileText className="w-5 h-5 text-emerald-500" />;
       case 'Article': return <HelpCircle className="w-5 h-5 text-purple-500" />;
       case 'Faq': return <HelpCircle className="w-5 h-5 text-amber-500" />;
@@ -101,7 +101,7 @@ export default function GlobalSearch() {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="p-2.5 rounded-xl text-slate-600 hover:text-blue-600 hover:bg-slate-100 transition-colors shrink-0"
+        className="p-2.5 rounded-xl text-slate-600 hover:text-[#1F1F1F] hover:bg-slate-100 transition-colors shrink-0"
         aria-label="Tìm kiếm"
         title="Tìm kiếm (Ctrl+K)"
       >
@@ -122,7 +122,7 @@ export default function GlobalSearch() {
                 placeholder="Tìm kiếm dịch vụ, bài viết, FAQ..."
                 className="flex-1 bg-transparent border-none outline-none text-slate-900 text-lg placeholder:text-slate-400"
               />
-              {isLoading && <Loader2 className="w-5 h-5 text-blue-500 animate-spin ml-2 shrink-0" />}
+              {isLoading && <Loader2 className="w-5 h-5 text-[#1F1F1F] animate-spin ml-2 shrink-0" />}
               <button onClick={() => setIsOpen(false)} className="p-1 text-slate-600 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-colors ml-2">
                 <X className="w-5 h-5" />
               </button>
@@ -149,13 +149,13 @@ export default function GlobalSearch() {
                         {getIcon(item.type)}
                       </div>
                       <div className="flex-1 overflow-hidden">
-                        <h4 className="text-sm font-bold text-slate-900 truncate group-hover:text-blue-600 transition-colors">
+                        <h4 className="text-sm font-bold text-slate-900 truncate group-hover:text-[#1F1F1F] transition-colors">
                           {item.title}
                         </h4>
                         <p className="text-xs text-slate-500 truncate mt-0.5">{item.description}</p>
                       </div>
                       <div className="shrink-0 pt-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <ExternalLink className="w-4 h-4 text-blue-500" />
+                        <ExternalLink className="w-4 h-4 text-[#1F1F1F]" />
                       </div>
                     </button>
                   ))}

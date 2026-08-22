@@ -77,7 +77,7 @@ export const HomeAboutSection = () => {
             </div>
 
             <div>
-              <Link href={data.moreLink || '/about'} className="inline-flex items-center text-sm font-bold text-blue-600 hover:text-blue-700 transition-colors group">
+              <Link href={data.moreLink || '/about'} className="inline-flex items-center text-sm font-bold text-[#1F1F1F] hover:text-[#1F1F1F] transition-colors group">
                 Xem thêm <span className="ml-1 group-hover:translate-x-1 transition-transform">→</span>
               </Link>
             </div>
@@ -104,7 +104,7 @@ export const HomeAboutSection = () => {
 
 const StatBlock = ({ title, desc }: { title: string, desc: string }) => (
   <div>
-    <h4 className="text-2xl font-black text-blue-600 mb-2">{title}</h4>
+    <h4 className="text-2xl font-black text-[#1F1F1F] mb-2">{title}</h4>
     <p className="text-sm text-slate-600 leading-relaxed">{desc}</p>
   </div>
 );

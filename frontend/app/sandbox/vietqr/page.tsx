@@ -218,12 +218,12 @@ function VietQRSandboxContent() {
             </div>
             <div className="flex justify-between items-center">
               <span className="text-slate-500">Số tiền:</span>
-              <span className="font-black text-lg text-blue-600">{amount.toLocaleString('vi-VN')} đ</span>
+              <span className="font-black text-lg text-[#1F1F1F]">{amount.toLocaleString('vi-VN')} đ</span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-slate-500">Phương thức:</span>
               <span className="font-bold text-slate-800 flex items-center gap-1.5">
-                <Building2 className="w-4 h-4 text-blue-600" /> VietQR (MB Bank)
+                <Building2 className="w-4 h-4 text-[#1F1F1F]" /> VietQR (MB Bank)
               </span>
             </div>
           </div>
@@ -256,7 +256,7 @@ function VietQRSandboxContent() {
         <div className="bg-gradient-to-r from-blue-700 via-indigo-700 to-blue-900 text-slate-900 p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center p-1.5 shadow-md">
-              <span className="font-black text-blue-700 text-lg tracking-tighter">MB</span>
+              <span className="font-black text-[#1F1F1F] text-lg tracking-tighter">MB</span>
             </div>
             <div>
               <div className="flex items-center gap-2">
@@ -265,14 +265,14 @@ function VietQRSandboxContent() {
                   Napas 247
                 </span>
               </div>
-              <p className="text-xs text-blue-200 mt-0.5">Chuyển khoản 24/7 tự động xác nhận trong 3 giây</p>
+              <p className="text-xs text-slate-200 mt-0.5">Chuyển khoản 24/7 tự động xác nhận trong 3 giây</p>
             </div>
           </div>
 
           <div className="flex items-center gap-2 bg-black/20 backdrop-blur-md px-4 py-2 rounded-2xl border border-white/10">
-            <Clock className="w-4 h-4 text-cyan-300" />
-            <span className="text-xs text-blue-100">Hết hạn sau:</span>
-            <span className="font-mono font-black text-cyan-300 text-sm">{formatTime(timeLeft)}</span>
+            <Clock className="w-4 h-4 text-slate-200" />
+            <span className="text-xs text-slate-200">Hết hạn sau:</span>
+            <span className="font-mono font-black text-slate-200 text-sm">{formatTime(timeLeft)}</span>
           </div>
         </div>
 
@@ -306,7 +306,7 @@ function VietQRSandboxContent() {
                   }}
                 />
                 <div className="absolute inset-0 bg-blue-600/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
-                  <span className="text-xs font-bold bg-white text-blue-700 px-3 py-1.5 rounded-full shadow">
+                  <span className="text-xs font-bold bg-white text-[#1F1F1F] px-3 py-1.5 rounded-full shadow">
                     Quét bằng App Ngân hàng
                   </span>
                 </div>
@@ -316,13 +316,13 @@ function VietQRSandboxContent() {
             {!isFakeAccount && (
               <>
                 <p className="text-xs font-bold text-slate-700 flex items-center gap-1.5 mb-1">
-                  <QrCode className="w-4 h-4 text-blue-600" />
+                  <QrCode className="w-4 h-4 text-[#1F1F1F]" />
                   Mở App Ngân hàng bất kỳ để quét mã
                 </p>
                 <p className="text-[11px] text-slate-600">
                   Chuẩn NAPAS 24/7 — {currentBankObj.name} — STK: {customAccNumber}
                 </p>
-                <div className="mt-3 pt-3 border-t border-slate-200 w-full flex items-center justify-center gap-2 text-xs font-bold text-blue-600">
+                <div className="mt-3 pt-3 border-t border-slate-200 w-full flex items-center justify-center gap-2 text-xs font-bold text-[#1F1F1F]">
                   <span className="w-2 h-2 rounded-full bg-blue-600 animate-ping" />
                   Đang lắng nghe chuyển khoản từ ngân hàng...
                 </div>
@@ -423,10 +423,10 @@ function VietQRSandboxContent() {
               <div className="flex items-center justify-between py-2 border-b border-slate-200 text-sm">
                 <span className="text-slate-500">Số tài khoản</span>
                 <div className="flex items-center gap-2">
-                  <span className="font-mono font-black text-base text-blue-600">{bankInfo.accountNumber}</span>
+                  <span className="font-mono font-black text-base text-[#1F1F1F]">{bankInfo.accountNumber}</span>
                   <button
                     onClick={() => copyToClipboard(bankInfo.accountNumber, 'accountNumber')}
-                    className="p-1.5 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors"
+                    className="p-1.5 rounded-lg bg-blue-50 text-[#1F1F1F] hover:bg-blue-100 transition-colors"
                     title="Sao chép"
                   >
                     {copiedField === 'accountNumber' ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}

@@ -41,11 +41,11 @@ export default function ReviewsDashboard() {
       
       {/* Header */}
       <div>
-        <Link href="/dashboard" className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-blue-600 mb-2 transition-colors">
+        <Link href="/dashboard" className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-[#1F1F1F] mb-2 transition-colors">
           <ArrowLeft className="w-4 h-4" /> Quay lại Dashboard
         </Link>
         <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 flex items-center gap-3">
-          <MessageSquare className="w-8 h-8 text-blue-600" />
+          <MessageSquare className="w-8 h-8 text-[#1F1F1F]" />
           Đánh giá của tôi
         </h1>
         <p className="text-slate-500 mt-2">Quản lý các đánh giá bạn đã viết cho các dịch vụ tại CloudHost VN.</p>
@@ -54,7 +54,7 @@ export default function ReviewsDashboard() {
       {/* List */}
       {loading ? (
         <div className="flex justify-center py-12">
-          <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+          <Loader2 className="w-8 h-8 text-[#1F1F1F] animate-spin" />
         </div>
       ) : (
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

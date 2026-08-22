@@ -49,7 +49,7 @@ export default function AdminUserDetailPage() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <Loader className="w-8 h-8 text-blue-600 animate-spin" />
+        <Loader className="w-8 h-8 text-[#1F1F1F] animate-spin" />
       </div>
     );
   }
@@ -59,7 +59,7 @@ export default function AdminUserDetailPage() {
       <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center">
         <AlertCircle className="w-12 h-12 text-red-400 mb-3" />
         <p className="text-slate-600">{error}</p>
-        <Link href="/admin/users" className="mt-4 text-blue-600 font-semibold">Quay lại</Link>
+        <Link href="/admin/users" className="mt-4 text-[#1F1F1F] font-semibold">Quay lại</Link>
       </div>
     );
   }
@@ -78,7 +78,7 @@ export default function AdminUserDetailPage() {
       <main className="max-w-3xl mx-auto px-4 py-8">
         <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold text-xl">
+            <div className="w-14 h-14 rounded-full bg-blue-100 flex items-center justify-center text-[#1F1F1F] font-bold text-xl">
               {user.fullName[0]}
             </div>
             <div>
@@ -89,7 +89,7 @@ export default function AdminUserDetailPage() {
           <div className="grid grid-cols-2 gap-4 pt-4 border-t border-slate-100">
             <div>
               <p className="text-xs text-slate-500 uppercase font-semibold">Vai trò</p>
-              <p className="flex items-center gap-1 mt-1 font-semibold"><Shield className="w-4 h-4 text-blue-600" /> {user.roleName}</p>
+              <p className="flex items-center gap-1 mt-1 font-semibold"><Shield className="w-4 h-4 text-[#1F1F1F]" /> {user.roleName}</p>
             </div>
             <div>
               <p className="text-xs text-slate-500 uppercase font-semibold">Trạng thái</p>

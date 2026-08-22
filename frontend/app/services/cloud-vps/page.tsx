@@ -27,10 +27,10 @@ const OS_TEMPLATES = [
   { id: 'ubuntu-24', name: 'Ubuntu 24.04 LTS', category: 'Linux', icon: SiUbuntu, color: 'text-orange-500', version: 'Noble Numbat' },
   { id: 'ubuntu-22', name: 'Ubuntu 22.04 LTS', category: 'Linux', icon: SiUbuntu, color: 'text-orange-400', version: 'Jammy Jellyfish' },
   { id: 'debian-12', name: 'Debian 12', category: 'Linux', icon: SiDebian, color: 'text-rose-500', version: 'Bookworm Enterprise' },
-  { id: 'almalinux-9', name: 'AlmaLinux 9', category: 'Enterprise', icon: SiAlmalinux, color: 'text-blue-400', version: 'RHEL 9 Compatible' },
+  { id: 'almalinux-9', name: 'AlmaLinux 9', category: 'Enterprise', icon: SiAlmalinux, color: 'text-slate-200', version: 'RHEL 9 Compatible' },
   { id: 'rocky-9', name: 'Rocky Linux 9', category: 'Enterprise', icon: SiRockylinux, color: 'text-emerald-400', version: 'RHEL 9 Binary Sync' },
-  { id: 'alpine-3', name: 'Alpine Linux 3.19', category: 'Minimal', icon: SiAlpinelinux, color: 'text-cyan-400', version: 'Ultra-lightweight 5MB' },
-  { id: 'windows-2022', name: 'Windows Server 2022', category: 'Windows', icon: FaWindows, color: 'text-blue-500', version: 'Standard 64-bit GUI' }
+  { id: 'alpine-3', name: 'Alpine Linux 3.19', category: 'Minimal', icon: SiAlpinelinux, color: 'text-[#1F1F1F]', version: 'Ultra-lightweight 5MB' },
+  { id: 'windows-2022', name: 'Windows Server 2022', category: 'Windows', icon: FaWindows, color: 'text-[#1F1F1F]', version: 'Standard 64-bit GUI' }
 ];
 
 // Datacenter Regions
@@ -139,16 +139,16 @@ export default function CloudVpsServicePage() {
           
           {/* Breadcrumb */}
           <nav className="flex items-center gap-2 text-xs font-mono text-slate-600 mb-8">
-            <Link href="/" className="hover:text-blue-400 transition-colors">HOME</Link>
+            <Link href="/" className="hover:text-slate-200 transition-colors">HOME</Link>
             <span className="text-slate-600">/</span>
-            <Link href="/services" className="hover:text-blue-400 transition-colors">SERVICES</Link>
+            <Link href="/services" className="hover:text-slate-200 transition-colors">SERVICES</Link>
             <span className="text-slate-600">/</span>
-            <span className="text-blue-400 font-bold">CLOUD-VPS</span>
+            <span className="text-slate-200 font-bold">CLOUD-VPS</span>
           </nav>
 
           <div className="max-w-4xl">
             {/* Live Infrastructure Badge */}
-            <div className="inline-flex flex-wrap items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0d1627] border border-blue-500/30 text-blue-400 text-xs font-mono mb-6 shadow-sm">
+            <div className="inline-flex flex-wrap items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0d1627] border border-blue-500/30 text-slate-200 text-xs font-mono mb-6 shadow-sm">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
               <span className="font-bold">KVM HYPERVISOR ACTIVE</span>
               <span className="text-slate-600">•</span>
@@ -183,7 +183,7 @@ export default function CloudVpsServicePage() {
                 href="#core-features"
                 className="px-7 py-3.5 rounded-xl bg-[#0f172a] hover:bg-slate-100 text-slate-700 border border-slate-300 font-mono font-bold text-xs uppercase tracking-wider transition-all flex items-center gap-2"
               >
-                <Layers className="w-4 h-4 text-sky-400" />
+                <Layers className="w-4 h-4 text-slate-200" />
                 <span>KIẾN TRÚC HẠ TẦNG</span>
               </a>
             </div>
@@ -197,7 +197,7 @@ export default function CloudVpsServicePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="text-center max-w-3xl mx-auto mb-14">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-blue-950 text-blue-400 text-xs font-mono mb-3 border border-blue-800">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-blue-950 text-slate-200 text-xs font-mono mb-3 border border-blue-800">
               <Sliders className="w-3.5 h-3.5" />
               INTERACTIVE RESOURCE ENGINE
             </div>
@@ -237,7 +237,7 @@ export default function CloudVpsServicePage() {
                       {p.tag}
                     </span>
                   </div>
-                  <div className="text-lg font-black text-blue-400 font-mono mb-1">
+                  <div className="text-lg font-black text-slate-200 font-mono mb-1">
                     {p.monthlyPrice.toLocaleString('vi-VN')} đ<span className="text-[11px] font-normal text-slate-500">/tháng</span>
                   </div>
                   <div className="text-[11px] text-slate-700 font-mono space-y-0.5">
@@ -262,10 +262,10 @@ export default function CloudVpsServicePage() {
                 <div>
                   <div className="flex justify-between items-center mb-3 font-mono">
                     <label className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-2">
-                      <Sliders className="w-4 h-4 text-blue-400" />
+                      <Sliders className="w-4 h-4 text-slate-200" />
                       Kéo Chọn Gói Cấu Hình (Packages):
                     </label>
-                    <span className="text-sm font-black text-blue-400 bg-blue-950 px-3 py-1 rounded-lg border border-blue-900">
+                    <span className="text-sm font-black text-slate-200 bg-blue-950 px-3 py-1 rounded-lg border border-blue-900">
                       {matchedPlan ? matchedPlan.name : 'Loading...'}
                     </span>
                   </div>
@@ -372,10 +372,10 @@ export default function CloudVpsServicePage() {
               <div className="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200 space-y-4">
                 <div className="text-xs font-mono text-slate-700 uppercase tracking-wider flex items-center justify-between">
                   <span className="flex items-center gap-2">
-                    <Globe className="w-4 h-4 text-cyan-400" />
+                    <Globe className="w-4 h-4 text-[#1F1F1F]" />
                     5. Vị Trí Phòng Máy (Datacenter Region):
                   </span>
-                  <span className="text-cyan-400 text-[11px]">Đường Truyền VNIX 100G</span>
+                  <span className="text-[#1F1F1F] text-[11px]">Đường Truyền VNIX 100G</span>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 font-mono">
@@ -396,7 +396,7 @@ export default function CloudVpsServicePage() {
                             <span>{dc.flag}</span>
                             <span>{dc.region}</span>
                           </span>
-                          <span className="text-[9px] px-1.5 py-0.5 rounded bg-cyan-950 text-cyan-400 border border-cyan-900">
+                          <span className="text-[9px] px-1.5 py-0.5 rounded bg-cyan-950 text-[#1F1F1F] border border-cyan-900">
                             {dc.badge}
                           </span>
                         </div>
@@ -421,7 +421,7 @@ export default function CloudVpsServicePage() {
                 {/* Header */}
                 <div className="flex items-center justify-between pb-3 border-b border-slate-200">
                   <span className="font-bold text-slate-900 uppercase">DATASHEET MÁY CHỦ</span>
-                  <span className="px-2 py-0.5 rounded bg-blue-950 text-blue-400 border border-blue-800 text-[10px] font-bold">
+                  <span className="px-2 py-0.5 rounded bg-blue-950 text-slate-200 border border-blue-800 text-[10px] font-bold">
                     KVM VIRTUALIZATION
                   </span>
                 </div>
@@ -430,15 +430,15 @@ export default function CloudVpsServicePage() {
                 <div className="space-y-2.5 text-slate-700">
                   <div className="flex justify-between">
                     <span className="text-slate-500">Vi Xử Lý (CPU):</span>
-                    <span className="text-blue-400 font-bold">{cpu} vCPU (AMD EPYC)</span>
+                    <span className="text-slate-200 font-bold">{cpu} vCPU (AMD EPYC)</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-slate-500">Bộ Nhớ RAM:</span>
-                    <span className="text-indigo-400 font-bold">{ram} GB DDR5 ECC</span>
+                    <span className="text-slate-200 font-bold">{ram} GB DDR5 ECC</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-slate-500">Ổ Cứng Lưu Trữ:</span>
-                    <span className="text-sky-400 font-bold">{disk} GB NVMe Gen4</span>
+                    <span className="text-slate-200 font-bold">{disk} GB NVMe Gen4</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-slate-500">Hệ Điều Hành:</span>
@@ -448,7 +448,7 @@ export default function CloudVpsServicePage() {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-slate-500">Datacenter:</span>
-                    <span className="text-cyan-400">{DATACENTERS.find(d => d.id === selectedDc)?.region}</span>
+                    <span className="text-[#1F1F1F]">{DATACENTERS.find(d => d.id === selectedDc)?.region}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-slate-500">Băng Thông / Uplink:</span>
@@ -495,7 +495,7 @@ export default function CloudVpsServicePage() {
                 {/* Price Display */}
                 <div className="pt-2">
                   <div className="text-[10px] text-slate-500 uppercase">Tổng Chi Phí:</div>
-                  <div className="text-2xl font-black text-blue-400 mt-1">
+                  <div className="text-2xl font-black text-slate-200 mt-1">
                     {billingCycle === 'yearly'
                       ? `${yearlyMonthlyPrice.toLocaleString('vi-VN')} đ`
                       : `${monthlyPrice.toLocaleString('vi-VN')} đ`}
@@ -535,7 +535,7 @@ export default function CloudVpsServicePage() {
                   </div>
                   <div className="flex items-center justify-between p-2 rounded bg-white border border-slate-200">
                     <span>2. Cài OS &amp; Cloud-Init:</span>
-                    <span className="text-sky-400 font-bold">&lt; 15 Giây</span>
+                    <span className="text-slate-200 font-bold">&lt; 15 Giây</span>
                   </div>
                   <div className="flex items-center justify-between p-2 rounded bg-white border border-slate-200">
                     <span>3. Tạo Snapshot tức thì:</span>
@@ -559,10 +559,10 @@ export default function CloudVpsServicePage() {
               className="w-full p-4 rounded-2xl bg-white border border-slate-200 hover:border-slate-700 transition-all flex items-center justify-between font-mono text-xs text-slate-700"
             >
               <div className="flex items-center gap-2 font-bold">
-                <FileText className="w-4 h-4 text-blue-400" />
+                <FileText className="w-4 h-4 text-slate-200" />
                 <span>Xem Toàn Bộ Bảng So Sánh Chi Tiết Thông Số Kỹ Thuật (Spec Sheet)</span>
               </div>
-              <div className="flex items-center gap-2 text-blue-400 font-bold">
+              <div className="flex items-center gap-2 text-slate-200 font-bold">
                 <span>{showSpecAccordion ? 'Thu gọn' : 'Xem chi tiết'}</span>
                 {showSpecAccordion ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
               </div>
@@ -625,10 +625,10 @@ export default function CloudVpsServicePage() {
                     </tr>
                     <tr>
                       <td className="py-3 px-4 text-slate-600">Bản quyền Snapshot tức thì</td>
-                      <td className="py-3 px-4 text-sky-400">1 Bản Snapshot</td>
-                      <td className="py-3 px-4 text-sky-400">2 Bản Snapshot</td>
-                      <td className="py-3 px-4 text-sky-400">3 Bản Snapshot</td>
-                      <td className="py-3 px-4 text-sky-400">5 Bản Snapshot</td>
+                      <td className="py-3 px-4 text-slate-200">1 Bản Snapshot</td>
+                      <td className="py-3 px-4 text-slate-200">2 Bản Snapshot</td>
+                      <td className="py-3 px-4 text-slate-200">3 Bản Snapshot</td>
+                      <td className="py-3 px-4 text-slate-200">5 Bản Snapshot</td>
                     </tr>
                     <tr>
                       <td className="py-3 px-4 text-slate-600">Cam kết Uptime SLA</td>
@@ -651,7 +651,7 @@ export default function CloudVpsServicePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-blue-950 text-blue-400 text-xs font-mono mb-3 border border-blue-800">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-blue-950 text-slate-200 text-xs font-mono mb-3 border border-blue-800">
               <Layers className="w-3.5 h-3.5" />
               ENTERPRISE HARDWARE &amp; ARCHITECTURE
             </div>
@@ -671,12 +671,12 @@ export default function CloudVpsServicePage() {
                 <div className="p-4 rounded-2xl bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
                   <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
                     <span>ZEN 4 COMPUTE ENGINE</span>
-                    <span className="text-blue-400">3.7GHZ BOOST</span>
+                    <span className="text-slate-200">3.7GHZ BOOST</span>
                   </div>
                   <div className="space-y-1.5 text-slate-700 text-[11px]">
                     <div className="flex justify-between p-1.5 rounded bg-white">
                       <span>Architecture:</span>
-                      <span className="text-blue-400 font-bold">AMD EPYC 9004</span>
+                      <span className="text-slate-200 font-bold">AMD EPYC 9004</span>
                     </div>
                     <div className="flex justify-between p-1.5 rounded bg-white">
                       <span>L3 Cache Allocation:</span>
@@ -684,7 +684,7 @@ export default function CloudVpsServicePage() {
                     </div>
                     <div className="flex justify-between p-1.5 rounded bg-white">
                       <span>Instruction Set:</span>
-                      <span className="text-sky-400 font-bold">AVX-512 AI Ready</span>
+                      <span className="text-slate-200 font-bold">AVX-512 AI Ready</span>
                     </div>
                   </div>
                 </div>
@@ -697,7 +697,7 @@ export default function CloudVpsServicePage() {
 
               <div className="pt-4 border-t border-slate-200/80 text-xs font-mono text-slate-700 flex items-center justify-between">
                 <span>Clock Speed:</span>
-                <strong className="text-blue-400">3.7GHz Base / 4.4GHz Turbo</strong>
+                <strong className="text-slate-200">3.7GHz Base / 4.4GHz Turbo</strong>
               </div>
             </div>
 
@@ -716,7 +716,7 @@ export default function CloudVpsServicePage() {
                     </div>
                     <div className="flex justify-between p-1.5 rounded bg-white">
                       <span>Random 4K IOPS:</span>
-                      <span className="text-sky-400 font-bold">800,000 IOPS</span>
+                      <span className="text-slate-200 font-bold">800,000 IOPS</span>
                     </div>
                     <div className="flex justify-between p-1.5 rounded bg-white">
                       <span>Storage Array:</span>
@@ -756,7 +756,7 @@ export default function CloudVpsServicePage() {
                     </div>
                     <div className="flex justify-between p-1.5 rounded bg-white">
                       <span>Mitigation Time:</span>
-                      <span className="text-sky-400 font-bold">&lt; 1.0 Giây kích hoạt</span>
+                      <span className="text-slate-200 font-bold">&lt; 1.0 Giây kích hoạt</span>
                     </div>
                   </div>
                 </div>
@@ -779,12 +779,12 @@ export default function CloudVpsServicePage() {
                 <div className="p-4 rounded-2xl bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
                   <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
                     <span>COW SNAPSHOT ENGINE</span>
-                    <span className="text-sky-400">3-SECOND CLONE</span>
+                    <span className="text-slate-200">3-SECOND CLONE</span>
                   </div>
                   <div className="space-y-1.5 text-slate-700 text-[11px]">
                     <div className="flex justify-between p-1.5 rounded bg-white">
                       <span>Snapshot Speed:</span>
-                      <span className="text-sky-400 font-bold">3 Giây hoàn tất</span>
+                      <span className="text-slate-200 font-bold">3 Giây hoàn tất</span>
                     </div>
                     <div className="flex justify-between p-1.5 rounded bg-white">
                       <span>Replication Target:</span>
@@ -805,7 +805,7 @@ export default function CloudVpsServicePage() {
 
               <div className="pt-4 border-t border-slate-200/80 text-xs font-mono text-slate-700 flex items-center justify-between">
                 <span>Snapshot Creation:</span>
-                <strong className="text-sky-400">&lt; 3s Không Cần Tắt Máy</strong>
+                <strong className="text-slate-200">&lt; 3s Không Cần Tắt Máy</strong>
               </div>
             </div>
 
@@ -828,7 +828,7 @@ export default function CloudVpsServicePage() {
                     </div>
                     <div className="flex justify-between p-1.5 rounded bg-white">
                       <span>Disk Expansion:</span>
-                      <span className="text-sky-400">Online Expand Không Format</span>
+                      <span className="text-slate-200">Online Expand Không Format</span>
                     </div>
                   </div>
                 </div>
@@ -860,7 +860,7 @@ export default function CloudVpsServicePage() {
                     </div>
                     <div className="flex justify-between p-1.5 rounded bg-white">
                       <span>Network Backbone:</span>
-                      <span className="text-sky-400 font-bold">VNIX 100Gbps Direct</span>
+                      <span className="text-slate-200 font-bold">VNIX 100Gbps Direct</span>
                     </div>
                     <div className="flex justify-between p-1.5 rounded bg-white">
                       <span>SOC / NOC Support:</span>
@@ -891,7 +891,7 @@ export default function CloudVpsServicePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-blue-950 text-blue-400 text-xs font-mono mb-3 border border-blue-800">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-blue-950 text-slate-200 text-xs font-mono mb-3 border border-blue-800">
               <Workflow className="w-3.5 h-3.5" />
               DEVOPS &amp; CONTAINER READY
             </div>
@@ -905,14 +905,14 @@ export default function CloudVpsServicePage() {
 
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 font-mono">
             {[
-              { name: 'Docker', desc: 'Container Engine', icon: SiDocker, color: 'text-blue-400' },
-              { name: 'Kubernetes', desc: 'Cluster K8s', icon: SiKubernetes, color: 'text-blue-500' },
+              { name: 'Docker', desc: 'Container Engine', icon: SiDocker, color: 'text-slate-200' },
+              { name: 'Kubernetes', desc: 'Cluster K8s', icon: SiKubernetes, color: 'text-[#1F1F1F]' },
               { name: 'Terraform', desc: 'IaC Automation', icon: SiTerraform, color: 'text-purple-400' },
               { name: 'Ansible', desc: 'Config Mgmt', icon: SiAnsible, color: 'text-rose-400' },
               { name: 'Prometheus', desc: 'Metrics Monitor', icon: SiPrometheus, color: 'text-orange-400' },
               { name: 'Grafana', desc: 'Live Dashboard', icon: SiGrafana, color: 'text-amber-400' },
               { name: 'Nginx', desc: 'Reverse Proxy', icon: SiNginx, color: 'text-emerald-400' },
-              { name: 'PostgreSQL', desc: 'Relational DB', icon: SiPostgresql, color: 'text-sky-400' },
+              { name: 'PostgreSQL', desc: 'Relational DB', icon: SiPostgresql, color: 'text-slate-200' },
               { name: 'Redis', desc: 'In-Memory Cache', icon: SiRedis, color: 'text-red-400' },
               { name: 'GitHub Actions', desc: 'CI/CD Runner', icon: SiGithub, color: 'text-slate-200' },
               { name: 'Python', desc: 'Backend & AI', icon: SiPython, color: 'text-yellow-400' },
@@ -927,7 +927,7 @@ export default function CloudVpsServicePage() {
                   <div className="w-12 h-12 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
                     <AppIcon className={`w-6 h-6 ${app.color}`} />
                   </div>
-                  <div className="text-xs font-bold text-slate-900 group-hover:text-blue-400 transition-colors">{app.name}</div>
+                  <div className="text-xs font-bold text-slate-900 group-hover:text-slate-200 transition-colors">{app.name}</div>
                   <div className="text-[10px] text-slate-500 mt-0.5">{app.desc}</div>
                 </div>
               );
@@ -942,7 +942,7 @@ export default function CloudVpsServicePage() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-blue-950 text-blue-400 text-xs font-mono mb-3 border border-blue-800">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-blue-950 text-slate-200 text-xs font-mono mb-3 border border-blue-800">
               <HelpCircle className="w-3.5 h-3.5" />
               FREQUENTLY ASKED QUESTIONS
             </div>
@@ -965,7 +965,7 @@ export default function CloudVpsServicePage() {
                   className="w-full p-5 sm:p-6 text-left flex items-center justify-between gap-4 focus:outline-none"
                 >
                   <span className="font-bold text-sm sm:text-base text-slate-800">{faq.q}</span>
-                  <div className="w-7 h-7 rounded-lg bg-white border border-slate-200 flex items-center justify-center shrink-0 text-blue-400">
+                  <div className="w-7 h-7 rounded-lg bg-white border border-slate-200 flex items-center justify-center shrink-0 text-slate-200">
                     {openFaq === idx ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                   </div>
                 </button>
@@ -986,7 +986,7 @@ export default function CloudVpsServicePage() {
       <section className="py-24 bg-gradient-to-b from-[#090d16] via-[#0b1528] to-[#090d16] relative overflow-hidden">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-mono mb-6">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/30 text-slate-200 text-xs font-mono mb-6">
             <Sparkles className="w-3.5 h-3.5" />
             <span>KHỞI TẠO TỨC THÌ TRONG 30 GIÂY</span>
           </div>

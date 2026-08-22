@@ -46,7 +46,7 @@ export default function VpsInstancesListPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2">
-            <Server className="w-6 h-6 text-blue-600" />
+            <Server className="w-6 h-6 text-[#1F1F1F]" />
             Máy chủ ảo VPS
           </h1>
           <p className="text-sm text-slate-500 mt-1">Quản lý và giám sát các máy chủ Cloud VPS của bạn</p>
@@ -62,12 +62,12 @@ export default function VpsInstancesListPage() {
 
       {loading ? (
         <div className="py-20 flex justify-center">
-          <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+          <Loader2 className="w-8 h-8 text-[#1F1F1F] animate-spin" />
         </div>
       ) : instances.length === 0 ? (
         <div className="text-center py-16 bg-white rounded-2xl border border-slate-200 shadow-sm">
           <div className="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Server className="w-10 h-10 text-blue-500" />
+            <Server className="w-10 h-10 text-[#1F1F1F]" />
           </div>
           <h3 className="text-xl font-bold text-slate-900 mb-2">Bạn chưa có máy chủ VPS nào</h3>
           <p className="text-slate-500 max-w-md mx-auto mb-6">
@@ -91,7 +91,7 @@ export default function VpsInstancesListPage() {
                 <div className="p-5 border-b border-slate-100 flex justify-between items-start">
                   <div className="flex gap-4">
                     <div className="w-12 h-12 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-700 shadow-inner">
-                      <Server className="w-6 h-6 text-blue-600" />
+                      <Server className="w-6 h-6 text-[#1F1F1F]" />
                     </div>
                     <div>
                       <h3 className="font-bold text-slate-900 text-lg truncate max-w-[180px]" title={vps.containerName}>
@@ -137,7 +137,7 @@ export default function VpsInstancesListPage() {
                   </div>
                   <Link 
                     href={`/dashboard/vps-instances/${vps.id}`}
-                    className="flex items-center gap-1.5 text-sm font-bold text-blue-600 hover:text-blue-700 transition-colors"
+                    className="flex items-center gap-1.5 text-sm font-bold text-[#1F1F1F] hover:text-[#1F1F1F] transition-colors"
                   >
                     Quản lý <ArrowRight className="w-4 h-4" />
                   </Link>

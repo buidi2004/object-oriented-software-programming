@@ -344,14 +344,14 @@ export default function AdminNewsPage() {
                     {item.viewCount} lượt xem
                   </span>
                   {item.tags && (
-                    <span className="flex items-center gap-1 font-medium text-blue-600 bg-blue-50 px-2 py-0.5 rounded">
+                    <span className="flex items-center gap-1 font-medium text-[#1F1F1F] bg-blue-50 px-2 py-0.5 rounded">
                       <Tag className="w-3 h-3" />
                       {item.tags}
                     </span>
                   )}
                 </div>
                 
-                <h3 className="font-bold text-slate-900 mb-2 line-clamp-2 hover:text-blue-600 transition-colors">
+                <h3 className="font-bold text-slate-900 mb-2 line-clamp-2 hover:text-[#1F1F1F] transition-colors">
                   {item.title}
                 </h3>
                 
@@ -379,7 +379,7 @@ export default function AdminNewsPage() {
                   
                   <button 
                     onClick={() => handleOpenEditModal(item)} 
-                    className="p-2 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-colors"
+                    className="p-2 text-slate-500 hover:text-[#1F1F1F] hover:bg-blue-50 rounded-xl transition-colors"
                     title="Chỉnh sửa bài viết"
                   >
                     <Edit2 className="w-4 h-4" />

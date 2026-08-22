@@ -53,18 +53,18 @@ export default function AdminInvoicesPage() {
         <div className="max-w-6xl mx-auto space-y-6">
           <div className="flex items-center justify-between">
             <div>
-              <Link href="/admin" className="text-sm text-slate-500 hover:text-blue-600 flex items-center gap-1 mb-2">
+              <Link href="/admin" className="text-sm text-slate-500 hover:text-[#1F1F1F] flex items-center gap-1 mb-2">
                 <ArrowLeft className="w-4 h-4" /> Quay lại Dashboard
               </Link>
               <h1 className="text-2xl font-black text-slate-900 flex items-center gap-2">
-                <FileText className="w-6 h-6 text-blue-600" />
+                <FileText className="w-6 h-6 text-[#1F1F1F]" />
                 Quản Lý Hóa Đơn Toàn Hệ Thống
               </h1>
               <p className="text-slate-500 mt-1">Xem và tải xuống hóa đơn điện tử của khách hàng</p>
             </div>
             <button
               onClick={fetchInvoices}
-              className="p-2 rounded-xl bg-white border border-slate-200 hover:text-blue-600 transition-colors"
+              className="p-2 rounded-xl bg-white border border-slate-200 hover:text-[#1F1F1F] transition-colors"
             >
               <RefreshCw className="w-5 h-5" />
             </button>

@@ -96,7 +96,7 @@ export default function AffiliatesPage() {
   if (loading) {
     return (
       <div className="p-8 max-w-5xl mx-auto flex justify-center items-center h-64">
-        <div className="flex items-center gap-2 text-indigo-600">
+        <div className="flex items-center gap-2 text-[#1F1F1F]">
           <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin" />
           <span className="font-medium">Đang tải dữ liệu...</span>
         </div>
@@ -108,7 +108,7 @@ export default function AffiliatesPage() {
     <div className="p-8 max-w-5xl mx-auto space-y-8">
       <div>
         <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
-          <Share2 className="w-8 h-8 text-indigo-600" />
+          <Share2 className="w-8 h-8 text-[#1F1F1F]" />
           Tiếp thị Liên kết (Affiliates)
         </h1>
         <p className="text-gray-500 mt-2">Chia sẻ mã giới thiệu của bạn và đăng ký trở thành đối tác để nhận hoa hồng hấp dẫn.</p>
@@ -119,7 +119,7 @@ export default function AffiliatesPage() {
         {/* Your Referral Code */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
           <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2 mb-4">
-            <LinkIcon className="w-5 h-5 text-indigo-500" />
+            <LinkIcon className="w-5 h-5 text-[#1F1F1F]" />
             Mã Giới Thiệu Của Bạn
           </h2>
           <p className="text-sm text-gray-500 mb-6">
@@ -128,7 +128,7 @@ export default function AffiliatesPage() {
           
           <div className="flex items-center gap-3">
             <div className="flex-1 bg-gray-50 border border-gray-200 rounded-lg p-3 text-center">
-              <span className="font-mono text-xl font-bold tracking-wider text-indigo-700">
+              <span className="font-mono text-xl font-bold tracking-wider text-[#1F1F1F]">
                 {myReferralCode || '----'}
               </span>
             </div>
@@ -136,7 +136,7 @@ export default function AffiliatesPage() {
               onClick={handleCopyCode}
               disabled={!myReferralCode}
               className={`p-3 rounded-lg transition-colors flex items-center justify-center shrink-0 ${
-                copied ? 'bg-green-100 text-green-700' : 'bg-indigo-50 text-indigo-600 hover:bg-indigo-100'
+                copied ? 'bg-green-100 text-green-700' : 'bg-indigo-50 text-[#1F1F1F] hover:bg-indigo-100'
               }`}
               title="Sao chép"
             >
@@ -255,7 +255,7 @@ export default function AffiliatesPage() {
                     onChange={(e) => setCommissionRate(Number(e.target.value))}
                     className="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600"
                   />
-                  <div className="w-16 text-center font-bold text-lg text-indigo-700 bg-white border border-gray-200 rounded-lg py-1">
+                  <div className="w-16 text-center font-bold text-lg text-[#1F1F1F] bg-white border border-gray-200 rounded-lg py-1">
                     {commissionRate}%
                   </div>
                 </div>

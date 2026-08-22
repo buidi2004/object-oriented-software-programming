@@ -63,7 +63,7 @@ export default function ComparePlansPage() {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50">
-        <Loader2 className="w-12 h-12 animate-spin text-blue-600" />
+        <Loader2 className="w-12 h-12 animate-spin text-[#1F1F1F]" />
       </div>
     );
   }
@@ -73,7 +73,7 @@ export default function ComparePlansPage() {
       <div className="min-h-screen flex items-center justify-center bg-slate-50">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-slate-900 mb-4">Chưa chọn gói dịch vụ nào để so sánh</h1>
-          <Link href="/services" className="text-blue-600 hover:underline">← Về trang dịch vụ</Link>
+          <Link href="/services" className="text-[#1F1F1F] hover:underline">← Về trang dịch vụ</Link>
         </div>
       </div>
     );
@@ -114,11 +114,11 @@ export default function ComparePlansPage() {
                 </th>
                 {plans.map(plan => (
                   <th key={plan.id} className="p-6 border-b border-l border-slate-200 bg-white min-w-[250px] text-center">
-                    <div className="w-12 h-12 mx-auto bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center mb-3">
+                    <div className="w-12 h-12 mx-auto bg-blue-50 text-[#1F1F1F] rounded-xl flex items-center justify-center mb-3">
                       <Server className="w-6 h-6" />
                     </div>
                     <h3 className="text-lg font-bold text-slate-900 mb-1">{plan.name}</h3>
-                    <div className="text-2xl font-black text-blue-600 mb-4">
+                    <div className="text-2xl font-black text-[#1F1F1F] mb-4">
                       {(isYearly ? plan.yearlyPrice : plan.monthlyPrice).toLocaleString('vi-VN')}đ
                       <span className="text-sm font-normal text-slate-500">/{isYearly ? 'năm' : 'tháng'}</span>
                     </div>

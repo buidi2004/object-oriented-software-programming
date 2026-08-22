@@ -132,7 +132,7 @@ export default function TicketDetailPage() {
     if (p === 'urgent' || p === '4') return 'bg-rose-100 text-rose-700';
     if (p === 'high' || p === '3') return 'bg-red-100 text-red-700';
     if (p === 'medium' || p === 'normal' || p === '2') return 'bg-amber-100 text-amber-700';
-    return 'bg-blue-100 text-blue-700';
+    return 'bg-blue-100 text-[#1F1F1F]';
   };
 
   const getPriorityLabel = (priority: string) => {
@@ -157,7 +157,7 @@ export default function TicketDetailPage() {
         <div className="text-center">
           <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
           <h2 className="text-xl font-bold text-slate-900 mb-2">Không tìm thấy Ticket</h2>
-          <Link href="/dashboard/tickets" className="text-blue-600 hover:underline">
+          <Link href="/dashboard/tickets" className="text-[#1F1F1F] hover:underline">
             ← Quay lại danh sách ticket
           </Link>
         </div>
@@ -170,7 +170,7 @@ export default function TicketDetailPage() {
       {/* Header */}
       <header className="bg-white border-b border-slate-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-          <button onClick={() => router.back()} className="flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-blue-600">
+          <button onClick={() => router.back()} className="flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-[#1F1F1F]">
             <ArrowLeft className="w-4 h-4" />
             Quay lại
           </button>
@@ -320,7 +320,7 @@ export default function TicketDetailPage() {
             {/* Support Info */}
             <div className="bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl p-6 text-slate-900">
               <h3 className="font-bold text-lg mb-2">Cần hỗ trợ thêm?</h3>
-              <div className="space-y-3 text-sm text-blue-100">
+              <div className="space-y-3 text-sm text-slate-200">
                 <p>📞 Hotline: 1900 6888</p>
                 <p>💬 Live chat 24/7</p>
                 <p>✉️ support@cloudhost.vn</p>

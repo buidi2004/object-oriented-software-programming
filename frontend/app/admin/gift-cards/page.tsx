@@ -247,7 +247,7 @@ export default function AdminGiftCardsPage() {
                 <div>
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
+                      <div className="w-8 h-8 rounded-lg bg-indigo-50 text-[#1F1F1F] flex items-center justify-center">
                         <Gift className="w-4 h-4" />
                       </div>
                       <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold ${
@@ -275,7 +275,7 @@ export default function AdminGiftCardsPage() {
                     </span>
                     <button
                       onClick={() => copyToClipboard(card.code)}
-                      className="p-1.5 text-slate-500 hover:text-blue-600 hover:bg-white rounded-lg transition-colors"
+                      className="p-1.5 text-slate-500 hover:text-[#1F1F1F] hover:bg-white rounded-lg transition-colors"
                       title="Sao chép mã"
                     >
                       {copiedCode === card.code ? (
@@ -294,7 +294,7 @@ export default function AdminGiftCardsPage() {
                     </div>
                     <div className="flex justify-between">
                       <span className="text-slate-600">Số dư còn lại:</span>
-                      <span className="font-bold text-blue-600">{card.remainingAmount.toLocaleString('vi-VN')} đ</span>
+                      <span className="font-bold text-[#1F1F1F]">{card.remainingAmount.toLocaleString('vi-VN')} đ</span>
                     </div>
                     {card.expiryDate && (
                       <div className="flex justify-between">

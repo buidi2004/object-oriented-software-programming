@@ -75,7 +75,7 @@ export const Hero: React.FC<HeroProps> = ({ onStartClick, onPriceClick }) => {
               {/* Secondary Glass Button matching exact style in image */}
               <button
                 onClick={onPriceClick}
-                className="px-7 py-3.5 rounded-2xl bg-cyan-50/60 hover:bg-cyan-100/70 border border-cyan-300/60 text-cyan-900 font-bold text-base transition-all duration-300 shadow-xs cursor-pointer"
+                className="px-7 py-3.5 rounded-2xl bg-cyan-50/60 hover:bg-cyan-100/70 border border-cyan-300/60 text-[#1F1F1F] font-bold text-base transition-all duration-300 shadow-xs cursor-pointer"
               >
                 Xem báo giá
               </button>
@@ -126,7 +126,7 @@ export const Hero: React.FC<HeroProps> = ({ onStartClick, onPriceClick }) => {
 
               {/* Glassmorphism Floating Pill Badge bottom right matching exact picture */}
               <div className="absolute bottom-5 right-5 bg-white/85 backdrop-blur-xl border border-white/70 p-3 px-5 rounded-2xl shadow-xl flex items-center gap-3.5 text-slate-900 transition-transform duration-300 hover:scale-105">
-                <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center text-blue-600 shadow-inner">
+                <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center text-[#1F1F1F] shadow-inner">
                   <Gauge className="w-5 h-5 animate-spin-slow" />
                 </div>
                 <div className="flex flex-col text-left">

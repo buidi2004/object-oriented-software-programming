@@ -322,7 +322,7 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
   if (isLoading) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+        <Loader2 className="w-8 h-8 text-[#1F1F1F] animate-spin" />
       </div>
     );
   }
@@ -357,7 +357,7 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
       )}
 
       <div className="max-w-5xl mx-auto mb-2">
-        <Link href="/dashboard/vps-instances" className="text-xs font-bold text-slate-500 hover:text-blue-600 flex items-center gap-1.5 transition-colors w-fit">
+        <Link href="/dashboard/vps-instances" className="text-xs font-bold text-slate-500 hover:text-[#1F1F1F] flex items-center gap-1.5 transition-colors w-fit">
           <ArrowLeft className="w-4 h-4" /> Quay lại danh sách máy chủ
         </Link>
       </div>
@@ -367,7 +367,7 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
         <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
           <div className="flex flex-col items-center md:items-start text-center md:text-left space-y-3">
             <div className="w-16 h-16 rounded-full bg-white border-2 border-slate-300 flex items-center justify-center text-slate-900 shadow-inner">
-              <Server className="w-8 h-8 text-blue-600" />
+              <Server className="w-8 h-8 text-[#1F1F1F]" />
             </div>
             <div>
               <h2 className="text-lg font-black text-[#ffffff]">{vps.planName || 'Cheap 4'}</h2>
@@ -498,7 +498,7 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
             <button 
               onClick={() => handleAction('restart')}
               disabled={actionLoading !== null}
-              className="w-8 h-8 rounded border border-blue-300 hover:bg-blue-50 flex items-center justify-center text-blue-500 transition-colors"
+              className="w-8 h-8 rounded border border-blue-300 hover:bg-blue-50 flex items-center justify-center text-[#1F1F1F] transition-colors"
               title="Restart VPS"
             >
               <RefreshCw className={`w-4 h-4 ${actionLoading === 'restart' ? 'animate-spin' : ''}`} />
@@ -551,7 +551,7 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
           </div>
 
           <button className="text-slate-600 hover:text-slate-600 p-1">
-            <ChevronDown className="w-4 h-4 text-blue-500" />
+            <ChevronDown className="w-4 h-4 text-[#1F1F1F]" />
           </button>
         </div>
 
@@ -812,7 +812,7 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
                     onClick={() => setSettingsSubTab(item.id as any)}
                     className={`w-full text-left px-4 py-2.5 rounded-lg text-xs font-bold transition-all ${
                       settingsSubTab === item.id 
-                        ? 'bg-blue-50 text-blue-600 border border-blue-200 shadow-sm' 
+                        ? 'bg-blue-50 text-[#1F1F1F] border border-blue-200 shadow-sm' 
                         : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
                     }`}
                   >
@@ -897,7 +897,7 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
                     onClick={() => setInstallSubTab(item.id as any)}
                     className={`w-full text-left px-4 py-2.5 rounded-lg text-xs font-bold transition-all ${
                       installSubTab === item.id 
-                        ? 'bg-blue-50 text-blue-600 border border-blue-200 shadow-sm' 
+                        ? 'bg-blue-50 text-[#1F1F1F] border border-blue-200 shadow-sm' 
                         : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
                     }`}
                   >
@@ -962,7 +962,7 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
                         type="checkbox" 
                         checked={removeOldSsh} 
                         onChange={(e) => setRemoveOldSsh(e.target.checked)}
-                        className="w-4 h-4 text-blue-600 rounded"
+                        className="w-4 h-4 text-[#1F1F1F] rounded"
                       />
                     </div>
                   </div>

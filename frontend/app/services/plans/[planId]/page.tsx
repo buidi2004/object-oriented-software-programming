@@ -130,7 +130,7 @@ function PlanDetailInner() {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50">
-        <Loader2 className="w-12 h-12 animate-spin text-blue-600" />
+        <Loader2 className="w-12 h-12 animate-spin text-[#1F1F1F]" />
       </div>
     );
   }
@@ -140,7 +140,7 @@ function PlanDetailInner() {
       <div className="min-h-screen flex items-center justify-center bg-slate-50">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-slate-900 mb-4">{error}</h1>
-          <Link href="/services" className="text-blue-600 hover:underline">← Quay lại danh sách dịch vụ</Link>
+          <Link href="/services" className="text-[#1F1F1F] hover:underline">← Quay lại danh sách dịch vụ</Link>
         </div>
       </div>
     );
@@ -186,12 +186,12 @@ function PlanDetailInner() {
               <Server className="w-64 h-64" />
             </div>
             <div className="relative z-10">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-blue-200 text-xs font-bold uppercase tracking-wider mb-4 border border-white/20">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-slate-200 text-xs font-bold uppercase tracking-wider mb-4 border border-white/20">
                 <Zap className="w-3.5 h-3.5" />
                 {plan.categoryName}
               </div>
               <h2 className="text-4xl font-black mb-4">{plan.name}</h2>
-              <p className="text-lg text-blue-100 max-w-xl">{plan.description}</p>
+              <p className="text-lg text-slate-200 max-w-xl">{plan.description}</p>
               {maxDiscount > 0 && (
                 <p className="mt-3 text-emerald-300 font-semibold">Đang giảm {maxDiscount}% — ưu đãi có hạn</p>
               )}
@@ -201,17 +201,17 @@ function PlanDetailInner() {
           <div className="grid grid-cols-1 md:grid-cols-2">
             <div className="p-10 border-r border-slate-100">
               <h3 className="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
-                <Shield className="w-5 h-5 text-blue-600" />
+                <Shield className="w-5 h-5 text-[#1F1F1F]" />
                 Thông số kỹ thuật
               </h3>
               <ul className="space-y-4">
                 {Object.entries(plan.attributes).map(([key, value]) => (
                   <li key={key} className="flex justify-between items-center py-2 border-b border-slate-50 last:border-0">
                     <span className="text-slate-600 capitalize flex items-center gap-2">
-                      {key === 'cpu' && <Cpu className="w-4 h-4 text-blue-500" />}
-                      {key === 'ram' && <Database className="w-4 h-4 text-blue-500" />}
-                      {key === 'ssd' && <HardDrive className="w-4 h-4 text-blue-500" />}
-                      {key === 'bandwidth' && <Wifi className="w-4 h-4 text-blue-500" />}
+                      {key === 'cpu' && <Cpu className="w-4 h-4 text-[#1F1F1F]" />}
+                      {key === 'ram' && <Database className="w-4 h-4 text-[#1F1F1F]" />}
+                      {key === 'ssd' && <HardDrive className="w-4 h-4 text-[#1F1F1F]" />}
+                      {key === 'bandwidth' && <Wifi className="w-4 h-4 text-[#1F1F1F]" />}
                       {key.replace(/_/g, ' ')}
                     </span>
                     <span className="font-semibold text-slate-900">{value}</span>
@@ -242,7 +242,7 @@ function PlanDetailInner() {
                 <div className="text-sm text-slate-500 mb-2">
                   Giá thanh toán {isYearly ? 'hàng năm' : 'hàng tháng'}
                 </div>
-                <div className="text-4xl font-black text-blue-600 mb-2">
+                <div className="text-4xl font-black text-[#1F1F1F] mb-2">
                   {displayPrice.toLocaleString('vi-VN')}đ
                 </div>
                 {isYearly && plan.monthlyPrice > 0 && plan.yearlyPrice > 0 && (
@@ -273,7 +273,7 @@ export default function PlanDetailPage() {
     <Suspense
       fallback={
         <div className="min-h-screen flex items-center justify-center bg-slate-50">
-          <Loader2 className="w-12 h-12 animate-spin text-blue-600" />
+          <Loader2 className="w-12 h-12 animate-spin text-[#1F1F1F]" />
         </div>
       }
     >

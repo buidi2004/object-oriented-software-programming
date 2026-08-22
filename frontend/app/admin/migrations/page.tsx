@@ -17,7 +17,7 @@ interface MigrationApp {
 
 const statusMap = {
   0: { label: 'Pending', icon: <Clock className="w-4 h-4" />, color: 'bg-amber-50 text-amber-700 border-amber-200' },
-  1: { label: 'Processing', icon: <ArrowRightLeft className="w-4 h-4" />, color: 'bg-blue-50 text-blue-700 border-blue-200' },
+  1: { label: 'Processing', icon: <ArrowRightLeft className="w-4 h-4" />, color: 'bg-blue-50 text-[#1F1F1F] border-blue-200' },
   2: { label: 'Completed', icon: <CheckCircle2 className="w-4 h-4" />, color: 'bg-green-50 text-green-700 border-green-200' },
   3: { label: 'Failed', icon: <XCircle className="w-4 h-4" />, color: 'bg-red-50 text-red-700 border-red-200' },
 };
@@ -64,7 +64,7 @@ export default function AdminMigrationsPage() {
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
-            <Database className="w-8 h-8 text-indigo-600" />
+            <Database className="w-8 h-8 text-[#1F1F1F]" />
             Yêu cầu Migration (Chuyển dữ liệu)
           </h1>
           <p className="text-gray-500 mt-2">Quản lý và tiếp nhận các yêu cầu chuyển đổi dữ liệu từ Khách hàng.</p>
@@ -130,7 +130,7 @@ export default function AdminMigrationsPage() {
                           <option value={2}>Completed</option>
                           <option value={3}>Failed</option>
                         </select>
-                        <Link href={`/admin/migrations/${mig.id}`} className="inline-flex items-center gap-1 text-sm text-indigo-600 hover:text-indigo-800 font-medium mt-1">
+                        <Link href={`/admin/migrations/${mig.id}`} className="inline-flex items-center gap-1 text-sm text-[#1F1F1F] hover:text-[#1F1F1F] font-medium mt-1">
                           <Eye className="w-4 h-4" /> Chi tiết
                         </Link>
                       </div>

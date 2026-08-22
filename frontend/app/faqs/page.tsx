@@ -32,7 +32,7 @@ export default function PublicFaqsPage() {
         <h1 className="text-3xl font-black text-slate-900 mb-2">Câu hỏi thường gặp</h1>
         <p className="text-slate-500 mb-8">Giải đáp nhanh các thắc mắc phổ biến</p>
 
-        {isLoading && <Loader className="w-8 h-8 text-blue-600 animate-spin mx-auto" />}
+        {isLoading && <Loader className="w-8 h-8 text-[#1F1F1F] animate-spin mx-auto" />}
         {error && (
           <div className="p-4 bg-red-50 border border-red-200 rounded-xl flex items-center gap-2 text-red-700 text-sm">
             <AlertCircle className="w-4 h-4" /> {error}
@@ -47,7 +47,7 @@ export default function PublicFaqsPage() {
                 className="w-full px-5 py-4 flex items-center justify-between text-left hover:bg-slate-50"
               >
                 <span className="font-semibold text-slate-900 flex items-center gap-2">
-                  <HelpCircle className="w-4 h-4 text-blue-600 shrink-0" />
+                  <HelpCircle className="w-4 h-4 text-[#1F1F1F] shrink-0" />
                   {faq.question}
                 </span>
                 {openId === faq.id ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
@@ -64,7 +64,7 @@ export default function PublicFaqsPage() {
         )}
 
         <div className="mt-8 text-center">
-          <Link href="/" className="text-blue-600 font-semibold hover:text-blue-700">← Về trang chủ</Link>
+          <Link href="/" className="text-[#1F1F1F] font-semibold hover:text-[#1F1F1F]">← Về trang chủ</Link>
         </div>
       </div>
     </div>

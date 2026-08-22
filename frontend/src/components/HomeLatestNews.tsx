@@ -71,12 +71,12 @@ export const HomeLatestNews: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
           <div>
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-cyan-100 text-cyan-800 text-xs font-bold uppercase tracking-wider mb-3">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-cyan-100 text-[#1F1F1F] text-xs font-bold uppercase tracking-wider mb-3">
               <BookOpen className="w-3.5 h-3.5" />
               Blog &amp; Kiến Thức Công Nghệ
             </div>
             <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-              Tin Tức &amp; <span className="text-blue-600">Cập Nhật Mới Nhất</span>
+              Tin Tức &amp; <span className="text-[#1F1F1F]">Cập Nhật Mới Nhất</span>
             </h2>
             <p className="text-sm sm:text-base text-slate-600 mt-2 max-w-2xl">
               Khám phá các hướng dẫn kỹ thuật, xu hướng hạ tầng đám mây và thông báo nâng cấp hệ thống định kỳ.
@@ -85,7 +85,7 @@ export const HomeLatestNews: React.FC = () => {
 
           <Link
             href="/news"
-            className="mt-4 md:mt-0 inline-flex items-center gap-2 text-sm font-bold text-cyan-700 hover:text-cyan-800 group shrink-0"
+            className="mt-4 md:mt-0 inline-flex items-center gap-2 text-sm font-bold text-[#1F1F1F] hover:text-[#1F1F1F] group shrink-0"
           >
             <span>Xem tất cả bài viết</span>
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -111,7 +111,7 @@ export const HomeLatestNews: React.FC = () => {
                   </span>
                 </div>
 
-                <h3 className="text-base font-bold text-slate-900 group-hover:text-blue-600 transition-colors leading-snug mb-3 line-clamp-2">
+                <h3 className="text-base font-bold text-slate-900 group-hover:text-[#1F1F1F] transition-colors leading-snug mb-3 line-clamp-2">
                   {art.title}
                 </h3>
 
@@ -120,7 +120,7 @@ export const HomeLatestNews: React.FC = () => {
                 </p>
               </div>
 
-              <div className="pt-4 border-t border-slate-200/60 flex items-center justify-between text-xs font-bold text-blue-600">
+              <div className="pt-4 border-t border-slate-200/60 flex items-center justify-between text-xs font-bold text-[#1F1F1F]">
                 <span>Đọc bài viết</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </div>

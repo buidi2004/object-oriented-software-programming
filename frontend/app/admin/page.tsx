@@ -237,7 +237,7 @@ export default function AdminDashboardPage() {
           </div>
           
           <div className="flex items-center gap-4">
-            <Link href="/" className="text-xs font-bold text-slate-600 hover:text-blue-600">
+            <Link href="/" className="text-xs font-bold text-slate-600 hover:text-[#1F1F1F]">
               ← Về trang chủ
             </Link>
             <div className="flex items-center gap-2">
@@ -262,7 +262,7 @@ export default function AdminDashboardPage() {
             <div key={idx} className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition-all">
               <div className="flex items-center justify-between mb-3">
                 <div className={`w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center`}>
-                  <stat.icon className={`w-5 h-5 text-blue-600`} />
+                  <stat.icon className={`w-5 h-5 text-[#1F1F1F]`} />
                 </div>
                 <span className={`text-xs font-bold flex items-center gap-0.5 ${
                   stat.change.startsWith('+') ? 'text-emerald-600' : 'text-red-600'
@@ -282,13 +282,13 @@ export default function AdminDashboardPage() {
           <div className="relative z-10 space-y-4">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div>
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-indigo-500/30 border border-indigo-400/30 rounded-full text-indigo-200 text-xs font-bold mb-2">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-indigo-500/30 border border-indigo-400/30 rounded-full text-slate-200 text-xs font-bold mb-2">
                   <DollarSign className="w-3.5 h-3.5 text-emerald-400" /> Trung Tâm Bảng Giá & Gói Cước 11 Dịch Vụ
                 </div>
                 <h2 className="text-lg md:text-xl font-black text-slate-900">
                   Tùy Chỉnh Giá Bán & Cấu Hình Máy Chủ Toàn Diện
                 </h2>
-                <p className="text-xs text-indigo-200/80 mt-1 max-w-2xl">
+                <p className="text-xs text-slate-200/80 mt-1 max-w-2xl">
                   Sửa trực tiếp giá bán hàng tháng / hàng năm, thông số CPU / RAM / NVMe và chu kỳ cho từng dịch vụ:
                 </p>
               </div>
@@ -322,7 +322,7 @@ export default function AdminDashboardPage() {
                   href={`/admin/service-plans?category=${svc.slug}`}
                   className={`p-2.5 bg-white/10 hover:bg-white/20 border border-white/10 rounded-xl transition-all flex items-center gap-2 text-xs font-bold text-slate-900 group`}
                 >
-                  <svc.icon className="w-4 h-4 text-indigo-300 group-hover:text-emerald-400 transition-colors flex-shrink-0" />
+                  <svc.icon className="w-4 h-4 text-slate-200 group-hover:text-emerald-400 transition-colors flex-shrink-0" />
                   <span className="truncate">{svc.label}</span>
                 </Link>
               ))}
@@ -365,7 +365,7 @@ export default function AdminDashboardPage() {
                     <div>
                       <div className="flex items-center justify-between mb-3">
                         <div className="w-10 h-10 rounded-xl bg-slate-50 group-hover:bg-blue-50 flex items-center justify-center transition-colors">
-                          <item.icon className="w-5 h-5 text-slate-600 group-hover:text-blue-600 transition-colors" />
+                          <item.icon className="w-5 h-5 text-slate-600 group-hover:text-[#1F1F1F] transition-colors" />
                         </div>
                         {item.count !== undefined && (
                           <span className="px-2 py-0.5 rounded-full bg-slate-100 text-[10px] font-bold text-slate-600">
@@ -373,14 +373,14 @@ export default function AdminDashboardPage() {
                           </span>
                         )}
                       </div>
-                      <p className="text-xs font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
+                      <p className="text-xs font-bold text-slate-900 group-hover:text-[#1F1F1F] transition-colors">
                         {item.label}
                       </p>
                       <p className="text-[11px] text-slate-600 mt-1 leading-snug">
                         {item.desc}
                       </p>
                     </div>
-                    <div className="mt-3 pt-2 border-t border-slate-100 text-[10px] font-bold text-blue-600 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="mt-3 pt-2 border-t border-slate-100 text-[10px] font-bold text-[#1F1F1F] opacity-0 group-hover:opacity-100 transition-opacity">
                       Truy cập →
                     </div>
                   </Link>

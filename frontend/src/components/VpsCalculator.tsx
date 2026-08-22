@@ -68,7 +68,7 @@ export const VpsCalculator: React.FC<VpsCalculatorProps> = ({ onAddToCart, onVie
     <section id="vps-calculator-section" className="py-16 bg-slate-50/70 border-b border-slate-200/60">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-12">
-          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-blue-100 text-blue-700 text-xs font-bold uppercase tracking-wider mb-2">
+          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-blue-100 text-[#1F1F1F] text-xs font-bold uppercase tracking-wider mb-2">
             <Server className="w-3.5 h-3.5" />
             Cấu Hình Tự Chọn
           </div>
@@ -78,7 +78,7 @@ export const VpsCalculator: React.FC<VpsCalculatorProps> = ({ onAddToCart, onVie
           <p className="text-slate-600 text-sm sm:text-base mt-2">
             Linh hoạt tùy chỉnh tài nguyên CPU, RAM, NVMe SSD theo nhu cầu thực tế. Khởi tạo tức thì trong 30 giây.
           </p>
-          <a href="/services/cloud-vps" className="inline-flex items-center gap-1.5 mt-4 text-sm font-bold text-blue-600 hover:text-blue-700 transition-colors">
+          <a href="/services/cloud-vps" className="inline-flex items-center gap-1.5 mt-4 text-sm font-bold text-[#1F1F1F] hover:text-[#1F1F1F] transition-colors">
             Xem chi tiết tất cả gói VPS →
           </a>
         </div>
@@ -91,7 +91,7 @@ export const VpsCalculator: React.FC<VpsCalculatorProps> = ({ onAddToCart, onVie
                   <ResourceIcon type="cpu" />
                   Vi Xử Lý (CPU Cores):
                 </label>
-                <span className="text-sm sm:text-lg font-black text-blue-600 bg-blue-50 px-2.5 sm:px-3 py-1 rounded-xl w-fit">
+                <span className="text-sm sm:text-lg font-black text-[#1F1F1F] bg-blue-50 px-2.5 sm:px-3 py-1 rounded-xl w-fit">
                   {cpu} vCPU Core (AMD EPYC)
                 </span>
               </div>
@@ -110,7 +110,7 @@ export const VpsCalculator: React.FC<VpsCalculatorProps> = ({ onAddToCart, onVie
                   <ResourceIcon type="ram" />
                   Bộ Nhớ (RAM DDR5):
                 </label>
-                <span className="text-sm sm:text-lg font-black text-indigo-600 bg-indigo-50 px-2.5 sm:px-3 py-1 rounded-xl w-fit">
+                <span className="text-sm sm:text-lg font-black text-[#1F1F1F] bg-indigo-50 px-2.5 sm:px-3 py-1 rounded-xl w-fit">
                   {ram} GB RAM
                 </span>
               </div>
@@ -129,7 +129,7 @@ export const VpsCalculator: React.FC<VpsCalculatorProps> = ({ onAddToCart, onVie
                   <ResourceIcon type="disk" />
                   Ổ Cứng Enterprise NVMe SSD:
                 </label>
-                <span className="text-sm sm:text-lg font-black text-cyan-600 bg-cyan-50 px-2.5 sm:px-3 py-1 rounded-xl w-fit">
+                <span className="text-sm sm:text-lg font-black text-[#1F1F1F] bg-cyan-50 px-2.5 sm:px-3 py-1 rounded-xl w-fit">
                   {disk} GB NVMe Raid 10
                 </span>
               </div>
@@ -157,7 +157,7 @@ export const VpsCalculator: React.FC<VpsCalculatorProps> = ({ onAddToCart, onVie
                       onClick={() => setOs(item.name)}
                       className={`h-full min-h-[4.5rem] p-3 rounded-2xl border text-left flex flex-col justify-between transition-all cursor-pointer ${
                         selected
-                          ? 'bg-blue-50/80 border-blue-500 ring-2 ring-blue-500/20 text-blue-900 font-bold shadow-sm'
+                          ? 'bg-blue-50/80 border-blue-500 ring-2 ring-blue-500/20 text-[#1F1F1F] font-bold shadow-sm'
                           : 'bg-white border-slate-200 hover:border-slate-300 text-slate-700 hover:shadow-sm'
                       }`}
                     >
@@ -165,11 +165,11 @@ export const VpsCalculator: React.FC<VpsCalculatorProps> = ({ onAddToCart, onVie
                         <OsTemplateIcon os={item.osKey} size="sm" />
                         <span className="flex-1 min-w-0">
                           <span className="block text-xs font-bold leading-tight">{item.name}</span>
-                          <span className={`text-[10px] font-semibold ${selected ? 'text-blue-600' : 'text-slate-400'}`}>
+                          <span className={`text-[10px] font-semibold ${selected ? 'text-[#1F1F1F]' : 'text-slate-400'}`}>
                             {item.type}
                           </span>
                         </span>
-                        {selected && <Check className="w-4 h-4 text-blue-600 shrink-0" />}
+                        {selected && <Check className="w-4 h-4 text-[#1F1F1F] shrink-0" />}
                       </div>
                     </button>
                   );
@@ -192,7 +192,7 @@ export const VpsCalculator: React.FC<VpsCalculatorProps> = ({ onAddToCart, onVie
                       onClick={() => setDatacenter(loc.name)}
                       className={`h-full min-h-[5.5rem] p-3.5 rounded-2xl border text-left flex flex-col transition-all cursor-pointer ${
                         selected
-                          ? 'bg-blue-50/80 border-blue-500 ring-2 ring-blue-500/20 text-blue-900 shadow-sm'
+                          ? 'bg-blue-50/80 border-blue-500 ring-2 ring-blue-500/20 text-[#1F1F1F] shadow-sm'
                           : 'bg-white border-slate-200 hover:border-slate-300 hover:shadow-sm'
                       }`}
                     >
@@ -207,7 +207,7 @@ export const VpsCalculator: React.FC<VpsCalculatorProps> = ({ onAddToCart, onVie
                           </div>
                           <div className="text-[11px] text-slate-500 leading-snug line-clamp-2">{loc.detail}</div>
                         </div>
-                        {selected && <Check className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />}
+                        {selected && <Check className="w-4 h-4 text-[#1F1F1F] shrink-0 mt-0.5" />}
                       </div>
                     </button>
                   );
@@ -218,7 +218,7 @@ export const VpsCalculator: React.FC<VpsCalculatorProps> = ({ onAddToCart, onVie
 
           <div className="lg:col-span-4 bg-white text-slate-900 p-6 sm:p-8 rounded-3xl shadow-2xl border border-slate-200 space-y-6 sticky top-28">
             <div className="flex items-center justify-between pb-4 border-b border-slate-200">
-              <span className="text-xs font-extrabold tracking-wider uppercase text-cyan-400 flex items-center gap-1.5">
+              <span className="text-xs font-extrabold tracking-wider uppercase text-[#1F1F1F] flex items-center gap-1.5">
                 <Zap className="w-4 h-4 fill-cyan-400" />
                 Cấu Hình Đã Chọn
               </span>
@@ -240,7 +240,7 @@ export const VpsCalculator: React.FC<VpsCalculatorProps> = ({ onAddToCart, onVie
               </li>
               <li className="flex justify-between items-center gap-2">
                 <span className="text-slate-600 flex items-center gap-1.5"><ResourceIcon type="network" className="!w-7 !h-7 !rounded-lg" /> BW:</span>
-                <span className="font-bold text-cyan-400 flex items-center gap-1">
+                <span className="font-bold text-[#1F1F1F] flex items-center gap-1">
                   <Wifi className="w-3.5 h-3.5" /> Không giới hạn
                 </span>
               </li>
@@ -296,7 +296,7 @@ export const VpsCalculator: React.FC<VpsCalculatorProps> = ({ onAddToCart, onVie
             <div className="pt-4 border-t border-slate-200 space-y-1">
               <div className="flex items-baseline justify-between">
                 <span className="text-xs text-slate-600 font-semibold">Giá mỗi tháng:</span>
-                <span className="text-2xl font-black text-cyan-300">
+                <span className="text-2xl font-black text-slate-200">
                   {discountedMonthlyPrice.toLocaleString('vi-VN')} đ
                   <span className="text-xs text-slate-600 font-normal">/tháng</span>
                 </span>
@@ -319,7 +319,7 @@ export const VpsCalculator: React.FC<VpsCalculatorProps> = ({ onAddToCart, onVie
             <div className="space-y-3">
               <button
                 onClick={() => onViewDetails?.('vps-custom')}
-                className="w-full py-3 rounded-xl border-2 border-blue-500 text-blue-400 font-bold text-sm hover:bg-blue-500/10 transition-colors"
+                className="w-full py-3 rounded-xl border-2 border-blue-500 text-slate-200 font-bold text-sm hover:bg-blue-500/10 transition-colors"
               >
                 Xem chi tiết VPS
               </button>

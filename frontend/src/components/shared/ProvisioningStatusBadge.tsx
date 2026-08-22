@@ -17,9 +17,9 @@ export function ProvisioningStatusBadge({ status, elapsedSeconds, isSlow }: Prov
         <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold shadow-sm ${
           isSlow 
             ? 'bg-amber-100 border border-amber-300 text-amber-800 animate-pulse' 
-            : 'bg-blue-50 border border-blue-200 text-blue-700'
+            : 'bg-blue-50 border border-blue-200 text-[#1F1F1F]'
         }`}>
-          <RefreshCw className="w-3.5 h-3.5 animate-spin text-blue-600" />
+          <RefreshCw className="w-3.5 h-3.5 animate-spin text-[#1F1F1F]" />
           {status === 'Deploying' ? 'Đang deploy' : 'Đang khởi tạo'}
           {elapsedSeconds !== undefined && elapsedSeconds > 0 && (
             <span className="opacity-75 font-mono">({elapsedSeconds}s)</span>

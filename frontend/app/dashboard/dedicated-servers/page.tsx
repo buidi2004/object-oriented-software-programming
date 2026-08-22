@@ -84,7 +84,7 @@ export default function CustomerDedicatedServersPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
-            <Server className="w-6 h-6 text-cyan-400" /> Quản Lý Máy Chủ Vật Lý Riêng (Dedicated Server)
+            <Server className="w-6 h-6 text-[#1F1F1F]" /> Quản Lý Máy Chủ Vật Lý Riêng (Dedicated Server)
           </h1>
           <p className="text-sm text-slate-600">
             Hạ tầng phần cứng máy chủ riêng biệt 100% tài nguyên, kết nối trực tiếp cổng mạng 1Gbps / 10Gbps trong Data Center Tier 3.
@@ -112,7 +112,7 @@ export default function CustomerDedicatedServersPage() {
                   </span>
                 </div>
                 <p className="text-xs text-slate-600 font-mono">
-                  IP Chính: <span className="text-cyan-400">{srv.ipAddress}</span> • Data Center: <span className="text-slate-700">{srv.location}</span>
+                  IP Chính: <span className="text-[#1F1F1F]">{srv.ipAddress}</span> • Data Center: <span className="text-slate-700">{srv.location}</span>
                 </p>
               </div>
 
@@ -142,11 +142,11 @@ export default function CustomerDedicatedServersPage() {
             {/* Hardware Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <div className="p-4 rounded-2xl bg-slate-50/60 border border-slate-200/80">
-                <div className="text-xs text-slate-600 flex items-center gap-1.5 mb-1"><Cpu className="w-4 h-4 text-cyan-400" /> Vi Xử Lý (CPU)</div>
+                <div className="text-xs text-slate-600 flex items-center gap-1.5 mb-1"><Cpu className="w-4 h-4 text-[#1F1F1F]" /> Vi Xử Lý (CPU)</div>
                 <div className="text-sm font-semibold text-slate-900 truncate">{srv.cpuSpec}</div>
               </div>
               <div className="p-4 rounded-2xl bg-slate-50/60 border border-slate-200/80">
-                <div className="text-xs text-slate-600 flex items-center gap-1.5 mb-1"><Activity className="w-4 h-4 text-indigo-400" /> Bộ Nhớ (RAM)</div>
+                <div className="text-xs text-slate-600 flex items-center gap-1.5 mb-1"><Activity className="w-4 h-4 text-slate-200" /> Bộ Nhớ (RAM)</div>
                 <div className="text-sm font-semibold text-slate-900">{srv.ramSpec}</div>
               </div>
               <div className="p-4 rounded-2xl bg-slate-50/60 border border-slate-200/80">

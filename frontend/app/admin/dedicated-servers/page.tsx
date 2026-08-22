@@ -198,7 +198,7 @@ export default function AdminDedicatedServersPage() {
         {/* Navigation */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div>
-            <Link href="/admin" className="text-xs font-bold text-slate-500 hover:text-blue-600 flex items-center gap-1 mb-2">
+            <Link href="/admin" className="text-xs font-bold text-slate-500 hover:text-[#1F1F1F] flex items-center gap-1 mb-2">
               <ArrowLeft className="w-3.5 h-3.5" /> Quay lại Admin Panel
             </Link>
             <h1 className="text-2xl font-black text-slate-900 flex items-center gap-2.5">
@@ -421,7 +421,7 @@ export default function AdminDedicatedServersPage() {
                   <div className="flex items-center gap-1">
                     <button
                       onClick={() => handleOpenEdit(srv)}
-                      className="p-1.5 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                      className="p-1.5 text-slate-600 hover:text-[#1F1F1F] hover:bg-blue-50 rounded-lg transition-colors"
                       title="Chỉnh sửa máy chủ"
                     >
                       <Edit2 className="w-3.5 h-3.5" />
@@ -445,7 +445,7 @@ export default function AdminDedicatedServersPage() {
                     <span className="truncate">{srv.cpu}</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <HardDrive className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                    <HardDrive className="w-3.5 h-3.5 text-[#1F1F1F] shrink-0" />
                     <span className="truncate">{srv.storage} ({srv.ram})</span>
                   </div>
                   <div className="flex items-center gap-2 font-mono text-[11px] text-slate-500">

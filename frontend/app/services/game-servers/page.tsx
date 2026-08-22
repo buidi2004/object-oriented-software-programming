@@ -244,7 +244,7 @@ export default function GameServersServicePage() {
             <div className="flex items-center gap-4 text-slate-600">
               <span>PING VN: <strong className="text-emerald-400 font-mono">&lt; 8ms</strong></span>
               <span>PORT: <strong className="text-slate-900 font-mono">10Gbps Fiber</strong></span>
-              <span>DDOS: <strong className="text-sky-400 font-mono">500Gbps Game Filter</strong></span>
+              <span>DDOS: <strong className="text-slate-200 font-mono">500Gbps Game Filter</strong></span>
             </div>
           </div>
 
@@ -348,7 +348,7 @@ export default function GameServersServicePage() {
 
                   <div className="p-3 rounded-xl bg-[#0e1627] border border-slate-200">
                     <div className="text-[10px] text-slate-500 uppercase">Domestic Ping</div>
-                    <div className="text-base font-extrabold text-sky-400 mt-0.5">&lt; 6.5 ms</div>
+                    <div className="text-base font-extrabold text-slate-200 mt-0.5">&lt; 6.5 ms</div>
                     <div className="text-[10px] text-slate-500">Viettel / VNPT / FPT</div>
                   </div>
                 </div>
@@ -362,7 +362,7 @@ export default function GameServersServicePage() {
                     </div>
                     <div className="flex justify-between">
                       <span className="text-slate-500">Garbage Collector:</span>
-                      <span className="text-sky-400 font-bold">ZGC (Pause &lt; 0.2ms)</span>
+                      <span className="text-slate-200 font-bold">ZGC (Pause &lt; 0.2ms)</span>
                     </div>
                   </div>
                 </div>
@@ -418,7 +418,7 @@ export default function GameServersServicePage() {
                     </div>
                     <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>L3 Cache Allocation</span>
-                      <span className="text-sky-400">64MB Direct</span>
+                      <span className="text-slate-200">64MB Direct</span>
                     </div>
                     <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>DDR5 RAM Bandwidth</span>
@@ -446,7 +446,7 @@ export default function GameServersServicePage() {
                 <div className="p-4 rounded-2xl bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
                   <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
                     <span>CORERO SMARTWALL FILTER</span>
-                    <span className="text-sky-400">500GBPS L3-L7</span>
+                    <span className="text-slate-200">500GBPS L3-L7</span>
                   </div>
                   <div className="space-y-2 text-slate-700 text-[11px]">
                     <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
@@ -459,7 +459,7 @@ export default function GameServersServicePage() {
                     </div>
                     <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>3. Clean Player Traffic</span>
-                      <span className="text-sky-400 font-bold">0ms Ping Increase</span>
+                      <span className="text-slate-200 font-bold">0ms Ping Increase</span>
                     </div>
                   </div>
                 </div>
@@ -473,7 +473,7 @@ export default function GameServersServicePage() {
 
               <div className="pt-4 border-t border-slate-200/80 text-xs font-mono text-slate-700 flex items-center justify-between">
                 <span>Mitigation SLA:</span>
-                <strong className="text-sky-400">Tự động kích hoạt &lt; 1 Giây</strong>
+                <strong className="text-slate-200">Tự động kích hoạt &lt; 1 Giây</strong>
               </div>
             </div>
 
@@ -496,7 +496,7 @@ export default function GameServersServicePage() {
                     </div>
                     <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>Scheduled Backups</span>
-                      <span className="text-sky-400">Offsite S3 Storage</span>
+                      <span className="text-slate-200">Offsite S3 Storage</span>
                     </div>
                   </div>
                 </div>
@@ -548,8 +548,8 @@ export default function GameServersServicePage() {
                   { region: 'Hà Nội & Miền Bắc (Viettel / VNPT / FPT)', ping: '2.1 ms', status: 'CỰC TỐT', color: 'text-emerald-400', bar: 'w-[98%]', bg: 'bg-emerald-500' },
                   { region: 'Đà Nẵng & Miền Trung', ping: '4.8 ms', status: 'CỰC TỐT', color: 'text-emerald-400', bar: 'w-[92%]', bg: 'bg-emerald-500' },
                   { region: 'TP. Hồ Chí Minh & Miền Nam', ping: '6.2 ms', status: 'CỰC TỐT', color: 'text-emerald-400', bar: 'w-[88%]', bg: 'bg-emerald-500' },
-                  { region: 'Singapore (SEA Regional Gateway)', ping: '22.4 ms', status: 'TỐT', color: 'text-sky-400', bar: 'w-[70%]', bg: 'bg-sky-500' },
-                  { region: 'Bangkok, Thái Lan', ping: '26.8 ms', status: 'TỐT', color: 'text-sky-400', bar: 'w-[65%]', bg: 'bg-sky-500' },
+                  { region: 'Singapore (SEA Regional Gateway)', ping: '22.4 ms', status: 'TỐT', color: 'text-slate-200', bar: 'w-[70%]', bg: 'bg-sky-500' },
+                  { region: 'Bangkok, Thái Lan', ping: '26.8 ms', status: 'TỐT', color: 'text-slate-200', bar: 'w-[65%]', bg: 'bg-sky-500' },
                   { region: 'Hong Kong & Tokyo, Nhật Bản', ping: '38.5 ms', status: 'ỔN ĐỊNH', color: 'text-amber-400', bar: 'w-[52%]', bg: 'bg-amber-500' },
                 ].map((item, i) => (
                   <div key={i} className="p-3.5 rounded-xl bg-slate-100 border border-slate-200 space-y-2">
@@ -593,7 +593,7 @@ export default function GameServersServicePage() {
                   </div>
                   <div className="p-4 rounded-xl bg-slate-100 border border-slate-200">
                     <div className="text-slate-500 text-[10px]">ĐỘ BIẾN THIÊN (JITTER)</div>
-                    <div className="text-xl font-black text-sky-400 mt-1">&lt; 0.2 ms</div>
+                    <div className="text-xl font-black text-slate-200 mt-1">&lt; 0.2 ms</div>
                     <div className="text-[10px] text-slate-600 mt-0.5">Không giật hình / lag</div>
                   </div>
                   <div className="p-4 rounded-xl bg-slate-100 border border-slate-200">
@@ -707,7 +707,7 @@ export default function GameServersServicePage() {
                   <tr className="hover:bg-slate-900/40">
                     <td className="p-4 font-bold text-slate-600">Bảo Vệ Anti-DDoS Phần Cứng</td>
                     {plans.map((p) => (
-                      <td key={p.id} className="p-4 border-l border-slate-200/60 text-sky-400 font-bold">{p.ddos}</td>
+                      <td key={p.id} className="p-4 border-l border-slate-200/60 text-slate-200 font-bold">{p.ddos}</td>
                     ))}
                   </tr>
                   <tr className="hover:bg-slate-900/40">

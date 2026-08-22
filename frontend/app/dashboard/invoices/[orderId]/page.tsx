@@ -94,7 +94,7 @@ export default function InvoiceDetailPage() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center py-20">
-        <Loader className="w-8 h-8 text-blue-600 animate-spin" />
+        <Loader className="w-8 h-8 text-[#1F1F1F] animate-spin" />
       </div>
     );
   }
@@ -109,7 +109,7 @@ export default function InvoiceDetailPage() {
       <div className="max-w-4xl mx-auto mb-6 flex flex-wrap items-center justify-between gap-4 print:hidden">
         <Link 
           href="/dashboard/invoices" 
-          className="inline-flex items-center gap-2 text-xs font-bold text-slate-600 hover:text-blue-600 bg-white px-3.5 py-2 rounded-lg border border-slate-200 shadow-sm transition-colors"
+          className="inline-flex items-center gap-2 text-xs font-bold text-slate-600 hover:text-[#1F1F1F] bg-white px-3.5 py-2 rounded-lg border border-slate-200 shadow-sm transition-colors"
         >
           <ArrowLeft className="w-4 h-4" /> Quay lại danh sách
         </Link>

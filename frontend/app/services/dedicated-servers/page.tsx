@@ -317,11 +317,11 @@ export default function DedicatedServersPage() {
               {/* Vendor Badges */}
               <div className="flex flex-wrap items-center gap-3 pt-2">
                 <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0f172a] border border-slate-200 text-xs font-mono text-slate-700">
-                  <SiDell className="w-4 h-4 text-sky-400" />
+                  <SiDell className="w-4 h-4 text-slate-200" />
                   <span>Dell EMC PowerEdge</span>
                 </div>
                 <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0f172a] border border-slate-200 text-xs font-mono text-slate-700">
-                  <SiIntel className="w-4 h-4 text-blue-400" />
+                  <SiIntel className="w-4 h-4 text-slate-200" />
                   <span>Intel Xeon Scalable</span>
                 </div>
                 <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0f172a] border border-slate-200 text-xs font-mono text-slate-700">
@@ -376,7 +376,7 @@ export default function DedicatedServersPage() {
                   </div>
                   <div className="p-2.5 rounded-xl bg-[#0e1627] border border-slate-200">
                     <div className="text-[10px] text-slate-500 uppercase">Fan Speed</div>
-                    <div className="text-sm font-extrabold text-sky-400 mt-0.5">4,800 RPM</div>
+                    <div className="text-sm font-extrabold text-slate-200 mt-0.5">4,800 RPM</div>
                   </div>
                   <div className="p-2.5 rounded-xl bg-[#0e1627] border border-slate-200">
                     <div className="text-[10px] text-slate-500 uppercase">Power Draw</div>
@@ -453,7 +453,7 @@ export default function DedicatedServersPage() {
                   <div className="space-y-2 text-slate-700 text-[11px]">
                     <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>PERC H730P Controller</span>
-                      <span className="text-sky-400">2GB NV Cache</span>
+                      <span className="text-slate-200">2GB NV Cache</span>
                     </div>
                     <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>Drive 01 + Drive 02</span>
@@ -485,7 +485,7 @@ export default function DedicatedServersPage() {
                 <div className="p-4 rounded-2xl bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
                   <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
                     <span>ISOLATED IPMI NETWORK</span>
-                    <span className="text-sky-400">OUT-OF-BAND</span>
+                    <span className="text-slate-200">OUT-OF-BAND</span>
                   </div>
                   <div className="space-y-2 text-slate-700 text-[11px]">
                     <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
@@ -494,7 +494,7 @@ export default function DedicatedServersPage() {
                     </div>
                     <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>Virtual Media ISO</span>
-                      <span className="text-sky-400">Mount from Local PC</span>
+                      <span className="text-slate-200">Mount from Local PC</span>
                     </div>
                     <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>BIOS / UEFI Console</span>
@@ -512,7 +512,7 @@ export default function DedicatedServersPage() {
 
               <div className="pt-4 border-t border-slate-200/80 text-xs font-mono text-slate-700 flex items-center justify-between">
                 <span>Remote Access:</span>
-                <strong className="text-sky-400">Toàn quyền Root / IPMI 24/7</strong>
+                <strong className="text-slate-200">Toàn quyền Root / IPMI 24/7</strong>
               </div>
             </div>
 
@@ -535,7 +535,7 @@ export default function DedicatedServersPage() {
                     </div>
                     <div className="p-2 rounded bg-white border border-slate-200 flex items-center justify-between">
                       <span>Cooling System</span>
-                      <span className="text-sky-400">N+1 CRAC 22°C</span>
+                      <span className="text-slate-200">N+1 CRAC 22°C</span>
                     </div>
                   </div>
                 </div>
@@ -689,7 +689,7 @@ export default function DedicatedServersPage() {
                           }`}
                         >
                           <span>{u.label}</span>
-                          <span className="text-sky-400 text-[10px]">
+                          <span className="text-slate-200 text-[10px]">
                             {u.price === 0 ? 'FREE' : `+${(u.price / 1000).toLocaleString('vi-VN')}k`}
                           </span>
                         </button>
@@ -748,7 +748,7 @@ export default function DedicatedServersPage() {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-slate-500">Processor:</span>
-                    <span className="text-sky-400">{cpuPrices[cfgCpu].name}</span>
+                    <span className="text-slate-200">{cpuPrices[cfgCpu].name}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-slate-500">Memory:</span>
@@ -804,7 +804,7 @@ export default function DedicatedServersPage() {
                   </div>
                   <div className="p-2 rounded bg-white border border-slate-200 flex justify-between">
                     <span>iDRAC Dedicated:</span>
-                    <span className="text-sky-400 font-bold">1x RJ45 100Mbps OOB</span>
+                    <span className="text-slate-200 font-bold">1x RJ45 100Mbps OOB</span>
                   </div>
                   <div className="p-2 rounded bg-white border border-slate-200 flex justify-between">
                     <span>Optical Uplink:</span>
@@ -918,7 +918,7 @@ export default function DedicatedServersPage() {
                   <tr className="hover:bg-slate-900/40">
                     <td className="p-4 font-bold text-slate-600">Băng Thông &amp; Cổng Mạng</td>
                     {plans.map((p) => (
-                      <td key={p.id} className="p-4 border-l border-slate-200/60 text-sky-400 font-bold">{p.network}</td>
+                      <td key={p.id} className="p-4 border-l border-slate-200/60 text-slate-200 font-bold">{p.network}</td>
                     ))}
                   </tr>
                   <tr className="hover:bg-slate-900/40">

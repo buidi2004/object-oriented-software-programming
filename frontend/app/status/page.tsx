@@ -78,7 +78,7 @@ export default function StatusPage() {
       case 'Operational': return 'text-emerald-500 bg-emerald-50 border-emerald-200';
       case 'Degraded': return 'text-amber-500 bg-amber-50 border-amber-200';
       case 'Outage': return 'text-rose-500 bg-rose-50 border-rose-200';
-      case 'Maintenance': return 'text-blue-500 bg-blue-50 border-blue-200';
+      case 'Maintenance': return 'text-[#1F1F1F] bg-blue-50 border-blue-200';
       default: return 'text-slate-500 bg-slate-50 border-slate-200';
     }
   };
@@ -110,7 +110,7 @@ export default function StatusPage() {
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-black text-slate-900 tracking-tight mb-4 flex items-center justify-center gap-3">
-            <Activity className="w-10 h-10 text-blue-600" />
+            <Activity className="w-10 h-10 text-[#1F1F1F]" />
             Trạng thái Hệ thống
           </h1>
           <p className="text-lg text-slate-500">
@@ -120,7 +120,7 @@ export default function StatusPage() {
 
         {loading && !data ? (
           <div className="flex items-center justify-center py-20">
-            <RefreshCw className="w-8 h-8 text-blue-500 animate-spin" />
+            <RefreshCw className="w-8 h-8 text-[#1F1F1F] animate-spin" />
           </div>
         ) : data ? (
           <div className="space-y-6">

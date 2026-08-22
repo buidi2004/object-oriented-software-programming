@@ -84,7 +84,7 @@ export default function ApiKeysPage() {
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
-            <Key className="w-8 h-8 text-indigo-600" />
+            <Key className="w-8 h-8 text-[#1F1F1F]" />
             Quản lý API Keys
           </h1>
           <p className="text-gray-500 mt-2">Quản lý các khóa bảo mật để lập trình viên giao tiếp với hệ thống.</p>
@@ -141,7 +141,7 @@ export default function ApiKeysPage() {
                   <td className="px-6 py-4">
                     <div className="flex gap-2">
                       {key.scopes.split(',').map((scope) => (
-                        <span key={scope} className="px-2.5 py-1 text-xs font-medium bg-indigo-50 text-indigo-700 rounded-md">
+                        <span key={scope} className="px-2.5 py-1 text-xs font-medium bg-indigo-50 text-[#1F1F1F] rounded-md">
                           {scope.toUpperCase()}
                         </span>
                       ))}
@@ -200,7 +200,7 @@ export default function ApiKeysPage() {
                         type="checkbox" 
                         checked={scopes.read}
                         onChange={(e) => setScopes({...scopes, read: e.target.checked})}
-                        className="w-5 h-5 rounded text-indigo-600 focus:ring-indigo-500"
+                        className="w-5 h-5 rounded text-[#1F1F1F] focus:ring-indigo-500"
                       />
                       <div>
                         <div className="font-medium text-gray-900">Read</div>
@@ -212,7 +212,7 @@ export default function ApiKeysPage() {
                         type="checkbox" 
                         checked={scopes.write}
                         onChange={(e) => setScopes({...scopes, write: e.target.checked})}
-                        className="w-5 h-5 rounded text-indigo-600 focus:ring-indigo-500"
+                        className="w-5 h-5 rounded text-[#1F1F1F] focus:ring-indigo-500"
                       />
                       <div>
                         <div className="font-medium text-gray-900">Write</div>
@@ -224,7 +224,7 @@ export default function ApiKeysPage() {
                         type="checkbox" 
                         checked={scopes.admin}
                         onChange={(e) => setScopes({...scopes, admin: e.target.checked})}
-                        className="w-5 h-5 rounded text-indigo-600 focus:ring-indigo-500"
+                        className="w-5 h-5 rounded text-[#1F1F1F] focus:ring-indigo-500"
                       />
                       <div>
                         <div className="font-medium text-gray-900">Admin</div>
@@ -268,7 +268,7 @@ export default function ApiKeysPage() {
                     <button
                       onClick={copyToClipboard}
                       className={`p-3 rounded-lg transition-colors flex items-center justify-center ${
-                        copied ? 'bg-green-100 text-green-700' : 'bg-indigo-50 text-indigo-600 hover:bg-indigo-100'
+                        copied ? 'bg-green-100 text-green-700' : 'bg-indigo-50 text-[#1F1F1F] hover:bg-indigo-100'
                       }`}
                       title="Sao chép"
                     >

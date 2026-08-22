@@ -184,7 +184,7 @@ export default function RolesPage() {
               <div className="flex justify-between items-center mb-6">
                 <div>
                   <h2 className="text-lg font-semibold text-slate-800">
-                    Chi tiết quyền: <span className="text-indigo-400">{selectedRole.name}</span>
+                    Chi tiết quyền: <span className="text-slate-200">{selectedRole.name}</span>
                   </h2>
                   <p className="text-sm text-slate-600 mt-1">Check vào các quyền mà bạn muốn cấp cho nhóm này.</p>
                 </div>
@@ -215,7 +215,7 @@ export default function RolesPage() {
                         {isGranted && <Check className="w-3 h-3 text-slate-900" />}
                       </div>
                       <div>
-                        <p className={`font-medium ${isGranted ? "text-indigo-300" : "text-slate-300"}`}>
+                        <p className={`font-medium ${isGranted ? "text-slate-200" : "text-slate-300"}`}>
                           {permission.name}
                         </p>
                         <p className="text-xs text-slate-500 mt-1 font-mono">

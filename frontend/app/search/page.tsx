@@ -157,17 +157,17 @@ export default function GlobalSearchPage() {
                   className="block bg-white rounded-xl border border-slate-200 p-4 hover:border-blue-300 hover:shadow-md transition-all group"
                 >
                   <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center text-slate-600 group-hover:bg-blue-50 group-hover:text-blue-600 transition-colors shrink-0">
+                    <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center text-slate-600 group-hover:bg-blue-50 group-hover:text-[#1F1F1F] transition-colors shrink-0">
                       {result.icon}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="font-semibold text-slate-900 group-hover:text-blue-600 transition-colors">
+                      <p className="font-semibold text-slate-900 group-hover:text-[#1F1F1F] transition-colors">
                         {result.title}
                       </p>
                       <p className="text-sm text-slate-500 mt-1">{result.description}</p>
                       <p className="text-xs text-slate-600 mt-2">{result.url}</p>
                     </div>
-                    <svg className="w-5 h-5 text-slate-700 group-hover:text-blue-400 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className="w-5 h-5 text-slate-700 group-hover:text-slate-200 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
                   </div>

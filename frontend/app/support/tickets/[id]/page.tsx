@@ -77,7 +77,7 @@ export default function TicketDetailPage() {
   if (loading) {
     return (
       <div className="flex justify-center h-[60vh] items-center">
-        <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+        <Loader2 className="w-8 h-8 text-[#1F1F1F] animate-spin" />
       </div>
     );
   }
@@ -128,7 +128,7 @@ export default function TicketDetailPage() {
   const getStatusLabel = (status: string) => {
     switch(status.toLowerCase()) {
       case 'open': return { text: 'Đang mở (Open)', color: 'bg-emerald-100 text-emerald-700' };
-      case 'inprogress': return { text: 'Đang xử lý (In Progress)', color: 'bg-blue-100 text-blue-700' };
+      case 'inprogress': return { text: 'Đang xử lý (In Progress)', color: 'bg-blue-100 text-[#1F1F1F]' };
       case 'closed': return { text: 'Đã đóng (Closed)', color: 'bg-slate-200 text-slate-700' };
       default: return { text: status.toUpperCase(), color: 'bg-slate-200 text-slate-700' };
     }

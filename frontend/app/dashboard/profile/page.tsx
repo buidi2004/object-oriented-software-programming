@@ -74,7 +74,7 @@ export default function ProfilePage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+        <Loader2 className="w-8 h-8 animate-spin text-[#1F1F1F]" />
       </div>
     );
   }
@@ -106,7 +106,7 @@ export default function ProfilePage() {
         {/* Basic Info Section */}
         <div className="p-6 md:p-8 border-b border-slate-200 dark:border-slate-800">
           <h2 className="text-lg font-semibold text-slate-900 dark:text-white flex items-center gap-2 mb-6">
-            <User className="w-5 h-5 text-blue-500" />
+            <User className="w-5 h-5 text-[#1F1F1F]" />
             Thông Tin Cơ Bản
           </h2>
           
@@ -228,7 +228,7 @@ export default function ProfilePage() {
         {/* Company Section */}
         <div className="p-6 md:p-8">
           <h2 className="text-lg font-semibold text-slate-900 dark:text-white flex items-center gap-2 mb-6">
-            <Building className="w-5 h-5 text-indigo-500" />
+            <Building className="w-5 h-5 text-[#1F1F1F]" />
             Thông Tin Doanh Nghiệp (Tuỳ chọn)
           </h2>
           

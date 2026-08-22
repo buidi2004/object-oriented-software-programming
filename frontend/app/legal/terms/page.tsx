@@ -10,7 +10,7 @@ export default function TermsPage() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <nav className="flex items-center gap-2 text-sm text-slate-500 mb-8">
-          <Link href="/" className="hover:text-blue-600">Trang chủ</Link>
+          <Link href="/" className="hover:text-[#1F1F1F]">Trang chủ</Link>
           <ChevronRight className="w-4 h-4" />
           <span className="text-slate-900 font-medium">Thỏa thuận sử dụng</span>
         </nav>

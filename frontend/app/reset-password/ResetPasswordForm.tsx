@@ -61,7 +61,7 @@ export default function ResetPasswordForm() {
             <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-xl">
               <CheckCircle2 className="w-5 h-5 text-emerald-600 mb-2" />
               <p className="text-sm text-emerald-800">Mật khẩu đã được cập nhật.</p>
-              <button onClick={() => router.push('/login')} className="mt-4 text-blue-600 font-semibold text-sm">
+              <button onClick={() => router.push('/login')} className="mt-4 text-[#1F1F1F] font-semibold text-sm">
                 Đăng nhập ngay
               </button>
             </div>

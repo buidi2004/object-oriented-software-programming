@@ -126,7 +126,7 @@ export default function AdminTestimonialsPage() {
           <div className="bg-white rounded-xl p-4 border border-slate-200">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
-                <Star className="w-5 h-5 text-blue-600" />
+                <Star className="w-5 h-5 text-[#1F1F1F]" />
               </div>
               <div>
                 <p className="text-2xl font-bold text-slate-900">{totalCount}</p>

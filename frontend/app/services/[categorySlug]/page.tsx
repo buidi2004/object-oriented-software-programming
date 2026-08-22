@@ -51,7 +51,7 @@ export default function CategoryLandingPage() {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50">
-        <Loader2 className="w-12 h-12 animate-spin text-blue-600" />
+        <Loader2 className="w-12 h-12 animate-spin text-[#1F1F1F]" />
       </div>
     );
   }
@@ -61,7 +61,7 @@ export default function CategoryLandingPage() {
       <div className="min-h-screen flex items-center justify-center bg-slate-50">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-slate-900 mb-4">{error}</h1>
-          <Link href="/services" className="text-blue-600 hover:underline">← Về danh sách dịch vụ</Link>
+          <Link href="/services" className="text-[#1F1F1F] hover:underline">← Về danh sách dịch vụ</Link>
         </div>
       </div>
     );
@@ -73,12 +73,12 @@ export default function CategoryLandingPage() {
       {/* Hero */}
       <section className="bg-gradient-to-br from-slate-900 via-blue-950 to-indigo-950 text-slate-900 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-blue-500/20 text-cyan-300 text-xs font-bold uppercase tracking-wider mb-4">
+          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-blue-500/20 text-slate-200 text-xs font-bold uppercase tracking-wider mb-4">
             <Server className="w-3.5 h-3.5" />
             {category.name}
           </div>
           <h1 className="text-4xl sm:text-5xl font-black mb-6">{category.name}</h1>
-          <p className="text-lg text-blue-200 max-w-2xl mx-auto mb-8">
+          <p className="text-lg text-slate-200 max-w-2xl mx-auto mb-8">
             {category.description || 'Giải pháp tốt nhất cho nhu cầu của bạn, với hiệu năng cao và độ ổn định tuyệt đối.'}
           </p>
           <a href="#pricing" className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-900 font-bold text-base shadow-xl hover:shadow-2xl transition-all">

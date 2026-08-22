@@ -82,10 +82,10 @@ export default function PaymentMethodsPage() {
               <CreditCard className="w-6 h-6" />
             </div>
             <span className="text-xl font-black text-slate-900">
-              CloudHost<span className="text-blue-600"> VN</span>
+              CloudHost<span className="text-[#1F1F1F]"> VN</span>
             </span>
           </Link>
-          <Link href="/dashboard" className="text-sm font-semibold text-slate-600 hover:text-blue-600">
+          <Link href="/dashboard" className="text-sm font-semibold text-slate-600 hover:text-[#1F1F1F]">
             ← Quay lại Dashboard
           </Link>
         </div>
@@ -153,7 +153,7 @@ export default function PaymentMethodsPage() {
                 />
               </div>
               <div className="flex items-center gap-2">
-                <input type="checkbox" id="setDefault" className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500" />
+                <input type="checkbox" id="setDefault" className="w-4 h-4 rounded border-slate-300 text-[#1F1F1F] focus:ring-blue-500" />
                 <label htmlFor="setDefault" className="text-sm text-slate-700">Đặt làm phương thức mặc định</label>
               </div>
               <div className="flex gap-3">

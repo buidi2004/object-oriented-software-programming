@@ -14,7 +14,7 @@ interface Transaction {
 }
 
 const colorMap: Record<string, string> = {
-  blue: 'text-blue-600 bg-blue-100',
+  blue: 'text-[#1F1F1F] bg-blue-100',
   emerald: 'text-emerald-600 bg-emerald-100',
   amber: 'text-amber-600 bg-amber-100',
   red: 'text-red-600 bg-red-100',
@@ -67,7 +67,7 @@ export default function PaymentsPage() {
 
   const getTransactionIcon = (type: string) => {
     switch (type) {
-      case 'refund': return <ArrowDownLeft className="w-5 h-5 text-blue-600" />;
+      case 'refund': return <ArrowDownLeft className="w-5 h-5 text-[#1F1F1F]" />;
       case 'payment': return <DollarSign className="w-5 h-5 text-emerald-600" />;
       default: return <DollarSign className="w-5 h-5 text-emerald-600" />;
     }
@@ -145,7 +145,7 @@ export default function PaymentsPage() {
 
               <div className="text-right flex flex-col items-end">
                 <p className={`font-bold ${
-                  tx.type === 'refund' ? 'text-blue-600' : 'text-emerald-600'
+                  tx.type === 'refund' ? 'text-[#1F1F1F]' : 'text-emerald-600'
                 }`}>
                   {tx.type === 'refund' ? '+' : '-'}{formatCurrency(tx.amount)}
                 </p>

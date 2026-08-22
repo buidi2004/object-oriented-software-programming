@@ -221,7 +221,7 @@ export default function AdminAbandonedCartsPage() {
           </div>
 
           <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
+            <div className="w-12 h-12 rounded-xl bg-blue-50 text-[#1F1F1F] flex items-center justify-center font-bold">
               <Package className="w-6 h-6" />
             </div>
             <div>
@@ -279,7 +279,7 @@ export default function AdminAbandonedCartsPage() {
                     <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold ${
                       cart.status === 'abandoned' ? 'bg-amber-100 text-amber-700' :
                       cart.status === 'recovered' ? 'bg-emerald-100 text-emerald-700' :
-                      'bg-blue-100 text-blue-700'
+                      'bg-blue-100 text-[#1F1F1F]'
                     }`}>
                       {cart.status === 'abandoned' ? 'Bỏ quên' :
                        cart.status === 'recovered' ? 'Đã thanh toán' : 'Đã gửi mã ưu đãi'}
