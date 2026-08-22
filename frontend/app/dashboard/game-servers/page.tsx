@@ -62,12 +62,14 @@ export default function DashboardGameServersPage() {
 
     try {
       const gType = parseInt(gameType, 10);
+      const idempotencyKey = `game-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
       const res = await api.post('/game-servers', {
         serverName,
         gameType: gType,
+        idempotencyKey,
       });
 
-      const newId = res.data?.serverId || `game-${Date.now()}`;
+      const newId = res.data?.serverId || idempotencyKey;
       const newServer: GameServer = {
         id: newId,
         serverName,
