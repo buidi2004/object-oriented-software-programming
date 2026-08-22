@@ -164,7 +164,7 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
 
   const fetchVpsDetail = async () => {
     try {
-      const res = await api.get(`/vpsinstances/${resolvedParams.id}`);
+      const res = await api.get(`/vpsinstances/${resolvedParams.id}?_t=${Date.now()}`);
       setVps(res.data);
       setNewHostname(res.data.containerName || 'azvps-1786899581');
     } catch (error) {
@@ -177,7 +177,7 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
 
   const fetchStats = async () => {
     try {
-      const res = await api.get(`/vpsinstances/${resolvedParams.id}/stats`);
+      const res = await api.get(`/vpsinstances/${resolvedParams.id}/stats?_t=${Date.now()}`);
       setStats(res.data);
       if (res.data.cpuUsagePercent) {
         setCpuHistory(prev => [...prev.slice(1), res.data.cpuUsagePercent]);
@@ -374,8 +374,10 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
               <p className="text-xs text-[#94a3b8]">VPS Giá Rẻ</p>
             </div>
             <div className="w-full space-y-2 max-w-xs">
-              <div className="w-full py-1.5 px-3 rounded-lg font-bold text-xs uppercase tracking-wider text-center bg-[#16a34a] text-[#ffffff]">
-                ĐANG HOẠT ĐỘNG
+              <div className={`w-full py-1.5 px-3 rounded-lg font-bold text-xs uppercase tracking-wider text-center text-[#ffffff] transition-colors ${
+                isRunning ? 'bg-[#16a34a]' : 'bg-slate-500'
+              }`}>
+                {isRunning ? 'ĐANG HOẠT ĐỘNG' : 'ĐÃ DỪNG'}
               </div>
               <button className="w-full py-1.5 px-3 bg-[#16a34a] hover:bg-[#15803d] text-[#ffffff] font-bold text-xs rounded-lg transition-colors flex items-center justify-center gap-1.5 shadow-sm">
                 <span>⬆</span> Nâng cấp
