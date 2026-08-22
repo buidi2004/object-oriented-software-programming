@@ -103,6 +103,65 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
     };
   }, [vps?.containerId]);
 
+  // Set up real-time Resource Status Hub for Start/Stop/Restart events
+  useEffect(() => {
+    let statusConnection: signalR.HubConnection | null = null;
+    const token = localStorage.getItem('accessToken');
+    
+    if (resolvedParams.id) {
+      statusConnection = new signalR.HubConnectionBuilder()
+        .withUrl(process.env.NEXT_PUBLIC_API_URL ? `${process.env.NEXT_PUBLIC_API_URL}/hubs/resource-status` : '/hubs/resource-status', {
+          accessTokenFactory: () => token || ''
+        })
+        .withAutomaticReconnect()
+        .build();
+
+      statusConnection.on('StatusChanged', (resId: string, newStatus: string) => {
+        if (resId.toLowerCase() !== resolvedParams.id.toLowerCase()) return;
+        
+        switch (newStatus) {
+          case 'Starting':
+            showToast('success', 'VPS đang được khởi động...');
+            break;
+          case 'Running':
+            showToast('success', 'VPS đã khởi động thành công và đang hoạt động.');
+            fetchVpsDetail();
+            fetchStats();
+            break;
+          case 'Stopping':
+            showToast('success', 'VPS đang được tắt...');
+            break;
+          case 'Stopped':
+            showToast('success', 'VPS đã được tắt hoàn toàn.');
+            fetchVpsDetail();
+            fetchStats();
+            break;
+          case 'Restarting':
+            showToast('success', 'VPS đang khởi động lại...');
+            break;
+          case 'FailedToStart':
+            showToast('error', 'Lỗi: Không thể khởi động VPS.');
+            break;
+          case 'FailedToRestart':
+            showToast('error', 'Lỗi: Không thể khởi động lại VPS.');
+            break;
+        }
+      });
+
+      statusConnection.start()
+        .then(() => {
+          statusConnection?.invoke('SubscribeToResource', 'VPS', resolvedParams.id);
+        })
+        .catch(err => console.error('Failed to connect to ResourceStatusHub', err));
+    }
+
+    return () => {
+      if (statusConnection) {
+        statusConnection.stop();
+      }
+    };
+  }, [resolvedParams.id]);
+
   const fetchVpsDetail = async () => {
     try {
       const res = await api.get(`/vpsinstances/${resolvedParams.id}`);

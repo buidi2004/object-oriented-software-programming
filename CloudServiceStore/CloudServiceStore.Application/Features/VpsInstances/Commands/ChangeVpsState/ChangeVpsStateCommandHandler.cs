@@ -21,6 +21,7 @@ public class ChangeVpsStateCommandHandler : IRequestHandler<ChangeVpsStateComman
     private readonly ICurrentUserService _currentUserService;
     private readonly IConfiguration _configuration;
     private readonly ILogger<ChangeVpsStateCommandHandler> _logger;
+    private readonly IResourceStatusNotifier _notifier;
 
     public ChangeVpsStateCommandHandler(
         IVpsProvisioningService provisioningService,
@@ -28,7 +29,8 @@ public class ChangeVpsStateCommandHandler : IRequestHandler<ChangeVpsStateComman
         IUnitOfWork uow,
         ICurrentUserService currentUserService,
         IConfiguration configuration,
-        ILogger<ChangeVpsStateCommandHandler> logger)
+        ILogger<ChangeVpsStateCommandHandler> logger,
+        IResourceStatusNotifier notifier)
     {
         _provisioningService = provisioningService;
         _vpsRepo = vpsRepo;
@@ -36,6 +38,7 @@ public class ChangeVpsStateCommandHandler : IRequestHandler<ChangeVpsStateComman
         _currentUserService = currentUserService;
         _configuration = configuration;
         _logger = logger;
+        _notifier = notifier;
     }
 
     public async Task<bool> Handle(ChangeVpsStateCommand request, CancellationToken cancellationToken)
@@ -97,6 +100,7 @@ public class ChangeVpsStateCommandHandler : IRequestHandler<ChangeVpsStateComman
             case "start":
                 try
                 {
+                    await _notifier.NotifyStatusChangedAsync("VPS", instance.Id.ToString(), "Starting");
                     await _provisioningService.StartAsync(instance.ContainerId, cancellationToken);
                 }
                 catch (Exception ex)
@@ -105,16 +109,19 @@ public class ChangeVpsStateCommandHandler : IRequestHandler<ChangeVpsStateComman
                     var reProvResult = await ReProvisionContainerAsync(instance, cancellationToken);
                     if (!reProvResult)
                     {
+                        await _notifier.NotifyStatusChangedAsync("VPS", instance.Id.ToString(), "FailedToStart");
                         throw new BadRequestException(
                             "Không thể khởi động VPS. Container đã bị xóa và không thể tạo lại. Liên hệ hỗ trợ.");
                     }
                 }
                 instance.Status = VpsInstanceStatus.Running;
                 instance.LastActiveAt = DateTime.UtcNow;
+                await _notifier.NotifyStatusChangedAsync("VPS", instance.Id.ToString(), "Running");
                 break;
             case "stop":
                 try
                 {
+                    await _notifier.NotifyStatusChangedAsync("VPS", instance.Id.ToString(), "Stopping");
                     await _provisioningService.StopAsync(instance.ContainerId, cancellationToken);
                 }
                 catch (Exception ex)
@@ -122,10 +129,12 @@ public class ChangeVpsStateCommandHandler : IRequestHandler<ChangeVpsStateComman
                     _logger.LogWarning(ex, "Failed to stop container {ContainerId}, marking as Stopped anyway.", instance.ContainerId);
                 }
                 instance.Status = VpsInstanceStatus.Stopped;
+                await _notifier.NotifyStatusChangedAsync("VPS", instance.Id.ToString(), "Stopped");
                 break;
             case "restart":
                 try
                 {
+                    await _notifier.NotifyStatusChangedAsync("VPS", instance.Id.ToString(), "Restarting");
                     await _provisioningService.RestartAsync(instance.ContainerId, cancellationToken);
                 }
                 catch (Exception ex)
@@ -134,12 +143,14 @@ public class ChangeVpsStateCommandHandler : IRequestHandler<ChangeVpsStateComman
                     var reProvResult = await ReProvisionContainerAsync(instance, cancellationToken);
                     if (!reProvResult)
                     {
+                        await _notifier.NotifyStatusChangedAsync("VPS", instance.Id.ToString(), "FailedToRestart");
                         throw new BadRequestException(
                             "Không thể khởi động lại VPS. Container đã bị xóa và không thể tạo lại. Liên hệ hỗ trợ.");
                     }
                 }
                 instance.Status = VpsInstanceStatus.Running;
                 instance.LastActiveAt = DateTime.UtcNow;
+                await _notifier.NotifyStatusChangedAsync("VPS", instance.Id.ToString(), "Running");
                 break;
             default:
                 throw new BadRequestException("Invalid action.");
