@@ -63,6 +63,19 @@
   }
 }
 
+@layer base {
+  :root {
+    --surface: #FFFFFF;
+    --on-surface: #1F1F1F;
+    --on-surface-variant: #5F6368;
+    --primary-button-bg: #1F1F1F;
+    --primary-button-text: #FFFFFF;
+    --badge-bg: #E8F0FE;
+    --badge-text: #1967D2;
+    --outline: #DADCE0;
+  }
+}
+
 @layer utilities {
   .scrollbar-none::-webkit-scrollbar,
   .hide-scrollbar::-webkit-scrollbar {
@@ -74,10 +87,28 @@
     scrollbar-width: none;
   }
 
-  /* Vô hiệu hóa hiệu ứng chuyển màu (gradient) trên toàn bộ ứng dụng và ép về màu gốc */
-  .bg-gradient-to-t, .bg-gradient-to-tr, .bg-gradient-to-r, .bg-gradient-to-br, 
-  .bg-gradient-to-b, .bg-gradient-to-bl, .bg-gradient-to-l, .bg-gradient-to-tl {
-    background-image: none !important;
-    background-color: theme('colors.blue.600') !important;
+  .btn-primary {
+    background: var(--primary-button-bg);
+    color: var(--primary-button-text);
+    border-radius: 999px;
+    padding: 0.75em 1.5em;
+    font-weight: 500;
+    border: none;
+  }
+
+  .btn-secondary {
+    background: transparent;
+    border: 1px solid var(--outline);
+    border-radius: 999px;
+    padding: 0.75em 1.5em;
+  }
+
+  .badge {
+    background: var(--badge-bg);
+    color: var(--badge-text);
+    border-radius: 999px;
+    padding: 0.2em 0.7em;
+    font-size: 0.75em;
+    font-weight: 600;
   }
 }

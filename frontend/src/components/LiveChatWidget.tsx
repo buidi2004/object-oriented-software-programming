@@ -64,7 +64,7 @@ export const LiveChatWidget: React.FC = () => {
       {!isOpen ? (
         <button
           onClick={() => setIsOpen(true)}
-          className="p-4 rounded-full bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 hover:scale-105 text-slate-900 shadow-2xl shadow-blue-500/40 flex items-center justify-center cursor-pointer transition-all relative group"
+          className="p-4 rounded-full bg-[#1F1F1F] hover:scale-105 text-white shadow-2xl shadow-black/20 flex items-center justify-center cursor-pointer transition-all relative group"
         >
           <MessageSquare className="w-6 h-6" />
           <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-emerald-400 border-2 border-white rounded-full animate-ping" />
@@ -76,7 +76,7 @@ export const LiveChatWidget: React.FC = () => {
           {/* Top Bar */}
           <div className="p-4 bg-white text-slate-900 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center text-cyan-300 font-bold">
+              <div className="w-9 h-9 rounded-full bg-[#1F1F1F] flex items-center justify-center text-white font-bold">
                 <Bot className="w-5 h-5" />
               </div>
               <div>
@@ -105,7 +105,7 @@ export const LiveChatWidget: React.FC = () => {
               >
                 <div className={`max-w-[80%] p-3 rounded-2xl text-xs font-medium leading-relaxed ${
                   m.sender === 'user'
-                    ? 'bg-blue-600 text-white rounded-br-none'
+                    ? 'bg-[#1F1F1F] text-white rounded-br-none'
                     : 'bg-white border border-slate-200 text-slate-800 shadow-xs rounded-bl-none'
                 }`}>
                   {m.text}
@@ -126,7 +126,7 @@ export const LiveChatWidget: React.FC = () => {
             <button
               type="submit"
               disabled={loading}
-              className="p-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white transition-colors cursor-pointer disabled:opacity-50"
+              className="p-2.5 rounded-full bg-[#1F1F1F] hover:bg-black text-white transition-colors cursor-pointer disabled:opacity-50"
             >
               {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
             </button>
