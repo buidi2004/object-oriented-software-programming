@@ -221,7 +221,7 @@ export const Header: React.FC<HeaderProps> = ({
                               <span>Xem Tất Cả 12 Gói Dịch Vụ</span>
                               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
                             </div>
-                            <p className="text-[11px] text-slate-500 mt-0.5">Bảng giá tổng hợp & so sánh</p>
+                            <p className="text-[11px] text-blue-800/80 mt-0.5 font-medium">Bảng giá tổng hợp & so sánh</p>
                           </Link>
                         </div>
                       </div>
@@ -236,7 +236,7 @@ export const Header: React.FC<HeaderProps> = ({
                             </div>
                             <div>
                               <h4 className="text-sm font-black text-slate-900">{serviceCategories[activeServiceCategory].name}</h4>
-                              <p className="text-[12px] text-slate-500 font-medium leading-relaxed max-w-lg mt-0.5">
+                              <p className="text-[12px] text-slate-600 font-medium leading-relaxed max-w-lg mt-0.5">
                                 {serviceCategories[activeServiceCategory].description}
                               </p>
                             </div>
@@ -260,7 +260,7 @@ export const Header: React.FC<HeaderProps> = ({
                                     <div className="text-[13px] font-black text-slate-900 group-hover:text-blue-600 transition-colors mb-0.5 truncate">
                                       {service.title}
                                     </div>
-                                    <div className="text-[11px] font-medium text-slate-500 line-clamp-2 leading-snug">
+                                    <div className="text-[11px] font-medium text-slate-600 line-clamp-2 leading-snug">
                                       {service.desc}
                                     </div>
                                   </div>
@@ -271,8 +271,8 @@ export const Header: React.FC<HeaderProps> = ({
                         </div>
 
                         {/* Bottom Bar */}
-                        <div className="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-                          <span className="font-semibold text-slate-600">⚡ Triển khai tự động trong 30-60 giây</span>
+                        <div className="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-600">
+                          <span className="font-semibold text-slate-700">⚡ Triển khai tự động trong 30-60 giây</span>
                           <Link
                             href="/services"
                             onClick={() => setServicesDropdownOpen(false)}
