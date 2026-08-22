@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ShoppingCart, CreditCard, QrCode, Banknote, CheckCircle, Loader2, AlertCircle, ArrowRight } from 'lucide-react';
+import { ShoppingCart, CreditCard, QrCode, Banknote, CheckCircle, Loader2, AlertCircle, ArrowRight, Wallet } from 'lucide-react';
 import { useCartStore } from '@/src/store/useCartStore';
 import { CheckoutAddressBook } from '@/src/components/team-features/CheckoutAddressBook';
 
@@ -66,6 +66,8 @@ export default function CheckoutPage() {
 
   const paymentMethods: PaymentMethod[] = [
     { id: 'vietqr', name: 'Chuyển khoản VietQR (MB Bank)', icon: QrCode, description: 'Quét mã VietQR chuyển khoản tự động 24/7 (SePay)' },
+    { id: 'momo_sandbox', name: 'Ví MoMo (Sandbox)', icon: Wallet, description: 'Môi trường giả lập thanh toán MoMo' },
+    { id: 'zalo_sandbox', name: 'ZaloPay (Sandbox)', icon: Wallet, description: 'Môi trường giả lập thanh toán ZaloPay' },
   ];
 
   const handlePayment = async () => {
@@ -93,9 +95,17 @@ export default function CheckoutPage() {
       const orderData = await orderResponse.json();
       const orderId = orderData.orderId || orderData.id || `ORD_${Date.now()}`;
 
-      // 2. Route to VietQR payment gateway
+      // 2. Route to payment gateway
       if (selectedMethod === 'vietqr') {
         router.push(`/sandbox/vietqr?orderId=${orderId}&amount=${finalAmount}`);
+        return;
+      }
+      if (selectedMethod === 'momo_sandbox') {
+        router.push(`/sandbox/momo?orderId=${orderId}&amount=${finalAmount}`);
+        return;
+      }
+      if (selectedMethod === 'zalo_sandbox') {
+        router.push(`/sandbox/zalo?orderId=${orderId}&amount=${finalAmount}`);
         return;
       }
 
