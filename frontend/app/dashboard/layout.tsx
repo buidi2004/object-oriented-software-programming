@@ -92,10 +92,27 @@ const menuGroups: MenuGroup[] = [
   }
 ];
 
+const MENU_TO_SLUG: Record<string, string> = {
+  'vps-instances': 'cloud-vps',
+  'hosting': 'cloud-hosting',
+  'domains': 'ten-mien',
+  'dedicated-servers': 'dedicated-server',
+  'email-hosting': 'email-server',
+  'ssl-certificates': 'ssl-certificate',
+  'databases': 'managed-database',
+  'game-servers': 'game-server',
+  'apps': '1click-apps',
+  'static-sites': 'static-sites',
+  'storage': 'object-storage',
+  'cdn': 'cloud-cdn',
+  'vps-backups': 'cloud-vps'
+};
+
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const router = useRouter();
   const pathname = usePathname();
   const [user, setUser] = useState<UserInfo | null>(null);
+  const [purchasedSlugs, setPurchasedSlugs] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -136,12 +153,43 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       const data = await response.json();
       setUser(data);
       setIsAuthenticated(true);
+      
+      try {
+        const dashRes = await fetch('/api/dashboard/me', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        if (dashRes.ok) {
+          const dashData = await dashRes.json();
+          if (dashData && dashData.activeServices) {
+            const slugs = dashData.activeServices.map((s: any) => s.categorySlug);
+            setPurchasedSlugs(slugs);
+          }
+        }
+      } catch (err) {
+        console.warn('Failed to load dashboard active services', err);
+      }
+      
     } catch (error) {
       console.error('Auth check failed:', error);
     } finally {
       setIsLoading(false);
     }
   };
+
+  const filteredMenuGroups = menuGroups.map(group => {
+    if (group.title === 'Hạ Tầng & Dịch Vụ Cloud' || group.title === 'Tên Miền & Mạng Lưới') {
+      const filteredItems = group.items.filter(item => {
+        if (item.id === 'overview') return true;
+        const requiredSlug = MENU_TO_SLUG[item.id];
+        if (requiredSlug) {
+          return purchasedSlugs.includes(requiredSlug);
+        }
+        return true;
+      });
+      return { ...group, items: filteredItems };
+    }
+    return group;
+  }).filter(group => group.items.length > 0);
 
   if (isLoading) {
     return (
@@ -185,9 +233,43 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 />
               )}
 
+              {/* Sidebar Area */}
+              <div className="w-[280px] shrink-0 hidden lg:block h-[calc(100vh-140px)] sticky top-[100px] overflow-y-auto no-scrollbar pb-8">
+                <div className="space-y-8 pr-6 border-r border-slate-100">
+                  
+                  {filteredMenuGroups.map((group) => (
+                    <div key={group.title}>
+                        <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-3 ml-2 flex items-center gap-2">
+                          {group.title}
+                        </h3>
+                        <ul className="space-y-1">
+                          {group.items.map((item) => {
+                            const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
+                            return (
+                              <li key={item.id}>
+                                <Link
+                                  href={item.href}
+                                  className={`flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-semibold transition-all duration-200
+                                    ${isActive
+                                      ? 'bg-blue-600 text-white shadow-md shadow-blue-600/20'
+                                      : 'text-slate-600 hover:text-slate-900 hover:bg-blue-50'
+                                    }`}
+                                >
+                                  <item.icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-slate-400'}`} />
+                                  {item.name}
+                                </Link>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
               <div className="h-full max-h-[calc(100vh-6rem)] overflow-y-auto p-3.5 space-y-4">
-                {menuGroups.map((group, gIdx) => (
-                  <div key={group.title} className={gIdx > 0 ? 'pt-3 border-t border-slate-100' : ''}>
+                {filteredMenuGroups.map((group, gIdx) => (
+                  <div key={`mobile-${group.title}`} className={gIdx > 0 ? 'pt-3 border-t border-slate-100' : ''}>
                     <div className="text-[10px] font-black text-slate-600 uppercase tracking-wider px-3 pb-2">
                       {group.title}
                     </div>
