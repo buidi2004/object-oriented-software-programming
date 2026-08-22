@@ -165,7 +165,7 @@ export default function CartPage() {
                           <h3 className="text-base font-bold text-slate-900">{item.title || item.name}</h3>
                           <p className="text-xs text-slate-500 mt-1">{item.details || 'Cấu hình tiêu chuẩn'}</p>
                           <p className="text-xs text-slate-600 mt-1">
-                            Chu kỳ: <span className="font-semibold text-slate-700">{item.billingCycle} tháng</span>
+                            Chu kỳ: <span className="font-semibold text-slate-700">{item.billingCycle}{typeof item.billingCycle === 'number' ? ' tháng' : ''}</span>
                           </p>
                         </div>
 
@@ -177,8 +177,15 @@ export default function CartPage() {
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>
-                          <div className="text-lg font-black text-[#1F1F1F]">
-                            {item.price.toLocaleString('vi-VN')} đ
+                          <div className="text-right">
+                            <div className="text-lg font-black text-[#1F1F1F]">
+                              {(item.price * (item.quantity || 1)).toLocaleString('vi-VN')} đ
+                            </div>
+                            {(item.quantity && item.quantity > 1) ? (
+                              <div className="text-xs text-slate-500 font-medium mt-1">
+                                {item.quantity} x {item.price.toLocaleString('vi-VN')} đ
+                              </div>
+                            ) : null}
                           </div>
                         </div>
                       </div>
