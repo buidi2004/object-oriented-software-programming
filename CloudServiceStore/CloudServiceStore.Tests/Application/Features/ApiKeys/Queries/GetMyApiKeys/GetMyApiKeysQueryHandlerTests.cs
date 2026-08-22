@@ -32,7 +32,6 @@ public class GetMyApiKeysQueryHandlerTests
     {
         // Arrange
         // var request = new GetMyApiKeysQuery();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

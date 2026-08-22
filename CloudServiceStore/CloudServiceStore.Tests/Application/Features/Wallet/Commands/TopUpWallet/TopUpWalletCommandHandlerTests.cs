@@ -36,7 +36,6 @@ public class TopUpWalletCommandHandlerTests
     {
         // Arrange
         // var request = new TopUpWalletCommand();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

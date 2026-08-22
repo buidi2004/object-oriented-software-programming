@@ -30,7 +30,6 @@ public class GetAllMigrationsQueryHandlerTests
     {
         // Arrange
         // var request = new GetAllMigrationsQuery();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

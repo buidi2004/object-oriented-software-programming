@@ -30,7 +30,6 @@ public class GetNewsBySlugQueryHandlerTests
     {
         // Arrange
         // var request = new GetNewsBySlugQuery();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

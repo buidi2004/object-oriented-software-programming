@@ -37,7 +37,7 @@ public class RegisterDomainCommandHandlerTests
     {
         _currentUserMock.Setup(c => c.UserId).Returns(Guid.NewGuid());
         _domainRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<DomainRecord, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<DomainRecord, object>>[]>()))
-            .ReturnsAsync((DomainRecord)null);
+            .ReturnsAsync((DomainRecord?)null);
 
         var order = new OrderRequest { Status = OrderStatus.Pending }; // Not Paid
         _orderRepoMock.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
@@ -52,7 +52,7 @@ public class RegisterDomainCommandHandlerTests
         var userId = Guid.NewGuid();
         _currentUserMock.Setup(c => c.UserId).Returns(userId);
         _domainRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<DomainRecord, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<DomainRecord, object>>[]>()))
-            .ReturnsAsync((DomainRecord)null);
+            .ReturnsAsync((DomainRecord?)null);
 
         var order = new OrderRequest { Id = Guid.NewGuid(), Status = OrderStatus.Paid, UserId = userId };
         _orderRepoMock.Setup(r => r.GetByIdAsync(order.Id, It.IsAny<CancellationToken>()))

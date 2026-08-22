@@ -34,7 +34,6 @@ public class CloseChatSessionCommandHandlerTests
     {
         // Arrange
         // var request = new CloseChatSessionCommand();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

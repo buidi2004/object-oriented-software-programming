@@ -24,7 +24,7 @@ public class CreateMigrationCommandHandlerTests
     public async Task Handle_OrderNotFound_ThrowsNotFoundException()
     {
         _currentUserMock.Setup(c => c.UserId).Returns(Guid.NewGuid());
-        _orderRepoMock.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync((OrderRequest)null);
+        _orderRepoMock.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync((OrderRequest?)null);
         await Assert.ThrowsAsync<NotFoundException>(() => CreateHandler().Handle(new CreateMigrationCommand(Guid.NewGuid(), "AWS", "Help"), CancellationToken.None));
     }
     

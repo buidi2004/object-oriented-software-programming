@@ -30,7 +30,6 @@ public class GetKbArticleByIdQueryHandlerTests
     {
         // Arrange
         // var request = new GetKbArticleByIdQuery();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

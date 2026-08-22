@@ -26,7 +26,7 @@ public class RequestSslCertificateCommandHandlerTests
     {
         _currentUserMock.Setup(c => c.UserId).Returns(Guid.NewGuid());
         _domainRepoMock.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync((DomainRecord)null);
+            .ReturnsAsync((DomainRecord?)null);
 
         await Assert.ThrowsAsync<NotFoundException>(() => CreateHandler().Handle(new RequestSslCertificateCommand(Guid.NewGuid(), "CSR", Guid.NewGuid().ToString()), CancellationToken.None));
     }

@@ -32,7 +32,6 @@ public class GetMyLoyaltyQueryHandlerTests
     {
         // Arrange
         // var request = new GetMyLoyaltyQuery();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

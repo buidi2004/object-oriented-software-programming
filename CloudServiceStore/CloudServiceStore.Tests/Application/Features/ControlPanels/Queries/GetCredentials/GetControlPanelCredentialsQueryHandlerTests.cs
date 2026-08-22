@@ -35,7 +35,6 @@ public class GetControlPanelCredentialsQueryHandlerTests
         // Arrange
         var orderId = Guid.NewGuid();
         var request = new GetControlPanelCredentialsQuery(orderId);
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

@@ -32,7 +32,6 @@ public class GetMyAffiliateApplicationQueryHandlerTests
     {
         // Arrange
         // var request = new GetMyAffiliateApplicationQuery();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

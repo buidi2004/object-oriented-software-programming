@@ -25,7 +25,7 @@ public class AddDnsRecordCommandHandlerTests
     {
         _currentUserMock.Setup(c => c.UserId).Returns(Guid.NewGuid());
         _domainRepoMock.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync((DomainRecord)null);
+            .ReturnsAsync((DomainRecord?)null);
 
         await Assert.ThrowsAsync<NotFoundException>(() => CreateHandler().Handle(new AddDnsRecordCommand(Guid.NewGuid(), "A", "@", "1.1.1.1", 3600), CancellationToken.None));
     }

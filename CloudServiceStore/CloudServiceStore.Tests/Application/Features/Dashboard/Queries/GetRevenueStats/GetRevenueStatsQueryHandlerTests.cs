@@ -40,7 +40,6 @@ public class GetRevenueStatsQueryHandlerTests
     {
         // Arrange
         // var request = new GetRevenueStatsQuery();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

@@ -30,7 +30,6 @@ public class GetAbandonedCartsQueryHandlerTests
     {
         // Arrange
         // var request = new GetAbandonedCartsQuery();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

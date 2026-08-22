@@ -32,7 +32,6 @@ public class RejectAffiliateCommandHandlerTests
     {
         // Arrange
         // var request = new RejectAffiliateCommand();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

@@ -26,7 +26,7 @@ public class GetBackupsForOrderQueryHandlerTests
     {
         _currentUserMock.Setup(c => c.UserId).Returns(Guid.NewGuid());
         _orderRepoMock.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync((OrderRequest)null);
+            .ReturnsAsync((OrderRequest?)null);
 
         await Assert.ThrowsAsync<NotFoundException>(() => CreateHandler().Handle(new GetBackupsForOrderQuery(Guid.NewGuid()), CancellationToken.None));
     }

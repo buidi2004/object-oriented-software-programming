@@ -32,7 +32,6 @@ public class GetRolePermissionsQueryHandlerTests
     {
         // Arrange
         // var request = new GetRolePermissionsQuery();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

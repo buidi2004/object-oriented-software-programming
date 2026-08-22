@@ -32,7 +32,6 @@ public class CheckUserPermissionQueryHandlerTests
     {
         // Arrange
         // var request = new CheckUserPermissionQuery();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

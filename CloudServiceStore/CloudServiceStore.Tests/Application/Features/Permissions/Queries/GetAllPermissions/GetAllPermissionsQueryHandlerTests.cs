@@ -30,7 +30,6 @@ public class GetAllPermissionsQueryHandlerTests
     {
         // Arrange
         // var request = new GetAllPermissionsQuery();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

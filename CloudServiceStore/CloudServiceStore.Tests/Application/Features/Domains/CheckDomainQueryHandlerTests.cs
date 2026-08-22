@@ -30,7 +30,7 @@ public class CheckDomainQueryHandlerTests
     public async Task Handle_DomainNotExists_ReturnsTrue()
     {
         _repoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<Expression<Func<DomainRecord, bool>>>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<DomainRecord, object>>[]>()))
-            .ReturnsAsync((DomainRecord)null);
+            .ReturnsAsync((DomainRecord?)null);
 
         var result = await CreateHandler().Handle(new CheckDomainQuery("my-new-domain.com"), CancellationToken.None);
         

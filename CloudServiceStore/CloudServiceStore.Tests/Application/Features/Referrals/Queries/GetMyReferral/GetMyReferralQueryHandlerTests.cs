@@ -34,7 +34,6 @@ public class GetMyReferralQueryHandlerTests
     {
         // Arrange
         // var request = new GetMyReferralQuery();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

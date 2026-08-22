@@ -32,7 +32,6 @@ public class UpdateNewsArticleCommandHandlerTests
     {
         // Arrange
         // var request = new UpdateNewsArticleCommand();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

@@ -34,7 +34,6 @@ public class GetProfileQueryHandlerTests
     {
         // Arrange
         var request = new GetProfileQuery();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

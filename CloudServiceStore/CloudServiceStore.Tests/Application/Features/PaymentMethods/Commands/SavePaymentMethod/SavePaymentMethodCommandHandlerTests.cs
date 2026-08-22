@@ -34,7 +34,6 @@ public class SavePaymentMethodCommandHandlerTests
     {
         // Arrange
         // var request = new SavePaymentMethodCommand();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

@@ -32,7 +32,6 @@ public class CreateBannerCommandHandlerTests
     {
         // Arrange
         // var request = new CreateBannerCommand();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

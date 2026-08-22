@@ -34,7 +34,6 @@ public class GetMyWalletTransactionsQueryHandlerTests
     {
         // Arrange
         // var request = new GetMyWalletTransactionsQuery();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

@@ -32,7 +32,6 @@ public class GetMyNotificationSettingQueryHandlerTests
     {
         // Arrange
         // var request = new GetMyNotificationSettingQuery();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

@@ -32,7 +32,6 @@ public class UpdateControlPanelCredentialsCommandHandlerTests
     {
         // Arrange
         // var request = new UpdateControlPanelCredentialsCommand();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

@@ -30,7 +30,6 @@ public class ExportOrdersQueryHandlerTests
     {
         // Arrange
         // var request = new ExportOrdersQuery();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

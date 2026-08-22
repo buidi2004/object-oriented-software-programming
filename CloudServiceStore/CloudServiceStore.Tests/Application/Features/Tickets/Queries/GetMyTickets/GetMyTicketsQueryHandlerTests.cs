@@ -32,7 +32,6 @@ public class GetMyTicketsQueryHandlerTests
     {
         // Arrange
         // var request = new GetMyTicketsQuery();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

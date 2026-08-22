@@ -34,7 +34,6 @@ public class UpdateNotificationSettingCommandHandlerTests
     {
         // Arrange
         // var request = new UpdateNotificationSettingCommand();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

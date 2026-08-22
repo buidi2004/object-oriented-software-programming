@@ -32,7 +32,6 @@ public class GetMyRefundRequestsQueryHandlerTests
     {
         // Arrange
         // var request = new GetMyRefundRequestsQuery();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

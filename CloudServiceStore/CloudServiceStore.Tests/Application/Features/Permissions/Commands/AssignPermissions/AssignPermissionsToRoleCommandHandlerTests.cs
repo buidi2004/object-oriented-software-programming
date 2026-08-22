@@ -32,7 +32,6 @@ public class AssignPermissionsToRoleCommandHandlerTests
     {
         // Arrange
         // var request = new AssignPermissionsToRoleCommand();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

@@ -36,7 +36,6 @@ public class AddToWishlistCommandHandlerTests
     {
         // Arrange
         // var request = new AddToWishlistCommand();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

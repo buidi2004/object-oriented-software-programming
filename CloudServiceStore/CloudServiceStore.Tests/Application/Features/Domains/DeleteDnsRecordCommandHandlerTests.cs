@@ -39,7 +39,7 @@ public class DeleteDnsRecordCommandHandlerTests
             .ReturnsAsync(new DomainRecord { UserId = userId }); // Owned by user
         
         _dnsRepoMock.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync((DnsRecord)null);
+            .ReturnsAsync((DnsRecord?)null);
 
         await Assert.ThrowsAsync<NotFoundException>(() => CreateHandler().Handle(new DeleteDnsRecordCommand(Guid.NewGuid(), Guid.NewGuid()), CancellationToken.None));
     }

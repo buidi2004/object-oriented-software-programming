@@ -34,7 +34,6 @@ public class TerminateVpsCommandHandlerTests
     {
         // Arrange
         // var request = new TerminateVpsCommand();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

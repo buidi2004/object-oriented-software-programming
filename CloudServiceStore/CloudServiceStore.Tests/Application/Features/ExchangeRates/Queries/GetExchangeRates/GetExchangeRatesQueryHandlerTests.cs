@@ -30,7 +30,6 @@ public class GetExchangeRatesQueryHandlerTests
     {
         // Arrange
         // var request = new GetExchangeRatesQuery();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

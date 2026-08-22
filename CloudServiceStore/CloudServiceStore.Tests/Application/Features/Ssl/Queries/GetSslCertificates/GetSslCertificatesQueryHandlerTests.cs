@@ -34,7 +34,6 @@ public class GetSslCertificatesQueryHandlerTests
     {
         // Arrange
         // var request = new GetSslCertificatesQuery();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

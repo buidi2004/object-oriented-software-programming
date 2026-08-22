@@ -37,7 +37,6 @@ public class GetVpsInstancesQueryHandlerTests
     {
         // Arrange
         // var request = new GetVpsInstancesQuery();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

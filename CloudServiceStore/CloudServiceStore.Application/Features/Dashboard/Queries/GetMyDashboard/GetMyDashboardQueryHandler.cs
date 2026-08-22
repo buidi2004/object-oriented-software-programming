@@ -1,7 +1,6 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Threading.Tasks;
 using System.Collections.Generic;
 using CloudServiceStore.Application.Exceptions;
 using CloudServiceStore.Application.Interfaces;

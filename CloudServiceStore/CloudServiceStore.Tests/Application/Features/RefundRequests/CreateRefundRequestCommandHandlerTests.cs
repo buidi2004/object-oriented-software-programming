@@ -25,7 +25,7 @@ public class CreateRefundRequestCommandHandlerTests
     [Fact]
     public async Task Handle_OrderNotFound_ThrowsNotFoundException()
     {
-        _orderRepoMock.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync((OrderRequest)null);
+        _orderRepoMock.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync((OrderRequest?)null);
         _currentUserMock.Setup(c => c.UserId).Returns(Guid.NewGuid());
         await Assert.ThrowsAsync<NotFoundException>(() => CreateHandler().Handle(new CreateRefundRequestCommand(Guid.NewGuid(), "Bad service", 10), CancellationToken.None));
     }

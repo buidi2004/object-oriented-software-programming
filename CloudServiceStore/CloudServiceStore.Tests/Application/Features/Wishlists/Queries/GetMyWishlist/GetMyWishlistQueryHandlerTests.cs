@@ -32,7 +32,6 @@ public class GetMyWishlistQueryHandlerTests
     {
         // Arrange
         // var request = new GetMyWishlistQuery();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

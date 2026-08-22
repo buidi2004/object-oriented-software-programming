@@ -32,7 +32,6 @@ public class DeleteNewsArticleCommandHandlerTests
     {
         // Arrange
         // var request = new DeleteNewsArticleCommand();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

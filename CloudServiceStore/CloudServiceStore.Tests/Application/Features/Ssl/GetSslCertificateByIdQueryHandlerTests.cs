@@ -24,7 +24,7 @@ public class GetSslCertificateByIdQueryHandlerTests
     {
         _currentUserMock.Setup(c => c.UserId).Returns(Guid.NewGuid());
         _sslRepoMock.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync((SslCertificate)null);
+            .ReturnsAsync((SslCertificate?)null);
 
         await Assert.ThrowsAsync<NotFoundException>(() => CreateHandler().Handle(new GetSslCertificateByIdQuery(Guid.NewGuid()), CancellationToken.None));
     }

@@ -18,6 +18,7 @@ public class GetMyDashboardQueryHandlerTests
 {
     private readonly Mock<IRepository<OrderRequest>> _mockRepositoryOrderRequest;
     private readonly Mock<IRepository<ServicePlan>> _mockRepositoryServicePlan;
+    private readonly Mock<IRepository<ServiceCategory>> _mockRepositoryServiceCategory;
     private readonly Mock<ICurrentUserService> _mockCurrentUserService;
     private readonly GetMyDashboardQueryHandler _handler;
 
@@ -25,8 +26,9 @@ public class GetMyDashboardQueryHandlerTests
     {
         _mockRepositoryOrderRequest = new Mock<IRepository<OrderRequest>>();
         _mockRepositoryServicePlan = new Mock<IRepository<ServicePlan>>();
+        _mockRepositoryServiceCategory = new Mock<IRepository<ServiceCategory>>();
         _mockCurrentUserService = new Mock<ICurrentUserService>();
-        _handler = new GetMyDashboardQueryHandler(_mockRepositoryOrderRequest.Object, _mockRepositoryServicePlan.Object, _mockCurrentUserService.Object);
+        _handler = new GetMyDashboardQueryHandler(_mockRepositoryOrderRequest.Object, _mockRepositoryServicePlan.Object, _mockRepositoryServiceCategory.Object, _mockCurrentUserService.Object);
     }
 
     [Fact]
@@ -34,7 +36,6 @@ public class GetMyDashboardQueryHandlerTests
     {
         // Arrange
         // var request = new GetMyDashboardQuery();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);

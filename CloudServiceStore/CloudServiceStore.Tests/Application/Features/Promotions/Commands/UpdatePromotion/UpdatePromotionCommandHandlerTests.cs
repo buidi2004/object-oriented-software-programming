@@ -37,7 +37,6 @@ public class UpdatePromotionCommandHandlerTests
     {
         // Arrange
         // var request = new UpdatePromotionCommand();
-        var cancellationToken = new CancellationToken();
 
         // Act
         // var result = await _handler.Handle(request, cancellationToken);
