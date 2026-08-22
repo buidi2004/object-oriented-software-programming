@@ -9,7 +9,7 @@ import {
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
-function MoMoSandboxContent() {
+function ZaloPaySandboxContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -35,14 +35,14 @@ function MoMoSandboxContent() {
 
   const VIETNAMESE_BANKS = [];
 
-  const currentBankObj = { name: 'MoMo', code: 'MoMo' };
+  const currentBankObj = { name: 'ZaloPay', code: 'ZaloPay' };
 
-  // Clean short alphanumeric transfer content conforming strictly to NAPAS 24/7 MoMo EMVCo spec (tag 62.08)
+  // Clean short alphanumeric transfer content conforming strictly to NAPAS 24/7 ZaloPay EMVCo spec (tag 62.08)
   const rawClean = orderId.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
   const shortOrderCode = rawClean.length > 10 ? rawClean.slice(0, 8) : (rawClean || 'TEST');
   const cleanContent = `PAY${shortOrderCode}`;
 
-  const momoInfo = {
+  const zalopayInfo = {
     bankName: currentBankObj.name,
     bankCode: selectedBank,
     bankBin: currentBankObj.bin,
@@ -52,9 +52,9 @@ function MoMoSandboxContent() {
     content: cleanContent,
   };
 
-  // QR Code URL via official MoMo NAPAS standard image API (using Bank BIN for 100% banking app recognition)
+  // QR Code URL via official ZaloPay NAPAS standard image API (using Bank BIN for 100% banking app recognition)
   const encodedName = encodeURIComponent(customAccName.toUpperCase());
-  const qrImageUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=sandbox-payment-momo-' + orderId;
+  const qrImageUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=sandbox-payment-zalopay-' + orderId;
 
   // Sync actual order amount from backend
   useEffect(() => {
@@ -208,7 +208,7 @@ function MoMoSandboxContent() {
             <div className="flex justify-between items-center">
               <span className="text-slate-500">Phương thức:</span>
               <span className="font-bold text-slate-800 flex items-center gap-1.5">
-                <Building2 className="w-4 h-4 text-[#1F1F1F]" /> MoMo
+                <Building2 className="w-4 h-4 text-[#1F1F1F]" /> ZaloPay
               </span>
             </div>
           </div>
@@ -245,7 +245,7 @@ function MoMoSandboxContent() {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-xl font-bold">Cổng Thanh Toán MoMo Sandbox</h1>
+                <h1 className="text-xl font-bold">Cổng Thanh Toán ZaloPay Sandbox</h1>
                 <span className="text-[10px] uppercase tracking-wider bg-white/20 px-2 py-0.5 rounded-full font-bold">
                   Napas 247
                 </span>
@@ -280,7 +280,7 @@ function MoMoSandboxContent() {
                 <img
                   key={qrImageUrl}
                   src={qrImageUrl}
-                  alt={`MoMo ${momoInfo.bankName} Payment`}
+                  alt={`ZaloPay ${zalopayInfo.bankName} Payment`}
                   className="w-60 h-60 object-contain rounded-lg transition-all"
                   onError={(e) => {
                     const target = e.currentTarget;
@@ -290,7 +290,7 @@ function MoMoSandboxContent() {
                     }
                   }}
                 />
-                <div className="absolute inset-0 bg-[#A50064]/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
+                <div className="absolute inset-0 bg-[#0068FF]/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
                   <span className="text-xs font-bold bg-white text-[#1F1F1F] px-3 py-1.5 rounded-full shadow">
                     Quét bằng App Ngân hàng
                   </span>
@@ -308,7 +308,7 @@ function MoMoSandboxContent() {
                   Chuẩn NAPAS 24/7 — {currentBankObj.name} — STK: {customAccNumber}
                 </p>
                 <div className="mt-3 pt-3 border-t border-slate-200 w-full flex items-center justify-center gap-2 text-xs font-bold text-[#1F1F1F]">
-                  <span className="w-2 h-2 rounded-full bg-[#A50064] animate-ping" />
+                  <span className="w-2 h-2 rounded-full bg-[#0068FF] animate-ping" />
                   Đang lắng nghe chuyển khoản từ ngân hàng...
                 </div>
               </>
@@ -327,23 +327,23 @@ function MoMoSandboxContent() {
               {/* Ngân hàng */}
               <div className="flex items-center justify-between py-2 border-b border-slate-200 text-sm">
                 <span className="text-slate-500">Ngân hàng</span>
-                <span className="font-bold text-slate-900">{momoInfo.bankName}</span>
+                <span className="font-bold text-slate-900">{zalopayInfo.bankName}</span>
               </div>
 
               {/* Chủ tài khoản */}
               <div className="flex items-center justify-between py-2 border-b border-slate-200 text-sm">
                 <span className="text-slate-500">Chủ tài khoản</span>
-                <span className="font-bold text-slate-900">{momoInfo.accountName}</span>
+                <span className="font-bold text-slate-900">{zalopayInfo.accountName}</span>
               </div>
 
               {/* Số tài khoản */}
               <div className="flex items-center justify-between py-2 border-b border-slate-200 text-sm">
                 <span className="text-slate-500">Số tài khoản</span>
                 <div className="flex items-center gap-2">
-                  <span className="font-mono font-black text-base text-[#1F1F1F]">{momoInfo.accountNumber}</span>
+                  <span className="font-mono font-black text-base text-[#1F1F1F]">{zalopayInfo.accountNumber}</span>
                   <button
-                    onClick={() => copyToClipboard(momoInfo.accountNumber, 'accountNumber')}
-                    className="p-1.5 rounded-lg bg-[#fce4ec] text-[#1F1F1F] hover:bg-[#fce4ec] transition-colors"
+                    onClick={() => copyToClipboard(zalopayInfo.accountNumber, 'accountNumber')}
+                    className="p-1.5 rounded-lg bg-[#e3f2fd] text-[#1F1F1F] hover:bg-[#e3f2fd] transition-colors"
                     title="Sao chép"
                   >
                     {copiedField === 'accountNumber' ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
@@ -370,10 +370,10 @@ function MoMoSandboxContent() {
               <div className="flex items-center justify-between py-2 text-sm bg-amber-50/80 -mx-2 px-3 rounded-xl border border-amber-200">
                 <div>
                   <span className="text-amber-800 text-xs block font-semibold">Nội dung chuyển khoản (Bắt buộc)</span>
-                  <span className="font-mono font-black text-slate-900 text-base">{momoInfo.content}</span>
+                  <span className="font-mono font-black text-slate-900 text-base">{zalopayInfo.content}</span>
                 </div>
                 <button
-                  onClick={() => copyToClipboard(momoInfo.content, 'content')}
+                  onClick={() => copyToClipboard(zalopayInfo.content, 'content')}
                   className="px-3 py-1.5 rounded-lg bg-amber-600 text-white font-bold text-xs hover:bg-amber-700 transition-colors flex items-center gap-1"
                 >
                   {copiedField === 'content' ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
@@ -412,10 +412,10 @@ function MoMoSandboxContent() {
   );
 }
 
-export default function MoMoSandboxPage() {
+export default function ZaloPaySandboxPage() {
   return (
     <Suspense fallback={<div className="min-h-screen bg-white flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-slate-900" /></div>}>
-      <MoMoSandboxContent />
+      <ZaloPaySandboxContent />
     </Suspense>
   );
 }
