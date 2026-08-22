@@ -196,9 +196,9 @@ export default function HostingManagementPage() {
                   onChange={(e) => setSelectedPlan(e.target.value)}
                   className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:border-cyan-500 text-sm"
                 >
-                  <option value="Cloud NVMe Starter (5GB)">Cloud NVMe Starter (5GB SSD) - 49.000đ/th</option>
-                  <option value="Cloud NVMe Business (20GB)">Cloud NVMe Business (20GB NVMe) - 149.000đ/th</option>
-                  <option value="Cloud NVMe Ultimate (50GB)">Cloud NVMe Ultimate (50GB NVMe) - 299.000đ/th</option>
+                  <option value="Cloud NVMe Starter (5GB)">Cloud NVMe Starter (5GB SSD)</option>
+                  <option value="Cloud NVMe Business (20GB)">Cloud NVMe Business (20GB NVMe)</option>
+                  <option value="Cloud NVMe Ultimate (50GB)">Cloud NVMe Ultimate (50GB NVMe)</option>
                 </select>
               </div>
 

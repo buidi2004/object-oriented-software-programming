@@ -917,7 +917,7 @@ export default function DatabasesServicePage() {
             </h3>
             
             <p className="text-slate-300 text-xs sm:text-base leading-relaxed font-normal">
-              Bắt đầu với gói DB Micro chỉ 99.000đ/tháng hoặc nâng cấp cụm HA Master-Replica cho hệ thống production. 
+              Bắt đầu với gói DB Micro với mức giá rẻ hoặc nâng cấp cụm HA Master-Replica cho hệ thống production. 
               Hỗ trợ di dời cơ sở dữ liệu lớn sang SEN CloudHost hoàn toàn miễn phí.
             </p>
             

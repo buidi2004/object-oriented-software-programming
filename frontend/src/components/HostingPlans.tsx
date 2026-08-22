@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { Globe, CheckCircle2, Zap, Shield, Server, ArrowRight } from 'lucide-react';
 import { HOSTING_PACKAGES } from '../data/mockData';
+import { usePricing } from '../hooks/usePricing';
 
 interface HostingPlansProps {
   onAddToCart: (item: {
@@ -18,11 +19,10 @@ interface HostingPlansProps {
 
 export const HostingPlans: React.FC<HostingPlansProps> = ({ onAddToCart, onViewDetails }) => {
   const [isYearly, setIsYearly] = useState(true);
+  const { getPrice } = usePricing();
 
-  const handleSelectPackage = (pkg: typeof HOSTING_PACKAGES[0]) => {
-    const monthlyRate = isYearly ? pkg.yearlyPriceMonthly : pkg.monthlyPrice;
-    const durationMonths = isYearly ? 12 : 1;
-    const totalPrice = monthlyRate * durationMonths;
+  const handleSelectPackage = (pkg: typeof HOSTING_PACKAGES[0], displayPrice: number, durationMonths: number) => {
+    const totalPrice = displayPrice * durationMonths;
 
     onAddToCart({
       id: `hosting-${pkg.id}-${Date.now()}`,
@@ -80,7 +80,10 @@ export const HostingPlans: React.FC<HostingPlansProps> = ({ onAddToCart, onViewD
         {/* Pricing Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
           {HOSTING_PACKAGES.map((pkg) => {
-            const displayPrice = isYearly ? pkg.yearlyPriceMonthly : pkg.monthlyPrice;
+            const dbMonthly = getPrice(pkg.name, 1, pkg.monthlyPrice);
+            const dbYearlyTotal = getPrice(pkg.name, 2, pkg.yearlyPriceMonthly * 12);
+            const displayPrice = isYearly ? Math.round(dbYearlyTotal / 12) : dbMonthly;
+            const durationMonths = isYearly ? 12 : 1;
 
             return (
               <div
@@ -161,7 +164,7 @@ export const HostingPlans: React.FC<HostingPlansProps> = ({ onAddToCart, onViewD
                     Xem chi tiết
                   </a>
                   <button
-                    onClick={() => handleSelectPackage(pkg)}
+                    onClick={() => handleSelectPackage(pkg, displayPrice, durationMonths)}
                     className={`w-full py-3.5 rounded-xl font-bold text-base transition-all flex items-center justify-center gap-2 cursor-pointer ${
                       pkg.isPopular
                         ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg'

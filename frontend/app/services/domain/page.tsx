@@ -273,7 +273,7 @@ export default function DomainPage() {
       <section className="py-16 bg-gradient-to-r from-cyan-600 to-emerald-600 text-slate-900 text-center">
         <div className="max-w-3xl mx-auto px-4">
           <h2 className="text-3xl font-black mb-4">Sở Hữu Tên Miền Ngay Hôm Nay</h2>
-          <p className="text-slate-200 mb-8">Giá chỉ từ 99.000đ/năm. Bao gồm DNS, WHOIS Privacy miễn phí.</p>
+          <p className="text-slate-200 mb-8">Mức giá đăng ký siêu rẻ. Bao gồm DNS, WHOIS Privacy miễn phí.</p>
           <a href="#top" className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl bg-white text-[#1F1F1F] font-bold shadow-xl hover:shadow-2xl transition-all">
             <Search className="w-5 h-5" />
             Tìm Tên Miền
