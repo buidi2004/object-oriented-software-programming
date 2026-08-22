@@ -104,33 +104,8 @@ export const HomeHeroBanner = () => {
         </div>
       </div>
 
-      {/* Feature Strip (Normal Flow - No Overlap) */}
-      <div className="bg-slate-50 w-full py-8 md:py-12 relative z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-white rounded-2xl shadow-xl shadow-slate-200/50 p-5 sm:p-6 lg:p-8 border border-slate-100">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 lg:gap-10">
-              <FeatureBox icon={Network} title="Hệ sinh thái mở" desc="Đa dạng giải pháp và ứng dụng" />
-              <FeatureBox icon={Zap} title="Linh hoạt" desc="Tùy biến tài nguyên theo nhu cầu" />
-              <FeatureBox icon={ShieldCheck} title="An toàn bảo mật" desc="Hệ thống bảo vệ nhiều lớp" />
-              <FeatureBox icon={Server} title="Chủ động" desc="Quản trị toàn diện hệ thống" />
-            </div>
-          </div>
-        </div>
-      </div>
+
     </div>
   );
 };
 
-const FeatureBox = ({ icon: Icon, title, desc }: { icon: any, title: string, desc: string }) => (
-  <div className="flex items-center gap-4 group">
-    <div className="shrink-0">
-      <div className="w-12 h-12 rounded-full bg-[#fdf8f4] flex items-center justify-center text-[#6e4e37] shadow-[inset_0_1px_2px_rgba(0,0,0,0.05)] border border-[#f5ebe4] group-hover:bg-[#f5ebe4] group-hover:scale-105 transition-all duration-300">
-        <Icon className="w-5 h-5" strokeWidth={2} />
-      </div>
-    </div>
-    <div className="flex flex-col justify-center">
-      <h4 className="text-[15px] font-bold text-slate-800 mb-0.5 group-hover:text-[#6e4e37] transition-colors">{title}</h4>
-      <p className="text-[13px] text-slate-500 font-medium">{desc}</p>
-    </div>
-  </div>
-);
