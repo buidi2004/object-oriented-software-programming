@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 export const HomePreFooterCTA = () => {
   return (
-    <section className="bg-blue-600 text-white">
+    <section className="bg-[#1F1F1F] text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-white/20">
           

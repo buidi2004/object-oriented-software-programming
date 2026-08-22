@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono } from 'next/font/google';
+import { Plus_Jakarta_Sans, JetBrains_Mono } from 'next/font/google';
 import "./globals.css";
 
-const inter = Inter({
+const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ['latin', 'vietnamese'],
   display: 'swap',
   variable: '--font-sans',
@@ -30,8 +30,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="vi" className={`${inter.variable} ${jetbrainsMono.variable}`}>
-      <body className="antialiased bg-slate-50 font-sans">
+    <html lang="vi" className={`${plusJakartaSans.variable} ${jetbrainsMono.variable}`}>
+      <body className="antialiased bg-[var(--surface)] text-[var(--on-surface)] font-sans">
         <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || ''}>
           <AppShell>
             {children}

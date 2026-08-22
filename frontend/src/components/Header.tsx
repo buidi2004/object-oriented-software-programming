@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import {
   Cloud, Server, Globe, Shield, ShoppingCart, Menu, X, Cpu, ChevronDown, LogOut, Wallet,
   Gamepad2, Mail, Database, HardDrive, ShieldCheck, Zap, Layers, Palette, ShoppingBag, Activity, ArrowRight, Compass,
-  LifeBuoy, Megaphone, BookOpen, DownloadCloud, ActivitySquare, Search, LayoutTemplate, Boxes, ArrowLeftRight
+  LifeBuoy, Megaphone, BookOpen, DownloadCloud, ActivitySquare, Search, LayoutTemplate, Boxes, ArrowLeftRight, User
 } from 'lucide-react';
 import { useAuthStore } from '../store/useAuthStore';
 import { useUIStore } from '../store/useUIStore';
@@ -460,16 +460,11 @@ export const Header: React.FC<HeaderProps> = ({
               </div>
             ) : (
               <>
-                <button
-                  onClick={() => handleOpenAuth('login')}
-                  className="hidden md:inline-flex px-3 py-2 text-sm font-semibold text-slate-800 hover:text-blue-600 transition-colors whitespace-nowrap shrink-0"
-                >
+                <button onClick={() => handleOpenAuth('login')} className="hidden lg:flex items-center gap-1.5 px-4 py-2 text-slate-700 font-bold hover:text-[#1F1F1F] hover:bg-slate-100 rounded-full transition-colors">
+                  <User className="w-4 h-4" />
                   Đăng nhập
                 </button>
-                <button
-                  onClick={() => handleOpenAuth('register')}
-                  className="px-3 sm:px-4 py-2 text-sm font-bold text-slate-900 rounded-full bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 shadow-md shadow-blue-500/20 transition-all whitespace-nowrap shrink-0"
-                >
+                <button onClick={() => handleOpenAuth('register')} className="hidden lg:block px-5 py-2 bg-[#1F1F1F] hover:bg-black text-white font-bold rounded-full transition-all shadow-sm">
                   Đăng ký
                 </button>
               </>
@@ -562,12 +557,10 @@ export const Header: React.FC<HeaderProps> = ({
                         <div className="text-[11px] font-semibold text-emerald-600">{walletBalance.toLocaleString('vi-VN')} đ</div>
                       </div>
                     </div>
-                    <Link
-                      href="/dashboard"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="px-3 py-1.5 bg-blue-600 text-white font-bold text-xs rounded-lg hover:bg-blue-700 shadow-xs"
+                    <Link href="/dashboard/billing" onClick={() => setMobileMenuOpen(false)}
+                      className="px-4 py-1.5 bg-[#1F1F1F] text-white font-bold text-xs rounded-full hover:bg-black shadow-xs transition-colors"
                     >
-                      Bảng điều khiển
+                      Nạp tiền
                     </Link>
                   </div>
 
@@ -603,12 +596,8 @@ export const Header: React.FC<HeaderProps> = ({
                   >
                     Đăng nhập
                   </button>
-                  <button
-                    onClick={() => {
-                      handleOpenAuth('register');
-                      setMobileMenuOpen(false);
-                    }}
-                    className="w-full text-center px-4 py-2.5 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-md shadow-blue-500/20"
+                  <button onClick={() => { setMobileMenuOpen(false); handleOpenAuth('register'); }}
+                    className="w-full text-center px-4 py-2.5 text-sm font-bold text-white bg-[#1F1F1F] hover:bg-black rounded-full shadow-md transition-colors"
                   >
                     Đăng ký
                   </button>
