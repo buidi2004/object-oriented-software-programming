@@ -216,8 +216,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({ initialMode, onClose, onSu
 
         <div className={`${isRegister ? 'p-6 sm:p-8 lg:p-10' : 'p-6 sm:p-8'}`}>
           <div className="text-center mb-6 sm:mb-8">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-cyan-500 via-blue-600 to-indigo-600 text-slate-900 flex items-center justify-center mx-auto mb-3 shadow-md shadow-blue-500/20">
-              <Cloud className="w-7 h-7" />
+            <div className="flex justify-center mx-auto mb-3">
+              <img src="/images/logo.png" alt="Logo" className="h-10 w-auto object-contain" />
             </div>
             <h3 className="text-2xl font-black text-slate-900">
               {mode === 'login' ? 'Đăng Nhập Tài Khoản' : mode === 'two_factor' ? 'Xác Thực 2 Bước' : 'Tạo Tài Khoản CloudHost'}
@@ -464,7 +464,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ initialMode, onClose, onSu
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-slate-900 font-bold text-sm shadow-lg shadow-blue-500/25 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-70"
+              className="w-full py-3.5 rounded-full bg-[#1F1F1F] hover:bg-black text-white font-bold text-sm shadow-lg shadow-black/20 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-70"
             >
               {isLoading ? (
                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -499,7 +499,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ initialMode, onClose, onSu
                 <button
                   type="button"
                   onClick={() => setMode('register')}
-                  className="font-bold text-blue-600 hover:underline cursor-pointer"
+                  className="font-bold text-[#1F1F1F] hover:underline cursor-pointer"
                 >
                   Đăng ký ngay
                 </button>
@@ -510,7 +510,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ initialMode, onClose, onSu
                 <button
                   type="button"
                   onClick={() => setMode('login')}
-                  className="font-bold text-blue-600 hover:underline cursor-pointer"
+                  className="font-bold text-[#1F1F1F] hover:underline cursor-pointer"
                 >
                   Đăng nhập
                 </button>
