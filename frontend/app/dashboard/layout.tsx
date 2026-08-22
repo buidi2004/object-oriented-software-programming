@@ -12,7 +12,8 @@ import {
   ChevronDown, Menu, X, Monitor, RefreshCw, History,
   Repeat, Shield, AlertCircle, Loader2, Cpu, Mail,
   Database, HardDrive, Layers, Palette, Gift, RotateCcw,
-  Building2, KeyRound, Key, Star, Bell, ArrowRightLeft, Package, ShoppingBag
+  Building2, KeyRound, Key, Star, Bell, ArrowRightLeft, Package, ShoppingBag,
+  Lock
 } from 'lucide-react';
 
 interface UserInfo {
@@ -233,43 +234,10 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 />
               )}
 
-              {/* Sidebar Area */}
-              <div className="w-[280px] shrink-0 hidden lg:block h-[calc(100vh-140px)] sticky top-[100px] overflow-y-auto no-scrollbar pb-8">
-                <div className="space-y-8 pr-6 border-r border-slate-100">
-                  
-                  {filteredMenuGroups.map((group) => (
-                    <div key={group.title}>
-                        <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-3 ml-2 flex items-center gap-2">
-                          {group.title}
-                        </h3>
-                        <ul className="space-y-1">
-                          {group.items.map((item) => {
-                            const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
-                            return (
-                              <li key={item.id}>
-                                <Link
-                                  href={item.href}
-                                  className={`flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-semibold transition-all duration-200
-                                    ${isActive
-                                      ? 'bg-blue-600 text-white shadow-md shadow-blue-600/20'
-                                      : 'text-slate-600 hover:text-slate-900 hover:bg-blue-50'
-                                    }`}
-                                >
-                                  <item.icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-slate-400'}`} />
-                                  {item.name}
-                                </Link>
-                              </li>
-                            );
-                          })}
-                        </ul>
-                    </div>
-                  ))}
-                </div>
-              </div>
 
               <div className="h-full max-h-[calc(100vh-6rem)] overflow-y-auto p-3.5 space-y-4">
                 {filteredMenuGroups.map((group, gIdx) => (
-                  <div key={`mobile-${group.title}`} className={gIdx > 0 ? 'pt-3 border-t border-slate-100' : ''}>
+                  <div key={group.title} className={gIdx > 0 ? 'pt-3 border-t border-slate-100' : ''}>
                     <div className="text-[10px] font-black text-slate-600 uppercase tracking-wider px-3 pb-2">
                       {group.title}
                     </div>
@@ -313,8 +281,45 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             </aside>
           )}
 
-          {/* Main content */}
-          <main className="flex-1 min-w-0">
+          {/* Main Content Area */}
+          <main className="flex-1 w-full min-w-0">
+            {(() => {
+              const restrictedRoutes: string[] = [];
+              menuGroups.forEach(group => {
+                if (group.title === 'Hạ Tầng & Dịch Vụ Cloud' || group.title === 'Tên Miền & Mạng Lưới') {
+                  group.items.forEach(item => {
+                    if (item.id !== 'overview') {
+                      const requiredSlug = MENU_TO_SLUG[item.id];
+                      if (requiredSlug && !purchasedSlugs.includes(requiredSlug)) {
+                        restrictedRoutes.push(item.href);
+                      }
+                    }
+                  });
+                }
+              });
+
+              const isBlocked = restrictedRoutes.some(route => pathname === route || pathname.startsWith(`${route}/`));
+
+              if (isBlocked) {
+                return (
+                  <div className="flex flex-col items-center justify-center py-32 px-4 text-center h-full">
+                    <div className="w-20 h-20 bg-red-50 text-red-600 rounded-full flex items-center justify-center mb-6">
+                      <Lock className="w-10 h-10" />
+                    </div>
+                    <h2 className="text-2xl font-bold text-slate-900 mb-2">Truy cập bị hạn chế</h2>
+                    <p className="text-slate-500 max-w-md mb-8">
+                      Bạn chưa sở hữu dịch vụ này. Vui lòng đăng ký gói dịch vụ để có thể truy cập và quản lý tính năng trong hệ thống.
+                    </p>
+                    <Link href="/services/cloud-vps" className="px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-colors">
+                      Khám phá dịch vụ
+                    </Link>
+                  </div>
+                );
+              }
+
+              return children;
+            })()}
+
             {/* Auth Warning Banner */}
             {!isAuthenticated && (
               <div className="mb-6 p-5 bg-amber-50 border border-amber-200 rounded-2xl flex items-start gap-3">
