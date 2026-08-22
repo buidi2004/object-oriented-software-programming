@@ -27,6 +27,8 @@ services:
       - Provisioning__PortRangeEnd=40000
       - Provisioning__TimeoutSeconds=60
       - Provisioning__DataPath=/app/provisioning-data
+      - Gemini__ApiKey=${GEMINI_API_KEY}
+      - Gemini__Model=${GEMINI_MODEL:-gemini-3.6-flash}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./CloudServiceStore/images:/app/images
