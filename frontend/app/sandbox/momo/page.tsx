@@ -45,7 +45,7 @@ function MoMoSandboxContent() {
   const momoInfo = {
     bankName: currentBankObj.name,
     bankCode: selectedBank,
-    bankBin: currentBankObj.bin,
+    bankBin: "sandbox",
     accountNumber: customAccNumber,
     accountName: customAccName,
     amount: amount,
@@ -387,7 +387,11 @@ function MoMoSandboxContent() {
               <div className="w-full py-4 rounded-2xl bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 text-center">
                 <p className="text-sm font-bold text-amber-800 flex items-center justify-center gap-2">
                   <ShieldCheck className="w-5 h-5 text-emerald-500" />
-                  Hệ thống tự động xác nhận khi nhận được tiền
+                  Hệ thống tự động xác nhận khi nhận được tiền</p>
+                <button onClick={handleSimulatePaymentSuccess} disabled={isLoading} className="mt-3 w-full py-3 bg-slate-900 text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2">
+                  {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Sparkles className="w-5 h-5 text-amber-300" />}
+                  Mô phỏng thanh toán thành công (Bypass)
+                </button>
                 </p>
                 <p className="text-xs text-amber-600 mt-1">Sau khi chuyển khoản, VPS sẽ được kích hoạt tự động trong vài giây</p>
               </div>
