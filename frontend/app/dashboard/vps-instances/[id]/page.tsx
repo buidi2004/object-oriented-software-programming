@@ -458,9 +458,9 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
             </div>
 
             <div className="flex items-center gap-3">
-              <span className="flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-bold bg-[#f0fdf4] text-[#16a34a] border border-[#bbf7d0]">
-                <span className="w-2 h-2 rounded-full bg-[#16a34a]" />
-                Online
+              <span className={`flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-bold border ${isRunning ? 'bg-[#f0fdf4] text-[#16a34a] border-[#bbf7d0]' : 'bg-slate-100 text-slate-500 border-slate-200'}`}>
+                <span className={`w-2 h-2 rounded-full ${isRunning ? 'bg-[#16a34a]' : 'bg-slate-400'}`} />
+                {isRunning ? 'Online' : 'Offline'}
               </span>
 
               <button className="p-2 text-slate-600 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-colors">
@@ -474,14 +474,25 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
           </div>
 
           <div className="flex items-center gap-2 mt-4">
-            <button 
-              onClick={() => handleAction('stop')}
-              disabled={actionLoading !== null}
-              className="w-8 h-8 rounded border border-red-300 hover:bg-red-50 flex items-center justify-center text-red-500 transition-colors"
-              title="Stop VPS"
-            >
-              <Square className="w-4 h-4" />
-            </button>
+            {isRunning ? (
+              <button 
+                onClick={() => handleAction('stop')}
+                disabled={actionLoading !== null}
+                className={`w-8 h-8 rounded border flex items-center justify-center transition-colors ${actionLoading === 'stop' ? 'border-red-300 bg-red-50 text-red-500' : 'border-red-300 hover:bg-red-50 text-red-500'}`}
+                title="Stop VPS"
+              >
+                {actionLoading === 'stop' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Square className="w-4 h-4" />}
+              </button>
+            ) : (
+              <button 
+                onClick={() => handleAction('start')}
+                disabled={actionLoading !== null}
+                className={`w-8 h-8 rounded border flex items-center justify-center transition-colors ${actionLoading === 'start' ? 'border-emerald-300 bg-emerald-50 text-emerald-500' : 'border-emerald-300 hover:bg-emerald-50 text-emerald-500'}`}
+                title="Start VPS"
+              >
+                {actionLoading === 'start' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Play className="w-4 h-4" />}
+              </button>
+            )}
             <button 
               onClick={() => handleAction('restart')}
               disabled={actionLoading !== null}
