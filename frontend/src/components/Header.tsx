@@ -121,10 +121,10 @@ export const Header: React.FC<HeaderProps> = ({
   return (
     <header className="sticky top-0 z-40 w-full flex flex-col">
       {/* Top Bar (Secondary Actions) */}
-      <div className="w-full bg-[#333333] text-slate-700 py-1.5 text-xs font-medium hidden sm:block">
+      <div className="w-full bg-[#333333] text-slate-300 py-1.5 text-xs font-medium hidden sm:block">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-end gap-6">
-          <Link href="/careers" className="hover:text-slate-900 transition-colors">Tuyển dụng</Link>
-          <div className="flex items-center gap-1.5 cursor-pointer hover:text-slate-900 transition-colors">
+          <Link href="/careers" className="hover:text-white transition-colors">Tuyển dụng</Link>
+          <div className="flex items-center gap-1.5 cursor-pointer hover:text-white transition-colors">
             <Globe className="w-3.5 h-3.5" />
             <span>Tiếng Việt</span>
             <ChevronDown className="w-3.5 h-3.5" />

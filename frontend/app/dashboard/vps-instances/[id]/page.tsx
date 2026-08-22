@@ -103,6 +103,65 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
     };
   }, [vps?.containerId]);
 
+  // Set up real-time Resource Status Hub for Start/Stop/Restart events
+  useEffect(() => {
+    let statusConnection: signalR.HubConnection | null = null;
+    const token = localStorage.getItem('accessToken');
+    
+    if (resolvedParams.id) {
+      statusConnection = new signalR.HubConnectionBuilder()
+        .withUrl(process.env.NEXT_PUBLIC_API_URL ? `${process.env.NEXT_PUBLIC_API_URL}/hubs/resource-status` : '/hubs/resource-status', {
+          accessTokenFactory: () => token || ''
+        })
+        .withAutomaticReconnect()
+        .build();
+
+      statusConnection.on('StatusChanged', (resId: string, newStatus: string) => {
+        if (resId.toLowerCase() !== resolvedParams.id.toLowerCase()) return;
+        
+        switch (newStatus) {
+          case 'Starting':
+            showToast('success', 'VPS đang được khởi động...');
+            break;
+          case 'Running':
+            showToast('success', 'VPS đã khởi động thành công và đang hoạt động.');
+            fetchVpsDetail();
+            fetchStats();
+            break;
+          case 'Stopping':
+            showToast('success', 'VPS đang được tắt...');
+            break;
+          case 'Stopped':
+            showToast('success', 'VPS đã được tắt hoàn toàn.');
+            fetchVpsDetail();
+            fetchStats();
+            break;
+          case 'Restarting':
+            showToast('success', 'VPS đang khởi động lại...');
+            break;
+          case 'FailedToStart':
+            showToast('error', 'Lỗi: Không thể khởi động VPS.');
+            break;
+          case 'FailedToRestart':
+            showToast('error', 'Lỗi: Không thể khởi động lại VPS.');
+            break;
+        }
+      });
+
+      statusConnection.start()
+        .then(() => {
+          statusConnection?.invoke('SubscribeToResource', 'VPS', resolvedParams.id);
+        })
+        .catch(err => console.error('Failed to connect to ResourceStatusHub', err));
+    }
+
+    return () => {
+      if (statusConnection) {
+        statusConnection.stop();
+      }
+    };
+  }, [resolvedParams.id]);
+
   const fetchVpsDetail = async () => {
     try {
       const res = await api.get(`/vpsinstances/${resolvedParams.id}`);
@@ -304,24 +363,24 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
       </div>
 
       {/* TOP HEADER SECTION */}
-      <div className="max-w-5xl mx-auto bg-[#101828] text-white rounded-2xl border border-slate-700 overflow-hidden shadow-lg">
+      <div className="max-w-5xl mx-auto bg-[#101828] text-[#ffffff] rounded-2xl border border-slate-700 overflow-hidden shadow-lg">
         <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
           <div className="flex flex-col items-center md:items-start text-center md:text-left space-y-3">
             <div className="w-16 h-16 rounded-full bg-white border-2 border-slate-300 flex items-center justify-center text-slate-900 shadow-inner">
               <Server className="w-8 h-8 text-blue-600" />
             </div>
             <div>
-              <h2 className="text-lg font-black text-white">{vps.planName || 'Cheap 4'}</h2>
-              <p className="text-xs text-slate-400">VPS Giá Rẻ</p>
+              <h2 className="text-lg font-black text-[#ffffff]">{vps.planName || 'Cheap 4'}</h2>
+              <p className="text-xs text-[#94a3b8]">VPS Giá Rẻ</p>
             </div>
             <div className="w-full space-y-2 max-w-xs">
-              <div className="w-full py-1.5 px-3 rounded-lg font-bold text-xs uppercase tracking-wider text-center bg-[#16a34a] text-white">
+              <div className="w-full py-1.5 px-3 rounded-lg font-bold text-xs uppercase tracking-wider text-center bg-[#16a34a] text-[#ffffff]">
                 ĐANG HOẠT ĐỘNG
               </div>
-              <button className="w-full py-1.5 px-3 bg-[#16a34a] hover:bg-[#15803d] text-white font-bold text-xs rounded-lg transition-colors flex items-center justify-center gap-1.5 shadow-sm">
+              <button className="w-full py-1.5 px-3 bg-[#16a34a] hover:bg-[#15803d] text-[#ffffff] font-bold text-xs rounded-lg transition-colors flex items-center justify-center gap-1.5 shadow-sm">
                 <span>⬆</span> Nâng cấp
               </button>
-              <button className="w-full py-1.5 px-3 bg-[#2563eb] hover:bg-[#1d4ed8] text-white font-bold text-xs rounded-lg transition-colors flex items-center justify-center gap-1.5 shadow-sm">
+              <button className="w-full py-1.5 px-3 bg-[#2563eb] hover:bg-[#1d4ed8] text-[#ffffff] font-bold text-xs rounded-lg transition-colors flex items-center justify-center gap-1.5 shadow-sm">
                 <span>🔁</span> Gia hạn dịch vụ
               </button>
             </div>
@@ -330,47 +389,47 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
           <div className="md:col-span-2 space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs bg-[#0b1120] p-4 rounded-xl border border-slate-700">
               <div>
-                <p className="text-slate-400">Chu kỳ thanh toán</p>
-                <p className="font-bold text-white mt-0.5 text-sm">1 tháng</p>
+                <p className="text-[#94a3b8]">Chu kỳ thanh toán</p>
+                <p className="font-bold text-[#ffffff] mt-0.5 text-sm">1 tháng</p>
               </div>
               <div>
-                <p className="text-slate-400">Ngày hết hạn</p>
-                <p className="font-bold text-white mt-0.5 text-sm">
+                <p className="text-[#94a3b8]">Ngày hết hạn</p>
+                <p className="font-bold text-[#ffffff] mt-0.5 text-sm">
                   {vps.expiresAt ? new Date(vps.expiresAt).toLocaleDateString('vi-VN') : '16/09/2026'}
                 </p>
               </div>
               <div className="sm:col-span-2 pt-2 border-t border-slate-700">
-                <p className="text-slate-400">Phương thức thanh toán</p>
-                <p className="font-medium text-slate-300 mt-0.5">MBBANK Doanh Nghiệp (Dành cho K/H DN lấy hóa đơn GTGT)</p>
+                <p className="text-[#94a3b8]">Phương thức thanh toán</p>
+                <p className="font-medium text-[#cbd5e1] mt-0.5">MBBANK Doanh Nghiệp (Dành cho K/H DN lấy hóa đơn GTGT)</p>
               </div>
             </div>
 
             <div className="bg-[#0b1120] p-4 rounded-xl border border-slate-700 text-xs space-y-2">
               <div className="flex justify-between items-center py-0.5 border-b border-slate-700">
-                <span className="text-slate-400">Hostname</span>
-                <span className="font-mono font-bold text-white">{hostname}</span>
+                <span className="text-[#94a3b8]">Hostname</span>
+                <span className="font-mono font-bold text-[#ffffff]">{hostname}</span>
               </div>
               <div className="flex justify-between items-center py-0.5 border-b border-slate-700">
-                <span className="text-slate-400">IP chính</span>
+                <span className="text-[#94a3b8]">IP chính</span>
                 <div className="flex items-center gap-2">
-                  <span className="font-mono font-bold text-white">{ipAddress}</span>
-                  <button onClick={() => handleCopy(ipAddress, 'ip')} className="text-slate-400 hover:text-white" title="Copy IP">
+                  <span className="font-mono font-bold text-[#ffffff]">{ipAddress}</span>
+                  <button onClick={() => handleCopy(ipAddress, 'ip')} className="text-[#94a3b8] hover:text-white" title="Copy IP">
                     {copiedField === 'ip' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
                   </button>
                 </div>
               </div>
               <div className="flex justify-between items-center py-0.5 border-b border-slate-700">
-                <span className="text-slate-400">Username</span>
-                <span className="font-mono font-bold text-white">Administrator</span>
+                <span className="text-[#94a3b8]">Username</span>
+                <span className="font-mono font-bold text-[#ffffff]">Administrator</span>
               </div>
               <div className="flex justify-between items-center py-0.5">
-                <span className="text-slate-400">Mật khẩu</span>
+                <span className="text-[#94a3b8]">Mật khẩu</span>
                 <div className="flex items-center gap-2 font-mono">
-                  <span className="font-bold text-white">{showPassword ? rootPasswordVal : '••••••••'}</span>
-                  <button onClick={() => setShowPassword(!showPassword)} className="text-slate-400 hover:text-white">
+                  <span className="font-bold text-[#ffffff]">{showPassword ? rootPasswordVal : '••••••••'}</span>
+                  <button onClick={() => setShowPassword(!showPassword)} className="text-[#94a3b8] hover:text-[#ffffff]">
                     {showPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                   </button>
-                  <button onClick={() => handleCopy(rootPasswordVal, 'pass')} className="text-slate-400 hover:text-white">
+                  <button onClick={() => handleCopy(rootPasswordVal, 'pass')} className="text-[#94a3b8] hover:text-[#ffffff]">
                     {copiedField === 'pass' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
                   </button>
                 </div>
@@ -399,9 +458,9 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
             </div>
 
             <div className="flex items-center gap-3">
-              <span className="flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-bold bg-[#f0fdf4] text-[#16a34a] border border-[#bbf7d0]">
-                <span className="w-2 h-2 rounded-full bg-[#16a34a]" />
-                Online
+              <span className={`flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-bold border ${isRunning ? 'bg-[#f0fdf4] text-[#16a34a] border-[#bbf7d0]' : 'bg-slate-100 text-slate-500 border-slate-200'}`}>
+                <span className={`w-2 h-2 rounded-full ${isRunning ? 'bg-[#16a34a]' : 'bg-slate-400'}`} />
+                {isRunning ? 'Online' : 'Offline'}
               </span>
 
               <button className="p-2 text-slate-600 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-colors">
@@ -415,14 +474,25 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
           </div>
 
           <div className="flex items-center gap-2 mt-4">
-            <button 
-              onClick={() => handleAction('stop')}
-              disabled={actionLoading !== null}
-              className="w-8 h-8 rounded border border-red-300 hover:bg-red-50 flex items-center justify-center text-red-500 transition-colors"
-              title="Stop VPS"
-            >
-              <Square className="w-4 h-4" />
-            </button>
+            {isRunning ? (
+              <button 
+                onClick={() => handleAction('stop')}
+                disabled={actionLoading !== null}
+                className={`w-8 h-8 rounded border flex items-center justify-center transition-colors ${actionLoading === 'stop' ? 'border-red-300 bg-red-50 text-red-500' : 'border-red-300 hover:bg-red-50 text-red-500'}`}
+                title="Stop VPS"
+              >
+                {actionLoading === 'stop' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Square className="w-4 h-4" />}
+              </button>
+            ) : (
+              <button 
+                onClick={() => handleAction('start')}
+                disabled={actionLoading !== null}
+                className={`w-8 h-8 rounded border flex items-center justify-center transition-colors ${actionLoading === 'start' ? 'border-emerald-300 bg-emerald-50 text-emerald-500' : 'border-emerald-300 hover:bg-emerald-50 text-emerald-500'}`}
+                title="Start VPS"
+              >
+                {actionLoading === 'start' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Play className="w-4 h-4" />}
+              </button>
+            )}
             <button 
               onClick={() => handleAction('restart')}
               disabled={actionLoading !== null}
