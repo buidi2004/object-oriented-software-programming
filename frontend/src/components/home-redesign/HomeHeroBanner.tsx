@@ -69,7 +69,7 @@ export const HomeHeroBanner = () => {
               style={{ backgroundImage: `url('${slide.image}')` }}
               onClick={() => { if (slide.link && slide.link !== '#') window.location.href = slide.link; }}
             />
-            <div className="absolute inset-0 bg-blue-900/60 mix-blend-multiply pointer-events-none" />
+            <div className="absolute inset-0 bg-black/60 mix-blend-multiply pointer-events-none" />
           </div>
         ))}
 

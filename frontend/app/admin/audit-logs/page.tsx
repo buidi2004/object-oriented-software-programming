@@ -207,7 +207,7 @@ export default function AdminAuditLogsPage() {
     <div className="min-h-screen bg-slate-50">
       {/* Toast */}
       {toast && (
-        <div className={`fixed bottom-5 right-5 z-50 px-5 py-3 rounded-xl shadow-xl text-white font-semibold text-sm flex items-center gap-2.5 animate-in slide-in-from-bottom-5 ${
+        <div className={`fixed bottom-5 right-5 z-50 px-5 py-3 rounded shadow-xl text-white font-semibold text-sm flex items-center gap-2.5 animate-in slide-in-from-bottom-5 ${
           toast.type === 'success' ? 'bg-emerald-600' : 'bg-red-600'
         }`}>
           {toast.type === 'success' ? <CheckCircle2 className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />}
@@ -219,7 +219,7 @@ export default function AdminAuditLogsPage() {
       <header className="bg-white border-b border-slate-200 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link href="/admin" className="p-2 rounded-lg hover:bg-slate-100 transition-colors">
+            <Link href="/admin" className="p-2 rounded-sm hover:bg-slate-100 transition-colors">
               <ArrowLeft className="w-5 h-5 text-slate-600" />
             </Link>
             <div>
@@ -227,19 +227,19 @@ export default function AdminAuditLogsPage() {
                 <ShieldAlert className="w-6 h-6 text-slate-700" />
                 Nhật Ký Thao Tác Hệ Thống (Audit Logs)
               </h1>
-              <p className="text-xs text-slate-500">{logs.length} bản ghi nhật ký kiểm toán</p>
+              <p className="text-xs text-slate-600">{logs.length} bản ghi nhật ký kiểm toán</p>
             </div>
           </div>
           <div className="flex items-center gap-2.5">
             <button
               onClick={handleExportCsv}
-              className="px-3.5 py-2 rounded-xl bg-slate-100 text-slate-700 text-xs font-bold hover:bg-slate-200 transition-colors flex items-center gap-1.5"
+              className="px-3.5 py-2 rounded bg-slate-100 text-slate-700 text-xs font-bold hover:bg-slate-200 transition-colors flex items-center gap-1.5"
             >
               <Download className="w-3.5 h-3.5" /> Xuất CSV
             </button>
             <button
               onClick={handleClearLogs}
-              className="px-3.5 py-2 rounded-xl bg-rose-50 text-rose-700 text-xs font-bold hover:bg-rose-100 transition-colors flex items-center gap-1.5"
+              className="px-3.5 py-2 rounded bg-rose-50 text-rose-700 text-xs font-bold hover:bg-rose-100 transition-colors flex items-center gap-1.5"
             >
               <Trash2 className="w-3.5 h-3.5" /> Dọn Dẹp Logs
             </button>
@@ -249,7 +249,7 @@ export default function AdminAuditLogsPage() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Search & Filters */}
-        <div className="bg-white rounded-2xl p-4 border border-slate-200 mb-6 flex flex-col sm:flex-row gap-4 items-center justify-between shadow-sm">
+        <div className="bg-white rounded-md p-4 border border-slate-200 mb-6 flex flex-col sm:flex-row gap-4 items-center justify-between shadow-sm">
           <div className="relative w-full sm:max-w-md">
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-600" />
             <input
@@ -257,7 +257,7 @@ export default function AdminAuditLogsPage() {
               placeholder="Tìm theo email, hành động, IP hoặc mã thực thể..."
               value={searchTerm}
               onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1); }}
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500/20"
+              className="w-full pl-10 pr-4 py-2.5 rounded border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500/20"
             />
           </div>
 
@@ -265,7 +265,7 @@ export default function AdminAuditLogsPage() {
             <select
               value={selectedEntity}
               onChange={(e) => { setSelectedEntity(e.target.value); setCurrentPage(1); }}
-              className="px-3 py-2 rounded-xl border border-slate-200 text-xs font-semibold bg-white text-slate-700"
+              className="px-3 py-2 rounded border border-slate-200 text-xs font-semibold bg-white text-slate-700"
             >
               <option value="ALL">Mọi Thực Thể</option>
               <option value="ServicePlan">ServicePlan</option>
@@ -278,7 +278,7 @@ export default function AdminAuditLogsPage() {
             <select
               value={selectedAction}
               onChange={(e) => { setSelectedAction(e.target.value); setCurrentPage(1); }}
-              className="px-3 py-2 rounded-xl border border-slate-200 text-xs font-semibold bg-white text-slate-700"
+              className="px-3 py-2 rounded border border-slate-200 text-xs font-semibold bg-white text-slate-700"
             >
               <option value="ALL">Mọi Hành Động</option>
               <option value="CREATE">CREATE / ADD</option>
@@ -290,7 +290,7 @@ export default function AdminAuditLogsPage() {
         </div>
 
         {/* Table */}
-        <div className="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-sm">
+        <div className="bg-white rounded-lg border border-slate-200 overflow-hidden shadow-sm">
           <table className="w-full text-sm">
             <thead className="bg-slate-50 border-b border-slate-200 text-xs uppercase tracking-wider text-slate-600">
               <tr>
@@ -307,7 +307,7 @@ export default function AdminAuditLogsPage() {
                 <tr key={log.id} className="hover:bg-slate-50 transition-colors">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center font-bold">
+                      <div className="w-8 h-8 rounded bg-slate-100 text-slate-600 flex items-center justify-center font-bold">
                         <User className="w-4 h-4" />
                       </div>
                       <div>
@@ -332,13 +332,13 @@ export default function AdminAuditLogsPage() {
                       {log.ipAddress}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-xs text-slate-500">
+                  <td className="px-6 py-4 text-xs text-slate-600">
                     {new Date(log.timestamp).toLocaleString('vi-VN')}
                   </td>
                   <td className="px-6 py-4 text-right">
                     <button
                       onClick={() => setSelectedLog(log)}
-                      className="p-1.5 text-slate-600 hover:text-[#1F1F1F] hover:bg-blue-50 rounded-lg transition-colors"
+                      className="p-1.5 text-slate-600 hover:text-[#1F1F1F] hover:bg-blue-50 rounded-sm transition-colors"
                       title="Xem chi tiết Payload"
                     >
                       <Eye className="w-4 h-4" />
@@ -350,7 +350,7 @@ export default function AdminAuditLogsPage() {
           </table>
 
           {filteredLogs.length === 0 && (
-            <div className="text-center py-16 text-slate-500">
+            <div className="text-center py-16 text-slate-600">
               <ShieldAlert className="w-12 h-12 mx-auto mb-3 text-slate-700" />
               <p className="font-bold text-slate-700">Không tìm thấy bản ghi nhật ký nào</p>
               <p className="text-xs text-slate-600 mt-1">Thử thay đổi bộ lọc tìm kiếm</p>
@@ -365,14 +365,14 @@ export default function AdminAuditLogsPage() {
                 <button
                   onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                   disabled={currentPage === 1}
-                  className="px-3 py-1.5 rounded-lg border border-slate-200 disabled:opacity-40 hover:bg-slate-50"
+                  className="px-3 py-1.5 rounded-sm border border-slate-200 disabled:opacity-40 hover:bg-slate-50"
                 >
                   <ChevronLeft className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                   disabled={currentPage === totalPages}
-                  className="px-3 py-1.5 rounded-lg border border-slate-200 disabled:opacity-40 hover:bg-slate-50"
+                  className="px-3 py-1.5 rounded-sm border border-slate-200 disabled:opacity-40 hover:bg-slate-50"
                 >
                   <ChevronRight className="w-4 h-4" />
                 </button>
@@ -384,10 +384,10 @@ export default function AdminAuditLogsPage() {
         {/* Payload Detail Modal */}
         {selectedLog && (
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl">
+            <div className="bg-white rounded-lg p-6 sm:p-8 max-w-lg w-full shadow-2xl">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-base font-black text-slate-900">Chi Tiết Payload Nhật Ký</h3>
-                <button onClick={() => setSelectedLog(null)} className="p-1.5 text-slate-600 hover:text-slate-600 rounded-lg hover:bg-slate-100">
+                <button onClick={() => setSelectedLog(null)} className="p-1.5 text-slate-600 hover:text-slate-600 rounded-sm hover:bg-slate-100">
                   <X className="w-5 h-5" />
                 </button>
               </div>
@@ -397,13 +397,13 @@ export default function AdminAuditLogsPage() {
                 <p><strong>Người thực hiện:</strong> {selectedLog.userEmail} (IP: {selectedLog.ipAddress})</p>
                 <p><strong>Thời gian:</strong> {new Date(selectedLog.timestamp).toLocaleString('vi-VN')}</p>
               </div>
-              <div className="bg-white text-slate-900 p-4 rounded-2xl font-mono text-xs overflow-x-auto max-h-60">
+              <div className="bg-white text-slate-900 p-4 rounded-md font-mono text-xs overflow-x-auto max-h-60">
                 <pre>{selectedLog.details || '{\n  "status": "No additional payload recorded"\n}'}</pre>
               </div>
               <div className="mt-4 flex justify-end">
                 <button
                   onClick={() => setSelectedLog(null)}
-                  className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs"
+                  className="px-4 py-2 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs"
                 >
                   Đóng
                 </button>

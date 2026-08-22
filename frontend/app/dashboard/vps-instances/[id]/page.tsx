@@ -337,7 +337,7 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
     <div className="min-h-screen bg-[#f8fafc] text-slate-800 py-6 px-4 sm:px-6 lg:px-8 space-y-6">
       {/* Toast Notification */}
       {actionToast && (
-        <div className={`fixed top-4 right-4 z-50 max-w-md px-4 py-3 rounded-xl shadow-2xl border flex items-start gap-3 animate-in slide-in-from-top-2 transition-all ${
+        <div className={`fixed top-4 right-4 z-50 max-w-md px-4 py-3 rounded shadow-2xl border flex items-start gap-3 animate-in slide-in-from-top-2 transition-all ${
           actionToast.type === 'success' 
             ? 'bg-emerald-50 border-emerald-300 text-emerald-800' 
             : 'bg-red-50 border-red-300 text-red-800'
@@ -357,13 +357,13 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
       )}
 
       <div className="max-w-5xl mx-auto mb-2">
-        <Link href="/dashboard/vps-instances" className="text-xs font-bold text-slate-500 hover:text-[#1F1F1F] flex items-center gap-1.5 transition-colors w-fit">
+        <Link href="/dashboard/vps-instances" className="text-xs font-bold text-slate-600 hover:text-[#1F1F1F] flex items-center gap-1.5 transition-colors w-fit">
           <ArrowLeft className="w-4 h-4" /> Quay lại danh sách máy chủ
         </Link>
       </div>
 
       {/* TOP HEADER SECTION */}
-      <div className="max-w-5xl mx-auto bg-[#101828] text-[#ffffff] rounded-2xl border border-slate-700 overflow-hidden shadow-lg">
+      <div className="max-w-5xl mx-auto bg-[#101828] text-[#ffffff] rounded-md border border-slate-700 overflow-hidden shadow-lg">
         <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
           <div className="flex flex-col items-center md:items-start text-center md:text-left space-y-3">
             <div className="w-16 h-16 rounded-full bg-white border-2 border-slate-300 flex items-center justify-center text-slate-900 shadow-inner">
@@ -374,22 +374,22 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
               <p className="text-xs text-[#94a3b8]">VPS Giá Rẻ</p>
             </div>
             <div className="w-full space-y-2 max-w-xs">
-              <div className={`w-full py-1.5 px-3 rounded-lg font-bold text-xs uppercase tracking-wider text-center text-[#ffffff] transition-colors ${
+              <div className={`w-full py-1.5 px-3 rounded-sm font-bold text-xs uppercase tracking-wider text-center text-[#ffffff] transition-colors ${
                 isRunning ? 'bg-[#16a34a]' : 'bg-slate-500'
               }`}>
                 {isRunning ? 'ĐANG HOẠT ĐỘNG' : 'ĐÃ DỪNG'}
               </div>
-              <button className="w-full py-1.5 px-3 bg-[#16a34a] hover:bg-[#15803d] text-[#ffffff] font-bold text-xs rounded-lg transition-colors flex items-center justify-center gap-1.5 shadow-sm">
+              <button className="w-full py-1.5 px-3 bg-[#16a34a] hover:bg-[#15803d] text-[#ffffff] font-bold text-xs rounded-sm transition-colors flex items-center justify-center gap-1.5 shadow-sm">
                 <span>⬆</span> Nâng cấp
               </button>
-              <button className="w-full py-1.5 px-3 bg-[#2563eb] hover:bg-[#1d4ed8] text-[#ffffff] font-bold text-xs rounded-lg transition-colors flex items-center justify-center gap-1.5 shadow-sm">
+              <button className="w-full py-1.5 px-3 bg-[#2563eb] hover:bg-[#1d4ed8] text-[#ffffff] font-bold text-xs rounded-sm transition-colors flex items-center justify-center gap-1.5 shadow-sm">
                 <span>🔁</span> Gia hạn dịch vụ
               </button>
             </div>
           </div>
 
           <div className="md:col-span-2 space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs bg-[#0b1120] p-4 rounded-xl border border-slate-700">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs bg-[#0b1120] p-4 rounded border border-slate-700">
               <div>
                 <p className="text-[#94a3b8]">Chu kỳ thanh toán</p>
                 <p className="font-bold text-[#ffffff] mt-0.5 text-sm">1 tháng</p>
@@ -406,7 +406,7 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
               </div>
             </div>
 
-            <div className="bg-[#0b1120] p-4 rounded-xl border border-slate-700 text-xs space-y-2">
+            <div className="bg-[#0b1120] p-4 rounded border border-slate-700 text-xs space-y-2">
               <div className="flex justify-between items-center py-0.5 border-b border-slate-700">
                 <span className="text-[#94a3b8]">Hostname</span>
                 <span className="font-mono font-bold text-[#ffffff]">{hostname}</span>
@@ -442,7 +442,7 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
       </div>
 
       {/* MAIN CONSOLE MANAGEMENT BOX */}
-      <div className="max-w-5xl mx-auto bg-white rounded-2xl border border-slate-200 shadow-xl overflow-hidden">
+      <div className="max-w-5xl mx-auto bg-white rounded-md border border-slate-200 shadow-xl overflow-hidden">
         <div className="p-6 border-b border-slate-100">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-center gap-3">
@@ -460,16 +460,16 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
             </div>
 
             <div className="flex items-center gap-3">
-              <span className={`flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-bold border ${isRunning ? 'bg-[#f0fdf4] text-[#16a34a] border-[#bbf7d0]' : 'bg-slate-100 text-slate-500 border-slate-200'}`}>
+              <span className={`flex items-center gap-1.5 px-3 py-1 rounded-sm text-xs font-bold border ${isRunning ? 'bg-[#f0fdf4] text-[#16a34a] border-[#bbf7d0]' : 'bg-slate-100 text-slate-600 border-slate-200'}`}>
                 <span className={`w-2 h-2 rounded-full ${isRunning ? 'bg-[#16a34a]' : 'bg-slate-400'}`} />
                 {isRunning ? 'Online' : 'Offline'}
               </span>
 
-              <button className="p-2 text-slate-600 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-colors">
+              <button className="p-2 text-slate-600 hover:text-slate-600 rounded-sm hover:bg-slate-100 transition-colors">
                 <Moon className="w-4 h-4" />
               </button>
 
-              <button onClick={() => fetchStats()} className="p-2 text-slate-600 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-colors">
+              <button onClick={() => fetchStats()} className="p-2 text-slate-600 hover:text-slate-600 rounded-sm hover:bg-slate-100 transition-colors">
                 <RefreshCw className="w-4 h-4" />
               </button>
             </div>
@@ -537,7 +537,7 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as any)}
-                  className={`flex items-center gap-2 py-2 px-3.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap ${
+                  className={`flex items-center gap-2 py-2 px-3.5 rounded-sm text-xs font-bold transition-all whitespace-nowrap ${
                     isActive 
                       ? 'bg-[#eff6ff] text-[#2563eb] border border-[#bfdbfe]' 
                       : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
@@ -560,12 +560,12 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
           <div className="p-6 space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Card 1: Disk Usage */}
-              <div className="bg-white p-5 rounded-xl border border-slate-200/80 shadow-sm space-y-4">
+              <div className="bg-white p-5 rounded border border-slate-200/80 shadow-sm space-y-4">
                 <div className="flex justify-between items-center text-xs">
                   <span className="font-bold text-slate-800">Disk Usage</span>
-                  <span className="font-mono text-slate-500 font-bold">{stats?.diskUsedGb ?? 14.81} / {vps.diskGb || 30} GB</span>
+                  <span className="font-mono text-slate-600 font-bold">{stats?.diskUsedGb ?? 14.81} / {vps.diskGb || 30} GB</span>
                 </div>
-                <div className="w-full bg-slate-100 rounded-md h-5 overflow-hidden p-0.5 border border-slate-200">
+                <div className="w-full bg-slate-100 rounded-sm h-5 overflow-hidden p-0.5 border border-slate-200">
                   <div 
                     className="bg-[#f59e0b] h-full rounded text-[10px] text-slate-900 font-bold flex items-center justify-center transition-all duration-500"
                     style={{ width: `${Math.min(stats?.diskUsagePercent ?? 49.36, 100)}%` }}
@@ -576,7 +576,7 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
               </div>
 
               {/* Card 2: CPU Line Chart */}
-              <div className="bg-white p-5 rounded-xl border border-slate-200/80 shadow-sm relative">
+              <div className="bg-white p-5 rounded border border-slate-200/80 shadow-sm relative">
                 <div className="flex justify-between items-center text-xs mb-2">
                   <span className="font-bold text-slate-800">CPU</span>
                   <span className="font-mono font-bold text-slate-700">{stats?.cpuUsagePercent ?? 4.8} %</span>
@@ -617,17 +617,17 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
               </div>
 
               {/* Card 3: Bandwidth */}
-              <div className="bg-white p-5 rounded-xl border border-slate-200/80 shadow-sm space-y-4">
+              <div className="bg-white p-5 rounded border border-slate-200/80 shadow-sm space-y-4">
                 <div className="flex justify-between items-center text-xs">
                   <span className="font-bold text-slate-800">Bandwidth</span>
-                  <span className="font-mono text-slate-500 font-bold">2.83 / ∞ GB</span>
+                  <span className="font-mono text-slate-600 font-bold">2.83 / ∞ GB</span>
                 </div>
                 <div className="space-y-1">
                   <div className="flex justify-between text-[10px] text-slate-600 font-bold px-1">
                     <span>IN</span>
                     <span>OUT</span>
                   </div>
-                  <div className="w-full bg-slate-100 rounded-md h-6 flex overflow-hidden border border-slate-200 text-[10px] font-bold text-center leading-6">
+                  <div className="w-full bg-slate-100 rounded-sm h-6 flex overflow-hidden border border-slate-200 text-[10px] font-bold text-center leading-6">
                     <div className="bg-[#93c5fd] text-slate-800" style={{ width: '94.90%' }}>94.90%</div>
                     <div className="bg-[#fecdd3] text-slate-800" style={{ width: '5.10%' }}>5.10%</div>
                   </div>
@@ -635,7 +635,7 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
               </div>
 
               {/* Card 4: Network Speed (MB/s) */}
-              <div className="bg-white p-5 rounded-xl border border-slate-200/80 shadow-sm space-y-3">
+              <div className="bg-white p-5 rounded border border-slate-200/80 shadow-sm space-y-3">
                 <div className="flex justify-between items-center text-xs">
                   <span className="font-bold text-slate-800">Network Speed (MB/s)</span>
                   <span className="font-mono font-bold text-slate-700">0.00 MB/s</span>
@@ -665,7 +665,7 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
                   </div>
                 </div>
 
-                <div className="flex items-center justify-center gap-4 text-[10px] text-slate-500 pt-1">
+                <div className="flex items-center justify-center gap-4 text-[10px] text-slate-600 pt-1">
                   <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-blue-600" /> Total speed</span>
                   <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-emerald-500" /> Download</span>
                   <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-amber-500" /> Upload</span>
@@ -673,9 +673,9 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
               </div>
 
               {/* Card 5: Account (Bottom Right) */}
-              <div className="bg-white p-5 rounded-xl border border-slate-200/80 shadow-sm space-y-4 md:col-start-2">
+              <div className="bg-white p-5 rounded border border-slate-200/80 shadow-sm space-y-4 md:col-start-2">
                 <div className="text-xs font-bold text-slate-800">Account</div>
-                <div className="pt-2 border-t border-slate-100 text-xs text-slate-500">
+                <div className="pt-2 border-t border-slate-100 text-xs text-slate-600">
                   <p className="font-semibold text-slate-700">Last Login</p>
                   <p className="font-mono text-slate-600 mt-1">{new Date().toLocaleString('en-US', { month: 'long', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
                 </div>
@@ -683,7 +683,7 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
             </div>
 
             {/* RESTORED EMBEDDED WEB TERMINAL CONSOLE */}
-            <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-inner mt-6">
+            <div className="bg-white rounded border border-slate-200 overflow-hidden shadow-inner mt-6">
               <div className="flex items-center justify-between px-4 py-2.5 bg-white border-b border-slate-300 text-xs">
                 <div className="flex items-center gap-2">
                   <div className="flex gap-1.5">
@@ -718,7 +718,7 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
                   onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleExecCommand(); } }}
                   placeholder={vps?.status === 'Running' ? "Nhập lệnh Linux (ví dụ: free -m, top, df -h)..." : (vps?.status === 'Provisioning' ? "VPS đang khởi tạo, vui lòng chờ..." : "VPS đang tắt. Vui lòng khởi động lại để dùng Terminal.")}
                   disabled={vps?.status !== 'Running'}
-                  className="flex-1 bg-white text-slate-900 text-xs font-mono px-3 py-1.5 rounded border border-slate-300 focus:outline-none focus:border-emerald-500 disabled:bg-slate-100 disabled:text-slate-500"
+                  className="flex-1 bg-white text-slate-900 text-xs font-mono px-3 py-1.5 rounded border border-slate-300 focus:outline-none focus:border-emerald-500 disabled:bg-slate-100 disabled:text-slate-600"
                 />
                 <button
                   onClick={handleExecCommand}
@@ -738,7 +738,7 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
             <div className="flex items-center justify-center gap-2 mb-4">
               <button 
                 onClick={() => setGraphsSubTab('bandwidth')}
-                className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${
+                className={`px-4 py-2 rounded-sm text-xs font-bold transition-all ${
                   graphsSubTab === 'bandwidth' ? 'bg-blue-600 text-white shadow-sm' : 'bg-white text-slate-700 border border-slate-200'
                 }`}
               >
@@ -746,7 +746,7 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
               </button>
               <button 
                 onClick={() => setGraphsSubTab('system')}
-                className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${
+                className={`px-4 py-2 rounded-sm text-xs font-bold transition-all ${
                   graphsSubTab === 'system' ? 'bg-blue-600 text-white shadow-sm' : 'bg-white text-slate-700 border border-slate-200'
                 }`}
               >
@@ -755,13 +755,13 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
+              <div className="bg-white p-5 rounded border border-slate-200 shadow-sm space-y-4">
                 <div className="flex items-center justify-between text-xs border-b border-slate-100 pb-3">
                   <span className="font-bold text-slate-700">08/17 - 08/22</span>
                   <div className="flex items-center gap-4">
-                    <span className="text-slate-500">Limit: <strong>∞ GB</strong></span>
-                    <span className="text-slate-500">Utilized: <strong>2.83 GB</strong></span>
-                    <span className="text-slate-500">Utilization: <strong>0%</strong></span>
+                    <span className="text-slate-600">Limit: <strong>∞ GB</strong></span>
+                    <span className="text-slate-600">Utilized: <strong>2.83 GB</strong></span>
+                    <span className="text-slate-600">Utilization: <strong>0%</strong></span>
                   </div>
                 </div>
                 <div className="h-48 flex items-end justify-between gap-2 pt-6 px-4">
@@ -779,7 +779,7 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
                 </div>
               </div>
 
-              <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
+              <div className="bg-white p-5 rounded border border-slate-200 shadow-sm space-y-4">
                 <div className="text-xs font-bold text-slate-700 border-b border-slate-100 pb-3">Monthly Chart</div>
                 <div className="h-48 flex items-end justify-between gap-1 pt-6 px-2">
                   {['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'].map((m) => (
@@ -810,7 +810,7 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
                   <button
                     key={item.id}
                     onClick={() => setSettingsSubTab(item.id as any)}
-                    className={`w-full text-left px-4 py-2.5 rounded-lg text-xs font-bold transition-all ${
+                    className={`w-full text-left px-4 py-2.5 rounded-sm text-xs font-bold transition-all ${
                       settingsSubTab === item.id 
                         ? 'bg-blue-50 text-[#1F1F1F] border border-blue-200 shadow-sm' 
                         : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
@@ -821,7 +821,7 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
                 ))}
               </div>
 
-              <div className="md:col-span-3 bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+              <div className="md:col-span-3 bg-white p-6 rounded border border-slate-200 shadow-sm">
                 {settingsSubTab === 'password' && (
                   <form onSubmit={handleChangePasswordSubmit} className="max-w-md space-y-4">
                     <h4 className="text-sm font-bold text-slate-900 border-b pb-2">Change Root Password</h4>
@@ -834,12 +834,12 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
                           onChange={(e) => setSettingsNewPass(e.target.value)}
                           placeholder="Nhập mật khẩu mới..."
                           required
-                          className="flex-1 text-xs p-2.5 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono"
+                          className="flex-1 text-xs p-2.5 border border-slate-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono"
                         />
                         <button
                           type="button"
                           onClick={() => setSettingsNewPass('Pass@' + Math.random().toString(36).slice(-8) + '!')}
-                          className="px-3 py-2 bg-slate-100 text-slate-700 text-xs font-bold rounded-lg border hover:bg-slate-200"
+                          className="px-3 py-2 bg-slate-100 text-slate-700 text-xs font-bold rounded-sm border hover:bg-slate-200"
                         >
                           Generate
                         </button>
@@ -848,7 +848,7 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
                     <button
                       type="submit"
                       disabled={isUpdatingSettings || !settingsNewPass}
-                      className="px-5 py-2.5 bg-blue-600 text-white font-bold text-xs rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors shadow-sm"
+                      className="px-5 py-2.5 bg-blue-600 text-white font-bold text-xs rounded-sm hover:bg-blue-700 disabled:opacity-50 transition-colors shadow-sm"
                     >
                       Change Password
                     </button>
@@ -858,19 +858,19 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
                 {settingsSubTab === 'hostname' && (
                   <div className="max-w-md space-y-4">
                     <h4 className="text-sm font-bold text-slate-900 border-b pb-2">Change Hostname</h4>
-                    <p className="text-xs text-slate-500">Current Hostname: <strong className="text-slate-800 font-mono">{hostname}</strong></p>
+                    <p className="text-xs text-slate-600">Current Hostname: <strong className="text-slate-800 font-mono">{hostname}</strong></p>
                     <div>
                       <label className="block text-xs font-bold text-slate-700 mb-1">New Host Name</label>
                       <input
                         type="text"
                         value={newHostname}
                         onChange={(e) => setNewHostname(e.target.value)}
-                        className="w-full text-xs p-2.5 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono"
+                        className="w-full text-xs p-2.5 border border-slate-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono"
                       />
                     </div>
                     <button
                       onClick={() => showToast('success', `Đã đổi hostname sang ${newHostname} thành công!`)}
-                      className="px-5 py-2.5 bg-blue-600 text-white font-bold text-xs rounded-lg hover:bg-blue-700 transition-colors shadow-sm"
+                      className="px-5 py-2.5 bg-blue-600 text-white font-bold text-xs rounded-sm hover:bg-blue-700 transition-colors shadow-sm"
                     >
                       Change Hostname
                     </button>
@@ -895,7 +895,7 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
                   <button
                     key={item.id}
                     onClick={() => setInstallSubTab(item.id as any)}
-                    className={`w-full text-left px-4 py-2.5 rounded-lg text-xs font-bold transition-all ${
+                    className={`w-full text-left px-4 py-2.5 rounded-sm text-xs font-bold transition-all ${
                       installSubTab === item.id 
                         ? 'bg-blue-50 text-[#1F1F1F] border border-blue-200 shadow-sm' 
                         : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
@@ -906,14 +906,14 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
                 ))}
               </div>
 
-              <div className="md:col-span-3 bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+              <div className="md:col-span-3 bg-white p-6 rounded border border-slate-200 shadow-sm">
                 <form onSubmit={handleReinstallSubmit} className="max-w-md space-y-4">
                   <div className="border-b pb-3">
                     <label className="block text-xs font-bold text-slate-700 mb-1">Select OS:</label>
                     <select
                       value={reinstallOs}
                       onChange={(e) => setReinstallOs(e.target.value)}
-                      className="w-full text-xs p-2.5 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-semibold"
+                      className="w-full text-xs p-2.5 border border-slate-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500 font-semibold"
                     >
                       <option value="Ubuntu 24.04 LTS">Ubuntu 24.04 LTS (64-bit)</option>
                       <option value="Ubuntu 22.04 LTS">Ubuntu 22.04 LTS (64-bit)</option>
@@ -923,7 +923,7 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
                     </select>
                   </div>
 
-                  <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
+                  <div className="bg-slate-50 p-4 rounded border border-slate-200 space-y-3">
                     <p className="text-xs font-bold text-slate-800">Password for OS after reinstallation</p>
                     <div>
                       <div className="flex gap-1.5">
@@ -933,12 +933,12 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
                           onChange={(e) => setReinstallPass(e.target.value)}
                           placeholder="New Password"
                           required
-                          className="flex-1 text-xs p-2.5 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono"
+                          className="flex-1 text-xs p-2.5 border border-slate-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono"
                         />
                         <button
                           type="button"
                           onClick={generateRandomPassword}
-                          className="p-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                          className="p-2.5 bg-blue-600 text-white rounded-sm hover:bg-blue-700"
                         >
                           <Key className="w-4 h-4" />
                         </button>
@@ -952,7 +952,7 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
                         onChange={(e) => setReinstallPassConfirm(e.target.value)}
                         placeholder="Retype Password"
                         required
-                        className="w-full text-xs p-2.5 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono"
+                        className="w-full text-xs p-2.5 border border-slate-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono"
                       />
                     </div>
 
@@ -970,7 +970,7 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
                   <button
                     type="submit"
                     disabled={isReinstalling}
-                    className="px-6 py-2.5 bg-blue-600 text-white font-bold text-xs rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors shadow-sm"
+                    className="px-6 py-2.5 bg-blue-600 text-white font-bold text-xs rounded-sm hover:bg-blue-700 disabled:opacity-50 transition-colors shadow-sm"
                   >
                     {isReinstalling ? 'Đang Reinstall...' : 'Reinstall'}
                   </button>
@@ -991,11 +991,11 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
         {activeTab === 'networking' && (
           <div className="p-6 space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="bg-white p-4 rounded-xl border border-slate-200">
+              <div className="bg-white p-4 rounded border border-slate-200">
                 <span className="text-xs text-slate-600">IPv4 Address</span>
                 <p className="font-mono font-bold text-slate-900 text-sm mt-1">{ipAddress}</p>
               </div>
-              <div className="bg-white p-4 rounded-xl border border-slate-200">
+              <div className="bg-white p-4 rounded border border-slate-200">
                 <span className="text-xs text-slate-600">Gateway</span>
                 <p className="font-mono font-bold text-slate-900 text-sm mt-1">203.145.46.1</p>
               </div>
@@ -1006,7 +1006,7 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
         {/* TAB 7: TASKS & LOGS */}
         {activeTab === 'tasks' && (
           <div className="p-6 space-y-4">
-            <div className="flex items-center justify-center gap-1 border border-slate-200 rounded-lg p-1 bg-white max-w-xs mx-auto">
+            <div className="flex items-center justify-center gap-1 border border-slate-200 rounded-sm p-1 bg-white max-w-xs mx-auto">
               <button 
                 onClick={() => setLogsSubTab('tasks')}
                 className={`flex-1 py-1.5 px-3 rounded text-xs font-bold transition-all ${
@@ -1033,7 +1033,7 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
               </button>
             </div>
 
-            <div className="bg-white p-4 rounded-xl border border-slate-200 min-h-[220px] font-mono text-xs text-slate-700 space-y-2">
+            <div className="bg-white p-4 rounded border border-slate-200 min-h-[220px] font-mono text-xs text-slate-700 space-y-2">
               <div className="flex justify-between text-slate-600 text-[11px] border-b pb-2">
                 <span>Timestamp</span>
                 <span>Action</span>

@@ -161,7 +161,7 @@ export default function AdminLiveChatPage() {
   if (!adminId) return <div>Đang tải...</div>;
 
   return (
-    <div className="flex h-[calc(100vh-100px)] bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+    <div className="flex h-[calc(100vh-100px)] bg-white rounded-md shadow-sm border border-slate-200 overflow-hidden">
       
       {/* Sidebar: Active Sessions */}
       <div className="w-1/3 border-r border-slate-200 flex flex-col bg-slate-50">
@@ -176,7 +176,7 @@ export default function AdminLiveChatPage() {
         </div>
         <div className="flex-1 overflow-y-auto">
           {sessions.length === 0 ? (
-            <div className="p-8 text-center text-slate-500">
+            <div className="p-8 text-center text-slate-600">
               Không có yêu cầu hỗ trợ nào.
             </div>
           ) : (
@@ -192,7 +192,7 @@ export default function AdminLiveChatPage() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="font-medium text-slate-900 truncate">{s.userFullName || s.userEmail || 'Khách hàng'}</p>
-                      <p className="text-xs text-slate-500 flex items-center gap-1 mt-1">
+                      <p className="text-xs text-slate-600 flex items-center gap-1 mt-1">
                         <Clock size={12} />
                         {new Date(s.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </p>
@@ -225,7 +225,7 @@ export default function AdminLiveChatPage() {
               </div>
               <button 
                 onClick={() => handleCloseSession(selectedSession.id)}
-                className="flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm font-medium transition-colors"
+                className="flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-sm text-sm font-medium transition-colors"
               >
                 <CheckCircle size={16} />
                 Đóng phiên
@@ -241,7 +241,7 @@ export default function AdminLiveChatPage() {
                   const isMine = adminId ? normalizeId(msg.senderId) === normalizeId(adminId) : false;
                   return (
                     <div key={msg.id} className={`flex flex-col max-w-[70%] ${isMine ? 'self-end items-end' : 'self-start items-start'}`}>
-                      <div className={`px-4 py-2.5 rounded-2xl text-[15px] ${isMine ? 'bg-emerald-500 text-white rounded-tr-sm' : 'bg-white border border-slate-200 text-slate-800 rounded-tl-sm shadow-sm'}`}>
+                      <div className={`px-4 py-2.5 rounded-md text-[15px] ${isMine ? 'bg-emerald-500 text-white rounded-tr-sm' : 'bg-white border border-slate-200 text-slate-800 rounded-tl-sm shadow-sm'}`}>
                         {msg.message}
                       </div>
                       <span className="text-[11px] text-slate-600 mt-1.5 px-1">
@@ -259,7 +259,7 @@ export default function AdminLiveChatPage() {
               <form onSubmit={handleSendMessage} className="flex gap-3">
                 <input 
                   type="text" 
-                  className="flex-1 bg-slate-50 text-slate-800 rounded-xl px-5 py-3 border border-slate-200 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
+                  className="flex-1 bg-slate-50 text-slate-800 rounded px-5 py-3 border border-slate-200 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
                   placeholder="Nhập câu trả lời..." 
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
@@ -267,7 +267,7 @@ export default function AdminLiveChatPage() {
                 <button 
                   type="submit" 
                   disabled={!inputValue.trim()}
-                  className="bg-emerald-500 text-white px-6 rounded-xl font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-emerald-600 transition-colors flex items-center gap-2 shadow-sm shadow-emerald-200"
+                  className="bg-emerald-500 text-white px-6 rounded font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-emerald-600 transition-colors flex items-center gap-2 shadow-sm shadow-emerald-200"
                 >
                   <Send size={18} />
                   Gửi

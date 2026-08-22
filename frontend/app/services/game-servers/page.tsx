@@ -229,7 +229,7 @@ export default function GameServersServicePage() {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           {/* Status Bar */}
-          <div className="flex flex-wrap items-center justify-between gap-4 p-3.5 mb-10 rounded-2xl bg-[#0d1424] border border-slate-200 text-xs font-mono">
+          <div className="flex flex-wrap items-center justify-between gap-4 p-3.5 mb-10 rounded-md bg-[#0d1424] border border-slate-200 text-xs font-mono">
             <div className="flex items-center gap-3">
               <span className="flex items-center gap-1.5 text-emerald-400 font-bold">
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
@@ -252,7 +252,7 @@ export default function GameServersServicePage() {
             
             {/* Left Headline */}
             <div className="lg:col-span-7 space-y-6">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-amber-950/60 border border-amber-800/60 text-amber-300 text-xs font-mono">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm bg-amber-950/60 border border-amber-800/60 text-amber-300 text-xs font-mono">
                 <Gamepad2 className="w-3.5 h-3.5 text-amber-400" />
                 HIGH-TICKRATE DEDICATED GAME SERVERS
               </div>
@@ -282,14 +282,14 @@ export default function GameServersServicePage() {
                       <button
                         key={gKey}
                         onClick={() => setSelectedGame(gKey)}
-                        className={`p-3.5 rounded-xl border text-left transition-all flex items-center gap-3.5 ${
+                        className={`p-3.5 rounded border text-left transition-all flex items-center gap-3.5 ${
                           active
                             ? 'bg-[#131d31] border-amber-500 shadow-lg shadow-amber-500/10'
                             : 'bg-[#0e1626] border-slate-800 hover:border-slate-700 text-slate-400'
                         }`}
                       >
                         <div 
-                          className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 border"
+                          className="w-9 h-9 rounded-sm flex items-center justify-center shrink-0 border"
                           style={{ 
                             backgroundColor: active ? '#0b1322' : '#0a0f1a',
                             borderColor: active ? g.color : '#1e293b' 
@@ -312,7 +312,7 @@ export default function GameServersServicePage() {
               </div>
 
               {/* Engine Spec Details */}
-              <div className="p-4 rounded-xl bg-white border border-slate-200 text-xs font-mono space-y-2">
+              <div className="p-4 rounded bg-white border border-slate-200 text-xs font-mono space-y-2">
                 <div className="flex items-center justify-between text-slate-600">
                   <span>Selected Engine: <strong className="text-slate-900">{currentGame.name}</strong></span>
                   <span>Port: <strong className="text-amber-400">{currentGame.port}</strong></span>
@@ -326,7 +326,7 @@ export default function GameServersServicePage() {
 
             {/* Right Telemetry Monitor */}
             <div className="lg:col-span-5">
-              <div className="rounded-2xl bg-[#0b1320] border border-slate-200 p-6 shadow-2xl space-y-5">
+              <div className="rounded-md bg-[#0b1320] border border-slate-200 p-6 shadow-2xl space-y-5">
                 <div className="flex items-center justify-between pb-3 border-b border-slate-200">
                   <div className="flex items-center gap-2">
                     <span className="w-3 h-3 rounded-full bg-rose-500/80" />
@@ -340,28 +340,28 @@ export default function GameServersServicePage() {
                 </div>
 
                 <div className="grid grid-cols-2 gap-3 font-mono">
-                  <div className="p-3 rounded-xl bg-[#0e1627] border border-slate-200">
-                    <div className="text-[10px] text-slate-500 uppercase">Tick Rate / TPS</div>
+                  <div className="p-3 rounded bg-[#0e1627] border border-slate-200">
+                    <div className="text-[10px] text-slate-600 uppercase">Tick Rate / TPS</div>
                     <div className="text-base font-extrabold text-emerald-400 mt-0.5">20.0 / 20.0</div>
-                    <div className="text-[10px] text-slate-500">Tick Duration: 12.4ms</div>
+                    <div className="text-[10px] text-slate-600">Tick Duration: 12.4ms</div>
                   </div>
 
-                  <div className="p-3 rounded-xl bg-[#0e1627] border border-slate-200">
-                    <div className="text-[10px] text-slate-500 uppercase">Domestic Ping</div>
+                  <div className="p-3 rounded bg-[#0e1627] border border-slate-200">
+                    <div className="text-[10px] text-slate-600 uppercase">Domestic Ping</div>
                     <div className="text-base font-extrabold text-slate-200 mt-0.5">&lt; 6.5 ms</div>
-                    <div className="text-[10px] text-slate-500">Viettel / VNPT / FPT</div>
+                    <div className="text-[10px] text-slate-600">Viettel / VNPT / FPT</div>
                   </div>
                 </div>
 
                 <div className="space-y-2 font-mono text-xs">
-                  <div className="text-slate-500">// Live DDoS Filtering Telemetry</div>
-                  <div className="p-3 rounded-xl bg-slate-100 border border-slate-200 text-slate-700 space-y-1.5 text-[11px]">
+                  <div className="text-slate-600">// Live DDoS Filtering Telemetry</div>
+                  <div className="p-3 rounded bg-slate-100 border border-slate-200 text-slate-700 space-y-1.5 text-[11px]">
                     <div className="flex justify-between">
-                      <span className="text-slate-500">UDP Flood Filter:</span>
+                      <span className="text-slate-600">UDP Flood Filter:</span>
                       <span className="text-emerald-400 font-bold">ARMED (0 packet loss)</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-slate-500">Garbage Collector:</span>
+                      <span className="text-slate-600">Garbage Collector:</span>
                       <span className="text-slate-200 font-bold">ZGC (Pause &lt; 0.2ms)</span>
                     </div>
                   </div>
@@ -370,7 +370,7 @@ export default function GameServersServicePage() {
                 <div className="pt-2">
                   <a
                     href="#spec-matrix"
-                    className="w-full py-3.5 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs font-mono flex items-center justify-center gap-2 transition-all shadow-lg shadow-amber-600/20"
+                    className="w-full py-3.5 rounded bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs font-mono flex items-center justify-center gap-2 transition-all shadow-lg shadow-amber-600/20"
                   >
                     <span>XEM BẢNG CẤU HÌNH VÀ BÁO GIÁ</span>
                     <ArrowRight className="w-4 h-4" />
@@ -389,7 +389,7 @@ export default function GameServersServicePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-amber-950 text-amber-400 text-xs font-mono mb-3 border border-amber-800">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm bg-amber-950 text-amber-400 text-xs font-mono mb-3 border border-amber-800">
               <Flame className="w-3.5 h-3.5" />
               ULTRA LOW-LATENCY INFRASTRUCTURE
             </div>
@@ -404,10 +404,10 @@ export default function GameServersServicePage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             
             {/* Schematic 1: AMD Ryzen 5.7GHz Single-Core */}
-            <div className="p-6 rounded-3xl bg-white border border-slate-200 flex flex-col justify-between space-y-6">
+            <div className="p-6 rounded-lg bg-white border border-slate-200 flex flex-col justify-between space-y-6">
               <div>
-                <div className="p-4 rounded-2xl bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
-                  <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
+                <div className="p-4 rounded-md bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
+                  <div className="text-[10px] text-slate-600 uppercase mb-3 flex items-center justify-between">
                     <span>ZEN 4 5.7GHZ BOOST</span>
                     <span className="text-amber-400">TPS 20.0</span>
                   </div>
@@ -441,10 +441,10 @@ export default function GameServersServicePage() {
             </div>
 
             {/* Schematic 2: 500Gbps Game Anti-DDoS */}
-            <div className="p-6 rounded-3xl bg-white border border-slate-200 flex flex-col justify-between space-y-6">
+            <div className="p-6 rounded-lg bg-white border border-slate-200 flex flex-col justify-between space-y-6">
               <div>
-                <div className="p-4 rounded-2xl bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
-                  <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
+                <div className="p-4 rounded-md bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
+                  <div className="text-[10px] text-slate-600 uppercase mb-3 flex items-center justify-between">
                     <span>CORERO SMARTWALL FILTER</span>
                     <span className="text-slate-200">500GBPS L3-L7</span>
                   </div>
@@ -478,10 +478,10 @@ export default function GameServersServicePage() {
             </div>
 
             {/* Schematic 3: 1-Click Game Management Console */}
-            <div className="p-6 rounded-3xl bg-white border border-slate-200 flex flex-col justify-between space-y-6">
+            <div className="p-6 rounded-lg bg-white border border-slate-200 flex flex-col justify-between space-y-6">
               <div>
-                <div className="p-4 rounded-2xl bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
-                  <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
+                <div className="p-4 rounded-md bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
+                  <div className="text-[10px] text-slate-600 uppercase mb-3 flex items-center justify-between">
                     <span>WEB CONSOLE &amp; MODPACK</span>
                     <span className="text-emerald-400">AUTO-DEPLOY</span>
                   </div>
@@ -523,7 +523,7 @@ export default function GameServersServicePage() {
       <section className="py-24 bg-slate-50 border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-emerald-950 text-emerald-400 text-xs font-mono mb-3 border border-emerald-800">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm bg-emerald-950 text-emerald-400 text-xs font-mono mb-3 border border-emerald-800">
               <Activity className="w-3.5 h-3.5" />
               REGIONAL PING &amp; PACKET TELEMETRY
             </div>
@@ -538,7 +538,7 @@ export default function GameServersServicePage() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             {/* Left: Interactive Regional Latency Grid */}
             <div className="lg:col-span-7 space-y-4 font-mono">
-              <div className="p-6 rounded-2xl bg-white border border-slate-200 space-y-4">
+              <div className="p-6 rounded-md bg-white border border-slate-200 space-y-4">
                 <div className="text-xs text-slate-600 uppercase tracking-wider flex items-center justify-between pb-3 border-b border-slate-200">
                   <span>VÙNG KẾT NỐI (POP LOCATION)</span>
                   <span>PING THỜI GIAN THỰC</span>
@@ -552,7 +552,7 @@ export default function GameServersServicePage() {
                   { region: 'Bangkok, Thái Lan', ping: '26.8 ms', status: 'TỐT', color: 'text-slate-200', bar: 'w-[65%]', bg: 'bg-sky-500' },
                   { region: 'Hong Kong & Tokyo, Nhật Bản', ping: '38.5 ms', status: 'ỔN ĐỊNH', color: 'text-amber-400', bar: 'w-[52%]', bg: 'bg-amber-500' },
                 ].map((item, i) => (
-                  <div key={i} className="p-3.5 rounded-xl bg-slate-100 border border-slate-200 space-y-2">
+                  <div key={i} className="p-3.5 rounded bg-slate-100 border border-slate-200 space-y-2">
                     <div className="flex items-center justify-between text-xs">
                       <div className="flex items-center gap-2">
                         <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
@@ -576,33 +576,33 @@ export default function GameServersServicePage() {
 
             {/* Right: Network Quality Metrics Card */}
             <div className="lg:col-span-5 space-y-6">
-              <div className="p-8 rounded-3xl bg-white border border-emerald-500/40 shadow-2xl space-y-6 font-mono">
+              <div className="p-8 rounded-lg bg-white border border-emerald-500/40 shadow-2xl space-y-6 font-mono">
                 <div className="flex items-center justify-between pb-4 border-b border-slate-200">
                   <div>
-                    <div className="text-xs text-slate-500 uppercase">TIÊU CHUẨN MẠNG ESPORTS</div>
+                    <div className="text-xs text-slate-600 uppercase">TIÊU CHUẨN MẠNG ESPORTS</div>
                     <div className="text-lg font-black text-slate-900 mt-0.5">SEN CLOUD BONE (VNIX 100G)</div>
                   </div>
                   <div className="w-3 h-3 rounded-full bg-emerald-400 shadow-md shadow-emerald-400/50" />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 text-xs">
-                  <div className="p-4 rounded-xl bg-slate-100 border border-slate-200">
-                    <div className="text-slate-500 text-[10px]">TỶ LỆ RỚT GÓI (PACKET LOSS)</div>
+                  <div className="p-4 rounded bg-slate-100 border border-slate-200">
+                    <div className="text-slate-600 text-[10px]">TỶ LỆ RỚT GÓI (PACKET LOSS)</div>
                     <div className="text-xl font-black text-emerald-400 mt-1">0.00 %</div>
                     <div className="text-[10px] text-slate-600 mt-0.5">Chuẩn cáp quang Tier-1</div>
                   </div>
-                  <div className="p-4 rounded-xl bg-slate-100 border border-slate-200">
-                    <div className="text-slate-500 text-[10px]">ĐỘ BIẾN THIÊN (JITTER)</div>
+                  <div className="p-4 rounded bg-slate-100 border border-slate-200">
+                    <div className="text-slate-600 text-[10px]">ĐỘ BIẾN THIÊN (JITTER)</div>
                     <div className="text-xl font-black text-slate-200 mt-1">&lt; 0.2 ms</div>
                     <div className="text-[10px] text-slate-600 mt-0.5">Không giật hình / lag</div>
                   </div>
-                  <div className="p-4 rounded-xl bg-slate-100 border border-slate-200">
-                    <div className="text-slate-500 text-[10px]">BĂNG THÔNG NỘI ĐỊA</div>
+                  <div className="p-4 rounded bg-slate-100 border border-slate-200">
+                    <div className="text-slate-600 text-[10px]">BĂNG THÔNG NỘI ĐỊA</div>
                     <div className="text-xl font-black text-amber-400 mt-1">1,000 Mbps</div>
                     <div className="text-[10px] text-slate-600 mt-0.5">Không giới hạn Traffic</div>
                   </div>
-                  <div className="p-4 rounded-xl bg-slate-100 border border-slate-200">
-                    <div className="text-slate-500 text-[10px]">THỜI GIAN PHẢN ỨNG DDoS</div>
+                  <div className="p-4 rounded bg-slate-100 border border-slate-200">
+                    <div className="text-slate-600 text-[10px]">THỜI GIAN PHẢN ỨNG DDoS</div>
                     <div className="text-xl font-black text-purple-400 mt-1">&lt; 1.0 Giây</div>
                     <div className="text-[10px] text-slate-600 mt-0.5">Tự động kích hoạt lọc</div>
                   </div>
@@ -624,7 +624,7 @@ export default function GameServersServicePage() {
           
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
             <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-amber-950 text-amber-400 text-xs font-mono mb-3 border border-amber-800">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm bg-amber-950 text-amber-400 text-xs font-mono mb-3 border border-amber-800">
                 <Sliders className="w-3.5 h-3.5" />
                 GAME INFRASTRUCTURE SPEC SHEET
               </div>
@@ -637,10 +637,10 @@ export default function GameServersServicePage() {
             </div>
 
             {/* Billing Switch */}
-            <div className="inline-flex items-center p-1 rounded-xl bg-white border border-slate-200 font-mono text-xs">
+            <div className="inline-flex items-center p-1 rounded bg-white border border-slate-200 font-mono text-xs">
               <button
                 onClick={() => setBillingCycle('monthly')}
-                className={`px-4 py-2 rounded-lg font-bold transition-all ${
+                className={`px-4 py-2 rounded-sm font-bold transition-all ${
                   billingCycle === 'monthly'
                     ? 'bg-amber-600 text-white shadow'
                     : 'text-slate-400 hover:text-white'
@@ -650,7 +650,7 @@ export default function GameServersServicePage() {
               </button>
               <button
                 onClick={() => setBillingCycle('yearly')}
-                className={`px-4 py-2 rounded-lg font-bold transition-all flex items-center gap-1.5 ${
+                className={`px-4 py-2 rounded-sm font-bold transition-all flex items-center gap-1.5 ${
                   billingCycle === 'yearly'
                     ? 'bg-amber-600 text-white shadow'
                     : 'text-slate-400 hover:text-white'
@@ -665,7 +665,7 @@ export default function GameServersServicePage() {
           </div>
 
           {/* Matrix Table */}
-          <div className="rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-2xl">
+          <div className="rounded-md border border-slate-200 bg-white overflow-hidden shadow-2xl">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs font-mono">
                 <thead>
@@ -734,7 +734,7 @@ export default function GameServersServicePage() {
                       <td key={p.id} className="p-5 border-l border-slate-200/60">
                         <button
                           onClick={() => handleOrder(p)}
-                          className={`w-full py-3 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-2 ${
+                          className={`w-full py-3 rounded font-bold text-xs transition-all flex items-center justify-center gap-2 ${
                             p.popular
                               ? 'bg-amber-600 hover:bg-amber-500 text-white shadow-lg shadow-amber-600/30'
                               : 'bg-slate-800 hover:bg-slate-700 text-white'
@@ -766,7 +766,7 @@ export default function GameServersServicePage() {
             {faqs.map((faq, idx) => (
               <div
                 key={idx}
-                className="bg-white rounded-2xl border border-slate-200 overflow-hidden transition-all"
+                className="bg-white rounded-md border border-slate-200 overflow-hidden transition-all"
               >
                 <button
                   onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
@@ -776,7 +776,7 @@ export default function GameServersServicePage() {
                   {openFaq === idx ? (
                     <ChevronUp className="w-5 h-5 text-amber-400 shrink-0" />
                   ) : (
-                    <ChevronDown className="w-5 h-5 text-slate-500 shrink-0" />
+                    <ChevronDown className="w-5 h-5 text-slate-600 shrink-0" />
                   )}
                 </button>
                 {openFaq === idx && (
@@ -792,9 +792,9 @@ export default function GameServersServicePage() {
 
       {/* 5. CALL TO ACTION */}
       <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="rounded-3xl bg-gradient-to-r from-[#1f1408] via-[#140c04] to-[#1f1408] p-8 sm:p-12 border border-amber-600/30 text-center relative overflow-hidden shadow-2xl">
+        <div className="rounded-lg bg-gradient-to-r from-[#1f1408] via-[#140c04] to-[#1f1408] p-8 sm:p-12 border border-amber-600/30 text-center relative overflow-hidden shadow-2xl">
           <div className="relative z-10 max-w-3xl mx-auto space-y-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-amber-950 border border-amber-800 text-amber-400 text-xs font-mono">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm bg-amber-950 border border-amber-800 text-amber-400 text-xs font-mono">
               <Zap className="w-3.5 h-3.5" />
               DEPLOY IN 60 SECONDS
             </div>
@@ -813,13 +813,13 @@ export default function GameServersServicePage() {
                   const el = document.getElementById('spec-matrix');
                   el?.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className="px-8 py-3.5 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs font-mono shadow-xl shadow-amber-600/25 transition-all hover:scale-105"
+                className="px-8 py-3.5 rounded bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs font-mono shadow-xl shadow-amber-600/25 transition-all hover:scale-105"
               >
                 Khởi Tạo Game Server Ngay
               </button>
               <Link
                 href="/contact"
-                className="px-8 py-3.5 rounded-xl bg-white hover:bg-slate-200 text-slate-900 font-bold text-xs font-mono border border-slate-300 transition-all"
+                className="px-8 py-3.5 rounded bg-white hover:bg-slate-200 text-slate-900 font-bold text-xs font-mono border border-slate-300 transition-all"
               >
                 Tư Vấn Cụm Game Lớn
               </Link>

@@ -55,7 +55,7 @@ export default function CartPage() {
     return (
       <div className="py-24 flex flex-col items-center justify-center">
         <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-4" />
-        <p className="text-slate-500 font-medium text-sm">Đang tải giỏ hàng...</p>
+        <p className="text-slate-600 font-medium text-sm">Đang tải giỏ hàng...</p>
       </div>
     );
   }
@@ -72,12 +72,12 @@ export default function CartPage() {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <h1 className="text-3xl font-black text-slate-900 tracking-tight">Giỏ hàng của bạn</h1>
-              <p className="text-slate-500 text-sm mt-0.5">
+              <p className="text-slate-600 text-sm mt-0.5">
                 {cartItems.length > 0 ? `${cartItems.length} dịch vụ đang chờ thanh toán` : 'Giỏ hàng đang trống'}
               </p>
             </div>
             {isLoggedIn && (
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-700 text-xs font-semibold">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-emerald-50 border border-emerald-200 rounded text-emerald-700 text-xs font-semibold">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600" />
                 Đã đăng nhập tài khoản CloudHost
               </div>
@@ -87,9 +87,9 @@ export default function CartPage() {
 
         {/* Guest Reminder Banner (When not logged in) */}
         {!isLoggedIn && cartItems.length > 0 && (
-          <div className="mb-8 p-5 bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 rounded-2xl border border-blue-800 text-slate-900 shadow-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div className="mb-8 p-5 bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 rounded-md border border-blue-800 text-slate-900 shadow-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div className="flex items-start gap-3.5">
-              <div className="p-2.5 bg-blue-600/30 border border-blue-500/40 rounded-xl text-slate-200 shrink-0">
+              <div className="p-2.5 bg-blue-600/30 border border-blue-500/40 rounded text-slate-700 shrink-0">
                 <LogIn className="w-6 h-6" />
               </div>
               <div>
@@ -99,7 +99,7 @@ export default function CartPage() {
                     Chưa đăng nhập
                   </span>
                 </h3>
-                <p className="text-xs text-slate-200 mt-1 max-w-xl leading-relaxed">
+                <p className="text-xs text-slate-700 mt-1 max-w-xl leading-relaxed">
                   Đăng nhập hoặc đăng ký để hệ thống tự động lưu giỏ hàng của bạn, áp dụng chiết khấu thành viên và kích hoạt dịch vụ Cloud VPS / Hosting tức thì sau khi thanh toán.
                 </p>
               </div>
@@ -107,13 +107,13 @@ export default function CartPage() {
             <div className="flex items-center gap-2.5 w-full md:w-auto shrink-0">
               <button
                 onClick={() => handleOpenAuth('login')}
-                className="flex-1 md:flex-initial px-4 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs rounded-xl shadow transition-all flex items-center justify-center gap-1.5"
+                className="flex-1 md:flex-initial px-4 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs rounded shadow transition-all flex items-center justify-center gap-1.5"
               >
                 <LogIn className="w-4 h-4" /> Đăng Nhập
               </button>
               <button
                 onClick={() => handleOpenAuth('register')}
-                className="flex-1 md:flex-initial px-4 py-2.5 bg-white hover:bg-slate-200 text-slate-900 font-semibold text-xs rounded-xl border border-slate-300 transition-all"
+                className="flex-1 md:flex-initial px-4 py-2.5 bg-white hover:bg-slate-200 text-slate-900 font-semibold text-xs rounded border border-slate-300 transition-all"
               >
                 Đăng Ký
               </button>
@@ -122,17 +122,17 @@ export default function CartPage() {
         )}
 
         {cartItems.length === 0 ? (
-          <div className="text-center py-20 bg-white rounded-3xl border border-slate-200 shadow-sm">
-            <div className="w-20 h-20 rounded-2xl bg-blue-50 text-[#1F1F1F] flex items-center justify-center mx-auto mb-4">
+          <div className="text-center py-20 bg-white rounded-lg border border-slate-200 shadow-sm">
+            <div className="w-20 h-20 rounded-md bg-blue-50 text-[#1F1F1F] flex items-center justify-center mx-auto mb-4">
               <ShoppingCart className="w-10 h-10" />
             </div>
             <h2 className="text-2xl font-black text-slate-900 mb-2">Giỏ hàng của bạn đang trống</h2>
-            <p className="text-slate-500 text-sm max-w-md mx-auto mb-6">
+            <p className="text-slate-600 text-sm max-w-md mx-auto mb-6">
               Bạn chưa có dịch vụ nào trong giỏ. Hãy khám phá các gói Cloud VPS thế hệ mới hoặc NVMe Hosting hiệu năng cao của chúng tôi.
             </p>
             <Link
               href="/services"
-              className="inline-flex items-center gap-2 px-8 py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg shadow-blue-500/25 transition-all text-sm"
+              className="inline-flex items-center gap-2 px-8 py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded shadow-lg shadow-blue-500/25 transition-all text-sm"
             >
               Khám Phá Bảng Giá Dịch Vụ
               <ArrowRight className="w-4 h-4" />
@@ -144,9 +144,9 @@ export default function CartPage() {
             {/* Cart Items List */}
             <div className="lg:col-span-2 space-y-4">
               {cartItems.map((item) => (
-                <div key={item.id} className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm hover:shadow transition-all">
+                <div key={item.id} className="bg-white rounded-md p-6 border border-slate-200/80 shadow-sm hover:shadow transition-all">
                   <div className="flex items-start gap-4">
-                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-600 via-indigo-600 to-cyan-500 flex items-center justify-center text-slate-900 font-black text-xl shadow-md shrink-0">
+                    <div className="w-14 h-14 rounded-md bg-gradient-to-br from-blue-600 via-indigo-600 to-cyan-500 flex items-center justify-center text-slate-900 font-black text-xl shadow-md shrink-0">
                       {(item.title || item.name || 'C')[0]?.toUpperCase()}
                     </div>
                     
@@ -163,7 +163,7 @@ export default function CartPage() {
                             </span>
                           </div>
                           <h3 className="text-base font-bold text-slate-900">{item.title || item.name}</h3>
-                          <p className="text-xs text-slate-500 mt-1">{item.details || 'Cấu hình tiêu chuẩn'}</p>
+                          <p className="text-xs text-slate-600 mt-1">{item.details || 'Cấu hình tiêu chuẩn'}</p>
                           <p className="text-xs text-slate-600 mt-1">
                             Chu kỳ: <span className="font-semibold text-slate-700">{item.billingCycle}{typeof item.billingCycle === 'number' ? ' tháng' : ''}</span>
                           </p>
@@ -172,7 +172,7 @@ export default function CartPage() {
                         <div className="text-right flex flex-col items-end gap-3 shrink-0">
                           <button
                             onClick={() => removeItem(item.id)}
-                            className="p-2 text-slate-600 hover:text-red-500 hover:bg-red-50 rounded-xl transition-colors"
+                            className="p-2 text-slate-600 hover:text-red-500 hover:bg-red-50 rounded transition-colors"
                             title="Xóa dịch vụ"
                           >
                             <Trash2 className="w-4 h-4" />
@@ -182,7 +182,7 @@ export default function CartPage() {
                               {(item.price * (item.quantity || 1)).toLocaleString('vi-VN')} đ
                             </div>
                             {(item.quantity && item.quantity > 1) ? (
-                              <div className="text-xs text-slate-500 font-medium mt-1">
+                              <div className="text-xs text-slate-600 font-medium mt-1">
                                 {item.quantity} x {item.price.toLocaleString('vi-VN')} đ
                               </div>
                             ) : null}
@@ -197,7 +197,7 @@ export default function CartPage() {
 
             {/* Order Summary Sidebar */}
             <div className="lg:col-span-1">
-              <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-md sticky top-24">
+              <div className="bg-white rounded-lg p-6 border border-slate-200/80 shadow-md sticky top-24">
                 <h2 className="text-lg font-black text-slate-900 mb-4 pb-3 border-b border-slate-100">
                   Tóm Tắt Đơn Hàng
                 </h2>
@@ -214,7 +214,7 @@ export default function CartPage() {
                 {/* Price Breakdown */}
                 <div className="space-y-3 mb-6">
                   <div className="flex justify-between text-sm">
-                    <span className="text-slate-500">Tạm tính:</span>
+                    <span className="text-slate-600">Tạm tính:</span>
                     <span className="font-semibold text-slate-800">{subtotal.toLocaleString('vi-VN')} đ</span>
                   </div>
                   
@@ -226,7 +226,7 @@ export default function CartPage() {
                   )}
                   
                   <div className="flex justify-between text-sm">
-                    <span className="text-slate-500">Thuế GTGT (VAT 8%):</span>
+                    <span className="text-slate-600">Thuế GTGT (VAT 8%):</span>
                     <span className="font-semibold text-slate-800">{tax.toLocaleString('vi-VN')} đ</span>
                   </div>
                   
@@ -241,7 +241,7 @@ export default function CartPage() {
                 {/* Checkout Button */}
                 <button
                   onClick={handleCheckout}
-                  className="w-full py-4 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-slate-900 font-extrabold text-base shadow-xl shadow-blue-500/25 hover:shadow-blue-500/40 transition-all flex items-center justify-center gap-2 group cursor-pointer"
+                  className="w-full py-4 rounded-md bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-slate-900 font-extrabold text-base shadow-xl shadow-blue-500/25 hover:shadow-blue-500/40 transition-all flex items-center justify-center gap-2 group cursor-pointer"
                 >
                   <span>{isLoggedIn ? 'Tiến Hành Thanh Toán' : 'Đăng Nhập Để Thanh Toán'}</span>
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -256,11 +256,11 @@ export default function CartPage() {
 
                 {/* Security badges */}
                 <div className="mt-6 pt-4 border-t border-slate-100 space-y-2.5">
-                  <div className="flex items-center gap-2 text-xs text-slate-500 font-medium">
+                  <div className="flex items-center gap-2 text-xs text-slate-600 font-medium">
                     <ShieldCheck className="w-4 h-4 text-emerald-500 shrink-0" />
                     <span>Bảo mật chuẩn mã hóa SSL 256-bit</span>
                   </div>
-                  <div className="flex items-center gap-2 text-xs text-slate-500 font-medium">
+                  <div className="flex items-center gap-2 text-xs text-slate-600 font-medium">
                     <Clock className="w-4 h-4 text-[#1F1F1F] shrink-0" />
                     <span>Kích hoạt Cloud tự động trong 30 giây</span>
                   </div>

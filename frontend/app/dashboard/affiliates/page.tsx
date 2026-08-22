@@ -117,7 +117,7 @@ export default function AffiliatesPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         
         {/* Your Referral Code */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <div className="bg-white rounded shadow-sm border border-gray-100 p-6">
           <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2 mb-4">
             <LinkIcon className="w-5 h-5 text-[#1F1F1F]" />
             Mã Giới Thiệu Của Bạn
@@ -127,7 +127,7 @@ export default function AffiliatesPage() {
           </p>
           
           <div className="flex items-center gap-3">
-            <div className="flex-1 bg-gray-50 border border-gray-200 rounded-lg p-3 text-center">
+            <div className="flex-1 bg-gray-50 border border-gray-200 rounded-sm p-3 text-center">
               <span className="font-mono text-xl font-bold tracking-wider text-[#1F1F1F]">
                 {myReferralCode || '----'}
               </span>
@@ -135,7 +135,7 @@ export default function AffiliatesPage() {
             <button
               onClick={handleCopyCode}
               disabled={!myReferralCode}
-              className={`p-3 rounded-lg transition-colors flex items-center justify-center shrink-0 ${
+              className={`p-3 rounded-sm transition-colors flex items-center justify-center shrink-0 ${
                 copied ? 'bg-green-100 text-green-700' : 'bg-indigo-50 text-[#1F1F1F] hover:bg-indigo-100'
               }`}
               title="Sao chép"
@@ -151,7 +151,7 @@ export default function AffiliatesPage() {
         </div>
 
         {/* Apply Referral Code */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <div className="bg-white rounded shadow-sm border border-gray-100 p-6">
           <h2 className="text-lg font-bold text-gray-900 mb-4">Nhập Mã Giới Thiệu</h2>
           <p className="text-sm text-gray-500 mb-6">
             Bạn có mã giới thiệu từ người khác? Hãy nhập vào đây để nhận ưu đãi ngay lập tức.
@@ -165,18 +165,18 @@ export default function AffiliatesPage() {
                 value={applyCode}
                 onChange={(e) => setApplyCode(e.target.value)}
                 placeholder="Ví dụ: REF-ABCDEF"
-                className="flex-1 border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 font-mono uppercase"
+                className="flex-1 border border-gray-300 rounded-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 font-mono uppercase"
               />
               <button
                 type="submit"
                 disabled={!applyCode.trim()}
-                className="bg-white hover:bg-gray-800 text-slate-900 px-6 py-2.5 rounded-lg font-medium transition-colors disabled:opacity-50"
+                className="bg-white hover:bg-gray-800 text-slate-900 px-6 py-2.5 rounded-sm font-medium transition-colors disabled:opacity-50"
               >
                 Áp dụng
               </button>
             </div>
             {applyStatus && (
-              <div className={`p-3 rounded-lg text-sm flex items-start gap-2 ${
+              <div className={`p-3 rounded-sm text-sm flex items-start gap-2 ${
                 applyStatus.type === 'success' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'
               }`}>
                 {applyStatus.type === 'success' ? <CheckCircle2 className="w-5 h-5 shrink-0" /> : <AlertCircle className="w-5 h-5 shrink-0" />}
@@ -189,24 +189,24 @@ export default function AffiliatesPage() {
       </div>
 
       {/* Affiliate Application */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 md:p-8 mt-8">
+      <div className="bg-white rounded shadow-sm border border-gray-100 p-6 md:p-8 mt-8">
         <h2 className="text-xl font-bold text-gray-900 mb-2">Chương trình Đối tác Affiliate</h2>
         
         {application && application.status === 'Approved' ? (
-          <div className="bg-green-50 border border-green-200 rounded-xl p-6 mt-6 flex items-start gap-4">
+          <div className="bg-green-50 border border-green-200 rounded p-6 mt-6 flex items-start gap-4">
             <div className="bg-green-100 p-3 rounded-full text-green-600 shrink-0">
               <CheckCircle2 className="w-8 h-8" />
             </div>
             <div>
               <h3 className="text-lg font-bold text-green-900 mb-1">Bạn đã là Đối tác chính thức!</h3>
               <p className="text-green-800 mb-2">Đơn đăng ký cho công ty <strong>{application.companyName}</strong> đã được phê duyệt.</p>
-              <div className="inline-flex items-center gap-2 bg-white px-3 py-1.5 rounded-lg border border-green-200 font-medium text-green-700 text-sm">
+              <div className="inline-flex items-center gap-2 bg-white px-3 py-1.5 rounded-sm border border-green-200 font-medium text-green-700 text-sm">
                 Mức hoa hồng của bạn: <span className="text-xl">{application.commissionRate}%</span>
               </div>
             </div>
           </div>
         ) : application && application.status === 'Pending' ? (
-          <div className="bg-amber-50 border border-amber-200 rounded-xl p-6 mt-6 flex items-start gap-4">
+          <div className="bg-amber-50 border border-amber-200 rounded p-6 mt-6 flex items-start gap-4">
             <div className="bg-amber-100 p-3 rounded-full text-amber-600 shrink-0">
               <Clock className="w-8 h-8" />
             </div>
@@ -224,13 +224,13 @@ export default function AffiliatesPage() {
             </p>
             
             {application && application.status === 'Rejected' && (
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6 flex items-center gap-3 text-red-800">
+              <div className="bg-red-50 border border-red-200 rounded-sm p-4 mb-6 flex items-center gap-3 text-red-800">
                 <XCircle className="w-5 h-5 shrink-0 text-red-600" />
                 Đơn đăng ký trước đó của bạn đã bị từ chối. Bạn có thể thử gửi lại thông tin mới bên dưới.
               </div>
             )}
 
-            <form onSubmit={handleApplyAffiliate} className="max-w-xl space-y-5 bg-gray-50 p-6 rounded-xl border border-gray-100">
+            <form onSubmit={handleApplyAffiliate} className="max-w-xl space-y-5 bg-gray-50 p-6 rounded border border-gray-100">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Tên Công ty / Tổ chức của bạn *</label>
                 <input
@@ -239,7 +239,7 @@ export default function AffiliatesPage() {
                   value={companyName}
                   onChange={(e) => setCompanyName(e.target.value)}
                   placeholder="Nhập tên thương hiệu, website hoặc tổ chức"
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="w-full border border-gray-300 rounded-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                 />
               </div>
               
@@ -253,9 +253,9 @@ export default function AffiliatesPage() {
                     step="5"
                     value={commissionRate}
                     onChange={(e) => setCommissionRate(Number(e.target.value))}
-                    className="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+                    className="flex-1 h-2 bg-gray-200 rounded-sm appearance-none cursor-pointer accent-indigo-600"
                   />
-                  <div className="w-16 text-center font-bold text-lg text-[#1F1F1F] bg-white border border-gray-200 rounded-lg py-1">
+                  <div className="w-16 text-center font-bold text-lg text-[#1F1F1F] bg-white border border-gray-200 rounded-sm py-1">
                     {commissionRate}%
                   </div>
                 </div>
@@ -263,7 +263,7 @@ export default function AffiliatesPage() {
               </div>
 
               {appStatus && (
-                <div className={`p-3 rounded-lg text-sm flex items-start gap-2 ${
+                <div className={`p-3 rounded-sm text-sm flex items-start gap-2 ${
                   appStatus.type === 'success' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'
                 }`}>
                   {appStatus.type === 'success' ? <CheckCircle2 className="w-5 h-5 shrink-0" /> : <AlertCircle className="w-5 h-5 shrink-0" />}
@@ -273,7 +273,7 @@ export default function AffiliatesPage() {
 
               <button
                 type="submit"
-                className="w-full bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg font-medium transition-colors mt-4"
+                className="w-full bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-sm font-medium transition-colors mt-4"
               >
                 Gửi Đăng Ký Đối Tác
               </button>

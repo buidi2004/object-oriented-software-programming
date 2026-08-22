@@ -67,7 +67,7 @@ export default function ServicePageSections({ content, group = 'all', skipFaqs =
               <div key={i} className="text-center lg:text-left">
                 <div className={`text-3xl lg:text-4xl font-black ${theme.accentText} mb-1`}>{stat.value}</div>
                 <div className="font-bold text-slate-900 text-sm mb-1">{stat.label}</div>
-                <p className="text-xs text-slate-500 leading-relaxed">{stat.detail}</p>
+                <p className="text-xs text-slate-600 leading-relaxed">{stat.detail}</p>
               </div>
             ))}
           </div>
@@ -87,7 +87,7 @@ export default function ServicePageSections({ content, group = 'all', skipFaqs =
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {content.promotions.map((promo, i) => (
-              <div key={i} className="bg-white rounded-2xl p-6 border-2 border-slate-100 hover:border-slate-200 hover:shadow-lg transition-all relative overflow-hidden">
+              <div key={i} className="bg-white rounded-md p-6 border-2 border-slate-100 hover:border-slate-200 hover:shadow-lg transition-all relative overflow-hidden">
                 <div className={`absolute top-4 right-4 px-3 py-1 rounded-full bg-gradient-to-r ${theme.gradient} text-slate-900 text-xs font-black`}>
                   {promo.discount}
                 </div>
@@ -98,12 +98,12 @@ export default function ServicePageSections({ content, group = 'all', skipFaqs =
                 <p className="text-sm text-slate-600 mb-4 leading-relaxed">{promo.description}</p>
                 <div className="flex flex-wrap gap-2 text-xs">
                   {promo.code && (
-                    <span className="px-2.5 py-1 bg-slate-100 rounded-lg font-mono font-bold text-slate-700">
+                    <span className="px-2.5 py-1 bg-slate-100 rounded-sm font-mono font-bold text-slate-700">
                       Mã: {promo.code}
                     </span>
                   )}
                   {promo.validUntil && (
-                    <span className="px-2.5 py-1 bg-amber-50 text-amber-700 rounded-lg font-medium">
+                    <span className="px-2.5 py-1 bg-amber-50 text-amber-700 rounded-sm font-medium">
                       HSD: {promo.validUntil}
                     </span>
                   )}
@@ -123,7 +123,7 @@ export default function ServicePageSections({ content, group = 'all', skipFaqs =
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {content.deepFeatures.map((feat, i) => (
-              <div key={i} className="bg-slate-50 rounded-2xl p-6 lg:p-8 border border-slate-100">
+              <div key={i} className="bg-slate-50 rounded-md p-6 lg:p-8 border border-slate-100">
                 <h3 className="text-xl font-bold text-slate-900 mb-3">{feat.title}</h3>
                 <p className="text-sm text-slate-600 mb-4 leading-relaxed">{feat.description}</p>
                 <ul className="space-y-2">
@@ -149,12 +149,12 @@ export default function ServicePageSections({ content, group = 'all', skipFaqs =
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {content.useCases.map((uc, i) => (
-              <div key={i} className="bg-white/5 border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-colors">
+              <div key={i} className="bg-white/5 border border-white/10 rounded-md p-6 hover:bg-white/10 transition-colors">
                 <h3 className="text-lg font-bold mb-2">{uc.title}</h3>
                 <p className="text-base text-slate-700 mb-4 leading-relaxed">{uc.description}</p>
                 <div className="flex flex-wrap gap-1.5">
                   {uc.tags.map((tag, j) => (
-                    <span key={j} className="px-2 py-0.5 rounded-md bg-white/10 text-xs font-medium text-slate-700">
+                    <span key={j} className="px-2 py-0.5 rounded-sm bg-white/10 text-xs font-medium text-slate-700">
                       {tag}
                     </span>
                   ))}
@@ -176,7 +176,7 @@ export default function ServicePageSections({ content, group = 'all', skipFaqs =
             <div className="text-center mb-10">
               <h2 className="text-3xl font-extrabold text-slate-900 mb-3">{content.specTable.title}</h2>
             </div>
-            <div className="overflow-x-auto rounded-2xl border border-slate-200 max-h-[600px] overflow-y-auto">
+            <div className="overflow-x-auto rounded-md border border-slate-200 max-h-[600px] overflow-y-auto">
               <table className="w-full border-collapse min-w-[600px]">
                 <thead className="sticky top-0 z-10 shadow-sm">
                   <tr className="bg-slate-50 border-b-2 border-slate-200">
@@ -228,9 +228,9 @@ export default function ServicePageSections({ content, group = 'all', skipFaqs =
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {content.infrastructure.items.map((item, i) => (
-              <div key={i} className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm">
+              <div key={i} className="bg-white rounded-md p-6 border border-slate-100 shadow-sm">
                 <div className="flex items-start gap-4">
-                  <div className={`w-10 h-10 rounded-xl ${theme.iconBg} flex items-center justify-center shrink-0`}>
+                  <div className={`w-10 h-10 rounded ${theme.iconBg} flex items-center justify-center shrink-0`}>
                     <Server className={`w-5 h-5 ${theme.accentText}`} />
                   </div>
                   <div>
@@ -254,7 +254,7 @@ export default function ServicePageSections({ content, group = 'all', skipFaqs =
             </div>
             <h2 className="text-3xl font-extrabold text-slate-900 mb-3">{content.sla.title}</h2>
           </div>
-          <div className="overflow-x-auto rounded-2xl border border-slate-200">
+          <div className="overflow-x-auto rounded-md border border-slate-200">
             <table className="w-full border-collapse min-w-[500px]">
               <thead>
                 <tr className="bg-slate-50 border-b border-slate-200">
@@ -286,7 +286,7 @@ export default function ServicePageSections({ content, group = 'all', skipFaqs =
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {content.addons.map((addon, i) => (
-              <div key={i} className="bg-white rounded-2xl p-5 border border-slate-200 hover:shadow-md transition-all">
+              <div key={i} className="bg-white rounded-md p-5 border border-slate-200 hover:shadow-md transition-all">
                 <div className="flex items-start justify-between gap-2 mb-2">
                   <h3 className="font-bold text-slate-900 text-sm">{addon.name}</h3>
                   <span className={`text-sm font-black ${theme.accentText} whitespace-nowrap`}>{addon.price}</span>
@@ -307,7 +307,7 @@ export default function ServicePageSections({ content, group = 'all', skipFaqs =
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
             {content.migration.steps.map((step, i) => (
-              <div key={i} className="bg-white/10 backdrop-blur rounded-2xl p-4 border border-white/20 text-center">
+              <div key={i} className="bg-white/10 backdrop-blur rounded-md p-4 border border-white/20 text-center">
                 <div className="w-8 h-8 rounded-full bg-white/20 text-slate-900 font-black text-sm flex items-center justify-center mx-auto mb-3">
                   {i + 1}
                 </div>
@@ -327,7 +327,7 @@ export default function ServicePageSections({ content, group = 'all', skipFaqs =
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {content.testimonials.map((t, i) => (
-              <div key={i} className="bg-slate-50 rounded-2xl p-6 border border-slate-100 relative">
+              <div key={i} className="bg-slate-50 rounded-md p-6 border border-slate-100 relative">
                 <Quote className={`w-8 h-8 ${theme.accentText} opacity-30 absolute top-4 right-4`} />
                 <div className="flex gap-0.5 mb-3">
                   {Array.from({ length: t.rating }).map((_, j) => (
@@ -337,7 +337,7 @@ export default function ServicePageSections({ content, group = 'all', skipFaqs =
                 <p className="text-sm text-slate-700 leading-relaxed mb-4 italic">&ldquo;{t.quote}&rdquo;</p>
                 <div>
                   <p className="font-bold text-slate-900 text-sm">{t.name}</p>
-                  <p className="text-xs text-slate-500">{t.role} — {t.company}</p>
+                  <p className="text-xs text-slate-600">{t.role} — {t.company}</p>
                 </div>
               </div>
             ))}
@@ -351,7 +351,7 @@ export default function ServicePageSections({ content, group = 'all', skipFaqs =
           <h3 className="text-lg font-bold text-slate-900 mb-6">Tích Hợp & Tương Thích</h3>
           <div className="flex flex-wrap justify-center gap-3">
             {content.integrations.map((name, i) => (
-              <span key={i} className="px-4 py-2 bg-white rounded-xl border border-slate-200 text-sm font-semibold text-slate-700 shadow-sm">
+              <span key={i} className="px-4 py-2 bg-white rounded border border-slate-200 text-sm font-semibold text-slate-700 shadow-sm">
                 {name}
               </span>
             ))}
@@ -371,7 +371,7 @@ export default function ServicePageSections({ content, group = 'all', skipFaqs =
               <Link
                 key={i}
                 href={svc.href}
-                className="group p-5 rounded-2xl border border-slate-200 hover:border-slate-300 hover:shadow-md transition-all"
+                className="group p-5 rounded-md border border-slate-200 hover:border-slate-300 hover:shadow-md transition-all"
               >
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="font-bold text-slate-900 group-hover:text-[#1F1F1F] transition-colors">{svc.label}</h3>
@@ -394,7 +394,7 @@ export default function ServicePageSections({ content, group = 'all', skipFaqs =
             </div>
             <div className="space-y-3">
               {content.extendedFaqs.map((faq, i) => (
-                <div key={i} className="bg-white rounded-2xl border border-slate-100 overflow-hidden">
+                <div key={i} className="bg-white rounded-md border border-slate-100 overflow-hidden">
                   <button
                     onClick={() => setOpenFaq(openFaq === i ? null : i)}
                     className="w-full p-5 flex items-center justify-between text-left"

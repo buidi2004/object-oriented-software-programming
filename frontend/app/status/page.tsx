@@ -79,7 +79,7 @@ export default function StatusPage() {
       case 'Degraded': return 'text-amber-500 bg-amber-50 border-amber-200';
       case 'Outage': return 'text-rose-500 bg-rose-50 border-rose-200';
       case 'Maintenance': return 'text-[#1F1F1F] bg-blue-50 border-blue-200';
-      default: return 'text-slate-500 bg-slate-50 border-slate-200';
+      default: return 'text-slate-600 bg-slate-50 border-slate-200';
     }
   };
 
@@ -113,7 +113,7 @@ export default function StatusPage() {
             <Activity className="w-10 h-10 text-[#1F1F1F]" />
             Trạng thái Hệ thống
           </h1>
-          <p className="text-lg text-slate-500">
+          <p className="text-lg text-slate-600">
             Cập nhật liên tục tình trạng hoạt động của các dịch vụ tại CloudHost VN.
           </p>
         </div>
@@ -126,7 +126,7 @@ export default function StatusPage() {
           <div className="space-y-6">
             
             {/* Overall Status Banner */}
-            <div className={`rounded-2xl p-6 border-2 flex items-center gap-4 ${getStatusColor(data.overallStatus)}`}>
+            <div className={`rounded-md p-6 border-2 flex items-center gap-4 ${getStatusColor(data.overallStatus)}`}>
               <div className="bg-white/50 p-3 rounded-full">
                 {getStatusIcon(data.overallStatus)}
               </div>
@@ -144,17 +144,17 @@ export default function StatusPage() {
             </div>
 
             {/* Services List */}
-            <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+            <div className="bg-white border border-slate-200 rounded-md overflow-hidden shadow-sm">
               <div className="px-6 py-4 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
                 <h3 className="font-bold text-slate-700">Trạng thái dịch vụ</h3>
-                <span className="text-sm font-medium text-slate-500">Uptime 30 ngày</span>
+                <span className="text-sm font-medium text-slate-600">Uptime 30 ngày</span>
               </div>
               <div className="divide-y divide-slate-100">
                 {data.services.map((service) => (
                   <div key={service.id} className="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
                       <div className="font-bold text-slate-900 text-lg">{service.serviceName}</div>
-                      <div className="text-sm text-slate-500 mt-1 flex items-center gap-2">
+                      <div className="text-sm text-slate-600 mt-1 flex items-center gap-2">
                         <Clock className="w-3.5 h-3.5" />
                         Kiểm tra: {formatDistanceToNow(new Date(service.lastChecked), { addSuffix: true, locale: vi })}
                       </div>

@@ -83,7 +83,7 @@ export default function MigrationsPage() {
         
         {/* Form Yêu cầu mới */}
         <div className="lg:col-span-1">
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <div className="bg-white rounded shadow-sm border border-gray-100 p-6">
             <h2 className="text-lg font-bold text-gray-900 mb-4">Gửi Yêu cầu mới</h2>
             
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -95,7 +95,7 @@ export default function MigrationsPage() {
                   value={orderId}
                   onChange={(e) => setOrderId(e.target.value)}
                   placeholder="Ví dụ: 123e4567-e89b-..."
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 font-mono text-sm"
+                  className="w-full border border-gray-300 rounded-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 font-mono text-sm"
                 />
                 <p className="text-xs text-gray-500 mt-1">ID của VPS hoặc Hosting bạn vừa đăng ký.</p>
               </div>
@@ -105,7 +105,7 @@ export default function MigrationsPage() {
                 <select
                   value={provider}
                   onChange={(e) => setProvider(e.target.value)}
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white"
+                  className="w-full border border-gray-300 rounded-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white"
                 >
                   <option value="AWS">Amazon Web Services (AWS)</option>
                   <option value="Google Cloud">Google Cloud (GCP)</option>
@@ -125,12 +125,12 @@ export default function MigrationsPage() {
                   onChange={(e) => setNote(e.target.value)}
                   placeholder="Cung cấp IP, username, password để kỹ thuật viên truy cập máy chủ cũ..."
                   rows={4}
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+                  className="w-full border border-gray-300 rounded-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
                 />
               </div>
 
               {submitStatus && (
-                <div className={`p-3 rounded-lg text-sm flex items-start gap-2 ${
+                <div className={`p-3 rounded-sm text-sm flex items-start gap-2 ${
                   submitStatus.type === 'success' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'
                 }`}>
                   {submitStatus.type === 'success' ? <CheckCircle2 className="w-5 h-5 shrink-0" /> : <AlertCircle className="w-5 h-5 shrink-0" />}
@@ -140,7 +140,7 @@ export default function MigrationsPage() {
 
               <button
                 type="submit"
-                className="w-full bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-lg font-medium transition-colors"
+                className="w-full bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-sm font-medium transition-colors"
               >
                 Gửi Yêu Cầu
               </button>
@@ -150,7 +150,7 @@ export default function MigrationsPage() {
 
         {/* Lịch sử */}
         <div className="lg:col-span-2">
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+          <div className="bg-white rounded shadow-sm border border-gray-100 overflow-hidden">
             <div className="p-6 border-b border-gray-100 bg-gray-50">
               <h2 className="text-lg font-bold text-gray-900">Lịch sử Yêu cầu</h2>
             </div>

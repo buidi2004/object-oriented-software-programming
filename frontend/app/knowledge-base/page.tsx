@@ -30,11 +30,11 @@ export default function PublicKnowledgeBasePage() {
     <div className="py-8">
         <div className="max-w-4xl mx-auto px-4">
         <h1 className="text-3xl font-black text-slate-900 mb-2">Trung tâm trợ giúp</h1>
-        <p className="text-slate-500 mb-8">Hướng dẫn và tài liệu kỹ thuật</p>
+        <p className="text-slate-600 mb-8">Hướng dẫn và tài liệu kỹ thuật</p>
 
         {isLoading && <Loader className="w-8 h-8 text-[#1F1F1F] animate-spin mx-auto" />}
         {error && (
-          <div className="p-4 bg-red-50 border border-red-200 rounded-xl flex items-center gap-2 text-red-700 text-sm">
+          <div className="p-4 bg-red-50 border border-red-200 rounded flex items-center gap-2 text-red-700 text-sm">
             <AlertCircle className="w-4 h-4" /> {error}
           </div>
         )}
@@ -44,7 +44,7 @@ export default function PublicKnowledgeBasePage() {
             <Link
               key={article.id}
               href={`/knowledge-base/${article.id}`}
-              className="block bg-white rounded-xl border border-slate-200 p-5 hover:shadow-md transition-all group"
+              className="block bg-white rounded border border-slate-200 p-5 hover:shadow-md transition-all group"
             >
               <div className="flex items-start justify-between gap-4">
                 <div>
@@ -61,7 +61,7 @@ export default function PublicKnowledgeBasePage() {
         </div>
 
         {!isLoading && articles.length === 0 && !error && (
-          <p className="text-center text-slate-500 py-12">Chưa có bài viết nào.</p>
+          <p className="text-center text-slate-600 py-12">Chưa có bài viết nào.</p>
         )}
       </div>
     </div>

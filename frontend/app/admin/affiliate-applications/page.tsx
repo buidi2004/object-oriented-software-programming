@@ -78,7 +78,7 @@ export default function AdminAffiliateApplicationsPage() {
         </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+      <div className="bg-white rounded shadow-sm border border-gray-100 overflow-hidden">
         <table className="w-full text-left">
           <thead className="bg-gray-50 border-b border-gray-100 text-gray-500 font-medium text-sm">
             <tr>
@@ -119,13 +119,13 @@ export default function AdminAffiliateApplicationsPage() {
                       <div className="flex justify-end gap-2">
                         <button
                           onClick={() => handleAction(app.id, 'approve')}
-                          className="px-4 py-2 bg-green-50 text-green-700 hover:bg-green-100 rounded-lg font-medium text-sm transition-colors"
+                          className="px-4 py-2 bg-green-50 text-green-700 hover:bg-green-100 rounded-sm font-medium text-sm transition-colors"
                         >
                           Duyệt
                         </button>
                         <button
                           onClick={() => handleAction(app.id, 'reject')}
-                          className="px-4 py-2 bg-red-50 text-red-700 hover:bg-red-100 rounded-lg font-medium text-sm transition-colors"
+                          className="px-4 py-2 bg-red-50 text-red-700 hover:bg-red-100 rounded-sm font-medium text-sm transition-colors"
                         >
                           Từ chối
                         </button>

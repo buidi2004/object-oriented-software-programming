@@ -9,13 +9,13 @@ export default function TermsPage() {
     <div className="min-h-screen bg-slate-50 py-12">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        <nav className="flex items-center gap-2 text-sm text-slate-500 mb-8">
+        <nav className="flex items-center gap-2 text-sm text-slate-600 mb-8">
           <Link href="/" className="hover:text-[#1F1F1F]">Trang chủ</Link>
           <ChevronRight className="w-4 h-4" />
           <span className="text-slate-900 font-medium">Thỏa thuận sử dụng</span>
         </nav>
 
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div className="bg-white rounded-md shadow-sm border border-slate-200 overflow-hidden">
           <div className="bg-white p-8 text-slate-900">
             <h1 className="text-3xl font-black mb-2">Thỏa Thuận Sử Dụng Dịch Vụ</h1>
             <p className="text-slate-600">Cập nhật lần cuối: 20/08/2026</p>

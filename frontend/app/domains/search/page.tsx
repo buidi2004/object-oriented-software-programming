@@ -98,12 +98,12 @@ export default function DomainSearchPage() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Nhập tên miền bạn muốn tìm (VD: cloudhost.vn)"
-            className="w-full pl-6 pr-32 py-5 rounded-2xl border-2 border-slate-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 text-lg outline-none transition-all"
+            className="w-full pl-6 pr-32 py-5 rounded-md border-2 border-slate-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 text-lg outline-none transition-all"
           />
           <button
             type="submit"
             disabled={isSearching || !query.trim()}
-            className="absolute right-2 top-2 bottom-2 px-6 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+            className="absolute right-2 top-2 bottom-2 px-6 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
           >
             {isSearching ? <Loader2 className="w-5 h-5 animate-spin" /> : <Search className="w-5 h-5" />}
             Tìm
@@ -112,14 +112,14 @@ export default function DomainSearchPage() {
 
         {/* Error */}
         {error && (
-          <div className="bg-red-50 text-red-600 p-4 rounded-xl border border-red-100 text-center font-medium">
+          <div className="bg-red-50 text-red-600 p-4 rounded border border-red-100 text-center font-medium">
             {error}
           </div>
         )}
 
         {/* Result */}
         {result && !isSearching && (
-          <div className={`p-8 rounded-3xl border-2 transition-all ${
+          <div className={`p-8 rounded-lg border-2 transition-all ${
             result.isAvailable 
               ? 'bg-emerald-50 border-emerald-200 shadow-lg shadow-emerald-500/10' 
               : 'bg-slate-100 border-slate-200'
@@ -131,14 +131,14 @@ export default function DomainSearchPage() {
                     <CheckCircle2 className="w-6 h-6" />
                   </div>
                 ) : (
-                  <div className="w-12 h-12 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center shrink-0">
+                  <div className="w-12 h-12 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center shrink-0">
                     <XCircle className="w-6 h-6" />
                   </div>
                 )}
                 
                 <div>
                   <h3 className="text-2xl font-bold text-slate-900">{result.name}</h3>
-                  <p className={`font-semibold mt-1 ${result.isAvailable ? 'text-emerald-600' : 'text-slate-500'}`}>
+                  <p className={`font-semibold mt-1 ${result.isAvailable ? 'text-emerald-600' : 'text-slate-600'}`}>
                     {result.isAvailable ? 'Tên miền này đang khả dụng!' : 'Rất tiếc, tên miền này đã được đăng ký.'}
                   </p>
                 </div>
@@ -147,11 +147,11 @@ export default function DomainSearchPage() {
               {result.isAvailable && (
                 <div className="flex flex-col sm:items-end w-full sm:w-auto">
                   <div className="text-2xl font-black text-slate-900 mb-3 text-center sm:text-right">
-                    Giá ưu đãi<span className="text-sm text-slate-500 font-normal">/năm</span>
+                    Giá ưu đãi<span className="text-sm text-slate-600 font-normal">/năm</span>
                   </div>
                   <button
                     onClick={handleBuy}
-                    className="w-full sm:w-auto px-8 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow-lg shadow-emerald-600/30 transition-all"
+                    className="w-full sm:w-auto px-8 py-3 rounded bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow-lg shadow-emerald-600/30 transition-all"
                   >
                     Thêm vào giỏ
                   </button>

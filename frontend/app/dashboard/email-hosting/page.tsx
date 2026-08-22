@@ -81,16 +81,16 @@ export default function DashboardEmailHostingPage() {
         {/* Top Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div>
-            <Link href="/dashboard" className="text-xs font-bold text-slate-500 hover:text-[#1F1F1F] flex items-center gap-1 mb-2">
+            <Link href="/dashboard" className="text-xs font-bold text-slate-600 hover:text-[#1F1F1F] flex items-center gap-1 mb-2">
               <ArrowLeft className="w-3.5 h-3.5" /> Quay lại Dashboard
             </Link>
             <h1 className="text-2xl sm:text-3xl font-black text-slate-900 flex items-center gap-3">
-              <div className="p-2.5 rounded-2xl bg-rose-100 text-rose-600">
+              <div className="p-2.5 rounded-md bg-rose-100 text-rose-600">
                 <Mail className="w-7 h-7" />
               </div>
               Quản Lý Email Doanh Nghiệp
             </h1>
-            <p className="text-xs sm:text-sm text-slate-500 mt-1">
+            <p className="text-xs sm:text-sm text-slate-600 mt-1">
               Tạo hòm thư theo tên miền, quản lý dung lượng, đổi mật khẩu và đăng nhập Webmail.
             </p>
           </div>
@@ -98,14 +98,14 @@ export default function DashboardEmailHostingPage() {
           <div className="flex items-center gap-3">
             <button
               onClick={fetchAccounts}
-              className="p-2.5 rounded-2xl bg-white border border-slate-200 text-slate-600 hover:text-rose-600 hover:border-rose-300 transition-all shadow-sm"
+              className="p-2.5 rounded-md bg-white border border-slate-200 text-slate-600 hover:text-rose-600 hover:border-rose-300 transition-all shadow-sm"
               title="Làm mới"
             >
               <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
             </button>
             <button
               onClick={() => setIsCreateOpen(true)}
-              className="px-5 py-2.5 rounded-2xl bg-rose-600 hover:bg-rose-700 text-slate-900 font-bold text-xs sm:text-sm transition-all shadow-lg shadow-rose-500/25 flex items-center gap-2"
+              className="px-5 py-2.5 rounded-md bg-rose-600 hover:bg-rose-700 text-slate-900 font-bold text-xs sm:text-sm transition-all shadow-lg shadow-rose-500/25 flex items-center gap-2"
             >
               <Plus className="w-4 h-4" />
               Tạo Hòm Thư Mới
@@ -114,13 +114,13 @@ export default function DashboardEmailHostingPage() {
         </div>
 
         {success && (
-          <div className="mb-6 p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold flex items-center gap-2">
+          <div className="mb-6 p-4 rounded-md bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4" /> {success}
           </div>
         )}
 
         {/* Mailboxes List */}
-        <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+        <div className="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden">
           <div className="p-6 border-b border-slate-100 flex items-center justify-between">
             <h2 className="text-base font-bold text-slate-900">Danh Sách Hòm Thư Active</h2>
             <span className="text-xs font-semibold px-3 py-1 rounded-full bg-slate-100 text-slate-600">
@@ -135,16 +135,16 @@ export default function DashboardEmailHostingPage() {
             </div>
           ) : accounts.length === 0 ? (
             <div className="p-12 text-center">
-              <div className="w-16 h-16 rounded-3xl bg-rose-50 text-rose-500 flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 rounded-lg bg-rose-50 text-rose-500 flex items-center justify-center mx-auto mb-4">
                 <Mail className="w-8 h-8" />
               </div>
               <h3 className="text-base font-bold text-slate-900 mb-1">Chưa Có Hòm Thư Nào</h3>
-              <p className="text-xs text-slate-500 max-w-sm mx-auto mb-6">
+              <p className="text-xs text-slate-600 max-w-sm mx-auto mb-6">
                 Bạn chưa tạo hòm thư email doanh nghiệp nào. Hãy nhấn vào nút bên dưới để tạo ngay!
               </p>
               <button
                 onClick={() => setIsCreateOpen(true)}
-                className="px-5 py-2.5 rounded-2xl bg-rose-600 text-slate-900 font-bold text-xs shadow-md"
+                className="px-5 py-2.5 rounded-md bg-rose-600 text-slate-900 font-bold text-xs shadow-md"
               >
                 + Tạo Hòm Thư Đầu Tiên
               </button>
@@ -152,7 +152,7 @@ export default function DashboardEmailHostingPage() {
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50/80 text-slate-500 font-extrabold uppercase tracking-wider border-b border-slate-100">
+                <thead className="bg-slate-50/80 text-slate-600 font-extrabold uppercase tracking-wider border-b border-slate-100">
                   <tr>
                     <th className="px-6 py-4">Địa Chỉ Email</th>
                     <th className="px-6 py-4">Tên Miền</th>
@@ -182,7 +182,7 @@ export default function DashboardEmailHostingPage() {
                           href="https://webmail.cloudhost.vn"
                           target="_blank"
                           rel="noreferrer"
-                          className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-rose-50 text-slate-700 hover:text-rose-600 font-bold transition-all"
+                          className="inline-flex items-center gap-1 px-3 py-1.5 rounded bg-slate-100 hover:bg-rose-50 text-slate-700 hover:text-rose-600 font-bold transition-all"
                         >
                           <ExternalLink className="w-3.5 h-3.5" /> Webmail
                         </a>
@@ -199,16 +199,16 @@ export default function DashboardEmailHostingPage() {
       {/* Modal Create Email */}
       {isCreateOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-white/60 backdrop-blur-sm animate-in fade-in">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100">
+          <div className="bg-white rounded-lg max-w-md w-full p-6 shadow-2xl border border-slate-100">
             <h3 className="text-lg font-black text-slate-900 mb-2 flex items-center gap-2">
               <Mail className="w-5 h-5 text-rose-600" /> Tạo Hòm Thư Doanh Nghiệp Mới
             </h3>
-            <p className="text-xs text-slate-500 mb-6">
+            <p className="text-xs text-slate-600 mb-6">
               Điền tên tài khoản và mật khẩu để kích hoạt hòm thư mới.
             </p>
 
             {error && (
-              <div className="mb-4 p-3 rounded-xl bg-rose-50 text-rose-600 text-xs font-bold flex items-center gap-2">
+              <div className="mb-4 p-3 rounded bg-rose-50 text-rose-600 text-xs font-bold flex items-center gap-2">
                 <AlertCircle className="w-4 h-4" /> {error}
               </div>
             )}
@@ -216,7 +216,7 @@ export default function DashboardEmailHostingPage() {
             <form onSubmit={handleCreate} className="space-y-4">
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1">Tên Hòm Thư</label>
-                <div className="flex rounded-xl overflow-hidden border border-slate-200 focus-within:ring-2 focus-within:ring-rose-500">
+                <div className="flex rounded overflow-hidden border border-slate-200 focus-within:ring-2 focus-within:ring-rose-500">
                   <input
                     type="text"
                     required
@@ -225,7 +225,7 @@ export default function DashboardEmailHostingPage() {
                     onChange={(e) => setUsername(e.target.value)}
                     className="flex-1 px-3.5 py-2.5 text-xs text-slate-900 outline-none"
                   />
-                  <span className="px-3 py-2.5 bg-slate-50 text-slate-500 text-xs font-bold border-l border-slate-200">
+                  <span className="px-3 py-2.5 bg-slate-50 text-slate-600 text-xs font-bold border-l border-slate-200">
                     @{domain}
                   </span>
                 </div>
@@ -239,7 +239,7 @@ export default function DashboardEmailHostingPage() {
                   placeholder="Tối thiểu 8 ký tự, gồm chữ & số"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs text-slate-900 outline-none focus:ring-2 focus:ring-rose-500"
+                  className="w-full px-3.5 py-2.5 rounded border border-slate-200 text-xs text-slate-900 outline-none focus:ring-2 focus:ring-rose-500"
                 />
               </div>
 
@@ -248,7 +248,7 @@ export default function DashboardEmailHostingPage() {
                 <select
                   value={quotaMB}
                   onChange={(e) => setQuotaMB(Number(e.target.value))}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs text-slate-900 outline-none focus:ring-2 focus:ring-rose-500 bg-white"
+                  className="w-full px-3.5 py-2.5 rounded border border-slate-200 text-xs text-slate-900 outline-none focus:ring-2 focus:ring-rose-500 bg-white"
                 >
                   <option value={1024}>1,024 MB (1 GB)</option>
                   <option value={2048}>2,048 MB (2 GB)</option>
@@ -261,14 +261,14 @@ export default function DashboardEmailHostingPage() {
                 <button
                   type="button"
                   onClick={() => setIsCreateOpen(false)}
-                  className="px-4 py-2.5 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100"
+                  className="px-4 py-2.5 rounded text-xs font-bold text-slate-600 hover:bg-slate-100"
                 >
                   Hủy Bỏ
                 </button>
                 <button
                   type="submit"
                   disabled={creating}
-                  className="px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-slate-900 font-bold text-xs shadow-md flex items-center gap-2"
+                  className="px-5 py-2.5 rounded bg-rose-600 hover:bg-rose-700 text-slate-900 font-bold text-xs shadow-md flex items-center gap-2"
                 >
                   {creating && <RefreshCw className="w-3.5 h-3.5 animate-spin" />}
                   Xác Nhận Tạo

@@ -97,16 +97,16 @@ export default function AdminRefundRequestsPage() {
       <header className="bg-white border-b border-slate-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link href="/admin" className="p-2 rounded-lg hover:bg-slate-100 transition-colors">
+            <Link href="/admin" className="p-2 rounded-sm hover:bg-slate-100 transition-colors">
               <ArrowLeft className="w-5 h-5 text-slate-600" />
             </Link>
             <div>
               <h1 className="text-xl font-bold text-slate-900">Yêu cầu hoàn tiền</h1>
-              <p className="text-sm text-slate-500">{requests.length} yêu cầu</p>
+              <p className="text-sm text-slate-600">{requests.length} yêu cầu</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <span className="px-3 py-1.5 rounded-lg bg-amber-100 text-amber-700 text-sm font-semibold">
+            <span className="px-3 py-1.5 rounded-sm bg-amber-100 text-amber-700 text-sm font-semibold">
               {requests.filter(r => r.status === 'pending').length} Chờ xử lý
             </span>
           </div>
@@ -114,11 +114,11 @@ export default function AdminRefundRequestsPage() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="bg-white rounded-xl p-4 border border-slate-200 mb-6 flex gap-4">
+        <div className="bg-white rounded p-4 border border-slate-200 mb-6 flex gap-4">
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
-            className="px-3 py-2.5 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+            className="px-3 py-2.5 rounded-sm border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
           >
             <option value="all">Tất cả trạng thái</option>
             <option value="pending">Chờ xử lý</option>
@@ -129,15 +129,15 @@ export default function AdminRefundRequestsPage() {
 
         <div className="space-y-4">
           {filteredRequests.map((request) => (
-            <div key={request.id} className="bg-white rounded-xl p-6 border border-slate-200 hover:border-blue-200 transition-colors">
+            <div key={request.id} className="bg-white rounded p-6 border border-slate-200 hover:border-blue-200 transition-colors">
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-rose-500 to-pink-600 flex items-center justify-center shrink-0">
+                  <div className="w-12 h-12 rounded bg-gradient-to-br from-rose-500 to-pink-600 flex items-center justify-center shrink-0">
                     <DollarSign className="w-6 h-6 text-slate-900" />
                   </div>
                   <div>
                     <h3 className="font-bold text-slate-900 text-lg">Yêu cầu #{request.id.slice(0, 8)}</h3>
-                    <p className="text-sm text-slate-500 mt-1">Đơn hàng: <span className="font-mono font-semibold">{request.orderId}</span></p>
+                    <p className="text-sm text-slate-600 mt-1">Đơn hàng: <span className="font-mono font-semibold">{request.orderId}</span></p>
                     <div className="flex items-center gap-4 mt-2 text-sm text-slate-600">
                       <span className="flex items-center gap-1"><User className="w-4 h-4" />{request.customerName}</span>
                       <span className="flex items-center gap-1"><Clock className="w-4 h-4" />{new Date(request.createdAt).toLocaleString('vi-VN')}</span>
@@ -154,7 +154,7 @@ export default function AdminRefundRequestsPage() {
                 </span>
               </div>
 
-              <div className="bg-slate-50 rounded-xl p-4 mb-4">
+              <div className="bg-slate-50 rounded p-4 mb-4">
                 <p className="text-sm text-slate-600"><span className="font-semibold">Lý do:</span> {request.reason}</p>
                 <p className="text-sm text-slate-600 mt-2"><span className="font-semibold">Số tiền hoàn:</span> <span className="text-rose-600 font-bold text-lg">{request.amount.toLocaleString('vi-VN')} đ</span></p>
               </div>
@@ -163,19 +163,19 @@ export default function AdminRefundRequestsPage() {
                 <div className="flex items-center gap-3">
                   <button
                     onClick={() => handleAction(request.id, 'approve')}
-                    className="px-4 py-2.5 rounded-lg bg-emerald-600 text-white font-semibold text-sm hover:bg-emerald-700 transition-colors flex items-center gap-2"
+                    className="px-4 py-2.5 rounded-sm bg-emerald-600 text-white font-semibold text-sm hover:bg-emerald-700 transition-colors flex items-center gap-2"
                   >
                     <CheckCircle2 className="w-4 h-4" /> Duyệt hoàn tiền
                   </button>
                   <button
                     onClick={() => handleAction(request.id, 'reject')}
-                    className="px-4 py-2.5 rounded-lg bg-red-600 text-white font-semibold text-sm hover:bg-red-700 transition-colors flex items-center gap-2"
+                    className="px-4 py-2.5 rounded-sm bg-red-600 text-white font-semibold text-sm hover:bg-red-700 transition-colors flex items-center gap-2"
                   >
                     Từ chối
                   </button>
                   <Link
                     href={`/admin/refund-requests/${request.id}`}
-                    className="px-4 py-2.5 rounded-lg bg-slate-100 text-slate-700 font-semibold text-sm hover:bg-slate-200 transition-colors ml-auto"
+                    className="px-4 py-2.5 rounded-sm bg-slate-100 text-slate-700 font-semibold text-sm hover:bg-slate-200 transition-colors ml-auto"
                   >
                     Chi tiết
                   </Link>
@@ -183,7 +183,7 @@ export default function AdminRefundRequestsPage() {
               )}
 
               {request.status !== 'pending' && request.reviewer && (
-                <p className="text-xs text-slate-500 mt-2">
+                <p className="text-xs text-slate-600 mt-2">
                   Đã xử lý bởi <span className="font-semibold">{request.reviewer}</span> vào {new Date(request.reviewedAt!).toLocaleString('vi-VN')}
                 </p>
               )}
@@ -192,7 +192,7 @@ export default function AdminRefundRequestsPage() {
         </div>
 
         {filteredRequests.length === 0 && (
-          <div className="text-center py-12 text-slate-500">
+          <div className="text-center py-12 text-slate-600">
             <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-700" />
             <p className="font-medium">Không có yêu cầu hoàn tiền nào</p>
           </div>

@@ -54,7 +54,7 @@ const getCategoryIcon = (name: string, slug?: string) => {
   if (n.includes('miền') || n.includes('domain')) return <Globe className="w-4 h-4 text-[#1F1F1F]" />;
   if (n.includes('bảo mật') || n.includes('security') || n.includes('waf')) return <Shield className="w-4 h-4 text-red-500" />;
   if (n.includes('chuyển') || n.includes('migration')) return <RefreshCw className="w-4 h-4 text-orange-500" />;
-  return <Package className="w-4 h-4 text-slate-500" />;
+  return <Package className="w-4 h-4 text-slate-600" />;
 };
 
 function AdminServicePlansContent() {
@@ -385,7 +385,7 @@ function AdminServicePlansContent() {
     <div className="min-h-screen bg-[#f8fafc] p-4 md:p-8 text-slate-800">
       {/* Toast Notification */}
       {toastMessage && (
-        <div className="fixed top-5 right-5 z-50 px-4 py-3 bg-white text-slate-900 rounded-xl shadow-2xl text-xs font-bold flex items-center gap-2 animate-in slide-in-from-top-2 border border-slate-300">
+        <div className="fixed top-5 right-5 z-50 px-4 py-3 bg-white text-slate-900 rounded shadow-2xl text-xs font-bold flex items-center gap-2 animate-in slide-in-from-top-2 border border-slate-300">
           <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
           <span>{toastMessage}</span>
         </div>
@@ -393,9 +393,9 @@ function AdminServicePlansContent() {
 
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header Bar */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-200 shadow-xs">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-md border border-slate-200 shadow-xs">
           <div className="flex items-center gap-4">
-            <Link href="/admin" className="p-2.5 hover:bg-slate-100 rounded-xl transition-colors border border-slate-200">
+            <Link href="/admin" className="p-2.5 hover:bg-slate-100 rounded transition-colors border border-slate-200">
               <ArrowLeft className="w-5 h-5 text-slate-600" />
             </Link>
             <div>
@@ -407,7 +407,7 @@ function AdminServicePlansContent() {
                   {plans.length} Sản phẩm
                 </span>
               </div>
-              <p className="text-xs text-slate-500 mt-1">
+              <p className="text-xs text-slate-600 mt-1">
                 Tùy chỉnh giá bán, thông số CPU / RAM / NVMe, và chu kỳ thanh toán cho 11+ danh mục dịch vụ Cloud.
               </p>
             </div>
@@ -416,7 +416,7 @@ function AdminServicePlansContent() {
           <div className="flex items-center gap-3">
             <button
               onClick={() => openAddModal(selectedCategory !== 'all' ? selectedCategory : undefined)}
-              className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all shadow-md hover:shadow-indigo-200"
+              className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-4 py-2.5 rounded transition-all shadow-md hover:shadow-indigo-200"
             >
               <Plus className="w-4 h-4" />
               Thêm Gói Sản Phẩm
@@ -425,11 +425,11 @@ function AdminServicePlansContent() {
         </div>
 
         {/* 11+ Category Filter Pills Bar */}
-        <div className="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-xs overflow-x-auto">
+        <div className="bg-white p-3.5 rounded-md border border-slate-200 shadow-xs overflow-x-auto">
           <div className="flex items-center gap-2 min-w-max">
             <button
               onClick={() => setSelectedCategory('all')}
-              className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all ${
+              className={`flex items-center gap-2 px-3.5 py-2 rounded text-xs font-bold transition-all ${
                 selectedCategory === 'all'
                   ? 'bg-slate-900 text-white shadow-sm'
                   : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200/60'
@@ -451,7 +451,7 @@ function AdminServicePlansContent() {
                 <button
                   key={cat.id}
                   onClick={() => setSelectedCategory(cat.slug || cat.id)}
-                  className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all ${
+                  className={`flex items-center gap-2 px-3.5 py-2 rounded text-xs font-bold transition-all ${
                     isSelected
                       ? 'bg-indigo-600 text-white shadow-sm'
                       : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200/60'
@@ -473,25 +473,25 @@ function AdminServicePlansContent() {
         </div>
 
         {/* Filter & Search Bar */}
-        <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs flex flex-wrap items-center justify-between gap-4">
+        <div className="bg-white p-4 rounded-md border border-slate-200 shadow-xs flex flex-wrap items-center justify-between gap-4">
           <div className="flex flex-wrap items-center gap-3 flex-1 min-w-[300px]">
             <div className="relative flex-1 max-w-md">
               <Search className="w-4 h-4 text-slate-600 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 placeholder="Tìm theo tên gói, CPU, RAM, SSD..."
-                className="pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 text-xs w-full font-medium"
+                className="pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 text-xs w-full font-medium"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
 
             <div className="flex items-center gap-2 text-xs">
-              <span className="text-slate-500 font-medium">Trạng thái:</span>
+              <span className="text-slate-600 font-medium">Trạng thái:</span>
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value as any)}
-                className="p-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 outline-none focus:ring-2 focus:ring-indigo-500"
+                className="p-2 bg-slate-50 border border-slate-200 rounded text-xs font-bold text-slate-700 outline-none focus:ring-2 focus:ring-indigo-500"
               >
                 <option value="all">Tất cả</option>
                 <option value="active">🟢 Đang bán</option>
@@ -501,11 +501,11 @@ function AdminServicePlansContent() {
           </div>
 
           <div className="flex items-center gap-2 text-xs">
-            <span className="text-slate-500 font-medium">Sắp xếp:</span>
+            <span className="text-slate-600 font-medium">Sắp xếp:</span>
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
-              className="p-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 outline-none focus:ring-2 focus:ring-indigo-500"
+              className="p-2 bg-slate-50 border border-slate-200 rounded text-xs font-bold text-slate-700 outline-none focus:ring-2 focus:ring-indigo-500"
             >
               <option value="name_asc">Tên (A - Z)</option>
               <option value="price_asc">Giá (Thấp đến Cao)</option>
@@ -515,7 +515,7 @@ function AdminServicePlansContent() {
         </div>
 
         {/* Product Table */}
-        <div className="bg-white rounded-2xl shadow-xs border border-slate-200 overflow-hidden">
+        <div className="bg-white rounded-md shadow-xs border border-slate-200 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse text-xs">
               <thead>
@@ -534,7 +534,7 @@ function AdminServicePlansContent() {
                   filteredPlans.map((plan) => (
                     <tr key={plan.servicePlanId} className="hover:bg-slate-50/80 transition-colors group">
                       <td className="p-4 text-center">
-                        <div className="w-10 h-10 bg-slate-100 rounded-xl border border-slate-200 overflow-hidden flex items-center justify-center mx-auto shadow-2xs">
+                        <div className="w-10 h-10 bg-slate-100 rounded border border-slate-200 overflow-hidden flex items-center justify-center mx-auto shadow-2xs">
                           {plan.imageUrl ? (
                             <img src={'http://localhost:5053' + plan.imageUrl} alt={plan.servicePlanName} className="w-full h-full object-cover" />
                           ) : (
@@ -551,7 +551,7 @@ function AdminServicePlansContent() {
                         </div>
                       </td>
                       <td className="p-4">
-                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-indigo-50 text-[#1F1F1F] border border-indigo-100">
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm text-xs font-bold bg-indigo-50 text-[#1F1F1F] border border-indigo-100">
                           {getCategoryIcon(plan.categoryName)}
                           <span>{plan.categoryName || 'Chưa phân loại'}</span>
                         </span>
@@ -611,7 +611,7 @@ function AdminServicePlansContent() {
                         <div className="flex items-center justify-end gap-1.5">
                           <button
                             onClick={() => openPricingModal(plan)}
-                            className="p-2 text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-lg transition-colors font-bold text-xs flex items-center gap-1"
+                            className="p-2 text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-sm transition-colors font-bold text-xs flex items-center gap-1"
                             title="Chỉnh sửa bảng giá"
                           >
                             <DollarSign className="w-3.5 h-3.5" />
@@ -619,14 +619,14 @@ function AdminServicePlansContent() {
                           </button>
                           <button
                             onClick={() => openEditModal(plan)}
-                            className="p-2 text-[#1F1F1F] bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 rounded-lg transition-colors font-bold text-xs"
+                            className="p-2 text-[#1F1F1F] bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 rounded-sm transition-colors font-bold text-xs"
                             title="Sửa thông số gói"
                           >
                             <Edit2 className="w-3.5 h-3.5" />
                           </button>
                           <button
                             onClick={() => handleDelete(plan.servicePlanId, plan.servicePlanName)}
-                            className="p-2 text-red-600 bg-red-50 hover:bg-red-100 border border-red-200 rounded-lg transition-colors"
+                            className="p-2 text-red-600 bg-red-50 hover:bg-red-100 border border-red-200 rounded-sm transition-colors"
                             title="Xóa / Ẩn sản phẩm"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
@@ -653,7 +653,7 @@ function AdminServicePlansContent() {
       {/* MODAL 1: ADD / EDIT PRODUCT & SPECS */}
       {showModal && (
         <div className="fixed inset-0 bg-white/60 backdrop-blur-xs flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-slate-200 animate-in zoom-in-95">
+          <div className="bg-white rounded-md shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-slate-200 animate-in zoom-in-95">
             <div className="p-6 border-b border-slate-100 flex items-center justify-between sticky top-0 bg-white z-10">
               <div className="flex items-center gap-2">
                 <Package className="w-5 h-5 text-[#1F1F1F]" />
@@ -678,7 +678,7 @@ function AdminServicePlansContent() {
                     required
                     value={formName}
                     onChange={e => setFormName(e.target.value)}
-                    className="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-xs font-medium"
+                    className="w-full px-3.5 py-2.5 border border-slate-200 rounded focus:ring-2 focus:ring-indigo-500 outline-none text-xs font-medium"
                     placeholder="VD: Dedicated AMD EPYC 7502, Cloud VPS Pro..."
                   />
                 </div>
@@ -689,7 +689,7 @@ function AdminServicePlansContent() {
                     required
                     value={formCategoryId}
                     onChange={e => setFormCategoryId(e.target.value)}
-                    className="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none bg-white text-xs font-medium"
+                    className="w-full px-3.5 py-2.5 border border-slate-200 rounded focus:ring-2 focus:ring-indigo-500 outline-none bg-white text-xs font-medium"
                   >
                     <option value="" disabled>-- Chọn danh mục --</option>
                     {categories.map(c => (
@@ -700,7 +700,7 @@ function AdminServicePlansContent() {
               </div>
 
               {/* Hardware Specs */}
-              <div className="bg-slate-50 p-4 rounded-xl border border-slate-200/80 space-y-3">
+              <div className="bg-slate-50 p-4 rounded border border-slate-200/80 space-y-3">
                 <h3 className="text-xs font-bold text-slate-800 flex items-center gap-2 uppercase tracking-wider">
                   <Cpu className="w-4 h-4 text-[#1F1F1F]" />
                   Thông số phần cứng / Cấu hình (Tùy chọn)
@@ -713,7 +713,7 @@ function AdminServicePlansContent() {
                       list="cpu-suggestions"
                       value={formCpu}
                       onChange={e => setFormCpu(e.target.value)}
-                      className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none bg-white text-xs"
+                      className="w-full px-3 py-2 border border-slate-200 rounded-sm focus:ring-2 focus:ring-indigo-500 outline-none bg-white text-xs"
                       placeholder="VD: 16 Core / 32 Thread"
                     />
                     <datalist id="cpu-suggestions">
@@ -734,7 +734,7 @@ function AdminServicePlansContent() {
                       list="ram-suggestions"
                       value={formRam}
                       onChange={e => setFormRam(e.target.value)}
-                      className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none bg-white text-xs"
+                      className="w-full px-3 py-2 border border-slate-200 rounded-sm focus:ring-2 focus:ring-indigo-500 outline-none bg-white text-xs"
                       placeholder="VD: 64GB ECC DDR4"
                     />
                     <datalist id="ram-suggestions">
@@ -757,7 +757,7 @@ function AdminServicePlansContent() {
                       list="ssd-suggestions"
                       value={formSsd}
                       onChange={e => setFormSsd(e.target.value)}
-                      className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none bg-white text-xs"
+                      className="w-full px-3 py-2 border border-slate-200 rounded-sm focus:ring-2 focus:ring-indigo-500 outline-none bg-white text-xs"
                       placeholder="VD: 2x 1TB NVMe RAID 1"
                     />
                     <datalist id="ssd-suggestions">
@@ -780,7 +780,7 @@ function AdminServicePlansContent() {
                       list="bw-suggestions"
                       value={formBandwidth}
                       onChange={e => setFormBandwidth(e.target.value)}
-                      className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none bg-white text-xs"
+                      className="w-full px-3 py-2 border border-slate-200 rounded-sm focus:ring-2 focus:ring-indigo-500 outline-none bg-white text-xs"
                       placeholder="VD: 1Gbps / 20TB hoặc Unlimited"
                     />
                     <datalist id="bw-suggestions">
@@ -802,11 +802,11 @@ function AdminServicePlansContent() {
                 </label>
                 <div className="flex items-center gap-4">
                   {previewImage ? (
-                    <div className="w-16 h-16 rounded-xl overflow-hidden border border-slate-200 bg-slate-100 flex items-center justify-center flex-shrink-0">
+                    <div className="w-16 h-16 rounded overflow-hidden border border-slate-200 bg-slate-100 flex items-center justify-center flex-shrink-0">
                       <img src={previewImage.startsWith('blob:') ? previewImage : `http://localhost:5053${previewImage}`} alt="Preview" className="w-full h-full object-cover" />
                     </div>
                   ) : (
-                    <div className="w-16 h-16 rounded-xl border-2 border-dashed border-slate-200 flex items-center justify-center text-slate-600 flex-shrink-0">
+                    <div className="w-16 h-16 rounded border-2 border-dashed border-slate-200 flex items-center justify-center text-slate-600 flex-shrink-0">
                       <Upload className="w-6 h-6" />
                     </div>
                   )}
@@ -815,7 +815,7 @@ function AdminServicePlansContent() {
                       type="file"
                       accept="image/*"
                       onChange={handleFileChange}
-                      className="block w-full text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-indigo-50 file:text-[#1F1F1F] hover:file:bg-indigo-100 cursor-pointer"
+                      className="block w-full text-xs text-slate-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-sm file:border-0 file:text-xs file:font-bold file:bg-indigo-50 file:text-[#1F1F1F] hover:file:bg-indigo-100 cursor-pointer"
                     />
                     <p className="text-[11px] text-slate-600 mt-1">PNG, JPG, WEBP tối đa 2MB</p>
                   </div>
@@ -826,14 +826,14 @@ function AdminServicePlansContent() {
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold transition-colors"
+                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded font-bold transition-colors"
                 >
                   Hủy
                 </button>
                 <button
                   type="submit"
                   disabled={isSaving}
-                  className="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold flex items-center gap-1.5 shadow-md disabled:opacity-50 transition-all"
+                  className="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded font-bold flex items-center gap-1.5 shadow-md disabled:opacity-50 transition-all"
                 >
                   <Save className="w-4 h-4" />
                   <span>{isSaving ? 'Đang lưu...' : 'Lưu Thông Tin'}</span>
@@ -847,14 +847,14 @@ function AdminServicePlansContent() {
       {/* MODAL 2: PRICING MANAGER (Monthly, Yearly, Multi-Cycle) */}
       {showPricingModal && editingPlan && (
         <div className="fixed inset-0 bg-white/60 backdrop-blur-xs flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col border border-slate-200 animate-in zoom-in-95">
+          <div className="bg-white rounded-md shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col border border-slate-200 animate-in zoom-in-95">
             <div className="p-6 border-b border-slate-100 flex items-center justify-between">
               <div>
                 <h2 className="text-lg font-black text-slate-900 flex items-center gap-2">
                   <DollarSign className="w-5 h-5 text-emerald-500" />
                   Quản lý Bảng Giá: {editingPlan.servicePlanName}
                 </h2>
-                <p className="text-xs text-slate-500 mt-0.5">
+                <p className="text-xs text-slate-600 mt-0.5">
                   Danh mục: <strong className="text-slate-700">{editingPlan.categoryName}</strong> • Thiết lập các mức giá chu kỳ thanh toán
                 </p>
               </div>
@@ -868,7 +868,7 @@ function AdminServicePlansContent() {
             
             <div className="p-6 overflow-y-auto flex-1 bg-slate-50 space-y-6 text-xs">
               {/* Form Add / Edit Price */}
-              <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-4">
+              <div className="bg-white p-5 rounded-md border border-slate-200 shadow-xs space-y-4">
                 <h3 className="font-bold text-slate-900 uppercase tracking-wider text-[11px] flex items-center gap-1.5">
                   <Tag className="w-3.5 h-3.5 text-[#1F1F1F]" />
                   {priceFormId ? 'Cập nhật mức giá đã chọn' : 'Thêm Mức Giá Chu Kỳ Mới'}
@@ -879,7 +879,7 @@ function AdminServicePlansContent() {
                     <select
                       value={priceFormCycle}
                       onChange={(e) => setPriceFormCycle(Number(e.target.value))}
-                      className="w-full p-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none bg-white font-medium"
+                      className="w-full p-2.5 border border-slate-200 rounded focus:ring-2 focus:ring-emerald-500 outline-none bg-white font-medium"
                     >
                       <option value={1}>1 Tháng (Monthly)</option>
                       <option value={3}>3 Tháng (Quarterly)</option>
@@ -900,7 +900,7 @@ function AdminServicePlansContent() {
                         required
                         value={priceFormAmount}
                         onChange={(e) => setPriceFormAmount(e.target.value)}
-                        className="w-full p-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none font-bold text-emerald-700 pr-12"
+                        className="w-full p-2.5 border border-slate-200 rounded focus:ring-2 focus:ring-emerald-500 outline-none font-bold text-emerald-700 pr-12"
                         placeholder="VD: 2800000"
                       />
                       <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-600 font-bold text-[11px]">VNĐ</span>
@@ -911,7 +911,7 @@ function AdminServicePlansContent() {
                     <button
                       type="submit"
                       disabled={isSaving}
-                      className="flex-1 p-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold flex items-center justify-center gap-1.5 shadow-sm disabled:opacity-50 transition-colors"
+                      className="flex-1 p-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded font-bold flex items-center justify-center gap-1.5 shadow-sm disabled:opacity-50 transition-colors"
                     >
                       <Save className="w-4 h-4" />
                       <span>{isSaving ? 'Đang lưu...' : (priceFormId ? 'Cập nhật' : 'Thêm Mức Giá')}</span>
@@ -920,7 +920,7 @@ function AdminServicePlansContent() {
                       <button
                         type="button"
                         onClick={resetPricingForm}
-                        className="p-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold"
+                        className="p-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded font-bold"
                       >
                         Hủy
                       </button>
@@ -930,10 +930,10 @@ function AdminServicePlansContent() {
               </div>
 
               {/* Existing Prices Table */}
-              <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs">
+              <div className="bg-white rounded-md border border-slate-200 overflow-hidden shadow-xs">
                 <div className="p-4 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
                   <h4 className="font-bold text-slate-800">Các mức giá đang áp dụng</h4>
-                  <span className="text-[11px] text-slate-500">{currentPrices.length} chu kỳ</span>
+                  <span className="text-[11px] text-slate-600">{currentPrices.length} chu kỳ</span>
                 </div>
                 <table className="w-full text-left">
                   <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold text-[11px]">
@@ -960,21 +960,21 @@ function AdminServicePlansContent() {
                           <td className="p-3.5 font-extrabold text-emerald-600 text-sm">
                             {p.price.toLocaleString('vi-VN')} đ
                           </td>
-                          <td className="p-3.5 text-slate-500">
+                          <td className="p-3.5 text-slate-600">
                             {new Date(p.effectiveFrom).toLocaleDateString('vi-VN')}
                           </td>
                           <td className="p-3.5 text-right">
                             <div className="flex items-center justify-end gap-1.5">
                               <button
                                 onClick={() => handleEditPrice(p)}
-                                className="p-1.5 text-[#1F1F1F] hover:bg-indigo-50 rounded-lg transition-colors"
+                                className="p-1.5 text-[#1F1F1F] hover:bg-indigo-50 rounded-sm transition-colors"
                                 title="Sửa giá này"
                               >
                                 <Edit2 className="w-3.5 h-3.5" />
                               </button>
                               <button
                                 onClick={() => handleDeletePrice(p.id)}
-                                className="p-1.5 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                className="p-1.5 text-red-600 hover:bg-red-50 rounded-sm transition-colors"
                                 title="Xóa giá này"
                               >
                                 <Trash2 className="w-3.5 h-3.5" />

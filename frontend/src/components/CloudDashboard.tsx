@@ -140,12 +140,12 @@ export const CloudDashboard: React.FC<CloudDashboardProps> = ({ onClose }) => {
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-50/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
-      <div className="bg-white border border-slate-200 text-slate-900 rounded-3xl w-full max-w-6xl overflow-hidden shadow-2xl flex flex-col max-h-[92vh]">
+      <div className="bg-white border border-slate-200 text-slate-900 rounded-lg w-full max-w-6xl overflow-hidden shadow-2xl flex flex-col max-h-[92vh]">
         
         {/* Modal Top Header */}
         <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-white/90">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-blue-600/20 text-[#1F1F1F] border border-blue-500/30">
+            <div className="p-2 rounded bg-blue-600/20 text-[#1F1F1F] border border-blue-500/30">
               <Cpu className="w-5 h-5" />
             </div>
             <div>
@@ -186,7 +186,7 @@ export const CloudDashboard: React.FC<CloudDashboardProps> = ({ onClose }) => {
               <div
                 key={inst.id}
                 onClick={() => setSelectedId(inst.id)}
-                className={`p-4 rounded-2xl border transition-all cursor-pointer ${
+                className={`p-4 rounded-md border transition-all cursor-pointer ${
                   selectedId === inst.id
                     ? 'bg-blue-900/30 border-blue-500/80 text-white shadow-lg'
                     : 'bg-slate-800/40 border-slate-800 hover:border-slate-700 text-slate-300'
@@ -209,7 +209,7 @@ export const CloudDashboard: React.FC<CloudDashboardProps> = ({ onClose }) => {
                   <span>{inst.cpu} vCPU / {inst.ram}GB</span>
                 </div>
 
-                <div className="text-[11px] text-slate-500 mt-2 flex items-center justify-between border-t border-slate-200/60 pt-2">
+                <div className="text-[11px] text-slate-600 mt-2 flex items-center justify-between border-t border-slate-200/60 pt-2">
                   <span>{inst.os}</span>
                   <span>Uptime: {inst.uptimeDays} ngày</span>
                 </div>
@@ -226,7 +226,7 @@ export const CloudDashboard: React.FC<CloudDashboardProps> = ({ onClose }) => {
             {activeInstance ? (
               <>
                 {/* Instance Quick Specs & Power Controls Header */}
-            <div className="bg-white/60 border border-slate-200 p-5 rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div className="bg-white/60 border border-slate-200 p-5 rounded-md flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <div>
                 <div className="flex items-center gap-2">
                   <h4 className="text-xl font-extrabold text-slate-900">{activeInstance.name}</h4>
@@ -243,7 +243,7 @@ export const CloudDashboard: React.FC<CloudDashboardProps> = ({ onClose }) => {
               <div className="flex items-center gap-2 flex-wrap">
                 <button
                   onClick={() => handleTogglePower(activeInstance.id)}
-                  className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                  className={`px-3.5 py-2 rounded text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
                     activeInstance.status === 'running'
                       ? 'bg-rose-600/80 hover:bg-rose-600 text-white'
                       : 'bg-emerald-600/80 hover:bg-emerald-600 text-white'
@@ -256,7 +256,7 @@ export const CloudDashboard: React.FC<CloudDashboardProps> = ({ onClose }) => {
                 <button
                   onClick={() => handleReboot(activeInstance.id)}
                   disabled={activeInstance.status !== 'running'}
-                  className="px-3.5 py-2 rounded-xl bg-slate-700 hover:bg-slate-600 disabled:opacity-50 text-slate-900 text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer"
+                  className="px-3.5 py-2 rounded bg-slate-700 hover:bg-slate-600 disabled:opacity-50 text-slate-900 text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer"
                 >
                   <RefreshCw className="w-3.5 h-3.5" />
                   Reboot
@@ -264,7 +264,7 @@ export const CloudDashboard: React.FC<CloudDashboardProps> = ({ onClose }) => {
 
                 <button
                   onClick={() => setTerminalOpen(!terminalOpen)}
-                  className="px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer"
+                  className="px-3.5 py-2 rounded bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer"
                 >
                   <Terminal className="w-3.5 h-3.5" />
                   Console SSH
@@ -273,7 +273,7 @@ export const CloudDashboard: React.FC<CloudDashboardProps> = ({ onClose }) => {
             </div>
 
             {/* Live Chart: vCPU & RAM Usage */}
-            <div className="bg-white/40 border border-slate-200 p-5 rounded-2xl">
+            <div className="bg-white/40 border border-slate-200 p-5 rounded-md">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2 text-sm font-bold text-slate-800">
                   <Activity className="w-4 h-4 text-[#1F1F1F]" />
@@ -311,14 +311,14 @@ export const CloudDashboard: React.FC<CloudDashboardProps> = ({ onClose }) => {
                     </AreaChart>
                   </ResponsiveContainer>
                 ) : (
-                  <div className="flex items-center justify-center h-full text-slate-500 text-xs">Đang tải biểu đồ...</div>
+                  <div className="flex items-center justify-center h-full text-slate-600 text-xs">Đang tải biểu đồ...</div>
                 )}
               </div>
             </div>
 
             {/* Interactive Terminal Box */}
             {terminalOpen && (
-              <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 font-mono text-xs text-emerald-400 animate-in fade-in duration-200">
+              <div className="bg-slate-50 border border-slate-200 rounded-md p-4 font-mono text-xs text-emerald-400 animate-in fade-in duration-200">
                 <div className="flex items-center justify-between pb-2 mb-3 border-b border-slate-200 text-slate-600 text-[11px]">
                   <span>VNC Console - root@{activeInstance?.ip}</span>
                   <button onClick={() => setTerminalOpen(false)} className="hover:text-slate-900">Đóng</button>
@@ -344,7 +344,7 @@ export const CloudDashboard: React.FC<CloudDashboardProps> = ({ onClose }) => {
             )}
             </>
             ) : (
-              <div className="flex flex-col items-center justify-center h-full text-slate-500 space-y-4">
+              <div className="flex flex-col items-center justify-center h-full text-slate-600 space-y-4">
                 <Server className="w-16 h-16 opacity-20" />
                 <p>Vui lòng chọn một máy chủ để xem chi tiết.</p>
               </div>

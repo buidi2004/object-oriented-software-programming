@@ -111,7 +111,7 @@ export default function AdminResourcesPage() {
     const ext = url.split('.').pop()?.toLowerCase();
     if (ext === 'pdf') return <FileText className="w-5 h-5 text-rose-500" />;
     if (['zip', 'rar', 'tar', 'gz'].includes(ext || '')) return <FileArchive className="w-5 h-5 text-amber-500" />;
-    if (['exe', 'msi', 'sh'].includes(ext || '')) return <Settings className="w-5 h-5 text-slate-500" />;
+    if (['exe', 'msi', 'sh'].includes(ext || '')) return <Settings className="w-5 h-5 text-slate-600" />;
     return <File className="w-5 h-5 text-[#1F1F1F]" />;
   };
 
@@ -120,22 +120,22 @@ export default function AdminResourcesPage() {
       <div className="flex justify-between items-center mb-6">
         <div>
           <h1 className="text-2xl font-bold text-slate-800">Quản lý Tài nguyên</h1>
-          <p className="text-sm text-slate-500">Tải lên các phần mềm, tài liệu cho khách hàng tải xuống.</p>
+          <p className="text-sm text-slate-600">Tải lên các phần mềm, tài liệu cho khách hàng tải xuống.</p>
         </div>
         <button
           onClick={() => setIsModalOpen(true)}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-sm font-medium transition-colors flex items-center gap-2"
+          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm font-medium transition-colors flex items-center gap-2"
         >
           <Plus className="w-4 h-4" />
           Tải lên file mới
         </button>
       </div>
 
-      <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+      <div className="bg-white rounded-md shadow-sm border border-slate-200 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-slate-50 border-b border-slate-200 text-xs uppercase text-slate-500 font-semibold tracking-wider">
+              <tr className="bg-slate-50 border-b border-slate-200 text-xs uppercase text-slate-600 font-semibold tracking-wider">
                 <th className="p-4">Tên tài nguyên</th>
                 <th className="p-4">Danh mục</th>
                 <th className="p-4">Kích thước</th>
@@ -146,41 +146,41 @@ export default function AdminResourcesPage() {
             <tbody className="divide-y divide-slate-100">
               {loading ? (
                 <tr>
-                  <td colSpan={5} className="p-8 text-center text-slate-500">Đang tải dữ liệu...</td>
+                  <td colSpan={5} className="p-8 text-center text-slate-600">Đang tải dữ liệu...</td>
                 </tr>
               ) : resources.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="p-8 text-center text-slate-500">Chưa có tài nguyên nào.</td>
+                  <td colSpan={5} className="p-8 text-center text-slate-600">Chưa có tài nguyên nào.</td>
                 </tr>
               ) : (
                 resources.map(resource => (
                   <tr key={resource.id} className="hover:bg-slate-50 transition-colors">
                     <td className="p-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center shrink-0">
+                        <div className="w-10 h-10 rounded-sm bg-slate-100 flex items-center justify-center shrink-0">
                           {getFileIcon(resource.fileUrl)}
                         </div>
                         <div>
                           <div className="font-bold text-slate-800">{resource.title}</div>
-                          <div className="text-xs text-slate-500 truncate max-w-md">{resource.description}</div>
+                          <div className="text-xs text-slate-600 truncate max-w-md">{resource.description}</div>
                         </div>
                       </div>
                     </td>
                     <td className="p-4">
-                      <span className="px-2.5 py-1 bg-slate-100 text-slate-600 text-xs font-semibold rounded-lg">
+                      <span className="px-2.5 py-1 bg-slate-100 text-slate-600 text-xs font-semibold rounded-sm">
                         {resource.category}
                       </span>
                     </td>
                     <td className="p-4 text-sm font-medium text-slate-600">
                       {formatFileSize(resource.fileSize)}
                     </td>
-                    <td className="p-4 text-sm text-slate-500">
+                    <td className="p-4 text-sm text-slate-600">
                       {formatDistanceToNow(new Date(resource.createdAt), { addSuffix: true, locale: vi })}
                     </td>
                     <td className="p-4 text-right">
                       <button
                         onClick={() => handleDelete(resource.id)}
-                        className="p-2 text-slate-600 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+                        className="p-2 text-slate-600 hover:text-rose-600 hover:bg-rose-50 rounded-sm transition-colors"
                         title="Xóa"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -197,7 +197,7 @@ export default function AdminResourcesPage() {
       {/* Upload Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-white/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+          <div className="bg-white rounded-md shadow-xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in-95 duration-200">
             <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center">
               <h3 className="font-bold text-slate-800 text-lg">Tải lên Tài nguyên mới</h3>
               <button onClick={() => setIsModalOpen(false)} className="text-slate-600 hover:text-slate-600">
@@ -213,7 +213,7 @@ export default function AdminResourcesPage() {
                   required
                   value={title}
                   onChange={e => setTitle(e.target.value)}
-                  className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                  className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
                   placeholder="VD: AnyDesk, TeamViewer, HDSD PDF..."
                 />
               </div>
@@ -225,7 +225,7 @@ export default function AdminResourcesPage() {
                   required
                   value={category}
                   onChange={e => setCategory(e.target.value)}
-                  className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                  className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
                   placeholder="VD: Tools, Manuals, Drivers..."
                 />
               </div>
@@ -237,14 +237,14 @@ export default function AdminResourcesPage() {
                   rows={3}
                   value={description}
                   onChange={e => setDescription(e.target.value)}
-                  className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 resize-none"
+                  className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 resize-none"
                   placeholder="Mô tả công dụng của file này..."
                 ></textarea>
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">File đính kèm <span className="text-rose-500">*</span></label>
-                <div className="relative border-2 border-dashed border-slate-300 rounded-xl p-6 text-center hover:bg-slate-50 transition-colors">
+                <div className="relative border-2 border-dashed border-slate-300 rounded p-6 text-center hover:bg-slate-50 transition-colors">
                   <input
                     type="file"
                     required
@@ -258,7 +258,7 @@ export default function AdminResourcesPage() {
                   ) : (
                     <>
                       <div className="text-sm font-medium text-slate-700">Click hoặc kéo thả file vào đây</div>
-                      <div className="text-xs text-slate-500 mt-1">Hỗ trợ PDF, ZIP, RAR, EXE...</div>
+                      <div className="text-xs text-slate-600 mt-1">Hỗ trợ PDF, ZIP, RAR, EXE...</div>
                     </>
                   )}
                 </div>
@@ -268,14 +268,14 @@ export default function AdminResourcesPage() {
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-xl transition-colors"
+                  className="px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded transition-colors"
                 >
                   Hủy
                 </button>
                 <button
                   type="submit"
                   disabled={uploading || !file || !title || !category}
-                  className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-xl transition-colors disabled:opacity-50 flex items-center gap-2"
+                  className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded transition-colors disabled:opacity-50 flex items-center gap-2"
                 >
                   {uploading ? 'Đang tải lên...' : 'Tải lên & Lưu'}
                 </button>

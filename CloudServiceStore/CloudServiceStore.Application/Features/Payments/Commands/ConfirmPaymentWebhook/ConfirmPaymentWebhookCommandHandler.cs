@@ -67,14 +67,14 @@ public class ConfirmPaymentWebhookCommandHandler : IRequestHandler<ConfirmPaymen
             var prefix = cleanKey.ToLowerInvariant();
             if (payment == null && prefix.Length >= 6)
             {
-                var allPayments = await _paymentRepo.GetAllAsync(ct);
-                payment = allPayments.FirstOrDefault(p => p.OrderId.ToString("N").StartsWith(prefix) || p.IdempotencyKey.ToLowerInvariant().Contains(prefix));
+                var pendingPayments = await _paymentRepo.WhereAsync(p => p.Status == PaymentStatus.Pending, ct);
+                payment = pendingPayments.FirstOrDefault(p => p.OrderId.ToString("N").StartsWith(prefix) || p.IdempotencyKey.ToLowerInvariant().Contains(prefix));
             }
 
             if (payment == null)
             {
-                var allOrders = await _orderRepo.GetAllAsync(ct);
-                var directOrder = allOrders.FirstOrDefault(o =>
+                var pendingOrders = await _orderRepo.WhereAsync(o => o.Status == OrderStatus.Pending, ct);
+                var directOrder = pendingOrders.FirstOrDefault(o =>
                     (parsedGuid != Guid.Empty && o.Id == parsedGuid) ||
                     (prefix.Length >= 6 && o.Id.ToString("N").StartsWith(prefix)));
 

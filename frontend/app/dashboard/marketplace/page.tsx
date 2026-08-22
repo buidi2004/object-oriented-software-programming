@@ -65,11 +65,11 @@ export default function UserMarketplacePage() {
               <ShoppingBag className="w-6 h-6 text-fuchsia-600" />
               Chợ Ứng Dụng (Marketplace)
             </h1>
-            <p className="text-slate-500 mt-1">Khám phá và mua sắm Plugins, Themes chất lượng cao.</p>
+            <p className="text-slate-600 mt-1">Khám phá và mua sắm Plugins, Themes chất lượng cao.</p>
           </div>
           <button
             onClick={fetchListings}
-            className="p-2 rounded-xl bg-white border border-slate-200 hover:text-fuchsia-600 transition-colors"
+            className="p-2 rounded bg-white border border-slate-200 hover:text-fuchsia-600 transition-colors"
           >
             <RefreshCw className="w-5 h-5" />
           </button>
@@ -77,20 +77,20 @@ export default function UserMarketplacePage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {displayListings.map((item) => (
-            <div key={item.id} className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden flex flex-col hover:shadow-md transition-shadow">
+            <div key={item.id} className="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden flex flex-col hover:shadow-md transition-shadow">
               <div className="aspect-video bg-slate-100 flex items-center justify-center border-b border-slate-200">
                 <ShoppingBag className="w-16 h-16 text-slate-700" />
               </div>
               <div className="p-6 flex flex-col flex-1">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-bold px-2 py-1 bg-fuchsia-50 text-fuchsia-700 rounded-lg">{item.category || 'Extension'}</span>
+                  <span className="text-xs font-bold px-2 py-1 bg-fuchsia-50 text-fuchsia-700 rounded-sm">{item.category || 'Extension'}</span>
                   <div className="flex items-center gap-1 text-amber-500 text-sm font-bold">
                     <Star className="w-4 h-4 fill-amber-500" />
                     {item.rating || '5.0'}
                   </div>
                 </div>
                 <h3 className="font-bold text-lg text-slate-900 mb-2">{item.title}</h3>
-                <p className="text-slate-500 text-sm mb-6 flex-1 line-clamp-3">{item.description}</p>
+                <p className="text-slate-600 text-sm mb-6 flex-1 line-clamp-3">{item.description}</p>
                 
                 <div className="flex items-center justify-between mt-auto">
                   <div className="font-black text-xl text-slate-900 flex items-center">
@@ -99,7 +99,7 @@ export default function UserMarketplacePage() {
                   <button
                     onClick={() => handlePurchase(item.id)}
                     disabled={purchasingId === item.id}
-                    className="flex items-center gap-2 px-4 py-2 bg-fuchsia-600 text-slate-900 rounded-xl hover:bg-fuchsia-700 font-semibold transition-colors disabled:opacity-50"
+                    className="flex items-center gap-2 px-4 py-2 bg-fuchsia-600 text-slate-900 rounded hover:bg-fuchsia-700 font-semibold transition-colors disabled:opacity-50"
                   >
                     {purchasingId === item.id ? (
                       <RefreshCw className="w-4 h-4 animate-spin" />

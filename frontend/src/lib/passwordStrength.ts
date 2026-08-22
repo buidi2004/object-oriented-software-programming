@@ -7,7 +7,7 @@ export interface PasswordStrength {
 
 export function getPasswordStrength(password: string): PasswordStrength {
   if (password.length === 0) {
-    return { strength: 1, label: 'Yếu', barColor: 'bg-slate-200', textColor: 'text-slate-400' };
+    return { strength: 1, label: 'Yếu', barColor: 'bg-slate-200', textColor: 'text-slate-600' };
   }
   if (password.length < 6) {
     return { strength: 1, label: 'Yếu', barColor: 'bg-red-500', textColor: 'text-red-600' };

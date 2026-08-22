@@ -136,16 +136,16 @@ export default function CheckoutPage() {
   if (step === 'success' && paymentUrl) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center py-12 px-4">
-        <div className="max-w-md w-full bg-white rounded-2xl p-8 shadow-xl border border-slate-100 text-center">
+        <div className="max-w-md w-full bg-white rounded-md p-8 shadow-xl border border-slate-100 text-center">
           <div className="w-20 h-20 rounded-full bg-emerald-100 flex items-center justify-center mx-auto mb-6">
             <CheckCircle className="w-12 h-12 text-emerald-600" />
           </div>
           <h1 className="text-2xl font-black text-slate-900 mb-2">Đặt Hàng Thành Công!</h1>
-          <p className="text-slate-500 mb-6">
+          <p className="text-slate-600 mb-6">
             Đơn hàng của bạn đã được ghi nhận. Vui lòng hoàn tất thanh toán để kích hoạt dịch vụ.
           </p>
           
-          <div className="bg-slate-50 rounded-xl p-4 mb-6">
+          <div className="bg-slate-50 rounded p-4 mb-6">
             <p className="text-sm text-slate-600 mb-1">Tổng thanh toán</p>
             <p className="text-3xl font-black text-[#1F1F1F]">{finalAmount.toLocaleString('vi-VN')} đ</p>
           </div>
@@ -154,12 +154,12 @@ export default function CheckoutPage() {
             href={paymentUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full py-4 rounded-xl bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 text-slate-900 font-bold text-base shadow-lg hover:shadow-xl transition-all block mb-3"
+            className="w-full py-4 rounded bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 text-slate-900 font-bold text-base shadow-lg hover:shadow-xl transition-all block mb-3"
           >
             Thanh Toán Ngay
           </a>
           
-          <Link href="/dashboard/orders" className="text-sm text-slate-500 hover:text-[#1F1F1F]">
+          <Link href="/dashboard/orders" className="text-sm text-slate-600 hover:text-[#1F1F1F]">
             Xem đơn hàng của tôi →
           </Link>
         </div>
@@ -170,17 +170,17 @@ export default function CheckoutPage() {
   if (cartItems.length === 0) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center py-12 px-4">
-        <div className="max-w-md w-full bg-white rounded-3xl p-8 shadow-xl border border-slate-100 text-center">
+        <div className="max-w-md w-full bg-white rounded-lg p-8 shadow-xl border border-slate-100 text-center">
           <div className="w-16 h-16 rounded-full bg-blue-50 flex items-center justify-center mx-auto mb-4 text-[#1F1F1F]">
             <ShoppingCart className="w-8 h-8" />
           </div>
           <h1 className="text-2xl font-black text-slate-900 mb-2">Giỏ Hàng Trống</h1>
-          <p className="text-slate-500 mb-6 text-sm">
+          <p className="text-slate-600 mb-6 text-sm">
             Bạn chưa có gói dịch vụ nào trong giỏ hàng để thanh toán.
           </p>
           <Link
             href="/services/cloud-vps"
-            className="w-full py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 text-slate-900 font-bold text-sm shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2"
+            className="w-full py-3.5 rounded bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 text-slate-900 font-bold text-sm shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2"
           >
             Khám phá gói Cloud VPS
             <ArrowRight className="w-4 h-4" />
@@ -196,7 +196,7 @@ export default function CheckoutPage() {
         <h1 className="text-3xl font-extrabold text-slate-900 mb-8">Thanh Toán</h1>
 
         {error && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-center gap-3">
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded flex items-center gap-3">
             <AlertCircle className="w-5 h-5 text-red-500 shrink-0" />
             <p className="text-sm text-red-700">{error}</p>
           </div>
@@ -206,14 +206,14 @@ export default function CheckoutPage() {
           {/* Order Items */}
           <div className="lg:col-span-2 space-y-4">
             <CheckoutAddressBook />
-            <div className="bg-white rounded-2xl p-6 border border-slate-200">
+            <div className="bg-white rounded-md p-6 border border-slate-200">
               <h2 className="text-lg font-bold text-slate-900 mb-4">Dịch vụ trong giỏ hàng</h2>
               <div className="space-y-4">
                 {cartItems.map((item) => (
                   <div key={item.id} className="flex flex-col sm:flex-row sm:items-center justify-between py-3 border-b border-slate-100 last:border-0 gap-1.5 sm:gap-4">
                     <div className="flex-1 min-w-0">
                       <p className="font-bold text-sm sm:text-base text-slate-900 leading-snug">{item.title}</p>
-                      <p className="text-xs text-slate-500">{item.type === 'vps' ? 'Cloud VPS' : item.type === 'hosting' ? 'Web Hosting' : 'Tên miền'}</p>
+                      <p className="text-xs text-slate-600">{item.type === 'vps' ? 'Cloud VPS' : item.type === 'hosting' ? 'Web Hosting' : 'Tên miền'}</p>
                     </div>
                     <span className="font-extrabold text-sm sm:text-base text-[#1F1F1F] sm:text-slate-900 shrink-0">{item.price.toLocaleString('vi-VN')} đ</span>
                   </div>
@@ -222,13 +222,13 @@ export default function CheckoutPage() {
             </div>
 
             {/* Payment Methods */}
-            <div className="bg-white rounded-2xl p-6 border border-slate-200">
+            <div className="bg-white rounded-md p-6 border border-slate-200">
               <h2 className="text-lg font-bold text-slate-900 mb-4">Phương thức thanh toán</h2>
               <div className="space-y-3">
                 {paymentMethods.map((method) => (
                   <label
                     key={method.id}
-                    className={`flex items-center gap-4 p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                    className={`flex items-center gap-4 p-4 rounded border-2 cursor-pointer transition-all ${
                       selectedMethod === method.id
                         ? 'border-blue-500 bg-blue-50'
                         : 'border-slate-200 hover:border-slate-300'
@@ -242,10 +242,10 @@ export default function CheckoutPage() {
                       onChange={(e) => setSelectedMethod(e.target.value)}
                       className="w-4 h-4 text-[#1F1F1F] focus:ring-blue-500"
                     />
-                    <method.icon className={`w-6 h-6 ${selectedMethod === method.id ? 'text-[#1F1F1F]' : 'text-slate-400'}`} />
+                    <method.icon className={`w-6 h-6 ${selectedMethod === method.id ? 'text-[#1F1F1F]' : 'text-slate-600'}`} />
                     <div className="flex-1">
                       <p className="font-bold text-slate-900">{method.name}</p>
-                      <p className="text-sm text-slate-500">{method.description}</p>
+                      <p className="text-sm text-slate-600">{method.description}</p>
                     </div>
                     {selectedMethod === method.id && (
                       <CheckCircle className="w-5 h-5 text-[#1F1F1F]" />
@@ -258,7 +258,7 @@ export default function CheckoutPage() {
 
           {/* Order Summary */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-2xl p-6 border border-slate-200 sticky top-24">
+            <div className="bg-white rounded-md p-6 border border-slate-200 sticky top-24">
               <h2 className="text-lg font-bold text-slate-900 mb-4">Tổng thanh toán</h2>
               
               <div className="space-y-3 mb-6">
@@ -281,7 +281,7 @@ export default function CheckoutPage() {
               <button
                 onClick={handlePayment}
                 disabled={isLoading}
-                className="w-full py-4 rounded-xl bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 text-slate-900 font-bold text-base shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 disabled:opacity-70"
+                className="w-full py-4 rounded bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 text-slate-900 font-bold text-base shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 disabled:opacity-70"
               >
                 {isLoading ? (
                   <Loader2 className="w-5 h-5 animate-spin" />
@@ -293,7 +293,7 @@ export default function CheckoutPage() {
                 )}
               </button>
 
-              <div className="mt-4 text-xs text-slate-500 text-center">
+              <div className="mt-4 text-xs text-slate-600 text-center">
                 Thanh toán an toàn được bảo vệ bởi mã hóa SSL 256-bit
               </div>
             </div>

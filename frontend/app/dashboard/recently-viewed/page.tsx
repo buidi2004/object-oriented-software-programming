@@ -70,12 +70,12 @@ export default function RecentlyViewedPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-black text-slate-900 tracking-tight">Lịch sử xem gần đây</h1>
-          <p className="text-slate-500 mt-1">Các trang bạn đã truy cập gần đây</p>
+          <p className="text-slate-600 mt-1">Các trang bạn đã truy cập gần đây</p>
         </div>
         {items.length > 0 && (
           <button
             onClick={handleClearAll}
-            className="px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition-colors flex items-center gap-2"
+            className="px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 rounded-sm transition-colors flex items-center gap-2"
           >
             <Trash2 className="w-4 h-4" />
             Xóa tất cả
@@ -84,10 +84,10 @@ export default function RecentlyViewedPage() {
       </div>
 
       {error && (
-        <div className="p-3 bg-red-50 border border-red-200 rounded-xl flex items-center gap-2 text-sm text-red-700">
+        <div className="p-3 bg-red-50 border border-red-200 rounded flex items-center gap-2 text-sm text-red-700">
           <AlertCircle className="w-4 h-4 shrink-0" />
           <span>{error}</span>
-          <button onClick={fetchHistory} className="ml-auto px-3 py-1 bg-red-100 hover:bg-red-200 rounded-lg text-xs font-semibold">
+          <button onClick={fetchHistory} className="ml-auto px-3 py-1 bg-red-100 hover:bg-red-200 rounded-sm text-xs font-semibold">
             Thử lại
           </button>
         </div>
@@ -98,10 +98,10 @@ export default function RecentlyViewedPage() {
         {items.map((item) => (
           <div
             key={item.id}
-            className="bg-white rounded-xl border border-slate-200 p-4 hover:border-blue-200 hover:shadow-md transition-all group"
+            className="bg-white rounded border border-slate-200 p-4 hover:border-blue-200 hover:shadow-md transition-all group"
           >
             <div className="flex items-center gap-4">
-              <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${colorMap[item.type]}`}>
+              <div className={`w-10 h-10 rounded flex items-center justify-center ${colorMap[item.type]}`}>
                 {getTypeIcon(item.type)}
               </div>
 
@@ -109,7 +109,7 @@ export default function RecentlyViewedPage() {
                 <Link href={item.url} className="font-semibold text-slate-900 hover:text-[#1F1F1F] transition-colors">
                   {item.title}
                 </Link>
-                <p className="text-sm text-slate-500 mt-1">{item.description}</p>
+                <p className="text-sm text-slate-600 mt-1">{item.description}</p>
                 <p className="text-xs text-slate-600 mt-1 flex items-center gap-1">
                   <Clock className="w-3 h-3" />
                   Đã xem: {new Date(item.viewedAt).toLocaleString('vi-VN')}
@@ -118,7 +118,7 @@ export default function RecentlyViewedPage() {
 
               <button
                 onClick={() => handleDeleteItem(item.id || "")}
-                className="p-2 rounded-lg hover:bg-slate-100 text-slate-600 hover:text-red-600 transition-colors opacity-0 group-hover:opacity-100"
+                className="p-2 rounded-sm hover:bg-slate-100 text-slate-600 hover:text-red-600 transition-colors opacity-0 group-hover:opacity-100"
                 title="Xóa"
               >
                 <Trash2 className="w-4 h-4" />
@@ -129,13 +129,13 @@ export default function RecentlyViewedPage() {
       </div>
 
       {items.length === 0 && !error && (
-        <div className="text-center py-12 bg-white rounded-xl border border-slate-200">
+        <div className="text-center py-12 bg-white rounded border border-slate-200">
           <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-700" />
-          <p className="font-medium text-slate-500">Chưa có lịch sử xem</p>
+          <p className="font-medium text-slate-600">Chưa có lịch sử xem</p>
           <p className="text-sm text-slate-600 mt-1">Các trang bạn xem sẽ hiển thị ở đây</p>
           <Link
             href="/services"
-            className="inline-flex items-center gap-2 mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+            className="inline-flex items-center gap-2 mt-4 px-4 py-2 bg-blue-600 text-white rounded-sm font-semibold hover:bg-blue-700 transition-colors"
           >
             Khám phá dịch vụ
           </Link>

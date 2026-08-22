@@ -85,11 +85,11 @@ export const HomeAboutSection = () => {
 
           {/* Right Image */}
           <div className="relative mt-4 lg:mt-0">
-            <div className="hidden sm:block absolute inset-0 bg-blue-50 transform sm:translate-x-6 lg:translate-x-10 -translate-y-6 lg:-translate-y-10 rounded-3xl -z-10" />
+            <div className="hidden sm:block absolute inset-0 bg-slate-100 transform sm:translate-x-6 lg:translate-x-10 -translate-y-6 lg:-translate-y-10 rounded-lg -z-10" />
             <img 
               src={data.imageUrl || DEFAULT_ABOUT.imageUrl} 
               alt="Data Center" 
-              className="rounded-2xl sm:rounded-3xl shadow-xl lg:shadow-2xl object-cover w-full h-[280px] sm:h-[380px] lg:h-[500px]"
+              className="rounded-md sm:rounded-lg shadow-xl lg:shadow-2xl object-cover w-full h-[280px] sm:h-[380px] lg:h-[500px]"
               onError={(e) => {
                 (e.target as HTMLImageElement).src = DEFAULT_ABOUT.imageUrl;
               }}

@@ -107,12 +107,12 @@ export default function NotificationsPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-black text-slate-900 tracking-tight">Trung tâm Thông báo</h1>
-          <p className="text-slate-500 mt-1">Quản lý cách chúng tôi liên hệ và gửi thông báo cho bạn</p>
+          <p className="text-slate-600 mt-1">Quản lý cách chúng tôi liên hệ và gửi thông báo cho bạn</p>
         </div>
         <button
           onClick={handleSave}
           disabled={isSaving}
-          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl font-bold transition-all disabled:opacity-50"
+          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded font-bold transition-all disabled:opacity-50"
         >
           {isSaving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
           <span>Lưu cài đặt</span>
@@ -120,7 +120,7 @@ export default function NotificationsPage() {
       </div>
 
       {loadError && (
-        <div className="p-4 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-sm flex items-start gap-3">
+        <div className="p-4 rounded bg-amber-50 border border-amber-200 text-amber-900 text-sm flex items-start gap-3">
           <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
           <div>
             <p className="font-semibold">{loadError}</p>
@@ -139,19 +139,19 @@ export default function NotificationsPage() {
       )}
 
       {message && (
-        <div className={`p-4 rounded-xl text-sm font-semibold ${message.includes('Lỗi') ? 'bg-rose-50 text-rose-600' : 'bg-emerald-50 text-emerald-600'}`}>
+        <div className={`p-4 rounded text-sm font-semibold ${message.includes('Lỗi') ? 'bg-rose-50 text-rose-600' : 'bg-emerald-50 text-emerald-600'}`}>
           {message}
         </div>
       )}
 
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      <div className="bg-white rounded-md border border-slate-200 shadow-sm overflow-hidden">
         <div className="px-6 py-5 border-b border-slate-100 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-[#1F1F1F]">
+          <div className="w-10 h-10 rounded bg-blue-50 flex items-center justify-center text-[#1F1F1F]">
             <Bell className="w-5 h-5" />
           </div>
           <div>
             <h2 className="text-lg font-bold text-slate-900">Email Notifications</h2>
-            <p className="text-sm text-slate-500">Cấu hình nhận thông báo qua email của bạn</p>
+            <p className="text-sm text-slate-600">Cấu hình nhận thông báo qua email của bạn</p>
           </div>
         </div>
 
@@ -163,7 +163,7 @@ export default function NotificationsPage() {
               </div>
               <div>
                 <h3 className="text-sm font-bold text-slate-900">Cập nhật đơn hàng</h3>
-                <p className="text-xs text-slate-500 mt-1">Nhận email khi có hóa đơn mới, dịch vụ được kích hoạt hoặc gia hạn thành công.</p>
+                <p className="text-xs text-slate-600 mt-1">Nhận email khi có hóa đơn mới, dịch vụ được kích hoạt hoặc gia hạn thành công.</p>
               </div>
             </div>
             <label className="relative inline-flex items-center cursor-pointer shrink-0">
@@ -179,7 +179,7 @@ export default function NotificationsPage() {
               </div>
               <div>
                 <h3 className="text-sm font-bold text-slate-900">Cảnh báo bảo mật</h3>
-                <p className="text-xs text-slate-500 mt-1">Thông báo khi có đăng nhập từ thiết bị lạ, thay đổi mật khẩu hoặc xác thực 2 bước.</p>
+                <p className="text-xs text-slate-600 mt-1">Thông báo khi có đăng nhập từ thiết bị lạ, thay đổi mật khẩu hoặc xác thực 2 bước.</p>
               </div>
             </div>
             <label className="relative inline-flex items-center cursor-pointer shrink-0">
@@ -195,7 +195,7 @@ export default function NotificationsPage() {
               </div>
               <div>
                 <h3 className="text-sm font-bold text-slate-900">Chương trình khuyến mãi</h3>
-                <p className="text-xs text-slate-500 mt-1">Nhận các voucher giảm giá, tin tức và ưu đãi đặc biệt từ chúng tôi.</p>
+                <p className="text-xs text-slate-600 mt-1">Nhận các voucher giảm giá, tin tức và ưu đãi đặc biệt từ chúng tôi.</p>
               </div>
             </div>
             <label className="relative inline-flex items-center cursor-pointer shrink-0">
@@ -206,12 +206,12 @@ export default function NotificationsPage() {
         </div>
       </div>
 
-      <div className="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden">
-        <div className="px-6 py-5 border-b border-slate-100"><h2 className="text-lg font-bold text-slate-900">SMS, Zalo và Telegram</h2><p className="text-sm text-slate-500">Khai báo kênh liên hệ và bật từng loại thông báo.</p></div>
+      <div className="bg-white rounded-sm border border-slate-200 shadow-sm overflow-hidden">
+        <div className="px-6 py-5 border-b border-slate-100"><h2 className="text-lg font-bold text-slate-900">SMS, Zalo và Telegram</h2><p className="text-sm text-slate-600">Khai báo kênh liên hệ và bật từng loại thông báo.</p></div>
         <div className="grid md:grid-cols-3 gap-4 p-6 border-b border-slate-100">
-          <label className="text-sm font-semibold">Số điện thoại<input value={settings.phoneNumber} onChange={e=>setSettings({...settings,phoneNumber:e.target.value})} placeholder="0901234567" className="mt-2 w-full border rounded-lg px-3 py-2 font-normal" /></label>
-          <label className="text-sm font-semibold">Zalo ID<input value={settings.zaloId} onChange={e=>setSettings({...settings,zaloId:e.target.value})} placeholder="Zalo ID" className="mt-2 w-full border rounded-lg px-3 py-2 font-normal" /></label>
-          <label className="text-sm font-semibold">Telegram Chat ID<input value={settings.telegramChatId} onChange={e=>setSettings({...settings,telegramChatId:e.target.value})} placeholder="123456789" className="mt-2 w-full border rounded-lg px-3 py-2 font-normal" /></label>
+          <label className="text-sm font-semibold">Số điện thoại<input value={settings.phoneNumber} onChange={e=>setSettings({...settings,phoneNumber:e.target.value})} placeholder="0901234567" className="mt-2 w-full border rounded-sm px-3 py-2 font-normal" /></label>
+          <label className="text-sm font-semibold">Zalo ID<input value={settings.zaloId} onChange={e=>setSettings({...settings,zaloId:e.target.value})} placeholder="Zalo ID" className="mt-2 w-full border rounded-sm px-3 py-2 font-normal" /></label>
+          <label className="text-sm font-semibold">Telegram Chat ID<input value={settings.telegramChatId} onChange={e=>setSettings({...settings,telegramChatId:e.target.value})} placeholder="123456789" className="mt-2 w-full border rounded-sm px-3 py-2 font-normal" /></label>
         </div>
         <div className="divide-y divide-slate-100">
           {([

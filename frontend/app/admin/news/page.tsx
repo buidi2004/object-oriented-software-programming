@@ -236,7 +236,7 @@ export default function AdminNewsPage() {
     <div className="min-h-screen bg-slate-50">
       {/* Toast Notification */}
       {toast && (
-        <div className={`fixed bottom-5 right-5 z-50 px-5 py-3 rounded-xl shadow-xl text-white font-semibold text-sm flex items-center gap-2.5 animate-in slide-in-from-bottom-5 ${
+        <div className={`fixed bottom-5 right-5 z-50 px-5 py-3 rounded shadow-xl text-white font-semibold text-sm flex items-center gap-2.5 animate-in slide-in-from-bottom-5 ${
           toast.type === 'success' ? 'bg-emerald-600' : 'bg-red-600'
         }`}>
           {toast.type === 'success' ? <CheckCircle2 className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />}
@@ -247,25 +247,25 @@ export default function AdminNewsPage() {
       <header className="bg-white border-b border-slate-200 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link href="/admin" className="p-2 rounded-lg hover:bg-slate-100 transition-colors">
+            <Link href="/admin" className="p-2 rounded-sm hover:bg-slate-100 transition-colors">
               <ArrowLeft className="w-5 h-5 text-slate-600" />
             </Link>
             <div>
               <h1 className="text-xl font-bold text-slate-900">Quản lý Tin tức & Blog</h1>
-              <p className="text-xs text-slate-500">{news.length} bài viết • Quản trị nội dung</p>
+              <p className="text-xs text-slate-600">{news.length} bài viết • Quản trị nội dung</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
             <button
               onClick={fetchNews}
-              className="p-2 text-slate-500 hover:bg-slate-100 rounded-lg transition-colors"
+              className="p-2 text-slate-600 hover:bg-slate-100 rounded-sm transition-colors"
               title="Tải lại danh sách"
             >
               <RefreshCw className="w-5 h-5" />
             </button>
             <button 
               onClick={handleOpenAddModal} 
-              className="px-4 py-2 rounded-xl bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 transition-colors flex items-center gap-2 shadow-sm"
+              className="px-4 py-2 rounded bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 transition-colors flex items-center gap-2 shadow-sm"
             >
               <Plus className="w-4 h-4" />
               Viết bài mới
@@ -284,7 +284,7 @@ export default function AdminNewsPage() {
               placeholder="Tìm kiếm theo tiêu đề, tags hoặc slug..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 bg-white rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 shadow-sm"
+              className="w-full pl-10 pr-4 py-2.5 bg-white rounded border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 shadow-sm"
             />
           </div>
 
@@ -297,7 +297,7 @@ export default function AdminNewsPage() {
               <button
                 key={f.id}
                 onClick={() => setStatusFilter(f.id as any)}
-                className={`px-4 py-2 rounded-xl text-xs font-semibold transition-colors ${
+                className={`px-4 py-2 rounded text-xs font-semibold transition-colors ${
                   statusFilter === f.id
                     ? 'bg-blue-600 text-white shadow-sm'
                     : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
@@ -312,7 +312,7 @@ export default function AdminNewsPage() {
         {/* Grid Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {filteredNews.map((item) => (
-            <div key={item.id} className="bg-white rounded-2xl border border-slate-200 overflow-hidden hover:shadow-md transition-shadow flex flex-col">
+            <div key={item.id} className="bg-white rounded-md border border-slate-200 overflow-hidden hover:shadow-md transition-shadow flex flex-col">
               {/* Thumbnail */}
               <div className="h-44 bg-slate-100 relative overflow-hidden border-b border-slate-100 flex items-center justify-center">
                 {item.thumbnailUrl ? (
@@ -355,7 +355,7 @@ export default function AdminNewsPage() {
                   {item.title}
                 </h3>
                 
-                <p className="text-xs text-slate-500 font-mono mb-4 truncate">
+                <p className="text-xs text-slate-600 font-mono mb-4 truncate">
                   /{item.slug}
                 </p>
                 
@@ -363,7 +363,7 @@ export default function AdminNewsPage() {
                   {!isItemPublished(item.status) ? (
                     <button 
                       onClick={() => handleTogglePublish(item)}
-                      className="flex-1 py-2 rounded-xl bg-emerald-50 text-emerald-700 hover:bg-emerald-100 text-xs font-bold transition-colors flex items-center justify-center gap-1.5"
+                      className="flex-1 py-2 rounded bg-emerald-50 text-emerald-700 hover:bg-emerald-100 text-xs font-bold transition-colors flex items-center justify-center gap-1.5"
                     >
                       <Globe className="w-3.5 h-3.5" /> Xuất bản
                     </button>
@@ -371,7 +371,7 @@ export default function AdminNewsPage() {
                     <Link
                       href={`/news/${item.slug}`}
                       target="_blank"
-                      className="flex-1 py-2 rounded-xl bg-slate-50 text-slate-600 hover:bg-slate-100 text-xs font-semibold transition-colors flex items-center justify-center gap-1.5"
+                      className="flex-1 py-2 rounded bg-slate-50 text-slate-600 hover:bg-slate-100 text-xs font-semibold transition-colors flex items-center justify-center gap-1.5"
                     >
                       <ExternalLink className="w-3.5 h-3.5" /> Xem bài
                     </Link>
@@ -379,14 +379,14 @@ export default function AdminNewsPage() {
                   
                   <button 
                     onClick={() => handleOpenEditModal(item)} 
-                    className="p-2 text-slate-500 hover:text-[#1F1F1F] hover:bg-blue-50 rounded-xl transition-colors"
+                    className="p-2 text-slate-600 hover:text-[#1F1F1F] hover:bg-blue-50 rounded transition-colors"
                     title="Chỉnh sửa bài viết"
                   >
                     <Edit2 className="w-4 h-4" />
                   </button>
                   <button 
                     onClick={() => handleDelete(item.id, item.title)} 
-                    className="p-2 text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors"
+                    className="p-2 text-slate-600 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
                     title="Xóa bài viết"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -398,7 +398,7 @@ export default function AdminNewsPage() {
         </div>
 
         {filteredNews.length === 0 && (
-          <div className="text-center py-16 bg-white rounded-2xl border border-slate-200 text-slate-500">
+          <div className="text-center py-16 bg-white rounded-md border border-slate-200 text-slate-600">
             <Newspaper className="w-12 h-12 mx-auto mb-3 text-slate-700" />
             <p className="font-semibold text-slate-700">Không tìm thấy bài viết nào</p>
             <p className="text-xs text-slate-600 mt-1">Bấm "Viết bài mới" để tạo bài viết đầu tiên</p>
@@ -409,19 +409,19 @@ export default function AdminNewsPage() {
       {/* Add / Edit Article Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
+          <div className="bg-white rounded-lg p-6 sm:p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h3 className="text-xl font-bold text-slate-900">
                   {editingId ? 'Chỉnh sửa bài viết' : 'Viết bài tin tức mới'}
                 </h3>
-                <p className="text-xs text-slate-500 mt-0.5">
+                <p className="text-xs text-slate-600 mt-0.5">
                   Đăng tải nội dung chia sẻ kiến thức, hướng dẫn và cập nhật hệ thống
                 </p>
               </div>
               <button 
                 onClick={() => setShowModal(false)}
-                className="p-2 text-slate-600 hover:text-slate-600 rounded-lg hover:bg-slate-100"
+                className="p-2 text-slate-600 hover:text-slate-600 rounded-sm hover:bg-slate-100"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -448,7 +448,7 @@ export default function AdminNewsPage() {
                       .replace(/^-|-$/g, "");
                     setFormData({ ...formData, title, slug: formData.slug || slug });
                   }}
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full px-4 py-2.5 rounded border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                 />
               </div>
 
@@ -461,7 +461,7 @@ export default function AdminNewsPage() {
                   placeholder="vd: huong-dan-cau-hinh-vps-nginx"
                   value={formData.slug}
                   onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full px-4 py-2.5 rounded border border-slate-200 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                 />
               </div>
 
@@ -474,7 +474,7 @@ export default function AdminNewsPage() {
                     placeholder="https://... hoặc tải ảnh từ máy tính"
                     value={formData.thumbnailUrl}
                     onChange={(e) => setFormData({ ...formData, thumbnailUrl: e.target.value })}
-                    className="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                    className="flex-1 px-4 py-2.5 rounded border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                   />
                   <input
                     type="file"
@@ -487,14 +487,14 @@ export default function AdminNewsPage() {
                     type="button"
                     disabled={isUploading}
                     onClick={() => fileInputRef.current?.click()}
-                    className="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-semibold flex items-center gap-2 transition-colors disabled:opacity-50"
+                    className="px-4 py-2.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-semibold flex items-center gap-2 transition-colors disabled:opacity-50"
                   >
                     <Upload className="w-4 h-4" />
                     {isUploading ? 'Đang tải...' : 'Tải ảnh'}
                   </button>
                 </div>
                 {formData.thumbnailUrl && (
-                  <div className="mt-2 relative w-full h-32 rounded-xl overflow-hidden border border-slate-200">
+                  <div className="mt-2 relative w-full h-32 rounded overflow-hidden border border-slate-200">
                     <img 
                       src={formData.thumbnailUrl} 
                       alt="Preview" 
@@ -516,7 +516,7 @@ export default function AdminNewsPage() {
                     placeholder="VPS, Cloud, Linux, Hướng dẫn..."
                     value={formData.tags}
                     onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                    className="w-full px-4 py-2.5 rounded border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                   />
                 </div>
                 <div>
@@ -524,7 +524,7 @@ export default function AdminNewsPage() {
                   <select
                     value={formData.status}
                     onChange={(e) => setFormData({ ...formData, status: Number(e.target.value) })}
-                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                    className="w-full px-4 py-2.5 rounded border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                   >
                     <option value={1}>Xuất bản công khai (Published)</option>
                     <option value={0}>Lưu bản nháp (Draft)</option>
@@ -541,7 +541,7 @@ export default function AdminNewsPage() {
                   placeholder="Nhập nội dung bài viết chi tiết tại đây..."
                   value={formData.content}
                   onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 font-sans"
+                  className="w-full px-4 py-3 rounded border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 font-sans"
                 />
               </div>
 
@@ -549,14 +549,14 @@ export default function AdminNewsPage() {
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="flex-1 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm transition-colors"
+                  className="flex-1 py-3 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm transition-colors"
                 >
                   Hủy bỏ
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="flex-1 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-md transition-colors disabled:opacity-50"
+                  className="flex-1 py-3 rounded bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-md transition-colors disabled:opacity-50"
                 >
                   {isSubmitting ? 'Đang lưu...' : editingId ? 'Lưu Thay Đổi' : 'Đăng Bài Viết'}
                 </button>

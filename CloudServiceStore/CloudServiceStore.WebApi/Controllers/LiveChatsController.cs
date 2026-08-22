@@ -31,6 +31,24 @@ public class LiveChatsController : ControllerBase
     public async Task<IActionResult> SendMessage(Guid id, [FromBody] string message, CancellationToken ct)
     {
         var msgId = await _mediator.Send(new SendChatMessageCommand(id, message), ct);
+        
+        // Trigger ChatBot asynchronously
+        var serviceScopeFactory = HttpContext.RequestServices.GetRequiredService<Microsoft.Extensions.DependencyInjection.IServiceScopeFactory>();
+        _ = Task.Run(async () =>
+        {
+            using var scope = serviceScopeFactory.CreateScope();
+            var scopedMediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+            try
+            {
+                await scopedMediator.Send(new CloudServiceStore.Application.Features.LiveChats.Commands.TriggerChatBotReply.TriggerChatBotReplyCommand(id, message), CancellationToken.None);
+            }
+            catch (Exception ex)
+            {
+                var logger = scope.ServiceProvider.GetRequiredService<Microsoft.Extensions.Logging.ILogger<LiveChatsController>>();
+                logger.LogError(ex, "Failed to execute chatbot reply");
+            }
+        });
+
         return CreatedAtAction(null, new { id = msgId });
     }
 

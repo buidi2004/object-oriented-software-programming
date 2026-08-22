@@ -205,7 +205,7 @@ export default function AdminUptimePage() {
     <div className="min-h-screen bg-slate-50">
       {/* Toast */}
       {toast && (
-        <div className={`fixed bottom-5 right-5 z-50 px-5 py-3 rounded-xl shadow-xl text-white font-semibold text-sm flex items-center gap-2.5 animate-in slide-in-from-bottom-5 ${
+        <div className={`fixed bottom-5 right-5 z-50 px-5 py-3 rounded shadow-xl text-white font-semibold text-sm flex items-center gap-2.5 animate-in slide-in-from-bottom-5 ${
           toast.type === 'success' ? 'bg-emerald-600' : 'bg-red-600'
         }`}>
           {toast.type === 'success' ? <CheckCircle2 className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />}
@@ -217,7 +217,7 @@ export default function AdminUptimePage() {
       <header className="bg-white border-b border-slate-200 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link href="/admin" className="p-2 rounded-lg hover:bg-slate-100 transition-colors">
+            <Link href="/admin" className="p-2 rounded-sm hover:bg-slate-100 transition-colors">
               <ArrowLeft className="w-5 h-5 text-slate-600" />
             </Link>
             <div>
@@ -225,13 +225,13 @@ export default function AdminUptimePage() {
                 <Activity className="w-6 h-6 text-emerald-600" />
                 Giám Sát Hạ Tầng &amp; Uptime (Status Monitoring)
               </h1>
-              <p className="text-xs text-slate-500">Cập nhật lúc: {lastRefresh}</p>
+              <p className="text-xs text-slate-600">Cập nhật lúc: {lastRefresh}</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
             <button
               onClick={fetchData}
-              className="p-2 text-slate-500 hover:bg-slate-100 rounded-xl transition-colors"
+              className="p-2 text-slate-600 hover:bg-slate-100 rounded transition-colors"
               title="Ping lại toàn bộ"
             >
               <RefreshCw className="w-5 h-5" />
@@ -241,7 +241,7 @@ export default function AdminUptimePage() {
                 setFormData({ name: '', url: '', expectedCode: '200' });
                 setShowAddModal(true);
               }}
-              className="px-4 py-2 rounded-xl bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 transition-colors flex items-center gap-2 shadow-sm"
+              className="px-4 py-2 rounded bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 transition-colors flex items-center gap-2 shadow-sm"
             >
               <Plus className="w-4 h-4" />
               Thêm Endpoint Mới
@@ -254,9 +254,9 @@ export default function AdminUptimePage() {
         {/* System Overview Cards */}
         {systemStatus && (
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-            <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
+            <div className="bg-white rounded-md p-5 border border-slate-200 shadow-sm">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs text-slate-500 font-bold uppercase">Trạng Thái Hệ Thống</span>
+                <span className="text-xs text-slate-600 font-bold uppercase">Trạng Thái Hệ Thống</span>
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
               </div>
               <div className="text-xl font-black text-emerald-600 flex items-center gap-1.5">
@@ -264,20 +264,20 @@ export default function AdminUptimePage() {
               </div>
             </div>
 
-            <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
-              <div className="text-xs text-slate-500 font-bold uppercase mb-1">Tỷ Lệ Uptime Toàn Mạng</div>
+            <div className="bg-white rounded-md p-5 border border-slate-200 shadow-sm">
+              <div className="text-xs text-slate-600 font-bold uppercase mb-1">Tỷ Lệ Uptime Toàn Mạng</div>
               <div className="text-2xl font-black text-slate-900">{systemStatus.uptime}%</div>
               <div className="text-[10px] text-slate-600 mt-1">Cam kết SLA: 99.9%</div>
             </div>
 
-            <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
-              <div className="text-xs text-slate-500 font-bold uppercase mb-1">Độ Trễ Trung Bình</div>
+            <div className="bg-white rounded-md p-5 border border-slate-200 shadow-sm">
+              <div className="text-xs text-slate-600 font-bold uppercase mb-1">Độ Trễ Trung Bình</div>
               <div className="text-2xl font-black text-[#1F1F1F]">{systemStatus.avgResponseTime} ms</div>
               <div className="text-[10px] text-slate-600 mt-1">Đo đạc từ 3 miền Bắc - Trung - Nam</div>
             </div>
 
-            <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
-              <div className="text-xs text-slate-500 font-bold uppercase mb-1">Lượt Yêu Cầu 24h</div>
+            <div className="bg-white rounded-md p-5 border border-slate-200 shadow-sm">
+              <div className="text-xs text-slate-600 font-bold uppercase mb-1">Lượt Yêu Cầu 24h</div>
               <div className="text-2xl font-black text-purple-600">{systemStatus.totalRequests.toLocaleString('vi-VN')}</div>
               <div className="text-[10px] text-slate-600 mt-1">100% Requests được bảo vệ qua WAF</div>
             </div>
@@ -285,7 +285,7 @@ export default function AdminUptimePage() {
         )}
 
         {/* Services Table */}
-        <div className="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-sm">
+        <div className="bg-white rounded-lg border border-slate-200 overflow-hidden shadow-sm">
           <table className="w-full text-sm">
             <thead className="bg-slate-50 border-b border-slate-200 text-xs uppercase tracking-wider text-slate-600">
               <tr>
@@ -301,7 +301,7 @@ export default function AdminUptimePage() {
                 <tr key={svc.id} className="hover:bg-slate-50 transition-colors">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center font-bold">
+                      <div className="w-10 h-10 rounded bg-slate-100 text-slate-700 flex items-center justify-center font-bold">
                         <Server className="w-5 h-5" />
                       </div>
                       <div>
@@ -344,29 +344,29 @@ export default function AdminUptimePage() {
                       <button
                         onClick={() => handlePingTest(svc.id, svc.name)}
                         disabled={testingPingId === svc.id}
-                        className="px-2.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center gap-1 transition-colors disabled:opacity-50"
+                        className="px-2.5 py-1.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center gap-1 transition-colors disabled:opacity-50"
                         title="Kiểm tra Ping tức thời"
                       >
-                        <Zap className={`w-3.5 h-3.5 ${testingPingId === svc.id ? 'animate-bounce text-amber-500' : 'text-slate-500'}`} />
+                        <Zap className={`w-3.5 h-3.5 ${testingPingId === svc.id ? 'animate-bounce text-amber-500' : 'text-slate-600'}`} />
                         Ping
                       </button>
                       <button
                         onClick={() => handleTogglePause(svc.id)}
-                        className="p-1.5 text-slate-600 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors"
+                        className="p-1.5 text-slate-600 hover:text-slate-700 hover:bg-slate-100 rounded-sm transition-colors"
                         title={svc.isPaused ? 'Tiếp tục giám sát' : 'Tạm dừng giám sát'}
                       >
                         {svc.isPaused ? <Play className="w-3.5 h-3.5" /> : <Pause className="w-3.5 h-3.5" />}
                       </button>
                       <button
                         onClick={() => handleOpenEdit(svc)}
-                        className="p-1.5 text-slate-600 hover:text-[#1F1F1F] hover:bg-blue-50 rounded-lg transition-colors"
+                        className="p-1.5 text-slate-600 hover:text-[#1F1F1F] hover:bg-blue-50 rounded-sm transition-colors"
                         title="Sửa endpoint"
                       >
                         <Edit2 className="w-3.5 h-3.5" />
                       </button>
                       <button
                         onClick={() => handleDeleteService(svc.id, svc.name)}
-                        className="p-1.5 text-slate-600 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+                        className="p-1.5 text-slate-600 hover:text-rose-600 hover:bg-rose-50 rounded-sm transition-colors"
                         title="Xóa endpoint"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -382,12 +382,12 @@ export default function AdminUptimePage() {
         {/* Add / Edit Modal */}
         {(showAddModal || editingService) && (
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl">
+            <div className="bg-white rounded-lg p-6 sm:p-8 max-w-md w-full shadow-2xl">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-base font-black text-slate-900">
                   {editingService ? 'Chỉnh Sửa Endpoint Giám Sát' : 'Thêm Endpoint Giám Sát Mới'}
                 </h3>
-                <button onClick={() => { setShowAddModal(false); setEditingService(null); }} className="p-1.5 text-slate-600 hover:text-slate-600 rounded-lg hover:bg-slate-100">
+                <button onClick={() => { setShowAddModal(false); setEditingService(null); }} className="p-1.5 text-slate-600 hover:text-slate-600 rounded-sm hover:bg-slate-100">
                   <X className="w-5 h-5" />
                 </button>
               </div>
@@ -401,7 +401,7 @@ export default function AdminUptimePage() {
                     value={formData.name}
                     onChange={e => setFormData({ ...formData, name: e.target.value })}
                     placeholder="VD: Primary API Gateway"
-                    className="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none"
+                    className="w-full px-3 py-2 text-xs rounded border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none"
                   />
                 </div>
 
@@ -413,7 +413,7 @@ export default function AdminUptimePage() {
                     value={formData.url}
                     onChange={e => setFormData({ ...formData, url: e.target.value })}
                     placeholder="https://api.example.vn/health"
-                    className="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none font-mono"
+                    className="w-full px-3 py-2 text-xs rounded border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none font-mono"
                   />
                 </div>
 
@@ -421,13 +421,13 @@ export default function AdminUptimePage() {
                   <button
                     type="button"
                     onClick={() => { setShowAddModal(false); setEditingService(null); }}
-                    className="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold"
+                    className="px-4 py-2.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold"
                   >
                     Hủy
                   </button>
                   <button
                     type="submit"
-                    className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-md"
+                    className="px-5 py-2.5 rounded bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-md"
                   >
                     {editingService ? 'Lưu Thay Đổi' : 'Bắt Đầu Giám Sát'}
                   </button>

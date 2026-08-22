@@ -151,25 +151,25 @@ export default function AdminVpsInstancesPage() {
       <header className="bg-white border-b border-slate-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link href="/admin" className="p-2 rounded-lg hover:bg-slate-100 transition-colors">
+            <Link href="/admin" className="p-2 rounded-sm hover:bg-slate-100 transition-colors">
               <ArrowLeft className="w-5 h-5 text-slate-600" />
             </Link>
             <div>
               <h1 className="text-xl font-bold text-slate-900">Quản lý VPS Instances</h1>
-              <p className="text-sm text-slate-500">{instances.length} instances tổng cộng</p>
+              <p className="text-sm text-slate-600">{instances.length} instances tổng cộng</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <span className="px-3 py-1.5 rounded-lg bg-emerald-100 text-emerald-700 text-sm font-semibold">
+            <span className="px-3 py-1.5 rounded-sm bg-emerald-100 text-emerald-700 text-sm font-semibold">
               {runningCount} Running
             </span>
-            <span className="px-3 py-1.5 rounded-lg bg-red-100 text-red-700 text-sm font-semibold">
+            <span className="px-3 py-1.5 rounded-sm bg-red-100 text-red-700 text-sm font-semibold">
               {stoppedCount} Stopped/Failed
             </span>
             <button
               onClick={handleBulkDeleteTerminated}
               disabled={bulkDeleting}
-              className="px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-700 text-white text-sm font-semibold flex items-center gap-1.5 transition-colors disabled:opacity-50"
+              className="px-3 py-1.5 rounded-sm bg-red-600 hover:bg-red-700 text-white text-sm font-semibold flex items-center gap-1.5 transition-colors disabled:opacity-50"
             >
               {bulkDeleting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
               Xóa tất cả đã huỷ
@@ -179,7 +179,7 @@ export default function AdminVpsInstancesPage() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="bg-white rounded-xl p-4 border border-slate-200 mb-6 flex flex-wrap gap-4 items-center">
+        <div className="bg-white rounded p-4 border border-slate-200 mb-6 flex flex-wrap gap-4 items-center">
           <div className="flex-1 min-w-[200px] relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-600" />
             <input
@@ -187,13 +187,13 @@ export default function AdminVpsInstancesPage() {
               placeholder="Tìm theo tên, email, container ID..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+              className="w-full pl-10 pr-4 py-2.5 rounded-sm border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
             />
           </div>
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
-            className="px-3 py-2.5 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+            className="px-3 py-2.5 rounded-sm border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
           >
             <option value="all">Tất cả trạng thái</option>
             <option value="Running">Running — Đang chạy</option>
@@ -209,15 +209,15 @@ export default function AdminVpsInstancesPage() {
           {filteredInstances.map((instance) => {
             const statusMeta = getVpsStatusMeta(instance.status);
             return (
-              <div key={instance.id} className="bg-white rounded-xl border border-slate-200 p-5 hover:border-blue-200 transition-colors">
+              <div key={instance.id} className="bg-white rounded border border-slate-200 p-5 hover:border-blue-200 transition-colors">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
+                    <div className="w-12 h-12 rounded bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
                       <Server className="w-6 h-6 text-slate-900" />
                     </div>
                     <div>
                       <h3 className="font-bold text-slate-900">{instance.containerName}</h3>
-                      <p className="text-xs font-mono text-slate-500">{instance.containerId.substring(0, 12)}...</p>
+                      <p className="text-xs font-mono text-slate-600">{instance.containerId.substring(0, 12)}...</p>
                     </div>
                   </div>
                   <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${statusMeta.color}`}>
@@ -255,7 +255,7 @@ export default function AdminVpsInstancesPage() {
                 <button
                   onClick={() => handleDelete(instance)}
                   disabled={deletingId === instance.id}
-                  className="w-full mt-2 py-2 rounded-lg border border-red-200 text-red-600 hover:bg-red-50 text-sm font-semibold flex items-center justify-center gap-2 transition-colors disabled:opacity-50"
+                  className="w-full mt-2 py-2 rounded-sm border border-red-200 text-red-600 hover:bg-red-50 text-sm font-semibold flex items-center justify-center gap-2 transition-colors disabled:opacity-50"
                 >
                   {deletingId === instance.id ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
@@ -270,7 +270,7 @@ export default function AdminVpsInstancesPage() {
         </div>
 
         {filteredInstances.length === 0 && (
-          <div className="text-center py-12 text-slate-500">
+          <div className="text-center py-12 text-slate-600">
             <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-700" />
             <p className="font-medium">Không tìm thấy instance nào</p>
           </div>

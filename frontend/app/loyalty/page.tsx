@@ -95,7 +95,7 @@ export default function LoyaltyPage() {
       <header className="bg-white border-b border-slate-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2.5">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-cyan-400 flex items-center justify-center text-slate-900">
+            <div className="w-10 h-10 rounded bg-gradient-to-tr from-blue-600 via-indigo-600 to-cyan-400 flex items-center justify-center text-slate-900">
               <Star className="w-6 h-6" />
             </div>
             <span className="text-xl font-black text-slate-900">
@@ -110,25 +110,25 @@ export default function LoyaltyPage() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Hero Section */}
-        <div className="bg-gradient-to-br from-slate-900 via-indigo-900 to-slate-900 rounded-3xl p-8 text-slate-900 mb-8 relative overflow-hidden">
+        <div className="bg-gradient-to-br from-slate-900 via-indigo-900 to-slate-900 rounded-lg p-8 text-slate-900 mb-8 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
           <div className="absolute bottom-0 left-0 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl" />
           
           <div className="relative z-10">
             <div className="flex items-center gap-3 mb-4">
               <Award className="w-8 h-8 text-amber-400" />
-              <span className="text-sm font-bold text-slate-200 uppercase tracking-wider">Chương trình thành viên</span>
+              <span className="text-sm font-bold text-slate-700 uppercase tracking-wider">Chương trình thành viên</span>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div>
-                <p className="text-slate-200 text-sm mb-1">Điểm thưởng hiện tại</p>
+                <p className="text-slate-700 text-sm mb-1">Điểm thưởng hiện tại</p>
                 <p className="text-5xl font-black text-slate-900">{loyalty?.points.toLocaleString() || 0}</p>
                 <p className="text-sm text-slate-600 mt-1">điểm</p>
               </div>
               
               <div>
-                <p className="text-slate-200 text-sm mb-1">Cấp độ hiện tại</p>
+                <p className="text-slate-700 text-sm mb-1">Cấp độ hiện tại</p>
                 <p className="text-3xl font-black text-slate-900">{loyalty?.tier || 'Bronze'}</p>
                 <p className="text-sm text-slate-600 mt-1">
                   {nextTier ? `Còn ${nextTier.minPoints - (loyalty?.points || 0)} điểm để lên ${nextTier.name}` : 'Đã đạt cấp cao nhất!'}
@@ -136,7 +136,7 @@ export default function LoyaltyPage() {
               </div>
               
               <div>
-                <p className="text-slate-200 text-sm mb-1">Tổng chi tiêu</p>
+                <p className="text-slate-700 text-sm mb-1">Tổng chi tiêu</p>
                 <p className="text-3xl font-black text-slate-900">
                   {(loyalty?.totalSpent || 0).toLocaleString()}đ
                 </p>
@@ -171,16 +171,16 @@ export default function LoyaltyPage() {
             { icon: Heart, title: 'Giới thiệu bạn bè', desc: '100 điểm/giới thiệu thành công', color: 'rose' },
             { icon: Star, title: 'Viết đánh giá', desc: '20 điểm/bài đánh giá', color: 'amber' },
           ].map((item, idx) => (
-            <div key={idx} className="bg-white rounded-2xl p-6 border border-slate-200">
+            <div key={idx} className="bg-white rounded-md p-6 border border-slate-200">
               <item.icon className={`w-8 h-8 text-${item.color}-500 mb-3`} />
               <h3 className="font-bold text-slate-900 mb-1">{item.title}</h3>
-              <p className="text-sm text-slate-500">{item.desc}</p>
+              <p className="text-sm text-slate-600">{item.desc}</p>
             </div>
           ))}
         </div>
 
         {/* Rewards */}
-        <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+        <div className="bg-white rounded-md border border-slate-200 overflow-hidden">
           <div className="p-6 border-b border-slate-200">
             <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
               <Gift className="w-5 h-5 text-[#1F1F1F]" />
@@ -194,7 +194,7 @@ export default function LoyaltyPage() {
                 {loyalty.rewards.map((reward) => (
                   <div
                     key={reward.id}
-                    className={`p-4 rounded-xl border-2 ${
+                    className={`p-4 rounded border-2 ${
                       reward.claimed
                         ? 'border-slate-200 opacity-50'
                         : 'border-slate-200 hover:border-blue-300 transition-colors'
@@ -208,13 +208,13 @@ export default function LoyaltyPage() {
                         </span>
                       )}
                     </div>
-                    <p className="text-sm text-slate-500 mb-3">{reward.description}</p>
+                    <p className="text-sm text-slate-600 mb-3">{reward.description}</p>
                     <div className="flex items-center justify-between">
                       <span className="font-bold text-[#1F1F1F]">{reward.cost} điểm</span>
                       <button
                         onClick={() => !reward.claimed && redeemReward(reward.id, reward.cost)}
                         disabled={reward.claimed || (loyalty?.points || 0) < reward.cost}
-                        className="px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-bold hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="px-4 py-2 rounded-sm bg-blue-600 text-white text-sm font-bold hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         {reward.claimed ? 'Đã đổi' : 'Đổi quà'}
                       </button>
@@ -223,7 +223,7 @@ export default function LoyaltyPage() {
                 ))}
               </div>
             ) : (
-              <div className="text-center py-12 text-slate-500">
+              <div className="text-center py-12 text-slate-600">
                 <Gift className="w-12 h-12 mx-auto mb-3 text-slate-700" />
                 <p className="font-medium">Chưa có quà thưởng nào</p>
                 <p className="text-sm mt-1">Mua dịch vụ để tích điểm và đổi quà!</p>

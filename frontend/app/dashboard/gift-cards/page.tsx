@@ -98,16 +98,16 @@ export default function GiftCardsPage() {
             Quay lại dashboard
           </Link>
           <h1 className="text-2xl font-black text-slate-900 tracking-tight">Thẻ quà tặng</h1>
-          <p className="text-slate-500 mt-1">Nhập mã thẻ quà tặng để kiểm tra số dư và đổi thưởng</p>
+          <p className="text-slate-600 mt-1">Nhập mã thẻ quà tặng để kiểm tra số dư và đổi thưởng</p>
         </div>
-        <div className="flex items-center gap-2 px-4 py-2 bg-emerald-50 border border-emerald-200 rounded-xl">
+        <div className="flex items-center gap-2 px-4 py-2 bg-emerald-50 border border-emerald-200 rounded">
           <Wallet className="w-5 h-5 text-emerald-600" />
           <span className="text-sm font-semibold text-emerald-700">Ví tiền điện tử</span>
         </div>
       </div>
 
       {/* Input Card */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+      <div className="bg-white rounded-md border border-slate-200 shadow-sm p-6">
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="flex-1">
             <label className="block text-sm font-medium text-slate-700 mb-2">
@@ -118,7 +118,7 @@ export default function GiftCardsPage() {
               value={code}
               onChange={(e) => setCode(e.target.value.toUpperCase())}
               placeholder="NHAP-MATYPE-CUA-BAN"
-              className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 font-mono text-lg"
+              className="w-full px-4 py-3 rounded border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 font-mono text-lg"
               onKeyDown={(e) => e.key === 'Enter' && handleCheckBalance()}
             />
           </div>
@@ -126,14 +126,14 @@ export default function GiftCardsPage() {
             <button
               onClick={handleCheckBalance}
               disabled={isLoading}
-              className="px-6 py-3 bg-slate-100 text-slate-700 rounded-xl font-semibold hover:bg-slate-200 transition-colors disabled:opacity-50"
+              className="px-6 py-3 bg-slate-100 text-slate-700 rounded font-semibold hover:bg-slate-200 transition-colors disabled:opacity-50"
             >
               Kiểm tra
             </button>
             <button
               onClick={handleRedeem}
               disabled={isLoading || !code.trim()}
-              className="px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-colors disabled:opacity-50 flex items-center gap-2"
+              className="px-6 py-3 bg-blue-600 text-white rounded font-semibold hover:bg-blue-700 transition-colors disabled:opacity-50 flex items-center gap-2"
             >
               {isLoading ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -146,7 +146,7 @@ export default function GiftCardsPage() {
         </div>
 
         {/* Info */}
-        <div className="mt-4 p-4 bg-blue-50 border border-blue-100 rounded-xl">
+        <div className="mt-4 p-4 bg-blue-50 border border-blue-100 rounded">
           <p className="text-sm text-[#1F1F1F]">
             💡 <strong>Mẹo:</strong> Mã thẻ quà tặng thường có dạng 12-16 ký tự, ví dụ: GIFT2024-VN-CLOU
           </p>
@@ -163,7 +163,7 @@ export default function GiftCardsPage() {
 
       {/* Error State */}
       {error && (
-        <div className="p-4 bg-red-50 border border-red-200 rounded-xl flex items-center gap-3">
+        <div className="p-4 bg-red-50 border border-red-200 rounded flex items-center gap-3">
           <XCircle className="w-5 h-5 text-red-500 shrink-0" />
           <div>
             <p className="font-semibold text-red-900">Lỗi</p>
@@ -174,7 +174,7 @@ export default function GiftCardsPage() {
 
       {/* Success Result */}
       {result && !error && (
-        <div className={`p-6 rounded-2xl border ${
+        <div className={`p-6 rounded-md border ${
           result.isRedeemed 
             ? 'bg-emerald-50 border-emerald-200' 
             : result.balance > 0
@@ -182,7 +182,7 @@ export default function GiftCardsPage() {
             : 'bg-slate-50 border-slate-200'
         }`}>
           <div className="flex items-start gap-4">
-            <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
+            <div className={`w-12 h-12 rounded flex items-center justify-center ${
               result.isRedeemed 
                 ? 'bg-emerald-100' 
                 : result.balance > 0
@@ -221,7 +221,7 @@ export default function GiftCardsPage() {
               <button
                 onClick={handleRedeem}
                 disabled={isLoading}
-                className="px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-colors disabled:opacity-50"
+                className="px-6 py-3 bg-blue-600 text-white rounded font-semibold hover:bg-blue-700 transition-colors disabled:opacity-50"
               >
                 Đổi ngay
               </button>
@@ -231,7 +231,7 @@ export default function GiftCardsPage() {
       )}
 
       {/* Help Section */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-6">
+      <div className="bg-white rounded-md border border-slate-200 p-6">
         <h3 className="text-lg font-bold text-slate-900 mb-4">Câu hỏi thường gặp</h3>
         <div className="space-y-4">
           <details className="group">

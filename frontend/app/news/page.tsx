@@ -41,28 +41,23 @@ export default function PublicNewsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 py-8">
+    <div className="min-h-screen bg-white py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
-        <div className="mb-6 flex items-center text-sm text-slate-500 gap-2">
-          <Link href="/" className="hover:text-[#1F1F1F] transition-colors">Trang chủ</Link>
+        <div className="mb-8 flex items-center text-sm text-slate-600 gap-2 pb-4 border-b border-slate-100">
+          <Link href="/" className="hover:text-red-600 transition-colors">Trang chủ</Link>
           <span>/</span>
-          <span className="text-slate-900 font-medium">Tin tức & Blog</span>
-        </div>
-
-        <div className="mb-8">
-          <h1 className="text-3xl font-black text-slate-900">Tin tức & Blog</h1>
-          <p className="text-slate-500 mt-2">Cập nhật mới nhất từ CloudHost VN</p>
+          <span className="text-slate-900">Tin công nghệ</span>
         </div>
 
         {isLoading && (
           <div className="flex justify-center py-20">
-            <Loader className="w-8 h-8 text-[#1F1F1F] animate-spin" />
+            <Loader className="w-8 h-8 text-red-600 animate-spin" />
           </div>
         )}
 
         {error && (
-          <div className="p-4 bg-red-50 border border-red-200 rounded-xl flex items-center gap-2 text-sm text-red-700">
+          <div className="p-4 bg-red-50 border border-red-200 flex items-center gap-2 text-sm text-red-700">
             <AlertCircle className="w-4 h-4" />
             {error}
           </div>
@@ -71,93 +66,92 @@ export default function PublicNewsPage() {
         {!isLoading && !error && (
           <div className="space-y-12">
             {news.length === 0 ? (
-              <p className="text-center text-slate-500 py-12">Chưa có bài viết nào.</p>
+              <p className="text-center text-slate-600 py-12">Chưa có bài viết nào.</p>
             ) : (
               <>
                 {/* Featured Post (First item) */}
                 {news.length > 0 && (
-                  <Link href={`/blog/${news[0].slug}`} className="group block bg-white rounded-2xl overflow-hidden hover:shadow-xl transition-all border border-slate-100">
-                    <div className="flex flex-col md:flex-row items-stretch">
-                      {/* Image Left */}
-                      <div className="md:w-3/5 relative overflow-hidden bg-slate-100">
-                        {news[0].thumbnailUrl ? (
-                          <img
-                            src={news[0].thumbnailUrl}
-                            alt={news[0].title}
-                            className="w-full h-[220px] sm:h-[300px] md:h-[400px] object-cover group-hover:scale-105 transition-transform duration-500"
-                            onError={(e) => { (e.currentTarget as HTMLElement).style.display = 'none'; }}
-                          />
-                        ) : (
-                          <div className="w-full h-[220px] sm:h-[300px] md:h-[400px] flex items-center justify-center text-slate-700">
-                            <ImageIcon className="w-16 h-16" />
-                          </div>
-                        )}
-                      </div>
-                      {/* Content Right */}
-                      <div className="md:w-2/5 p-5 sm:p-8 lg:p-12 flex flex-col justify-center">
-                        {news[0].publishedAt && (
-                          <span className="text-xs sm:text-sm text-slate-500 font-medium mb-2 sm:mb-3 block">
-                            {new Date(news[0].publishedAt).toLocaleDateString('vi-VN')}
-                          </span>
-                        )}
-                        <h2 className="text-xl sm:text-2xl lg:text-3xl font-black text-slate-900 group-hover:text-[#1F1F1F] transition-colors leading-tight mb-3 sm:mb-4">
+                  <div className="group flex flex-col md:flex-row items-stretch bg-white border border-transparent hover:border-slate-100 hover:shadow-lg transition-all duration-300">
+                    {/* Image Left */}
+                    <Link href={`/blog/${news[0].slug}`} className="md:w-[55%] relative overflow-hidden bg-slate-100 block">
+                      {news[0].thumbnailUrl ? (
+                        <img
+                          src={news[0].thumbnailUrl}
+                          alt={news[0].title}
+                          className="w-full h-full min-h-[300px] object-cover group-hover:scale-105 transition-transform duration-700"
+                          onError={(e) => { (e.currentTarget as HTMLElement).style.display = 'none'; }}
+                        />
+                      ) : (
+                        <div className="w-full h-[300px] md:h-full flex items-center justify-center text-slate-600">
+                          <ImageIcon className="w-16 h-16" />
+                        </div>
+                      )}
+                    </Link>
+                    {/* Content Right */}
+                    <div className="md:w-[45%] p-6 md:p-10 flex flex-col justify-center">
+                      {news[0].publishedAt && (
+                        <span className="text-sm text-slate-600 mb-3 block">
+                          {new Date(news[0].publishedAt).toLocaleDateString('vi-VN')}
+                        </span>
+                      )}
+                      <Link href={`/blog/${news[0].slug}`}>
+                        <h2 className="text-2xl md:text-3xl lg:text-[28px] font-bold text-slate-800 hover:text-red-600 transition-colors uppercase leading-tight mb-4">
                           {news[0].title}
                         </h2>
-                        {news[0].content && (
-                          <p className="text-sm sm:text-base text-slate-600 line-clamp-3 sm:line-clamp-4 leading-relaxed mb-4 sm:mb-8">
-                            {news[0].content.replace(/<[^>]*>/g, '').replace(/[#*`_~>\-\[\]]/g, '').trim()}
-                          </p>
-                        )}
-                        <div className="mt-auto flex items-center text-xs sm:text-sm font-bold text-red-600 uppercase tracking-wider">
-                          XEM THÊM <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-2 transition-transform" />
-                        </div>
-                      </div>
+                      </Link>
+                      {news[0].content && (
+                        <p className="text-base text-slate-600 line-clamp-3 md:line-clamp-4 leading-relaxed mb-8">
+                          {news[0].content.replace(/<[^>]*>/g, '').replace(/[#*`_~>\-\[\]]/g, '').trim()}
+                        </p>
+                      )}
+                      <Link 
+                        href={`/blog/${news[0].slug}`}
+                        className="mt-auto inline-flex items-center text-sm font-semibold text-red-600 uppercase tracking-wider hover:text-red-700"
+                      >
+                        XEM THÊM <ArrowRight className="w-4 h-4 ml-2" />
+                      </Link>
                     </div>
-                  </Link>
+                  </div>
                 )}
 
                 {/* Rest of the posts Grid */}
                 {news.length > 1 && (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-8">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                     {news.slice(1).map((item) => (
-                      <Link
+                      <div
                         key={item.id}
-                        href={`/blog/${item.slug}`}
-                        className="bg-white rounded-2xl overflow-hidden hover:shadow-lg transition-all group flex flex-col border border-slate-100 shadow-2xs"
+                        className="bg-white group flex flex-col"
                       >
                         {/* Thumbnail */}
-                        <div className="aspect-[16/10] w-full bg-slate-100 overflow-hidden relative">
+                        <Link href={`/blog/${item.slug}`} className="aspect-[16/10] w-full bg-slate-100 overflow-hidden relative block mb-4">
                           {item.thumbnailUrl ? (
                             <img
                               src={item.thumbnailUrl}
                               alt={item.title}
-                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                               onError={(e) => { (e.currentTarget as HTMLElement).style.display = 'none'; }}
                             />
                           ) : (
-                            <div className="w-full h-full flex items-center justify-center text-slate-700">
+                            <div className="w-full h-full flex items-center justify-center text-slate-600">
                               <ImageIcon className="w-10 h-10" />
                             </div>
                           )}
-                        </div>
+                        </Link>
 
                         {/* Content */}
-                        <div className="p-4 sm:p-6 flex flex-col flex-1">
+                        <div className="flex flex-col flex-1">
                           {item.publishedAt && (
-                            <span className="text-[11px] sm:text-xs text-slate-500 font-medium mb-1.5 sm:mb-2 block">
+                            <span className="text-xs text-slate-600 mb-2 block">
                               {new Date(item.publishedAt).toLocaleDateString('vi-VN')}
                             </span>
                           )}
-                          <h2 className="text-base sm:text-lg font-bold text-slate-900 group-hover:text-[#1F1F1F] transition-colors line-clamp-2 sm:line-clamp-3 flex-1 leading-snug">
-                            {item.title}
-                          </h2>
-                          {item.content && (
-                            <p className="text-xs sm:text-sm text-slate-600 mt-2 sm:mt-3 line-clamp-2 leading-relaxed">
-                              {item.content.replace(/<[^>]*>/g, '').replace(/[#*`_~>\-\[\]]/g, '').trim().slice(0, 150)}…
-                            </p>
-                          )}
+                          <Link href={`/blog/${item.slug}`}>
+                            <h2 className="text-lg font-bold text-slate-800 hover:text-red-600 transition-colors uppercase leading-snug line-clamp-3">
+                              {item.title}
+                            </h2>
+                          </Link>
                         </div>
-                      </Link>
+                      </div>
                     ))}
                   </div>
                 )}

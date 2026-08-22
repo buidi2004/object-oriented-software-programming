@@ -57,16 +57,16 @@ export default function GiftCardsPage() {
   return (
     <div className="max-w-3xl mx-auto py-12 px-4 sm:px-6">
       <div className="text-center mb-10">
-        <div className="w-16 h-16 bg-gradient-to-tr from-emerald-500 to-teal-400 rounded-2xl mx-auto flex items-center justify-center shadow-lg shadow-emerald-500/30 mb-6">
+        <div className="w-16 h-16 bg-gradient-to-tr from-emerald-500 to-teal-400 rounded-md mx-auto flex items-center justify-center shadow-lg shadow-emerald-500/30 mb-6">
           <Gift className="w-8 h-8 text-slate-900" />
         </div>
         <h1 className="text-3xl font-black text-slate-900 tracking-tight">Thẻ Quà Tặng (Gift Cards)</h1>
-        <p className="text-slate-500 mt-3 text-lg max-w-xl mx-auto">
+        <p className="text-slate-600 mt-3 text-lg max-w-xl mx-auto">
           Nhập mã thẻ quà tặng của bạn để kiểm tra số dư và nạp tiền vào ví CloudHost VN.
         </p>
       </div>
 
-      <div className="bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden relative">
+      <div className="bg-white rounded-lg shadow-xl border border-slate-100 overflow-hidden relative">
         <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400" />
         
         <div className="p-8 sm:p-12">
@@ -74,8 +74,8 @@ export default function GiftCardsPage() {
             <div className="text-center py-10">
               <AlertCircle className="w-12 h-12 text-amber-500 mx-auto mb-4" />
               <h2 className="text-xl font-bold text-slate-900 mb-2">Vui lòng đăng nhập</h2>
-              <p className="text-slate-500 mb-6">Bạn cần đăng nhập để có thể nạp thẻ quà tặng vào ví.</p>
-              <button onClick={() => requestAuth('login', '/gift-cards')} className="inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition cursor-pointer">
+              <p className="text-slate-600 mb-6">Bạn cần đăng nhập để có thể nạp thẻ quà tặng vào ví.</p>
+              <button onClick={() => requestAuth('login', '/gift-cards')} className="inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white font-bold rounded hover:bg-blue-700 transition cursor-pointer">
                 Đăng nhập để Mua thẻ
               </button>
             </div>
@@ -92,13 +92,13 @@ export default function GiftCardsPage() {
                       value={code}
                       onChange={(e) => setCode(e.target.value.toUpperCase())}
                       placeholder="VD: CLOUD-XXXX-YYYY"
-                      className="w-full bg-slate-50 border-2 border-slate-200 focus:border-emerald-500 focus:bg-white rounded-xl py-3.5 pl-12 pr-4 text-slate-900 font-bold uppercase tracking-wider transition-all outline-none"
+                      className="w-full bg-slate-50 border-2 border-slate-200 focus:border-emerald-500 focus:bg-white rounded py-3.5 pl-12 pr-4 text-slate-900 font-bold uppercase tracking-wider transition-all outline-none"
                     />
                   </div>
                   <button
                     onClick={handleCheck}
                     disabled={!code || isChecking}
-                    className="px-6 py-3 bg-white hover:bg-slate-100 text-slate-900 font-bold rounded-xl transition-all disabled:opacity-50 flex items-center gap-2 whitespace-nowrap"
+                    className="px-6 py-3 bg-white hover:bg-slate-100 text-slate-900 font-bold rounded transition-all disabled:opacity-50 flex items-center gap-2 whitespace-nowrap"
                   >
                     {isChecking ? <Loader2 className="w-5 h-5 animate-spin" /> : <Search className="w-5 h-5" />}
                     <span className="hidden sm:inline">Kiểm tra</span>
@@ -108,13 +108,13 @@ export default function GiftCardsPage() {
 
               {/* Status Messages */}
               {error && (
-                <div className="p-4 rounded-xl bg-rose-50 border border-rose-100 flex items-start gap-3">
+                <div className="p-4 rounded bg-rose-50 border border-rose-100 flex items-start gap-3">
                   <AlertCircle className="w-5 h-5 text-rose-500 shrink-0 mt-0.5" />
                   <p className="text-sm font-semibold text-rose-700">{error}</p>
                 </div>
               )}
               {success && (
-                <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-100 flex items-start gap-3">
+                <div className="p-4 rounded bg-emerald-50 border border-emerald-100 flex items-start gap-3">
                   <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />
                   <p className="text-sm font-semibold text-emerald-700">{success}</p>
                 </div>
@@ -123,7 +123,7 @@ export default function GiftCardsPage() {
               {/* Step 2: Redeem */}
               {balance !== null && balance >= 0 && (
                 <div className="pt-6 border-t border-slate-100 animate-in fade-in slide-in-from-bottom-4">
-                  <div className="bg-emerald-50 rounded-2xl p-6 border border-emerald-100 mb-6 flex items-center justify-between">
+                  <div className="bg-emerald-50 rounded-md p-6 border border-emerald-100 mb-6 flex items-center justify-between">
                     <div>
                       <p className="text-emerald-800 font-medium text-sm">Số dư thẻ khả dụng</p>
                       <p className="text-3xl font-black text-emerald-600 mt-1">{balance.toLocaleString('vi-VN')} đ</p>
@@ -138,20 +138,20 @@ export default function GiftCardsPage() {
                       <label className="block text-sm font-bold text-slate-900 mb-2">Số tiền muốn nạp vào ví</label>
                       <div className="flex gap-3">
                         <div className="relative flex-1">
-                          <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 font-bold">VNĐ</span>
+                          <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-600 font-bold">VNĐ</span>
                           <input
                             type="number"
                             value={amountToRedeem}
                             onChange={(e) => setAmountToRedeem(Number(e.target.value))}
                             max={balance}
                             min={1000}
-                            className="w-full bg-slate-50 border-2 border-slate-200 focus:border-emerald-500 focus:bg-white rounded-xl py-3.5 px-4 text-slate-900 font-bold transition-all outline-none"
+                            className="w-full bg-slate-50 border-2 border-slate-200 focus:border-emerald-500 focus:bg-white rounded py-3.5 px-4 text-slate-900 font-bold transition-all outline-none"
                           />
                         </div>
                         <button
                           onClick={handleRedeem}
                           disabled={!amountToRedeem || isRedeeming || amountToRedeem <= 0 || amountToRedeem > balance}
-                          className="px-8 py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-xl transition-all disabled:opacity-50 flex items-center gap-2"
+                          className="px-8 py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded transition-all disabled:opacity-50 flex items-center gap-2"
                         >
                           {isRedeeming ? <Loader2 className="w-5 h-5 animate-spin" /> : <span>Nạp tiền</span>}
                           {!isRedeeming && <ArrowRight className="w-5 h-5" />}
@@ -162,8 +162,8 @@ export default function GiftCardsPage() {
                       )}
                     </div>
                   ) : (
-                    <div className="text-center py-4 bg-slate-50 rounded-xl">
-                      <p className="text-slate-500 font-medium">Thẻ quà tặng này đã được sử dụng hết.</p>
+                    <div className="text-center py-4 bg-slate-50 rounded">
+                      <p className="text-slate-600 font-medium">Thẻ quà tặng này đã được sử dụng hết.</p>
                     </div>
                   )}
                 </div>

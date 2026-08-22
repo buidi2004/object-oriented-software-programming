@@ -113,7 +113,7 @@ export default function InvoicesPage() {
         {/* LEFT SIDEBAR FILTERS (3 Cards from screenshot) */}
         <div className="space-y-4">
           {/* Card 1: Hóa đơn đến hạn */}
-          <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+          <div className="bg-white rounded border border-slate-200 shadow-sm overflow-hidden">
             <button
               onClick={() => setCollapseDue(!collapseDue)}
               className="w-full flex items-center justify-between px-4 py-3 bg-[#eef2ff] text-[#3730a3] font-bold text-xs transition-colors"
@@ -136,7 +136,7 @@ export default function InvoicesPage() {
           </div>
 
           {/* Card 2: Trạng thái Filter */}
-          <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+          <div className="bg-white rounded border border-slate-200 shadow-sm overflow-hidden">
             <button
               onClick={() => setCollapseStatus(!collapseStatus)}
               className="w-full flex items-center justify-between px-4 py-3 bg-[#eef2ff] text-[#3730a3] font-bold text-xs transition-colors"
@@ -209,7 +209,7 @@ export default function InvoicesPage() {
           </div>
 
           {/* Card 3: Thanh toán Menu */}
-          <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+          <div className="bg-white rounded border border-slate-200 shadow-sm overflow-hidden">
             <button
               onClick={() => setCollapsePayment(!collapsePayment)}
               className="w-full flex items-center justify-between px-4 py-3 bg-[#eef2ff] text-[#3730a3] font-bold text-xs transition-colors"
@@ -251,7 +251,7 @@ export default function InvoicesPage() {
         <div className="lg:col-span-3 space-y-4">
           {/* Top Bar: Counter & Search input */}
           <div className="flex flex-wrap items-center justify-between gap-4">
-            <span className="text-xs text-slate-500 font-medium">
+            <span className="text-xs text-slate-600 font-medium">
               Hiển thị {filteredInvoices.length > 0 ? (currentPage - 1) * pageSize + 1 : 0} đến {Math.min(currentPage * pageSize, filteredInvoices.length)} trong tổng số {filteredInvoices.length} mục
             </span>
             <div className="relative">
@@ -260,14 +260,14 @@ export default function InvoicesPage() {
                 value={searchQuery}
                 onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
                 placeholder="Tìm kiếm hóa đơn..."
-                className="w-56 text-xs pl-8 pr-3 py-1.5 bg-white border border-slate-200 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="w-56 text-xs pl-8 pr-3 py-1.5 bg-white border border-slate-200 rounded-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
               <Search className="w-3.5 h-3.5 text-slate-600 absolute left-2.5 top-1/2 -translate-y-1/2" />
             </div>
           </div>
 
           {/* Main Invoices Table */}
-          <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-x-auto">
+          <div className="bg-white rounded border border-slate-200 shadow-sm overflow-x-auto">
             <table className="w-full text-left text-xs text-slate-700">
               <thead>
                 <tr className="bg-[#f8fafc] border-b border-slate-200 text-slate-600 font-bold">

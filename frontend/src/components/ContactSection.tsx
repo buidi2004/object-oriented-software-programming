@@ -99,7 +99,7 @@ export const ContactSection: React.FC = () => {
             {faqs.map((faq, idx) => (
               <div
                 key={faq.id || idx}
-                className="bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-xs transition-all"
+                className="bg-white rounded-md border border-slate-200/80 overflow-hidden shadow-xs transition-all"
               >
                 <button
                   onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
@@ -120,7 +120,7 @@ export const ContactSection: React.FC = () => {
         </div>
 
         {/* Contact Info & Form */}
-        <div className="bg-white rounded-3xl p-8 sm:p-12 border border-slate-200/80 shadow-xl grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+        <div className="bg-white rounded-lg p-8 sm:p-12 border border-slate-200/80 shadow-xl grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
           
           {/* Left Info */}
           <div className="lg:col-span-5 space-y-6">
@@ -132,14 +132,14 @@ export const ContactSection: React.FC = () => {
               <h3 className="text-3xl font-black text-slate-900 tracking-tight">
                 Liên Hệ Tư Vấn Giải Pháp Cloud
               </h3>
-              <p className="text-slate-500 text-sm mt-2">
+              <p className="text-slate-600 text-sm mt-2">
                 Đội ngũ chuyên gia CloudHost VN luôn sẵn sàng hỗ trợ bạn khảo sát nhu cầu hạ tầng và báo giá tối ưu nhất.
               </p>
             </div>
 
             <div className="space-y-4 pt-2">
               <div className="flex items-start gap-4">
-                <div className="p-3 rounded-2xl bg-blue-50 text-[#1F1F1F]">
+                <div className="p-3 rounded-md bg-blue-50 text-[#1F1F1F]">
                   <MapPin className="w-5 h-5" />
                 </div>
                 <div>
@@ -151,7 +151,7 @@ export const ContactSection: React.FC = () => {
               </div>
 
               <div className="flex items-start gap-4">
-                <div className="p-3 rounded-2xl bg-indigo-50 text-[#1F1F1F]">
+                <div className="p-3 rounded-md bg-indigo-50 text-[#1F1F1F]">
                   <Phone className="w-5 h-5" />
                 </div>
                 <div>
@@ -163,7 +163,7 @@ export const ContactSection: React.FC = () => {
               </div>
 
               <div className="flex items-start gap-4">
-                <div className="p-3 rounded-2xl bg-cyan-50 text-[#1F1F1F]">
+                <div className="p-3 rounded-md bg-cyan-50 text-[#1F1F1F]">
                   <Mail className="w-5 h-5" />
                 </div>
                 <div>
@@ -177,12 +177,12 @@ export const ContactSection: React.FC = () => {
           </div>
 
           {/* Right Form */}
-          <div className="lg:col-span-7 bg-slate-50/80 p-6 sm:p-8 rounded-2xl border border-slate-200/80">
+          <div className="lg:col-span-7 bg-slate-50/80 p-6 sm:p-8 rounded-md border border-slate-200/80">
             {formSubmitted ? (
               <div className="py-12 text-center space-y-3">
                 <CheckCircle2 className="w-12 h-12 text-emerald-500 mx-auto" />
                 <h4 className="text-xl font-bold text-slate-900">Gửi Yêu Cầu Thành Công!</h4>
-                <p className="text-xs text-slate-500 max-w-sm mx-auto">
+                <p className="text-xs text-slate-600 max-w-sm mx-auto">
                   Chuyên viên giải pháp của CloudHost VN sẽ gọi điện tư vấn trực tiếp cho bạn trong vòng 15 phút.
                 </p>
               </div>
@@ -201,7 +201,7 @@ export const ContactSection: React.FC = () => {
                       value={name}
                       onChange={e => setName(e.target.value)}
                       placeholder="Nguyễn Văn A"
-                      className="w-full px-4 py-3 rounded-xl bg-white border border-slate-200 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-4 py-3 rounded bg-white border border-slate-200 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
                   <div>
@@ -212,7 +212,7 @@ export const ContactSection: React.FC = () => {
                       value={phone}
                       onChange={e => setPhone(e.target.value)}
                       placeholder="0912 345 678"
-                      className="w-full px-4 py-3 rounded-xl bg-white border border-slate-200 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-4 py-3 rounded bg-white border border-slate-200 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
                 </div>
@@ -225,7 +225,7 @@ export const ContactSection: React.FC = () => {
                     value={email}
                     onChange={e => setEmail(e.target.value)}
                     placeholder="contact@company.com"
-                    className="w-full px-4 py-3 rounded-xl bg-white border border-slate-200 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-3 rounded bg-white border border-slate-200 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
 
@@ -237,13 +237,13 @@ export const ContactSection: React.FC = () => {
                     value={message}
                     onChange={e => setMessage(e.target.value)}
                     placeholder="Mô tả cấu hình VPS / Số lượng Website / Yêu cầu chịu tải..."
-                    className="w-full px-4 py-3 rounded-xl bg-white border border-slate-200 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                    className="w-full px-4 py-3 rounded bg-white border border-slate-200 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
                   />
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full py-3.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-slate-900 font-bold text-xs shadow-md transition-all flex items-center justify-center gap-2"
+                  className="w-full py-3.5 rounded bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-slate-900 font-bold text-xs shadow-md transition-all flex items-center justify-center gap-2"
                 >
                   <Send className="w-4 h-4" /> Gửi Yêu Cầu Tư Vấn Ngay
                 </button>

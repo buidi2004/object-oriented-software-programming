@@ -31,7 +31,7 @@ export const CookieConsent = () => {
         </p>
         <button
           onClick={handleAccept}
-          className="shrink-0 w-full sm:w-auto px-8 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-md transition-colors cursor-pointer"
+          className="shrink-0 w-full sm:w-auto px-8 py-2.5 rounded-sm bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-md transition-colors cursor-pointer"
         >
           Đồng ý
         </button>

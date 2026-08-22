@@ -87,8 +87,8 @@ export default function SupportCenterPage() {
 
         {/* 3 Quick Channels */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="p-6 rounded-2xl bg-white/60 border border-slate-200 hover:border-cyan-500/40 transition-all shadow-xl group">
-            <div className="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-[#1F1F1F] mb-4 group-hover:scale-110 transition-transform">
+          <div className="p-6 rounded-md bg-white/60 border border-slate-200 hover:border-cyan-500/40 transition-all shadow-xl group">
+            <div className="w-12 h-12 rounded bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-[#1F1F1F] mb-4 group-hover:scale-110 transition-transform">
               <MessageSquare className="w-6 h-6" />
             </div>
             <h3 className="text-lg font-bold text-slate-900 mb-2">Live Chat Trực Tuyến</h3>
@@ -98,19 +98,19 @@ export default function SupportCenterPage() {
             </div>
           </div>
 
-          <Link href="/knowledge-base" className="p-6 rounded-2xl bg-white/60 border border-slate-200 hover:border-indigo-500/40 transition-all shadow-xl group block">
-            <div className="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-center text-slate-200 mb-4 group-hover:scale-110 transition-transform">
+          <Link href="/knowledge-base" className="p-6 rounded-md bg-white/60 border border-slate-200 hover:border-indigo-500/40 transition-all shadow-xl group block">
+            <div className="w-12 h-12 rounded bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-center text-slate-700 mb-4 group-hover:scale-110 transition-transform">
               <FileText className="w-6 h-6" />
             </div>
             <h3 className="text-lg font-bold text-slate-900 mb-2">Knowledge Base</h3>
             <p className="text-sm text-slate-600 mb-4">Hơn 500+ tài liệu hướng dẫn kỹ thuật, cấu hình VPS, Web Server và bảo mật.</p>
-            <div className="flex items-center text-slate-200 text-sm font-semibold gap-1 group-hover:translate-x-1 transition-transform">
+            <div className="flex items-center text-slate-700 text-sm font-semibold gap-1 group-hover:translate-x-1 transition-transform">
               Xem tài liệu <ChevronRight className="w-4 h-4" />
             </div>
           </Link>
 
-          <Link href="/faqs" className="p-6 rounded-2xl bg-white/60 border border-slate-200 hover:border-emerald-500/40 transition-all shadow-xl group block">
-            <div className="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mb-4 group-hover:scale-110 transition-transform">
+          <Link href="/faqs" className="p-6 rounded-md bg-white/60 border border-slate-200 hover:border-emerald-500/40 transition-all shadow-xl group block">
+            <div className="w-12 h-12 rounded bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mb-4 group-hover:scale-110 transition-transform">
               <HelpCircle className="w-6 h-6" />
             </div>
             <h3 className="text-lg font-bold text-slate-900 mb-2">Câu Hỏi Thường Gặp</h3>
@@ -123,14 +123,14 @@ export default function SupportCenterPage() {
 
         {/* Ticket Submission Form */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          <div className="lg:col-span-8 p-8 rounded-3xl bg-white/70 border border-slate-200 shadow-2xl">
+          <div className="lg:col-span-8 p-8 rounded-lg bg-white/70 border border-slate-200 shadow-2xl">
             <h2 className="text-2xl font-bold text-slate-900 mb-2 flex items-center gap-2">
               <ShieldCheck className="w-6 h-6 text-[#1F1F1F]" /> Gửi Yêu Cầu Hỗ Trợ Kỹ Thuật (Ticket)
             </h2>
             <p className="text-slate-600 text-sm mb-6">Điền thông tin sự cố bên dưới để nhận hỗ trợ chuyên sâu từ kỹ sư hệ thống.</p>
 
             {successMsg && (
-              <div className="mb-6 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-sm flex items-center gap-3">
+              <div className="mb-6 p-4 rounded bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-sm flex items-center gap-3">
                 <CheckCircle2 className="w-5 h-5 flex-shrink-0" /> {successMsg}
               </div>
             )}
@@ -144,7 +144,7 @@ export default function SupportCenterPage() {
                   placeholder="Ví dụ: Cần hỗ trợ mở port 8080 trên firewall VPS Ubuntu"
                   value={ticketSubject}
                   onChange={(e) => setTicketSubject(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition-colors"
+                  className="w-full px-4 py-3 rounded bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition-colors"
                 />
               </div>
 
@@ -153,7 +153,7 @@ export default function SupportCenterPage() {
                 <select 
                   value={priority}
                   onChange={(e) => setPriority(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:border-cyan-500 transition-colors"
+                  className="w-full px-4 py-3 rounded bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:border-cyan-500 transition-colors"
                 >
                   <option value="1">Bình thường (Low - Tư vấn kỹ thuật chung)</option>
                   <option value="2">Trung bình (Medium - Cần hỗ trợ cấu hình)</option>
@@ -169,14 +169,14 @@ export default function SupportCenterPage() {
                   placeholder="Vui lòng cung cấp địa chỉ IP máy chủ, thông tin hệ điều hành và chi tiết lỗi bạn đang gặp phải..."
                   value={ticketMessage}
                   onChange={(e) => setTicketMessage(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition-colors"
+                  className="w-full px-4 py-3 rounded bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition-colors"
                 />
               </div>
 
               <button 
                 type="submit" 
                 disabled={submitting}
-                className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-900 font-bold flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/20 transition-all disabled:opacity-50"
+                className="w-full sm:w-auto px-8 py-3.5 rounded bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-900 font-bold flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/20 transition-all disabled:opacity-50"
               >
                 <Send className="w-4 h-4" /> {submitting ? 'Đang gửi...' : 'Gửi Yêu Cầu Hỗ Trợ'}
               </button>
@@ -185,7 +185,7 @@ export default function SupportCenterPage() {
 
           {/* Contact Direct Box */}
           <div className="lg:col-span-4 space-y-6">
-            <div className="p-6 rounded-3xl bg-white/60 border border-slate-200 shadow-xl space-y-4">
+            <div className="p-6 rounded-lg bg-white/60 border border-slate-200 shadow-xl space-y-4">
               <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
                 <Clock className="w-5 h-5 text-amber-400" /> Cam Kết Chất Lượng SLA
               </h3>
@@ -205,7 +205,7 @@ export default function SupportCenterPage() {
               </ul>
             </div>
 
-            <div className="p-6 rounded-3xl bg-gradient-to-br from-cyan-950/40 to-slate-900/80 border border-cyan-500/20 shadow-xl space-y-4">
+            <div className="p-6 rounded-lg bg-gradient-to-br from-cyan-950/40 to-slate-900/80 border border-cyan-500/20 shadow-xl space-y-4">
               <h3 className="text-lg font-bold text-slate-900">Đường Dây Nóng Khẩn Cấp</h3>
               <div className="space-y-3 text-sm">
                 <div className="flex items-center gap-3 text-slate-700">

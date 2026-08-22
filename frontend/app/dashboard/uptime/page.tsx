@@ -119,11 +119,11 @@ export default function DashboardUptimePage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-black text-slate-900 tracking-tight">Tình trạng hệ thống</h1>
-          <p className="text-slate-500 mt-1">Theo dõi uptime và các sự cố gần đây</p>
+          <p className="text-slate-600 mt-1">Theo dõi uptime và các sự cố gần đây</p>
         </div>
         <button
           onClick={fetchData}
-          className="p-2 rounded-lg hover:bg-slate-100 text-slate-500 transition-colors"
+          className="p-2 rounded-sm hover:bg-slate-100 text-slate-600 transition-colors"
           title="Làm mới"
         >
           <RefreshCw className="w-4 h-4" />
@@ -131,10 +131,10 @@ export default function DashboardUptimePage() {
       </div>
 
       {error && (
-        <div className="p-3 bg-red-50 border border-red-200 rounded-xl flex items-center gap-2 text-sm text-red-700">
+        <div className="p-3 bg-red-50 border border-red-200 rounded flex items-center gap-2 text-sm text-red-700">
           <AlertCircle className="w-4 h-4 shrink-0" />
           <span>{error}</span>
-          <button onClick={fetchData} className="ml-auto px-3 py-1 bg-red-100 hover:bg-red-200 rounded-lg text-xs font-semibold">
+          <button onClick={fetchData} className="ml-auto px-3 py-1 bg-red-100 hover:bg-red-200 rounded-sm text-xs font-semibold">
             Thử lại
           </button>
         </div>
@@ -143,12 +143,12 @@ export default function DashboardUptimePage() {
       {/* Uptime Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {uptimeData.map((data) => (
-          <div key={`uptime-${data.period}`} className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
-            <p className="text-sm text-slate-500 mb-2">{data.period}</p>
+          <div key={`uptime-${data.period}`} className="bg-white rounded-md border border-slate-200 shadow-sm p-6">
+            <p className="text-sm text-slate-600 mb-2">{data.period}</p>
             <p className={`text-3xl font-black ${getUptimeColor(data.uptime)}`}>
               {data.uptime.toFixed(1)}%
             </p>
-            <div className="flex items-center justify-between mt-3 text-xs text-slate-500">
+            <div className="flex items-center justify-between mt-3 text-xs text-slate-600">
               <span>{data.downtime} phút off</span>
               <span>{data.incidents} sự cố</span>
             </div>
@@ -157,7 +157,7 @@ export default function DashboardUptimePage() {
       </div>
 
       {/* Incidents */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      <div className="bg-white rounded-md border border-slate-200 shadow-sm overflow-hidden">
         <div className="px-6 py-4 border-b border-slate-100">
           <h2 className="text-lg font-bold text-slate-900">Lịch sử sự cố</h2>
         </div>
@@ -170,7 +170,7 @@ export default function DashboardUptimePage() {
                 className="w-full flex items-center justify-between text-left"
               >
                 <div className="flex items-center gap-4">
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
+                  <div className={`w-10 h-10 rounded flex items-center justify-center ${
                     incident.resolved ? 'bg-emerald-100' : 'bg-amber-100'
                   }`}>
                     <Clock className={`w-5 h-5 ${
@@ -179,12 +179,12 @@ export default function DashboardUptimePage() {
                   </div>
                   <div>
                     <p className="font-semibold text-slate-900">{incident.service}</p>
-                    <p className="text-sm text-slate-500">{incident.date}</p>
+                    <p className="text-sm text-slate-600">{incident.date}</p>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-4">
-                  <span className="text-sm text-slate-500">{incident.duration}</span>
+                  <span className="text-sm text-slate-600">{incident.duration}</span>
                   <span className={`px-2 py-1 rounded-full text-xs font-bold ${
                     incident.resolved ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'
                   }`}>
@@ -199,7 +199,7 @@ export default function DashboardUptimePage() {
               </button>
 
               {expandedId === incident.id && (
-                <div className="mt-4 ml-14 p-4 bg-slate-50 rounded-lg text-sm text-slate-600">
+                <div className="mt-4 ml-14 p-4 bg-slate-50 rounded-sm text-sm text-slate-600">
                   {incident.description}
                 </div>
               )}
@@ -210,7 +210,7 @@ export default function DashboardUptimePage() {
         {incidents.length === 0 && !error && (
           <div className="text-center py-12">
             <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-700" />
-            <p className="font-medium text-slate-500">Không có sự cố nào được ghi nhận</p>
+            <p className="font-medium text-slate-600">Không có sự cố nào được ghi nhận</p>
             <p className="text-sm text-slate-600 mt-1">Hệ thống hoạt động ổn định</p>
           </div>
         )}

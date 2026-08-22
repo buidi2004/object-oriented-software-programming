@@ -139,7 +139,7 @@ export default function AdminRevenuePage() {
     <div className="min-h-screen bg-slate-50">
       {/* Toast */}
       {toast && (
-        <div className={`fixed bottom-5 right-5 z-50 px-5 py-3 rounded-xl shadow-xl text-white font-semibold text-sm flex items-center gap-2.5 animate-in slide-in-from-bottom-5 ${
+        <div className={`fixed bottom-5 right-5 z-50 px-5 py-3 rounded shadow-xl text-white font-semibold text-sm flex items-center gap-2.5 animate-in slide-in-from-bottom-5 ${
           toast.type === 'success' ? 'bg-emerald-600' : 'bg-red-600'
         }`}>
           {toast.type === 'success' ? <CheckCircle2 className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />}
@@ -150,19 +150,19 @@ export default function AdminRevenuePage() {
       <header className="bg-white border-b border-slate-200 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link href="/admin" className="p-2 rounded-lg hover:bg-slate-100 transition-colors">
+            <Link href="/admin" className="p-2 rounded-sm hover:bg-slate-100 transition-colors">
               <ArrowLeft className="w-5 h-5 text-slate-600" />
             </Link>
             <div>
               <h1 className="text-xl font-bold text-slate-900">Báo Cáo Doanh Thu &amp; Tài Chính (Revenue)</h1>
-              <p className="text-xs text-slate-500">Phân tích dòng tiền kinh doanh và tăng trưởng đơn hàng</p>
+              <p className="text-xs text-slate-600">Phân tích dòng tiền kinh doanh và tăng trưởng đơn hàng</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
             <select
               value={dateRange}
               onChange={(e) => setDateRange(e.target.value as any)}
-              className="px-3.5 py-2 rounded-xl border border-slate-200 text-xs font-bold bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
+              className="px-3.5 py-2 rounded border border-slate-200 text-xs font-bold bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
             >
               <option value="7d">7 ngày qua</option>
               <option value="30d">30 ngày qua</option>
@@ -171,7 +171,7 @@ export default function AdminRevenuePage() {
             </select>
             <button 
               onClick={() => handleExport('csv')}
-              className="px-4 py-2 rounded-xl bg-blue-600 text-white font-semibold text-xs hover:bg-blue-700 transition-colors flex items-center gap-1.5 shadow-sm"
+              className="px-4 py-2 rounded bg-blue-600 text-white font-semibold text-xs hover:bg-blue-700 transition-colors flex items-center gap-1.5 shadow-sm"
             >
               <Download className="w-4 h-4" />
               Xuất Báo Cáo CSV
@@ -183,9 +183,9 @@ export default function AdminRevenuePage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-          <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm">
+          <div className="bg-white rounded-lg p-6 border border-slate-200 shadow-sm">
             <div className="flex items-center justify-between mb-3">
-              <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">
+              <div className="w-12 h-12 rounded-md bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">
                 <DollarSign className="w-6 h-6" />
               </div>
               <span className="text-xs font-bold text-emerald-600 flex items-center gap-0.5 bg-emerald-50 px-2 py-0.5 rounded-full">
@@ -196,24 +196,24 @@ export default function AdminRevenuePage() {
             <p className="text-xs font-bold text-slate-600 uppercase tracking-wider mt-1">Tổng Doanh Thu ({dateRange})</p>
           </div>
 
-          <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm">
-            <div className="w-12 h-12 rounded-2xl bg-blue-50 text-[#1F1F1F] flex items-center justify-center font-bold mb-3">
+          <div className="bg-white rounded-lg p-6 border border-slate-200 shadow-sm">
+            <div className="w-12 h-12 rounded-md bg-blue-50 text-[#1F1F1F] flex items-center justify-center font-bold mb-3">
               <ShoppingCart className="w-6 h-6" />
             </div>
             <p className="text-2xl font-black text-slate-900">{stats.totalOrders.toLocaleString()} đơn</p>
             <p className="text-xs font-bold text-slate-600 uppercase tracking-wider mt-1">Đơn Hàng Đã Thanh Toán</p>
           </div>
 
-          <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm">
-            <div className="w-12 h-12 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center font-bold mb-3">
+          <div className="bg-white rounded-lg p-6 border border-slate-200 shadow-sm">
+            <div className="w-12 h-12 rounded-md bg-purple-50 text-purple-600 flex items-center justify-center font-bold mb-3">
               <Users className="w-6 h-6" />
             </div>
             <p className="text-2xl font-black text-slate-900">{stats.totalUsers.toLocaleString()} khách</p>
             <p className="text-xs font-bold text-slate-600 uppercase tracking-wider mt-1">Khách Hàng Mua Sắm</p>
           </div>
 
-          <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm">
-            <div className="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold mb-3">
+          <div className="bg-white rounded-lg p-6 border border-slate-200 shadow-sm">
+            <div className="w-12 h-12 rounded-md bg-amber-50 text-amber-600 flex items-center justify-center font-bold mb-3">
               <TrendingUp className="w-6 h-6" />
             </div>
             <p className="text-2xl font-black text-slate-900">{Math.round(stats.averageOrderValue).toLocaleString('vi-VN')} đ</p>
@@ -222,22 +222,22 @@ export default function AdminRevenuePage() {
         </div>
 
         {/* Main Revenue Chart */}
-        <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 mb-6 shadow-sm">
+        <div className="bg-white rounded-lg border border-slate-200 p-6 sm:p-8 mb-6 shadow-sm">
           <div className="flex items-center justify-between mb-6">
             <div>
               <h2 className="text-lg font-black text-slate-900">Biểu Đồ Doanh Thu Theo Dòng Thời Gian</h2>
-              <p className="text-xs text-slate-500">Doanh số bán lẻ và gia hạn dịch vụ tự động</p>
+              <p className="text-xs text-slate-600">Doanh số bán lẻ và gia hạn dịch vụ tự động</p>
             </div>
             <div className="flex gap-2">
               <button 
                 onClick={() => handleExport('excel')}
-                className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold flex items-center gap-1 transition-colors"
+                className="px-3 py-1.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold flex items-center gap-1 transition-colors"
               >
                 <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-600" /> Excel
               </button>
               <button 
                 onClick={() => handleExport('pdf')}
-                className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold flex items-center gap-1 transition-colors"
+                className="px-3 py-1.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold flex items-center gap-1 transition-colors"
               >
                 <FileText className="w-3.5 h-3.5 text-rose-600" /> PDF
               </button>
@@ -275,9 +275,9 @@ export default function AdminRevenuePage() {
 
         {/* Product Breakdown & Orders */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm">
+          <div className="bg-white rounded-lg border border-slate-200 p-6 sm:p-8 shadow-sm">
             <h2 className="text-base font-black text-slate-900 mb-1">Cơ Cấu Doanh Thu Theo Dịch Vụ</h2>
-            <p className="text-xs text-slate-500 mb-6">Tỷ trọng đóng góp vào tổng thu nhập</p>
+            <p className="text-xs text-slate-600 mb-6">Tỷ trọng đóng góp vào tổng thu nhập</p>
             <div className="space-y-4">
               {categoryBreakdown.map((cat, i) => (
                 <div key={i} className="space-y-1.5">
@@ -293,9 +293,9 @@ export default function AdminRevenuePage() {
             </div>
           </div>
 
-          <div className="lg:col-span-2 bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm">
+          <div className="lg:col-span-2 bg-white rounded-lg border border-slate-200 p-6 sm:p-8 shadow-sm">
             <h2 className="text-base font-black text-slate-900 mb-1">Đơn Hàng &amp; Khách Mới Mỗi Ngày</h2>
-            <p className="text-xs text-slate-500 mb-4">Lượng giao dịch phát sinh trên hệ thống</p>
+            <p className="text-xs text-slate-600 mb-4">Lượng giao dịch phát sinh trên hệ thống</p>
             <div className="h-64 w-full min-w-0">
               {mounted ? (
                 <React.Suspense fallback={<div className="flex items-center justify-center h-full"><div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" /></div>}>

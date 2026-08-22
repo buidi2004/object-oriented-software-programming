@@ -19,30 +19,30 @@ const serviceCategories = [
     name: 'Hạ tầng & Máy chủ',
     description: 'Cung cấp các dịch vụ hạ tầng máy chủ chuyên dụng, ảo hóa CPU AMD/Intel hiệu năng cao và container tối ưu.',
     services: [
-      { id: 1, title: 'Cloud VPS NVMe', desc: 'Máy chủ ảo hiệu năng cao CPU AMD EPYC', link: '/services/cloud-vps', icon: Server, color: 'text-[#1F1F1F] bg-blue-50' },
-      { id: 2, title: 'Dedicated Server', desc: 'Máy chủ vật lý riêng biệt Dual Xeon & EPYC', link: '/services/dedicated-servers', icon: Server, color: 'text-purple-600 bg-purple-50' },
-      { id: 3, title: 'Game Servers', desc: 'Minecraft, CS2, Rust Anti-DDoS 500Gbps', link: '/services/game-servers', icon: Gamepad2, color: 'text-rose-600 bg-rose-50' },
-      { id: 4, title: 'Static Sites (Nginx)', desc: 'Web tĩnh tốc độ cao trên container Nginx', link: '/services/static-sites', icon: Globe, color: 'text-[#1F1F1F] bg-cyan-50' }
+      { id: 1, title: 'Cloud VPS NVMe', desc: 'Máy chủ ảo hiệu năng cao CPU AMD EPYC', link: '/services/cloud-vps', icon: Server, color: 'text-[#1F1F1F] bg-slate-100' },
+      { id: 2, title: 'Dedicated Server', desc: 'Máy chủ vật lý riêng biệt Dual Xeon & EPYC', link: '/services/dedicated-servers', icon: Server, color: 'text-[#1F1F1F] bg-slate-100' },
+      { id: 3, title: 'Game Servers', desc: 'Minecraft, CS2, Rust Anti-DDoS 500Gbps', link: '/services/game-servers', icon: Gamepad2, color: 'text-[#1F1F1F] bg-slate-100' },
+      { id: 4, title: 'Static Sites (Nginx)', desc: 'Web tĩnh tốc độ cao trên container Nginx', link: '/services/static-sites', icon: Globe, color: 'text-[#1F1F1F] bg-slate-100' }
     ]
   },
   {
     name: 'Web & Bảo mật',
     description: 'Giải pháp lưu trữ web tốc độ cao, cài ứng dụng 1 chạm và bảo vệ đường truyền đạt chuẩn quốc tế.',
     services: [
-      { id: 1, title: 'NVMe Web Hosting', desc: 'LiteSpeed + cPanel tối ưu tốc độ WordPress', link: '/services/hosting', icon: LayoutTemplate, color: 'text-emerald-600 bg-emerald-50' },
-      { id: 2, title: '1-Click Apps Installer', desc: 'Cài WordPress, Ghost, Nextcloud, n8n 60s', link: '/apps', icon: Boxes, color: 'text-amber-600 bg-amber-50' },
-      { id: 3, title: 'Chứng Chỉ SSL / TLS', desc: 'Mã hóa HTTPS bảo hiểm $1.75M USD', link: '/services/ssl-certificates', icon: ShieldCheck, color: 'text-teal-600 bg-teal-50' },
-      { id: 4, title: 'Tên Miền (DNS)', desc: 'Đăng ký .VN, .COM, .AI, .IO giá tốt', link: '/domains', icon: Compass, color: 'text-[#1F1F1F] bg-indigo-50' }
+      { id: 1, title: 'NVMe Web Hosting', desc: 'LiteSpeed + cPanel tối ưu tốc độ WordPress', link: '/services/hosting', icon: LayoutTemplate, color: 'text-[#1F1F1F] bg-slate-100' },
+      { id: 2, title: '1-Click Apps Installer', desc: 'Cài WordPress, Ghost, Nextcloud, n8n 60s', link: '/apps', icon: Boxes, color: 'text-[#1F1F1F] bg-slate-100' },
+      { id: 3, title: 'Chứng Chỉ SSL / TLS', desc: 'Mã hóa HTTPS bảo hiểm $1.75M USD', link: '/services/ssl-certificates', icon: ShieldCheck, color: 'text-[#1F1F1F] bg-slate-100' },
+      { id: 4, title: 'Tên Miền (DNS)', desc: 'Đăng ký .VN, .COM, .AI, .IO giá tốt', link: '/domains', icon: Compass, color: 'text-[#1F1F1F] bg-slate-100' }
     ]
   },
   {
     name: 'Dữ liệu & Giải pháp',
     description: 'Hệ sinh thái lưu trữ S3, cơ sở dữ liệu quản trị tự động và dịch vụ chuyển đổi dữ liệu toàn diện.',
     services: [
-      { id: 1, title: 'Managed Databases', desc: 'PostgreSQL, MySQL, Redis HA tự động', link: '/services/databases', icon: Database, color: 'text-teal-600 bg-teal-50' },
-      { id: 2, title: 'Object Storage (S3)', desc: 'MinIO S3 API All-Flash 11 số 9 độ bền', link: '/services/storage', icon: HardDrive, color: 'text-[#1F1F1F] bg-blue-50' },
-      { id: 3, title: 'Bảo Mật & WAF', desc: 'Tường lửa AI, chống DDoS L7 & OWASP', link: '/services/security', icon: Shield, color: 'text-red-600 bg-red-50' },
-      { id: 4, title: 'Chuyển Đổi Dữ Liệu', desc: 'Di dời Zero-Downtime 24/7 MIỄN PHÍ', link: '/services/migrations', icon: Activity, color: 'text-orange-600 bg-orange-50' }
+      { id: 1, title: 'Managed Databases', desc: 'PostgreSQL, MySQL, Redis HA tự động', link: '/services/databases', icon: Database, color: 'text-[#1F1F1F] bg-slate-100' },
+      { id: 2, title: 'Object Storage (S3)', desc: 'MinIO S3 API All-Flash 11 số 9 độ bền', link: '/services/storage', icon: HardDrive, color: 'text-[#1F1F1F] bg-slate-100' },
+      { id: 3, title: 'Bảo Mật & WAF', desc: 'Tường lửa AI, chống DDoS L7 & OWASP', link: '/services/security', icon: Shield, color: 'text-[#1F1F1F] bg-slate-100' },
+      { id: 4, title: 'Chuyển Đổi Dữ Liệu', desc: 'Di dời Zero-Downtime 24/7 MIỄN PHÍ', link: '/services/migrations', icon: Activity, color: 'text-[#1F1F1F] bg-slate-100' }
     ]
   }
 ];
@@ -84,6 +84,7 @@ export const Header: React.FC<HeaderProps> = ({
   const [servicesDropdownOpen, setServicesDropdownOpen] = useState(false);
   const [activeServiceCategory, setActiveServiceCategory] = useState(0);
   const [supportDropdownOpen, setSupportDropdownOpen] = useState(false);
+  const [newsDropdownOpen, setNewsDropdownOpen] = useState(false);
   const { user, setUser, logout, token } = useAuthStore();
   const walletBalance = user?.walletBalance ?? 0;
 
@@ -107,7 +108,7 @@ export const Header: React.FC<HeaderProps> = ({
   }, [token, user, setUser]);
 
   const navLinkBase =
-    'px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center shrink-0';
+    'px-3.5 py-2 rounded text-xs font-bold transition-all flex items-center shrink-0';
   const isServicesActive = pathname.startsWith('/services') || servicesDropdownOpen;
   const isHomeActive = pathname === '/' && !servicesDropdownOpen;
 
@@ -180,7 +181,7 @@ export const Header: React.FC<HeaderProps> = ({
 
               {servicesDropdownOpen && (
                 <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 w-[940px] max-w-[95vw] z-50">
-                  <div className="bg-white rounded-3xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.18)] border border-slate-200 flex flex-col overflow-hidden min-h-[420px] animate-in fade-in slide-in-from-top-2 duration-200">
+                  <div className="bg-white rounded-lg shadow-[0_20px_60px_-15px_rgba(0,0,0,0.18)] border border-slate-200 flex flex-col overflow-hidden min-h-[420px] animate-in fade-in slide-in-from-top-2 duration-200">
                     
                     <div className="flex flex-1">
                       {/* Left Sidebar */}
@@ -194,7 +195,7 @@ export const Header: React.FC<HeaderProps> = ({
                               key={idx}
                               onMouseEnter={() => setActiveServiceCategory(idx)}
                               onClick={() => setActiveServiceCategory(idx)}
-                              className={`w-full text-left px-4 py-3.5 rounded-2xl text-[14px] font-bold transition-all flex items-center justify-between outline-none ${
+                              className={`w-full text-left px-4 py-3.5 rounded-md text-[14px] font-bold transition-all flex items-center justify-between outline-none ${
                                 activeServiceCategory === idx
                                   ? 'bg-white text-[#1F1F1F] shadow-sm border border-slate-200/80 font-black'
                                   : 'text-slate-700 hover:bg-slate-100/80 hover:text-slate-900'
@@ -215,7 +216,7 @@ export const Header: React.FC<HeaderProps> = ({
                           <Link
                             href="/services"
                             onClick={() => setServicesDropdownOpen(false)}
-                            className="block p-3 rounded-2xl bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 hover:border-blue-300 transition-all group"
+                            className="block p-3 rounded-md bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 hover:border-blue-300 transition-all group"
                           >
                             <div className="text-xs font-black text-[#1F1F1F] group-hover:text-[#1F1F1F] flex items-center justify-between">
                               <span>Xem Tất Cả 12 Gói Dịch Vụ</span>
@@ -231,7 +232,7 @@ export const Header: React.FC<HeaderProps> = ({
                         <div>
                           {/* Banner */}
                           <div className="flex items-center gap-4 mb-6 pb-4 border-b border-slate-100">
-                            <div className="w-12 h-12 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center shrink-0 shadow-2xs">
+                            <div className="w-12 h-12 rounded-md bg-blue-50 border border-blue-100 flex items-center justify-center shrink-0 shadow-2xs">
                               <Cloud className="w-6 h-6 text-[#1F1F1F]" />
                             </div>
                             <div>
@@ -251,9 +252,9 @@ export const Header: React.FC<HeaderProps> = ({
                                   key={idx}
                                   href={service.link}
                                   onClick={() => setServicesDropdownOpen(false)}
-                                  className="flex items-start gap-3.5 p-3.5 rounded-2xl hover:bg-slate-50 border border-slate-100 hover:border-blue-200 transition-all group"
+                                  className="flex items-start gap-3.5 p-3.5 rounded-md hover:bg-slate-50 border border-slate-100 hover:border-blue-200 transition-all group"
                                 >
-                                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${service.color} transition-transform group-hover:scale-110 shadow-2xs`}>
+                                  <div className={`w-10 h-10 rounded flex items-center justify-center shrink-0 ${service.color} transition-transform group-hover:scale-110 shadow-2xs`}>
                                     <SIcon className="w-5 h-5" />
                                   </div>
                                   <div className="min-w-0">
@@ -292,6 +293,58 @@ export const Header: React.FC<HeaderProps> = ({
 
             <div
               className="relative shrink-0"
+              onMouseEnter={() => setNewsDropdownOpen(true)}
+              onMouseLeave={() => setNewsDropdownOpen(false)}
+            >
+              <button
+                type="button"
+                onClick={() => setNewsDropdownOpen(open => !open)}
+                aria-expanded={newsDropdownOpen}
+                aria-haspopup="true"
+                className={`${navLinkBase} gap-1 ${newsDropdownOpen || pathname.startsWith('/news') || pathname.startsWith('/promotions')
+                    ? 'text-[#1F1F1F] bg-blue-50/80 font-black'
+                    : 'text-slate-700 hover:text-[#1F1F1F] hover:bg-slate-50'
+                  }`}
+              >
+                Tin tức
+                <ChevronDown className={`w-4 h-4 shrink-0 transition-transform ${newsDropdownOpen ? 'rotate-180 text-[#1F1F1F]' : ''}`} />
+              </button>
+
+              {newsDropdownOpen && (
+                <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 w-[240px] z-50">
+                  <div className="bg-white rounded-md shadow-xl border border-slate-100 p-2 animate-in fade-in slide-in-from-top-2 duration-200 flex flex-col gap-1">
+                    <Link
+                      href="/news"
+                      onClick={() => setNewsDropdownOpen(false)}
+                      className="flex items-center gap-3 p-2.5 rounded hover:bg-slate-50 transition-colors group"
+                    >
+                      <div className="w-8 h-8 rounded-sm bg-slate-100/70 text-[#1F1F1F] flex items-center justify-center shrink-0">
+                        <Cpu className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <div className="text-sm font-bold text-slate-700 group-hover:text-[#1F1F1F]">Tin công nghệ</div>
+                      </div>
+                    </Link>
+
+                    <Link
+                      href="/promotions"
+                      onClick={() => setNewsDropdownOpen(false)}
+                      className="flex items-center gap-3 p-2.5 rounded hover:bg-slate-50 transition-colors group"
+                    >
+                      <div className="w-8 h-8 rounded-sm bg-slate-100/70 text-[#1F1F1F] flex items-center justify-center shrink-0">
+                        <Megaphone className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <div className="text-sm font-bold text-slate-700 group-hover:text-[#1F1F1F]">Tin khuyến mại</div>
+                      </div>
+                    </Link>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div
+              className="relative shrink-0"
               onMouseEnter={() => setSupportDropdownOpen(true)}
               onMouseLeave={() => setSupportDropdownOpen(false)}
             >
@@ -300,7 +353,7 @@ export const Header: React.FC<HeaderProps> = ({
                 onClick={() => setSupportDropdownOpen(open => !open)}
                 aria-expanded={supportDropdownOpen}
                 aria-haspopup="true"
-                className={`${navLinkBase} gap-1 ${supportDropdownOpen || pathname.startsWith('/support') || pathname.startsWith('/news') || pathname.startsWith('/knowledge-base') || pathname.startsWith('/resources') || pathname.startsWith('/status')
+                className={`${navLinkBase} gap-1 ${supportDropdownOpen || pathname.startsWith('/support') || pathname.startsWith('/knowledge-base') || pathname.startsWith('/resources') || pathname.startsWith('/status')
                     ? 'text-[#1F1F1F] bg-blue-50/80 font-black'
                     : 'text-slate-700 hover:text-[#1F1F1F] hover:bg-slate-50'
                   }`}
@@ -311,13 +364,13 @@ export const Header: React.FC<HeaderProps> = ({
 
               {supportDropdownOpen && (
                 <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 w-[280px] z-50">
-                  <div className="bg-white rounded-2xl shadow-xl border border-slate-100 p-2 animate-in fade-in slide-in-from-top-2 duration-200 flex flex-col gap-1">
+                  <div className="bg-white rounded-md shadow-xl border border-slate-100 p-2 animate-in fade-in slide-in-from-top-2 duration-200 flex flex-col gap-1">
                     <Link
                       href="/support/tickets"
                       onClick={() => setSupportDropdownOpen(false)}
-                      className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-blue-50/70 transition-colors group"
+                      className="flex items-center gap-3 p-2.5 rounded hover:bg-slate-50 transition-colors group"
                     >
-                      <div className="w-8 h-8 rounded-lg bg-blue-100/70 text-[#1F1F1F] flex items-center justify-center shrink-0">
+                      <div className="w-8 h-8 rounded-sm bg-slate-100/70 text-[#1F1F1F] flex items-center justify-center shrink-0">
                         <LifeBuoy className="w-4 h-4" />
                       </div>
                       <div>
@@ -328,22 +381,22 @@ export const Header: React.FC<HeaderProps> = ({
                     <Link
                       href="/news"
                       onClick={() => setSupportDropdownOpen(false)}
-                      className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-amber-50/70 transition-colors group"
+                      className="flex items-center gap-3 p-2.5 rounded hover:bg-slate-50 transition-colors group"
                     >
-                      <div className="w-8 h-8 rounded-lg bg-amber-100/70 text-amber-600 flex items-center justify-center shrink-0">
+                      <div className="w-8 h-8 rounded-sm bg-slate-100/70 text-[#1F1F1F] flex items-center justify-center shrink-0">
                         <Megaphone className="w-4 h-4" />
                       </div>
                       <div>
-                        <div className="text-sm font-bold text-slate-700 group-hover:text-amber-600">Thông báo</div>
+                        <div className="text-sm font-bold text-slate-700 group-hover:text-[#1F1F1F]">Thông báo</div>
                       </div>
                     </Link>
 
                     <Link
                       href="/knowledge-base"
                       onClick={() => setSupportDropdownOpen(false)}
-                      className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-indigo-50/70 transition-colors group"
+                      className="flex items-center gap-3 p-2.5 rounded hover:bg-slate-50 transition-colors group"
                     >
-                      <div className="w-8 h-8 rounded-lg bg-indigo-100/70 text-[#1F1F1F] flex items-center justify-center shrink-0">
+                      <div className="w-8 h-8 rounded-sm bg-slate-100/70 text-[#1F1F1F] flex items-center justify-center shrink-0">
                         <BookOpen className="w-4 h-4" />
                       </div>
                       <div>
@@ -354,26 +407,26 @@ export const Header: React.FC<HeaderProps> = ({
                     <Link
                       href="/resources"
                       onClick={() => setSupportDropdownOpen(false)}
-                      className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-emerald-50/70 transition-colors group"
+                      className="flex items-center gap-3 p-2.5 rounded hover:bg-slate-50 transition-colors group"
                     >
-                      <div className="w-8 h-8 rounded-lg bg-emerald-100/70 text-emerald-600 flex items-center justify-center shrink-0">
+                      <div className="w-8 h-8 rounded-sm bg-slate-100/70 text-[#1F1F1F] flex items-center justify-center shrink-0">
                         <DownloadCloud className="w-4 h-4" />
                       </div>
                       <div>
-                        <div className="text-sm font-bold text-slate-700 group-hover:text-emerald-600">Tài nguyên & Phần mềm</div>
+                        <div className="text-sm font-bold text-slate-700 group-hover:text-[#1F1F1F]">Tài nguyên & Phần mềm</div>
                       </div>
                     </Link>
 
                     <Link
                       href="/status"
                       onClick={() => setSupportDropdownOpen(false)}
-                      className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-rose-50/70 transition-colors group"
+                      className="flex items-center gap-3 p-2.5 rounded hover:bg-slate-50 transition-colors group"
                     >
-                      <div className="w-8 h-8 rounded-lg bg-rose-100/70 text-rose-600 flex items-center justify-center shrink-0">
+                      <div className="w-8 h-8 rounded-sm bg-slate-100/70 text-[#1F1F1F] flex items-center justify-center shrink-0">
                         <ActivitySquare className="w-4 h-4" />
                       </div>
                       <div>
-                        <div className="text-sm font-bold text-slate-700 group-hover:text-rose-600">Trạng thái hệ thống</div>
+                        <div className="text-sm font-bold text-slate-700 group-hover:text-[#1F1F1F]">Trạng thái hệ thống</div>
                       </div>
                     </Link>
                   </div>
@@ -395,7 +448,7 @@ export const Header: React.FC<HeaderProps> = ({
             {(user?.role === 'Admin' || user?.role === 'Editor') && (
               <Link
                 href="/admin"
-                className="px-3.5 py-2 rounded-xl text-xs font-black bg-gradient-to-r from-red-600 to-rose-600 text-slate-900 shadow-xs hover:shadow-red-500/20 hover:from-red-500 hover:to-rose-500 transition-all flex items-center gap-1.5 shrink-0"
+                className="px-3.5 py-2 rounded text-xs font-black bg-gradient-to-r from-red-600 to-rose-600 text-slate-900 shadow-xs hover:shadow-red-500/20 hover:from-red-500 hover:to-rose-500 transition-all flex items-center gap-1.5 shrink-0"
               >
                 <Shield className="w-3.5 h-3.5" />
                 <span>Admin Panel</span>
@@ -409,7 +462,7 @@ export const Header: React.FC<HeaderProps> = ({
 
             <button
               onClick={handleOpenCart}
-              className="relative p-2 text-slate-700 hover:bg-slate-100 rounded-xl transition-colors shrink-0"
+              className="relative p-2 text-slate-700 hover:bg-slate-100 rounded transition-colors shrink-0"
               aria-label="Giỏ hàng"
             >
               <ShoppingCart className="w-5 h-5" />
@@ -472,7 +525,7 @@ export const Header: React.FC<HeaderProps> = ({
 
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 rounded-xl text-slate-700 hover:bg-slate-100 transition-colors shrink-0"
+              className="lg:hidden p-2 rounded text-slate-700 hover:bg-slate-100 transition-colors shrink-0"
               aria-label={mobileMenuOpen ? 'Đóng menu' : 'Mở menu'}
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -488,7 +541,7 @@ export const Header: React.FC<HeaderProps> = ({
                   key={item.id}
                   href={item.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className={`block w-full text-left px-4 py-2.5 rounded-xl text-sm font-bold transition-all ${pathname === item.href || (item.href !== '/' && item.href !== '/#contact' && pathname.startsWith(item.href))
+                  className={`block w-full text-left px-4 py-2.5 rounded text-sm font-bold transition-all ${pathname === item.href || (item.href !== '/' && item.href !== '/#contact' && pathname.startsWith(item.href))
                       ? 'bg-blue-50 text-[#1F1F1F]'
                       : 'text-slate-700 hover:bg-slate-50'
                     }`}
@@ -499,7 +552,7 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
 
             {/* Quick Mobile Services Grid for all 12 services */}
-            <div className="p-3 bg-slate-50 rounded-2xl border border-slate-100">
+            <div className="p-3 bg-slate-50 rounded-md border border-slate-100">
               <div className="text-[11px] font-black uppercase tracking-wider text-slate-600 mb-2.5 px-1 flex items-center justify-between">
                 <span>Toàn bộ 12 Dịch Vụ Cloud</span>
                 <Link href="/services" onClick={() => setMobileMenuOpen(false)} className="text-[#1F1F1F] font-bold lowercase">
@@ -509,23 +562,23 @@ export const Header: React.FC<HeaderProps> = ({
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                 {[
                   { label: 'Cloud VPS', href: '/services/cloud-vps', icon: Server, color: 'text-[#1F1F1F]' },
-                  { label: 'Dedicated Server', href: '/services/dedicated-servers', icon: Server, color: 'text-purple-600' },
-                  { label: 'Managed DB', href: '/services/databases', icon: Database, color: 'text-teal-600' },
-                  { label: 'Game Servers', href: '/services/game-servers', icon: Gamepad2, color: 'text-rose-600' },
-                  { label: '1-Click Apps', href: '/apps', icon: Boxes, color: 'text-amber-600' },
+                  { label: 'Dedicated Server', href: '/services/dedicated-servers', icon: Server, color: 'text-[#1F1F1F]' },
+                  { label: 'Managed DB', href: '/services/databases', icon: Database, color: 'text-[#1F1F1F]' },
+                  { label: 'Game Servers', href: '/services/game-servers', icon: Gamepad2, color: 'text-[#1F1F1F]' },
+                  { label: '1-Click Apps', href: '/apps', icon: Boxes, color: 'text-[#1F1F1F]' },
                   { label: 'Static Sites', href: '/services/static-sites', icon: Globe, color: 'text-[#1F1F1F]' },
                   { label: 'Object Storage', href: '/services/storage', icon: HardDrive, color: 'text-[#1F1F1F]' },
-                  { label: 'Chứng Chỉ SSL', href: '/services/ssl-certificates', icon: ShieldCheck, color: 'text-teal-600' },
+                  { label: 'Chứng Chỉ SSL', href: '/services/ssl-certificates', icon: ShieldCheck, color: 'text-[#1F1F1F]' },
                   { label: 'Tên Miền (DNS)', href: '/domains', icon: Compass, color: 'text-[#1F1F1F]' },
-                  { label: 'Bảo Mật & WAF', href: '/services/security', icon: Shield, color: 'text-red-600' },
-                  { label: 'Chuyển Đổi Data', href: '/services/migrations', icon: ArrowLeftRight, color: 'text-orange-600' },
-                  { label: 'Web Hosting', href: '/services/hosting', icon: LayoutTemplate, color: 'text-emerald-600' },
+                  { label: 'Bảo Mật & WAF', href: '/services/security', icon: Shield, color: 'text-[#1F1F1F]' },
+                  { label: 'Chuyển Đổi Data', href: '/services/migrations', icon: ArrowLeftRight, color: 'text-[#1F1F1F]' },
+                  { label: 'Web Hosting', href: '/services/hosting', icon: LayoutTemplate, color: 'text-[#1F1F1F]' },
                 ].map((svc, idx) => (
                   <Link 
                     key={idx}
                     href={svc.href} 
                     onClick={() => setMobileMenuOpen(false)}
-                    className="p-2.5 bg-white rounded-xl border border-slate-200/70 text-xs font-bold text-slate-800 hover:text-[#1F1F1F] flex items-center gap-2 shadow-2xs"
+                    className="p-2.5 bg-white rounded border border-slate-200/70 text-xs font-bold text-slate-800 hover:text-[#1F1F1F] flex items-center gap-2 shadow-2xs"
                   >
                     <svc.icon className={`w-4 h-4 ${svc.color} shrink-0`} /> 
                     <span className="truncate">{svc.label}</span>
@@ -547,7 +600,7 @@ export const Header: React.FC<HeaderProps> = ({
             <div className="pt-3 border-t border-slate-100 flex flex-col gap-2">
               {user ? (
                 <>
-                  <div className="flex items-center justify-between p-3 bg-blue-50/70 rounded-xl border border-blue-100">
+                  <div className="flex items-center justify-between p-3 bg-blue-50/70 rounded border border-blue-100">
                     <div className="flex items-center gap-2">
                       <div className="w-8 h-8 rounded-full bg-blue-600 text-white font-bold text-xs flex items-center justify-center">
                         {user.fullName.charAt(0).toUpperCase()}
@@ -568,7 +621,7 @@ export const Header: React.FC<HeaderProps> = ({
                     <Link
                       href="/admin"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-50 text-[#1F1F1F] font-bold text-sm"
+                      className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded bg-indigo-50 text-[#1F1F1F] font-bold text-sm"
                     >
                       <Shield className="w-4 h-4" />
                       Admin Panel
@@ -580,7 +633,7 @@ export const Header: React.FC<HeaderProps> = ({
                       logout();
                       setMobileMenuOpen(false);
                     }}
-                    className="w-full text-center px-4 py-2 text-xs font-bold text-rose-500 hover:bg-rose-50 rounded-xl transition-colors"
+                    className="w-full text-center px-4 py-2 text-xs font-bold text-rose-500 hover:bg-rose-50 rounded transition-colors"
                   >
                     Đăng xuất tài khoản
                   </button>
@@ -592,7 +645,7 @@ export const Header: React.FC<HeaderProps> = ({
                       handleOpenAuth('login');
                       setMobileMenuOpen(false);
                     }}
-                    className="w-full text-center px-4 py-2.5 text-sm font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl"
+                    className="w-full text-center px-4 py-2.5 text-sm font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded"
                   >
                     Đăng nhập
                   </button>

@@ -21,7 +21,7 @@ export function ResourceActionMenu({ status, onSuspend, onResume, onTerminate }:
     <div className="relative">
       <button 
         onClick={() => setIsOpen(!isOpen)}
-        className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-500 transition-colors"
+        className="p-1.5 rounded-sm hover:bg-slate-100 text-slate-600 transition-colors"
       >
         <MoreVertical className="w-5 h-5" />
       </button>
@@ -32,7 +32,7 @@ export function ResourceActionMenu({ status, onSuspend, onResume, onTerminate }:
             className="fixed inset-0 z-10"
             onClick={() => setIsOpen(false)}
           />
-          <div className="absolute right-0 mt-1 w-48 bg-white rounded-xl shadow-lg border border-slate-200 z-20 py-1 overflow-hidden">
+          <div className="absolute right-0 mt-1 w-48 bg-white rounded shadow-lg border border-slate-200 z-20 py-1 overflow-hidden">
             {(status === 'Running' || status === 'Active') && onSuspend && (
               <button 
                 className="w-full px-4 py-2 text-left text-sm text-slate-700 hover:bg-slate-50 flex items-center gap-2"

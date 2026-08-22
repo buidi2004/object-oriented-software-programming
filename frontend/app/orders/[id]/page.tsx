@@ -175,7 +175,7 @@ export default function OrderDetailPage() {
 
       <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Order Header */}
-        <div className="bg-white rounded-2xl p-6 border border-slate-200 mb-6">
+        <div className="bg-white rounded-md p-6 border border-slate-200 mb-6">
           <div className="flex items-start justify-between">
             <div>
               <div className="flex items-center gap-3 mb-2">
@@ -185,12 +185,12 @@ export default function OrderDetailPage() {
                   {StatusLabel}
                 </span>
               </div>
-              <p className="text-slate-500">
+              <p className="text-slate-600">
                 Đặt ngày: {new Date(order.orderDate).toLocaleDateString('vi-VN')}
               </p>
             </div>
             <div className="text-right">
-              <p className="text-sm text-slate-500 mb-1">Tổng thanh toán</p>
+              <p className="text-sm text-slate-600 mb-1">Tổng thanh toán</p>
               <p className="text-3xl font-black text-[#1F1F1F]">
                 {order.totalAmount.toLocaleString('vi-VN')} đ
               </p>
@@ -201,7 +201,7 @@ export default function OrderDetailPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Order Items */}
           <div className="lg:col-span-2 space-y-6">
-            <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+            <div className="bg-white rounded-md border border-slate-200 overflow-hidden shadow-sm">
               <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
                 <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
                   <Package className="w-5 h-5 text-[#1F1F1F]" />
@@ -214,11 +214,11 @@ export default function OrderDetailPage() {
                     <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
                       <div>
                         <h3 className="font-bold text-slate-900">{item.servicePlanName}</h3>
-                        <p className="text-sm text-slate-500 mt-1">Chu kỳ: {item.billingCycle}</p>
+                        <p className="text-sm text-slate-600 mt-1">Chu kỳ: {item.billingCycle}</p>
                       </div>
                       <div className="text-right">
                         <p className="font-bold text-slate-900">{item.unitPrice.toLocaleString('vi-VN')} đ</p>
-                        <p className="text-sm text-slate-500">Số lượng: {item.quantity}</p>
+                        <p className="text-sm text-slate-600">Số lượng: {item.quantity}</p>
                       </div>
                     </div>
                   </div>
@@ -235,19 +235,19 @@ export default function OrderDetailPage() {
             )}
           </div>
           <div className="lg:col-span-2 space-y-6">
-            <div className="bg-white rounded-2xl p-6 border border-slate-200">
+            <div className="bg-white rounded-md p-6 border border-slate-200">
               <h2 className="text-lg font-bold text-slate-900 mb-4">Dịch vụ đã đặt</h2>
               <div className="space-y-4">
                 {order.items.map((item, idx) => (
                   <div key={idx} className="flex items-start justify-between py-4 border-b border-slate-100 last:border-0">
                     <div className="flex items-center gap-3">
-                      <div className="p-2 rounded-lg bg-slate-100 text-slate-600">
+                      <div className="p-2 rounded-sm bg-slate-100 text-slate-600">
                         {getStatusIcon(item.type)}
                       </div>
                       <div>
                         <p className="font-semibold text-slate-900">{item.title}</p>
                         {item.details && (
-                          <p className="text-sm text-slate-500 mt-1">{item.details}</p>
+                          <p className="text-sm text-slate-600 mt-1">{item.details}</p>
                         )}
                       </div>
                     </div>
@@ -261,16 +261,16 @@ export default function OrderDetailPage() {
 
             {/* Invoice */}
             {order.invoice && (
-              <div className="bg-white rounded-2xl p-6 border border-slate-200">
+              <div className="bg-white rounded-md p-6 border border-slate-200">
                 <h2 className="text-lg font-bold text-slate-900 mb-4">Hóa đơn</h2>
-                <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl">
+                <div className="flex items-center justify-between p-4 bg-slate-50 rounded">
                   <div>
                     <p className="font-semibold text-slate-900">Invoice #{order.invoice.id}</p>
-                    <p className="text-sm text-slate-500">{new Date(order.invoice.date).toLocaleDateString('vi-VN')}</p>
+                    <p className="text-sm text-slate-600">{new Date(order.invoice.date).toLocaleDateString('vi-VN')}</p>
                   </div>
                   <button
                     onClick={handleDownloadInvoice}
-                    className="px-4 py-2 rounded-xl bg-blue-600 text-white font-bold text-sm hover:bg-blue-700 transition-colors flex items-center gap-2"
+                    className="px-4 py-2 rounded bg-blue-600 text-white font-bold text-sm hover:bg-blue-700 transition-colors flex items-center gap-2"
                   >
                     <Download className="w-4 h-4" />
                     Tải PDF
@@ -281,14 +281,14 @@ export default function OrderDetailPage() {
 
             {/* Backups */}
             {order.backups && order.backups.length > 0 && (
-              <div className="bg-white rounded-2xl p-6 border border-slate-200">
+              <div className="bg-white rounded-md p-6 border border-slate-200">
                 <h2 className="text-lg font-bold text-slate-900 mb-4">Backup</h2>
                 <div className="space-y-3">
                   {order.backups.map((backup) => (
-                    <div key={backup.id} className="flex items-center justify-between p-3 bg-slate-50 rounded-xl">
+                    <div key={backup.id} className="flex items-center justify-between p-3 bg-slate-50 rounded">
                       <div>
                         <p className="font-medium text-slate-900">{backup.type}</p>
-                        <p className="text-sm text-slate-500">{new Date(backup.date).toLocaleDateString('vi-VN')}</p>
+                        <p className="text-sm text-slate-600">{new Date(backup.date).toLocaleDateString('vi-VN')}</p>
                       </div>
                       <span className="text-sm text-slate-600">{backup.size}</span>
                     </div>
@@ -299,12 +299,12 @@ export default function OrderDetailPage() {
 
             {/* Uptime */}
             {order.uptime && (
-              <div className="bg-white rounded-2xl p-6 border border-slate-200">
+              <div className="bg-white rounded-md p-6 border border-slate-200">
                 <h2 className="text-lg font-bold text-slate-900 mb-4">Uptime</h2>
                 <div className="flex items-center gap-4">
                   <div className="text-center">
                     <p className="text-4xl font-black text-emerald-600">{order.uptime.percentage}%</p>
-                    <p className="text-sm text-slate-500">Thời gian hoạt động</p>
+                    <p className="text-sm text-slate-600">Thời gian hoạt động</p>
                   </div>
                   <div className="flex-1 h-2 bg-slate-200 rounded-full overflow-hidden">
                     <div
@@ -313,7 +313,7 @@ export default function OrderDetailPage() {
                     />
                   </div>
                 </div>
-                <p className="text-sm text-slate-500 mt-2">Kỳ: {order.uptime.period}</p>
+                <p className="text-sm text-slate-600 mt-2">Kỳ: {order.uptime.period}</p>
               </div>
             )}
           </div>
@@ -321,18 +321,18 @@ export default function OrderDetailPage() {
           {/* Sidebar */}
           <div className="space-y-6">
             {/* Quick Actions */}
-            <div className="bg-white rounded-2xl p-6 border border-slate-200">
+            <div className="bg-white rounded-md p-6 border border-slate-200">
               <h2 className="text-lg font-bold text-slate-900 mb-4">Thao tác nhanh</h2>
               <div className="space-y-3">
-                <button className="w-full py-3 rounded-xl bg-slate-100 text-slate-700 font-bold text-sm hover:bg-slate-200 transition-colors flex items-center justify-center gap-2">
+                <button className="w-full py-3 rounded bg-slate-100 text-slate-700 font-bold text-sm hover:bg-slate-200 transition-colors flex items-center justify-center gap-2">
                   <RefreshCw className="w-4 h-4" />
                   Khởi động lại
                 </button>
-                <button className="w-full py-3 rounded-xl bg-slate-100 text-slate-700 font-bold text-sm hover:bg-slate-200 transition-colors flex items-center justify-center gap-2">
+                <button className="w-full py-3 rounded bg-slate-100 text-slate-700 font-bold text-sm hover:bg-slate-200 transition-colors flex items-center justify-center gap-2">
                   <Download className="w-4 h-4" />
                   Tải lại OS
                 </button>
-                <button className="w-full py-3 rounded-xl bg-slate-100 text-slate-700 font-bold text-sm hover:bg-slate-200 transition-colors flex items-center justify-center gap-2">
+                <button className="w-full py-3 rounded bg-slate-100 text-slate-700 font-bold text-sm hover:bg-slate-200 transition-colors flex items-center justify-center gap-2">
                   <FileText className="w-4 h-4" />
                   Xem thông tin
                 </button>
@@ -340,14 +340,14 @@ export default function OrderDetailPage() {
             </div>
 
             {/* Support */}
-            <div className="bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl p-6 text-slate-900">
+            <div className="bg-gradient-to-br from-blue-600 to-indigo-600 rounded-md p-6 text-slate-900">
               <h3 className="font-bold text-lg mb-2">Cần hỗ trợ?</h3>
-              <p className="text-sm text-slate-200 mb-4">
+              <p className="text-sm text-slate-700 mb-4">
                 Đội ngũ kỹ thuật sẵn sàng hỗ trợ 24/7
               </p>
               <Link
                 href="/tickets"
-                className="block w-full py-3 rounded-xl bg-white text-[#1F1F1F] font-bold text-sm text-center hover:bg-blue-50 transition-colors"
+                className="block w-full py-3 rounded bg-white text-[#1F1F1F] font-bold text-sm text-center hover:bg-blue-50 transition-colors"
               >
                 Tạo ticket hỗ trợ
               </Link>

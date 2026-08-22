@@ -91,7 +91,7 @@ export default function ApiKeysPage() {
         </div>
         <button
           onClick={() => setIsCreateModalOpen(true)}
-          className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-lg font-medium flex items-center gap-2 transition-colors shadow-sm"
+          className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-sm font-medium flex items-center gap-2 transition-colors shadow-sm"
         >
           <Plus className="w-5 h-5" />
           Tạo API Key mới
@@ -99,13 +99,13 @@ export default function ApiKeysPage() {
       </div>
 
       {error && (
-        <div className="bg-red-50 text-red-700 p-4 rounded-lg mb-6 flex items-center gap-2">
+        <div className="bg-red-50 text-red-700 p-4 rounded-sm mb-6 flex items-center gap-2">
           <AlertCircle className="w-5 h-5" />
           {error}
         </div>
       )}
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+      <div className="bg-white rounded shadow-sm border border-gray-100 overflow-hidden">
         <table className="w-full text-left">
           <thead className="bg-gray-50 border-b border-gray-100 text-gray-500 font-medium">
             <tr>
@@ -141,7 +141,7 @@ export default function ApiKeysPage() {
                   <td className="px-6 py-4">
                     <div className="flex gap-2">
                       {key.scopes.split(',').map((scope) => (
-                        <span key={scope} className="px-2.5 py-1 text-xs font-medium bg-indigo-50 text-[#1F1F1F] rounded-md">
+                        <span key={scope} className="px-2.5 py-1 text-xs font-medium bg-indigo-50 text-[#1F1F1F] rounded-sm">
                           {scope.toUpperCase()}
                         </span>
                       ))}
@@ -167,7 +167,7 @@ export default function ApiKeysPage() {
                     {!key.revokedAt && (
                       <button
                         onClick={() => handleRevoke(key.id)}
-                        className="text-red-600 hover:text-red-700 p-2 rounded-lg hover:bg-red-50 transition-colors"
+                        className="text-red-600 hover:text-red-700 p-2 rounded-sm hover:bg-red-50 transition-colors"
                         title="Thu hồi khóa này"
                       >
                         <Trash2 className="w-5 h-5" />
@@ -184,7 +184,7 @@ export default function ApiKeysPage() {
       {/* Create Modal */}
       {isCreateModalOpen && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-xl max-w-md w-full overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+          <div className="bg-white rounded-md shadow-xl max-w-md w-full overflow-hidden animate-in fade-in zoom-in-95 duration-200">
             <div className="p-6">
               <h2 className="text-xl font-bold text-gray-900 mb-2">Tạo API Key Mới</h2>
               
@@ -195,7 +195,7 @@ export default function ApiKeysPage() {
                   </p>
                   
                   <div className="space-y-4 mb-8">
-                    <label className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors">
+                    <label className="flex items-center gap-3 p-3 rounded-sm border border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors">
                       <input 
                         type="checkbox" 
                         checked={scopes.read}
@@ -207,7 +207,7 @@ export default function ApiKeysPage() {
                         <div className="text-sm text-gray-500">Quyền đọc dữ liệu</div>
                       </div>
                     </label>
-                    <label className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors">
+                    <label className="flex items-center gap-3 p-3 rounded-sm border border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors">
                       <input 
                         type="checkbox" 
                         checked={scopes.write}
@@ -219,7 +219,7 @@ export default function ApiKeysPage() {
                         <div className="text-sm text-gray-500">Quyền chỉnh sửa dữ liệu</div>
                       </div>
                     </label>
-                    <label className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors">
+                    <label className="flex items-center gap-3 p-3 rounded-sm border border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors">
                       <input 
                         type="checkbox" 
                         checked={scopes.admin}
@@ -236,14 +236,14 @@ export default function ApiKeysPage() {
                   <div className="flex justify-end gap-3">
                     <button 
                       onClick={closeCreateModal}
-                      className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium transition-colors"
+                      className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-sm font-medium transition-colors"
                     >
                       Hủy bỏ
                     </button>
                     <button 
                       onClick={handleCreate}
                       disabled={!scopes.read && !scopes.write && !scopes.admin}
-                      className="bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed text-white px-5 py-2 rounded-lg font-medium transition-colors"
+                      className="bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed text-white px-5 py-2 rounded-sm font-medium transition-colors"
                     >
                       Tạo Khóa
                     </button>
@@ -251,7 +251,7 @@ export default function ApiKeysPage() {
                 </>
               ) : (
                 <>
-                  <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6">
+                  <div className="bg-amber-50 border border-amber-200 rounded-sm p-4 mb-6">
                     <div className="flex gap-3">
                       <AlertCircle className="w-5 h-5 text-amber-600 shrink-0" />
                       <div className="text-sm text-amber-800">
@@ -262,12 +262,12 @@ export default function ApiKeysPage() {
                   </div>
 
                   <div className="flex items-center gap-2 mb-8">
-                    <div className="flex-1 bg-gray-50 border border-gray-200 rounded-lg p-3 font-mono text-sm text-gray-800 break-all">
+                    <div className="flex-1 bg-gray-50 border border-gray-200 rounded-sm p-3 font-mono text-sm text-gray-800 break-all">
                       {newKey}
                     </div>
                     <button
                       onClick={copyToClipboard}
-                      className={`p-3 rounded-lg transition-colors flex items-center justify-center ${
+                      className={`p-3 rounded-sm transition-colors flex items-center justify-center ${
                         copied ? 'bg-green-100 text-green-700' : 'bg-indigo-50 text-[#1F1F1F] hover:bg-indigo-100'
                       }`}
                       title="Sao chép"
@@ -279,7 +279,7 @@ export default function ApiKeysPage() {
                   <div className="flex justify-end">
                     <button 
                       onClick={closeCreateModal}
-                      className="bg-white hover:bg-gray-800 text-slate-900 px-6 py-2 rounded-lg font-medium transition-colors w-full"
+                      className="bg-white hover:bg-gray-800 text-slate-900 px-6 py-2 rounded-sm font-medium transition-colors w-full"
                     >
                       Tôi đã lưu mã này
                     </button>

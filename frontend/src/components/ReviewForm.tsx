@@ -38,7 +38,7 @@ export default function ReviewForm({ orderId }: ReviewFormProps) {
 
   if (isSubmitted) {
     return (
-      <div className="bg-emerald-50 rounded-2xl p-6 border border-emerald-100 flex flex-col items-center justify-center text-center">
+      <div className="bg-emerald-50 rounded-md p-6 border border-emerald-100 flex flex-col items-center justify-center text-center">
         <div className="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mb-4">
           <CheckCircle2 className="w-6 h-6" />
         </div>
@@ -49,12 +49,12 @@ export default function ReviewForm({ orderId }: ReviewFormProps) {
   }
 
   return (
-    <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm mt-6">
+    <div className="bg-white rounded-md p-6 border border-slate-200 shadow-sm mt-6">
       <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2 mb-4">
         <MessageSquare className="w-5 h-5 text-[#1F1F1F]" />
         Đánh giá dịch vụ
       </h3>
-      <p className="text-sm text-slate-500 mb-6">Bạn cảm thấy dịch vụ này như thế nào? Xin hãy chia sẻ cảm nhận của bạn.</p>
+      <p className="text-sm text-slate-600 mb-6">Bạn cảm thấy dịch vụ này như thế nào? Xin hãy chia sẻ cảm nhận của bạn.</p>
 
       <form onSubmit={handleSubmit}>
         <div className="flex items-center gap-2 mb-6">
@@ -71,7 +71,7 @@ export default function ReviewForm({ orderId }: ReviewFormProps) {
                 className={`w-8 h-8 transition-colors ${
                   star <= (hoverRating || rating) 
                     ? 'text-amber-400 fill-amber-400' 
-                    : 'text-slate-200'
+                    : 'text-slate-700'
                 }`} 
               />
             </button>
@@ -86,13 +86,13 @@ export default function ReviewForm({ orderId }: ReviewFormProps) {
           onChange={(e) => setContent(e.target.value)}
           placeholder="Chia sẻ thêm trải nghiệm của bạn (không bắt buộc)..."
           rows={3}
-          className="w-full bg-slate-50 border border-slate-200 focus:border-blue-500 focus:bg-white rounded-xl p-4 text-sm text-slate-900 transition-all outline-none resize-none mb-4"
+          className="w-full bg-slate-50 border border-slate-200 focus:border-blue-500 focus:bg-white rounded p-4 text-sm text-slate-900 transition-all outline-none resize-none mb-4"
         />
 
         <button
           type="submit"
           disabled={isSubmitting || rating === 0}
-          className="w-full flex justify-center items-center gap-2 bg-white hover:bg-slate-100 text-slate-900 font-bold py-3 rounded-xl transition-all disabled:opacity-50"
+          className="w-full flex justify-center items-center gap-2 bg-white hover:bg-slate-100 text-slate-900 font-bold py-3 rounded transition-all disabled:opacity-50"
         >
           {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
           Gửi đánh giá

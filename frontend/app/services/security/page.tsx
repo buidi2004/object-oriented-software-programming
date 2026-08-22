@@ -198,7 +198,7 @@ export default function SecurityWafServicePage() {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           {/* Engineering Status Bar */}
-          <div className="flex flex-wrap items-center justify-between gap-4 p-3.5 mb-10 rounded-2xl bg-[#0d1424] border border-slate-200 text-xs font-mono">
+          <div className="flex flex-wrap items-center justify-between gap-4 p-3.5 mb-10 rounded-md bg-[#0d1424] border border-slate-200 text-xs font-mono">
             <div className="flex items-center gap-3">
               <span className="flex items-center gap-1.5 text-emerald-400 font-bold">
                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
@@ -220,7 +220,7 @@ export default function SecurityWafServicePage() {
             
             {/* Left Headline */}
             <div className="lg:col-span-7 space-y-6">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-rose-950/60 border border-rose-800/60 text-rose-300 text-xs font-mono">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm bg-rose-950/60 border border-rose-800/60 text-rose-300 text-xs font-mono">
                 <ShieldAlert className="w-3.5 h-3.5 text-rose-400" />
                 ENTERPRISE WEB APPLICATION FIREWALL
               </div>
@@ -239,22 +239,22 @@ export default function SecurityWafServicePage() {
 
               {/* Security Standards Badges */}
               <div className="flex flex-wrap items-center gap-3 pt-2">
-                <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0f172a] border border-slate-200 text-xs font-mono text-slate-700">
+                <div className="flex items-center gap-2 px-3.5 py-2 rounded bg-[#0f172a] border border-slate-200 text-xs font-mono text-slate-700">
                   <ShieldCheck className="w-4 h-4 text-rose-400" />
                   <span>OWASP Top 10 Ruleset</span>
                 </div>
-                <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0f172a] border border-slate-200 text-xs font-mono text-slate-700">
+                <div className="flex items-center gap-2 px-3.5 py-2 rounded bg-[#0f172a] border border-slate-200 text-xs font-mono text-slate-700">
                   <Cpu className="w-4 h-4 text-slate-200" />
                   <span>AI Zero-Day Heuristics</span>
                 </div>
-                <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0f172a] border border-slate-200 text-xs font-mono text-slate-700">
+                <div className="flex items-center gap-2 px-3.5 py-2 rounded bg-[#0f172a] border border-slate-200 text-xs font-mono text-slate-700">
                   <Lock className="w-4 h-4 text-emerald-400" />
                   <span>Origin IP Cloaking</span>
                 </div>
               </div>
 
               {/* Quick Spec Readout */}
-              <div className="p-4 rounded-xl bg-white border border-slate-200 text-xs font-mono space-y-2">
+              <div className="p-4 rounded bg-white border border-slate-200 text-xs font-mono space-y-2">
                 <div className="flex items-center justify-between text-slate-600">
                   <span>Inspection Speed: <strong className="text-slate-900">0.42 ms (No latency impact)</strong></span>
                   <span>Setup: <strong className="text-emerald-400">2-Minute DNS Change</strong></span>
@@ -268,7 +268,7 @@ export default function SecurityWafServicePage() {
 
             {/* Right Interactive Threat Inspector Simulator */}
             <div className="lg:col-span-5">
-              <div className="rounded-2xl bg-[#0b1320] border border-slate-200 p-6 shadow-2xl space-y-5">
+              <div className="rounded-md bg-[#0b1320] border border-slate-200 p-6 shadow-2xl space-y-5">
                 <div className="flex items-center justify-between pb-3 border-b border-slate-200">
                   <div className="flex items-center gap-2">
                     <span className="w-3 h-3 rounded-full bg-rose-500/80" />
@@ -283,45 +283,45 @@ export default function SecurityWafServicePage() {
 
                 <div className="space-y-3 font-mono text-xs">
                   <div className="flex items-center justify-between">
-                    <span className="text-slate-500">// Select Attack Vector Simulation:</span>
+                    <span className="text-slate-600">// Select Attack Vector Simulation:</span>
                   </div>
                   <div className="flex gap-2">
                     <button
                       onClick={() => handlePayloadSelect('sqli')}
-                      className={`px-3 py-1.5 rounded-lg border ${attackType === 'sqli' ? 'bg-rose-950 border-rose-500 text-rose-300 font-bold' : 'bg-white border-slate-200 text-slate-400'}`}
+                      className={`px-3 py-1.5 rounded-sm border ${attackType === 'sqli' ? 'bg-rose-950 border-rose-500 text-rose-300 font-bold' : 'bg-white border-slate-200 text-slate-600'}`}
                     >
                       SQL Injection
                     </button>
                     <button
                       onClick={() => handlePayloadSelect('xss')}
-                      className={`px-3 py-1.5 rounded-lg border ${attackType === 'xss' ? 'bg-rose-950 border-rose-500 text-rose-300 font-bold' : 'bg-white border-slate-200 text-slate-400'}`}
+                      className={`px-3 py-1.5 rounded-sm border ${attackType === 'xss' ? 'bg-rose-950 border-rose-500 text-rose-300 font-bold' : 'bg-white border-slate-200 text-slate-600'}`}
                     >
                       Cross-Site XSS
                     </button>
                     <button
                       onClick={() => handlePayloadSelect('rce')}
-                      className={`px-3 py-1.5 rounded-lg border ${attackType === 'rce' ? 'bg-rose-950 border-rose-500 text-rose-300 font-bold' : 'bg-white border-slate-200 text-slate-400'}`}
+                      className={`px-3 py-1.5 rounded-sm border ${attackType === 'rce' ? 'bg-rose-950 border-rose-500 text-rose-300 font-bold' : 'bg-white border-slate-200 text-slate-600'}`}
                     >
                       Command RCE
                     </button>
                   </div>
 
-                  <div className="p-3.5 rounded-xl bg-slate-100 border border-slate-200 text-rose-300 break-all select-all font-mono text-[11px] leading-relaxed">
+                  <div className="p-3.5 rounded bg-slate-100 border border-slate-200 text-rose-300 break-all select-all font-mono text-[11px] leading-relaxed">
                     {testPayload}
                   </div>
                 </div>
 
-                <div className="p-3.5 rounded-xl bg-[#0e1627] border border-slate-200 font-mono text-xs space-y-1.5">
+                <div className="p-3.5 rounded bg-[#0e1627] border border-slate-200 font-mono text-xs space-y-1.5">
                   <div className="flex justify-between">
-                    <span className="text-slate-500">WAF Rule Triggered:</span>
+                    <span className="text-slate-600">WAF Rule Triggered:</span>
                     <span className="text-rose-400 font-bold">CRS-942100 (SQLi Signature)</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-500">Action Taken:</span>
+                    <span className="text-slate-600">Action Taken:</span>
                     <span className="text-emerald-400 font-bold">HTTP 403 FORBIDDEN (Blocked)</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-500">Origin Server Impact:</span>
+                    <span className="text-slate-600">Origin Server Impact:</span>
                     <span className="text-slate-200">0 Request (Saved CPU)</span>
                   </div>
                 </div>
@@ -329,7 +329,7 @@ export default function SecurityWafServicePage() {
                 <div className="pt-2">
                   <a
                     href="#spec-matrix"
-                    className="w-full py-3.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-slate-900 font-bold text-xs font-mono flex items-center justify-center gap-2 transition-all shadow-lg shadow-rose-600/20"
+                    className="w-full py-3.5 rounded bg-rose-600 hover:bg-rose-500 text-slate-900 font-bold text-xs font-mono flex items-center justify-center gap-2 transition-all shadow-lg shadow-rose-600/20"
                   >
                     <span>XEM BẢNG GÓI BẢO MẬT VÀ ĐẶT MUA</span>
                     <ArrowRight className="w-4 h-4" />
@@ -348,7 +348,7 @@ export default function SecurityWafServicePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-rose-950 text-rose-400 text-xs font-mono mb-3 border border-rose-800">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm bg-rose-950 text-rose-400 text-xs font-mono mb-3 border border-rose-800">
               <ShieldCheck className="w-3.5 h-3.5" />
               CYBER DEFENSE ARCHITECTURE
             </div>
@@ -363,10 +363,10 @@ export default function SecurityWafServicePage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             
             {/* Schematic 1: Reverse Proxy & Origin Cloaking */}
-            <div className="p-6 rounded-3xl bg-white border border-slate-200 flex flex-col justify-between space-y-6">
+            <div className="p-6 rounded-lg bg-white border border-slate-200 flex flex-col justify-between space-y-6">
               <div>
-                <div className="p-4 rounded-2xl bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
-                  <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
+                <div className="p-4 rounded-md bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
+                  <div className="text-[10px] text-slate-600 uppercase mb-3 flex items-center justify-between">
                     <span>ORIGIN CLOAKING FLOW</span>
                     <span className="text-emerald-400">100% INVISIBLE</span>
                   </div>
@@ -400,10 +400,10 @@ export default function SecurityWafServicePage() {
             </div>
 
             {/* Schematic 2: AI Zero-Day Threat Filter */}
-            <div className="p-6 rounded-3xl bg-white border border-slate-200 flex flex-col justify-between space-y-6">
+            <div className="p-6 rounded-lg bg-white border border-slate-200 flex flex-col justify-between space-y-6">
               <div>
-                <div className="p-4 rounded-2xl bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
-                  <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
+                <div className="p-4 rounded-md bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
+                  <div className="text-[10px] text-slate-600 uppercase mb-3 flex items-center justify-between">
                     <span>AI HEURISTIC SCANNER</span>
                     <span className="text-slate-200">ZERO-DAY DEFENSE</span>
                   </div>
@@ -437,10 +437,10 @@ export default function SecurityWafServicePage() {
             </div>
 
             {/* Schematic 3: Rate Limiting & Botnet Shield */}
-            <div className="p-6 rounded-3xl bg-white border border-slate-200 flex flex-col justify-between space-y-6">
+            <div className="p-6 rounded-lg bg-white border border-slate-200 flex flex-col justify-between space-y-6">
               <div>
-                <div className="p-4 rounded-2xl bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
-                  <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
+                <div className="p-4 rounded-md bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
+                  <div className="text-[10px] text-slate-600 uppercase mb-3 flex items-center justify-between">
                     <span>RATE LIMIT &amp; BOT SHIELD</span>
                     <span className="text-purple-400">ANTI-SCRAPING</span>
                   </div>
@@ -484,7 +484,7 @@ export default function SecurityWafServicePage() {
           
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
             <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-rose-950 text-rose-400 text-xs font-mono mb-3 border border-rose-800">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm bg-rose-950 text-rose-400 text-xs font-mono mb-3 border border-rose-800">
                 <Sliders className="w-3.5 h-3.5" />
                 SECURITY SPEC SHEET
               </div>
@@ -497,10 +497,10 @@ export default function SecurityWafServicePage() {
             </div>
 
             {/* Billing Switch */}
-            <div className="inline-flex items-center p-1 rounded-xl bg-white border border-slate-200 font-mono text-xs">
+            <div className="inline-flex items-center p-1 rounded bg-white border border-slate-200 font-mono text-xs">
               <button
                 onClick={() => setBillingCycle('monthly')}
-                className={`px-4 py-2 rounded-lg font-bold transition-all ${
+                className={`px-4 py-2 rounded-sm font-bold transition-all ${
                   billingCycle === 'monthly'
                     ? 'bg-rose-600 text-white shadow'
                     : 'text-slate-400 hover:text-white'
@@ -510,7 +510,7 @@ export default function SecurityWafServicePage() {
               </button>
               <button
                 onClick={() => setBillingCycle('yearly')}
-                className={`px-4 py-2 rounded-lg font-bold transition-all flex items-center gap-1.5 ${
+                className={`px-4 py-2 rounded-sm font-bold transition-all flex items-center gap-1.5 ${
                   billingCycle === 'yearly'
                     ? 'bg-rose-600 text-white shadow'
                     : 'text-slate-400 hover:text-white'
@@ -525,7 +525,7 @@ export default function SecurityWafServicePage() {
           </div>
 
           {/* Matrix Table */}
-          <div className="rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-2xl">
+          <div className="rounded-md border border-slate-200 bg-white overflow-hidden shadow-2xl">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs font-mono">
                 <thead>
@@ -588,7 +588,7 @@ export default function SecurityWafServicePage() {
                       <td key={p.id} className="p-5 border-l border-slate-200/60">
                         <button
                           onClick={() => handleOrder(p)}
-                          className={`w-full py-3 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-2 ${
+                          className={`w-full py-3 rounded font-bold text-xs transition-all flex items-center justify-center gap-2 ${
                             p.popular
                               ? 'bg-rose-600 hover:bg-rose-500 text-white shadow-lg shadow-rose-600/30'
                               : 'bg-slate-800 hover:bg-slate-700 text-white'
@@ -620,7 +620,7 @@ export default function SecurityWafServicePage() {
             {faqs.map((faq, idx) => (
               <div
                 key={idx}
-                className="bg-white rounded-2xl border border-slate-200 overflow-hidden transition-all"
+                className="bg-white rounded-md border border-slate-200 overflow-hidden transition-all"
               >
                 <button
                   onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
@@ -630,7 +630,7 @@ export default function SecurityWafServicePage() {
                   {openFaq === idx ? (
                     <ChevronUp className="w-5 h-5 text-rose-400 shrink-0" />
                   ) : (
-                    <ChevronDown className="w-5 h-5 text-slate-500 shrink-0" />
+                    <ChevronDown className="w-5 h-5 text-slate-600 shrink-0" />
                   )}
                 </button>
                 {openFaq === idx && (
@@ -646,9 +646,9 @@ export default function SecurityWafServicePage() {
 
       {/* 5. CALL TO ACTION */}
       <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="rounded-3xl bg-gradient-to-r from-[#210c14] via-[#14060b] to-[#210c14] p-8 sm:p-12 border border-rose-600/30 text-center relative overflow-hidden shadow-2xl">
+        <div className="rounded-lg bg-gradient-to-r from-[#210c14] via-[#14060b] to-[#210c14] p-8 sm:p-12 border border-rose-600/30 text-center relative overflow-hidden shadow-2xl">
           <div className="relative z-10 max-w-3xl mx-auto space-y-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-rose-950 border border-rose-800 text-rose-400 text-xs font-mono">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm bg-rose-950 border border-rose-800 text-rose-400 text-xs font-mono">
               <Zap className="w-3.5 h-3.5" />
               ACTIVATE IN 2 MINUTES
             </div>
@@ -667,13 +667,13 @@ export default function SecurityWafServicePage() {
                   const el = document.getElementById('spec-matrix');
                   el?.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className="px-8 py-3.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs font-mono shadow-xl shadow-rose-600/25 transition-all hover:scale-105"
+                className="px-8 py-3.5 rounded bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs font-mono shadow-xl shadow-rose-600/25 transition-all hover:scale-105"
               >
                 Kích Hoạt WAF Ngay
               </button>
               <Link
                 href="/contact"
-                className="px-8 py-3.5 rounded-xl bg-white hover:bg-slate-200 text-slate-900 font-bold text-xs font-mono border border-slate-300 transition-all"
+                className="px-8 py-3.5 rounded bg-white hover:bg-slate-200 text-slate-900 font-bold text-xs font-mono border border-slate-300 transition-all"
               >
                 Tư Vấn An Ninh Mạng
               </Link>

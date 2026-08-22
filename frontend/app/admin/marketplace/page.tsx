@@ -71,27 +71,27 @@ export default function AdminMarketplacePage() {
         <div className="max-w-6xl mx-auto space-y-6">
           <div className="flex items-center justify-between">
             <div>
-              <Link href="/admin" className="text-sm text-slate-500 hover:text-[#1F1F1F] flex items-center gap-1 mb-2">
+              <Link href="/admin" className="text-sm text-slate-600 hover:text-[#1F1F1F] flex items-center gap-1 mb-2">
                 <ArrowLeft className="w-4 h-4" /> Quay lại Dashboard
               </Link>
               <h1 className="text-2xl font-black text-slate-900 flex items-center gap-2">
                 <ShoppingBag className="w-6 h-6 text-fuchsia-600" />
                 Quản Lý Marketplace Listings
               </h1>
-              <p className="text-slate-500 mt-1">Duyệt và kiểm soát các sản phẩm trên chợ ứng dụng</p>
+              <p className="text-slate-600 mt-1">Duyệt và kiểm soát các sản phẩm trên chợ ứng dụng</p>
             </div>
             <button
               onClick={fetchListings}
-              className="p-2 rounded-xl bg-white border border-slate-200 hover:text-fuchsia-600 transition-colors"
+              className="p-2 rounded bg-white border border-slate-200 hover:text-fuchsia-600 transition-colors"
             >
               <RefreshCw className="w-5 h-5" />
             </button>
           </div>
 
-          <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+          <div className="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm text-slate-600">
-                <thead className="bg-slate-50/80 border-b border-slate-200 text-slate-500">
+                <thead className="bg-slate-50/80 border-b border-slate-200 text-slate-600">
                   <tr>
                     <th className="p-4 font-semibold">Listing ID</th>
                     <th className="p-4 font-semibold">Tiêu Đề</th>
@@ -104,7 +104,7 @@ export default function AdminMarketplacePage() {
                 <tbody className="divide-y divide-slate-100">
                   {listings.length === 0 ? (
                     <tr>
-                      <td colSpan={6} className="p-8 text-center text-slate-500">Chưa có sản phẩm nào</td>
+                      <td colSpan={6} className="p-8 text-center text-slate-600">Chưa có sản phẩm nào</td>
                     </tr>
                   ) : (
                     listings.map((listing) => (

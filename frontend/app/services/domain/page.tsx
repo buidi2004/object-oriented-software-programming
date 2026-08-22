@@ -84,7 +84,7 @@ export default function DomainPage() {
       {/* Hero with Search */}
       <section className="relative overflow-hidden bg-gradient-to-br from-cyan-950 via-teal-950 to-slate-900 text-slate-900 py-20 sm:py-28">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-          <nav className="flex items-center gap-2 text-sm text-slate-200 mb-8">
+          <nav className="flex items-center gap-2 text-sm text-slate-700 mb-8">
             <Link href="/" className="hover:text-slate-900">Trang chủ</Link>
             <span>/</span>
             <Link href="/services" className="hover:text-slate-900">Dịch vụ</Link>
@@ -100,13 +100,13 @@ export default function DomainPage() {
               Tìm Kiếm & Đăng Ký
               <span className="bg-gradient-to-r from-cyan-400 to-emerald-400 bg-clip-text text-transparent"> Tên Miền</span>
             </h1>
-            <p className="text-lg text-slate-200 max-w-2xl mx-auto mb-10">
+            <p className="text-lg text-slate-700 max-w-2xl mx-auto mb-10">
               Sở hữu tên miền hoàn hảo cho thương hiệu của bạn. Hỗ trợ .com, .vn, .net, .ai và hàng trăm đuôi khác.
             </p>
 
             {/* Search Box */}
             <form onSubmit={handleSearch} className="max-w-2xl mx-auto">
-              <div className="flex bg-white rounded-2xl p-2 shadow-2xl shadow-black/20">
+              <div className="flex bg-white rounded-md p-2 shadow-2xl shadow-black/20">
                 <div className="flex-1 flex items-center gap-3 px-4">
                   <Search className="w-5 h-5 text-slate-600 shrink-0" />
                   <input
@@ -120,7 +120,7 @@ export default function DomainPage() {
                 <button
                   type="submit"
                   disabled={isSearching}
-                  className="px-8 py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-emerald-500 text-slate-900 font-bold text-sm shadow-md hover:shadow-lg transition-all disabled:opacity-70 flex items-center gap-2"
+                  className="px-8 py-3.5 rounded bg-gradient-to-r from-cyan-500 to-emerald-500 text-slate-900 font-bold text-sm shadow-md hover:shadow-lg transition-all disabled:opacity-70 flex items-center gap-2"
                 >
                   {isSearching ? (
                     <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -137,7 +137,7 @@ export default function DomainPage() {
             {/* Search Result */}
             {searchResult && (
               <div className="max-w-2xl mx-auto mt-6">
-                <div className={`rounded-2xl p-5 ${searchResult.available ? 'bg-emerald-500/20 border border-emerald-400/30' : 'bg-rose-500/20 border border-rose-400/30'}`}>
+                <div className={`rounded-md p-5 ${searchResult.available ? 'bg-emerald-500/20 border border-emerald-400/30' : 'bg-rose-500/20 border border-rose-400/30'}`}>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       {searchResult.available ? (
@@ -155,7 +155,7 @@ export default function DomainPage() {
                     {searchResult.available && (
                       <div className="text-right">
                         <p className="text-xl font-black text-emerald-400">{searchResult.price.toLocaleString('vi-VN')} đ/năm</p>
-                        <Link href="/" className="inline-flex items-center gap-1 text-sm font-bold text-slate-900 hover:text-slate-200 mt-1">
+                        <Link href="/" className="inline-flex items-center gap-1 text-sm font-bold text-slate-900 hover:text-slate-700 mt-1">
                           <ShoppingCart className="w-4 h-4" /> Đăng ký ngay
                         </Link>
                       </div>
@@ -190,7 +190,7 @@ export default function DomainPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {domainPricing.map((d, i) => (
-              <div key={i} className={`rounded-2xl p-6 border-2 transition-all hover:shadow-lg ${
+              <div key={i} className={`rounded-md p-6 border-2 transition-all hover:shadow-lg ${
                 d.isPopular ? 'border-cyan-400 bg-cyan-50/50 shadow-md' : 'border-slate-200 bg-white hover:border-cyan-300'
               }`}>
                 {d.isPopular && (
@@ -199,15 +199,15 @@ export default function DomainPage() {
                   </div>
                 )}
                 <div className="text-2xl font-black text-slate-900 mb-1">{d.ext}</div>
-                <p className="text-xs text-slate-500 mb-3">{d.desc}</p>
+                <p className="text-xs text-slate-600 mb-3">{d.desc}</p>
                 <div className="flex items-end gap-2 mb-4">
                   <span className="text-xl font-black text-[#1F1F1F]">{d.price.toLocaleString('vi-VN')} đ</span>
                   {d.originalPrice && (
                     <span className="text-sm text-slate-600 line-through">{d.originalPrice.toLocaleString('vi-VN')} đ</span>
                   )}
                 </div>
-                <div className="text-[11px] text-slate-500 mb-4">/năm đầu tiên</div>
-                <Link href="/" className="block w-full py-2.5 rounded-xl bg-white text-slate-900 text-sm font-bold text-center hover:bg-slate-100 transition-colors">
+                <div className="text-[11px] text-slate-600 mb-4">/năm đầu tiên</div>
+                <Link href="/" className="block w-full py-2.5 rounded bg-white text-slate-900 text-sm font-bold text-center hover:bg-slate-100 transition-colors">
                   Đăng Ký
                 </Link>
               </div>
@@ -226,7 +226,7 @@ export default function DomainPage() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {PROCESS_STEPS.map((s, i) => (
               <div key={i} className="text-center relative">
-                <div className="w-14 h-14 rounded-2xl bg-gradient-to-r from-cyan-500 to-emerald-500 text-slate-900 font-black text-xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <div className="w-14 h-14 rounded-md bg-gradient-to-r from-cyan-500 to-emerald-500 text-slate-900 font-black text-xl flex items-center justify-center mx-auto mb-4 shadow-lg">
                   {s.step}
                 </div>
                 <h3 className="font-bold text-slate-900 mb-2">{s.title}</h3>
@@ -255,7 +255,7 @@ export default function DomainPage() {
               { title: 'Auto-Renew', desc: 'Tự động gia hạn trước khi hết hạn' },
               { title: 'Hỗ trợ 24/7', desc: 'Đội ngũ kỹ thuật hỗ trợ xuyên suốt' },
             ].map((f, i) => (
-              <div key={i} className="flex items-start gap-3 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+              <div key={i} className="flex items-start gap-3 p-4 bg-slate-50 rounded-md border border-slate-100">
                 <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />
                 <div>
                   <h4 className="font-bold text-slate-900 text-sm">{f.title}</h4>
@@ -273,8 +273,8 @@ export default function DomainPage() {
       <section className="py-16 bg-gradient-to-r from-cyan-600 to-emerald-600 text-slate-900 text-center">
         <div className="max-w-3xl mx-auto px-4">
           <h2 className="text-3xl font-black mb-4">Sở Hữu Tên Miền Ngay Hôm Nay</h2>
-          <p className="text-slate-200 mb-8">Mức giá đăng ký siêu rẻ. Bao gồm DNS, WHOIS Privacy miễn phí.</p>
-          <a href="#top" className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl bg-white text-[#1F1F1F] font-bold shadow-xl hover:shadow-2xl transition-all">
+          <p className="text-slate-700 mb-8">Mức giá đăng ký siêu rẻ. Bao gồm DNS, WHOIS Privacy miễn phí.</p>
+          <a href="#top" className="inline-flex items-center gap-2 px-8 py-4 rounded-md bg-white text-[#1F1F1F] font-bold shadow-xl hover:shadow-2xl transition-all">
             <Search className="w-5 h-5" />
             Tìm Tên Miền
           </a>

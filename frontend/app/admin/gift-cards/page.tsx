@@ -158,7 +158,7 @@ export default function AdminGiftCardsPage() {
     <div className="min-h-screen bg-slate-50">
       {/* Toast */}
       {toast && (
-        <div className={`fixed bottom-5 right-5 z-50 px-5 py-3 rounded-xl shadow-xl text-white font-semibold text-sm flex items-center gap-2.5 animate-in slide-in-from-bottom-5 ${
+        <div className={`fixed bottom-5 right-5 z-50 px-5 py-3 rounded shadow-xl text-white font-semibold text-sm flex items-center gap-2.5 animate-in slide-in-from-bottom-5 ${
           toast.type === 'success' ? 'bg-emerald-600' : 'bg-red-600'
         }`}>
           {toast.type === 'success' ? <CheckCircle2 className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />}
@@ -170,25 +170,25 @@ export default function AdminGiftCardsPage() {
       <header className="bg-white border-b border-slate-200 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link href="/admin" className="p-2 rounded-lg hover:bg-slate-100 transition-colors">
+            <Link href="/admin" className="p-2 rounded-sm hover:bg-slate-100 transition-colors">
               <ArrowLeft className="w-5 h-5 text-slate-600" />
             </Link>
             <div>
               <h1 className="text-xl font-bold text-slate-900">Quản lý Thẻ Quà Tặng (Gift Cards)</h1>
-              <p className="text-xs text-slate-500">{giftCards.length} thẻ quà tặng trong hệ thống</p>
+              <p className="text-xs text-slate-600">{giftCards.length} thẻ quà tặng trong hệ thống</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
             <button
               onClick={fetchGiftCards}
-              className="p-2 text-slate-500 hover:bg-slate-100 rounded-xl transition-colors"
+              className="p-2 text-slate-600 hover:bg-slate-100 rounded transition-colors"
               title="Tải lại danh sách"
             >
               <RefreshCw className="w-5 h-5" />
             </button>
             <button 
               onClick={() => setShowAddModal(true)}
-              className="px-4 py-2 rounded-xl bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 transition-colors flex items-center gap-2 shadow-sm"
+              className="px-4 py-2 rounded bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 transition-colors flex items-center gap-2 shadow-sm"
             >
               <Plus className="w-4 h-4" />
               Tạo Thẻ Mới
@@ -207,7 +207,7 @@ export default function AdminGiftCardsPage() {
               placeholder="Tìm kiếm theo mã thẻ quà tặng..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 bg-white rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 shadow-sm font-mono"
+              className="w-full pl-10 pr-4 py-2.5 bg-white rounded border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 shadow-sm font-mono"
             />
           </div>
 
@@ -220,7 +220,7 @@ export default function AdminGiftCardsPage() {
               <button
                 key={f.id}
                 onClick={() => setFilter(f.id as any)}
-                className={`px-4 py-2 rounded-xl text-xs font-semibold transition-colors ${
+                className={`px-4 py-2 rounded text-xs font-semibold transition-colors ${
                   filter === f.id
                     ? 'bg-blue-600 text-white shadow-sm'
                     : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
@@ -242,12 +242,12 @@ export default function AdminGiftCardsPage() {
             return (
               <div 
                 key={card.id} 
-                className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden flex flex-col justify-between"
+                className="bg-white rounded-md border border-slate-200 p-5 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden flex flex-col justify-between"
               >
                 <div>
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-lg bg-indigo-50 text-[#1F1F1F] flex items-center justify-center">
+                      <div className="w-8 h-8 rounded-sm bg-indigo-50 text-[#1F1F1F] flex items-center justify-center">
                         <Gift className="w-4 h-4" />
                       </div>
                       <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold ${
@@ -261,7 +261,7 @@ export default function AdminGiftCardsPage() {
 
                     <button
                       onClick={() => handleDelete(card.id, card.code)}
-                      className="p-1.5 text-slate-600 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+                      className="p-1.5 text-slate-600 hover:text-rose-600 hover:bg-rose-50 rounded-sm transition-colors"
                       title="Vô hiệu hóa thẻ"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -269,13 +269,13 @@ export default function AdminGiftCardsPage() {
                   </div>
 
                   {/* Code Box */}
-                  <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 mb-4 flex items-center justify-between">
+                  <div className="bg-slate-50 border border-slate-200 rounded p-3 mb-4 flex items-center justify-between">
                     <span className="font-mono font-bold text-slate-900 text-sm tracking-wider">
                       {card.code}
                     </span>
                     <button
                       onClick={() => copyToClipboard(card.code)}
-                      className="p-1.5 text-slate-500 hover:text-[#1F1F1F] hover:bg-white rounded-lg transition-colors"
+                      className="p-1.5 text-slate-600 hover:text-[#1F1F1F] hover:bg-white rounded-sm transition-colors"
                       title="Sao chép mã"
                     >
                       {copiedCode === card.code ? (
@@ -314,7 +314,7 @@ export default function AdminGiftCardsPage() {
         </div>
 
         {filteredGiftCards.length === 0 && (
-          <div className="text-center py-16 bg-white rounded-2xl border border-slate-200 text-slate-500">
+          <div className="text-center py-16 bg-white rounded-md border border-slate-200 text-slate-600">
             <Gift className="w-12 h-12 mx-auto mb-3 text-slate-700" />
             <p className="font-bold text-slate-700">Không tìm thấy thẻ quà tặng nào</p>
             <p className="text-xs text-slate-600 mt-1">Bấm "Tạo Thẻ Mới" để phát hành mã thẻ</p>
@@ -325,13 +325,13 @@ export default function AdminGiftCardsPage() {
       {/* Add Modal */}
       {showAddModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl">
+          <div className="bg-white rounded-lg p-6 sm:p-8 max-w-md w-full shadow-2xl">
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h3 className="text-xl font-bold text-slate-900">Phát Hành Thẻ Quà Tặng Mới</h3>
-                <p className="text-xs text-slate-500 mt-0.5">Tạo mã nạp tiền trực tiếp vào tài khoản</p>
+                <p className="text-xs text-slate-600 mt-0.5">Tạo mã nạp tiền trực tiếp vào tài khoản</p>
               </div>
-              <button onClick={() => setShowAddModal(false)} className="p-2 text-slate-600 hover:text-slate-600 rounded-lg hover:bg-slate-100">
+              <button onClick={() => setShowAddModal(false)} className="p-2 text-slate-600 hover:text-slate-600 rounded-sm hover:bg-slate-100">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -344,7 +344,7 @@ export default function AdminGiftCardsPage() {
                   placeholder="Để trống để hệ thống tự sinh mã tự động"
                   value={formData.code}
                   onChange={(e) => setFormData({ ...formData, code: e.target.value.toUpperCase() })}
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500/20 uppercase"
+                  className="w-full px-4 py-2.5 rounded border border-slate-200 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500/20 uppercase"
                 />
               </div>
 
@@ -359,7 +359,7 @@ export default function AdminGiftCardsPage() {
                     placeholder="100000"
                     value={formData.amount}
                     onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
-                    className="w-full pl-4 pr-12 py-2.5 rounded-xl border border-slate-200 text-sm font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                    className="w-full pl-4 pr-12 py-2.5 rounded border border-slate-200 text-sm font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                   />
                   <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-600">
                     VNĐ
@@ -376,7 +376,7 @@ export default function AdminGiftCardsPage() {
                   placeholder="180"
                   value={formData.expiryDays}
                   onChange={(e) => setFormData({ ...formData, expiryDays: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full px-4 py-2.5 rounded border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                 />
               </div>
 
@@ -384,14 +384,14 @@ export default function AdminGiftCardsPage() {
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}
-                  className="flex-1 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm transition-colors"
+                  className="flex-1 py-3 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm transition-colors"
                 >
                   Hủy bỏ
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="flex-1 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-md transition-colors disabled:opacity-50"
+                  className="flex-1 py-3 rounded bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-md transition-colors disabled:opacity-50"
                 >
                   {isSubmitting ? 'Đang tạo...' : 'Tạo Thẻ Quà Tặng'}
                 </button>

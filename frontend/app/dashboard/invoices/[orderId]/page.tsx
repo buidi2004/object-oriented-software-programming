@@ -109,7 +109,7 @@ export default function InvoiceDetailPage() {
       <div className="max-w-4xl mx-auto mb-6 flex flex-wrap items-center justify-between gap-4 print:hidden">
         <Link 
           href="/dashboard/invoices" 
-          className="inline-flex items-center gap-2 text-xs font-bold text-slate-600 hover:text-[#1F1F1F] bg-white px-3.5 py-2 rounded-lg border border-slate-200 shadow-sm transition-colors"
+          className="inline-flex items-center gap-2 text-xs font-bold text-slate-600 hover:text-[#1F1F1F] bg-white px-3.5 py-2 rounded-sm border border-slate-200 shadow-sm transition-colors"
         >
           <ArrowLeft className="w-4 h-4" /> Quay lại danh sách
         </Link>
@@ -117,13 +117,13 @@ export default function InvoiceDetailPage() {
         <div className="flex items-center gap-2">
           <button
             onClick={handlePrint}
-            className="inline-flex items-center gap-1.5 px-4 py-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-lg text-xs font-bold shadow-sm transition-colors"
+            className="inline-flex items-center gap-1.5 px-4 py-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-sm text-xs font-bold shadow-sm transition-colors"
           >
-            <Printer className="w-4 h-4 text-slate-500" /> In
+            <Printer className="w-4 h-4 text-slate-600" /> In
           </button>
           <button
             onClick={handleDownload}
-            className="inline-flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold shadow-sm transition-colors"
+            className="inline-flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-sm text-xs font-bold shadow-sm transition-colors"
           >
             <Download className="w-4 h-4" /> Tải về PDF
           </button>
@@ -131,7 +131,7 @@ export default function InvoiceDetailPage() {
       </div>
 
       {/* A4 Paper Invoice Canvas */}
-      <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-xl border border-slate-200/80 p-8 sm:p-12 print:shadow-none print:border-none print:p-0 print:m-0 print:max-w-full print:rounded-none">
+      <div className="max-w-4xl mx-auto bg-white rounded shadow-xl border border-slate-200/80 p-8 sm:p-12 print:shadow-none print:border-none print:p-0 print:m-0 print:max-w-full print:rounded-none">
         
         {/* 1. Header: Logo & Status */}
         <div className="flex items-start justify-between border-b border-transparent pb-6">
@@ -200,7 +200,7 @@ export default function InvoiceDetailPage() {
         </div>
 
         {/* 4. Invoice Line Items Table */}
-        <div className="mt-8 rounded-lg border border-slate-200 overflow-hidden">
+        <div className="mt-8 rounded-sm border border-slate-200 overflow-hidden">
           {/* Table Header Bar */}
           <div className="bg-[#f8fafc] px-4 py-2.5 border-b border-slate-200">
             <h2 className="font-bold text-slate-900 text-xs sm:text-sm">Chi tiết hóa đơn</h2>
@@ -219,7 +219,7 @@ export default function InvoiceDetailPage() {
                   <p className="font-semibold text-slate-900">
                     {invoice?.planName || 'Cheap 4'} - {invoice?.containerName || 'azvps-1786899581'} (16/08/2026 - 15/09/2026)
                   </p>
-                  <ul className="text-slate-500 space-y-0.5 mt-1 text-[11px]">
+                  <ul className="text-slate-600 space-y-0.5 mt-1 text-[11px]">
                     <li>Hệ điều hành: Ubuntu 24.04 LTS (64-bit)</li>
                     <li>Mua thêm CPU Intel Platinum: 0 x 1 35,000đ</li>
                     <li>Mua Thêm GB RAM: 0 x 1 30,000đ</li>
@@ -256,7 +256,7 @@ export default function InvoiceDetailPage() {
         </div>
 
         {/* Tax Note */}
-        <p className="text-[11px] text-slate-500 italic mt-2">
+        <p className="text-[11px] text-slate-600 italic mt-2">
           * Chỉ báo mục bị tính thuế.
         </p>
 

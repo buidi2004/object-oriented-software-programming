@@ -27,14 +27,14 @@ export default function AutoRenewToggle({ orderId, initialState = false }: AutoR
   };
 
   return (
-    <div className="flex items-center justify-between bg-white p-4 rounded-xl border border-slate-200">
+    <div className="flex items-center justify-between bg-white p-4 rounded border border-slate-200">
       <div className="flex items-center gap-3">
-        <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${isAutoRenew ? 'bg-blue-50 text-[#1F1F1F]' : 'bg-slate-50 text-slate-400'}`}>
+        <div className={`w-10 h-10 rounded-sm flex items-center justify-center ${isAutoRenew ? 'bg-blue-50 text-[#1F1F1F]' : 'bg-slate-50 text-slate-600'}`}>
           <RefreshCcw className="w-5 h-5" />
         </div>
         <div>
           <h3 className="text-sm font-bold text-slate-900">Tự động gia hạn</h3>
-          <p className="text-xs text-slate-500 mt-0.5">Hệ thống sẽ tự động trừ tiền từ Wallet khi đến hạn.</p>
+          <p className="text-xs text-slate-600 mt-0.5">Hệ thống sẽ tự động trừ tiền từ Wallet khi đến hạn.</p>
         </div>
       </div>
       <button 

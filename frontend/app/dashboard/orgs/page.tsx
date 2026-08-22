@@ -100,13 +100,13 @@ export default function CustomerOrganizationsPage() {
         <div className="flex items-center gap-3">
           <button 
             onClick={fetchOrgData}
-            className="p-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:text-slate-900 transition-colors"
+            className="p-2.5 rounded bg-white border border-slate-200 text-slate-700 hover:text-slate-900 transition-colors"
           >
             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
           </button>
           <button 
             onClick={() => setShowInviteModal(true)}
-            className="px-4 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold flex items-center gap-2 shadow-lg shadow-cyan-500/20 transition-all text-sm"
+            className="px-4 py-2.5 rounded bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold flex items-center gap-2 shadow-lg shadow-cyan-500/20 transition-all text-sm"
           >
             <UserPlus className="w-4 h-4" /> Mời Thành Viên Mới
           </button>
@@ -115,7 +115,7 @@ export default function CustomerOrganizationsPage() {
 
       {/* Org Overview Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="p-6 rounded-2xl bg-white/60 border border-slate-200 shadow-xl space-y-2">
+        <div className="p-6 rounded-md bg-white/60 border border-slate-200 shadow-xl space-y-2">
           <div className="text-xs text-slate-600 font-semibold uppercase tracking-wider flex items-center gap-1.5">
             <Building2 className="w-4 h-4 text-[#1F1F1F]" /> Tên Tổ Chức / Doanh Nghiệp
           </div>
@@ -123,7 +123,7 @@ export default function CustomerOrganizationsPage() {
           <div className="text-xs text-slate-600 font-mono">Mã số thuế: {taxCode}</div>
         </div>
 
-        <div className="p-6 rounded-2xl bg-white/60 border border-slate-200 shadow-xl space-y-2">
+        <div className="p-6 rounded-md bg-white/60 border border-slate-200 shadow-xl space-y-2">
           <div className="text-xs text-slate-600 font-semibold uppercase tracking-wider flex items-center gap-1.5">
             <CreditCard className="w-4 h-4 text-emerald-400" /> Hạn Mức Tín Dụng Doanh Nghiệp
           </div>
@@ -133,7 +133,7 @@ export default function CustomerOrganizationsPage() {
           <div className="text-xs text-slate-600">Thanh toán trả sau định kỳ hàng tháng</div>
         </div>
 
-        <div className="p-6 rounded-2xl bg-white/60 border border-slate-200 shadow-xl space-y-2">
+        <div className="p-6 rounded-md bg-white/60 border border-slate-200 shadow-xl space-y-2">
           <div className="text-xs text-slate-600 font-semibold uppercase tracking-wider flex items-center gap-1.5">
             <Users className="w-4 h-4 text-slate-200" /> Tổng Số Thành Viên
           </div>
@@ -143,7 +143,7 @@ export default function CustomerOrganizationsPage() {
       </div>
 
       {/* Members Table */}
-      <div className="rounded-3xl bg-white/60 border border-slate-200 shadow-2xl overflow-hidden">
+      <div className="rounded-lg bg-white/60 border border-slate-200 shadow-2xl overflow-hidden">
         <div className="p-5 border-b border-slate-200 flex items-center justify-between">
           <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
             <Users className="w-4 h-4 text-[#1F1F1F]" /> Danh Sách Thành Viên & Quyền Hạn
@@ -179,7 +179,7 @@ export default function CustomerOrganizationsPage() {
                     {m.role !== 'Owner' && (
                       <button 
                         onClick={() => handleRemoveMember(m.id)}
-                        className="p-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 transition-colors"
+                        className="p-1.5 rounded-sm bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 transition-colors"
                         title="Xóa thành viên"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -196,7 +196,7 @@ export default function CustomerOrganizationsPage() {
       {/* Modal Mời Thành Viên */}
       {showInviteModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-          <div className="w-full max-w-md p-6 rounded-3xl bg-white border border-slate-200 shadow-2xl space-y-5">
+          <div className="w-full max-w-md p-6 rounded-lg bg-white border border-slate-200 shadow-2xl space-y-5">
             <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
               <UserPlus className="w-5 h-5 text-[#1F1F1F]" /> Mời Thành Viên Vào Tổ Chức
             </h2>
@@ -209,7 +209,7 @@ export default function CustomerOrganizationsPage() {
                   placeholder="nhanvien@company.vn"
                   value={inviteEmail}
                   onChange={(e) => setInviteEmail(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-500 focus:outline-none focus:border-cyan-500 text-sm"
+                  className="w-full px-4 py-2.5 rounded bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-500 focus:outline-none focus:border-cyan-500 text-sm"
                 />
               </div>
 
@@ -218,7 +218,7 @@ export default function CustomerOrganizationsPage() {
                 <select 
                   value={inviteRole}
                   onChange={(e) => setInviteRole(e.target.value as 'Admin' | 'Member')}
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:border-cyan-500 text-sm"
+                  className="w-full px-4 py-2.5 rounded bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:border-cyan-500 text-sm"
                 >
                   <option value="Member">Member (Chỉ xem & quản lý dịch vụ được giao)</option>
                   <option value="Admin">Admin (Toàn quyền quản trị kỹ thuật & tạo VPS)</option>
@@ -229,13 +229,13 @@ export default function CustomerOrganizationsPage() {
                 <button 
                   type="button" 
                   onClick={() => setShowInviteModal(false)}
-                  className="px-4 py-2 rounded-xl bg-white text-slate-700 text-sm font-semibold hover:bg-slate-200"
+                  className="px-4 py-2 rounded bg-white text-slate-700 text-sm font-semibold hover:bg-slate-200"
                 >
                   Hủy
                 </button>
                 <button 
                   type="submit" 
-                  className="px-5 py-2 rounded-xl bg-cyan-500 text-slate-950 font-bold text-sm hover:bg-cyan-400"
+                  className="px-5 py-2 rounded bg-cyan-500 text-slate-950 font-bold text-sm hover:bg-cyan-400"
                 >
                   Gửi Lời Mời
                 </button>

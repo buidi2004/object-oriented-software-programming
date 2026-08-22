@@ -93,7 +93,7 @@ export default function GlobalSearch() {
       case 'News': return <FileText className="w-5 h-5 text-emerald-500" />;
       case 'Article': return <HelpCircle className="w-5 h-5 text-purple-500" />;
       case 'Faq': return <HelpCircle className="w-5 h-5 text-amber-500" />;
-      default: return <Search className="w-5 h-5 text-slate-500" />;
+      default: return <Search className="w-5 h-5 text-slate-600" />;
     }
   };
 
@@ -101,7 +101,7 @@ export default function GlobalSearch() {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="p-2.5 rounded-xl text-slate-600 hover:text-[#1F1F1F] hover:bg-slate-100 transition-colors shrink-0"
+        className="p-2.5 rounded text-slate-600 hover:text-[#1F1F1F] hover:bg-slate-100 transition-colors shrink-0"
         aria-label="Tìm kiếm"
         title="Tìm kiếm (Ctrl+K)"
       >
@@ -112,7 +112,7 @@ export default function GlobalSearch() {
         <div className="fixed inset-0 z-[100] flex items-start justify-center pt-20 px-4 sm:px-6">
           <div className="absolute inset-0 bg-white/40 backdrop-blur-sm" onClick={() => setIsOpen(false)} />
           
-          <div className="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl overflow-hidden border border-slate-200 animate-in fade-in zoom-in-95 duration-200">
+          <div className="relative w-full max-w-2xl bg-white rounded-md shadow-2xl overflow-hidden border border-slate-200 animate-in fade-in zoom-in-95 duration-200">
             <div className="flex items-center px-4 py-3 border-b border-slate-100">
               <Search className="w-5 h-5 text-slate-600 mr-3 shrink-0" />
               <input 
@@ -120,21 +120,21 @@ export default function GlobalSearch() {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Tìm kiếm dịch vụ, bài viết, FAQ..."
-                className="flex-1 bg-transparent border-none outline-none text-slate-900 text-lg placeholder:text-slate-400"
+                className="flex-1 bg-transparent border-none outline-none text-slate-900 text-lg placeholder:text-slate-600"
               />
               {isLoading && <Loader2 className="w-5 h-5 text-[#1F1F1F] animate-spin ml-2 shrink-0" />}
-              <button onClick={() => setIsOpen(false)} className="p-1 text-slate-600 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-colors ml-2">
+              <button onClick={() => setIsOpen(false)} className="p-1 text-slate-600 hover:text-slate-600 rounded-sm hover:bg-slate-100 transition-colors ml-2">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             <div className="max-h-[60vh] overflow-y-auto">
               {query.trim() === '' ? (
-                <div className="px-6 py-12 text-center text-slate-500">
+                <div className="px-6 py-12 text-center text-slate-600">
                   <p className="text-sm">Gõ từ khóa để bắt đầu tìm kiếm</p>
                 </div>
               ) : results.length === 0 && !isLoading ? (
-                <div className="px-6 py-12 text-center text-slate-500">
+                <div className="px-6 py-12 text-center text-slate-600">
                   <p className="text-sm">Không tìm thấy kết quả nào cho &quot;{query}&quot;</p>
                 </div>
               ) : (
@@ -145,14 +145,14 @@ export default function GlobalSearch() {
                       onClick={() => handleSelect(item)}
                       className="w-full text-left px-4 py-3 flex items-start gap-4 hover:bg-blue-50 transition-colors group"
                     >
-                      <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center shrink-0 group-hover:bg-white border border-slate-100">
+                      <div className="w-10 h-10 rounded bg-slate-50 flex items-center justify-center shrink-0 group-hover:bg-white border border-slate-100">
                         {getIcon(item.type)}
                       </div>
                       <div className="flex-1 overflow-hidden">
                         <h4 className="text-sm font-bold text-slate-900 truncate group-hover:text-[#1F1F1F] transition-colors">
                           {item.title}
                         </h4>
-                        <p className="text-xs text-slate-500 truncate mt-0.5">{item.description}</p>
+                        <p className="text-xs text-slate-600 truncate mt-0.5">{item.description}</p>
                       </div>
                       <div className="shrink-0 pt-2 opacity-0 group-hover:opacity-100 transition-opacity">
                         <ExternalLink className="w-4 h-4 text-[#1F1F1F]" />

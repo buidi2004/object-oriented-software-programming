@@ -82,10 +82,10 @@ export const InfrastructureFeatures: React.FC = () => {
           {features.map((feat, i) => (
             <div
               key={i}
-              className="flex h-full p-7 rounded-3xl bg-white/60 border border-slate-700/60 hover:border-blue-500/50 hover:bg-slate-100 transition-all duration-300 group"
+              className="flex h-full p-7 rounded-lg bg-white/60 border border-slate-700/60 hover:border-blue-500/50 hover:bg-slate-100 transition-all duration-300 group"
             >
               <div className="flex flex-col h-full w-full min-h-0">
-                <div className="w-12 h-12 shrink-0 rounded-2xl bg-white border border-slate-300 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+                <div className="w-12 h-12 shrink-0 rounded-md bg-white border border-slate-300 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
                   {feat.icon}
                 </div>
                 <h3 className="text-xl font-bold text-slate-900 mb-3 min-h-[3.5rem] leading-snug">
@@ -114,7 +114,7 @@ export const InfrastructureFeatures: React.FC = () => {
             {REVIEWS.map((rev, idx) => (
               <div
                 key={idx}
-                className="p-6 rounded-3xl bg-white/40 border border-slate-700/50 flex flex-col justify-between"
+                className="p-6 rounded-lg bg-white/40 border border-slate-700/50 flex flex-col justify-between"
               >
                 <div>
                   <div className="flex items-center gap-1 text-amber-400 mb-4">

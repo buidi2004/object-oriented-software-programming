@@ -119,7 +119,7 @@ export default function VpsCustomConfiguratorPage() {
     <div className="min-h-screen bg-slate-50 text-slate-900">
       {/* Toast */}
       {toast && (
-        <div className={`fixed bottom-5 right-5 z-50 px-5 py-3.5 rounded-2xl shadow-2xl text-white font-bold text-sm flex items-center gap-3 animate-in slide-in-from-bottom-5 ${
+        <div className={`fixed bottom-5 right-5 z-50 px-5 py-3.5 rounded-md shadow-2xl text-white font-bold text-sm flex items-center gap-3 animate-in slide-in-from-bottom-5 ${
           toast.type === 'success' ? 'bg-emerald-600' : 'bg-rose-600'
         }`}>
           {toast.type === 'success' ? <CheckCircle2 className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />}
@@ -167,13 +167,13 @@ export default function VpsCustomConfiguratorPage() {
           <div className="lg:col-span-8 space-y-6">
             
             {/* Step 1: Hardware Resources */}
-            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-8">
+            <div className="bg-white rounded-lg p-6 sm:p-8 border border-slate-200 shadow-sm space-y-8">
               <div className="flex items-center justify-between border-b border-slate-100 pb-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-2xl bg-blue-50 text-[#1F1F1F] flex items-center justify-center font-black">1</div>
+                  <div className="w-10 h-10 rounded-md bg-blue-50 text-[#1F1F1F] flex items-center justify-center font-black">1</div>
                   <div>
                     <h2 className="text-lg font-black text-slate-900">Tài Nguyên Phần Cứng (Hardware Specs)</h2>
-                    <p className="text-xs text-slate-500">Kéo thanh trượt hoặc chọn các mốc định mức phù hợp</p>
+                    <p className="text-xs text-slate-600">Kéo thanh trượt hoặc chọn các mốc định mức phù hợp</p>
                   </div>
                 </div>
                 <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full flex items-center gap-1">
@@ -188,7 +188,7 @@ export default function VpsCustomConfiguratorPage() {
                     <Cpu className="w-4 h-4 text-[#1F1F1F]" />
                     Vi Xử Lý (CPU Cores):
                   </label>
-                  <span className="text-base font-black text-[#1F1F1F] bg-blue-50 px-3 py-1 rounded-xl">
+                  <span className="text-base font-black text-[#1F1F1F] bg-blue-50 px-3 py-1 rounded">
                     {cpu} vCPU Core
                   </span>
                 </div>
@@ -199,7 +199,7 @@ export default function VpsCustomConfiguratorPage() {
                   step="1"
                   value={cpu}
                   onChange={(e) => setCpu(Number(e.target.value))}
-                  className="w-full h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-blue-600"
+                  className="w-full h-2 bg-slate-100 rounded-sm appearance-none cursor-pointer accent-blue-600"
                 />
                 <div className="flex justify-between text-[11px] font-bold text-slate-600">
                   <span>1 vCPU</span>
@@ -214,7 +214,7 @@ export default function VpsCustomConfiguratorPage() {
                       key={v}
                       type="button"
                       onClick={() => setCpu(v)}
-                      className={`px-3 py-1 rounded-lg text-xs font-bold transition-all ${
+                      className={`px-3 py-1 rounded-sm text-xs font-bold transition-all ${
                         cpu === v 
                           ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20' 
                           : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
@@ -233,7 +233,7 @@ export default function VpsCustomConfiguratorPage() {
                     <Layers className="w-4 h-4 text-purple-600" />
                     Bộ Nhớ RAM (DDR5 ECC):
                   </label>
-                  <span className="text-base font-black text-purple-600 bg-purple-50 px-3 py-1 rounded-xl">
+                  <span className="text-base font-black text-purple-600 bg-purple-50 px-3 py-1 rounded">
                     {ram} GB RAM
                   </span>
                 </div>
@@ -244,7 +244,7 @@ export default function VpsCustomConfiguratorPage() {
                   step="1"
                   value={ram}
                   onChange={(e) => setRam(Number(e.target.value))}
-                  className="w-full h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-purple-600"
+                  className="w-full h-2 bg-slate-100 rounded-sm appearance-none cursor-pointer accent-purple-600"
                 />
                 <div className="flex justify-between text-[11px] font-bold text-slate-600">
                   <span>1 GB</span>
@@ -259,7 +259,7 @@ export default function VpsCustomConfiguratorPage() {
                       key={v}
                       type="button"
                       onClick={() => setRam(v)}
-                      className={`px-3 py-1 rounded-lg text-xs font-bold transition-all ${
+                      className={`px-3 py-1 rounded-sm text-xs font-bold transition-all ${
                         ram === v 
                           ? 'bg-purple-600 text-white shadow-md shadow-purple-500/20' 
                           : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
@@ -278,7 +278,7 @@ export default function VpsCustomConfiguratorPage() {
                     <HardDrive className="w-4 h-4 text-emerald-600" />
                     Ổ Cứng Lưu Trữ (NVMe Enterprise):
                   </label>
-                  <span className="text-base font-black text-emerald-600 bg-emerald-50 px-3 py-1 rounded-xl">
+                  <span className="text-base font-black text-emerald-600 bg-emerald-50 px-3 py-1 rounded">
                     {disk} GB NVMe
                   </span>
                 </div>
@@ -289,7 +289,7 @@ export default function VpsCustomConfiguratorPage() {
                   step="10"
                   value={disk}
                   onChange={(e) => setDisk(Number(e.target.value))}
-                  className="w-full h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-emerald-600"
+                  className="w-full h-2 bg-slate-100 rounded-sm appearance-none cursor-pointer accent-emerald-600"
                 />
                 <div className="flex justify-between text-[11px] font-bold text-slate-600">
                   <span>20 GB</span>
@@ -304,7 +304,7 @@ export default function VpsCustomConfiguratorPage() {
                       key={v}
                       type="button"
                       onClick={() => setDisk(v)}
-                      className={`px-3 py-1 rounded-lg text-xs font-bold transition-all ${
+                      className={`px-3 py-1 rounded-sm text-xs font-bold transition-all ${
                         disk === v 
                           ? 'bg-emerald-600 text-white shadow-md shadow-emerald-500/20' 
                           : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
@@ -318,12 +318,12 @@ export default function VpsCustomConfiguratorPage() {
             </div>
 
             {/* Step 2: OS Selection */}
-            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6">
+            <div className="bg-white rounded-lg p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6">
               <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
-                <div className="w-10 h-10 rounded-2xl bg-cyan-50 text-[#1F1F1F] flex items-center justify-center font-black">2</div>
+                <div className="w-10 h-10 rounded-md bg-cyan-50 text-[#1F1F1F] flex items-center justify-center font-black">2</div>
                 <div>
                   <h2 className="text-lg font-black text-slate-900">Hệ Điều Hành &amp; Template (OS Image)</h2>
-                  <p className="text-xs text-slate-500">Tự động cài đặt sạch 100% bản quyền và cập nhật mới nhất</p>
+                  <p className="text-xs text-slate-600">Tự động cài đặt sạch 100% bản quyền và cập nhật mới nhất</p>
                 </div>
               </div>
 
@@ -334,7 +334,7 @@ export default function VpsCustomConfiguratorPage() {
                     <div
                       key={os.id}
                       onClick={() => setSelectedOs(os)}
-                      className={`p-4 rounded-2xl border-2 transition-all cursor-pointer flex items-center justify-between ${
+                      className={`p-4 rounded-md border-2 transition-all cursor-pointer flex items-center justify-between ${
                         isSelected 
                           ? 'border-blue-600 bg-blue-50/50 shadow-sm ring-2 ring-blue-600/10' 
                           : 'border-slate-100 hover:border-slate-200 bg-slate-50/50'
@@ -348,11 +348,11 @@ export default function VpsCustomConfiguratorPage() {
                         </div>
                       </div>
                       {os.surcharge ? (
-                        <span className="text-[11px] font-black text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md">
+                        <span className="text-[11px] font-black text-amber-600 bg-amber-50 px-2 py-0.5 rounded-sm">
                           +{os.surcharge.toLocaleString('vi-VN')} đ/th
                         </span>
                       ) : (
-                        <span className="text-[11px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md">
+                        <span className="text-[11px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-sm">
                           Miễn phí
                         </span>
                       )}
@@ -363,12 +363,12 @@ export default function VpsCustomConfiguratorPage() {
             </div>
 
             {/* Step 3: Datacenter Location */}
-            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6">
+            <div className="bg-white rounded-lg p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6">
               <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
-                <div className="w-10 h-10 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center font-black">3</div>
+                <div className="w-10 h-10 rounded-md bg-amber-50 text-amber-600 flex items-center justify-center font-black">3</div>
                 <div>
                   <h2 className="text-lg font-black text-slate-900">Vị Trí Trung Tâm Dữ Liệu (Datacenter)</h2>
-                  <p className="text-xs text-slate-500">Đường truyền băng thông không giới hạn với Anti-DDoS</p>
+                  <p className="text-xs text-slate-600">Đường truyền băng thông không giới hạn với Anti-DDoS</p>
                 </div>
               </div>
 
@@ -379,7 +379,7 @@ export default function VpsCustomConfiguratorPage() {
                     <div
                       key={dc.id}
                       onClick={() => setSelectedDc(dc)}
-                      className={`p-4 rounded-2xl border-2 transition-all cursor-pointer flex items-center justify-between ${
+                      className={`p-4 rounded-md border-2 transition-all cursor-pointer flex items-center justify-between ${
                         isSelected 
                           ? 'border-amber-500 bg-amber-50/50 shadow-sm ring-2 ring-amber-500/10' 
                           : 'border-slate-100 hover:border-slate-200 bg-slate-50/50'
@@ -389,10 +389,10 @@ export default function VpsCustomConfiguratorPage() {
                         <span className="text-2xl">{dc.flag}</span>
                         <div>
                           <div className="text-xs font-black text-slate-900">{dc.name}</div>
-                          <div className="text-[11px] text-slate-500">{dc.desc}</div>
+                          <div className="text-[11px] text-slate-600">{dc.desc}</div>
                         </div>
                       </div>
-                      <span className="text-[11px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md">
+                      <span className="text-[11px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-sm">
                         {dc.ping}
                       </span>
                     </div>
@@ -402,12 +402,12 @@ export default function VpsCustomConfiguratorPage() {
             </div>
 
             {/* Step 4: Addon Services */}
-            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6">
+            <div className="bg-white rounded-lg p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6">
               <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
-                <div className="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-black">4</div>
+                <div className="w-10 h-10 rounded-md bg-emerald-50 text-emerald-600 flex items-center justify-center font-black">4</div>
                 <div>
                   <h2 className="text-lg font-black text-slate-900">Dịch Vụ Giá Trị Gia Tăng (Add-on Services)</h2>
-                  <p className="text-xs text-slate-500">Tăng cường khả năng bảo mật, backup và vận hành máy chủ</p>
+                  <p className="text-xs text-slate-600">Tăng cường khả năng bảo mật, backup và vận hành máy chủ</p>
                 </div>
               </div>
 
@@ -418,21 +418,21 @@ export default function VpsCustomConfiguratorPage() {
                     <div
                       key={addon.id}
                       onClick={() => toggleAddon(addon.id)}
-                      className={`p-4 rounded-2xl border-2 transition-all cursor-pointer flex items-center justify-between ${
+                      className={`p-4 rounded-md border-2 transition-all cursor-pointer flex items-center justify-between ${
                         isChecked 
                           ? 'border-emerald-600 bg-emerald-50/30' 
                           : 'border-slate-100 hover:border-slate-200 bg-slate-50/50'
                       }`}
                     >
                       <div className="flex items-center gap-3">
-                        <div className={`w-5 h-5 rounded-lg flex items-center justify-center border transition-all ${
+                        <div className={`w-5 h-5 rounded-sm flex items-center justify-center border transition-all ${
                           isChecked ? 'bg-emerald-600 border-emerald-600 text-white' : 'border-slate-300 bg-white'
                         }`}>
                           {isChecked && <Check className="w-3.5 h-3.5 stroke-[3]" />}
                         </div>
                         <div>
                           <div className="text-xs font-black text-slate-900">{addon.name}</div>
-                          <div className="text-[11px] text-slate-500">{addon.desc}</div>
+                          <div className="text-[11px] text-slate-600">{addon.desc}</div>
                         </div>
                       </div>
                       <span className="text-xs font-black text-slate-900">
@@ -448,7 +448,7 @@ export default function VpsCustomConfiguratorPage() {
 
           {/* Sticky Summary Card (Right Column) */}
           <div className="lg:col-span-4 sticky top-20 space-y-6">
-            <div className="bg-white text-slate-900 rounded-3xl p-6 sm:p-7 border border-slate-200 shadow-2xl space-y-6">
+            <div className="bg-white text-slate-900 rounded-lg p-6 sm:p-7 border border-slate-200 shadow-2xl space-y-6">
               
               <div>
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/20 text-[#1F1F1F] text-xs font-bold mb-3">
@@ -460,7 +460,7 @@ export default function VpsCustomConfiguratorPage() {
               </div>
 
               {/* Specs Breakdown */}
-              <div className="bg-white/80 rounded-2xl p-4 space-y-2.5 border border-slate-700/60 text-xs">
+              <div className="bg-white/80 rounded-md p-4 space-y-2.5 border border-slate-700/60 text-xs">
                 <div className="flex justify-between items-center text-slate-700">
                   <span className="flex items-center gap-1.5"><Cpu className="w-3.5 h-3.5 text-slate-200" /> CPU:</span>
                   <span className="font-bold text-slate-900">{cpu} vCPU Core</span>
@@ -505,7 +505,7 @@ export default function VpsCustomConfiguratorPage() {
                         key={cycle.months}
                         type="button"
                         onClick={() => setBillingCycle(cycle)}
-                        className={`p-2 rounded-xl text-center border transition-all ${
+                        className={`p-2 rounded text-center border transition-all ${
                           isSelected
                             ? 'bg-blue-600 border-blue-500 text-white font-black shadow-md'
                             : 'bg-slate-800/80 border-slate-700 text-slate-300 hover:bg-slate-700 font-bold'
@@ -540,7 +540,7 @@ export default function VpsCustomConfiguratorPage() {
                 </div>
 
                 {totalSaved > 0 && (
-                  <div className="text-right text-xs font-bold text-emerald-400 bg-emerald-950/60 border border-emerald-800/50 py-1.5 px-3 rounded-xl">
+                  <div className="text-right text-xs font-bold text-emerald-400 bg-emerald-950/60 border border-emerald-800/50 py-1.5 px-3 rounded">
                     🎉 Tiết kiệm {totalSaved.toLocaleString('vi-VN')} đ khi trả trước {billingCycle.months} tháng!
                   </div>
                 )}
@@ -558,7 +558,7 @@ export default function VpsCustomConfiguratorPage() {
                 <button
                   type="button"
                   onClick={() => handleAddToCart(true)}
-                  className="w-full py-4 rounded-2xl bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-slate-900 font-black text-base shadow-xl shadow-blue-500/25 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full py-4 rounded-md bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-slate-900 font-black text-base shadow-xl shadow-blue-500/25 transition-all flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <Zap className="w-5 h-5" />
                   <span>Khởi Tạo &amp; Thanh Toán Ngay</span>
@@ -567,7 +567,7 @@ export default function VpsCustomConfiguratorPage() {
                 <button
                   type="button"
                   onClick={() => handleAddToCart(false)}
-                  className="w-full py-3.5 rounded-2xl bg-white hover:bg-slate-200 text-slate-800 font-bold text-xs transition-colors flex items-center justify-center gap-2 border border-slate-300 cursor-pointer"
+                  className="w-full py-3.5 rounded-md bg-white hover:bg-slate-200 text-slate-800 font-bold text-xs transition-colors flex items-center justify-center gap-2 border border-slate-300 cursor-pointer"
                 >
                   <ShoppingCart className="w-4 h-4" />
                   <span>Thêm Vào Giỏ Hàng</span>
@@ -582,7 +582,7 @@ export default function VpsCustomConfiguratorPage() {
             </div>
 
             {/* Quick Links */}
-            <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-3">
+            <div className="bg-white rounded-lg p-6 border border-slate-200 shadow-sm space-y-3">
               <h4 className="text-xs font-black text-slate-900 uppercase tracking-wider">Cần Tham Khảo Thêm?</h4>
               <div className="space-y-2 text-xs">
                 <Link href="/services/cloud-vps" className="flex items-center justify-between text-[#1F1F1F] font-bold hover:underline">
@@ -606,8 +606,8 @@ export default function VpsCustomConfiguratorPage() {
 
         {/* Feature Highlights */}
         <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm">
-            <div className="w-12 h-12 rounded-2xl bg-blue-50 text-[#1F1F1F] flex items-center justify-center mb-4">
+          <div className="bg-white rounded-lg p-6 border border-slate-200 shadow-sm">
+            <div className="w-12 h-12 rounded-md bg-blue-50 text-[#1F1F1F] flex items-center justify-center mb-4">
               <Cpu className="w-6 h-6" />
             </div>
             <h3 className="text-base font-black text-slate-900 mb-2">AMD EPYC 9654 Zen 4</h3>
@@ -616,8 +616,8 @@ export default function VpsCustomConfiguratorPage() {
             </p>
           </div>
 
-          <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm">
-            <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-4">
+          <div className="bg-white rounded-lg p-6 border border-slate-200 shadow-sm">
+            <div className="w-12 h-12 rounded-md bg-emerald-50 text-emerald-600 flex items-center justify-center mb-4">
               <HardDrive className="w-6 h-6" />
             </div>
             <h3 className="text-base font-black text-slate-900 mb-2">NVMe PCIe Gen4 SSD</h3>
@@ -626,8 +626,8 @@ export default function VpsCustomConfiguratorPage() {
             </p>
           </div>
 
-          <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm">
-            <div className="w-12 h-12 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center mb-4">
+          <div className="bg-white rounded-lg p-6 border border-slate-200 shadow-sm">
+            <div className="w-12 h-12 rounded-md bg-purple-50 text-purple-600 flex items-center justify-center mb-4">
               <Shield className="w-6 h-6" />
             </div>
             <h3 className="text-base font-black text-slate-900 mb-2">Anti-DDoS 500Gbps</h3>
@@ -638,10 +638,10 @@ export default function VpsCustomConfiguratorPage() {
         </div>
 
         {/* FAQ Section */}
-        <div className="mt-16 bg-white rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-sm">
+        <div className="mt-16 bg-white rounded-lg p-6 sm:p-10 border border-slate-200 shadow-sm">
           <div className="text-center max-w-2xl mx-auto mb-8">
             <h3 className="text-2xl font-black text-slate-900">Câu Hỏi Thường Gặp Khi Tùy Chỉnh VPS</h3>
-            <p className="text-xs text-slate-500 mt-1">Tất cả những thông tin bạn cần biết trước khi nâng cấp máy chủ</p>
+            <p className="text-xs text-slate-600 mt-1">Tất cả những thông tin bạn cần biết trước khi nâng cấp máy chủ</p>
           </div>
 
           <div className="space-y-4 max-w-3xl mx-auto">
@@ -665,14 +665,14 @@ export default function VpsCustomConfiguratorPage() {
             ].map((item, idx) => {
               const isOpen = openFaq === idx;
               return (
-                <div key={idx} className="border border-slate-100 rounded-2xl overflow-hidden bg-slate-50/50">
+                <div key={idx} className="border border-slate-100 rounded-md overflow-hidden bg-slate-50/50">
                   <button
                     type="button"
                     onClick={() => setOpenFaq(isOpen ? null : idx)}
                     className="w-full p-4 text-left font-bold text-xs text-slate-900 flex items-center justify-between hover:bg-slate-100/60 transition-colors"
                   >
                     <span>{item.q}</span>
-                    {isOpen ? <ChevronUp className="w-4 h-4 text-slate-500 shrink-0" /> : <ChevronDown className="w-4 h-4 text-slate-500 shrink-0" />}
+                    {isOpen ? <ChevronUp className="w-4 h-4 text-slate-600 shrink-0" /> : <ChevronDown className="w-4 h-4 text-slate-600 shrink-0" />}
                   </button>
                   {isOpen && (
                     <div className="p-4 pt-0 text-xs text-slate-600 leading-relaxed border-t border-slate-100 bg-white">
