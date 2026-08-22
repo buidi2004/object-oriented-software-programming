@@ -252,7 +252,7 @@ export default function DedicatedServersPage() {
     },
     {
       q: 'Tôi có thể thuê thêm dải địa chỉ IP tĩnh (Subnet /29, /28, /27) không?',
-      a: 'Có. Chúng tôi hỗ trợ cấp phát dải IP tĩnh Clean IPv4 với định tuyến trực tiếp vào cổng mạng Dedicated của bạn, phục vụ nhu cầu tạo nhiều VPS ảo hóa hoặc chạy đa dịch vụ với chi phí chỉ từ 50.000đ/IP/tháng.'
+      a: 'Có. Chúng tôi hỗ trợ cấp phát dải IP tĩnh Clean IPv4 với định tuyến trực tiếp vào cổng mạng Dedicated của bạn, phục vụ nhu cầu tạo nhiều VPS ảo hóa hoặc chạy đa dịch vụ với chi phí vô cùng tiết kiệm.'
     }
   ];
 

@@ -635,7 +635,7 @@ server {
             </h3>
             
             <p className="text-slate-300 text-xs sm:text-base leading-relaxed font-normal">
-              Miễn phí trọn đời cho gói Starter hoặc nâng cấp gói Pro chỉ 49.000đ/tháng với tên miền riêng không giới hạn.
+              Miễn phí trọn đời cho gói Starter hoặc nâng cấp gói Pro với chi phí vô cùng tiết kiệm với tên miền riêng không giới hạn.
             </p>
             
             <div className="flex flex-wrap items-center justify-center gap-4 pt-2">

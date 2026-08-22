@@ -804,7 +804,7 @@ export default function GameServersServicePage() {
             </h3>
             
             <p className="text-slate-300 text-xs sm:text-base leading-relaxed font-normal">
-              Chỉ từ 149.000đ/tháng. Bàn giao bảng điều khiển Web Console trong 60 giây và hỗ trợ chuyển map game từ nơi khác sang miễn phí.
+              Mức giá cạnh tranh. Bàn giao bảng điều khiển Web Console trong 60 giây và hỗ trợ chuyển map game từ nơi khác sang miễn phí.
             </p>
             
             <div className="flex flex-wrap items-center justify-center gap-4 pt-2">

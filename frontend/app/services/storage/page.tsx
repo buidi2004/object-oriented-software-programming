@@ -809,7 +809,7 @@ func main() {
             </h3>
             
             <p className="text-slate-300 text-xs sm:text-base leading-relaxed font-normal">
-              Chỉ từ 50.000đ/tháng với 50GB NVMe. Nhận ngay cặp mã Access Key &amp; Secret Key trong 60 giây và hỗ trợ chuyển dữ liệu từ AWS S3 sang miễn phí.
+              Chỉ với chi phí cực kỳ thấp với 50GB NVMe. Nhận ngay cặp mã Access Key &amp; Secret Key trong 60 giây và hỗ trợ chuyển dữ liệu từ AWS S3 sang miễn phí.
             </p>
             
             <div className="flex flex-wrap items-center justify-center gap-4 pt-2">

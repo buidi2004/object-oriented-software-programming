@@ -631,7 +631,7 @@ export default function SslCertificatesPage() {
             </h3>
             
             <p className="text-slate-300 text-xs sm:text-base leading-relaxed font-normal">
-              Chỉ từ 199.000đ/năm. Cấp phát tự động qua DNS trong 5 phút và đội ngũ kỹ sư hỗ trợ cài đặt lên máy chủ miễn phí.
+              Với chi phí tiết kiệm. Cấp phát tự động qua DNS trong 5 phút và đội ngũ kỹ sư hỗ trợ cài đặt lên máy chủ miễn phí.
             </p>
             
             <div className="flex flex-wrap items-center justify-center gap-4 pt-2">

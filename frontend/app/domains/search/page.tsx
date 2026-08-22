@@ -147,7 +147,7 @@ export default function DomainSearchPage() {
               {result.isAvailable && (
                 <div className="flex flex-col sm:items-end w-full sm:w-auto">
                   <div className="text-2xl font-black text-slate-900 mb-3 text-center sm:text-right">
-                    250.000đ<span className="text-sm text-slate-500 font-normal">/năm</span>
+                    Giá ưu đãi<span className="text-sm text-slate-500 font-normal">/năm</span>
                   </div>
                   <button
                     onClick={handleBuy}

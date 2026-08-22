@@ -658,7 +658,7 @@ export default function SecurityWafServicePage() {
             </h3>
             
             <p className="text-slate-300 text-xs sm:text-base leading-relaxed font-normal">
-              Chỉ từ 99.000đ/tháng. Bật lớp khiên bảo mật trong 2 phút và đội ngũ kỹ sư an ninh mạng hỗ trợ cấu hình miễn phí 24/7.
+              Với mức giá cực kỳ ưu đãi. Bật lớp khiên bảo mật trong 2 phút và đội ngũ kỹ sư an ninh mạng hỗ trợ cấu hình miễn phí 24/7.
             </p>
             
             <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
