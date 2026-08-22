@@ -304,73 +304,73 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
       </div>
 
       {/* TOP HEADER SECTION */}
-      <div className="max-w-5xl mx-auto bg-[#101828] text-slate-900 rounded-2xl border border-slate-200 overflow-hidden shadow-lg">
+      <div className="max-w-5xl mx-auto bg-[#101828] text-white rounded-2xl border border-slate-700 overflow-hidden shadow-lg">
         <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
           <div className="flex flex-col items-center md:items-start text-center md:text-left space-y-3">
             <div className="w-16 h-16 rounded-full bg-white border-2 border-slate-300 flex items-center justify-center text-slate-900 shadow-inner">
-              <Server className="w-8 h-8 text-blue-400" />
+              <Server className="w-8 h-8 text-blue-600" />
             </div>
             <div>
-              <h2 className="text-lg font-black text-slate-900">{vps.planName || 'Cheap 4'}</h2>
-              <p className="text-xs text-slate-600">VPS Giá Rẻ</p>
+              <h2 className="text-lg font-black text-white">{vps.planName || 'Cheap 4'}</h2>
+              <p className="text-xs text-slate-400">VPS Giá Rẻ</p>
             </div>
             <div className="w-full space-y-2 max-w-xs">
-              <div className="w-full py-1.5 px-3 rounded-lg font-bold text-xs uppercase tracking-wider text-center bg-[#16a34a] text-slate-900">
+              <div className="w-full py-1.5 px-3 rounded-lg font-bold text-xs uppercase tracking-wider text-center bg-[#16a34a] text-white">
                 ĐANG HOẠT ĐỘNG
               </div>
-              <button className="w-full py-1.5 px-3 bg-[#16a34a] hover:bg-[#15803d] text-slate-900 font-bold text-xs rounded-lg transition-colors flex items-center justify-center gap-1.5 shadow-sm">
+              <button className="w-full py-1.5 px-3 bg-[#16a34a] hover:bg-[#15803d] text-white font-bold text-xs rounded-lg transition-colors flex items-center justify-center gap-1.5 shadow-sm">
                 <span>⬆</span> Nâng cấp
               </button>
-              <button className="w-full py-1.5 px-3 bg-[#2563eb] hover:bg-[#1d4ed8] text-slate-900 font-bold text-xs rounded-lg transition-colors flex items-center justify-center gap-1.5 shadow-sm">
+              <button className="w-full py-1.5 px-3 bg-[#2563eb] hover:bg-[#1d4ed8] text-white font-bold text-xs rounded-lg transition-colors flex items-center justify-center gap-1.5 shadow-sm">
                 <span>🔁</span> Gia hạn dịch vụ
               </button>
             </div>
           </div>
 
           <div className="md:col-span-2 space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs bg-[#0b1120] p-4 rounded-xl border border-slate-200/80">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs bg-[#0b1120] p-4 rounded-xl border border-slate-700">
               <div>
-                <p className="text-slate-600">Chu kỳ thanh toán</p>
-                <p className="font-bold text-slate-900 mt-0.5 text-sm">1 tháng</p>
+                <p className="text-slate-400">Chu kỳ thanh toán</p>
+                <p className="font-bold text-white mt-0.5 text-sm">1 tháng</p>
               </div>
               <div>
-                <p className="text-slate-600">Ngày hết hạn</p>
-                <p className="font-bold text-slate-900 mt-0.5 text-sm">
+                <p className="text-slate-400">Ngày hết hạn</p>
+                <p className="font-bold text-white mt-0.5 text-sm">
                   {vps.expiresAt ? new Date(vps.expiresAt).toLocaleDateString('vi-VN') : '16/09/2026'}
                 </p>
               </div>
-              <div className="sm:col-span-2 pt-2 border-t border-slate-200/80">
-                <p className="text-slate-600">Phương thức thanh toán</p>
-                <p className="font-medium text-slate-700 mt-0.5">MBBANK Doanh Nghiệp (Dành cho K/H DN lấy hóa đơn GTGT)</p>
+              <div className="sm:col-span-2 pt-2 border-t border-slate-700">
+                <p className="text-slate-400">Phương thức thanh toán</p>
+                <p className="font-medium text-slate-300 mt-0.5">MBBANK Doanh Nghiệp (Dành cho K/H DN lấy hóa đơn GTGT)</p>
               </div>
             </div>
 
-            <div className="bg-[#0b1120] p-4 rounded-xl border border-slate-200/80 text-xs space-y-2">
-              <div className="flex justify-between items-center py-0.5 border-b border-slate-200/60">
-                <span className="text-slate-600">Hostname</span>
-                <span className="font-mono font-bold text-slate-900">{hostname}</span>
+            <div className="bg-[#0b1120] p-4 rounded-xl border border-slate-700 text-xs space-y-2">
+              <div className="flex justify-between items-center py-0.5 border-b border-slate-700">
+                <span className="text-slate-400">Hostname</span>
+                <span className="font-mono font-bold text-white">{hostname}</span>
               </div>
-              <div className="flex justify-between items-center py-0.5 border-b border-slate-200/60">
-                <span className="text-slate-600">IP chính</span>
+              <div className="flex justify-between items-center py-0.5 border-b border-slate-700">
+                <span className="text-slate-400">IP chính</span>
                 <div className="flex items-center gap-2">
-                  <span className="font-mono font-bold text-slate-900">{ipAddress}</span>
-                  <button onClick={() => handleCopy(ipAddress, 'ip')} className="text-slate-600 hover:text-slate-900" title="Copy IP">
+                  <span className="font-mono font-bold text-white">{ipAddress}</span>
+                  <button onClick={() => handleCopy(ipAddress, 'ip')} className="text-slate-400 hover:text-white" title="Copy IP">
                     {copiedField === 'ip' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
                   </button>
                 </div>
               </div>
-              <div className="flex justify-between items-center py-0.5 border-b border-slate-200/60">
-                <span className="text-slate-600">Username</span>
-                <span className="font-mono font-bold text-slate-900">Administrator</span>
+              <div className="flex justify-between items-center py-0.5 border-b border-slate-700">
+                <span className="text-slate-400">Username</span>
+                <span className="font-mono font-bold text-white">Administrator</span>
               </div>
               <div className="flex justify-between items-center py-0.5">
-                <span className="text-slate-600">Mật khẩu</span>
+                <span className="text-slate-400">Mật khẩu</span>
                 <div className="flex items-center gap-2 font-mono">
-                  <span className="font-bold text-slate-900">{showPassword ? rootPasswordVal : '••••••••'}</span>
-                  <button onClick={() => setShowPassword(!showPassword)} className="text-slate-600 hover:text-slate-900">
+                  <span className="font-bold text-white">{showPassword ? rootPasswordVal : '••••••••'}</span>
+                  <button onClick={() => setShowPassword(!showPassword)} className="text-slate-400 hover:text-white">
                     {showPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                   </button>
-                  <button onClick={() => handleCopy(rootPasswordVal, 'pass')} className="text-slate-600 hover:text-slate-900">
+                  <button onClick={() => handleCopy(rootPasswordVal, 'pass')} className="text-slate-400 hover:text-white">
                     {copiedField === 'pass' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
                   </button>
                 </div>
