@@ -30,18 +30,18 @@ export default function PublicFaqsPage() {
     <div className="min-h-screen bg-slate-50 py-8">
       <div className="max-w-3xl mx-auto px-4">
         <h1 className="text-3xl font-black text-slate-900 mb-2">Câu hỏi thường gặp</h1>
-        <p className="text-slate-500 mb-8">Giải đáp nhanh các thắc mắc phổ biến</p>
+        <p className="text-slate-600 mb-8">Giải đáp nhanh các thắc mắc phổ biến</p>
 
         {isLoading && <Loader className="w-8 h-8 text-[#1F1F1F] animate-spin mx-auto" />}
         {error && (
-          <div className="p-4 bg-red-50 border border-red-200 rounded-xl flex items-center gap-2 text-red-700 text-sm">
+          <div className="p-4 bg-red-50 border border-red-200 rounded flex items-center gap-2 text-red-700 text-sm">
             <AlertCircle className="w-4 h-4" /> {error}
           </div>
         )}
 
         <div className="space-y-3">
           {faqs.map((faq) => (
-            <div key={faq.id} className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+            <div key={faq.id} className="bg-white rounded border border-slate-200 overflow-hidden">
               <button
                 onClick={() => setOpenId(openId === faq.id ? null : faq.id)}
                 className="w-full px-5 py-4 flex items-center justify-between text-left hover:bg-slate-50"
@@ -60,7 +60,7 @@ export default function PublicFaqsPage() {
         </div>
 
         {!isLoading && faqs.length === 0 && !error && (
-          <p className="text-center text-slate-500 py-12">Chưa có câu hỏi nào.</p>
+          <p className="text-center text-slate-600 py-12">Chưa có câu hỏi nào.</p>
         )}
 
         <div className="mt-8 text-center">

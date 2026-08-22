@@ -185,7 +185,7 @@ export default function SslCertificatesPage() {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           {/* Status Bar */}
-          <div className="flex flex-wrap items-center justify-between gap-4 p-3.5 mb-10 rounded-2xl bg-[#0d1424] border border-slate-200 text-xs font-mono">
+          <div className="flex flex-wrap items-center justify-between gap-4 p-3.5 mb-10 rounded-md bg-[#0d1424] border border-slate-200 text-xs font-mono">
             <div className="flex items-center gap-3">
               <span className="flex items-center gap-1.5 text-emerald-400 font-bold">
                 <Lock className="w-3.5 h-3.5 text-emerald-400" />
@@ -207,7 +207,7 @@ export default function SslCertificatesPage() {
             
             {/* Left Headline */}
             <div className="lg:col-span-7 space-y-6">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-emerald-950/60 border border-emerald-800/60 text-emerald-300 text-xs font-mono">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm bg-emerald-950/60 border border-emerald-800/60 text-emerald-300 text-xs font-mono">
                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
                 OFFICIAL SECTIGO &amp; DIGICERT CA CERTIFICATES
               </div>
@@ -226,22 +226,22 @@ export default function SslCertificatesPage() {
 
               {/* CA Badges */}
               <div className="flex flex-wrap items-center gap-3 pt-2">
-                <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0f172a] border border-slate-200 text-xs font-mono text-slate-700">
+                <div className="flex items-center gap-2 px-3.5 py-2 rounded bg-[#0f172a] border border-slate-200 text-xs font-mono text-slate-700">
                   <SectigoLogo className="w-4 h-4" />
                   <span>Sectigo CA (Comodo)</span>
                 </div>
-                <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0f172a] border border-slate-200 text-xs font-mono text-slate-700">
+                <div className="flex items-center gap-2 px-3.5 py-2 rounded bg-[#0f172a] border border-slate-200 text-xs font-mono text-slate-700">
                   <DigicertLogo className="w-4 h-4" />
                   <span>DigiCert EV Enterprise</span>
                 </div>
-                <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0f172a] border border-slate-200 text-xs font-mono text-slate-700">
+                <div className="flex items-center gap-2 px-3.5 py-2 rounded bg-[#0f172a] border border-slate-200 text-xs font-mono text-slate-700">
                   <Lock className="w-4 h-4 text-amber-400" />
                   <span>Green Padlock Trust</span>
                 </div>
               </div>
 
               {/* Handshake Details */}
-              <div className="p-4 rounded-xl bg-white border border-slate-200 text-xs font-mono space-y-2">
+              <div className="p-4 rounded bg-white border border-slate-200 text-xs font-mono space-y-2">
                 <div className="flex items-center justify-between text-slate-600">
                   <span>Cryptographic Cipher: <strong className="text-slate-900">TLS_AES_256_GCM_SHA384</strong></span>
                   <span>Handshake: <strong className="text-emerald-400">0-RTT Resumption</strong></span>
@@ -255,7 +255,7 @@ export default function SslCertificatesPage() {
 
             {/* Right Certificate Inspector Simulator */}
             <div className="lg:col-span-5">
-              <div className="rounded-2xl bg-[#0b1320] border border-slate-200 p-6 shadow-2xl space-y-5">
+              <div className="rounded-md bg-[#0b1320] border border-slate-200 p-6 shadow-2xl space-y-5">
                 <div className="flex items-center justify-between pb-3 border-b border-slate-200">
                   <div className="flex items-center gap-2">
                     <Lock className="w-3.5 h-3.5 text-emerald-400" />
@@ -266,43 +266,43 @@ export default function SslCertificatesPage() {
                   </span>
                 </div>
 
-                <div className="p-3.5 rounded-xl bg-slate-100 border border-slate-200 space-y-2 font-mono text-xs text-slate-700">
+                <div className="p-3.5 rounded bg-slate-100 border border-slate-200 space-y-2 font-mono text-xs text-slate-700">
                   <div className="flex justify-between">
-                    <span className="text-slate-500">Issued To:</span>
+                    <span className="text-slate-600">Issued To:</span>
                     <span className="text-slate-900 font-bold">{inspectDomain}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-500">Issued By:</span>
+                    <span className="text-slate-600">Issued By:</span>
                     <span className="text-slate-200">Sectigo RSA Domain Validation Secure Server CA</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-500">Key Exchange:</span>
+                    <span className="text-slate-600">Key Exchange:</span>
                     <span className="text-emerald-400 font-bold">ECDHE-RSA-AES256-GCM-SHA384</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-500">OCSP Stapling:</span>
+                    <span className="text-slate-600">OCSP Stapling:</span>
                     <span className="text-emerald-400">Enabled (Fast Verification)</span>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-3 font-mono text-xs">
-                  <div className="p-3 rounded-xl bg-[#0e1627] border border-slate-200">
-                    <div className="text-[10px] text-slate-500 uppercase">Handshake Latency</div>
+                  <div className="p-3 rounded bg-[#0e1627] border border-slate-200">
+                    <div className="text-[10px] text-slate-600 uppercase">Handshake Latency</div>
                     <div className="text-base font-extrabold text-emerald-400 mt-0.5">&lt; 3.8 ms</div>
-                    <div className="text-[10px] text-slate-500">TLS 1.3 0-RTT</div>
+                    <div className="text-[10px] text-slate-600">TLS 1.3 0-RTT</div>
                   </div>
 
-                  <div className="p-3 rounded-xl bg-[#0e1627] border border-slate-200">
-                    <div className="text-[10px] text-slate-500 uppercase">Browser Trust</div>
+                  <div className="p-3 rounded bg-[#0e1627] border border-slate-200">
+                    <div className="text-[10px] text-slate-600 uppercase">Browser Trust</div>
                     <div className="text-base font-extrabold text-slate-200 mt-0.5">100% Verified</div>
-                    <div className="text-[10px] text-slate-500">Chrome, Safari, iOS</div>
+                    <div className="text-[10px] text-slate-600">Chrome, Safari, iOS</div>
                   </div>
                 </div>
 
                 <div className="pt-2">
                   <a
                     href="#spec-matrix"
-                    className="w-full py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs font-mono flex items-center justify-center gap-2 transition-all shadow-lg shadow-emerald-600/20"
+                    className="w-full py-3.5 rounded bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs font-mono flex items-center justify-center gap-2 transition-all shadow-lg shadow-emerald-600/20"
                   >
                     <span>XEM BẢNG CHỨNG CHỈ VÀ ĐẶT MUA</span>
                     <ArrowRight className="w-4 h-4" />
@@ -321,7 +321,7 @@ export default function SslCertificatesPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-emerald-950 text-emerald-400 text-xs font-mono mb-3 border border-emerald-800">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm bg-emerald-950 text-emerald-400 text-xs font-mono mb-3 border border-emerald-800">
               <ShieldCheck className="w-3.5 h-3.5" />
               CRYPTOGRAPHIC STANDARDS
             </div>
@@ -336,10 +336,10 @@ export default function SslCertificatesPage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             
             {/* Schematic 1: TLS 1.3 0-RTT Handshake */}
-            <div className="p-6 rounded-3xl bg-white border border-slate-200 flex flex-col justify-between space-y-6">
+            <div className="p-6 rounded-lg bg-white border border-slate-200 flex flex-col justify-between space-y-6">
               <div>
-                <div className="p-4 rounded-2xl bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
-                  <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
+                <div className="p-4 rounded-md bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
+                  <div className="text-[10px] text-slate-600 uppercase mb-3 flex items-center justify-between">
                     <span>TLS 1.3 0-RTT HANDSHAKE</span>
                     <span className="text-emerald-400">1-ROUND TRIP</span>
                   </div>
@@ -373,10 +373,10 @@ export default function SslCertificatesPage() {
             </div>
 
             {/* Schematic 2: Insurance Warranty */}
-            <div className="p-6 rounded-3xl bg-white border border-slate-200 flex flex-col justify-between space-y-6">
+            <div className="p-6 rounded-lg bg-white border border-slate-200 flex flex-col justify-between space-y-6">
               <div>
-                <div className="p-4 rounded-2xl bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
-                  <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
+                <div className="p-4 rounded-md bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
+                  <div className="text-[10px] text-slate-600 uppercase mb-3 flex items-center justify-between">
                     <span>FINANCIAL WARRANTY</span>
                     <span className="text-slate-200">$1,750,000 USD</span>
                   </div>
@@ -410,10 +410,10 @@ export default function SslCertificatesPage() {
             </div>
 
             {/* Schematic 3: Site Seal & SEO Boost */}
-            <div className="p-6 rounded-3xl bg-white border border-slate-200 flex flex-col justify-between space-y-6">
+            <div className="p-6 rounded-lg bg-white border border-slate-200 flex flex-col justify-between space-y-6">
               <div>
-                <div className="p-4 rounded-2xl bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
-                  <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
+                <div className="p-4 rounded-md bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
+                  <div className="text-[10px] text-slate-600 uppercase mb-3 flex items-center justify-between">
                     <span>SEAL &amp; GOOGLE SEO RANKING</span>
                     <span className="text-amber-400">TOP 1 TRUST</span>
                   </div>
@@ -457,7 +457,7 @@ export default function SslCertificatesPage() {
           
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
             <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-emerald-950 text-emerald-400 text-xs font-mono mb-3 border border-emerald-800">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm bg-emerald-950 text-emerald-400 text-xs font-mono mb-3 border border-emerald-800">
                 <Sliders className="w-3.5 h-3.5" />
                 SSL CERTIFICATE SPEC SHEET
               </div>
@@ -470,10 +470,10 @@ export default function SslCertificatesPage() {
             </div>
 
             {/* Billing Switch */}
-            <div className="inline-flex items-center p-1 rounded-xl bg-white border border-slate-200 font-mono text-xs">
+            <div className="inline-flex items-center p-1 rounded bg-white border border-slate-200 font-mono text-xs">
               <button
                 onClick={() => setBillingCycle('yearly')}
-                className={`px-4 py-2 rounded-lg font-bold transition-all ${
+                className={`px-4 py-2 rounded-sm font-bold transition-all ${
                   billingCycle === 'yearly'
                     ? 'bg-emerald-600 text-white shadow'
                     : 'text-slate-400 hover:text-white'
@@ -483,7 +483,7 @@ export default function SslCertificatesPage() {
               </button>
               <button
                 onClick={() => setBillingCycle('two_year')}
-                className={`px-4 py-2 rounded-lg font-bold transition-all flex items-center gap-1.5 ${
+                className={`px-4 py-2 rounded-sm font-bold transition-all flex items-center gap-1.5 ${
                   billingCycle === 'two_year'
                     ? 'bg-emerald-600 text-white shadow'
                     : 'text-slate-400 hover:text-white'
@@ -498,7 +498,7 @@ export default function SslCertificatesPage() {
           </div>
 
           {/* Matrix Table */}
-          <div className="rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-2xl">
+          <div className="rounded-md border border-slate-200 bg-white overflow-hidden shadow-2xl">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs font-mono">
                 <thead>
@@ -561,7 +561,7 @@ export default function SslCertificatesPage() {
                       <td key={p.id} className="p-5 border-l border-slate-200/60">
                         <button
                           onClick={() => handleOrder(p)}
-                          className={`w-full py-3 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-2 ${
+                          className={`w-full py-3 rounded font-bold text-xs transition-all flex items-center justify-center gap-2 ${
                             p.popular
                               ? 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-600/30'
                               : 'bg-slate-800 hover:bg-slate-700 text-white'
@@ -593,7 +593,7 @@ export default function SslCertificatesPage() {
             {faqs.map((faq, idx) => (
               <div
                 key={idx}
-                className="bg-white rounded-2xl border border-slate-200 overflow-hidden transition-all"
+                className="bg-white rounded-md border border-slate-200 overflow-hidden transition-all"
               >
                 <button
                   onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
@@ -603,7 +603,7 @@ export default function SslCertificatesPage() {
                   {openFaq === idx ? (
                     <ChevronUp className="w-5 h-5 text-emerald-400 shrink-0" />
                   ) : (
-                    <ChevronDown className="w-5 h-5 text-slate-500 shrink-0" />
+                    <ChevronDown className="w-5 h-5 text-slate-600 shrink-0" />
                   )}
                 </button>
                 {openFaq === idx && (
@@ -619,9 +619,9 @@ export default function SslCertificatesPage() {
 
       {/* 5. CALL TO ACTION */}
       <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="rounded-3xl bg-gradient-to-r from-[#0a1e16] via-[#06120d] to-[#0a1e16] p-8 sm:p-12 border border-emerald-600/30 text-center relative overflow-hidden shadow-2xl">
+        <div className="rounded-lg bg-gradient-to-r from-[#0a1e16] via-[#06120d] to-[#0a1e16] p-8 sm:p-12 border border-emerald-600/30 text-center relative overflow-hidden shadow-2xl">
           <div className="relative z-10 max-w-3xl mx-auto space-y-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-emerald-950 border border-emerald-800 text-emerald-400 text-xs font-mono">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm bg-emerald-950 border border-emerald-800 text-emerald-400 text-xs font-mono">
               <Zap className="w-3.5 h-3.5" />
               ISSUANCE IN 5 MINUTES
             </div>
@@ -640,13 +640,13 @@ export default function SslCertificatesPage() {
                   const el = document.getElementById('spec-matrix');
                   el?.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className="px-8 py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs font-mono shadow-xl shadow-emerald-600/25 transition-all hover:scale-105"
+                className="px-8 py-3.5 rounded bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs font-mono shadow-xl shadow-emerald-600/25 transition-all hover:scale-105"
               >
                 Đăng Ký Chứng Chỉ Ngay
               </button>
               <Link
                 href="/contact"
-                className="px-8 py-3.5 rounded-xl bg-white hover:bg-slate-200 text-slate-900 font-bold text-xs font-mono border border-slate-300 transition-all"
+                className="px-8 py-3.5 rounded bg-white hover:bg-slate-200 text-slate-900 font-bold text-xs font-mono border border-slate-300 transition-all"
               >
                 Tư Vấn Doanh Nghiệp EV
               </Link>

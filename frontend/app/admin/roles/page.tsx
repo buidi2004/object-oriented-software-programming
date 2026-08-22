@@ -141,7 +141,7 @@ export default function RolesPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Roles List */}
         <div className="lg:col-span-1 space-y-4">
-          <div className="bg-white/50 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-6">
+          <div className="bg-white/50 backdrop-blur-xl border border-slate-700/50 rounded-md p-6">
             <h2 className="text-lg font-semibold text-slate-800 mb-4">Nhóm quyền (Roles)</h2>
             <div className="flex gap-2 mb-4">
               <input
@@ -149,11 +149,11 @@ export default function RolesPage() {
                 placeholder="Tên role mới..."
                 value={newRoleName}
                 onChange={(e) => setNewRoleName(e.target.value)}
-                className="flex-1 bg-white/50 border border-slate-300 rounded-xl px-4 py-2 text-sm text-slate-800 focus:outline-none focus:border-indigo-500"
+                className="flex-1 bg-white/50 border border-slate-300 rounded px-4 py-2 text-sm text-slate-800 focus:outline-none focus:border-indigo-500"
               />
               <button 
                 onClick={handleCreateRole}
-                className="bg-indigo-600 hover:bg-indigo-500 text-white p-2 rounded-xl transition-colors"
+                className="bg-indigo-600 hover:bg-indigo-500 text-white p-2 rounded transition-colors"
               >
                 <Plus className="w-5 h-5" />
               </button>
@@ -164,7 +164,7 @@ export default function RolesPage() {
                 <button
                   key={role.id}
                   onClick={() => handleSelectRole(role)}
-                  className={`w-full text-left px-4 py-3 rounded-xl transition-all flex items-center justify-between ${
+                  className={`w-full text-left px-4 py-3 rounded transition-all flex items-center justify-between ${
                     selectedRole?.id === role.id 
                       ? "bg-indigo-600 text-white" 
                       : "bg-slate-900/50 text-slate-300 hover:bg-slate-800 border border-slate-800"
@@ -180,7 +180,7 @@ export default function RolesPage() {
         {/* Permissions Configuration */}
         <div className="lg:col-span-2">
           {selectedRole ? (
-            <div className="bg-white/50 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-6">
+            <div className="bg-white/50 backdrop-blur-xl border border-slate-700/50 rounded-md p-6">
               <div className="flex justify-between items-center mb-6">
                 <div>
                   <h2 className="text-lg font-semibold text-slate-800">
@@ -190,7 +190,7 @@ export default function RolesPage() {
                 </div>
                 <button
                   onClick={handleSavePermissions}
-                  className="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-xl text-sm font-medium transition-colors flex items-center gap-2"
+                  className="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded text-sm font-medium transition-colors flex items-center gap-2"
                 >
                   <Save className="w-4 h-4" /> Lưu quyền
                 </button>
@@ -203,7 +203,7 @@ export default function RolesPage() {
                     <div 
                       key={permission.id}
                       onClick={() => handleTogglePermission(permission.id)}
-                      className={`p-4 rounded-xl border cursor-pointer transition-all flex items-start gap-4 ${
+                      className={`p-4 rounded border cursor-pointer transition-all flex items-start gap-4 ${
                         isGranted 
                           ? "bg-indigo-600/10 border-indigo-500/50" 
                           : "bg-slate-900/50 border-slate-700/50 hover:border-slate-600"
@@ -218,7 +218,7 @@ export default function RolesPage() {
                         <p className={`font-medium ${isGranted ? "text-slate-200" : "text-slate-300"}`}>
                           {permission.name}
                         </p>
-                        <p className="text-xs text-slate-500 mt-1 font-mono">
+                        <p className="text-xs text-slate-600 mt-1 font-mono">
                           {permission.code}
                         </p>
                       </div>
@@ -228,7 +228,7 @@ export default function RolesPage() {
               </div>
             </div>
           ) : (
-            <div className="h-full bg-white/20 border border-slate-200 border-dashed rounded-2xl flex flex-col items-center justify-center p-8 text-slate-500">
+            <div className="h-full bg-white/20 border border-slate-200 border-dashed rounded-md flex flex-col items-center justify-center p-8 text-slate-600">
               <p>Chọn một nhóm quyền bên trái để thiết lập</p>
             </div>
           )}

@@ -191,7 +191,7 @@ server {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           {/* Engineering Status Bar */}
-          <div className="flex flex-wrap items-center justify-between gap-4 p-3.5 mb-10 rounded-2xl bg-[#0d1424] border border-slate-200 text-xs font-mono">
+          <div className="flex flex-wrap items-center justify-between gap-4 p-3.5 mb-10 rounded-md bg-[#0d1424] border border-slate-200 text-xs font-mono">
             <div className="flex items-center gap-3">
               <span className="flex items-center gap-1.5 text-[#1F1F1F] font-bold">
                 <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
@@ -213,7 +213,7 @@ server {
             
             {/* Left Headline */}
             <div className="lg:col-span-7 space-y-6">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-cyan-950/60 border border-cyan-800/60 text-slate-200 text-xs font-mono">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm bg-cyan-950/60 border border-cyan-800/60 text-slate-200 text-xs font-mono">
                 <Globe className="w-3.5 h-3.5 text-[#1F1F1F]" />
                 ULTRA LOW-LATENCY STATIC &amp; SPA HOSTING
               </div>
@@ -232,22 +232,22 @@ server {
 
               {/* Supported Tech Badges */}
               <div className="flex flex-wrap items-center gap-3 pt-2">
-                <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0f172a] border border-slate-200 text-xs font-mono text-slate-700">
+                <div className="flex items-center gap-2 px-3.5 py-2 rounded bg-[#0f172a] border border-slate-200 text-xs font-mono text-slate-700">
                   <SiNginx className="w-4 h-4 text-emerald-500" />
                   <span>Nginx Engine v1.26</span>
                 </div>
-                <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0f172a] border border-slate-200 text-xs font-mono text-slate-700">
+                <div className="flex items-center gap-2 px-3.5 py-2 rounded bg-[#0f172a] border border-slate-200 text-xs font-mono text-slate-700">
                   <SiReact className="w-4 h-4 text-slate-200" />
                   <span>React / Vite SPA</span>
                 </div>
-                <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0f172a] border border-slate-200 text-xs font-mono text-slate-700">
+                <div className="flex items-center gap-2 px-3.5 py-2 rounded bg-[#0f172a] border border-slate-200 text-xs font-mono text-slate-700">
                   <SiNextdotjs className="w-4 h-4 text-slate-900" />
                   <span>Next.js Export</span>
                 </div>
               </div>
 
               {/* Quick Spec Details */}
-              <div className="p-4 rounded-xl bg-white border border-slate-200 text-xs font-mono space-y-2">
+              <div className="p-4 rounded bg-white border border-slate-200 text-xs font-mono space-y-2">
                 <div className="flex items-center justify-between text-slate-600">
                   <span>Routing Engine: <strong className="text-slate-900">SPA try_files Fallback (No 404)</strong></span>
                   <span>SSL: <strong className="text-emerald-400">Auto Let&apos;s Encrypt</strong></span>
@@ -261,7 +261,7 @@ server {
 
             {/* Right Nginx Config Engine Simulator */}
             <div className="lg:col-span-5">
-              <div className="rounded-2xl bg-[#0b1320] border border-slate-200 p-6 shadow-2xl space-y-5">
+              <div className="rounded-md bg-[#0b1320] border border-slate-200 p-6 shadow-2xl space-y-5">
                 <div className="flex items-center justify-between pb-3 border-b border-slate-200">
                   <div className="flex items-center gap-2">
                     <span className="w-3 h-3 rounded-full bg-rose-500/80" />
@@ -279,13 +279,13 @@ server {
                     <span className="text-slate-600">Preset:</span>
                     <button
                       onClick={() => setSpaFramework('react')}
-                      className={`px-2.5 py-1 rounded-lg border ${spaFramework === 'react' ? 'bg-cyan-950 border-cyan-500 text-slate-200' : 'bg-white border-slate-200 text-slate-400'}`}
+                      className={`px-2.5 py-1 rounded-sm border ${spaFramework === 'react' ? 'bg-cyan-950 border-cyan-500 text-slate-200' : 'bg-white border-slate-200 text-slate-600'}`}
                     >
                       React/Vite
                     </button>
                     <button
                       onClick={() => setSpaFramework('html')}
-                      className={`px-2.5 py-1 rounded-lg border ${spaFramework === 'html' ? 'bg-cyan-950 border-cyan-500 text-slate-200' : 'bg-white border-slate-200 text-slate-400'}`}
+                      className={`px-2.5 py-1 rounded-sm border ${spaFramework === 'html' ? 'bg-cyan-950 border-cyan-500 text-slate-200' : 'bg-white border-slate-200 text-slate-600'}`}
                     >
                       HTML Static
                     </button>
@@ -299,14 +299,14 @@ server {
                   </button>
                 </div>
 
-                <div className="p-3.5 rounded-xl bg-slate-100 border border-slate-200/90 text-slate-200 font-mono text-[11px] max-h-48 overflow-y-auto leading-relaxed whitespace-pre">
+                <div className="p-3.5 rounded bg-slate-100 border border-slate-200/90 text-slate-700 font-mono text-[11px] max-h-48 overflow-y-auto leading-relaxed whitespace-pre">
                   {nginxSnippet}
                 </div>
 
                 <div className="pt-2">
                   <a
                     href="#spec-matrix"
-                    className="w-full py-3.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs font-mono flex items-center justify-center gap-2 transition-all shadow-lg shadow-cyan-600/20"
+                    className="w-full py-3.5 rounded bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs font-mono flex items-center justify-center gap-2 transition-all shadow-lg shadow-cyan-600/20"
                   >
                     <span>XEM BẢNG CẤU HÌNH VÀ BÁO GIÁ</span>
                     <ArrowRight className="w-4 h-4" />
@@ -325,7 +325,7 @@ server {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-cyan-950 text-[#1F1F1F] text-xs font-mono mb-3 border border-cyan-800">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm bg-cyan-950 text-[#1F1F1F] text-xs font-mono mb-3 border border-cyan-800">
               <Zap className="w-3.5 h-3.5" />
               HIGH PERFORMANCE ARCHITECTURE
             </div>
@@ -340,10 +340,10 @@ server {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             
             {/* Schematic 1: TTFB < 15ms */}
-            <div className="p-6 rounded-3xl bg-white border border-slate-200 flex flex-col justify-between space-y-6">
+            <div className="p-6 rounded-lg bg-white border border-slate-200 flex flex-col justify-between space-y-6">
               <div>
-                <div className="p-4 rounded-2xl bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
-                  <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
+                <div className="p-4 rounded-md bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
+                  <div className="text-[10px] text-slate-600 uppercase mb-3 flex items-center justify-between">
                     <span>TIME TO FIRST BYTE (TTFB)</span>
                     <span className="text-emerald-400">&lt; 15MS</span>
                   </div>
@@ -377,10 +377,10 @@ server {
             </div>
 
             {/* Schematic 2: SPA Rewrite Fallback */}
-            <div className="p-6 rounded-3xl bg-white border border-slate-200 flex flex-col justify-between space-y-6">
+            <div className="p-6 rounded-lg bg-white border border-slate-200 flex flex-col justify-between space-y-6">
               <div>
-                <div className="p-4 rounded-2xl bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
-                  <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
+                <div className="p-4 rounded-md bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
+                  <div className="text-[10px] text-slate-600 uppercase mb-3 flex items-center justify-between">
                     <span>SPA TRY_FILES FALLBACK</span>
                     <span className="text-slate-200">NO 404 ERRORS</span>
                   </div>
@@ -414,10 +414,10 @@ server {
             </div>
 
             {/* Schematic 3: Git Webhook CI/CD */}
-            <div className="p-6 rounded-3xl bg-white border border-slate-200 flex flex-col justify-between space-y-6">
+            <div className="p-6 rounded-lg bg-white border border-slate-200 flex flex-col justify-between space-y-6">
               <div>
-                <div className="p-4 rounded-2xl bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
-                  <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
+                <div className="p-4 rounded-md bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
+                  <div className="text-[10px] text-slate-600 uppercase mb-3 flex items-center justify-between">
                     <span>ATOMIC GIT WEBHOOK CI/CD</span>
                     <span className="text-purple-400">ZERO DOWNTIME</span>
                   </div>
@@ -461,7 +461,7 @@ server {
           
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
             <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-cyan-950 text-[#1F1F1F] text-xs font-mono mb-3 border border-cyan-800">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm bg-cyan-950 text-[#1F1F1F] text-xs font-mono mb-3 border border-cyan-800">
                 <Sliders className="w-3.5 h-3.5" />
                 STATIC SITE SPEC SHEET
               </div>
@@ -474,10 +474,10 @@ server {
             </div>
 
             {/* Billing Switch */}
-            <div className="inline-flex items-center p-1 rounded-xl bg-white border border-slate-200 font-mono text-xs">
+            <div className="inline-flex items-center p-1 rounded bg-white border border-slate-200 font-mono text-xs">
               <button
                 onClick={() => setBillingCycle('monthly')}
-                className={`px-4 py-2 rounded-lg font-bold transition-all ${
+                className={`px-4 py-2 rounded-sm font-bold transition-all ${
                   billingCycle === 'monthly'
                     ? 'bg-cyan-600 text-white shadow'
                     : 'text-slate-400 hover:text-white'
@@ -487,7 +487,7 @@ server {
               </button>
               <button
                 onClick={() => setBillingCycle('yearly')}
-                className={`px-4 py-2 rounded-lg font-bold transition-all flex items-center gap-1.5 ${
+                className={`px-4 py-2 rounded-sm font-bold transition-all flex items-center gap-1.5 ${
                   billingCycle === 'yearly'
                     ? 'bg-cyan-600 text-white shadow'
                     : 'text-slate-400 hover:text-white'
@@ -502,7 +502,7 @@ server {
           </div>
 
           {/* Matrix Table */}
-          <div className="rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-2xl">
+          <div className="rounded-md border border-slate-200 bg-white overflow-hidden shadow-2xl">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs font-mono">
                 <thead>
@@ -565,7 +565,7 @@ server {
                       <td key={p.id} className="p-5 border-l border-slate-200/60">
                         <button
                           onClick={() => handleOrder(p)}
-                          className={`w-full py-3 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-2 ${
+                          className={`w-full py-3 rounded font-bold text-xs transition-all flex items-center justify-center gap-2 ${
                             p.popular
                               ? 'bg-cyan-600 hover:bg-cyan-500 text-white shadow-lg shadow-cyan-600/30'
                               : 'bg-slate-800 hover:bg-slate-700 text-white'
@@ -597,7 +597,7 @@ server {
             {faqs.map((faq, idx) => (
               <div
                 key={idx}
-                className="bg-white rounded-2xl border border-slate-200 overflow-hidden transition-all"
+                className="bg-white rounded-md border border-slate-200 overflow-hidden transition-all"
               >
                 <button
                   onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
@@ -607,7 +607,7 @@ server {
                   {openFaq === idx ? (
                     <ChevronUp className="w-5 h-5 text-[#1F1F1F] shrink-0" />
                   ) : (
-                    <ChevronDown className="w-5 h-5 text-slate-500 shrink-0" />
+                    <ChevronDown className="w-5 h-5 text-slate-600 shrink-0" />
                   )}
                 </button>
                 {openFaq === idx && (
@@ -623,9 +623,9 @@ server {
 
       {/* 5. CALL TO ACTION */}
       <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="rounded-3xl bg-gradient-to-r from-[#0d182e] via-[#091122] to-[#0d182e] p-8 sm:p-12 border border-cyan-600/30 text-center relative overflow-hidden shadow-2xl">
+        <div className="rounded-lg bg-gradient-to-r from-[#0d182e] via-[#091122] to-[#0d182e] p-8 sm:p-12 border border-cyan-600/30 text-center relative overflow-hidden shadow-2xl">
           <div className="relative z-10 max-w-3xl mx-auto space-y-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-cyan-950 border border-cyan-800 text-[#1F1F1F] text-xs font-mono">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm bg-cyan-950 border border-cyan-800 text-[#1F1F1F] text-xs font-mono">
               <Zap className="w-3.5 h-3.5" />
               DEPLOY IN 60 SECONDS
             </div>
@@ -644,13 +644,13 @@ server {
                   const el = document.getElementById('spec-matrix');
                   el?.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className="px-8 py-3.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs font-mono shadow-xl shadow-cyan-600/25 transition-all hover:scale-105"
+                className="px-8 py-3.5 rounded bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs font-mono shadow-xl shadow-cyan-600/25 transition-all hover:scale-105"
               >
                 Khởi Tạo Website Ngay
               </button>
               <Link
                 href="/contact"
-                className="px-8 py-3.5 rounded-xl bg-white hover:bg-slate-200 text-slate-900 font-bold text-xs font-mono border border-slate-300 transition-all"
+                className="px-8 py-3.5 rounded bg-white hover:bg-slate-200 text-slate-900 font-bold text-xs font-mono border border-slate-300 transition-all"
               >
                 Tư Vấn Miễn Phí
               </Link>

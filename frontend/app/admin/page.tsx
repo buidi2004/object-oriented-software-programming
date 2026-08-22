@@ -227,12 +227,12 @@ export default function AdminDashboardPage() {
       <header className="bg-white border-b border-slate-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-sm bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center">
               <Shield className="w-5 h-5 text-slate-900" />
             </div>
             <div>
               <h1 className="text-lg font-bold text-slate-900">Admin Control Center</h1>
-              <p className="text-xs text-slate-500">CloudServiceStore Enterprise Management</p>
+              <p className="text-xs text-slate-600">CloudServiceStore Enterprise Management</p>
             </div>
           </div>
           
@@ -259,9 +259,9 @@ export default function AdminDashboardPage() {
             { label: 'Doanh thu', value: stats?.totalRevenue ? `${(stats.totalRevenue / 1000000).toFixed(1)}M` : '0M', icon: DollarSign, color: 'purple', change: '+15%' },
             { label: 'Ticket mở', value: stats?.openTickets || 0, icon: MessageSquare, color: 'amber', change: '-5%' },
           ].map((stat, idx) => (
-            <div key={idx} className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition-all">
+            <div key={idx} className="bg-white rounded-md p-5 border border-slate-200 shadow-sm hover:shadow-md transition-all">
               <div className="flex items-center justify-between mb-3">
-                <div className={`w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center`}>
+                <div className={`w-10 h-10 rounded bg-slate-50 flex items-center justify-center`}>
                   <stat.icon className={`w-5 h-5 text-[#1F1F1F]`} />
                 </div>
                 <span className={`text-xs font-bold flex items-center gap-0.5 ${
@@ -272,29 +272,29 @@ export default function AdminDashboardPage() {
                 </span>
               </div>
               <p className="text-2xl font-black text-slate-900">{stat.value}</p>
-              <p className="text-xs text-slate-500 mt-1 font-medium">{stat.label}</p>
+              <p className="text-xs text-slate-600 mt-1 font-medium">{stat.label}</p>
             </div>
           ))}
         </div>
 
         {/* QUICK ACCESS: PRICING & HARDWARE SPECS MANAGER FOR 11 SERVICES */}
-        <div className="bg-gradient-to-r from-indigo-900 via-blue-900 to-slate-900 rounded-3xl p-6 text-slate-900 shadow-xl mb-8 relative overflow-hidden">
+        <div className="bg-gradient-to-r from-indigo-900 via-blue-900 to-slate-900 rounded-lg p-6 text-slate-900 shadow-xl mb-8 relative overflow-hidden">
           <div className="relative z-10 space-y-4">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div>
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-indigo-500/30 border border-indigo-400/30 rounded-full text-slate-200 text-xs font-bold mb-2">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-indigo-500/30 border border-indigo-400/30 rounded-full text-slate-700 text-xs font-bold mb-2">
                   <DollarSign className="w-3.5 h-3.5 text-emerald-400" /> Trung Tâm Bảng Giá & Gói Cước 11 Dịch Vụ
                 </div>
                 <h2 className="text-lg md:text-xl font-black text-slate-900">
                   Tùy Chỉnh Giá Bán & Cấu Hình Máy Chủ Toàn Diện
                 </h2>
-                <p className="text-xs text-slate-200/80 mt-1 max-w-2xl">
+                <p className="text-xs text-slate-700/80 mt-1 max-w-2xl">
                   Sửa trực tiếp giá bán hàng tháng / hàng năm, thông số CPU / RAM / NVMe và chu kỳ cho từng dịch vụ:
                 </p>
               </div>
               <Link
                 href="/admin/service-plans"
-                className="inline-flex items-center gap-2 px-4 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-black rounded-xl transition-all shadow-lg hover:shadow-emerald-500/20 flex-shrink-0"
+                className="inline-flex items-center gap-2 px-4 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-black rounded transition-all shadow-lg hover:shadow-emerald-500/20 flex-shrink-0"
               >
                 <span>Xem Tất Cả Gói Dịch Vụ</span>
                 <ChevronRight className="w-4 h-4" />
@@ -320,9 +320,9 @@ export default function AdminDashboardPage() {
                 <Link
                   key={idx}
                   href={`/admin/service-plans?category=${svc.slug}`}
-                  className={`p-2.5 bg-white/10 hover:bg-white/20 border border-white/10 rounded-xl transition-all flex items-center gap-2 text-xs font-bold text-slate-900 group`}
+                  className={`p-2.5 bg-white/10 hover:bg-white/20 border border-white/10 rounded transition-all flex items-center gap-2 text-xs font-bold text-slate-900 group`}
                 >
-                  <svc.icon className="w-4 h-4 text-slate-200 group-hover:text-emerald-400 transition-colors flex-shrink-0" />
+                  <svc.icon className="w-4 h-4 text-slate-700 group-hover:text-emerald-400 transition-colors flex-shrink-0" />
                   <span className="truncate">{svc.label}</span>
                 </Link>
               ))}
@@ -331,10 +331,10 @@ export default function AdminDashboardPage() {
         </div>
 
         {/* Search Modules Bar */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 bg-white p-4 rounded-md border border-slate-200 shadow-sm">
           <div>
             <h2 className="text-base font-black text-slate-900">Toàn Bộ 39 Phân Hệ Quản Trị Enterprise</h2>
-            <p className="text-xs text-slate-500">Truy cập nhanh mọi tính năng và cấu hình của hệ thống Cloud.</p>
+            <p className="text-xs text-slate-600">Truy cập nhanh mọi tính năng và cấu hình của hệ thống Cloud.</p>
           </div>
           <div className="relative w-full sm:w-80">
             <Search className="w-4 h-4 text-slate-600 absolute left-3 top-1/2 -translate-y-1/2" />
@@ -343,7 +343,7 @@ export default function AdminDashboardPage() {
               placeholder="Tìm kiếm phân hệ quản trị..."
               value={search}
               onChange={e => setSearch(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full pl-9 pr-4 py-2 text-xs rounded bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
         </div>
@@ -360,11 +360,11 @@ export default function AdminDashboardPage() {
                   <Link
                     key={idx}
                     href={item.href}
-                    className="bg-white rounded-2xl p-4 border border-slate-200 hover:border-blue-400 hover:shadow-md transition-all group flex flex-col justify-between"
+                    className="bg-white rounded-md p-4 border border-slate-200 hover:border-blue-400 hover:shadow-md transition-all group flex flex-col justify-between"
                   >
                     <div>
                       <div className="flex items-center justify-between mb-3">
-                        <div className="w-10 h-10 rounded-xl bg-slate-50 group-hover:bg-blue-50 flex items-center justify-center transition-colors">
+                        <div className="w-10 h-10 rounded bg-slate-50 group-hover:bg-blue-50 flex items-center justify-center transition-colors">
                           <item.icon className="w-5 h-5 text-slate-600 group-hover:text-[#1F1F1F] transition-colors" />
                         </div>
                         {item.count !== undefined && (
@@ -391,7 +391,7 @@ export default function AdminDashboardPage() {
         </div>
 
         {/* System Status Footer */}
-        <div className="mt-10 bg-white rounded-3xl p-6 text-slate-900 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="mt-10 bg-white rounded-lg p-6 text-slate-900 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h3 className="font-bold text-sm mb-1">Trạng Thái Toàn Bộ Cụm Hạ Tầng</h3>
             <div className="flex items-center gap-4 text-xs text-slate-600">
@@ -409,13 +409,13 @@ export default function AdminDashboardPage() {
           <div className="flex items-center gap-3">
             <Link
               href="/admin/jobs"
-              className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-xs font-bold transition-colors"
+              className="px-4 py-2 rounded bg-white/10 hover:bg-white/20 text-xs font-bold transition-colors"
             >
               Background Jobs
             </Link>
             <Link
               href="/admin/settings"
-              className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-xs font-bold transition-colors shadow-lg"
+              className="px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-xs font-bold transition-colors shadow-lg"
             >
               Cài Đặt Hệ Thống
             </Link>

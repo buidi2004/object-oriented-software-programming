@@ -57,7 +57,7 @@ export const HostingPlans: React.FC<HostingPlansProps> = ({ onAddToCart, onViewD
               type="button"
               onClick={() => setIsYearly(false)}
               className={`px-5 py-2 rounded-full text-sm font-extrabold transition-all cursor-pointer ${
-                !isYearly ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-900'
+                !isYearly ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               Thanh Toán Hàng Tháng
@@ -66,7 +66,7 @@ export const HostingPlans: React.FC<HostingPlansProps> = ({ onAddToCart, onViewD
               type="button"
               onClick={() => setIsYearly(true)}
               className={`px-5 py-2 rounded-full text-sm font-extrabold transition-all flex items-center gap-1.5 cursor-pointer ${
-                isYearly ? 'bg-blue-600 text-white shadow-md' : 'text-slate-500 hover:text-slate-900'
+                isYearly ? 'bg-blue-600 text-white shadow-md' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               <span>Thanh Toán Theo Năm</span>
@@ -88,7 +88,7 @@ export const HostingPlans: React.FC<HostingPlansProps> = ({ onAddToCart, onViewD
             return (
               <div
                 key={pkg.id}
-                className={`relative rounded-3xl p-8 sm:p-10 flex flex-col justify-between transition-all duration-300 ${
+                className={`relative rounded-lg p-8 sm:p-10 flex flex-col justify-between transition-all duration-300 ${
                   pkg.isPopular
                     ? 'bg-slate-900 text-white shadow-2xl ring-2 ring-blue-500 scale-105 z-10'
                     : 'bg-white text-slate-900 border border-slate-200 hover:border-blue-300 hover:shadow-xl'
@@ -102,7 +102,7 @@ export const HostingPlans: React.FC<HostingPlansProps> = ({ onAddToCart, onViewD
 
                 <div>
                   <h3 className="text-2xl font-extrabold tracking-tight">{pkg.name}</h3>
-                  <p className={`text-sm mt-2 leading-relaxed min-h-[32px] ${pkg.isPopular ? 'text-slate-700' : 'text-slate-500'}`}>
+                  <p className={`text-sm mt-2 leading-relaxed min-h-[32px] ${pkg.isPopular ? 'text-slate-700' : 'text-slate-600'}`}>
                     {pkg.tagline}
                   </p>
 
@@ -112,7 +112,7 @@ export const HostingPlans: React.FC<HostingPlansProps> = ({ onAddToCart, onViewD
                       <span className="text-3xl sm:text-4xl font-black tracking-tight text-[#1F1F1F]">
                         {displayPrice.toLocaleString('vi-VN')} đ
                       </span>
-                      <span className={`text-sm font-bold ${pkg.isPopular ? 'text-slate-700' : 'text-slate-500'}`}>
+                      <span className={`text-sm font-bold ${pkg.isPopular ? 'text-slate-700' : 'text-slate-600'}`}>
                         /tháng
                       </span>
                     </div>
@@ -159,13 +159,13 @@ export const HostingPlans: React.FC<HostingPlansProps> = ({ onAddToCart, onViewD
                 <div className="mt-8 space-y-3">
                   <a
                     href="/services/hosting"
-                    className="block w-full py-3 rounded-xl border-2 border-slate-200 text-slate-700 font-bold text-base hover:bg-slate-50 transition-colors text-center"
+                    className="block w-full py-3 rounded border-2 border-slate-200 text-slate-700 font-bold text-base hover:bg-slate-50 transition-colors text-center"
                   >
                     Xem chi tiết
                   </a>
                   <button
                     onClick={() => handleSelectPackage(pkg, displayPrice, durationMonths)}
-                    className={`w-full py-3.5 rounded-xl font-bold text-base transition-all flex items-center justify-center gap-2 cursor-pointer ${
+                    className={`w-full py-3.5 rounded font-bold text-base transition-all flex items-center justify-center gap-2 cursor-pointer ${
                       pkg.isPopular
                         ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg'
                         : 'bg-slate-900 hover:bg-slate-800 text-white shadow-md'

@@ -22,14 +22,14 @@ interface DashboardStats {
 
 const colorClasses: Record<string, string> = {
   blue: 'text-[#1F1F1F]',
-  emerald: 'text-emerald-600',
-  amber: 'text-amber-600',
+  emerald: 'text-[#1F1F1F]',
+  amber: 'text-[#1F1F1F]',
   cyan: 'text-[#1F1F1F]',
-  purple: 'text-purple-600',
-  rose: 'text-rose-600',
+  purple: 'text-[#1F1F1F]',
+  rose: 'text-[#1F1F1F]',
   indigo: 'text-[#1F1F1F]',
-  violet: 'text-violet-600',
-  teal: 'text-teal-600',
+  violet: 'text-[#1F1F1F]',
+  teal: 'text-[#1F1F1F]',
   sky: 'text-[#1F1F1F]',
 };
 
@@ -73,7 +73,7 @@ export default function DashboardPage() {
       const dash = dashboardRes?.data || {};
       setStats({
         totalOrders:   dash.totalOrders   ?? 0,
-        activeServices: dash.activeServices ?? 0,
+        activeServices: Array.isArray(dash.activeServices) ? dash.activeServices.length : (dash.activeServices ?? 0),
         totalSpent:    dash.totalSpent     ?? 0,
         loyaltyPoints: loyaltyRes?.data?.points ?? 0,
         openTickets:   Array.isArray(ticketsRes?.data)
@@ -101,7 +101,7 @@ export default function DashboardPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
+        <div className="w-12 h-12 border-4 border-[#1F1F1F] border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -113,14 +113,14 @@ export default function DashboardPage() {
         <h1 className="text-3xl font-extrabold text-slate-900">
           Xin chào, {user?.fullName || 'Khách hàng'}! 👋
         </h1>
-        <p className="text-slate-500 mt-1">Quản lý tất cả dịch vụ Cloud của bạn tại đây</p>
+        <p className="text-slate-600 mt-1">Quản lý tất cả dịch vụ Cloud của bạn tại đây</p>
       </div>
 
       {error && (
-        <div className="p-3 bg-red-50 border border-red-200 rounded-xl flex items-center gap-2 text-sm text-red-700">
+        <div className="p-3 bg-red-50 border border-red-200 rounded flex items-center gap-2 text-sm text-red-700">
           <AlertCircle className="w-4 h-4 shrink-0" />
           <span>{error}</span>
-          <button onClick={checkAuth} className="ml-auto px-3 py-1 bg-red-100 hover:bg-red-200 rounded-lg text-xs font-semibold">
+          <button onClick={checkAuth} className="ml-auto px-3 py-1 bg-red-100 hover:bg-red-200 rounded-sm text-xs font-semibold">
             Thử lại
           </button>
         </div>
@@ -137,10 +137,10 @@ export default function DashboardPage() {
           { label: 'Điểm thưởng', value: stats?.loyaltyPoints || 0, icon: ShieldCheck, colorKey: 'purple' },
           { label: 'Hóa đơn tháng', value: stats?.totalSpent ? `${(stats.totalSpent / 1000).toFixed(0)}K₫` : '0đ', icon: TrendingUp, colorKey: 'rose' },
         ].map((stat) => (
-          <div key={`stat-${stat.label}`} className="bg-white rounded-2xl p-4 border border-slate-200 hover:border-blue-200 transition-colors">
+          <div key={`stat-${stat.label}`} className="bg-white rounded-md p-4 border border-slate-200 hover:border-slate-400 transition-colors">
             <stat.icon className={`w-6 h-6 ${colorClasses[stat.colorKey]} mb-2`} />
             <p className="text-2xl font-black text-slate-900">{stat.value}</p>
-            <p className="text-xs text-slate-500 font-medium">{stat.label}</p>
+            <p className="text-xs text-slate-600 font-medium">{stat.label}</p>
           </div>
         ))}
       </div>
@@ -160,11 +160,11 @@ export default function DashboardPage() {
           <Link
             key={`action-${action.href}`}
             href={action.href}
-            className="bg-white rounded-2xl p-6 border border-slate-200 hover:border-blue-200 hover:shadow-lg transition-all group"
+            className="bg-white rounded-md p-6 border border-slate-200 hover:border-slate-400 hover:shadow-lg transition-all group"
           >
             <action.icon className={`w-8 h-8 ${colorClasses[action.colorKey]} mb-3 group-hover:scale-110 transition-transform`} />
             <h3 className="font-bold text-slate-900 mb-1">{action.title}</h3>
-            <p className="text-sm text-slate-500 mb-3">{action.desc}</p>
+            <p className="text-sm text-slate-600 mb-3">{action.desc}</p>
             <span className="text-sm font-semibold text-[#1F1F1F] flex items-center gap-1 group-hover:gap-2 transition-all">
               Vào ngay <ArrowRight className="w-4 h-4" />
             </span>

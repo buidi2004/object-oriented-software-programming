@@ -75,7 +75,7 @@ export const Hero: React.FC<HeroProps> = ({ onStartClick, onPriceClick }) => {
               {/* Secondary Glass Button matching exact style in image */}
               <button
                 onClick={onPriceClick}
-                className="px-7 py-3.5 rounded-2xl bg-cyan-50/60 hover:bg-cyan-100/70 border border-cyan-300/60 text-[#1F1F1F] font-bold text-base transition-all duration-300 shadow-xs cursor-pointer"
+                className="px-7 py-3.5 rounded-md bg-cyan-50/60 hover:bg-cyan-100/70 border border-cyan-300/60 text-[#1F1F1F] font-bold text-base transition-all duration-300 shadow-xs cursor-pointer"
               >
                 Xem báo giá
               </button>
@@ -87,7 +87,7 @@ export const Hero: React.FC<HeroProps> = ({ onStartClick, onPriceClick }) => {
                 <div className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
                   99.9%
                 </div>
-                <div className="text-xs font-bold text-slate-500 uppercase tracking-wider mt-0.5">
+                <div className="text-xs font-bold text-slate-600 uppercase tracking-wider mt-0.5">
                   UPTIME
                 </div>
               </div>
@@ -98,7 +98,7 @@ export const Hero: React.FC<HeroProps> = ({ onStartClick, onPriceClick }) => {
                 <div className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
                   24/7
                 </div>
-                <div className="text-xs font-bold text-slate-500 uppercase tracking-wider mt-0.5">
+                <div className="text-xs font-bold text-slate-600 uppercase tracking-wider mt-0.5">
                   HỖ TRỢ
                 </div>
               </div>
@@ -110,7 +110,7 @@ export const Hero: React.FC<HeroProps> = ({ onStartClick, onPriceClick }) => {
           <div className="lg:col-span-6 relative">
             
             {/* Main Rounded Datacenter Frame matching exact image */}
-            <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-white/80 bg-white group">
+            <div className="relative rounded-lg overflow-hidden shadow-2xl border border-white/80 bg-white group">
               
               <img
                 src={heroImage}
@@ -120,20 +120,20 @@ export const Hero: React.FC<HeroProps> = ({ onStartClick, onPriceClick }) => {
               />
 
               {/* Watermark Branding overlay top right corner */}
-              <div className="absolute top-4 right-5 bg-white/40 backdrop-blur-md border border-white/20 p-2 rounded-xl text-white/90 shadow-sm">
+              <div className="absolute top-4 right-5 bg-white/40 backdrop-blur-md border border-white/20 p-2 rounded text-white/90 shadow-sm">
                 <img src="/images/logo.png" alt="CloudHost VN" className="h-4 w-auto object-contain" />
               </div>
 
               {/* Glassmorphism Floating Pill Badge bottom right matching exact picture */}
-              <div className="absolute bottom-5 right-5 bg-white/85 backdrop-blur-xl border border-white/70 p-3 px-5 rounded-2xl shadow-xl flex items-center gap-3.5 text-slate-900 transition-transform duration-300 hover:scale-105">
-                <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center text-[#1F1F1F] shadow-inner">
+              <div className="absolute bottom-5 right-5 bg-white/85 backdrop-blur-xl border border-white/70 p-3 px-5 rounded-md shadow-xl flex items-center gap-3.5 text-slate-900 transition-transform duration-300 hover:scale-105">
+                <div className="w-10 h-10 rounded bg-blue-100 flex items-center justify-center text-[#1F1F1F] shadow-inner">
                   <Gauge className="w-5 h-5 animate-spin-slow" />
                 </div>
                 <div className="flex flex-col text-left">
                   <span className="text-xs font-extrabold text-slate-900">
                     Băng thông
                   </span>
-                  <span className="text-[11px] font-medium text-slate-500">
+                  <span className="text-[11px] font-medium text-slate-600">
                     Không giới hạn
                   </span>
                 </div>

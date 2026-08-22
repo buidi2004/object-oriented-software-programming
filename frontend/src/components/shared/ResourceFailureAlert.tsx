@@ -39,7 +39,7 @@ export function ResourceFailureAlert({
   if (isAdmin) {
     // Admin Technical Error Display
     return (
-      <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-900 text-xs">
+      <div className="p-4 rounded-md bg-rose-50 border border-rose-200 text-rose-900 text-xs">
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-start gap-2.5">
             <ShieldAlert className="w-5 h-5 text-rose-600 flex-shrink-0 mt-0.5" />
@@ -58,7 +58,7 @@ export function ResourceFailureAlert({
               <button
                 onClick={handleRetryClick}
                 disabled={retrying}
-                className="px-3 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-slate-900 font-bold transition-colors flex items-center gap-1.5 text-[11px] shadow-sm disabled:opacity-50"
+                className="px-3 py-1.5 rounded bg-rose-600 hover:bg-rose-700 text-slate-900 font-bold transition-colors flex items-center gap-1.5 text-[11px] shadow-sm disabled:opacity-50"
               >
                 <RefreshCw className={`w-3.5 h-3.5 ${retrying ? 'animate-spin' : ''}`} />
                 Force Retry
@@ -67,7 +67,7 @@ export function ResourceFailureAlert({
             {onMarkFailed && (
               <button
                 onClick={onMarkFailed}
-                className="px-3 py-1.5 rounded-xl bg-white border border-rose-300 text-rose-700 hover:bg-rose-100 font-bold transition-colors text-[11px]"
+                className="px-3 py-1.5 rounded bg-white border border-rose-300 text-rose-700 hover:bg-rose-100 font-bold transition-colors text-[11px]"
               >
                 Đánh dấu Failed
               </button>
@@ -86,7 +86,7 @@ export function ResourceFailureAlert({
               {showTechnical ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
             </button>
             {showTechnical && (
-              <pre className="p-3 bg-white text-rose-300 rounded-xl font-mono text-[10px] overflow-x-auto whitespace-pre-wrap max-h-48">
+              <pre className="p-3 bg-white text-rose-300 rounded font-mono text-[10px] overflow-x-auto whitespace-pre-wrap max-h-48">
                 {technicalDetails}
               </pre>
             )}
@@ -98,7 +98,7 @@ export function ResourceFailureAlert({
 
   // Customer Friendly Error Display (No technical leaks)
   return (
-    <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-xs shadow-sm">
+    <div className="p-4 rounded-md bg-amber-50 border border-amber-200 text-amber-900 text-xs shadow-sm">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-start gap-2.5">
           <AlertTriangle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
@@ -117,7 +117,7 @@ export function ResourceFailureAlert({
             <button
               onClick={handleRetryClick}
               disabled={retrying}
-              className="px-3.5 py-1.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold transition-colors flex items-center gap-1.5 text-xs shadow-sm disabled:opacity-50"
+              className="px-3.5 py-1.5 rounded bg-amber-600 hover:bg-amber-700 text-white font-bold transition-colors flex items-center gap-1.5 text-xs shadow-sm disabled:opacity-50"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${retrying ? 'animate-spin' : ''}`} />
               Thử lại
@@ -125,7 +125,7 @@ export function ResourceFailureAlert({
           )}
           <Link
             href={supportHref}
-            className="px-3.5 py-1.5 rounded-xl bg-white border border-amber-300 text-amber-800 hover:bg-amber-100 font-bold transition-colors flex items-center gap-1.5 text-xs"
+            className="px-3.5 py-1.5 rounded bg-white border border-amber-300 text-amber-800 hover:bg-amber-100 font-bold transition-colors flex items-center gap-1.5 text-xs"
           >
             <MessageSquare className="w-3.5 h-3.5" />
             Liên hệ hỗ trợ

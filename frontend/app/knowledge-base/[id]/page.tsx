@@ -68,7 +68,7 @@ export default function KnowledgeBaseDetailPage() {
           <ArrowLeft className="w-4 h-4" /> Thư viện
         </Link>
 
-        <article className="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm">
+        <article className="bg-white rounded-md border border-slate-200 p-8 shadow-sm">
           <div className="flex items-center gap-2 mb-4">
             <FileText className="w-5 h-5 text-[#1F1F1F]" />
             <span className="text-xs font-bold text-[#1F1F1F] uppercase">{article.categoryTag}</span>

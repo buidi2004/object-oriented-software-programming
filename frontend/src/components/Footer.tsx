@@ -211,7 +211,7 @@ export const Footer: React.FC = () => {
             </div>
             
             {/* Bộ Công Thương đỏ */}
-            <div className="h-9 px-2 sm:px-2.5 border-2 border-[#cc0000] rounded-lg flex items-center gap-1.5 bg-white shadow-xs">
+            <div className="h-9 px-2 sm:px-2.5 border-2 border-[#cc0000] rounded-sm flex items-center gap-1.5 bg-white shadow-xs">
               <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5 text-[#cc0000]" />
               <div className="flex flex-col items-start leading-[11px]">
                 <span className="text-[6px] sm:text-[7px] font-bold text-[#cc0000] tracking-wider uppercase">Đã đăng ký</span>
@@ -220,7 +220,7 @@ export const Footer: React.FC = () => {
             </div>
 
             {/* Đã thông báo Bộ Công Thương xanh */}
-            <div className="h-9 px-2 sm:px-2.5 border-2 border-[#095a9d] rounded-lg flex items-center gap-1.5 bg-white shadow-xs">
+            <div className="h-9 px-2 sm:px-2.5 border-2 border-[#095a9d] rounded-sm flex items-center gap-1.5 bg-white shadow-xs">
               <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5 text-[#095a9d]" />
               <div className="flex flex-col items-start leading-[11px]">
                 <span className="text-[6px] sm:text-[7px] font-bold text-[#095a9d] tracking-wider uppercase">Đã thông báo</span>

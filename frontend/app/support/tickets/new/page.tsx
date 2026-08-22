@@ -68,19 +68,19 @@ export default function NewTicketPage() {
             <ArrowLeft className="w-4 h-4" /> Quay lại
           </Link>
 
-          <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm">
+          <div className="bg-white rounded-md border border-slate-200 p-6 sm:p-8 shadow-sm">
             <div className="flex items-center gap-3 mb-6 border-b border-slate-100 pb-6">
-              <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-[#1F1F1F]">
+              <div className="w-12 h-12 bg-blue-50 rounded flex items-center justify-center text-[#1F1F1F]">
                 <LifeBuoy className="w-6 h-6" />
               </div>
               <div>
                 <h1 className="text-xl font-bold text-slate-900">Tạo Yêu cầu hỗ trợ mới</h1>
-                <p className="text-sm text-slate-500">Mô tả chi tiết vấn đề của bạn để kỹ thuật viên hỗ trợ tốt nhất.</p>
+                <p className="text-sm text-slate-600">Mô tả chi tiết vấn đề của bạn để kỹ thuật viên hỗ trợ tốt nhất.</p>
               </div>
             </div>
 
             {error && (
-              <div className="mb-6 p-4 bg-red-50 text-red-700 text-sm rounded-xl border border-red-200 flex items-center gap-2">
+              <div className="mb-6 p-4 bg-red-50 text-red-700 text-sm rounded border border-red-200 flex items-center gap-2">
                 <AlertCircle className="w-4 h-4" /> {error}
               </div>
             )}
@@ -95,7 +95,7 @@ export default function NewTicketPage() {
                   placeholder="Vd: Không thể truy cập vào VPS IP 103..."
                   value={formData.subject}
                   onChange={e => setFormData({ ...formData, subject: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                  className="w-full px-4 py-2.5 rounded border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
                 />
               </div>
 
@@ -104,14 +104,14 @@ export default function NewTicketPage() {
                 <select
                   value={formData.priority}
                   onChange={e => setFormData({ ...formData, priority: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all bg-white"
+                  className="w-full px-4 py-2.5 rounded border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all bg-white"
                 >
                   <option value="0">Thấp (Low)</option>
                   <option value="1">Bình thường (Normal)</option>
                   <option value="2">Cao (High)</option>
                   <option value="3">Khẩn cấp (Urgent)</option>
                 </select>
-                <p className="text-xs text-slate-500 mt-1.5">Vui lòng chỉ chọn Khẩn cấp khi dịch vụ bị gián đoạn hoàn toàn.</p>
+                <p className="text-xs text-slate-600 mt-1.5">Vui lòng chỉ chọn Khẩn cấp khi dịch vụ bị gián đoạn hoàn toàn.</p>
               </div>
 
               <div>
@@ -122,7 +122,7 @@ export default function NewTicketPage() {
                   placeholder="Mô tả chi tiết các bước bạn đã thực hiện, thông báo lỗi nếu có..."
                   value={formData.message}
                   onChange={e => setFormData({ ...formData, message: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all resize-y"
+                  className="w-full px-4 py-2.5 rounded border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all resize-y"
                 />
               </div>
 
@@ -130,7 +130,7 @@ export default function NewTicketPage() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:hover:bg-blue-600 text-white font-bold rounded-xl flex items-center gap-2 transition-colors"
+                  className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:hover:bg-blue-600 text-white font-bold rounded flex items-center gap-2 transition-colors"
                 >
                   {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
                   {isSubmitting ? 'Đang gửi...' : 'Gửi yêu cầu'}

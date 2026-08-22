@@ -78,7 +78,7 @@ export default function AdminReviewsPage() {
     <div className="p-8 max-w-7xl mx-auto">
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-4">
-          <Link href="/admin" className="p-2 rounded-lg hover:bg-slate-100 transition-colors border border-slate-200">
+          <Link href="/admin" className="p-2 rounded-sm hover:bg-slate-100 transition-colors border border-slate-200">
             <ArrowLeft className="w-5 h-5 text-slate-600" />
           </Link>
           <div>
@@ -91,7 +91,7 @@ export default function AdminReviewsPage() {
         </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+      <div className="bg-white rounded shadow-sm border border-gray-100 overflow-hidden">
         <table className="w-full text-left">
           <thead className="bg-gray-50 border-b border-gray-100 text-gray-500 font-medium text-sm">
             <tr>
@@ -126,7 +126,7 @@ export default function AdminReviewsPage() {
                     <div className="font-medium text-[#1F1F1F]">{review.servicePlanName}</div>
                     <div className="flex items-center gap-0.5 mt-1">
                       {[...Array(5)].map((_, i) => (
-                        <Star key={i} className={`w-3.5 h-3.5 ${i < review.rating ? 'text-amber-400 fill-amber-400' : 'text-gray-200'}`} />
+                        <Star key={i} className={`w-3.5 h-3.5 ${i < review.rating ? 'text-amber-400 fill-amber-400' : 'text-gray-700'}`} />
                       ))}
                     </div>
                   </td>
@@ -136,16 +136,16 @@ export default function AdminReviewsPage() {
                   <td className="px-6 py-4">
                     <div className="flex flex-col gap-2">
                       {review.isApproved ? (
-                        <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium bg-green-50 text-green-700 border border-green-200">
+                        <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-sm text-xs font-medium bg-green-50 text-green-700 border border-green-200">
                           <CheckCircle2 className="w-3.5 h-3.5" /> Approved
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200">
+                        <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-sm text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200">
                           <AlertCircle className="w-3.5 h-3.5" /> Pending
                         </span>
                       )}
                       {review.isFeatured && (
-                        <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium bg-blue-50 text-[#1F1F1F] border border-blue-200">
+                        <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-sm text-xs font-medium bg-blue-50 text-[#1F1F1F] border border-blue-200">
                           <Star className="w-3.5 h-3.5 fill-blue-700" /> Featured
                         </span>
                       )}
@@ -157,7 +157,7 @@ export default function AdminReviewsPage() {
                         <button
                           disabled={processingId === review.id}
                           onClick={() => handleApprove(review.id)}
-                          className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-lg transition-colors disabled:opacity-50"
+                          className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-sm transition-colors disabled:opacity-50"
                         >
                           Duyệt Review
                         </button>
@@ -167,7 +167,7 @@ export default function AdminReviewsPage() {
                         <button
                           disabled={processingId === review.id}
                           onClick={() => handleFeature(review.id, !review.isFeatured)}
-                          className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-colors disabled:opacity-50 border ${
+                          className={`px-3 py-1.5 text-xs font-bold rounded-sm transition-colors disabled:opacity-50 border ${
                             review.isFeatured 
                               ? 'bg-gray-100 hover:bg-gray-200 text-gray-700 border-gray-200' 
                               : 'bg-indigo-50 hover:bg-indigo-100 text-[#1F1F1F] border-indigo-200'
@@ -179,7 +179,7 @@ export default function AdminReviewsPage() {
 
                       <button
                         onClick={() => handleDelete(review.id)}
-                        className="p-1.5 text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors flex items-center justify-center"
+                        className="p-1.5 text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-sm transition-colors flex items-center justify-center"
                         title="Xóa đánh giá"
                       >
                         <Trash2 className="w-4 h-4" />

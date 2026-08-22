@@ -53,27 +53,27 @@ export default function AdminInvoicesPage() {
         <div className="max-w-6xl mx-auto space-y-6">
           <div className="flex items-center justify-between">
             <div>
-              <Link href="/admin" className="text-sm text-slate-500 hover:text-[#1F1F1F] flex items-center gap-1 mb-2">
+              <Link href="/admin" className="text-sm text-slate-600 hover:text-[#1F1F1F] flex items-center gap-1 mb-2">
                 <ArrowLeft className="w-4 h-4" /> Quay lại Dashboard
               </Link>
               <h1 className="text-2xl font-black text-slate-900 flex items-center gap-2">
                 <FileText className="w-6 h-6 text-[#1F1F1F]" />
                 Quản Lý Hóa Đơn Toàn Hệ Thống
               </h1>
-              <p className="text-slate-500 mt-1">Xem và tải xuống hóa đơn điện tử của khách hàng</p>
+              <p className="text-slate-600 mt-1">Xem và tải xuống hóa đơn điện tử của khách hàng</p>
             </div>
             <button
               onClick={fetchInvoices}
-              className="p-2 rounded-xl bg-white border border-slate-200 hover:text-[#1F1F1F] transition-colors"
+              className="p-2 rounded bg-white border border-slate-200 hover:text-[#1F1F1F] transition-colors"
             >
               <RefreshCw className="w-5 h-5" />
             </button>
           </div>
 
-          <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+          <div className="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm text-slate-600">
-                <thead className="bg-slate-50/80 border-b border-slate-200 text-slate-500">
+                <thead className="bg-slate-50/80 border-b border-slate-200 text-slate-600">
                   <tr>
                     <th className="p-4 font-semibold">Mã Hóa Đơn</th>
                     <th className="p-4 font-semibold">Ngày Xuất</th>
@@ -86,7 +86,7 @@ export default function AdminInvoicesPage() {
                 <tbody className="divide-y divide-slate-100">
                   {invoices.length === 0 ? (
                     <tr>
-                      <td colSpan={6} className="p-8 text-center text-slate-500">Không có hóa đơn nào</td>
+                      <td colSpan={6} className="p-8 text-center text-slate-600">Không có hóa đơn nào</td>
                     </tr>
                   ) : (
                     invoices.map((inv) => (
@@ -103,7 +103,7 @@ export default function AdminInvoicesPage() {
                         <td className="p-4 text-right">
                           <button
                             onClick={() => handleDownload(inv.id)}
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 font-medium text-slate-700 transition-colors"
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-sm bg-slate-100 hover:bg-slate-200 font-medium text-slate-700 transition-colors"
                           >
                             <Download className="w-4 h-4" /> Tải PDF
                           </button>

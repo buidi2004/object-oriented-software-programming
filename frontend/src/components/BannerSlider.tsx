@@ -73,7 +73,7 @@ export const BannerSlider: React.FC = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
-      <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-slate-200/80 bg-white aspect-[21/9] sm:aspect-[24/8] group">
+      <div className="relative rounded-lg overflow-hidden shadow-2xl border border-slate-200/80 bg-white aspect-[21/9] sm:aspect-[24/8] group">
         {/* Banner Image with Smooth Fade */}
         <div
           className="absolute inset-0 bg-cover bg-center transition-all duration-700 transform scale-105 group-hover:scale-100"
@@ -102,14 +102,14 @@ export const BannerSlider: React.FC = () => {
           <div className="flex items-center gap-3">
             <Link
               href={currentBanner.linkUrl || '/promotions'}
-              className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-slate-900 text-xs sm:text-sm font-bold shadow-lg shadow-blue-500/30 flex items-center gap-2 transition-all"
+              className="px-6 py-2.5 rounded bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-slate-900 text-xs sm:text-sm font-bold shadow-lg shadow-blue-500/30 flex items-center gap-2 transition-all"
             >
               <span>Xem Ngay</span>
               <ArrowRight className="w-4 h-4" />
             </Link>
             <Link
               href="/services"
-              className="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-slate-900 text-xs sm:text-sm font-bold backdrop-blur-md transition-colors"
+              className="px-5 py-2.5 rounded bg-white/10 hover:bg-white/20 text-slate-900 text-xs sm:text-sm font-bold backdrop-blur-md transition-colors"
             >
               Tất Cả Dịch Vụ
             </Link>

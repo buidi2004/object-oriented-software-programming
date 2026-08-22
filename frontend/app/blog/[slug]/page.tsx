@@ -87,7 +87,7 @@ export default function BlogPostPage() {
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
         <div className="text-center">
           <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-700" />
-          <p className="font-medium text-slate-500">Không tìm thấy bài viết</p>
+          <p className="font-medium text-slate-600">Không tìm thấy bài viết</p>
           <Link href="/news" className="text-[#1F1F1F] hover:text-[#1F1F1F] mt-2 inline-block">
             Quay lại danh sách bài viết
           </Link>
@@ -113,7 +113,7 @@ export default function BlogPostPage() {
 
       <main className="max-w-4xl mx-auto px-4 py-8">
         {/* Post Header */}
-        <article className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <article className="bg-white rounded-md shadow-sm border border-slate-200 overflow-hidden">
           {/* Featured Image */}
           {post.image && (
             <div className="aspect-video overflow-hidden">
@@ -128,7 +128,7 @@ export default function BlogPostPage() {
           {/* Content */}
           <div className="p-8">
             {/* Meta */}
-            <div className="flex items-center gap-4 text-sm text-slate-500 mb-4">
+            <div className="flex items-center gap-4 text-sm text-slate-600 mb-4">
               <span className="px-3 py-1 bg-blue-100 text-[#1F1F1F] rounded-full font-medium">
                 {post.category}
               </span>
@@ -170,10 +170,10 @@ export default function BlogPostPage() {
               <Link
                 key={i}
                 href={`/news`}
-                className="bg-white rounded-xl p-4 border border-slate-200 hover:border-blue-200 hover:shadow-md transition-all"
+                className="bg-white rounded p-4 border border-slate-200 hover:border-blue-200 hover:shadow-md transition-all"
               >
                 <p className="font-semibold text-slate-900">Bài viết liên quan {i}</p>
-                <p className="text-sm text-slate-500 mt-1">Mô tả ngắn gọn về bài viết...</p>
+                <p className="text-sm text-slate-600 mt-1">Mô tả ngắn gọn về bài viết...</p>
               </Link>
             ))}
           </div>

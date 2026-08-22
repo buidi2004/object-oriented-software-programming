@@ -148,13 +148,13 @@ export default function SecurityPage() {
     <div className="max-w-4xl mx-auto space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Bảo Mật Tài Khoản</h1>
-        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+        <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
           Quản lý mật khẩu và các thiết lập bảo mật 2 lớp.
         </p>
       </div>
 
       {message.text && (
-        <div className={`p-4 rounded-xl flex items-start gap-3 ${
+        <div className={`p-4 rounded flex items-start gap-3 ${
           message.type === 'success' ? 'bg-emerald-50 text-emerald-900 border border-emerald-200' : 'bg-red-50 text-red-900 border border-red-200'
         }`}>
           {message.type === 'success' ? (
@@ -170,7 +170,7 @@ export default function SecurityPage() {
         
         {/* Change Password Form */}
         <div className="lg:col-span-2 space-y-6">
-          <form onSubmit={handleSubmit} className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
+          <form onSubmit={handleSubmit} className="bg-white dark:bg-slate-900 rounded-md shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
             <div className="p-6 md:p-8 border-b border-slate-200 dark:border-slate-800">
               <h2 className="text-lg font-semibold text-slate-900 dark:text-white flex items-center gap-2 mb-6">
                 <Key className="w-5 h-5 text-amber-500" />
@@ -188,7 +188,7 @@ export default function SecurityPage() {
                       value={formData.currentPassword}
                       onChange={handleChange}
                       required
-                      className="w-full px-4 py-2.5 pr-10 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                      className="w-full px-4 py-2.5 pr-10 rounded border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
                     />
                     <button type="button" onClick={() => setShowCurrent(!showCurrent)} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-600 hover:text-slate-600">
                       {showCurrent ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
@@ -206,7 +206,7 @@ export default function SecurityPage() {
                       value={formData.newPassword}
                       onChange={handleChange}
                       required
-                      className="w-full px-4 py-2.5 pr-10 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                      className="w-full px-4 py-2.5 pr-10 rounded border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
                     />
                     <button type="button" onClick={() => setShowNew(!showNew)} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-600 hover:text-slate-600">
                       {showNew ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
@@ -220,10 +220,10 @@ export default function SecurityPage() {
                         <div className={`h-full transition-all duration-300 ${getStrengthColor()}`} style={{ width: `${strength}%` }} />
                       </div>
                       <div className="flex gap-4 text-xs">
-                        <span className={formData.newPassword.length >= 8 ? 'text-emerald-500' : 'text-slate-500'}>✓ 8+ ký tự</span>
-                        <span className={/[A-Z]/.test(formData.newPassword) ? 'text-emerald-500' : 'text-slate-500'}>✓ Chữ hoa</span>
-                        <span className={/[0-9]/.test(formData.newPassword) ? 'text-emerald-500' : 'text-slate-500'}>✓ Số</span>
-                        <span className={/[^a-zA-Z0-9]/.test(formData.newPassword) ? 'text-emerald-500' : 'text-slate-500'}>✓ Ký tự đặc biệt</span>
+                        <span className={formData.newPassword.length >= 8 ? 'text-emerald-500' : 'text-slate-600'}>✓ 8+ ký tự</span>
+                        <span className={/[A-Z]/.test(formData.newPassword) ? 'text-emerald-500' : 'text-slate-600'}>✓ Chữ hoa</span>
+                        <span className={/[0-9]/.test(formData.newPassword) ? 'text-emerald-500' : 'text-slate-600'}>✓ Số</span>
+                        <span className={/[^a-zA-Z0-9]/.test(formData.newPassword) ? 'text-emerald-500' : 'text-slate-600'}>✓ Ký tự đặc biệt</span>
                       </div>
                     </div>
                   )}
@@ -239,7 +239,7 @@ export default function SecurityPage() {
                       value={formData.confirmPassword}
                       onChange={handleChange}
                       required
-                      className="w-full px-4 py-2.5 pr-10 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                      className="w-full px-4 py-2.5 pr-10 rounded border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
                     />
                     <button type="button" onClick={() => setShowConfirm(!showConfirm)} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-600 hover:text-slate-600">
                       {showConfirm ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
@@ -254,7 +254,7 @@ export default function SecurityPage() {
               <button
                 type="submit"
                 disabled={isLoading || (formData.newPassword.length > 0 && strength < 100)}
-                className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-medium shadow-sm transition-all flex items-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+                className="px-6 py-2.5 rounded bg-blue-600 hover:bg-blue-700 text-white font-medium shadow-sm transition-all flex items-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
               >
                 {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Shield className="w-4 h-4" />}
                 Cập Nhật Mật Khẩu
@@ -265,7 +265,7 @@ export default function SecurityPage() {
 
         {/* Info Sidebar */}
         <div className="space-y-6">
-          <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl p-6 text-slate-900 shadow-lg">
+          <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-md p-6 text-slate-900 shadow-lg">
             <Shield className="w-8 h-8 mb-4 text-slate-200" />
             <h3 className="text-lg font-bold mb-2">Bảo mật 2 Lớp (2FA)</h3>
             <p className="text-slate-200 text-sm mb-4">
@@ -276,15 +276,15 @@ export default function SecurityPage() {
               <button 
                 onClick={handleSetup2FA}
                 disabled={is2faLoading}
-                className="w-full py-2.5 bg-white text-[#1F1F1F] hover:bg-blue-50 rounded-xl text-sm font-bold shadow-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+                className="w-full py-2.5 bg-white text-[#1F1F1F] hover:bg-blue-50 rounded text-sm font-bold shadow-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
               >
                 {is2faLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Key className="w-4 h-4" />}
                 Bật Xác Thực 2FA
               </button>
             ) : (
-              <div className="bg-white p-4 rounded-xl text-slate-900 mt-4 space-y-4 shadow-inner">
+              <div className="bg-white p-4 rounded text-slate-900 mt-4 space-y-4 shadow-inner">
                 <p className="text-sm font-semibold text-center mb-2">1. Quét mã QR bằng ứng dụng</p>
-                <div className="flex justify-center bg-white p-2 rounded-lg">
+                <div className="flex justify-center bg-white p-2 rounded-sm">
                   <QRCodeSVG value={setupData.otpAuthUri} size={160} />
                 </div>
                 <div>
@@ -295,19 +295,19 @@ export default function SecurityPage() {
                     placeholder="VD: 123456"
                     value={otpCode}
                     onChange={e => setOtpCode(e.target.value)}
-                    className="w-full text-center tracking-[0.2em] font-mono text-lg px-4 py-2 border-2 border-blue-500 rounded-lg focus:outline-none focus:ring-4 focus:ring-blue-500/20"
+                    className="w-full text-center tracking-[0.2em] font-mono text-lg px-4 py-2 border-2 border-blue-500 rounded-sm focus:outline-none focus:ring-4 focus:ring-blue-500/20"
                   />
                   <button 
                     onClick={handleEnable2FA}
                     disabled={is2faLoading || otpCode.length !== 6}
-                    className="w-full mt-3 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-bold transition-all disabled:opacity-50 flex justify-center items-center gap-2"
+                    className="w-full mt-3 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-sm text-sm font-bold transition-all disabled:opacity-50 flex justify-center items-center gap-2"
                   >
                     {is2faLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />}
                     Xác nhận Kích hoạt
                   </button>
                   <button 
                     onClick={() => setSetupData(null)}
-                    className="w-full mt-2 py-2 text-slate-500 hover:text-slate-700 text-sm font-medium"
+                    className="w-full mt-2 py-2 text-slate-600 hover:text-slate-700 text-sm font-medium"
                   >
                     Hủy bỏ
                   </button>
@@ -316,7 +316,7 @@ export default function SecurityPage() {
             )}
           </div>
           
-          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+          <div className="bg-white dark:bg-slate-900 rounded-md border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
             <div className="p-6 border-b border-slate-200 dark:border-slate-800">
               <h3 className="font-semibold text-slate-900 dark:text-white flex items-center gap-2">
                 <Laptop className="w-5 h-5 text-[#1F1F1F]" />
@@ -327,18 +327,18 @@ export default function SecurityPage() {
               {isSessionsLoading ? (
                 <div className="p-6 flex justify-center"><Loader2 className="w-6 h-6 animate-spin text-slate-600" /></div>
               ) : sessions.length === 0 ? (
-                <div className="p-6 text-center text-sm text-slate-500">Không có dữ liệu.</div>
+                <div className="p-6 text-center text-sm text-slate-600">Không có dữ liệu.</div>
               ) : sessions.map(session => (
                 <div key={session.id} className="p-4 sm:px-6 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
                   <div className="flex items-center gap-3">
-                    <div className={`p-2 rounded-lg ${session.isRevoked ? 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-500' : 'bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400'}`}>
+                    <div className={`p-2 rounded-sm ${session.isRevoked ? 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-600' : 'bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400'}`}>
                       {session.deviceInfo?.toLowerCase().includes('mobile') ? <Smartphone className="w-5 h-5" /> : <Laptop className="w-5 h-5" />}
                     </div>
                     <div>
-                      <p className={`text-sm font-semibold ${session.isRevoked ? 'text-slate-500 line-through dark:text-slate-500' : 'text-slate-900 dark:text-white'}`}>
+                      <p className={`text-sm font-semibold ${session.isRevoked ? 'text-slate-600 line-through dark:text-slate-600' : 'text-slate-900 dark:text-white'}`}>
                         {session.deviceInfo || 'Unknown Device'}
                       </p>
-                      <p className="text-xs text-slate-500 mt-0.5">
+                      <p className="text-xs text-slate-600 mt-0.5">
                         {session.isRevoked ? 'Đã đăng xuất' : `Hết hạn: ${new Date(session.expiresAt).toLocaleDateString('vi-VN')}`}
                       </p>
                     </div>
@@ -346,7 +346,7 @@ export default function SecurityPage() {
                   {!session.isRevoked && (
                     <button
                       onClick={() => handleRevoke(session.id)}
-                      className="p-2 text-slate-600 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+                      className="p-2 text-slate-600 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-sm transition-colors"
                       title="Đăng xuất thiết bị này"
                     >
                       <LogOut className="w-5 h-5" />

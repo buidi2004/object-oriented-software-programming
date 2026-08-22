@@ -58,6 +58,7 @@ public static class DependencyInjection
         }
 
         // Shared provisioning infrastructure
+        services.AddHttpClient<IChatBotService, GeminiChatService>();
         services.AddSingleton<DockerClientFactory>();
         services.AddSingleton<DockerPortAllocator>();
         services.AddSingleton<DockerResourceChecker>();

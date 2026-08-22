@@ -94,17 +94,17 @@ export default function AdminBlogCommentsPage() {
       <header className="bg-white border-b border-slate-200 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link href="/admin" className="p-2 rounded-lg hover:bg-slate-100 transition-colors">
+            <Link href="/admin" className="p-2 rounded-sm hover:bg-slate-100 transition-colors">
               <ArrowLeft className="w-5 h-5 text-slate-600" />
             </Link>
             <div>
               <h1 className="text-xl font-bold text-slate-900">Quản lý Bình luận Tin tức</h1>
-              <p className="text-sm text-slate-500">{comments.length} bình luận trên hệ thống</p>
+              <p className="text-sm text-slate-600">{comments.length} bình luận trên hệ thống</p>
             </div>
           </div>
           <button 
             onClick={fetchComments}
-            className="px-4 py-2 rounded-lg bg-slate-100 text-slate-700 font-semibold text-sm hover:bg-slate-200 transition-colors flex items-center gap-2"
+            className="px-4 py-2 rounded-sm bg-slate-100 text-slate-700 font-semibold text-sm hover:bg-slate-200 transition-colors flex items-center gap-2"
           >
             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
             Làm mới
@@ -114,13 +114,13 @@ export default function AdminBlogCommentsPage() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {success && (
-          <div className="mb-4 p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm flex items-center gap-2">
+          <div className="mb-4 p-4 rounded bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm flex items-center gap-2">
             <CheckCircle2 className="w-5 h-5 text-emerald-600" />
             {success}
           </div>
         )}
 
-        <div className="bg-white rounded-xl p-4 border border-slate-200 mb-6">
+        <div className="bg-white rounded p-4 border border-slate-200 mb-6">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-600" />
             <input
@@ -128,12 +128,12 @@ export default function AdminBlogCommentsPage() {
               placeholder="Tìm kiếm theo người đăng, email, nội dung bình luận..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+              className="w-full pl-10 pr-4 py-2.5 rounded-sm border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
             />
           </div>
         </div>
 
-        <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
+        <div className="bg-white rounded border border-slate-200 overflow-hidden shadow-sm">
           <div className="divide-y divide-slate-100">
             {filteredComments.map((comment) => (
               <div key={comment.id} className="p-5 hover:bg-slate-50 transition-colors">
@@ -145,7 +145,7 @@ export default function AdminBlogCommentsPage() {
                         {comment.authorName || 'Ẩn danh'}
                       </span>
                       {comment.authorEmail && (
-                        <span className="text-xs text-slate-500 font-mono">
+                        <span className="text-xs text-slate-600 font-mono">
                           ({comment.authorEmail})
                         </span>
                       )}
@@ -158,7 +158,7 @@ export default function AdminBlogCommentsPage() {
                       </span>
                     </div>
 
-                    <p className="text-slate-700 text-sm leading-relaxed bg-slate-50/80 p-3 rounded-xl border border-slate-100">
+                    <p className="text-slate-700 text-sm leading-relaxed bg-slate-50/80 p-3 rounded border border-slate-100">
                       {comment.content}
                     </p>
                   </div>
@@ -167,7 +167,7 @@ export default function AdminBlogCommentsPage() {
                     {!comment.isApproved && (
                       <button
                         onClick={() => handleApprove(comment.id)}
-                        className="p-2 text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors flex items-center gap-1 text-xs font-semibold"
+                        className="p-2 text-emerald-600 hover:bg-emerald-50 rounded-sm transition-colors flex items-center gap-1 text-xs font-semibold"
                         title="Duyệt bình luận"
                       >
                         <Check className="w-4 h-4" />
@@ -176,7 +176,7 @@ export default function AdminBlogCommentsPage() {
                     )}
                     <button
                       onClick={() => handleDelete(comment.id)}
-                      className="p-2 text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                      className="p-2 text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-sm transition-colors"
                       title="Xóa bình luận"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -188,7 +188,7 @@ export default function AdminBlogCommentsPage() {
           </div>
 
           {filteredComments.length === 0 && (
-            <div className="text-center py-12 text-slate-500">
+            <div className="text-center py-12 text-slate-600">
               <MessageSquare className="w-12 h-12 mx-auto mb-3 text-slate-700" />
               <p className="font-medium">Chưa có bình luận nào</p>
             </div>

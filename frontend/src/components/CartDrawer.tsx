@@ -153,29 +153,29 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                   <CheckCircle2 className="w-10 h-10" />
                 </div>
                 <h4 className="text-2xl font-black text-slate-900">Thanh Toán Thành Công!</h4>
-                <p className="text-sm text-slate-500 max-w-xs mx-auto leading-relaxed">
+                <p className="text-sm text-slate-600 max-w-xs mx-auto leading-relaxed">
                   Đơn hàng Cloud VPS / Domain của bạn đã được ghi nhận. Hệ thống đang tiến hành kích hoạt tự động trong 30 giây.
                 </p>
                 <button
                   onClick={handleFinish}
-                  className="px-6 py-3 rounded-xl bg-blue-600 text-white font-bold text-sm shadow-md hover:bg-blue-700 cursor-pointer"
+                  className="px-6 py-3 rounded bg-blue-600 text-white font-bold text-sm shadow-md hover:bg-blue-700 cursor-pointer"
                 >
                   Hoàn Tất & Về Trang Chủ
                 </button>
               </div>
             ) : cartItems.length === 0 ? (
               <div className="flex-1 flex flex-col items-center justify-center p-6 text-center">
-                <div className="w-16 h-16 rounded-2xl bg-slate-100 text-slate-600 flex items-center justify-center mb-4">
+                <div className="w-16 h-16 rounded-md bg-slate-100 text-slate-600 flex items-center justify-center mb-4">
                   <ShoppingBag className="w-8 h-8 stroke-[1.5]" />
                 </div>
                 <p className="text-base font-bold text-slate-800">Giỏ hàng của bạn đang trống</p>
-                <p className="text-sm text-slate-500 max-w-[260px] mt-2 leading-relaxed">
+                <p className="text-sm text-slate-600 max-w-[260px] mt-2 leading-relaxed">
                   Hãy chọn một gói Cloud VPS, Hosting hoặc Tên miền để bắt đầu.
                 </p>
                 <button
                   type="button"
                   onClick={handleExploreServices}
-                  className="mt-6 inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-slate-900 font-bold text-sm shadow-lg shadow-blue-500/20 transition-all cursor-pointer"
+                  className="mt-6 inline-flex items-center justify-center gap-2 px-6 py-3 rounded bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-slate-900 font-bold text-sm shadow-lg shadow-blue-500/20 transition-all cursor-pointer"
                 >
                   Khám phá dịch vụ
                   <ArrowRight className="w-4 h-4" />
@@ -186,14 +186,14 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                 {cartItems.map((item) => (
                   <div
                     key={item.id}
-                    className="p-4 rounded-2xl border border-slate-200 bg-slate-50/50 flex items-start justify-between gap-3"
+                    className="p-4 rounded-md border border-slate-200 bg-slate-50/50 flex items-start justify-between gap-3"
                   >
                     <div>
                       <div className="text-xs font-bold text-[#1F1F1F] uppercase tracking-wider">
                         {item.type === 'vps' ? 'Cloud VPS' : item.type === 'hosting' ? 'Web Hosting' : 'Tên miền'}
                       </div>
                       <div className="text-sm font-extrabold text-slate-900 mt-0.5">{item.title}</div>
-                      <div className="text-xs text-slate-500 mt-1">{item.details}</div>
+                      <div className="text-xs text-slate-600 mt-1">{item.details}</div>
                       <div className="text-xs font-semibold text-slate-700 mt-2">
                         Chu kỳ: <span className="font-bold text-[#1F1F1F]">{item.billingCycle}</span>
                       </div>
@@ -221,9 +221,9 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
           {!isCheckedOut && cartItems.length > 0 && (
             <div className="p-6 border-t border-slate-100 bg-white space-y-4 shrink-0">
               {insufficientNotice && (
-                <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 space-y-3">
+                <div className="rounded-md border border-amber-200 bg-amber-50 p-4 space-y-3">
                   <div className="flex items-start gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center shrink-0">
+                    <div className="w-10 h-10 rounded bg-amber-100 text-amber-700 flex items-center justify-center shrink-0">
                       <Wallet className="w-5 h-5" />
                     </div>
                     <div className="min-w-0">
@@ -235,19 +235,19 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                   </div>
 
                   <div className="grid grid-cols-2 gap-2 text-xs">
-                    <div className="rounded-xl bg-white/70 px-3 py-2">
+                    <div className="rounded bg-white/70 px-3 py-2">
                       <p className="text-amber-800/70">Số dư hiện tại</p>
                       <p className="font-bold text-amber-950 mt-0.5">
                         {insufficientNotice.balance.toLocaleString('vi-VN')} đ
                       </p>
                     </div>
-                    <div className="rounded-xl bg-white/70 px-3 py-2">
+                    <div className="rounded bg-white/70 px-3 py-2">
                       <p className="text-amber-800/70">Cần thanh toán</p>
                       <p className="font-bold text-amber-950 mt-0.5">
                         {insufficientNotice.required.toLocaleString('vi-VN')} đ
                       </p>
                     </div>
-                    <div className="col-span-2 rounded-xl bg-amber-100/80 px-3 py-2">
+                    <div className="col-span-2 rounded bg-amber-100/80 px-3 py-2">
                       <p className="text-amber-900/80">Còn thiếu</p>
                       <p className="font-black text-amber-950 mt-0.5">
                         {shortfall.toLocaleString('vi-VN')} đ
@@ -258,7 +258,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                   <button
                     type="button"
                     onClick={() => handleGoToTopUp(insufficientNotice)}
-                    className="w-full py-3 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-900 font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2"
+                    className="w-full py-3 rounded bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-900 font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2"
                   >
                     <Wallet className="w-4 h-4" />
                     Nạp tiền vào ví ngay
@@ -267,7 +267,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               )}
 
               {checkoutNotice?.kind === 'error' && (
-                <div className="rounded-2xl border border-rose-200 bg-rose-50 p-4 flex items-start gap-3">
+                <div className="rounded-md border border-rose-200 bg-rose-50 p-4 flex items-start gap-3">
                   <AlertCircle className="w-5 h-5 text-rose-600 shrink-0 mt-0.5" />
                   <div className="min-w-0">
                     <p className="text-sm font-bold text-rose-900">Không thể thanh toán</p>
@@ -286,7 +286,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               <button
                 onClick={handleCheckout}
                 disabled={isCheckingOut}
-                className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-slate-900 font-extrabold text-sm shadow-xl shadow-blue-500/25 flex items-center justify-center gap-2 cursor-pointer transition-all disabled:opacity-70 disabled:cursor-not-allowed"
+                className="w-full py-3.5 rounded-md bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-slate-900 font-extrabold text-sm shadow-xl shadow-blue-500/25 flex items-center justify-center gap-2 cursor-pointer transition-all disabled:opacity-70 disabled:cursor-not-allowed"
               >
                 {isCheckingOut ? (
                   <>
@@ -306,7 +306,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                   onClose();
                   router.push('/cart');
                 }}
-                className="w-full py-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-xs transition-colors flex items-center justify-center gap-1.5"
+                className="w-full py-2.5 rounded border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-xs transition-colors flex items-center justify-center gap-1.5"
               >
                 <ShoppingBag className="w-3.5 h-3.5" />
                 <span>Xem Giỏ Hàng Chi Tiết</span>

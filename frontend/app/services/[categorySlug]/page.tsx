@@ -81,7 +81,7 @@ export default function CategoryLandingPage() {
           <p className="text-lg text-slate-200 max-w-2xl mx-auto mb-8">
             {category.description || 'Giải pháp tốt nhất cho nhu cầu của bạn, với hiệu năng cao và độ ổn định tuyệt đối.'}
           </p>
-          <a href="#pricing" className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-900 font-bold text-base shadow-xl hover:shadow-2xl transition-all">
+          <a href="#pricing" className="inline-flex items-center gap-2 px-8 py-4 rounded-md bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-900 font-bold text-base shadow-xl hover:shadow-2xl transition-all">
             <Zap className="w-5 h-5" />
             Xem Bảng Giá
           </a>
@@ -100,7 +100,7 @@ export default function CategoryLandingPage() {
               <button
                 onClick={() => setIsYearly(false)}
                 className={`px-5 py-2 rounded-full text-sm font-bold transition-all ${
-                  !isYearly ? 'bg-slate-900 text-white' : 'text-slate-500 hover:text-slate-900'
+                  !isYearly ? 'bg-slate-900 text-white' : 'text-slate-600 hover:text-slate-900'
                 }`}
               >
                 Hàng Tháng
@@ -108,7 +108,7 @@ export default function CategoryLandingPage() {
               <button
                 onClick={() => setIsYearly(true)}
                 className={`px-5 py-2 rounded-full text-sm font-bold transition-all flex items-center gap-1.5 ${
-                  isYearly ? 'bg-blue-600 text-white' : 'text-slate-500 hover:text-slate-900'
+                  isYearly ? 'bg-blue-600 text-white' : 'text-slate-600 hover:text-slate-900'
                 }`}
               >
                 <span>Hàng Năm</span>

@@ -106,16 +106,16 @@ export default function DashboardStaticSitesPage() {
         {/* Top Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div>
-            <Link href="/dashboard" className="text-xs font-bold text-slate-500 hover:text-[#1F1F1F] flex items-center gap-1 mb-2">
+            <Link href="/dashboard" className="text-xs font-bold text-slate-600 hover:text-[#1F1F1F] flex items-center gap-1 mb-2">
               <ArrowLeft className="w-3.5 h-3.5" /> Quay lại Dashboard
             </Link>
             <h1 className="text-2xl sm:text-3xl font-black text-slate-900 flex items-center gap-3">
-              <div className="p-2.5 rounded-2xl bg-emerald-100 text-emerald-600">
+              <div className="p-2.5 rounded-md bg-emerald-100 text-emerald-600">
                 <Globe className="w-7 h-7" />
               </div>
               Quản Lý Jamstack &amp; Static Sites
             </h1>
-            <p className="text-xs sm:text-sm text-slate-500 mt-1">
+            <p className="text-xs sm:text-sm text-slate-600 mt-1">
               Triển khai Next.js, Vite, React, Astro siêu tốc trên container Nginx chuyên biệt với tên miền riêng và chứng chỉ SSL tự động.
             </p>
           </div>
@@ -123,14 +123,14 @@ export default function DashboardStaticSitesPage() {
           <div className="flex items-center gap-3">
             <button
               onClick={fetchSites}
-              className="p-2.5 rounded-2xl bg-white border border-slate-200 text-slate-600 hover:text-emerald-600 hover:border-emerald-300 transition-all shadow-sm"
+              className="p-2.5 rounded-md bg-white border border-slate-200 text-slate-600 hover:text-emerald-600 hover:border-emerald-300 transition-all shadow-sm"
               title="Làm mới"
             >
               <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
             </button>
             <button
               onClick={() => setIsCreateOpen(true)}
-              className="px-5 py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm transition-all shadow-lg shadow-emerald-500/25 flex items-center gap-2"
+              className="px-5 py-2.5 rounded-md bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm transition-all shadow-lg shadow-emerald-500/25 flex items-center gap-2"
             >
               <Plus className="w-4 h-4" />
               Tạo Dự Án Mới
@@ -139,13 +139,13 @@ export default function DashboardStaticSitesPage() {
         </div>
 
         {success && (
-          <div className="mb-6 p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold flex items-center gap-2">
+          <div className="mb-6 p-4 rounded-md bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4" /> {success}
           </div>
         )}
 
         {/* Sites List */}
-        <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+        <div className="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden">
           <div className="p-6 border-b border-slate-100 flex items-center justify-between">
             <h2 className="text-base font-bold text-slate-900">Danh Sách Website</h2>
             <span className="text-xs font-semibold px-3 py-1 rounded-full bg-slate-100 text-slate-600">
@@ -160,16 +160,16 @@ export default function DashboardStaticSitesPage() {
             </div>
           ) : sites.length === 0 ? (
             <div className="p-12 text-center">
-              <div className="w-16 h-16 rounded-3xl bg-emerald-50 text-emerald-500 flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 rounded-lg bg-emerald-50 text-emerald-500 flex items-center justify-center mx-auto mb-4">
                 <Globe className="w-8 h-8" />
               </div>
               <h3 className="text-base font-bold text-slate-900 mb-1">Chưa Có Dự Án Web Nào</h3>
-              <p className="text-xs text-slate-500 max-w-sm mx-auto mb-6">
+              <p className="text-xs text-slate-600 max-w-sm mx-auto mb-6">
                 Triển khai website tĩnh của bạn với tốc độ cao chỉ trong tích tắc.
               </p>
               <button
                 onClick={() => setIsCreateOpen(true)}
-                className="px-5 py-2.5 rounded-2xl bg-emerald-600 text-white font-bold text-xs shadow-md"
+                className="px-5 py-2.5 rounded-md bg-emerald-600 text-white font-bold text-xs shadow-md"
               >
                 + Deploy Website Đầu Tiên
               </button>
@@ -187,16 +187,16 @@ export default function DashboardStaticSitesPage() {
       {/* Modal Create Static Site */}
       {isCreateOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-white/60 backdrop-blur-sm animate-in fade-in">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100">
+          <div className="bg-white rounded-lg max-w-md w-full p-6 shadow-2xl border border-slate-100">
             <h3 className="text-lg font-black text-slate-900 mb-2 flex items-center gap-2">
               <Globe className="w-5 h-5 text-emerald-600" /> Tạo Dự Án Static Site Mới
             </h3>
-            <p className="text-xs text-slate-500 mb-6">
+            <p className="text-xs text-slate-600 mb-6">
               Chọn framework và nhập tên dự án để khởi tạo container web server.
             </p>
 
             {error && (
-              <div className="mb-4 p-3 rounded-xl bg-rose-50 text-rose-600 text-xs font-bold flex items-center gap-2">
+              <div className="mb-4 p-3 rounded bg-rose-50 text-rose-600 text-xs font-bold flex items-center gap-2">
                 <AlertCircle className="w-4 h-4" /> {error}
               </div>
             )}
@@ -210,7 +210,7 @@ export default function DashboardStaticSitesPage() {
                   placeholder="my-portfolio / company-landing"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs text-slate-900 outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="w-full px-3.5 py-2.5 rounded border border-slate-200 text-xs text-slate-900 outline-none focus:ring-2 focus:ring-emerald-500"
                 />
               </div>
 
@@ -219,7 +219,7 @@ export default function DashboardStaticSitesPage() {
                 <select
                   value={framework}
                   onChange={(e) => setFramework(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs text-slate-900 outline-none focus:ring-2 focus:ring-emerald-500 bg-white font-bold"
+                  className="w-full px-3.5 py-2.5 rounded border border-slate-200 text-xs text-slate-900 outline-none focus:ring-2 focus:ring-emerald-500 bg-white font-bold"
                 >
                   <option value="nextjs">Next.js (SSG/Export)</option>
                   <option value="vite">Vite / React SPA</option>
@@ -235,7 +235,7 @@ export default function DashboardStaticSitesPage() {
                   placeholder="landing.tenmien.com"
                   value={customDomain}
                   onChange={(e) => setCustomDomain(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs text-slate-900 outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="w-full px-3.5 py-2.5 rounded border border-slate-200 text-xs text-slate-900 outline-none focus:ring-2 focus:ring-emerald-500"
                 />
               </div>
 
@@ -243,14 +243,14 @@ export default function DashboardStaticSitesPage() {
                 <button
                   type="button"
                   onClick={() => setIsCreateOpen(false)}
-                  className="px-4 py-2.5 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100"
+                  className="px-4 py-2.5 rounded text-xs font-bold text-slate-600 hover:bg-slate-100"
                 >
                   Hủy Bỏ
                 </button>
                 <button
                   type="submit"
                   disabled={creating}
-                  className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md flex items-center gap-2"
+                  className="px-5 py-2.5 rounded bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md flex items-center gap-2"
                 >
                   {creating && <RefreshCw className="w-3.5 h-3.5 animate-spin" />}
                   Deploy Ngay
@@ -297,17 +297,17 @@ function StaticSiteRowItem({ site, onRefresh }: { site: StaticSite; onRefresh: (
     <div className="p-6 hover:bg-slate-50/60 transition-colors space-y-4">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-start sm:items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center flex-shrink-0">
+          <div className="w-10 h-10 rounded-md bg-emerald-100 text-emerald-600 flex items-center justify-center flex-shrink-0">
             <Globe className="w-5 h-5" />
           </div>
           <div>
             <div className="flex items-center gap-2">
               <span className="font-black text-slate-900 text-sm">{site.name}</span>
-              <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700">
+              <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-sm bg-emerald-50 text-emerald-700">
                 {site.framework || 'HTML/Nginx'}
               </span>
             </div>
-            <p className="text-xs text-slate-500 font-mono mt-0.5">
+            <p className="text-xs text-slate-600 font-mono mt-0.5">
               URL: <a href={liveUrl} target="_blank" rel="noreferrer" className="text-emerald-600 hover:underline">{liveUrl}</a>
             </p>
           </div>
@@ -319,7 +319,7 @@ function StaticSiteRowItem({ site, onRefresh }: { site: StaticSite; onRefresh: (
             <button
               onClick={handleRedeploy}
               disabled={redeploying}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 font-bold text-xs transition-colors disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-slate-100 hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 font-bold text-xs transition-colors disabled:opacity-50"
             >
               <Play className={`w-3.5 h-3.5 ${redeploying ? 'animate-spin' : ''}`} />
               Re-deploy
@@ -330,7 +330,7 @@ function StaticSiteRowItem({ site, onRefresh }: { site: StaticSite; onRefresh: (
 
       {/* Slow Warning Banner */}
       {isSlow && (
-        <div className="p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs flex items-center gap-2">
+        <div className="p-3 rounded bg-amber-50 border border-amber-200 text-amber-800 text-xs flex items-center gap-2">
           <AlertTriangle className="w-4 h-4 text-amber-600 flex-shrink-0" />
           <span>{slowWarningText}</span>
         </div>

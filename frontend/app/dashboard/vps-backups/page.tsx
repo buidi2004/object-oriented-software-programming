@@ -90,36 +90,36 @@ export default function VpsBackupsPage() {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center gap-4">
-        <Link href="/dashboard/vps-instances" className="p-2 rounded-lg hover:bg-slate-100 transition-colors">
+        <Link href="/dashboard/vps-instances" className="p-2 rounded-sm hover:bg-slate-100 transition-colors">
           <ArrowLeft className="w-5 h-5 text-slate-600" />
         </Link>
         <div>
           <h1 className="text-2xl font-black text-slate-900 tracking-tight">Backup - VPS</h1>
-          <p className="text-slate-500 mt-1">Quản lý bản sao lưu cho VPS của bạn</p>
+          <p className="text-slate-600 mt-1">Quản lý bản sao lưu cho VPS của bạn</p>
         </div>
       </div>
 
       {/* Create Button */}
       <button
         onClick={() => setShowCreateModal(true)}
-        className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold transition-colors flex items-center gap-2"
+        className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded font-semibold transition-colors flex items-center gap-2"
       >
         <Plus className="w-5 h-5" />
         Tạo backup mới
       </button>
 
       {error && (
-        <div className="p-3 bg-red-50 border border-red-200 rounded-xl flex items-center gap-2 text-sm text-red-700">
+        <div className="p-3 bg-red-50 border border-red-200 rounded flex items-center gap-2 text-sm text-red-700">
           <AlertCircle className="w-4 h-4 shrink-0" />
           <span>{error}</span>
-          <button onClick={fetchData} className="ml-auto px-3 py-1 bg-red-100 hover:bg-red-200 rounded-lg text-xs font-semibold">
+          <button onClick={fetchData} className="ml-auto px-3 py-1 bg-red-100 hover:bg-red-200 rounded-sm text-xs font-semibold">
             Thử lại
           </button>
         </div>
       )}
 
       {/* Backups List */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      <div className="bg-white rounded-md border border-slate-200 shadow-sm overflow-hidden">
         <div className="px-6 py-4 border-b border-slate-100">
           <h2 className="text-lg font-bold text-slate-900">Danh sách backup</h2>
         </div>
@@ -128,7 +128,7 @@ export default function VpsBackupsPage() {
           {backups.map((backup) => (
             <div key={backup.id} className="px-6 py-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
               <div className="flex items-center gap-4">
-                <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
+                <div className={`w-10 h-10 rounded flex items-center justify-center ${
                   backup.status === 'completed' ? 'bg-emerald-100' :
                   backup.status === 'processing' ? 'bg-blue-100' : 'bg-red-100'
                 }`}>
@@ -143,7 +143,7 @@ export default function VpsBackupsPage() {
                 <div>
                   <p className="font-semibold text-slate-900">{backup.name}</p>
                   <div className="flex items-center gap-3 mt-1">
-                    <span className="text-xs text-slate-500 flex items-center gap-1">
+                    <span className="text-xs text-slate-600 flex items-center gap-1">
                       <Clock className="w-3 h-3" />
                       {new Date(backup.createdAt).toLocaleDateString('vi-VN')}
                     </span>
@@ -159,14 +159,14 @@ export default function VpsBackupsPage() {
               </div>
 
               <div className="flex items-center gap-4">
-                <span className="text-sm text-slate-500">{backup.size} GB</span>
+                <span className="text-sm text-slate-600">{backup.size} GB</span>
                 <div className="flex items-center gap-2">
-                  <button className="p-2 rounded-lg hover:bg-slate-100 text-slate-600 hover:text-[#1F1F1F] transition-colors" title="Tải về">
+                  <button className="p-2 rounded-sm hover:bg-slate-100 text-slate-600 hover:text-[#1F1F1F] transition-colors" title="Tải về">
                     <Download className="w-4 h-4" />
                   </button>
                   <button
                     onClick={() => deleteBackup(backup.id)}
-                    className="p-2 rounded-lg hover:bg-slate-100 text-slate-600 hover:text-red-600 transition-colors"
+                    className="p-2 rounded-sm hover:bg-slate-100 text-slate-600 hover:text-red-600 transition-colors"
                     title="Xóa"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -180,7 +180,7 @@ export default function VpsBackupsPage() {
         {backups.length === 0 && !error && (
           <div className="text-center py-12">
             <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-700" />
-            <p className="font-medium text-slate-500">Chưa có backup nào</p>
+            <p className="font-medium text-slate-600">Chưa có backup nào</p>
             <p className="text-sm text-slate-600 mt-1">Tạo backup để bảo vệ dữ liệu VPS của bạn</p>
           </div>
         )}
@@ -194,7 +194,7 @@ export default function VpsBackupsPage() {
           role="dialog"
           aria-modal="true"
         >
-          <div className="bg-white rounded-xl w-full max-w-md p-6">
+          <div className="bg-white rounded w-full max-w-md p-6">
             <h2 className="text-lg font-bold text-slate-900 mb-4">Tạo backup mới</h2>
 
             <div className="space-y-4">
@@ -205,7 +205,7 @@ export default function VpsBackupsPage() {
                   value={backupName}
                   onChange={(e) => setBackupName(e.target.value)}
                   placeholder="VD: Backup trước khi nâng cấp"
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full px-3 py-2 rounded-sm border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                   autoFocus
                 />
               </div>
@@ -214,13 +214,13 @@ export default function VpsBackupsPage() {
             <div className="flex gap-3 mt-6">
               <button
                 onClick={() => setShowCreateModal(false)}
-                className="flex-1 py-2 rounded-lg bg-slate-100 text-slate-700 font-semibold hover:bg-slate-200 transition-colors"
+                className="flex-1 py-2 rounded-sm bg-slate-100 text-slate-700 font-semibold hover:bg-slate-200 transition-colors"
               >
                 Hủy
               </button>
               <button
                 onClick={createBackup}
-                className="flex-1 py-2 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors"
+                className="flex-1 py-2 rounded-sm bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors"
               >
                 Tạo backup
               </button>

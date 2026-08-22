@@ -115,15 +115,15 @@ export default function AdminOrdersPage() {
       <header className="bg-white border-b border-slate-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link href="/admin" className="p-2 rounded-lg hover:bg-slate-100 transition-colors">
+            <Link href="/admin" className="p-2 rounded-sm hover:bg-slate-100 transition-colors">
               <ArrowLeft className="w-5 h-5 text-slate-600" />
             </Link>
             <div>
               <h1 className="text-xl font-bold text-slate-900">Quản lý Đơn hàng</h1>
-              <p className="text-sm text-slate-500">{orders.length} đơn hàng tổng cộng</p>
+              <p className="text-sm text-slate-600">{orders.length} đơn hàng tổng cộng</p>
             </div>
           </div>
-          <button className="px-4 py-2 rounded-lg bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 transition-colors flex items-center gap-2">
+          <button className="px-4 py-2 rounded-sm bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 transition-colors flex items-center gap-2">
             <Download className="w-4 h-4" />
             Xuất Excel
           </button>
@@ -131,7 +131,7 @@ export default function AdminOrdersPage() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="bg-white rounded-xl p-4 border border-slate-200 mb-6 flex flex-wrap gap-4 items-center">
+        <div className="bg-white rounded p-4 border border-slate-200 mb-6 flex flex-wrap gap-4 items-center">
           <div className="flex-1 min-w-[200px] relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-600" />
             <input
@@ -139,13 +139,13 @@ export default function AdminOrdersPage() {
               placeholder="Tìm kiếm theo mã đơn hoặc tên khách hàng..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+              className="w-full pl-10 pr-4 py-2.5 rounded-sm border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
             />
           </div>
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
-            className="px-3 py-2.5 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+            className="px-3 py-2.5 rounded-sm border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
           >
             <option value="all">Tất cả trạng thái</option>
             <option value="pending">Chờ thanh toán</option>
@@ -155,7 +155,7 @@ export default function AdminOrdersPage() {
           </select>
         </div>
 
-        <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+        <div className="bg-white rounded border border-slate-200 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
@@ -176,7 +176,7 @@ export default function AdminOrdersPage() {
                     <td className="py-3 px-4">
                       <div>
                         <p className="font-semibold text-slate-900">{order.customerName}</p>
-                        <p className="text-xs text-slate-500">{order.customerEmail}</p>
+                        <p className="text-xs text-slate-600">{order.customerEmail}</p>
                       </div>
                     </td>
                     <td className="py-3 px-4">
@@ -200,7 +200,7 @@ export default function AdminOrdersPage() {
                       {new Date(order.createdAt).toLocaleDateString('vi-VN')}
                     </td>
                     <td className="py-3 px-4 text-right">
-                      <Link href={`/orders/${order.id}`} className="inline-flex p-2 text-slate-600 hover:text-[#1F1F1F] hover:bg-blue-50 rounded-lg transition-colors">
+                      <Link href={`/orders/${order.id}`} className="inline-flex p-2 text-slate-600 hover:text-[#1F1F1F] hover:bg-blue-50 rounded-sm transition-colors">
                         <Eye className="w-4 h-4" />
                       </Link>
                     </td>
@@ -211,7 +211,7 @@ export default function AdminOrdersPage() {
           </div>
           
           {filteredOrders.length === 0 && (
-            <div className="text-center py-12 text-slate-500">
+            <div className="text-center py-12 text-slate-600">
               <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-700" />
               <p className="font-medium">Không tìm thấy đơn hàng nào</p>
             </div>

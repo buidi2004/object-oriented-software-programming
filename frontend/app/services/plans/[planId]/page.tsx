@@ -152,7 +152,7 @@ function PlanDetailInner() {
     <div className="min-h-screen bg-slate-50 pb-20">
       <div className="bg-white border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <nav className="flex items-center gap-2 text-sm text-slate-500 flex-wrap">
+          <nav className="flex items-center gap-2 text-sm text-slate-600 flex-wrap">
             <Link href="/" className="hover:text-slate-700">Trang chủ</Link>
             <span>/</span>
             <Link href="/services" className="hover:text-slate-700">Dịch vụ</Link>
@@ -180,18 +180,18 @@ function PlanDetailInner() {
       </header>
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-12">
-        <div className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+        <div className="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
           <div className="bg-gradient-to-br from-blue-900 to-indigo-950 p-10 text-slate-900 relative overflow-hidden">
             <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
               <Server className="w-64 h-64" />
             </div>
             <div className="relative z-10">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-slate-200 text-xs font-bold uppercase tracking-wider mb-4 border border-white/20">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-slate-700 text-xs font-bold uppercase tracking-wider mb-4 border border-white/20">
                 <Zap className="w-3.5 h-3.5" />
                 {plan.categoryName}
               </div>
               <h2 className="text-4xl font-black mb-4">{plan.name}</h2>
-              <p className="text-lg text-slate-200 max-w-xl">{plan.description}</p>
+              <p className="text-lg text-slate-700 max-w-xl">{plan.description}</p>
               {maxDiscount > 0 && (
                 <p className="mt-3 text-emerald-300 font-semibold">Đang giảm {maxDiscount}% — ưu đãi có hạn</p>
               )}
@@ -221,25 +221,25 @@ function PlanDetailInner() {
             </div>
 
             <div className="p-10 bg-slate-50/50 flex flex-col justify-center">
-              <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 text-center mb-8">
+              <div className="bg-white rounded-md p-6 shadow-sm border border-slate-200 text-center mb-8">
                 {plan.monthlyPrice > 0 && plan.yearlyPrice > 0 && (
-                  <div className="inline-flex bg-slate-100 rounded-lg p-1 mb-6">
+                  <div className="inline-flex bg-slate-100 rounded-sm p-1 mb-6">
                     <button
                       onClick={() => setIsYearly(false)}
-                      className={`px-4 py-1.5 rounded-md text-sm font-semibold transition-colors ${!isYearly ? 'bg-white shadow-sm text-slate-900' : 'text-slate-500'}`}
+                      className={`px-4 py-1.5 rounded-sm text-sm font-semibold transition-colors ${!isYearly ? 'bg-white shadow-sm text-slate-900' : 'text-slate-600'}`}
                     >
                       Hàng tháng
                     </button>
                     <button
                       onClick={() => setIsYearly(true)}
-                      className={`px-4 py-1.5 rounded-md text-sm font-semibold transition-colors ${isYearly ? 'bg-white shadow-sm text-slate-900' : 'text-slate-500'}`}
+                      className={`px-4 py-1.5 rounded-sm text-sm font-semibold transition-colors ${isYearly ? 'bg-white shadow-sm text-slate-900' : 'text-slate-600'}`}
                     >
                       Hàng năm
                     </button>
                   </div>
                 )}
 
-                <div className="text-sm text-slate-500 mb-2">
+                <div className="text-sm text-slate-600 mb-2">
                   Giá thanh toán {isYearly ? 'hàng năm' : 'hàng tháng'}
                 </div>
                 <div className="text-4xl font-black text-[#1F1F1F] mb-2">
@@ -254,7 +254,7 @@ function PlanDetailInner() {
 
               <button
                 onClick={handleBuy}
-                className="w-full py-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg shadow-lg shadow-blue-600/30 transition-all flex items-center justify-center gap-2"
+                className="w-full py-4 rounded bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg shadow-lg shadow-blue-600/30 transition-all flex items-center justify-center gap-2"
               >
                 Thêm vào giỏ hàng
                 <Star className="w-5 h-5" />

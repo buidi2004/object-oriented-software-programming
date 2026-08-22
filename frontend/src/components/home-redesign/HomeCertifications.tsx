@@ -75,13 +75,13 @@ export const HomeCertifications = () => {
         <h2 className="text-3xl font-black text-slate-900 tracking-tight mb-2">
           Chứng chỉ quốc tế
         </h2>
-        <p className="text-slate-500 mb-10">Cam kết chất lượng dịch vụ đạt chuẩn doanh nghiệp quốc tế.</p>
+        <p className="text-slate-600 mb-10">Cam kết chất lượng dịch vụ đạt chuẩn doanh nghiệp quốc tế.</p>
         
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
           {certs.map((cert, idx) => {
             const Icon = cert.icon;
             return (
-              <div key={idx} className="bg-white rounded-2xl p-6 sm:p-8 flex flex-col items-center justify-center text-center shadow-md hover:shadow-xl transition-all duration-300 border border-slate-100 group hover:-translate-y-1">
+              <div key={idx} className="bg-white rounded-md p-6 sm:p-8 flex flex-col items-center justify-center text-center shadow-md hover:shadow-xl transition-all duration-300 border border-slate-100 group hover:-translate-y-1">
                 {/* Realistic Badge Container */}
                 <div className="relative mb-6">
                   {/* Outer Glow Effect */}
@@ -98,7 +98,7 @@ export const HomeCertifications = () => {
                   </div>
                 </div>
                 <h4 className="font-black text-slate-900 text-[15px] mb-2">{cert.title}</h4>
-                <p className="text-sm text-slate-500 font-medium">{cert.desc}</p>
+                <p className="text-sm text-slate-600 font-medium">{cert.desc}</p>
               </div>
             );
           })}

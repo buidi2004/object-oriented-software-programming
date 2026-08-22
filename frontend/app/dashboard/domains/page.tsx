@@ -94,13 +94,13 @@ export default function CustomerDomainsDashboardPage() {
         <div className="flex items-center gap-3">
           <button 
             onClick={fetchDomains}
-            className="p-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:text-slate-900 transition-colors"
+            className="p-2.5 rounded bg-white border border-slate-200 text-slate-700 hover:text-slate-900 transition-colors"
           >
             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
           </button>
           <a 
             href="/domains"
-            className="px-4 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold flex items-center gap-2 shadow-lg shadow-cyan-500/20 transition-all text-sm"
+            className="px-4 py-2.5 rounded bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold flex items-center gap-2 shadow-lg shadow-cyan-500/20 transition-all text-sm"
           >
             <Plus className="w-4 h-4" /> Đăng Ký Tên Miền Mới
           </a>
@@ -115,12 +115,12 @@ export default function CustomerDomainsDashboardPage() {
           placeholder="Tìm kiếm tên miền của bạn..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/80 border border-slate-200 text-slate-900 placeholder-slate-500 focus:outline-none focus:border-cyan-500 text-sm"
+          className="w-full pl-10 pr-4 py-2.5 rounded bg-white/80 border border-slate-200 text-slate-900 placeholder-slate-500 focus:outline-none focus:border-cyan-500 text-sm"
         />
       </div>
 
       {/* Domains Table */}
-      <div className="rounded-3xl bg-white/60 border border-slate-200 shadow-2xl overflow-hidden">
+      <div className="rounded-lg bg-white/60 border border-slate-200 shadow-2xl overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
             <thead className="bg-slate-50/60 text-slate-600 text-xs uppercase font-semibold border-b border-slate-200">
@@ -161,13 +161,13 @@ export default function CustomerDomainsDashboardPage() {
                       <PinServiceButton serviceType="DOMAIN" serviceId={dom.id} displayName={dom.name} />
                       <button 
                         onClick={() => alert(`Cấu hình bản ghi DNS (A, CNAME, MX, TXT) cho tên miền: ${dom.name}`)}
-                        className="px-3 py-1.5 rounded-xl bg-white hover:bg-slate-200 text-slate-800 text-xs font-semibold flex items-center gap-1.5 transition-colors"
+                        className="px-3 py-1.5 rounded bg-white hover:bg-slate-200 text-slate-800 text-xs font-semibold flex items-center gap-1.5 transition-colors"
                       >
                         <Layers className="w-3.5 h-3.5 text-[#1F1F1F]" /> DNS Records
                       </button>
                       <button 
                         onClick={() => alert(`Cấu hình Nameserver & Khóa Tên Miền cho ${dom.name}`)}
-                        className="p-1.5 rounded-xl bg-white hover:bg-slate-200 text-slate-800 transition-colors"
+                        className="p-1.5 rounded bg-white hover:bg-slate-200 text-slate-800 transition-colors"
                         title="Cài đặt tên miền"
                       >
                         <Settings2 className="w-4 h-4" />

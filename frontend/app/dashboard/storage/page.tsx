@@ -96,16 +96,16 @@ export default function DashboardStoragePage() {
         {/* Top Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div>
-            <Link href="/dashboard" className="text-xs font-bold text-slate-500 hover:text-[#1F1F1F] flex items-center gap-1 mb-2">
+            <Link href="/dashboard" className="text-xs font-bold text-slate-600 hover:text-[#1F1F1F] flex items-center gap-1 mb-2">
               <ArrowLeft className="w-3.5 h-3.5" /> Quay lại Dashboard
             </Link>
             <h1 className="text-2xl sm:text-3xl font-black text-slate-900 flex items-center gap-3">
-              <div className="p-2.5 rounded-2xl bg-blue-100 text-[#1F1F1F]">
+              <div className="p-2.5 rounded-md bg-blue-100 text-[#1F1F1F]">
                 <Cloud className="w-7 h-7" />
               </div>
               Quản Lý Cloud Object Storage (S3)
             </h1>
-            <p className="text-xs sm:text-sm text-slate-500 mt-1">
+            <p className="text-xs sm:text-sm text-slate-600 mt-1">
               Lưu trữ không giới hạn hình ảnh, video, dữ liệu ứng dụng với chuẩn tương thích AWS S3 REST API trên MinIO Cluster.
             </p>
           </div>
@@ -113,14 +113,14 @@ export default function DashboardStoragePage() {
           <div className="flex items-center gap-3">
             <button
               onClick={fetchBuckets}
-              className="p-2.5 rounded-2xl bg-white border border-slate-200 text-slate-600 hover:text-[#1F1F1F] hover:border-blue-300 transition-all shadow-sm"
+              className="p-2.5 rounded-md bg-white border border-slate-200 text-slate-600 hover:text-[#1F1F1F] hover:border-blue-300 transition-all shadow-sm"
               title="Làm mới"
             >
               <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
             </button>
             <button
               onClick={() => setIsCreateOpen(true)}
-              className="px-5 py-2.5 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm transition-all shadow-lg shadow-blue-500/25 flex items-center gap-2"
+              className="px-5 py-2.5 rounded-md bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm transition-all shadow-lg shadow-blue-500/25 flex items-center gap-2"
             >
               <Plus className="w-4 h-4" />
               Tạo S3 Bucket Mới
@@ -129,13 +129,13 @@ export default function DashboardStoragePage() {
         </div>
 
         {success && (
-          <div className="mb-6 p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold flex items-center gap-2">
+          <div className="mb-6 p-4 rounded-md bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4" /> {success}
           </div>
         )}
 
         {/* Buckets List */}
-        <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+        <div className="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden">
           <div className="p-6 border-b border-slate-100 flex items-center justify-between">
             <h2 className="text-base font-bold text-slate-900">Danh Sách S3 Buckets</h2>
             <span className="text-xs font-semibold px-3 py-1 rounded-full bg-slate-100 text-slate-600">
@@ -150,16 +150,16 @@ export default function DashboardStoragePage() {
             </div>
           ) : buckets.length === 0 ? (
             <div className="p-12 text-center">
-              <div className="w-16 h-16 rounded-3xl bg-blue-50 text-[#1F1F1F] flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 rounded-lg bg-blue-50 text-[#1F1F1F] flex items-center justify-center mx-auto mb-4">
                 <Cloud className="w-8 h-8" />
               </div>
               <h3 className="text-base font-bold text-slate-900 mb-1">Chưa Có S3 Bucket Nào</h3>
-              <p className="text-xs text-slate-500 max-w-sm mx-auto mb-6">
+              <p className="text-xs text-slate-600 max-w-sm mx-auto mb-6">
                 Tạo Bucket lưu trữ hình ảnh, video, tài liệu hoặc dữ liệu sao lưu ngay hôm nay.
               </p>
               <button
                 onClick={() => setIsCreateOpen(true)}
-                className="px-5 py-2.5 rounded-2xl bg-blue-600 text-white font-bold text-xs shadow-md"
+                className="px-5 py-2.5 rounded-md bg-blue-600 text-white font-bold text-xs shadow-md"
               >
                 + Tạo Bucket Đầu Tiên
               </button>
@@ -177,16 +177,16 @@ export default function DashboardStoragePage() {
       {/* Modal Create Bucket */}
       {isCreateOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-white/60 backdrop-blur-sm animate-in fade-in">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100">
+          <div className="bg-white rounded-lg max-w-md w-full p-6 shadow-2xl border border-slate-100">
             <h3 className="text-lg font-black text-slate-900 mb-2 flex items-center gap-2">
               <Cloud className="w-5 h-5 text-[#1F1F1F]" /> Tạo S3 Bucket Mới
             </h3>
-            <p className="text-xs text-slate-500 mb-6">
+            <p className="text-xs text-slate-600 mb-6">
               Tên bucket phải từ 3-63 ký tự, chỉ gồm chữ thường, số và dấu gạch ngang.
             </p>
 
             {error && (
-              <div className="mb-4 p-3 rounded-xl bg-rose-50 text-rose-600 text-xs font-bold flex items-center gap-2">
+              <div className="mb-4 p-3 rounded bg-rose-50 text-rose-600 text-xs font-bold flex items-center gap-2">
                 <AlertCircle className="w-4 h-4" /> {error}
               </div>
             )}
@@ -200,7 +200,7 @@ export default function DashboardStoragePage() {
                   placeholder="my-app-media / backups-2026"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs text-slate-900 outline-none focus:ring-2 focus:ring-blue-500 font-mono"
+                  className="w-full px-3.5 py-2.5 rounded border border-slate-200 text-xs text-slate-900 outline-none focus:ring-2 focus:ring-blue-500 font-mono"
                 />
               </div>
 
@@ -209,7 +209,7 @@ export default function DashboardStoragePage() {
                 <select
                   value={region}
                   onChange={(e) => setRegion(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs text-slate-900 outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                  className="w-full px-3.5 py-2.5 rounded border border-slate-200 text-xs text-slate-900 outline-none focus:ring-2 focus:ring-blue-500 bg-white"
                 >
                   <option value="us-east-1">Global Standard (us-east-1)</option>
                   <option value="ap-southeast-1">Vietnam / Singapore (ap-southeast-1)</option>
@@ -233,14 +233,14 @@ export default function DashboardStoragePage() {
                 <button
                   type="button"
                   onClick={() => setIsCreateOpen(false)}
-                  className="px-4 py-2.5 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100"
+                  className="px-4 py-2.5 rounded text-xs font-bold text-slate-600 hover:bg-slate-100"
                 >
                   Hủy Bỏ
                 </button>
                 <button
                   type="submit"
                   disabled={creating}
-                  className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-md flex items-center gap-2"
+                  className="px-5 py-2.5 rounded bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-md flex items-center gap-2"
                 >
                   {creating && <RefreshCw className="w-3.5 h-3.5 animate-spin" />}
                   Tạo Thùng Chứa
@@ -267,17 +267,17 @@ function BucketRowItem({ bucket, onRefresh }: { bucket: BucketItem; onRefresh: (
     <div className="p-6 hover:bg-slate-50/60 transition-colors space-y-4">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-start sm:items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-blue-100 text-[#1F1F1F] flex items-center justify-center flex-shrink-0">
+          <div className="w-10 h-10 rounded-md bg-blue-100 text-[#1F1F1F] flex items-center justify-center flex-shrink-0">
             <HardDrive className="w-5 h-5" />
           </div>
           <div>
             <div className="flex items-center gap-2">
               <span className="font-mono font-black text-slate-900 text-sm">{bucket.name}</span>
-              <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-md bg-slate-100 text-slate-600">
+              <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-sm bg-slate-100 text-slate-600">
                 {bucket.region || 'us-east-1'}
               </span>
             </div>
-            <p className="text-xs text-slate-500 font-mono mt-0.5">
+            <p className="text-xs text-slate-600 font-mono mt-0.5">
               S3 URI: s3://{bucket.name}
             </p>
           </div>
@@ -291,7 +291,7 @@ function BucketRowItem({ bucket, onRefresh }: { bucket: BucketItem; onRefresh: (
                 navigator.clipboard.writeText(endpointUrl);
                 alert('Đã sao chép S3 Endpoint!');
               }}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-blue-50 text-slate-700 hover:text-[#1F1F1F] font-bold text-xs transition-colors"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-slate-100 hover:bg-blue-50 text-slate-700 hover:text-[#1F1F1F] font-bold text-xs transition-colors"
             >
               <ExternalLink className="w-3.5 h-3.5" />
               Copy S3 URL
@@ -304,7 +304,7 @@ function BucketRowItem({ bucket, onRefresh }: { bucket: BucketItem; onRefresh: (
       {(status === 'Running' || status === 'Active') && (
         <div className="flex flex-wrap items-center gap-3 pt-2 border-t border-slate-100 text-xs">
           <div className="flex items-center gap-2">
-            <span className="text-slate-500 font-medium">Access Key:</span>
+            <span className="text-slate-600 font-medium">Access Key:</span>
             <SensitiveDataField value={bucket.accessKey || 'minioadmin'} label="Key" />
           </div>
         </div>
@@ -312,7 +312,7 @@ function BucketRowItem({ bucket, onRefresh }: { bucket: BucketItem; onRefresh: (
 
       {/* Slow Warning Banner */}
       {isSlow && (
-        <div className="p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs flex items-center gap-2">
+        <div className="p-3 rounded bg-amber-50 border border-amber-200 text-amber-800 text-xs flex items-center gap-2">
           <AlertTriangle className="w-4 h-4 text-amber-600 flex-shrink-0" />
           <span>{slowWarningText}</span>
         </div>

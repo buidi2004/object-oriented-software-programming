@@ -35,8 +35,8 @@ export function SensitiveDataField({
   };
 
   return (
-    <div className={`inline-flex items-center gap-2 bg-slate-100/80 px-2.5 py-1.5 rounded-xl border border-slate-200 text-xs font-mono ${className}`}>
-      {label && <span className="text-slate-500 font-sans font-bold text-[11px]">{label}:</span>}
+    <div className={`inline-flex items-center gap-2 bg-slate-100/80 px-2.5 py-1.5 rounded border border-slate-200 text-xs font-mono ${className}`}>
+      {label && <span className="text-slate-600 font-sans font-bold text-[11px]">{label}:</span>}
       <span className="text-slate-800 font-semibold select-all">
         {show ? value || '(trống)' : maskedPlaceholder}
       </span>
@@ -44,7 +44,7 @@ export function SensitiveDataField({
         <button
           type="button"
           onClick={toggleShow}
-          className="p-1 rounded-lg hover:bg-white text-slate-500 hover:text-slate-900 transition-colors"
+          className="p-1 rounded-sm hover:bg-white text-slate-600 hover:text-slate-900 transition-colors"
           title={show ? 'Ẩn thông tin' : 'Hiện thông tin nhạy cảm'}
         >
           {show ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
@@ -52,7 +52,7 @@ export function SensitiveDataField({
         <button
           type="button"
           onClick={handleCopy}
-          className="p-1 rounded-lg hover:bg-white text-slate-500 hover:text-slate-900 transition-colors"
+          className="p-1 rounded-sm hover:bg-white text-slate-600 hover:text-slate-900 transition-colors"
           title="Sao chép"
         >
           {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}

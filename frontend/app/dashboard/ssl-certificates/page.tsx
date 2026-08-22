@@ -79,16 +79,16 @@ export default function SslCertificatesPage() {
         {/* Top Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div>
-            <Link href="/dashboard" className="text-xs font-bold text-slate-500 hover:text-[#1F1F1F] flex items-center gap-1 mb-2">
+            <Link href="/dashboard" className="text-xs font-bold text-slate-600 hover:text-[#1F1F1F] flex items-center gap-1 mb-2">
               <ArrowLeft className="w-3.5 h-3.5" /> Quay lại Dashboard
             </Link>
             <h1 className="text-2xl sm:text-3xl font-black text-slate-900 flex items-center gap-3">
-              <div className="p-2.5 rounded-2xl bg-emerald-100 text-emerald-600">
+              <div className="p-2.5 rounded-md bg-emerald-100 text-emerald-600">
                 <ShieldCheck className="w-7 h-7" />
               </div>
               Quản Lý SSL / TLS Certificates
             </h1>
-            <p className="text-xs sm:text-sm text-slate-500 mt-1">
+            <p className="text-xs sm:text-sm text-slate-600 mt-1">
               Chứng chỉ SSL bảo mật 100% qua giao thức ACME Let's Encrypt, tự động xác thực HTTP-01 và gia hạn định kỳ.
             </p>
           </div>
@@ -96,14 +96,14 @@ export default function SslCertificatesPage() {
           <div className="flex items-center gap-3">
             <button
               onClick={fetchCertificates}
-              className="p-2.5 rounded-2xl bg-white border border-slate-200 text-slate-600 hover:text-emerald-600 hover:border-emerald-300 transition-all shadow-sm"
+              className="p-2.5 rounded-md bg-white border border-slate-200 text-slate-600 hover:text-emerald-600 hover:border-emerald-300 transition-all shadow-sm"
               title="Làm mới"
             >
               <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
             </button>
             <Link
               href="/services/ssl-certificates"
-              className="px-5 py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm transition-all shadow-lg shadow-emerald-500/25 flex items-center gap-2"
+              className="px-5 py-2.5 rounded-md bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm transition-all shadow-lg shadow-emerald-500/25 flex items-center gap-2"
             >
               <ShieldCheck className="w-4 h-4" />
               Yêu Cầu Cấp SSL Mới
@@ -116,11 +116,11 @@ export default function SslCertificatesPage() {
             <Loader className="w-8 h-8 text-emerald-600 animate-spin" />
           </div>
         ) : certificates.length === 0 ? (
-          <div className="bg-white rounded-3xl border border-slate-200 p-12 text-center shadow-sm">
+          <div className="bg-white rounded-lg border border-slate-200 p-12 text-center shadow-sm">
             <Shield className="w-16 h-16 text-slate-700 mx-auto mb-4" />
             <h3 className="text-xl font-bold text-slate-900 mb-2">Bạn chưa có chứng chỉ SSL nào</h3>
-            <p className="text-slate-500 mb-6 text-xs sm:text-sm">Tăng cường uy tín và mã hóa HTTPS cho tên miền của bạn ngay hôm nay.</p>
-            <Link href="/services/ssl-certificates" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-emerald-600 text-white font-bold text-xs shadow-md hover:bg-emerald-700">
+            <p className="text-slate-600 mb-6 text-xs sm:text-sm">Tăng cường uy tín và mã hóa HTTPS cho tên miền của bạn ngay hôm nay.</p>
+            <Link href="/services/ssl-certificates" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md bg-emerald-600 text-white font-bold text-xs shadow-md hover:bg-emerald-700">
               Khám phá dịch vụ SSL <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
@@ -141,7 +141,7 @@ export default function SslCertificatesPage() {
       {/* Confirmation Modal for Private Key Download */}
       {confirmKeyCert && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-white/60 backdrop-blur-sm animate-in fade-in">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100 space-y-4">
+          <div className="bg-white rounded-lg max-w-md w-full p-6 shadow-2xl border border-slate-100 space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2.5 text-rose-600 font-black text-base">
                 <ShieldAlert className="w-6 h-6" />
@@ -149,13 +149,13 @@ export default function SslCertificatesPage() {
               </div>
               <button 
                 onClick={() => setConfirmKeyCert(null)}
-                className="p-1 rounded-lg text-slate-600 hover:text-slate-600 hover:bg-slate-100"
+                className="p-1 rounded-sm text-slate-600 hover:text-slate-600 hover:bg-slate-100"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-            <div className="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-900 text-xs space-y-2">
+            <div className="p-3.5 rounded-md bg-rose-50 border border-rose-200 text-rose-900 text-xs space-y-2">
               <p className="font-bold">
                 Cảnh báo an toàn thông tin:
               </p>
@@ -171,7 +171,7 @@ export default function SslCertificatesPage() {
               <button
                 type="button"
                 onClick={() => setConfirmKeyCert(null)}
-                className="px-4 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100"
+                className="px-4 py-2 rounded text-xs font-bold text-slate-600 hover:bg-slate-100"
               >
                 Hủy Bỏ
               </button>
@@ -179,7 +179,7 @@ export default function SslCertificatesPage() {
                 type="button"
                 onClick={handleDownloadPrivateKey}
                 disabled={downloadingKey}
-                className="px-5 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-slate-900 font-bold text-xs shadow-md flex items-center gap-2"
+                className="px-5 py-2 rounded bg-rose-600 hover:bg-rose-700 text-slate-900 font-bold text-xs shadow-md flex items-center gap-2"
               >
                 {downloadingKey && <RefreshCw className="w-3.5 h-3.5 animate-spin" />}
                 Xác Nhận &amp; Tải Privkey.pem
@@ -221,7 +221,7 @@ function SslCertificateCard({
   };
 
   return (
-    <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition-all relative overflow-hidden flex flex-col justify-between">
+    <div className="bg-white rounded-lg border border-slate-200 p-6 shadow-sm hover:shadow-md transition-all relative overflow-hidden flex flex-col justify-between">
       <div className={`absolute top-0 left-0 w-1.5 h-full ${
         status === 'Failed' ? 'bg-rose-500' : isIssued ? 'bg-emerald-500' : 'bg-amber-500'
       }`}></div>
@@ -229,14 +229,14 @@ function SslCertificateCard({
       <div>
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-3">
-            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${
+            <div className={`w-12 h-12 rounded-md flex items-center justify-center ${
               isIssued ? 'bg-emerald-50 text-emerald-600' : 'bg-amber-50 text-amber-600'
             }`}>
               <Lock className="w-6 h-6" />
             </div>
             <div>
               <h3 className="font-black text-base text-slate-900">{domainName}</h3>
-              <p className="text-xs text-slate-500 font-mono">
+              <p className="text-xs text-slate-600 font-mono">
                 Issuer: {cert.issuer || "Let's Encrypt (ACME v2)"}
               </p>
             </div>
@@ -246,7 +246,7 @@ function SslCertificateCard({
 
         {/* Slow Warning Banner */}
         {isSlow && (
-          <div className="mb-4 p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs flex items-center gap-2">
+          <div className="mb-4 p-3 rounded bg-amber-50 border border-amber-200 text-amber-800 text-xs flex items-center gap-2">
             <AlertTriangle className="w-4 h-4 text-amber-600 flex-shrink-0" />
             <span>{slowWarningText}</span>
           </div>
@@ -266,13 +266,13 @@ function SslCertificateCard({
         {isIssued ? (
           <div className="grid grid-cols-2 gap-3 border-t border-slate-100 pt-4 text-xs">
             <div>
-              <p className="text-slate-500 font-medium">Ngày phát hành</p>
+              <p className="text-slate-600 font-medium">Ngày phát hành</p>
               <p className="font-bold text-slate-900 mt-0.5">
                 {new Date(cert.createdAt || Date.now()).toLocaleDateString('vi-VN')}
               </p>
             </div>
             <div>
-              <p className="text-slate-500 font-medium">Hạn chứng chỉ (90 ngày)</p>
+              <p className="text-slate-600 font-medium">Hạn chứng chỉ (90 ngày)</p>
               <p className="font-bold text-slate-900 mt-0.5">
                 {cert.expiryDate ? new Date(cert.expiryDate).toLocaleDateString('vi-VN') : '90 ngày kể từ ngày cấp'}
               </p>
@@ -281,20 +281,20 @@ function SslCertificateCard({
             <div className="col-span-2 flex gap-2 mt-2">
               <button
                 onClick={() => downloadPem(cert.certificate || '-----BEGIN CERTIFICATE-----\n...', `${domainName}-fullchain.pem`)}
-                className="flex-1 bg-white hover:bg-slate-100 text-slate-900 px-3 py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-colors"
+                className="flex-1 bg-white hover:bg-slate-100 text-slate-900 px-3 py-2 rounded text-xs font-bold flex items-center justify-center gap-1.5 transition-colors"
               >
                 <Download className="w-3.5 h-3.5" /> Fullchain.pem
               </button>
               <button
                 onClick={() => onRequestDownloadKey(cert)}
-                className="flex-1 bg-white border border-slate-200 hover:border-rose-300 hover:text-rose-600 text-slate-700 px-3 py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-colors"
+                className="flex-1 bg-white border border-slate-200 hover:border-rose-300 hover:text-rose-600 text-slate-700 px-3 py-2 rounded text-xs font-bold flex items-center justify-center gap-1.5 transition-colors"
               >
                 <Download className="w-3.5 h-3.5 text-rose-500" /> Privkey.pem
               </button>
             </div>
           </div>
         ) : (
-          <div className="flex items-start gap-2.5 bg-amber-50 border border-amber-200 p-3.5 rounded-2xl mt-2 text-xs">
+          <div className="flex items-start gap-2.5 bg-amber-50 border border-amber-200 p-3.5 rounded-md mt-2 text-xs">
             <Info className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
             <div>
               <p className="font-bold text-amber-900">Đang thực hiện HTTP-01 Challenge</p>

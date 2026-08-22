@@ -196,8 +196,8 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     return (
       <div className="min-h-[70vh] bg-slate-50 flex items-center justify-center">
         <div className="text-center">
-          <Loader2 className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-slate-500 text-sm font-semibold">Đang tải bảng điều khiển...</p>
+          <Loader2 className="w-12 h-12 border-4 border-[#1F1F1F] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-slate-600 text-sm font-semibold">Đang tải bảng điều khiển...</p>
         </div>
       </div>
     );
@@ -210,7 +210,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         <button
           type="button"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-slate-700 font-bold text-xs flex items-center gap-2 shadow-xs"
+          className="px-3.5 py-2 rounded bg-white border border-slate-200 text-slate-700 font-bold text-xs flex items-center gap-2 shadow-xs"
         >
           {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
           <span>Menu Dashboard</span>
@@ -223,7 +223,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           {/* Sidebar */}
           {isAuthenticated && (
             <aside className={`
-              fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-slate-200 transform transition-transform duration-200 lg:relative lg:translate-x-0 lg:w-60 shrink-0 lg:z-10 rounded-2xl lg:shadow-xs
+              fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-slate-200 transform transition-transform duration-200 lg:relative lg:translate-x-0 lg:w-60 shrink-0 lg:z-10 rounded-md lg:shadow-xs
               ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
             `}>
               {/* Overlay for mobile */}
@@ -251,9 +251,9 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                             href={item.href}
                             onClick={() => setMobileMenuOpen(false)}
                             className={`
-                              flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold transition-all
+                              flex items-center gap-2.5 px-3 py-2 rounded text-xs font-bold transition-all
                               ${isActive
-                                ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20 font-black'
+                                ? 'bg-[#1F1F1F] text-white shadow-md font-black'
                                 : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                               }
                             `}
@@ -271,7 +271,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                   <Link
                     href="/services"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold text-[#1F1F1F] bg-blue-50/70 hover:bg-blue-100/70 transition-all"
+                    className="flex items-center gap-2.5 px-3 py-2 rounded text-xs font-bold text-[#1F1F1F] bg-slate-100 hover:bg-slate-200 transition-all"
                   >
                     <Server className="w-3.5 h-3.5 shrink-0" />
                     <span>Mua thêm dịch vụ →</span>
@@ -303,51 +303,52 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               if (isBlocked) {
                 return (
                   <div className="flex flex-col items-center justify-center py-32 px-4 text-center h-full">
-                    <div className="w-20 h-20 bg-red-50 text-red-600 rounded-full flex items-center justify-center mb-6">
+                    <div className="w-20 h-20 bg-slate-100 text-[#1F1F1F] rounded-full flex items-center justify-center mb-6">
                       <Lock className="w-10 h-10" />
                     </div>
                     <h2 className="text-2xl font-bold text-slate-900 mb-2">Truy cập bị hạn chế</h2>
-                    <p className="text-slate-500 max-w-md mb-8">
+                    <p className="text-slate-600 max-w-md mb-8">
                       Bạn chưa sở hữu dịch vụ này. Vui lòng đăng ký gói dịch vụ để có thể truy cập và quản lý tính năng trong hệ thống.
                     </p>
-                    <Link href="/services/cloud-vps" className="px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-colors">
+                    <Link href="/services/cloud-vps" className="px-6 py-3 bg-[#1F1F1F] text-white rounded font-semibold hover:bg-black transition-colors">
                       Khám phá dịch vụ
                     </Link>
                   </div>
                 );
               }
 
-              return children;
+              return (
+                <>
+                  {/* Auth Warning Banner */}
+                  {!isAuthenticated && (
+                    <div className="mb-6 p-5 bg-slate-50 border border-slate-200 rounded-md flex items-start gap-3">
+                      <AlertCircle className="w-5 h-5 text-[#1F1F1F] shrink-0 mt-0.5" />
+                      <div>
+                        <p className="font-bold text-slate-900 text-sm">Cần đăng nhập để truy cập Bảng Điều Khiển</p>
+                        <p className="text-xs text-slate-700 mt-1">
+                          Bạn cần đăng nhập để xem thông tin cá nhân, quản trị VPS, hóa đơn và đơn hàng.
+                        </p>
+                        <div className="flex gap-2 mt-3">
+                          <Link
+                            href={getAuthModalUrl('login', pathname)}
+                            className="px-4 py-2 bg-[#1F1F1F] text-white rounded text-xs font-bold hover:bg-black transition-colors"
+                          >
+                            Đăng nhập ngay
+                          </Link>
+                          <Link
+                            href={getAuthModalUrl('register', pathname)}
+                            className="px-4 py-2 bg-white border border-slate-200 text-slate-700 rounded text-xs font-bold hover:bg-slate-50 transition-colors"
+                          >
+                            Tạo tài khoản
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  {children}
+                </>
+              );
             })()}
-
-            {/* Auth Warning Banner */}
-            {!isAuthenticated && (
-              <div className="mb-6 p-5 bg-amber-50 border border-amber-200 rounded-2xl flex items-start gap-3">
-                <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
-                <div>
-                  <p className="font-bold text-amber-900 text-sm">Cần đăng nhập để truy cập Bảng Điều Khiển</p>
-                  <p className="text-xs text-amber-700 mt-1">
-                    Bạn cần đăng nhập để xem thông tin cá nhân, quản trị VPS, hóa đơn và đơn hàng.
-                  </p>
-                  <div className="flex gap-2 mt-3">
-                    <Link
-                      href={getAuthModalUrl('login', pathname)}
-                      className="px-4 py-2 bg-blue-600 text-white rounded-xl text-xs font-bold hover:bg-blue-700 transition-colors"
-                    >
-                      Đăng nhập ngay
-                    </Link>
-                    <Link
-                      href={getAuthModalUrl('register', pathname)}
-                      className="px-4 py-2 bg-white border border-slate-200 text-slate-700 rounded-xl text-xs font-bold hover:bg-slate-50 transition-colors"
-                    >
-                      Tạo tài khoản
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {children}
           </main>
         </div>
       </div>

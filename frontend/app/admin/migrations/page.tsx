@@ -71,7 +71,7 @@ export default function AdminMigrationsPage() {
         </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+      <div className="bg-white rounded shadow-sm border border-gray-100 overflow-hidden">
         <table className="w-full text-left">
           <thead className="bg-gray-50 border-b border-gray-100 text-gray-500 font-medium text-sm">
             <tr>
@@ -108,13 +108,13 @@ export default function AdminMigrationsPage() {
                       {mig.fromProvider}
                     </td>
                     <td className="px-6 py-4">
-                      <div className="text-sm text-gray-600 bg-gray-50 p-3 rounded-lg border border-gray-200 min-h-[60px] whitespace-pre-wrap font-mono">
+                      <div className="text-sm text-gray-600 bg-gray-50 p-3 rounded-sm border border-gray-200 min-h-[60px] whitespace-pre-wrap font-mono">
                         {mig.note || <span className="italic text-gray-600">Không có ghi chú</span>}
                       </div>
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex flex-col gap-2 items-start">
-                        <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium border ${statusInfo.color}`}>
+                        <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-sm font-medium border ${statusInfo.color}`}>
                           {statusInfo.icon}
                           {statusInfo.label}
                         </span>
@@ -123,7 +123,7 @@ export default function AdminMigrationsPage() {
                           disabled={updating === mig.id}
                           value={mig.status}
                           onChange={(e) => handleUpdateStatus(mig.id, Number(e.target.value))}
-                          className="mt-2 text-sm border border-gray-300 rounded-md py-1.5 pl-2 pr-8 focus:ring-indigo-500 focus:border-indigo-500 disabled:opacity-50"
+                          className="mt-2 text-sm border border-gray-300 rounded-sm py-1.5 pl-2 pr-8 focus:ring-indigo-500 focus:border-indigo-500 disabled:opacity-50"
                         >
                           <option value={0}>Pending</option>
                           <option value={1}>Processing</option>

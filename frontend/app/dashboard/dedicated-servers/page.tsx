@@ -93,7 +93,7 @@ export default function CustomerDedicatedServersPage() {
 
         <button 
           onClick={fetchServers}
-          className="p-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:text-slate-900 transition-colors self-start sm:self-auto"
+          className="p-2.5 rounded bg-white border border-slate-200 text-slate-700 hover:text-slate-900 transition-colors self-start sm:self-auto"
         >
           <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
         </button>
@@ -102,7 +102,7 @@ export default function CustomerDedicatedServersPage() {
       {/* Server List */}
       <div className="space-y-6">
         {servers.map((srv) => (
-          <div key={srv.id} className="p-6 rounded-3xl bg-white/60 border border-slate-200 shadow-2xl space-y-6">
+          <div key={srv.id} className="p-6 rounded-lg bg-white/60 border border-slate-200 shadow-2xl space-y-6">
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 border-b border-slate-200 pb-5">
               <div>
                 <div className="flex items-center gap-3 mb-1.5">
@@ -120,19 +120,19 @@ export default function CustomerDedicatedServersPage() {
               <div className="flex flex-wrap items-center gap-2">
                 <button 
                   onClick={() => handlePowerAction(srv.id, 'reboot')}
-                  className="px-3.5 py-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/20 font-semibold text-xs flex items-center gap-1.5 transition-colors"
+                  className="px-3.5 py-2 rounded bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/20 font-semibold text-xs flex items-center gap-1.5 transition-colors"
                 >
                   <RefreshCw className="w-3.5 h-3.5" /> Khởi Động Lại
                 </button>
                 <button 
                   onClick={() => handlePowerAction(srv.id, srv.powerState === 'Running' ? 'shutdown' : 'poweron')}
-                  className={`px-3.5 py-2 rounded-xl font-semibold text-xs flex items-center gap-1.5 transition-colors ${srv.powerState === 'Running' ? 'bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20' : 'bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/20'}`}
+                  className={`px-3.5 py-2 rounded font-semibold text-xs flex items-center gap-1.5 transition-colors ${srv.powerState === 'Running' ? 'bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20' : 'bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/20'}`}
                 >
                   <Power className="w-3.5 h-3.5" /> {srv.powerState === 'Running' ? 'Tắt Nguồn' : 'Bật Nguồn'}
                 </button>
                 <button 
                   onClick={() => alert(`Mở bảng điều khiển phần cứng IPMI Virtual KVM cho máy chủ ${srv.ipAddress}`)}
-                  className="px-3.5 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs flex items-center gap-1.5 shadow-lg shadow-cyan-500/20 transition-colors"
+                  className="px-3.5 py-2 rounded bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs flex items-center gap-1.5 shadow-lg shadow-cyan-500/20 transition-colors"
                 >
                   <Terminal className="w-3.5 h-3.5" /> KVM Remote Console
                 </button>
@@ -141,19 +141,19 @@ export default function CustomerDedicatedServersPage() {
 
             {/* Hardware Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="p-4 rounded-2xl bg-slate-50/60 border border-slate-200/80">
+              <div className="p-4 rounded-md bg-slate-50/60 border border-slate-200/80">
                 <div className="text-xs text-slate-600 flex items-center gap-1.5 mb-1"><Cpu className="w-4 h-4 text-[#1F1F1F]" /> Vi Xử Lý (CPU)</div>
                 <div className="text-sm font-semibold text-slate-900 truncate">{srv.cpuSpec}</div>
               </div>
-              <div className="p-4 rounded-2xl bg-slate-50/60 border border-slate-200/80">
-                <div className="text-xs text-slate-600 flex items-center gap-1.5 mb-1"><Activity className="w-4 h-4 text-slate-200" /> Bộ Nhớ (RAM)</div>
+              <div className="p-4 rounded-md bg-slate-50/60 border border-slate-200/80">
+                <div className="text-xs text-slate-600 flex items-center gap-1.5 mb-1"><Activity className="w-4 h-4 text-slate-700" /> Bộ Nhớ (RAM)</div>
                 <div className="text-sm font-semibold text-slate-900">{srv.ramSpec}</div>
               </div>
-              <div className="p-4 rounded-2xl bg-slate-50/60 border border-slate-200/80">
+              <div className="p-4 rounded-md bg-slate-50/60 border border-slate-200/80">
                 <div className="text-xs text-slate-600 flex items-center gap-1.5 mb-1"><HardDrive className="w-4 h-4 text-emerald-400" /> Ổ Cứng (Storage)</div>
                 <div className="text-sm font-semibold text-slate-900 truncate">{srv.diskSpec}</div>
               </div>
-              <div className="p-4 rounded-2xl bg-slate-50/60 border border-slate-200/80">
+              <div className="p-4 rounded-md bg-slate-50/60 border border-slate-200/80">
                 <div className="text-xs text-slate-600 flex items-center gap-1.5 mb-1"><ShieldCheck className="w-4 h-4 text-amber-400" /> Băng Thông Mạng</div>
                 <div className="text-sm font-semibold text-slate-900">{srv.bandwidth}</div>
               </div>

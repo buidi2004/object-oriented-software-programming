@@ -23,7 +23,7 @@ export const HomePartnersGlobe = () => {
 
           {/* Center Globe (Realistic 3D Earth) */}
           <div className="flex justify-center relative py-6 md:py-0">
-            <div className="absolute inset-0 bg-blue-50/50 rounded-full blur-3xl" />
+            <div className="absolute inset-0 bg-slate-100/50 rounded-full blur-3xl" />
             <div className="w-48 h-48 sm:w-60 sm:h-60 md:w-72 md:h-72 rounded-full shadow-[0_0_50px_rgba(37,99,235,0.2)] flex items-center justify-center relative z-10">
               <img 
                 src="https://upload.wikimedia.org/wikipedia/commons/2/22/Earth_Western_Hemisphere_transparent_background.png" 
@@ -42,7 +42,7 @@ export const HomePartnersGlobe = () => {
               <LogoImage src="https://icon.horse/icon/shopee.vn" alt="Shopee" />
               <LogoImage src="https://icon.horse/icon/fpt.com.vn" alt="FPT" />
               <LogoImage src="https://icon.horse/icon/vingroup.net" alt="Vingroup" />
-              <div className="h-14 sm:h-16 bg-blue-50 border border-blue-100 rounded-xl flex items-center justify-center text-sm font-black text-[#1F1F1F] shadow-xs cursor-pointer hover:scale-105 transition-transform">
+              <div className="h-14 sm:h-16 bg-slate-50 border border-slate-200 rounded flex items-center justify-center text-sm font-black text-[#1F1F1F] shadow-xs cursor-pointer hover:scale-105 transition-transform">
                 25,000+
               </div>
             </div>
@@ -55,7 +55,7 @@ export const HomePartnersGlobe = () => {
 };
 
 const LogoImage = ({ src, alt }: { src: string, alt: string }) => (
-  <div className="h-16 bg-white border border-slate-100 rounded-xl flex items-center justify-center p-3 hover:border-blue-200 transition-all shadow-xs hover:shadow-md cursor-pointer group">
+  <div className="h-16 bg-white border border-slate-100 rounded flex items-center justify-center p-3 hover:border-slate-300 transition-all shadow-xs hover:shadow-md cursor-pointer group">
     <img src={src} alt={alt} className="max-h-full max-w-full object-contain group-hover:scale-110 transition-transform duration-300" />
   </div>
 );

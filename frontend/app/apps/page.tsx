@@ -177,7 +177,7 @@ export default function AppMarketplacePage() {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           {/* Status Bar */}
-          <div className="flex flex-wrap items-center justify-between gap-4 p-3.5 mb-10 rounded-2xl bg-[#0d1424] border border-slate-200 text-xs font-mono">
+          <div className="flex flex-wrap items-center justify-between gap-4 p-3.5 mb-10 rounded-md bg-[#0d1424] border border-slate-200 text-xs font-mono">
             <div className="flex items-center gap-3">
               <span className="flex items-center gap-1.5 text-slate-200 font-bold">
                 <Boxes className="w-3.5 h-3.5 text-slate-200" />
@@ -196,7 +196,7 @@ export default function AppMarketplacePage() {
           </div>
 
           <div className="text-center max-w-4xl mx-auto space-y-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-indigo-950/60 border border-indigo-800/60 text-slate-200 text-xs font-mono">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm bg-indigo-950/60 border border-indigo-800/60 text-slate-200 text-xs font-mono">
               <Zap className="w-3.5 h-3.5 text-slate-200" />
               1-CLICK AUTOMATED APP PROVISIONING
             </div>
@@ -221,7 +221,7 @@ export default function AppMarketplacePage() {
                 placeholder="Tìm kiếm ứng dụng (WordPress, Docker, Nextcloud, Ollama AI...)..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-11 pr-4 py-3.5 rounded-xl bg-white border border-slate-200 text-slate-900 placeholder-slate-500 text-xs font-mono focus:outline-none focus:border-indigo-500 shadow-xl transition-all"
+                className="w-full pl-11 pr-4 py-3.5 rounded bg-white border border-slate-200 text-slate-900 placeholder-slate-500 text-xs font-mono focus:outline-none focus:border-indigo-500 shadow-xl transition-all"
               />
             </div>
 
@@ -237,7 +237,7 @@ export default function AppMarketplacePage() {
                 <button
                   key={cat.id}
                   onClick={() => setSelectedCategory(cat.id)}
-                  className={`px-4 py-2 rounded-xl border transition-all ${
+                  className={`px-4 py-2 rounded border transition-all ${
                     selectedCategory === cat.id
                       ? 'bg-indigo-600 text-white border-indigo-400 shadow-md shadow-indigo-600/20 font-bold'
                       : 'bg-[#0e1627] text-slate-400 border-slate-800 hover:border-slate-700 hover:text-white'
@@ -258,11 +258,11 @@ export default function AppMarketplacePage() {
           {filteredApps.map((app) => (
             <div
               key={app.id}
-              className="p-6 rounded-2xl bg-white border border-slate-200 flex flex-col justify-between hover:border-indigo-500/60 transition-all group"
+              className="p-6 rounded-md bg-white border border-slate-200 flex flex-col justify-between hover:border-indigo-500/60 transition-all group"
             >
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <div className="w-12 h-12 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center group-hover:scale-105 transition-transform">
+                  <div className="w-12 h-12 rounded bg-slate-100 border border-slate-200 flex items-center justify-center group-hover:scale-105 transition-transform">
                     <app.Logo className="w-7 h-7" style={{ color: app.brandColor }} />
                   </div>
                   <span className="px-2 py-0.5 rounded bg-indigo-950/80 border border-indigo-800/60 text-slate-200 text-[10px] font-mono font-bold">
@@ -281,18 +281,18 @@ export default function AppMarketplacePage() {
               <div>
                 <div className="space-y-1.5 font-mono text-[11px] text-slate-600 mb-4 pt-3 border-t border-slate-200">
                   <div className="flex justify-between">
-                    <span className="text-slate-500">Khuyến nghị:</span>
+                    <span className="text-slate-600">Khuyến nghị:</span>
                     <span className="text-slate-700 font-bold">{app.specs}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-500">Port mặc định:</span>
+                    <span className="text-slate-600">Port mặc định:</span>
                     <span className="text-slate-200 font-bold">{app.port}</span>
                   </div>
                 </div>
 
                 <button
                   onClick={() => handleInstall(app.id)}
-                  className="w-full py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-mono font-bold transition-all flex items-center justify-center gap-1.5 shadow-md shadow-indigo-600/20"
+                  className="w-full py-2.5 rounded bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-mono font-bold transition-all flex items-center justify-center gap-1.5 shadow-md shadow-indigo-600/20"
                 >
                   <Play className="w-3.5 h-3.5" />
                   <span>Cài Đặt 1-Click Ngay</span>
@@ -308,7 +308,7 @@ export default function AppMarketplacePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-indigo-950 text-slate-200 text-xs font-mono mb-3 border border-indigo-800">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm bg-indigo-950 text-slate-200 text-xs font-mono mb-3 border border-indigo-800">
               <Zap className="w-3.5 h-3.5" />
               1-CLICK CONTAINER ENGINE
             </div>
@@ -323,10 +323,10 @@ export default function AppMarketplacePage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             
             {/* Schematic 1: 60s Provisioning Flow */}
-            <div className="p-6 rounded-3xl bg-white border border-slate-200 flex flex-col justify-between space-y-6">
+            <div className="p-6 rounded-lg bg-white border border-slate-200 flex flex-col justify-between space-y-6">
               <div>
-                <div className="p-4 rounded-2xl bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
-                  <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
+                <div className="p-4 rounded-md bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
+                  <div className="text-[10px] text-slate-600 uppercase mb-3 flex items-center justify-between">
                     <span>60S AUTO-PROVISIONING FLOW</span>
                     <span className="text-emerald-400">READY TO USE</span>
                   </div>
@@ -360,10 +360,10 @@ export default function AppMarketplacePage() {
             </div>
 
             {/* Schematic 2: Reverse Proxy & Auto SSL */}
-            <div className="p-6 rounded-3xl bg-white border border-slate-200 flex flex-col justify-between space-y-6">
+            <div className="p-6 rounded-lg bg-white border border-slate-200 flex flex-col justify-between space-y-6">
               <div>
-                <div className="p-4 rounded-2xl bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
-                  <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
+                <div className="p-4 rounded-md bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
+                  <div className="text-[10px] text-slate-600 uppercase mb-3 flex items-center justify-between">
                     <span>NGINX REVERSE PROXY &amp; SSL</span>
                     <span className="text-slate-200">AUTO-HTTPS</span>
                   </div>
@@ -397,10 +397,10 @@ export default function AppMarketplacePage() {
             </div>
 
             {/* Schematic 3: Dedicated NVMe & Root Access */}
-            <div className="p-6 rounded-3xl bg-white border border-slate-200 flex flex-col justify-between space-y-6">
+            <div className="p-6 rounded-lg bg-white border border-slate-200 flex flex-col justify-between space-y-6">
               <div>
-                <div className="p-4 rounded-2xl bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
-                  <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
+                <div className="p-4 rounded-md bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
+                  <div className="text-[10px] text-slate-600 uppercase mb-3 flex items-center justify-between">
                     <span>KERNEL ISOLATION &amp; SSH</span>
                     <span className="text-purple-400">ROOT PRIVILEGES</span>
                   </div>
@@ -450,7 +450,7 @@ export default function AppMarketplacePage() {
             {faqs.map((faq, idx) => (
               <div
                 key={idx}
-                className="bg-white rounded-2xl border border-slate-200 overflow-hidden transition-all"
+                className="bg-white rounded-md border border-slate-200 overflow-hidden transition-all"
               >
                 <button
                   onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
@@ -460,7 +460,7 @@ export default function AppMarketplacePage() {
                   {openFaq === idx ? (
                     <ChevronUp className="w-5 h-5 text-slate-200 shrink-0" />
                   ) : (
-                    <ChevronDown className="w-5 h-5 text-slate-500 shrink-0" />
+                    <ChevronDown className="w-5 h-5 text-slate-600 shrink-0" />
                   )}
                 </button>
                 {openFaq === idx && (
@@ -476,9 +476,9 @@ export default function AppMarketplacePage() {
 
       {/* 5. CALL TO ACTION */}
       <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="rounded-3xl bg-gradient-to-r from-[#14122e] via-[#0b0a1a] to-[#14122e] p-8 sm:p-12 border border-indigo-600/30 text-center relative overflow-hidden shadow-2xl">
+        <div className="rounded-lg bg-gradient-to-r from-[#14122e] via-[#0b0a1a] to-[#14122e] p-8 sm:p-12 border border-indigo-600/30 text-center relative overflow-hidden shadow-2xl">
           <div className="relative z-10 max-w-3xl mx-auto space-y-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-indigo-950 border border-indigo-800 text-slate-200 text-xs font-mono">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm bg-indigo-950 border border-indigo-800 text-slate-200 text-xs font-mono">
               <Zap className="w-3.5 h-3.5" />
               DEPLOY ANY APP IN 60 SECONDS
             </div>
@@ -494,13 +494,13 @@ export default function AppMarketplacePage() {
             <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
               <Link
                 href="/services/cloud-vps"
-                className="px-8 py-3.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs font-mono shadow-xl shadow-indigo-600/25 transition-all hover:scale-105"
+                className="px-8 py-3.5 rounded bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs font-mono shadow-xl shadow-indigo-600/25 transition-all hover:scale-105"
               >
                 Xem Cấu Hình Cloud VPS
               </Link>
               <Link
                 href="/contact"
-                className="px-8 py-3.5 rounded-xl bg-white hover:bg-slate-200 text-slate-900 font-bold text-xs font-mono border border-slate-300 transition-all"
+                className="px-8 py-3.5 rounded bg-white hover:bg-slate-200 text-slate-900 font-bold text-xs font-mono border border-slate-300 transition-all"
               >
                 Yêu Cầu Tích Hợp App Mới
               </Link>

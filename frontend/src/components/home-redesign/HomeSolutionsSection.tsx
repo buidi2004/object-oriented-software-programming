@@ -114,7 +114,7 @@ export const HomeSolutionsSection = () => {
               className={`relative whitespace-nowrap px-4 sm:px-6 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-bold transition-colors outline-none border shrink-0 ${
                 activeTab === tab.id
                   ? 'text-white border-transparent'
-                  : 'bg-white border-slate-200 text-slate-600 hover:border-blue-300 hover:text-[#1F1F1F]'
+                  : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300 hover:text-[#1F1F1F]'
               }`}
             >
               <span className="relative z-10">{tab.label}</span>
@@ -122,7 +122,7 @@ export const HomeSolutionsSection = () => {
               {activeTab === tab.id && (
                 <motion.div
                   layoutId="active-pill"
-                  className="absolute inset-0 bg-blue-600 rounded-full shadow-md"
+                  className="absolute inset-0 bg-[#1F1F1F] rounded-full shadow-md"
                   transition={{ type: 'spring', stiffness: 500, damping: 30 }}
                 />
               )}
@@ -136,7 +136,7 @@ export const HomeSolutionsSection = () => {
             <div 
               key={idx} 
               onClick={() => { if (sol.link && sol.link !== '#') router.push(sol.link); }}
-              className="group relative rounded-2xl overflow-hidden h-64 sm:h-72 cursor-pointer shadow-lg"
+              className="group relative rounded-md overflow-hidden h-64 sm:h-72 cursor-pointer shadow-lg"
             >
               <div 
                 className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
@@ -151,7 +151,7 @@ export const HomeSolutionsSection = () => {
                 <h3 className="text-lg sm:text-xl font-bold mb-1.5 sm:mb-2">{sol.title}</h3>
                 <p className="text-xs sm:text-sm text-slate-700 line-clamp-2 mb-3 sm:mb-4">{sol.desc}</p>
                 <div>
-                  <span className="inline-flex items-center px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-lg bg-blue-600/90 hover:bg-blue-600 text-xs sm:text-sm font-bold backdrop-blur-sm transition-colors">
+                  <span className="inline-flex items-center px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-sm bg-[#1F1F1F]/90 hover:bg-[#1F1F1F] text-xs sm:text-sm font-bold backdrop-blur-sm transition-colors text-white">
                     Xem chi tiết
                   </span>
                 </div>

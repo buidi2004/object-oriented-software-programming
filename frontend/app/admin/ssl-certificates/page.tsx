@@ -225,7 +225,7 @@ export default function AdminSslCertificatesPage() {
     <div className="min-h-screen bg-slate-50 py-8 px-4 sm:px-6 lg:px-8">
       {/* Toast */}
       {toast && (
-        <div className={`fixed bottom-5 right-5 z-50 px-5 py-3 rounded-xl shadow-xl text-white font-semibold text-sm flex items-center gap-2.5 animate-in slide-in-from-bottom-5 ${
+        <div className={`fixed bottom-5 right-5 z-50 px-5 py-3 rounded shadow-xl text-white font-semibold text-sm flex items-center gap-2.5 animate-in slide-in-from-bottom-5 ${
           toast.type === 'success' ? 'bg-emerald-600' : 'bg-red-600'
         }`}>
           {toast.type === 'success' ? <CheckCircle2 className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />}
@@ -237,13 +237,13 @@ export default function AdminSslCertificatesPage() {
         {/* Navigation */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div>
-            <Link href="/admin" className="text-xs font-bold text-slate-500 hover:text-[#1F1F1F] flex items-center gap-1 mb-2">
+            <Link href="/admin" className="text-xs font-bold text-slate-600 hover:text-[#1F1F1F] flex items-center gap-1 mb-2">
               <ArrowLeft className="w-3.5 h-3.5" /> Quay lại Admin Panel
             </Link>
             <h1 className="text-2xl font-black text-slate-900 flex items-center gap-2.5">
               <ShieldCheck className="w-6 h-6 text-emerald-600" /> Quản Lý Chứng Chỉ SSL (Admin)
             </h1>
-            <p className="text-xs text-slate-500 mt-0.5">
+            <p className="text-xs text-slate-600 mt-0.5">
               Theo dõi thời hạn chứng chỉ bảo mật HTTPS, nhà phát hành và hỗ trợ khách hàng tải chứng chỉ bảo mật.
             </p>
           </div>
@@ -256,7 +256,7 @@ export default function AdminSslCertificatesPage() {
                 placeholder="Tìm tên miền / email / CA..."
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                className="pl-10 pr-4 py-2.5 rounded-xl bg-white border border-slate-200 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm w-60"
+                className="pl-10 pr-4 py-2.5 rounded bg-white border border-slate-200 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm w-60"
               />
             </div>
             <button
@@ -264,7 +264,7 @@ export default function AdminSslCertificatesPage() {
                 setFormData({ domainName: '', ownerEmail: '', issuer: "Let's Encrypt", autoRenew: true });
                 setShowAddModal(true);
               }}
-              className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition-colors flex items-center gap-1.5 shadow-sm"
+              className="px-4 py-2.5 rounded bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition-colors flex items-center gap-1.5 shadow-sm"
             >
               <Plus className="w-4 h-4" /> Cấp Mới SSL
             </button>
@@ -282,7 +282,7 @@ export default function AdminSslCertificatesPage() {
             <button
               key={tab.id}
               onClick={() => setFilter(tab.id as any)}
-              className={`px-4 py-2 rounded-xl text-xs font-semibold transition-colors ${
+              className={`px-4 py-2 rounded text-xs font-semibold transition-colors ${
                 filter === tab.id
                   ? 'bg-emerald-600 text-white shadow-sm'
                   : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200'
@@ -294,10 +294,10 @@ export default function AdminSslCertificatesPage() {
         </div>
 
         {/* SSL Table */}
-        <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden mb-8">
+        <div className="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden mb-8">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 text-slate-500 font-extrabold uppercase tracking-wider border-b border-slate-100">
+              <thead className="bg-slate-50 text-slate-600 font-extrabold uppercase tracking-wider border-b border-slate-100">
                 <tr>
                   <th className="px-6 py-4">Tên Miền Bảo Mật</th>
                   <th className="px-6 py-4">Nhà Phát Hành (CA)</th>
@@ -317,7 +317,7 @@ export default function AdminSslCertificatesPage() {
                       </div>
                     </td>
                     <td className="px-6 py-4 font-semibold text-slate-700">{cert.issuer}</td>
-                    <td className="px-6 py-4 text-slate-500 font-mono">{cert.ownerEmail}</td>
+                    <td className="px-6 py-4 text-slate-600 font-mono">{cert.ownerEmail}</td>
                     <td className="px-6 py-4">
                       <span className={`font-black ${
                         cert.daysRemaining <= 30 ? 'text-amber-600' : 'text-slate-800'
@@ -339,7 +339,7 @@ export default function AdminSslCertificatesPage() {
                         <button
                           onClick={() => handleRenewCert(cert.id, cert.domainName)}
                           disabled={renewingId === cert.id}
-                          className="px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold text-xs transition-colors flex items-center gap-1 disabled:opacity-50"
+                          className="px-3 py-1.5 rounded bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold text-xs transition-colors flex items-center gap-1 disabled:opacity-50"
                           title="Gia hạn SSL"
                         >
                           <RefreshCw className={`w-3.5 h-3.5 ${renewingId === cert.id ? 'animate-spin' : ''}`} />
@@ -347,21 +347,21 @@ export default function AdminSslCertificatesPage() {
                         </button>
                         <button
                           onClick={() => handleDownloadFullchain(cert)}
-                          className="p-1.5 text-slate-600 hover:text-[#1F1F1F] hover:bg-blue-50 rounded-lg transition-colors"
+                          className="p-1.5 text-slate-600 hover:text-[#1F1F1F] hover:bg-blue-50 rounded-sm transition-colors"
                           title="Tải Cert (Fullchain.pem)"
                         >
                           <Download className="w-3.5 h-3.5" />
                         </button>
                         <button
                           onClick={() => setConfirmKeyCert(cert)}
-                          className="p-1.5 text-slate-600 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+                          className="p-1.5 text-slate-600 hover:text-rose-600 hover:bg-rose-50 rounded-sm transition-colors"
                           title="Tải Private Key (Yêu cầu xác nhận Admin)"
                         >
                           <Key className="w-3.5 h-3.5 text-rose-500" />
                         </button>
                         <button
                           onClick={() => handleRevoke(cert.id, cert.domainName)}
-                          className="p-1.5 text-slate-600 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+                          className="p-1.5 text-slate-600 hover:text-rose-600 hover:bg-rose-50 rounded-sm transition-colors"
                           title="Thu hồi chứng chỉ"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
@@ -378,7 +378,7 @@ export default function AdminSslCertificatesPage() {
         {/* Confirmation Modal for Admin Private Key Download */}
         {confirmKeyCert && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-white/60 backdrop-blur-sm animate-in fade-in">
-            <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100 space-y-4">
+            <div className="bg-white rounded-lg max-w-md w-full p-6 shadow-2xl border border-slate-100 space-y-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2.5 text-rose-600 font-black text-base">
                   <ShieldAlert className="w-6 h-6" />
@@ -386,13 +386,13 @@ export default function AdminSslCertificatesPage() {
                 </div>
                 <button 
                   onClick={() => setConfirmKeyCert(null)}
-                  className="p-1 rounded-lg text-slate-600 hover:text-slate-600 hover:bg-slate-100"
+                  className="p-1 rounded-sm text-slate-600 hover:text-slate-600 hover:bg-slate-100"
                 >
                   <X className="w-4 h-4" />
                 </button>
               </div>
 
-              <div className="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-900 text-xs space-y-2">
+              <div className="p-3.5 rounded-md bg-rose-50 border border-rose-200 text-rose-900 text-xs space-y-2">
                 <p className="font-bold">
                   Quy định kiểm toán &amp; bảo mật Admin:
                 </p>
@@ -408,7 +408,7 @@ export default function AdminSslCertificatesPage() {
                 <button
                   type="button"
                   onClick={() => setConfirmKeyCert(null)}
-                  className="px-4 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100"
+                  className="px-4 py-2 rounded text-xs font-bold text-slate-600 hover:bg-slate-100"
                 >
                   Hủy Bỏ
                 </button>
@@ -416,7 +416,7 @@ export default function AdminSslCertificatesPage() {
                   type="button"
                   onClick={handleConfirmDownloadPrivateKey}
                   disabled={downloadingKey}
-                  className="px-5 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-slate-900 font-bold text-xs shadow-md flex items-center gap-2"
+                  className="px-5 py-2 rounded bg-rose-600 hover:bg-rose-700 text-slate-900 font-bold text-xs shadow-md flex items-center gap-2"
                 >
                   {downloadingKey && <RefreshCw className="w-3.5 h-3.5 animate-spin" />}
                   Xác Nhận Quyền Admin &amp; Tải
@@ -429,10 +429,10 @@ export default function AdminSslCertificatesPage() {
         {/* Add Modal */}
         {showAddModal && (
           <div className="fixed inset-0 bg-white/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full border border-slate-200 shadow-2xl">
+            <div className="bg-white rounded-lg p-6 sm:p-8 max-w-md w-full border border-slate-200 shadow-2xl">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-base font-black text-slate-900">Yêu Cầu Cấp Chứng Chỉ SSL Mới</h3>
-                <button onClick={() => setShowAddModal(false)} className="p-1.5 text-slate-600 hover:text-slate-600 rounded-lg hover:bg-slate-100">
+                <button onClick={() => setShowAddModal(false)} className="p-1.5 text-slate-600 hover:text-slate-600 rounded-sm hover:bg-slate-100">
                   <X className="w-5 h-5" />
                 </button>
               </div>
@@ -446,7 +446,7 @@ export default function AdminSslCertificatesPage() {
                     value={formData.domainName}
                     onChange={e => setFormData({ ...formData, domainName: e.target.value })}
                     placeholder="*.example.vn hoặc secure.example.com"
-                    className="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500 outline-none font-mono"
+                    className="w-full px-3 py-2 text-xs rounded border border-slate-200 focus:ring-2 focus:ring-emerald-500 outline-none font-mono"
                   />
                 </div>
 
@@ -458,7 +458,7 @@ export default function AdminSslCertificatesPage() {
                     value={formData.ownerEmail}
                     onChange={e => setFormData({ ...formData, ownerEmail: e.target.value })}
                     placeholder="admin@example.com"
-                    className="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500 outline-none"
+                    className="w-full px-3 py-2 text-xs rounded border border-slate-200 focus:ring-2 focus:ring-emerald-500 outline-none"
                   />
                 </div>
 
@@ -467,7 +467,7 @@ export default function AdminSslCertificatesPage() {
                   <select
                     value={formData.issuer}
                     onChange={e => setFormData({ ...formData, issuer: e.target.value as any })}
-                    className="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500 outline-none bg-white"
+                    className="w-full px-3 py-2 text-xs rounded border border-slate-200 focus:ring-2 focus:ring-emerald-500 outline-none bg-white"
                   >
                     <option value="Let's Encrypt">Let's Encrypt (Miễn phí 90 ngày / Tự động gia hạn)</option>
                     <option value="Sectigo PositiveSSL">Sectigo PositiveSSL (Bảo hiểm $10,000 / 1 Năm)</option>
@@ -491,13 +491,13 @@ export default function AdminSslCertificatesPage() {
                   <button
                     type="button"
                     onClick={() => setShowAddModal(false)}
-                    className="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold"
+                    className="px-4 py-2.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold"
                   >
                     Hủy
                   </button>
                   <button
                     type="submit"
-                    className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-md"
+                    className="px-5 py-2.5 rounded bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-md"
                   >
                     Cấp Chứng Chỉ
                   </button>

@@ -57,7 +57,7 @@ export const BlogComments: React.FC<{ articleId?: string; postSlug?: string }> =
   };
 
   return (
-    <div className="mt-12 bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
+    <div className="mt-12 bg-white rounded-md shadow-sm border border-slate-200 p-8">
       <div className="flex items-center gap-3 mb-8">
         <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-[#1F1F1F]">
           <MessageCircle className="w-5 h-5" />
@@ -73,15 +73,15 @@ export const BlogComments: React.FC<{ articleId?: string; postSlug?: string }> =
             <Loader2 className="w-6 h-6 text-[#1F1F1F] animate-spin" />
           </div>
         ) : comments.length === 0 ? (
-          <p className="text-slate-500 text-sm text-center py-4">Chưa có bình luận nào. Hãy là người đầu tiên!</p>
+          <p className="text-slate-600 text-sm text-center py-4">Chưa có bình luận nào. Hãy là người đầu tiên!</p>
         ) : (
           comments.map((comment) => (
             <div key={comment.id} className="flex gap-4">
-              <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 font-bold shrink-0">
+              <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 font-bold shrink-0">
                 {(comment.author || 'User').charAt(0).toUpperCase()}
               </div>
               <div>
-                <div className="bg-slate-50 rounded-2xl rounded-tl-none p-4 border border-slate-100">
+                <div className="bg-slate-50 rounded-md rounded-tl-none p-4 border border-slate-100">
                   <div className="flex items-center gap-2 mb-1">
                     <span className="font-bold text-slate-900 text-sm">{comment.author || 'Người dùng'}</span>
                     <span className="text-xs text-slate-600 flex items-center gap-1">
@@ -98,14 +98,14 @@ export const BlogComments: React.FC<{ articleId?: string; postSlug?: string }> =
       </div>
 
       {successMsg && (
-        <div className="mb-6 p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold flex items-center gap-2">
+        <div className="mb-6 p-4 rounded bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold flex items-center gap-2">
           <span>✓</span>
           <span>{successMsg}</span>
         </div>
       )}
 
       <form onSubmit={handleSubmit} className="flex gap-4">
-        <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 shrink-0">
+        <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 shrink-0">
           <User className="w-5 h-5" />
         </div>
         <div className="flex-1 relative">
@@ -113,13 +113,13 @@ export const BlogComments: React.FC<{ articleId?: string; postSlug?: string }> =
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
             placeholder="Viết bình luận của bạn..."
-            className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 pr-12 text-sm text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none"
+            className="w-full bg-slate-50 border border-slate-200 rounded px-4 py-3 pr-12 text-sm text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none"
             rows={3}
           />
           <button
             type="submit"
             disabled={!newComment.trim() || submitting}
-            className="absolute bottom-3 right-3 p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors"
+            className="absolute bottom-3 right-3 p-2 bg-blue-600 text-white rounded-sm hover:bg-blue-700 disabled:opacity-50 transition-colors"
           >
             {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
           </button>

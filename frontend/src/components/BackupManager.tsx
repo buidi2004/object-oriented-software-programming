@@ -62,20 +62,20 @@ export default function BackupManager({ orderId }: { orderId: string }) {
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm mt-6">
+    <div className="bg-white rounded-md border border-slate-200 overflow-hidden shadow-sm mt-6">
       <div className="p-6 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center">
+          <div className="w-10 h-10 rounded bg-purple-50 text-purple-600 flex items-center justify-center">
             <Database className="w-5 h-5" />
           </div>
           <div>
             <h2 className="text-lg font-bold text-slate-900">Quản lý Sao lưu (Backups)</h2>
-            <p className="text-sm text-slate-500">Tạo và khôi phục bản sao lưu dữ liệu cho máy chủ</p>
+            <p className="text-sm text-slate-600">Tạo và khôi phục bản sao lưu dữ liệu cho máy chủ</p>
           </div>
         </div>
         <button
           onClick={fetchBackups}
-          className="p-2 text-slate-500 hover:text-[#1F1F1F] hover:bg-blue-50 rounded-lg transition-colors"
+          className="p-2 text-slate-600 hover:text-[#1F1F1F] hover:bg-blue-50 rounded-sm transition-colors"
           title="Làm mới"
         >
           <RefreshCw className={`w-5 h-5 ${isLoading ? 'animate-spin' : ''}`} />
@@ -88,12 +88,12 @@ export default function BackupManager({ orderId }: { orderId: string }) {
           value={note}
           onChange={(e) => setNote(e.target.value)}
           placeholder="Nhập ghi chú cho bản sao lưu (VD: Backup trước khi cài LAMP)..."
-          className="flex-1 px-4 py-2.5 bg-white border border-slate-200 rounded-xl focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none text-sm transition-all"
+          className="flex-1 px-4 py-2.5 bg-white border border-slate-200 rounded focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none text-sm transition-all"
         />
         <button
           onClick={handleCreateBackup}
           disabled={isCreating}
-          className="px-5 py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-xl transition-all shadow-md shadow-purple-600/20 flex items-center gap-2 whitespace-nowrap disabled:opacity-50"
+          className="px-5 py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded transition-all shadow-md shadow-purple-600/20 flex items-center gap-2 whitespace-nowrap disabled:opacity-50"
         >
           {isCreating ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
           Tạo bản sao lưu ngay
@@ -102,7 +102,7 @@ export default function BackupManager({ orderId }: { orderId: string }) {
 
       <div className="p-0">
         {backups.length === 0 && !isLoading ? (
-          <div className="p-8 text-center text-slate-500">
+          <div className="p-8 text-center text-slate-600">
             <Archive className="w-12 h-12 text-slate-700 mx-auto mb-3" />
             <p>Chưa có bản sao lưu nào. Hãy tạo bản sao lưu đầu tiên để bảo vệ dữ liệu của bạn!</p>
           </div>
@@ -116,7 +116,7 @@ export default function BackupManager({ orderId }: { orderId: string }) {
                   </div>
                   <div>
                     <h3 className="text-sm font-bold text-slate-900">{backup.note || 'Bản sao lưu tự động'}</h3>
-                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-500 mt-1">
+                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-600 mt-1">
                       <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> {new Date(backup.backupDate).toLocaleString('vi-VN')}</span>
                       <span className="font-mono bg-slate-100 px-1.5 py-0.5 rounded text-slate-600">{formatSize(backup.sizeBytes)}</span>
                       <span className={`font-bold ${backup.status === 'Completed' ? 'text-emerald-600' : 'text-amber-500'}`}>
@@ -126,7 +126,7 @@ export default function BackupManager({ orderId }: { orderId: string }) {
                   </div>
                 </div>
                 {backup.status === 'Completed' && (
-                  <button className="text-sm font-bold text-[#1F1F1F] hover:text-[#1F1F1F] bg-blue-50 hover:bg-blue-100 px-4 py-2 rounded-lg transition-colors flex items-center gap-2">
+                  <button className="text-sm font-bold text-[#1F1F1F] hover:text-[#1F1F1F] bg-blue-50 hover:bg-blue-100 px-4 py-2 rounded-sm transition-colors flex items-center gap-2">
                     <PlayCircle className="w-4 h-4" /> Khôi phục
                   </button>
                 )}

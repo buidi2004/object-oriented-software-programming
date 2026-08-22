@@ -245,7 +245,7 @@ export default function AdminUsersPage() {
     <div className="min-h-screen bg-slate-50">
       {/* Toast Notification */}
       {toast && (
-        <div className={`fixed bottom-5 right-5 z-50 px-5 py-3 rounded-xl shadow-xl text-white font-semibold text-sm flex items-center gap-2.5 animate-in slide-in-from-bottom-5 ${
+        <div className={`fixed bottom-5 right-5 z-50 px-5 py-3 rounded shadow-xl text-white font-semibold text-sm flex items-center gap-2.5 animate-in slide-in-from-bottom-5 ${
           toast.type === 'success' ? 'bg-emerald-600' : 'bg-red-600'
         }`}>
           {toast.type === 'success' ? <CheckCircle2 className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />}
@@ -257,25 +257,25 @@ export default function AdminUsersPage() {
       <header className="bg-white border-b border-slate-200 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link href="/admin" className="p-2 rounded-lg hover:bg-slate-100 transition-colors">
+            <Link href="/admin" className="p-2 rounded-sm hover:bg-slate-100 transition-colors">
               <ArrowLeft className="w-5 h-5 text-slate-600" />
             </Link>
             <div>
               <h1 className="text-xl font-bold text-slate-900">Quản lý Người dùng & Tài khoản</h1>
-              <p className="text-xs text-slate-500">{users.length} tài khoản trong hệ thống</p>
+              <p className="text-xs text-slate-600">{users.length} tài khoản trong hệ thống</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
             <button
               onClick={fetchUsers}
-              className="p-2 text-slate-500 hover:bg-slate-100 rounded-xl transition-colors"
+              className="p-2 text-slate-600 hover:bg-slate-100 rounded transition-colors"
               title="Tải lại danh sách"
             >
               <RefreshCw className="w-5 h-5" />
             </button>
             <button 
               onClick={() => setShowAddModal(true)}
-              className="px-4 py-2 rounded-xl bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 transition-colors flex items-center gap-2 shadow-sm"
+              className="px-4 py-2 rounded bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 transition-colors flex items-center gap-2 shadow-sm"
             >
               <Plus className="w-4 h-4" />
               Thêm User Mới
@@ -286,7 +286,7 @@ export default function AdminUsersPage() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Filters */}
-        <div className="bg-white rounded-2xl p-4 border border-slate-200 mb-6 flex flex-wrap gap-4 items-center justify-between shadow-sm">
+        <div className="bg-white rounded-md p-4 border border-slate-200 mb-6 flex flex-wrap gap-4 items-center justify-between shadow-sm">
           <div className="flex-1 min-w-[240px] relative">
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-600" />
             <input
@@ -294,7 +294,7 @@ export default function AdminUsersPage() {
               placeholder="Tìm kiếm theo họ tên, email hoặc số điện thoại..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+              className="w-full pl-10 pr-4 py-2.5 rounded border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
             />
           </div>
           <div className="flex items-center gap-2">
@@ -302,7 +302,7 @@ export default function AdminUsersPage() {
             <select
               value={filterRole}
               onChange={(e) => setFilterRole(e.target.value)}
-              className="px-3 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500/20 bg-white"
+              className="px-3 py-2.5 rounded border border-slate-200 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500/20 bg-white"
             >
               <option value="all">Tất cả vai trò</option>
               <option value="Customer">Khách hàng (Customer)</option>
@@ -314,7 +314,7 @@ export default function AdminUsersPage() {
         </div>
 
         {/* Users Table */}
-        <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+        <div className="bg-white rounded-md border border-slate-200 overflow-hidden shadow-sm">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
@@ -331,12 +331,12 @@ export default function AdminUsersPage() {
                   <tr key={user.id} className="hover:bg-slate-50/80 transition-colors">
                     <td className="py-3.5 px-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-slate-900 font-bold shadow-sm">
+                        <div className="w-10 h-10 rounded bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-slate-900 font-bold shadow-sm">
                           {user.fullName[0]?.toUpperCase() || 'U'}
                         </div>
                         <div>
                           <p className="font-bold text-slate-900">{user.fullName}</p>
-                          <p className="text-xs text-slate-500 flex items-center gap-1.5 mt-0.5">
+                          <p className="text-xs text-slate-600 flex items-center gap-1.5 mt-0.5">
                             <Mail className="w-3 h-3 text-slate-600" />
                             {user.email}
                             {user.phoneNumber && (
@@ -352,7 +352,7 @@ export default function AdminUsersPage() {
                       <select
                         value={user.role}
                         onChange={(e) => handleChangeRole(user.id, e.target.value)}
-                        className={`px-2.5 py-1 rounded-lg border text-xs font-bold focus:outline-none focus:ring-2 focus:ring-blue-500/20 ${
+                        className={`px-2.5 py-1 rounded-sm border text-xs font-bold focus:outline-none focus:ring-2 focus:ring-blue-500/20 ${
                           user.role === 'Admin' ? 'bg-purple-50 text-purple-700 border-purple-200' :
                           user.role === 'Staff' ? 'bg-blue-50 text-[#1F1F1F] border-blue-200' :
                           user.role === 'Editor' ? 'bg-teal-50 text-teal-700 border-teal-200' :
@@ -377,7 +377,7 @@ export default function AdminUsersPage() {
                         {user.status === 'active' ? 'Hoạt động' : 'Bị khóa'}
                       </span>
                     </td>
-                    <td className="py-3.5 px-4 text-xs text-slate-500">
+                    <td className="py-3.5 px-4 text-xs text-slate-600">
                       {new Date(user.createdAt).toLocaleDateString('vi-VN')}
                     </td>
                     <td className="py-3.5 px-4">
@@ -385,7 +385,7 @@ export default function AdminUsersPage() {
                         {/* Lock / Unlock Toggle Button */}
                         <button 
                           onClick={() => handleToggleLock(user)}
-                          className={`p-2 rounded-xl transition-colors ${
+                          className={`p-2 rounded transition-colors ${
                             user.status === 'active' 
                               ? 'text-amber-600 hover:bg-amber-50' 
                               : 'text-emerald-600 hover:bg-emerald-50'
@@ -398,7 +398,7 @@ export default function AdminUsersPage() {
                         {/* Edit User Button */}
                         <button
                           onClick={() => handleOpenEdit(user)}
-                          className="p-2 text-slate-500 hover:text-[#1F1F1F] hover:bg-blue-50 rounded-xl transition-colors"
+                          className="p-2 text-slate-600 hover:text-[#1F1F1F] hover:bg-blue-50 rounded transition-colors"
                           title="Chỉnh sửa thông tin"
                         >
                           <Edit2 className="w-4 h-4" />
@@ -407,7 +407,7 @@ export default function AdminUsersPage() {
                         {/* Deactivate User Button */}
                         <button 
                           onClick={() => handleDeleteUser(user)}
-                          className="p-2 text-slate-600 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-colors"
+                          className="p-2 text-slate-600 hover:text-rose-600 hover:bg-rose-50 rounded transition-colors"
                           title="Vô hiệu hóa tài khoản"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -421,7 +421,7 @@ export default function AdminUsersPage() {
           </div>
           
           {filteredUsers.length === 0 && (
-            <div className="text-center py-16 text-slate-500">
+            <div className="text-center py-16 text-slate-600">
               <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-700" />
               <p className="font-bold text-slate-700">Không tìm thấy người dùng nào</p>
               <p className="text-xs text-slate-600 mt-1">Thử thay đổi từ khóa tìm kiếm hoặc bộ lọc</p>
@@ -433,13 +433,13 @@ export default function AdminUsersPage() {
       {/* Add User Modal */}
       {showAddModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl">
+          <div className="bg-white rounded-lg p-6 sm:p-8 max-w-lg w-full shadow-2xl">
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h3 className="text-xl font-bold text-slate-900">Thêm Người Dùng Mới</h3>
-                <p className="text-xs text-slate-500 mt-0.5">Tạo tài khoản quản trị hoặc khách hàng mới</p>
+                <p className="text-xs text-slate-600 mt-0.5">Tạo tài khoản quản trị hoặc khách hàng mới</p>
               </div>
-              <button onClick={() => setShowAddModal(false)} className="p-2 text-slate-600 hover:text-slate-600 rounded-lg hover:bg-slate-100">
+              <button onClick={() => setShowAddModal(false)} className="p-2 text-slate-600 hover:text-slate-600 rounded-sm hover:bg-slate-100">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -453,7 +453,7 @@ export default function AdminUsersPage() {
                   placeholder="VD: Nguyễn Văn A"
                   value={addForm.fullName}
                   onChange={(e) => setAddForm({ ...addForm, fullName: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full px-4 py-2.5 rounded border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                 />
               </div>
 
@@ -465,7 +465,7 @@ export default function AdminUsersPage() {
                   placeholder="nguyenvana@gmail.com"
                   value={addForm.email}
                   onChange={(e) => setAddForm({ ...addForm, email: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full px-4 py-2.5 rounded border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                 />
               </div>
 
@@ -477,7 +477,7 @@ export default function AdminUsersPage() {
                   placeholder="Nhập mật khẩu (tối thiểu 6 ký tự)"
                   value={addForm.password}
                   onChange={(e) => setAddForm({ ...addForm, password: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full px-4 py-2.5 rounded border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                 />
               </div>
 
@@ -487,7 +487,7 @@ export default function AdminUsersPage() {
                   <select
                     value={addForm.role}
                     onChange={(e) => setAddForm({ ...addForm, role: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                    className="w-full px-4 py-2.5 rounded border border-slate-200 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                   >
                     <option value="Customer">Customer</option>
                     <option value="Staff">Staff</option>
@@ -502,7 +502,7 @@ export default function AdminUsersPage() {
                     placeholder="0912345678"
                     value={addForm.phoneNumber}
                     onChange={(e) => setAddForm({ ...addForm, phoneNumber: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                    className="w-full px-4 py-2.5 rounded border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                   />
                 </div>
               </div>
@@ -511,14 +511,14 @@ export default function AdminUsersPage() {
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}
-                  className="flex-1 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm transition-colors"
+                  className="flex-1 py-3 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm transition-colors"
                 >
                   Hủy bỏ
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="flex-1 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-md transition-colors disabled:opacity-50"
+                  className="flex-1 py-3 rounded bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-md transition-colors disabled:opacity-50"
                 >
                   {isSubmitting ? 'Đang tạo...' : 'Tạo Tài Khoản'}
                 </button>
@@ -531,13 +531,13 @@ export default function AdminUsersPage() {
       {/* Edit User Modal */}
       {showEditModal && editingUser && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl">
+          <div className="bg-white rounded-lg p-6 sm:p-8 max-w-lg w-full shadow-2xl">
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h3 className="text-xl font-bold text-slate-900">Chỉnh Sửa Người Dùng</h3>
-                <p className="text-xs text-slate-500 mt-0.5">{editingUser.email}</p>
+                <p className="text-xs text-slate-600 mt-0.5">{editingUser.email}</p>
               </div>
-              <button onClick={() => setShowEditModal(false)} className="p-2 text-slate-600 hover:text-slate-600 rounded-lg hover:bg-slate-100">
+              <button onClick={() => setShowEditModal(false)} className="p-2 text-slate-600 hover:text-slate-600 rounded-sm hover:bg-slate-100">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -550,7 +550,7 @@ export default function AdminUsersPage() {
                   required
                   value={editForm.fullName}
                   onChange={(e) => setEditForm({ ...editForm, fullName: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full px-4 py-2.5 rounded border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                 />
               </div>
 
@@ -561,7 +561,7 @@ export default function AdminUsersPage() {
                   required
                   value={editForm.email}
                   onChange={(e) => setEditForm({ ...editForm, email: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full px-4 py-2.5 rounded border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                 />
               </div>
 
@@ -571,7 +571,7 @@ export default function AdminUsersPage() {
                   <select
                     value={editForm.role}
                     onChange={(e) => setEditForm({ ...editForm, role: e.target.value as any })}
-                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                    className="w-full px-4 py-2.5 rounded border border-slate-200 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                   >
                     <option value="Customer">Customer</option>
                     <option value="Staff">Staff</option>
@@ -585,7 +585,7 @@ export default function AdminUsersPage() {
                     type="text"
                     value={editForm.phoneNumber}
                     onChange={(e) => setEditForm({ ...editForm, phoneNumber: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                    className="w-full px-4 py-2.5 rounded border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                   />
                 </div>
               </div>
@@ -597,7 +597,7 @@ export default function AdminUsersPage() {
                   placeholder="Nhập mật khẩu mới..."
                   value={editForm.newPassword}
                   onChange={(e) => setEditForm({ ...editForm, newPassword: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full px-4 py-2.5 rounded border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                 />
               </div>
 
@@ -606,7 +606,7 @@ export default function AdminUsersPage() {
                 <select
                   value={editForm.isActive ? '1' : '0'}
                   onChange={(e) => setEditForm({ ...editForm, isActive: e.target.value === '1' })}
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full px-4 py-2.5 rounded border border-slate-200 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                 >
                   <option value="1">Đang hoạt động (Active)</option>
                   <option value="0">Bị khóa / Vô hiệu hóa (Locked)</option>
@@ -617,14 +617,14 @@ export default function AdminUsersPage() {
                 <button
                   type="button"
                   onClick={() => setShowEditModal(false)}
-                  className="flex-1 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm transition-colors"
+                  className="flex-1 py-3 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm transition-colors"
                 >
                   Hủy bỏ
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="flex-1 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-md transition-colors disabled:opacity-50"
+                  className="flex-1 py-3 rounded bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-md transition-colors disabled:opacity-50"
                 >
                   {isSubmitting ? 'Đang lưu...' : 'Lưu Thay Đổi'}
                 </button>

@@ -154,17 +154,17 @@ export default function AdminKnowledgeBasePage() {
       <header className="bg-white border-b border-slate-200 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link href="/admin" className="p-2 rounded-lg hover:bg-slate-100 transition-colors">
+            <Link href="/admin" className="p-2 rounded-sm hover:bg-slate-100 transition-colors">
               <ArrowLeft className="w-5 h-5 text-slate-600" />
             </Link>
             <div>
               <h1 className="text-xl font-bold text-slate-900">Knowledge Base</h1>
-              <p className="text-sm text-slate-500">{articles.length} bài viết hướng dẫn</p>
+              <p className="text-sm text-slate-600">{articles.length} bài viết hướng dẫn</p>
             </div>
           </div>
           <button 
             onClick={handleOpenAddModal}
-            className="px-4 py-2 rounded-lg bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 transition-colors flex items-center gap-2"
+            className="px-4 py-2 rounded-sm bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 transition-colors flex items-center gap-2"
           >
             <Plus className="w-4 h-4" />
             Thêm bài viết
@@ -173,7 +173,7 @@ export default function AdminKnowledgeBasePage() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="bg-white rounded-xl p-4 border border-slate-200 mb-6">
+        <div className="bg-white rounded p-4 border border-slate-200 mb-6">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-600" />
             <input
@@ -181,12 +181,12 @@ export default function AdminKnowledgeBasePage() {
               placeholder="Tìm kiếm bài viết theo tiêu đề, slug, danh mục..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+              className="w-full pl-10 pr-4 py-2.5 rounded-sm border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
             />
           </div>
         </div>
 
-        <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
+        <div className="bg-white rounded border border-slate-200 overflow-hidden shadow-sm">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
@@ -203,12 +203,12 @@ export default function AdminKnowledgeBasePage() {
                   <tr key={article.id} className="hover:bg-slate-50 transition-colors">
                     <td className="py-3 px-4">
                       <div className="flex items-center gap-3">
-                        <div className="p-2 rounded-lg bg-teal-50 text-teal-600">
+                        <div className="p-2 rounded-sm bg-teal-50 text-teal-600">
                           <FileText className="w-5 h-5" />
                         </div>
                         <div>
                           <p className="font-semibold text-slate-900">{article.title}</p>
-                          <p className="text-xs text-slate-500 font-mono">/knowledge-base/{article.id}</p>
+                          <p className="text-xs text-slate-600 font-mono">/knowledge-base/{article.id}</p>
                         </div>
                       </div>
                     </td>
@@ -232,14 +232,14 @@ export default function AdminKnowledgeBasePage() {
                       <div className="flex items-center justify-end gap-2">
                         <button 
                           onClick={() => handleOpenEditModal(article)}
-                          className="p-2 text-slate-600 hover:text-[#1F1F1F] hover:bg-blue-50 rounded-lg transition-colors"
+                          className="p-2 text-slate-600 hover:text-[#1F1F1F] hover:bg-blue-50 rounded-sm transition-colors"
                           title="Chỉnh sửa"
                         >
                           <Edit2 className="w-4 h-4" />
                         </button>
                         <button 
                           onClick={() => handleDelete(article.id)}
-                          className="p-2 text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                          className="p-2 text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-sm transition-colors"
                           title="Xóa"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -253,7 +253,7 @@ export default function AdminKnowledgeBasePage() {
           </div>
           
           {filteredArticles.length === 0 && (
-            <div className="text-center py-12 text-slate-500">
+            <div className="text-center py-12 text-slate-600">
               <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-700" />
               <p className="font-medium">Chưa có bài viết hướng dẫn nào</p>
             </div>
@@ -264,14 +264,14 @@ export default function AdminKnowledgeBasePage() {
       {/* Modal Thêm/Sửa Bài Viết */}
       {showModal && (
         <div className="fixed inset-0 z-50 bg-white/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl border border-slate-100 animate-in fade-in zoom-in duration-200">
+          <div className="bg-white rounded-md max-w-2xl w-full p-6 shadow-2xl border border-slate-100 animate-in fade-in zoom-in duration-200">
             <div className="flex items-center justify-between pb-4 border-b border-slate-100">
               <h2 className="text-lg font-bold text-slate-900">
                 {editingArticle ? 'Chỉnh sửa bài viết' : 'Thêm bài viết mới'}
               </h2>
               <button 
                 onClick={() => setShowModal(false)}
-                className="p-1.5 rounded-lg text-slate-600 hover:text-slate-600 hover:bg-slate-100"
+                className="p-1.5 rounded-sm text-slate-600 hover:text-slate-600 hover:bg-slate-100"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -291,7 +291,7 @@ export default function AdminKnowledgeBasePage() {
                       setSlug(e.target.value.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''));
                     }
                   }}
-                  className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full px-3.5 py-2 rounded border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                 />
               </div>
 
@@ -304,7 +304,7 @@ export default function AdminKnowledgeBasePage() {
                     placeholder="huong-dan-ssl-nginx"
                     value={slug}
                     onChange={(e) => setSlug(e.target.value)}
-                    className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 font-mono text-xs"
+                    className="w-full px-3.5 py-2 rounded border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 font-mono text-xs"
                   />
                 </div>
                 <div>
@@ -312,7 +312,7 @@ export default function AdminKnowledgeBasePage() {
                   <select
                     value={categoryTag}
                     onChange={(e) => setCategoryTag(e.target.value)}
-                    className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                    className="w-full px-3.5 py-2 rounded border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                   >
                     <option value="VPS">Cloud VPS</option>
                     <option value="Dedicated">Dedicated Server</option>
@@ -333,7 +333,7 @@ export default function AdminKnowledgeBasePage() {
                   placeholder="Nhập hướng dẫn chi tiết từng bước..."
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
-                  className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 font-mono text-xs"
+                  className="w-full px-3.5 py-2 rounded border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 font-mono text-xs"
                 />
               </div>
 
@@ -354,14 +354,14 @@ export default function AdminKnowledgeBasePage() {
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="px-4 py-2 rounded-xl border border-slate-200 text-slate-600 text-sm font-semibold hover:bg-slate-50"
+                  className="px-4 py-2 rounded border border-slate-200 text-slate-600 text-sm font-semibold hover:bg-slate-50"
                 >
                   Hủy bỏ
                 </button>
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="px-5 py-2 rounded-xl bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition-colors disabled:opacity-50 flex items-center gap-2"
+                  className="px-5 py-2 rounded bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition-colors disabled:opacity-50 flex items-center gap-2"
                 >
                   {submitting ? 'Đang lưu...' : 'Lưu bài viết'}
                 </button>

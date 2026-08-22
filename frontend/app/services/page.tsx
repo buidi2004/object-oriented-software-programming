@@ -360,33 +360,33 @@ export default function ServicesPage() {
             <Link
               key={svc.slug}
               href={svc.href}
-              className={`group bg-white rounded-3xl border ${svc.borderColor} p-8 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 flex flex-col`}
+              className={`group bg-white rounded-lg border border-slate-200 p-8 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 flex flex-col`}
             >
-              <div className={`w-16 h-16 rounded-2xl ${svc.bgLight} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
-                <svc.icon className={`w-8 h-8 ${svc.textColor}`} />
+              <div className={`w-16 h-16 rounded-md bg-slate-100 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
+                <svc.icon className={`w-8 h-8 text-[#1F1F1F]`} />
               </div>
 
               <h2 className="text-2xl font-extrabold text-slate-900 mb-1">{svc.title}</h2>
-              <p className="text-sm font-semibold text-slate-500 mb-3">{svc.subtitle}</p>
+              <p className="text-sm font-semibold text-slate-600 mb-3">{svc.subtitle}</p>
               <p className="text-sm text-slate-600 mb-6 flex-1">{svc.description}</p>
 
               <div className="mb-6">
-                <span className="text-sm text-slate-500">Chỉ từ</span>
+                <span className="text-sm text-slate-600">Chỉ từ</span>
                 <div className="text-3xl font-black text-slate-900 font-mono">
-                  {svc.startPrice}<span className="text-base font-bold text-slate-500 font-sans">{svc.priceSuffix}</span>
+                  {svc.startPrice}<span className="text-base font-bold text-slate-600 font-sans">{svc.priceSuffix}</span>
                 </div>
               </div>
 
               <div className="space-y-2 mb-8">
                 {svc.features.map((f, i) => (
                   <div key={i} className="flex items-center gap-2">
-                    <CheckCircle2 className={`w-4 h-4 ${svc.textColor} shrink-0`} />
+                    <CheckCircle2 className={`w-4 h-4 text-[#1F1F1F] shrink-0`} />
                     <span className="text-sm text-slate-700">{f}</span>
                   </div>
                 ))}
               </div>
 
-              <div className={`w-full py-3.5 rounded-2xl bg-gradient-to-r ${svc.color} text-slate-900 font-bold text-sm text-center flex items-center justify-center gap-2 group-hover:shadow-lg transition-all`}>
+              <div className={`w-full py-3.5 rounded-md bg-[#1F1F1F] text-white font-bold text-sm text-center flex items-center justify-center gap-2 group-hover:shadow-lg transition-all`}>
                 <span>Xem Chi Tiết</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </div>
@@ -402,9 +402,9 @@ export default function ServicesPage() {
               { label: 'Datacenter Tier III', value: '3 vị trí' },
               { label: 'Hỗ trợ kỹ thuật', value: '24/7/365' },
             ].map((stat, i) => (
-              <div key={i} className="bg-white rounded-2xl p-6 border border-slate-200">
+              <div key={i} className="bg-white rounded-md p-6 border border-slate-200">
                 <div className="text-3xl font-black text-[#1F1F1F] mb-1">{stat.value}</div>
-                <div className="text-sm text-slate-500 font-semibold">{stat.label}</div>
+                <div className="text-sm text-slate-600 font-semibold">{stat.label}</div>
               </div>
             ))}
           </div>

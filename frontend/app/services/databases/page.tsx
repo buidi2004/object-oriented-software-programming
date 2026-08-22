@@ -261,7 +261,7 @@ export default function DatabasesServicePage() {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           {/* Engineering Status Bar */}
-          <div className="flex flex-wrap items-center justify-between gap-4 p-3.5 mb-10 rounded-2xl bg-[#0d1424] border border-slate-200 text-xs font-mono">
+          <div className="flex flex-wrap items-center justify-between gap-4 p-3.5 mb-10 rounded-md bg-[#0d1424] border border-slate-200 text-xs font-mono">
             <div className="flex items-center gap-3">
               <span className="flex items-center gap-1.5 text-emerald-400 font-bold">
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
@@ -284,7 +284,7 @@ export default function DatabasesServicePage() {
             
             {/* Left Headline & Value Proposition */}
             <div className="lg:col-span-7 space-y-6">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-sky-950/60 border border-sky-800/60 text-slate-200 text-xs font-mono">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm bg-sky-950/60 border border-sky-800/60 text-slate-200 text-xs font-mono">
                 <Terminal className="w-3.5 h-3.5 text-slate-200" />
                 SEN MANAGED CLOUD DATABASES
               </div>
@@ -314,14 +314,14 @@ export default function DatabasesServicePage() {
                       <button
                         key={engKey}
                         onClick={() => setEngine(engKey)}
-                        className={`p-3.5 rounded-xl border text-left transition-all flex items-center gap-3.5 ${
+                        className={`p-3.5 rounded border text-left transition-all flex items-center gap-3.5 ${
                           active
                             ? 'bg-[#131d31] border-sky-500 shadow-lg shadow-sky-500/10'
                             : 'bg-[#0e1626] border-slate-800 hover:border-slate-700 text-slate-400'
                         }`}
                       >
                         <div 
-                          className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 border"
+                          className="w-9 h-9 rounded-sm flex items-center justify-center shrink-0 border"
                           style={{ 
                             backgroundColor: active ? '#0b1322' : '#0a0f1a',
                             borderColor: active ? item.brandColor : '#1e293b' 
@@ -344,7 +344,7 @@ export default function DatabasesServicePage() {
               </div>
 
               {/* Quick Spec Readout */}
-              <div className="p-4 rounded-xl bg-white border border-slate-200 text-xs font-mono space-y-2">
+              <div className="p-4 rounded bg-white border border-slate-200 text-xs font-mono space-y-2">
                 <div className="flex items-center justify-between text-slate-600">
                   <span>Engine: <strong className="text-slate-900">{currentEngine.name}</strong></span>
                   <span>Version: <strong className="text-slate-200">{currentEngine.version}</strong></span>
@@ -358,7 +358,7 @@ export default function DatabasesServicePage() {
 
             {/* Right Connection String & Live Readout Preview */}
             <div className="lg:col-span-5">
-              <div className="rounded-2xl bg-[#0b1320] border border-slate-200 p-6 shadow-2xl space-y-5">
+              <div className="rounded-md bg-[#0b1320] border border-slate-200 p-6 shadow-2xl space-y-5">
                 <div className="flex items-center justify-between pb-3 border-b border-slate-200">
                   <div className="flex items-center gap-2">
                     <span className="w-3 h-3 rounded-full bg-rose-500/80" />
@@ -372,30 +372,30 @@ export default function DatabasesServicePage() {
                 </div>
 
                 <div className="space-y-2 font-mono text-xs">
-                  <div className="text-slate-500">// 1-Click Connection String Ready</div>
-                  <div className="p-3.5 rounded-xl bg-slate-100 border border-slate-200/90 text-slate-200 break-all select-all font-mono leading-relaxed">
+                  <div className="text-slate-600">// 1-Click Connection String Ready</div>
+                  <div className="p-3.5 rounded bg-slate-100 border border-slate-200/90 text-slate-700 break-all select-all font-mono leading-relaxed">
                     {currentEngine.uriExample}
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-3 pt-2 font-mono">
-                  <div className="p-3 rounded-xl bg-[#0e1627] border border-slate-200">
+                  <div className="p-3 rounded bg-[#0e1627] border border-slate-200">
                     <div className="text-[10px] text-slate-600 uppercase">Write Latency p99</div>
                     <div className="text-base font-extrabold text-emerald-400 mt-0.5">0.82 ms</div>
-                    <div className="text-[10px] text-slate-500">10Gbps VPC Backbone</div>
+                    <div className="text-[10px] text-slate-600">10Gbps VPC Backbone</div>
                   </div>
 
-                  <div className="p-3 rounded-xl bg-[#0e1627] border border-slate-200">
+                  <div className="p-3 rounded bg-[#0e1627] border border-slate-200">
                     <div className="text-[10px] text-slate-600 uppercase">WAL Sync Status</div>
                     <div className="text-base font-extrabold text-slate-200 mt-0.5">Synchronous</div>
-                    <div className="text-[10px] text-slate-500">Lag: 0 bytes</div>
+                    <div className="text-[10px] text-slate-600">Lag: 0 bytes</div>
                   </div>
                 </div>
 
                 <div className="pt-2">
                   <a
                     href="#pricing-matrix"
-                    className="w-full py-3.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-slate-900 font-bold text-xs font-mono flex items-center justify-center gap-2 transition-all shadow-lg shadow-sky-600/20"
+                    className="w-full py-3.5 rounded bg-sky-600 hover:bg-sky-500 text-slate-900 font-bold text-xs font-mono flex items-center justify-center gap-2 transition-all shadow-lg shadow-sky-600/20"
                   >
                     <span>XEM BẢNG CẤU HÌNH VÀ BÁO GIÁ</span>
                     <ArrowRight className="w-4 h-4" />
@@ -415,7 +415,7 @@ export default function DatabasesServicePage() {
           
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
             <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-emerald-950/60 border border-emerald-800/60 text-emerald-400 text-xs font-mono mb-3">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm bg-emerald-950/60 border border-emerald-800/60 text-emerald-400 text-xs font-mono mb-3">
                 <Activity className="w-3.5 h-3.5 animate-pulse" />
                 SIGNATURE HA TOPOLOGY
               </div>
@@ -432,7 +432,7 @@ export default function DatabasesServicePage() {
                 <button
                   onClick={triggerFailoverSimulation}
                   disabled={isSimulating}
-                  className="px-4 py-2.5 rounded-xl bg-rose-600/90 hover:bg-rose-500 text-slate-900 text-xs font-mono font-bold flex items-center gap-2 transition-all shadow-lg shadow-rose-600/20"
+                  className="px-4 py-2.5 rounded bg-rose-600/90 hover:bg-rose-500 text-slate-900 text-xs font-mono font-bold flex items-center gap-2 transition-all shadow-lg shadow-rose-600/20"
                 >
                   <AlertTriangle className="w-4 h-4" />
                   <span>MÔ PHỎNG SỰ CỐ PRIMARY</span>
@@ -440,7 +440,7 @@ export default function DatabasesServicePage() {
               ) : (
                 <button
                   onClick={resetTopology}
-                  className="px-4 py-2.5 rounded-xl bg-slate-700 hover:bg-slate-600 text-slate-900 text-xs font-mono font-bold flex items-center gap-2 transition-all"
+                  className="px-4 py-2.5 rounded bg-slate-700 hover:bg-slate-600 text-slate-900 text-xs font-mono font-bold flex items-center gap-2 transition-all"
                 >
                   <RefreshCw className="w-4 h-4" />
                   <span>KHÔI PHỤC TRẠNG THÁI BAN ĐẦU</span>
@@ -450,10 +450,10 @@ export default function DatabasesServicePage() {
           </div>
 
           {/* Topology Interactive Canvas */}
-          <div className="p-8 rounded-3xl bg-white border border-slate-200 relative overflow-hidden">
+          <div className="p-8 rounded-lg bg-white border border-slate-200 relative overflow-hidden">
             
             {/* Status Banner */}
-            <div className="mb-8 p-4 rounded-xl bg-[#070c16] border border-slate-200 flex flex-wrap items-center justify-between gap-4 font-mono text-xs">
+            <div className="mb-8 p-4 rounded bg-[#070c16] border border-slate-200 flex flex-wrap items-center justify-between gap-4 font-mono text-xs">
               <div className="flex items-center gap-3">
                 <span className="text-slate-600">CLUSTER CONSENSUS:</span>
                 <span className="text-slate-200 font-bold">Raft / Patroni HA Protocol</span>
@@ -473,7 +473,7 @@ export default function DatabasesServicePage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative">
               
               {/* Node 1: Primary */}
-              <div className={`p-6 rounded-2xl border transition-all ${
+              <div className={`p-6 rounded-md border transition-all ${
                 node1Status === 'primary' 
                   ? 'bg-[#10192b] border-emerald-500/80 shadow-lg shadow-emerald-500/10' 
                   : 'bg-[#181119] border-rose-600/80 opacity-80'
@@ -494,22 +494,22 @@ export default function DatabasesServicePage() {
 
                 <div className="space-y-2 font-mono text-xs text-slate-700">
                   <div className="flex justify-between">
-                    <span className="text-slate-500">Role:</span>
+                    <span className="text-slate-600">Role:</span>
                     <span>{node1Status === 'primary' ? 'Read / Write Active' : 'Unreachable'}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-500">WAL Stream:</span>
+                    <span className="text-slate-600">WAL Stream:</span>
                     <span className="text-slate-200">{node1Status === 'primary' ? 'LSN 0/18A42B0' : 'Disconnected'}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-500">Disk Engine:</span>
+                    <span className="text-slate-600">Disk Engine:</span>
                     <span>NVMe RAID-10</span>
                   </div>
                 </div>
               </div>
 
               {/* Node 2: Standby Replica */}
-              <div className={`p-6 rounded-2xl border transition-all ${
+              <div className={`p-6 rounded-md border transition-all ${
                 node1Status === 'failed'
                   ? 'bg-[#10192b] border-emerald-500 shadow-xl shadow-emerald-500/20 ring-2 ring-emerald-500/40'
                   : 'bg-[#10192b] border-sky-500/60'
@@ -530,22 +530,22 @@ export default function DatabasesServicePage() {
 
                 <div className="space-y-2 font-mono text-xs text-slate-700">
                   <div className="flex justify-between">
-                    <span className="text-slate-500">Role:</span>
+                    <span className="text-slate-600">Role:</span>
                     <span>{node1Status === 'failed' ? 'New Master Leader' : 'Sync Read Replica'}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-500">Replication Lag:</span>
+                    <span className="text-slate-600">Replication Lag:</span>
                     <span className="text-emerald-400">0.0 ms (Real-time)</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-500">Auto Failover:</span>
+                    <span className="text-slate-600">Auto Failover:</span>
                     <span className="text-emerald-400 font-bold">Quorum Ready</span>
                   </div>
                 </div>
               </div>
 
               {/* Node 3: Quorum Witness / ETCD */}
-              <div className="p-6 rounded-2xl bg-[#0f1728] border border-slate-200">
+              <div className="p-6 rounded-md bg-[#0f1728] border border-slate-200">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2">
                     <Radio className="w-5 h-5 text-amber-400" />
@@ -558,15 +558,15 @@ export default function DatabasesServicePage() {
 
                 <div className="space-y-2 font-mono text-xs text-slate-700">
                   <div className="flex justify-between">
-                    <span className="text-slate-500">Role:</span>
+                    <span className="text-slate-600">Role:</span>
                     <span>Consensus Arbiter</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-500">Heartbeat:</span>
+                    <span className="text-slate-600">Heartbeat:</span>
                     <span className="text-emerald-400 font-bold">500ms Interval</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-500">Split-Brain:</span>
+                    <span className="text-slate-600">Split-Brain:</span>
                     <span className="text-slate-200">Guaranteed Protected</span>
                   </div>
                 </div>
@@ -584,7 +584,7 @@ export default function DatabasesServicePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-sky-950 text-slate-200 text-xs font-mono mb-3 border border-sky-800">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm bg-sky-950 text-slate-200 text-xs font-mono mb-3 border border-sky-800">
               <ShieldCheck className="w-3.5 h-3.5" />
               INFRASTRUCTURE MECHANICS
             </div>
@@ -599,11 +599,11 @@ export default function DatabasesServicePage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             
             {/* Feature 1: Auto-Failover Schematic */}
-            <div className="p-6 rounded-3xl bg-white border border-slate-200 flex flex-col justify-between space-y-6">
+            <div className="p-6 rounded-lg bg-white border border-slate-200 flex flex-col justify-between space-y-6">
               <div>
                 {/* SVG Schematic Blueprint */}
-                <div className="p-4 rounded-2xl bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
-                  <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
+                <div className="p-4 rounded-md bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
+                  <div className="text-[10px] text-slate-600 uppercase mb-3 flex items-center justify-between">
                     <span>FAILOVER SEQUENCE PROTOCOL</span>
                     <span className="text-emerald-400">RTO &lt; 30s</span>
                   </div>
@@ -639,11 +639,11 @@ export default function DatabasesServicePage() {
             </div>
 
             {/* Feature 2: PITR Timeline Schematic */}
-            <div className="p-6 rounded-3xl bg-white border border-slate-200 flex flex-col justify-between space-y-6">
+            <div className="p-6 rounded-lg bg-white border border-slate-200 flex flex-col justify-between space-y-6">
               <div>
                 {/* Timeline Schematic */}
-                <div className="p-4 rounded-2xl bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
-                  <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
+                <div className="p-4 rounded-md bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
+                  <div className="text-[10px] text-slate-600 uppercase mb-3 flex items-center justify-between">
                     <span>WAL LOG CONTINUOUS STREAM</span>
                     <span className="text-slate-200">PITR 14-30 DAYS</span>
                   </div>
@@ -679,11 +679,11 @@ export default function DatabasesServicePage() {
             </div>
 
             {/* Feature 3: Zero-Trust Network Schematic */}
-            <div className="p-6 rounded-3xl bg-white border border-slate-200 flex flex-col justify-between space-y-6">
+            <div className="p-6 rounded-lg bg-white border border-slate-200 flex flex-col justify-between space-y-6">
               <div>
                 {/* Security Data Flow Schematic */}
-                <div className="p-4 rounded-2xl bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
-                  <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
+                <div className="p-4 rounded-md bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
+                  <div className="text-[10px] text-slate-600 uppercase mb-3 flex items-center justify-between">
                     <span>ISOLATED VPC &amp; TLS 1.3</span>
                     <span className="text-slate-200">AES-256</span>
                   </div>
@@ -727,7 +727,7 @@ export default function DatabasesServicePage() {
           
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
             <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-sky-950 text-slate-200 text-xs font-mono mb-3 border border-sky-800">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm bg-sky-950 text-slate-200 text-xs font-mono mb-3 border border-sky-800">
                 <Sliders className="w-3.5 h-3.5" />
                 ARCHITECTURE SPEC SHEET
               </div>
@@ -740,10 +740,10 @@ export default function DatabasesServicePage() {
             </div>
 
             {/* Billing Cycle Switch */}
-            <div className="inline-flex items-center p-1 rounded-xl bg-white border border-slate-200 font-mono text-xs">
+            <div className="inline-flex items-center p-1 rounded bg-white border border-slate-200 font-mono text-xs">
               <button
                 onClick={() => setBillingCycle('monthly')}
-                className={`px-4 py-2 rounded-lg font-bold transition-all ${
+                className={`px-4 py-2 rounded-sm font-bold transition-all ${
                   billingCycle === 'monthly'
                     ? 'bg-sky-600 text-white shadow'
                     : 'text-slate-400 hover:text-white'
@@ -753,7 +753,7 @@ export default function DatabasesServicePage() {
               </button>
               <button
                 onClick={() => setBillingCycle('yearly')}
-                className={`px-4 py-2 rounded-lg font-bold transition-all flex items-center gap-1.5 ${
+                className={`px-4 py-2 rounded-sm font-bold transition-all flex items-center gap-1.5 ${
                   billingCycle === 'yearly'
                     ? 'bg-sky-600 text-white shadow'
                     : 'text-slate-400 hover:text-white'
@@ -768,7 +768,7 @@ export default function DatabasesServicePage() {
           </div>
 
           {/* Pricing & Architecture Matrix Table */}
-          <div className="rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-2xl">
+          <div className="rounded-md border border-slate-200 bg-white overflow-hidden shadow-2xl">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs font-mono">
                 <thead>
@@ -847,7 +847,7 @@ export default function DatabasesServicePage() {
                       <td key={p.id} className="p-5 border-l border-slate-200/60">
                         <button
                           onClick={() => handleOrder(p)}
-                          className={`w-full py-3 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-2 ${
+                          className={`w-full py-3 rounded font-bold text-xs transition-all flex items-center justify-center gap-2 ${
                             p.popular
                               ? 'bg-sky-600 hover:bg-sky-500 text-white shadow-lg shadow-sky-600/30'
                               : 'bg-slate-800 hover:bg-slate-700 text-white'
@@ -879,7 +879,7 @@ export default function DatabasesServicePage() {
             {faqs.map((faq, idx) => (
               <div
                 key={idx}
-                className="bg-white rounded-2xl border border-slate-200 overflow-hidden transition-all"
+                className="bg-white rounded-md border border-slate-200 overflow-hidden transition-all"
               >
                 <button
                   onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
@@ -889,7 +889,7 @@ export default function DatabasesServicePage() {
                   {openFaq === idx ? (
                     <ChevronUp className="w-4 h-4 text-slate-200 shrink-0" />
                   ) : (
-                    <ChevronDown className="w-4 h-4 text-slate-500 shrink-0" />
+                    <ChevronDown className="w-4 h-4 text-slate-600 shrink-0" />
                   )}
                 </button>
                 {openFaq === idx && (
@@ -905,9 +905,9 @@ export default function DatabasesServicePage() {
 
       {/* 6. CALL TO ACTION: DIRECT CONSOLE DISPATCH */}
       <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="rounded-3xl bg-gradient-to-r from-[#0d182e] via-[#091122] to-[#0d182e] p-8 sm:p-12 border border-sky-600/30 text-center relative overflow-hidden shadow-2xl">
+        <div className="rounded-lg bg-gradient-to-r from-[#0d182e] via-[#091122] to-[#0d182e] p-8 sm:p-12 border border-sky-600/30 text-center relative overflow-hidden shadow-2xl">
           <div className="relative z-10 max-w-3xl mx-auto space-y-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-sky-950 border border-sky-800 text-slate-200 text-xs font-mono">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm bg-sky-950 border border-sky-800 text-slate-200 text-xs font-mono">
               <Zap className="w-3.5 h-3.5" />
               DEPLOY INSTANTLY IN 60 SECONDS
             </div>
@@ -927,13 +927,13 @@ export default function DatabasesServicePage() {
                   const el = document.getElementById('pricing-matrix');
                   el?.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className="px-8 py-3.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs font-mono shadow-xl shadow-sky-600/25 transition-all hover:scale-105"
+                className="px-8 py-3.5 rounded bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs font-mono shadow-xl shadow-sky-600/25 transition-all hover:scale-105"
               >
                 Khởi Tạo Database Ngay
               </button>
               <Link
                 href="/contact"
-                className="px-8 py-3.5 rounded-xl bg-white hover:bg-slate-200 text-slate-900 font-bold text-xs font-mono border border-slate-300 transition-all"
+                className="px-8 py-3.5 rounded bg-white hover:bg-slate-200 text-slate-900 font-bold text-xs font-mono border border-slate-300 transition-all"
               >
                 Tư Vấn Kiến Trúc 1-1
               </Link>

@@ -55,10 +55,10 @@ export default function ResetPasswordForm() {
         <Link href="/login" className="inline-flex items-center gap-2 text-sm text-slate-600 hover:text-slate-900 mb-6">
           <ArrowLeft className="w-4 h-4" /> Quay lại đăng nhập
         </Link>
-        <div className="bg-white rounded-2xl shadow-xl border border-slate-100 p-8">
+        <div className="bg-white rounded-md shadow-xl border border-slate-100 p-8">
           <h1 className="text-2xl font-extrabold text-slate-900 mb-6">Đặt lại mật khẩu</h1>
           {done ? (
-            <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-xl">
+            <div className="p-4 bg-emerald-50 border border-emerald-200 rounded">
               <CheckCircle2 className="w-5 h-5 text-emerald-600 mb-2" />
               <p className="text-sm text-emerald-800">Mật khẩu đã được cập nhật.</p>
               <button onClick={() => router.push('/login')} className="mt-4 text-[#1F1F1F] font-semibold text-sm">
@@ -68,7 +68,7 @@ export default function ResetPasswordForm() {
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
               {error && (
-                <div className="p-3 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2 text-sm text-red-700">
+                <div className="p-3 bg-red-50 border border-red-200 rounded-sm flex items-center gap-2 text-sm text-red-700">
                   <AlertCircle className="w-4 h-4" /> {error}
                 </div>
               )}
@@ -77,15 +77,15 @@ export default function ResetPasswordForm() {
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-600" />
                   <input type="password" required minLength={8} value={password} onChange={(e) => setPassword(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl" />
+                    className="w-full pl-10 pr-4 py-3 border border-slate-200 rounded" />
                 </div>
               </div>
               <div>
                 <label className="block text-sm font-semibold mb-1">Xác nhận mật khẩu</label>
                 <input type="password" required minLength={8} value={confirm} onChange={(e) => setConfirm(e.target.value)}
-                  className="w-full px-4 py-3 border border-slate-200 rounded-xl" />
+                  className="w-full px-4 py-3 border border-slate-200 rounded" />
               </div>
-              <button type="submit" disabled={isLoading} className="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold disabled:opacity-70">
+              <button type="submit" disabled={isLoading} className="w-full py-3 rounded bg-blue-600 hover:bg-blue-700 text-white font-bold disabled:opacity-70">
                 {isLoading ? 'Đang xử lý...' : 'Cập nhật mật khẩu'}
               </button>
             </form>

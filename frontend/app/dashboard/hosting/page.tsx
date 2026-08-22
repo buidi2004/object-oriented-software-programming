@@ -105,13 +105,13 @@ export default function HostingManagementPage() {
         <div className="flex items-center gap-3">
           <button 
             onClick={fetchAccounts}
-            className="p-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:text-slate-900 transition-colors"
+            className="p-2.5 rounded bg-white border border-slate-200 text-slate-700 hover:text-slate-900 transition-colors"
           >
             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
           </button>
           <button 
             onClick={() => setShowModal(true)}
-            className="px-4 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold flex items-center gap-2 shadow-lg shadow-cyan-500/20 transition-all text-sm"
+            className="px-4 py-2.5 rounded bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold flex items-center gap-2 shadow-lg shadow-cyan-500/20 transition-all text-sm"
           >
             <Plus className="w-4 h-4" /> Đăng Ký Hosting Mới
           </button>
@@ -121,7 +121,7 @@ export default function HostingManagementPage() {
       {/* Hosting Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {accounts.map((acc) => (
-          <div key={acc.id} className="p-6 rounded-2xl bg-white/60 border border-slate-200 hover:border-cyan-500/30 transition-all space-y-5 shadow-xl">
+          <div key={acc.id} className="p-6 rounded-md bg-white/60 border border-slate-200 hover:border-cyan-500/30 transition-all space-y-5 shadow-xl">
             <div className="flex items-start justify-between">
               <div>
                 <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 mb-2">
@@ -154,13 +154,13 @@ export default function HostingManagementPage() {
                 href={`https://${acc.domain}:2083`}
                 target="_blank"
                 rel="noreferrer"
-                className="px-3 py-2 rounded-xl bg-white hover:bg-slate-200 text-slate-800 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors"
+                className="px-3 py-2 rounded bg-white hover:bg-slate-200 text-slate-800 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors"
               >
                 <ExternalLink className="w-3.5 h-3.5" /> Vào cPanel
               </a>
               <button 
                 onClick={() => alert(`Thông tin FTP & Database cho tên miền: ${acc.domain}\nServer: ${acc.ipAddress}\nPort: 21`)}
-                className="px-3 py-2 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 text-[#1F1F1F] text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors border border-cyan-500/20"
+                className="px-3 py-2 rounded bg-cyan-500/10 hover:bg-cyan-500/20 text-[#1F1F1F] text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors border border-cyan-500/20"
               >
                 <Key className="w-3.5 h-3.5" /> Thông tin FTP
               </button>
@@ -172,7 +172,7 @@ export default function HostingManagementPage() {
       {/* Modal Đăng Ký Hosting */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-          <div className="w-full max-w-md p-6 rounded-3xl bg-white border border-slate-200 shadow-2xl space-y-5">
+          <div className="w-full max-w-md p-6 rounded-lg bg-white border border-slate-200 shadow-2xl space-y-5">
             <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
               <FolderLock className="w-5 h-5 text-[#1F1F1F]" /> Khởi Tạo Web Hosting Mới
             </h2>
@@ -185,7 +185,7 @@ export default function HostingManagementPage() {
                   placeholder="domaincuaban.vn"
                   value={newDomain}
                   onChange={(e) => setNewDomain(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-500 focus:outline-none focus:border-cyan-500 text-sm"
+                  className="w-full px-4 py-2.5 rounded bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-500 focus:outline-none focus:border-cyan-500 text-sm"
                 />
               </div>
 
@@ -194,7 +194,7 @@ export default function HostingManagementPage() {
                 <select 
                   value={selectedPlan}
                   onChange={(e) => setSelectedPlan(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:border-cyan-500 text-sm"
+                  className="w-full px-4 py-2.5 rounded bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:border-cyan-500 text-sm"
                 >
                   <option value="Cloud NVMe Starter (5GB)">Cloud NVMe Starter (5GB SSD)</option>
                   <option value="Cloud NVMe Business (20GB)">Cloud NVMe Business (20GB NVMe)</option>
@@ -206,13 +206,13 @@ export default function HostingManagementPage() {
                 <button 
                   type="button" 
                   onClick={() => setShowModal(false)}
-                  className="px-4 py-2 rounded-xl bg-white text-slate-700 text-sm font-semibold hover:bg-slate-200"
+                  className="px-4 py-2 rounded bg-white text-slate-700 text-sm font-semibold hover:bg-slate-200"
                 >
                   Hủy
                 </button>
                 <button 
                   type="submit" 
-                  className="px-5 py-2 rounded-xl bg-cyan-500 text-slate-950 font-bold text-sm hover:bg-cyan-400"
+                  className="px-5 py-2 rounded bg-cyan-500 text-slate-950 font-bold text-sm hover:bg-cyan-400"
                 >
                   Tạo Dịch Vụ
                 </button>

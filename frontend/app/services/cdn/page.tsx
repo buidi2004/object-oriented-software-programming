@@ -109,10 +109,10 @@ export default function CdnServicePage() {
           </p>
 
           {/* Billing Switch */}
-          <div className="inline-flex items-center p-1.5 rounded-2xl bg-white/80 backdrop-blur-md border border-slate-300">
+          <div className="inline-flex items-center p-1.5 rounded-md bg-white/80 backdrop-blur-md border border-slate-300">
             <button
               onClick={() => setBillingCycle('monthly')}
-              className={`px-5 py-2.5 rounded-xl text-xs font-bold transition-all ${
+              className={`px-5 py-2.5 rounded text-xs font-bold transition-all ${
                 billingCycle === 'monthly'
                   ? 'bg-amber-600 text-white shadow-lg shadow-amber-500/30'
                   : 'text-slate-400 hover:text-white'
@@ -122,7 +122,7 @@ export default function CdnServicePage() {
             </button>
             <button
               onClick={() => setBillingCycle('yearly')}
-              className={`px-5 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+              className={`px-5 py-2.5 rounded text-xs font-bold transition-all flex items-center gap-1.5 ${
                 billingCycle === 'yearly'
                   ? 'bg-amber-600 text-white shadow-lg shadow-amber-500/30'
                   : 'text-slate-400 hover:text-white'
@@ -146,7 +146,7 @@ export default function CdnServicePage() {
             return (
               <div
                 key={plan.id}
-                className={`relative rounded-3xl bg-white p-8 border transition-all duration-300 flex flex-col justify-between ${
+                className={`relative rounded-lg bg-white p-8 border transition-all duration-300 flex flex-col justify-between ${
                   plan.popular
                     ? 'border-amber-500 shadow-2xl shadow-amber-500/10 scale-105 z-10 ring-2 ring-amber-500/20'
                     : 'border-slate-200 shadow-lg hover:shadow-xl hover:border-slate-300'
@@ -162,20 +162,20 @@ export default function CdnServicePage() {
 
                 <div>
                   <div className="flex items-center justify-between mb-4">
-                    <div className="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold">
+                    <div className="w-12 h-12 rounded-md bg-amber-50 text-amber-600 flex items-center justify-center font-bold">
                       <Zap className="w-6 h-6" />
                     </div>
                   </div>
 
                   <h3 className="text-xl font-bold text-slate-900 mb-1">{plan.name}</h3>
-                  <p className="text-xs text-slate-500 mb-6">{plan.tagline}</p>
+                  <p className="text-xs text-slate-600 mb-6">{plan.tagline}</p>
 
                   <div className="mb-6 pb-6 border-b border-slate-100">
                     <div className="flex items-baseline gap-1">
                       <span className="text-3xl font-black text-slate-900">
                         {displayPrice.toLocaleString('vi-VN')}
                       </span>
-                      <span className="text-sm text-slate-500 font-medium">đ/tháng</span>
+                      <span className="text-sm text-slate-600 font-medium">đ/tháng</span>
                     </div>
                     {billingCycle === 'yearly' && (
                       <p className="text-xs text-emerald-600 font-semibold mt-1">
@@ -185,11 +185,11 @@ export default function CdnServicePage() {
                   </div>
 
                   <div className="space-y-3 mb-8 text-sm">
-                    <div className="p-3 rounded-xl bg-slate-50 text-slate-800 font-bold flex items-center gap-2">
+                    <div className="p-3 rounded bg-slate-50 text-slate-800 font-bold flex items-center gap-2">
                       <Activity className="w-4 h-4 text-amber-500" />
                       {plan.bandwidth}
                     </div>
-                    <div className="p-3 rounded-xl bg-slate-50 text-slate-800 font-bold flex items-center gap-2">
+                    <div className="p-3 rounded bg-slate-50 text-slate-800 font-bold flex items-center gap-2">
                       <Globe className="w-4 h-4 text-[#1F1F1F]" />
                       {plan.pops}
                     </div>
@@ -207,7 +207,7 @@ export default function CdnServicePage() {
 
                 <button
                   onClick={() => handleOrder(plan)}
-                  className={`w-full py-3.5 rounded-2xl font-bold text-sm transition-all flex items-center justify-center gap-2 ${
+                  className={`w-full py-3.5 rounded-md font-bold text-sm transition-all flex items-center justify-center gap-2 ${
                     plan.popular
                       ? 'bg-amber-600 hover:bg-amber-700 text-white shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40'
                       : 'bg-slate-900 hover:bg-slate-800 text-white'

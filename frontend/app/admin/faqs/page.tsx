@@ -137,17 +137,17 @@ export default function AdminFAQsPage() {
       <header className="bg-white border-b border-slate-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link href="/admin" className="p-2 rounded-lg hover:bg-slate-100 transition-colors">
+            <Link href="/admin" className="p-2 rounded-sm hover:bg-slate-100 transition-colors">
               <ArrowLeft className="w-5 h-5 text-slate-600" />
             </Link>
             <div>
               <h1 className="text-xl font-bold text-slate-900">Quản lý FAQ</h1>
-              <p className="text-sm text-slate-500">{faqs.length} câu hỏi</p>
+              <p className="text-sm text-slate-600">{faqs.length} câu hỏi</p>
             </div>
           </div>
           <button 
             onClick={() => setIsModalOpen(true)}
-            className="px-4 py-2 rounded-lg bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 transition-colors flex items-center gap-2"
+            className="px-4 py-2 rounded-sm bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 transition-colors flex items-center gap-2"
           >
             <Plus className="w-4 h-4" />
             Thêm câu hỏi
@@ -156,7 +156,7 @@ export default function AdminFAQsPage() {
       </header>
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="bg-white rounded-xl p-4 border border-slate-200 mb-6">
+        <div className="bg-white rounded p-4 border border-slate-200 mb-6">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-600" />
             <input
@@ -164,14 +164,14 @@ export default function AdminFAQsPage() {
               placeholder="Tìm kiếm câu hỏi hoặc câu trả lời..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+              className="w-full pl-10 pr-4 py-2.5 rounded-sm border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
             />
           </div>
         </div>
 
         <div className="space-y-3">
           {filteredFaqs.map((faq) => (
-            <div key={faq.id} className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+            <div key={faq.id} className="bg-white rounded border border-slate-200 overflow-hidden">
               <button
                 onClick={() => setOpenId(openId === faq.id ? null : faq.id)}
                 className="w-full p-4 flex items-center justify-between text-left hover:bg-slate-50 transition-colors"
@@ -189,7 +189,7 @@ export default function AdminFAQsPage() {
                   </div>
                 </div>
                 <div className="flex items-center gap-2 ml-4">
-                  <span className={`px-2 py-1 rounded-full text-xs font-bold ${faq.isActive ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-500'}`}>
+                  <span className={`px-2 py-1 rounded-full text-xs font-bold ${faq.isActive ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-600'}`}>
                     {faq.isActive ? 'Hiển thị' : 'Ẩn'}
                   </span>
                   {openId === faq.id ? <ChevronUp className="w-5 h-5 text-slate-600" /> : <ChevronDown className="w-5 h-5 text-slate-600" />}
@@ -200,13 +200,13 @@ export default function AdminFAQsPage() {
                 <div className="px-4 pb-4 border-t border-slate-100 pt-4">
                   <p className="text-sm text-slate-600 mb-4">{faq.answer}</p>
                   <div className="flex items-center gap-2">
-                    <button onClick={() => toggleStatus(faq.id)} className="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 text-xs font-semibold hover:bg-slate-200 transition-colors">
+                    <button onClick={() => toggleStatus(faq.id)} className="px-3 py-1.5 rounded-sm bg-slate-100 text-slate-700 text-xs font-semibold hover:bg-slate-200 transition-colors">
                       {faq.isActive ? 'Ẩn câu hỏi' : 'Hiển thị câu hỏi'}
                     </button>
-                    <button disabled className="opacity-50 cursor-not-allowed px-3 py-1.5 rounded-lg bg-blue-100 text-[#1F1F1F] text-xs font-semibold flex items-center gap-1">
+                    <button disabled className="opacity-50 cursor-not-allowed px-3 py-1.5 rounded-sm bg-blue-100 text-[#1F1F1F] text-xs font-semibold flex items-center gap-1">
                       <Edit2 className="w-3 h-3" /> Sửa
                     </button>
-                    <button disabled className="opacity-50 cursor-not-allowed px-3 py-1.5 rounded-lg bg-red-100 text-red-700 text-xs font-semibold flex items-center gap-1">
+                    <button disabled className="opacity-50 cursor-not-allowed px-3 py-1.5 rounded-sm bg-red-100 text-red-700 text-xs font-semibold flex items-center gap-1">
                       <Trash2 className="w-3 h-3" /> Xóa
                     </button>
                   </div>
@@ -217,7 +217,7 @@ export default function AdminFAQsPage() {
         </div>
 
         {filteredFaqs.length === 0 && (
-          <div className="text-center py-12 text-slate-500">
+          <div className="text-center py-12 text-slate-600">
             <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-700" />
             <p className="font-medium">Không tìm thấy câu hỏi nào</p>
           </div>
@@ -227,7 +227,7 @@ export default function AdminFAQsPage() {
       {/* Modal Thêm FAQ */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-white/50 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl w-full max-w-lg overflow-hidden shadow-xl">
+          <div className="bg-white rounded-md w-full max-w-lg overflow-hidden shadow-xl">
             <div className="p-6 border-b border-slate-100 flex items-center justify-between">
               <h2 className="text-xl font-bold text-slate-900">Thêm Câu Hỏi Mới</h2>
               <button 
@@ -245,7 +245,7 @@ export default function AdminFAQsPage() {
                   required
                   value={newFaq.question}
                   onChange={e => setNewFaq({...newFaq, question: e.target.value})}
-                  className="w-full px-4 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-2 rounded border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="Nhập câu hỏi..."
                 />
               </div>
@@ -259,7 +259,7 @@ export default function AdminFAQsPage() {
                   value={newFaq.answer}
                   onChange={e => setNewFaq({...newFaq, answer: e.target.value})}
                   rows={4}
-                  className="w-full px-4 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                  className="w-full px-4 py-2 rounded border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
                   placeholder="Nhập câu trả lời chi tiết (tối thiểu 10 ký tự)..."
                 />
               </div>
@@ -271,7 +271,7 @@ export default function AdminFAQsPage() {
                     required
                     value={newFaq.categoryTag}
                     onChange={e => setNewFaq({...newFaq, categoryTag: e.target.value})}
-                    className="w-full px-4 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-2 rounded border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="VD: VPS, Hosting..."
                   />
                 </div>
@@ -283,7 +283,7 @@ export default function AdminFAQsPage() {
                     min={1}
                     value={newFaq.displayOrder}
                     onChange={e => setNewFaq({...newFaq, displayOrder: parseInt(e.target.value) || 1})}
-                    className="w-full px-4 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-2 rounded border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
               </div>
@@ -291,14 +291,14 @@ export default function AdminFAQsPage() {
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
+                  className="px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-100 rounded-sm transition-colors"
                 >
                   Hủy
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="px-4 py-2 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors disabled:opacity-50 flex items-center gap-2"
+                  className="px-4 py-2 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-sm transition-colors disabled:opacity-50 flex items-center gap-2"
                 >
                   {isSubmitting && <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />}
                   Lưu câu hỏi

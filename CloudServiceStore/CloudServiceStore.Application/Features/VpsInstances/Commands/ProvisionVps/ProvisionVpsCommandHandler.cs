@@ -87,7 +87,7 @@ public class ProvisionVpsCommandHandler : IRequestHandler<ProvisionVpsCommand, S
             
             if (category.Slug != "cloud-vps")
             {
-                throw new BadRequestException($"Category slug is {category.Slug} not cloud-vps");
+                continue; // Skip non-VPS items instead of throwing so we can provision mixed orders
             }
 
             // We should use a unique key for existing check, perhaps add OrderItemId later, 

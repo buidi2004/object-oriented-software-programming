@@ -32,7 +32,7 @@ public class GetMyDashboardQueryHandler : IRequestHandler<GetMyDashboardQuery, C
         var userId = _currentUser.UserId ?? throw new UnauthorizedException("Người dùng chưa đăng nhập.");
 
         // Lọc CHỈ các đơn hàng đã thanh toán thành công
-        var orders = await _orderRepo.WhereAsync(o => o.UserId == userId && o.Status == OrderStatus.Paid, ct);
+        var orders = await _orderRepo.WhereAsync(o => o.UserId == userId && o.Status == OrderStatus.Paid, ct, o => o.Items!);
         
         var totalOrders = orders.Count;
         var totalSpent = orders.Sum(o => o.TotalAmount);

@@ -50,7 +50,7 @@ export default function RecentlyViewed() {
   };
 
   return (
-    <div className="bg-white rounded-3xl p-6 border border-slate-200 mt-8">
+    <div className="bg-white rounded-lg p-6 border border-slate-200 mt-8">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
           <Clock className="w-5 h-5 text-[#1F1F1F]" />
@@ -60,15 +60,15 @@ export default function RecentlyViewed() {
       
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {items.map((item) => (
-          <Link href={`/services/${item.serviceId}`} key={item.id} className="group flex items-center gap-4 p-4 rounded-2xl bg-slate-50 hover:bg-blue-50 border border-slate-100 transition-colors">
-            <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center shadow-sm border border-slate-100 group-hover:border-blue-100 transition-colors">
+          <Link href={`/services/${item.serviceId}`} key={item.id} className="group flex items-center gap-4 p-4 rounded-md bg-slate-50 hover:bg-blue-50 border border-slate-100 transition-colors">
+            <div className="w-12 h-12 rounded bg-white flex items-center justify-center shadow-sm border border-slate-100 group-hover:border-blue-100 transition-colors">
               {getIcon(item.category)}
             </div>
             <div className="flex-1 min-w-0">
               <h4 className="font-bold text-slate-900 truncate group-hover:text-[#1F1F1F] transition-colors">
                 {item.serviceName}
               </h4>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-slate-600">
                 Xem {new Date(item.viewedAt).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}
               </p>
             </div>

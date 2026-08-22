@@ -93,11 +93,11 @@ export default function ComparePlansPage() {
             <h1 className="text-xl font-bold text-slate-900">So Sánh Dịch Vụ</h1>
           </div>
           
-          <div className="inline-flex bg-slate-100 rounded-lg p-1">
-            <button onClick={() => setIsYearly(false)} className={`px-4 py-1.5 rounded-md text-sm font-semibold transition-colors ${!isYearly ? 'bg-white shadow-sm text-slate-900' : 'text-slate-500'}`}>
+          <div className="inline-flex bg-slate-100 rounded-sm p-1">
+            <button onClick={() => setIsYearly(false)} className={`px-4 py-1.5 rounded-sm text-sm font-semibold transition-colors ${!isYearly ? 'bg-white shadow-sm text-slate-900' : 'text-slate-600'}`}>
               Hàng tháng
             </button>
-            <button onClick={() => setIsYearly(true)} className={`px-4 py-1.5 rounded-md text-sm font-semibold transition-colors ${isYearly ? 'bg-white shadow-sm text-slate-900' : 'text-slate-500'}`}>
+            <button onClick={() => setIsYearly(true)} className={`px-4 py-1.5 rounded-sm text-sm font-semibold transition-colors ${isYearly ? 'bg-white shadow-sm text-slate-900' : 'text-slate-600'}`}>
               Hàng năm
             </button>
           </div>
@@ -105,26 +105,26 @@ export default function ComparePlansPage() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12">
-        <div className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-x-auto">
+        <div className="bg-white rounded-lg shadow-sm border border-slate-200 overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
               <tr>
                 <th className="p-6 border-b border-slate-200 bg-slate-50 min-w-[200px]">
-                  <span className="text-slate-500 font-medium">Tính năng / Gói</span>
+                  <span className="text-slate-600 font-medium">Tính năng / Gói</span>
                 </th>
                 {plans.map(plan => (
                   <th key={plan.id} className="p-6 border-b border-l border-slate-200 bg-white min-w-[250px] text-center">
-                    <div className="w-12 h-12 mx-auto bg-blue-50 text-[#1F1F1F] rounded-xl flex items-center justify-center mb-3">
+                    <div className="w-12 h-12 mx-auto bg-blue-50 text-[#1F1F1F] rounded flex items-center justify-center mb-3">
                       <Server className="w-6 h-6" />
                     </div>
                     <h3 className="text-lg font-bold text-slate-900 mb-1">{plan.name}</h3>
                     <div className="text-2xl font-black text-[#1F1F1F] mb-4">
                       {(isYearly ? plan.yearlyPrice : plan.monthlyPrice).toLocaleString('vi-VN')}đ
-                      <span className="text-sm font-normal text-slate-500">/{isYearly ? 'năm' : 'tháng'}</span>
+                      <span className="text-sm font-normal text-slate-600">/{isYearly ? 'năm' : 'tháng'}</span>
                     </div>
                     <button
                       onClick={() => handleBuy(plan)}
-                      className="w-full py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm transition-colors"
+                      className="w-full py-2.5 rounded bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm transition-colors"
                     >
                       Đăng Ký Ngay
                     </button>

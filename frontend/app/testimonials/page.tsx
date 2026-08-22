@@ -64,13 +64,13 @@ export default function TestimonialsPage() {
             {testimonials.map((testimonial, idx) => (
               <div 
                 key={testimonial.id} 
-                className={`bg-white rounded-3xl p-8 border border-slate-200 shadow-sm relative overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1`}
+                className={`bg-white rounded-lg p-8 border border-slate-200 shadow-sm relative overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1`}
               >
                 <Quote className="absolute top-6 right-6 w-12 h-12 text-slate-900 -z-0 transform rotate-180" />
                 <div className="relative z-10">
                   <div className="flex items-center gap-1 mb-6">
                     {[...Array(5)].map((_, i) => (
-                      <Star key={i} className={`w-5 h-5 ${i < testimonial.rating ? 'text-amber-400 fill-amber-400' : 'text-slate-200'}`} />
+                      <Star key={i} className={`w-5 h-5 ${i < testimonial.rating ? 'text-amber-400 fill-amber-400' : 'text-slate-700'}`} />
                     ))}
                   </div>
                   <p className="text-slate-700 text-lg leading-relaxed mb-8 min-h-[120px]">
@@ -83,7 +83,7 @@ export default function TestimonialsPage() {
                     <div>
                       <h4 className="font-bold text-slate-900">{testimonial.customerName}</h4>
                       {testimonial.companyName && (
-                        <p className="text-sm text-slate-500">{testimonial.companyName}</p>
+                        <p className="text-sm text-slate-600">{testimonial.companyName}</p>
                       )}
                     </div>
                   </div>
@@ -94,7 +94,7 @@ export default function TestimonialsPage() {
         )}
 
         <div className="mt-16 text-center">
-          <Link href="/services" className="inline-block bg-white hover:bg-slate-100 text-slate-900 font-bold py-3.5 px-8 rounded-xl transition-all shadow-lg shadow-slate-900/20">
+          <Link href="/services" className="inline-block bg-white hover:bg-slate-100 text-slate-900 font-bold py-3.5 px-8 rounded transition-all shadow-lg shadow-slate-900/20">
             Trải nghiệm dịch vụ ngay
           </Link>
         </div>

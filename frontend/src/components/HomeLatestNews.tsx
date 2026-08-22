@@ -98,7 +98,7 @@ export const HomeLatestNews: React.FC = () => {
             <Link
               key={art.id}
               href={`/blog/${art.slug}`}
-              className="bg-slate-50 rounded-3xl p-6 border border-slate-200/80 hover:border-blue-400 hover:shadow-xl transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1"
+              className="bg-slate-50 rounded-lg p-6 border border-slate-200/80 hover:border-blue-400 hover:shadow-xl transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1"
             >
               <div>
                 <div className="flex items-center justify-between gap-2 mb-5">

@@ -68,7 +68,7 @@ export default function RefundRequestsDashboard() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <Link href="/dashboard" className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-[#1F1F1F] mb-2 transition-colors">
+          <Link href="/dashboard" className="inline-flex items-center gap-2 text-sm text-slate-600 hover:text-[#1F1F1F] mb-2 transition-colors">
             <ArrowLeft className="w-4 h-4" /> Quay lại Dashboard
           </Link>
           <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 flex items-center gap-3">
@@ -78,7 +78,7 @@ export default function RefundRequestsDashboard() {
         </div>
         <button 
           onClick={() => setShowModal(true)}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl font-semibold text-sm transition-colors flex items-center gap-2 shrink-0"
+          className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded font-semibold text-sm transition-colors flex items-center gap-2 shrink-0"
         >
           <Plus className="w-4 h-4" />
           Tạo yêu cầu mới
@@ -90,10 +90,10 @@ export default function RefundRequestsDashboard() {
           <Loader2 className="w-8 h-8 text-[#1F1F1F] animate-spin" />
         </div>
       ) : (
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div className="bg-white rounded-md shadow-sm border border-slate-200 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm text-left">
-              <thead className="bg-slate-50 text-slate-500 border-b border-slate-200">
+              <thead className="bg-slate-50 text-slate-600 border-b border-slate-200">
                 <tr>
                   <th className="px-6 py-4 font-semibold">Mã YC</th>
                   <th className="px-6 py-4 font-semibold">Mã Đơn hàng</th>
@@ -106,7 +106,7 @@ export default function RefundRequestsDashboard() {
               <tbody className="divide-y divide-slate-100">
                 {requests.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="px-6 py-12 text-center text-slate-500">
+                    <td colSpan={6} className="px-6 py-12 text-center text-slate-600">
                       <FileText className="w-12 h-12 text-slate-700 mx-auto mb-3" />
                       Bạn chưa có yêu cầu hoàn tiền nào.
                     </td>
@@ -118,7 +118,7 @@ export default function RefundRequestsDashboard() {
                       <td className="px-6 py-4 font-mono text-slate-600">{req.orderId}</td>
                       <td className="px-6 py-4 font-bold text-rose-600">{(req.refundAmount || 0).toLocaleString('vi-VN')} ₫</td>
                       <td className="px-6 py-4 text-slate-600 max-w-xs truncate" title={req.reason}>{req.reason}</td>
-                      <td className="px-6 py-4 text-slate-500">{new Date(req.createdAt).toLocaleDateString('vi-VN')}</td>
+                      <td className="px-6 py-4 text-slate-600">{new Date(req.createdAt).toLocaleDateString('vi-VN')}</td>
                       <td className="px-6 py-4">{getStatusBadge(req.status)}</td>
                     </tr>
                   ))
@@ -132,7 +132,7 @@ export default function RefundRequestsDashboard() {
       {/* Modal */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-white/50 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl w-full max-w-md overflow-hidden shadow-xl">
+          <div className="bg-white rounded-md w-full max-w-md overflow-hidden shadow-xl">
             <div className="p-6 border-b border-slate-100">
               <h2 className="text-xl font-bold text-slate-900">Tạo yêu cầu hoàn tiền</h2>
             </div>
@@ -145,7 +145,7 @@ export default function RefundRequestsDashboard() {
                   value={newRequest.orderId}
                   onChange={e => setNewRequest({...newRequest, orderId: e.target.value})}
                   placeholder="VD: ORD-1234"
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 font-mono"
+                  className="w-full px-4 py-2.5 rounded border border-slate-200 focus:ring-2 focus:ring-blue-500 font-mono"
                 />
               </div>
               <div>
@@ -157,7 +157,7 @@ export default function RefundRequestsDashboard() {
                   value={newRequest.amount}
                   onChange={e => setNewRequest({...newRequest, amount: e.target.value})}
                   placeholder="VD: 500000"
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-2.5 rounded border border-slate-200 focus:ring-2 focus:ring-blue-500"
                 />
               </div>
               <div>
@@ -168,12 +168,12 @@ export default function RefundRequestsDashboard() {
                   value={newRequest.reason}
                   onChange={e => setNewRequest({...newRequest, reason: e.target.value})}
                   placeholder="Vui lòng cung cấp lý do chi tiết..."
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 resize-none"
+                  className="w-full px-4 py-2.5 rounded border border-slate-200 focus:ring-2 focus:ring-blue-500 resize-none"
                 />
               </div>
               
               {submitError && (
-                <div className="text-red-500 text-sm bg-red-50 p-3 rounded-lg border border-red-100">
+                <div className="text-red-500 text-sm bg-red-50 p-3 rounded-sm border border-red-100">
                   {submitError}
                 </div>
               )}
@@ -182,13 +182,13 @@ export default function RefundRequestsDashboard() {
                 <button 
                   type="button" 
                   onClick={() => setShowModal(false)}
-                  className="flex-1 px-4 py-2.5 text-sm font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors"
+                  className="flex-1 px-4 py-2.5 text-sm font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded transition-colors"
                 >
                   Hủy
                 </button>
                 <button 
                   type="submit"
-                  className="flex-1 px-4 py-2.5 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl transition-colors"
+                  className="flex-1 px-4 py-2.5 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 rounded transition-colors"
                 >
                   Gửi yêu cầu
                 </button>

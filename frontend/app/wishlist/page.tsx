@@ -76,7 +76,7 @@ export default function WishlistPage() {
       <header className="bg-white border-b border-slate-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2.5">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-cyan-400 flex items-center justify-center text-slate-900">
+            <div className="w-10 h-10 rounded bg-gradient-to-tr from-blue-600 via-indigo-600 to-cyan-400 flex items-center justify-center text-slate-900">
               <Heart className="w-6 h-6" />
             </div>
             <span className="text-xl font-black text-slate-900">
@@ -93,24 +93,24 @@ export default function WishlistPage() {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-3xl font-extrabold text-slate-900">Danh Sách Yêu Thích</h1>
-            <p className="text-slate-500 mt-1">Tổng cộng {items.length} sản phẩm</p>
+            <p className="text-slate-600 mt-1">Tổng cộng {items.length} sản phẩm</p>
           </div>
           <Link
             href="/"
-            className="px-5 py-2.5 rounded-xl bg-blue-600 text-white font-bold text-sm hover:bg-blue-700 transition-colors"
+            className="px-5 py-2.5 rounded bg-blue-600 text-white font-bold text-sm hover:bg-blue-700 transition-colors"
           >
             Khám phá dịch vụ
           </Link>
         </div>
 
         {items.length === 0 ? (
-          <div className="text-center py-20 bg-white rounded-2xl border border-slate-200">
+          <div className="text-center py-20 bg-white rounded-md border border-slate-200">
             <Heart className="w-16 h-16 text-slate-700 mx-auto mb-4" />
             <h2 className="text-xl font-bold text-slate-900 mb-2">Danh sách yêu thích trống</h2>
-            <p className="text-slate-500 mb-6">Hãy thêm dịch vụ vào danh sách yêu thích để theo dõi</p>
+            <p className="text-slate-600 mb-6">Hãy thêm dịch vụ vào danh sách yêu thích để theo dõi</p>
             <Link
               href="/"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-blue-600 text-white font-bold hover:bg-blue-700 transition-colors"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded bg-blue-600 text-white font-bold hover:bg-blue-700 transition-colors"
             >
               Khám phá dịch vụ
             </Link>
@@ -120,7 +120,7 @@ export default function WishlistPage() {
             {items.map((item) => (
               <div
                 key={item.id}
-                className="bg-white rounded-2xl border border-slate-200 hover:border-blue-200 hover:shadow-lg transition-all overflow-hidden"
+                className="bg-white rounded-md border border-slate-200 hover:border-blue-200 hover:shadow-lg transition-all overflow-hidden"
               >
                 <div className="h-48 bg-gradient-to-br from-blue-50 to-indigo-50 flex items-center justify-center">
                   {item.type === 'vps' ? (
@@ -143,7 +143,7 @@ export default function WishlistPage() {
                     </span>
                     <button
                       onClick={() => removeFromWishlist(item.id)}
-                      className="p-2 text-slate-600 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                      className="p-2 text-slate-600 hover:text-red-500 hover:bg-red-50 rounded-sm transition-colors"
                       title="Xóa khỏi danh sách yêu thích"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -151,7 +151,7 @@ export default function WishlistPage() {
                   </div>
                   
                   <h3 className="text-lg font-bold text-slate-900 mb-2">{item.title}</h3>
-                  <p className="text-sm text-slate-500 mb-4 line-clamp-2">{item.description}</p>
+                  <p className="text-sm text-slate-600 mb-4 line-clamp-2">{item.description}</p>
                   
                   <div className="flex items-center justify-between">
                     <span className="text-xl font-black text-[#1F1F1F]">
@@ -159,7 +159,7 @@ export default function WishlistPage() {
                     </span>
                     <button
                       onClick={() => addToCart(item)}
-                      className="px-4 py-2 rounded-xl bg-blue-600 text-white font-bold text-sm hover:bg-blue-700 transition-colors flex items-center gap-2"
+                      className="px-4 py-2 rounded bg-blue-600 text-white font-bold text-sm hover:bg-blue-700 transition-colors flex items-center gap-2"
                     >
                       <ShoppingCart className="w-4 h-4" />
                       Thêm giỏ

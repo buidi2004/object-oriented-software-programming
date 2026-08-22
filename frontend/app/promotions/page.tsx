@@ -24,72 +24,100 @@ export default function PromotionsPage() {
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <Loader2 className="w-8 h-8 text-[#1F1F1F] animate-spin" />
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen bg-slate-50 pt-16 pb-24">
+    <div className="min-h-screen bg-white py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Header */}
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-100 text-[#1F1F1F] font-semibold text-sm mb-6">
-            <Tag className="w-4 h-4" />
-            Chương Trình Khuyến Mãi
+        {/* Breadcrumb */}
+        <div className="mb-8 flex items-center text-sm text-slate-600 gap-2 pb-4 border-b border-slate-100">
+          <Link href="/" className="hover:text-red-600 transition-colors">Trang chủ</Link>
+          <span>/</span>
+          <span className="text-slate-900">Tin khuyến mại</span>
+        </div>
+
+        {loading && (
+          <div className="flex justify-center py-20">
+            <Loader2 className="w-8 h-8 text-red-600 animate-spin" />
           </div>
-          <h1 className="text-4xl md:text-5xl font-black text-slate-900 mb-6 tracking-tight">
-            Ưu Đãi Đặc Biệt Từ <span className="text-[#1F1F1F]">CloudHost VN</span>
-          </h1>
-          <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-            Tổng hợp các chương trình giảm giá và ưu đãi mới nhất dành cho khách hàng đăng ký dịch vụ Cloud VPS, Hosting và Tên miền.
-          </p>
-        </div>
+        )}
 
-        {/* Promotions Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {promotions.length === 0 ? (
-            <div className="col-span-full py-12 text-center text-slate-500">
-              Hiện chưa có chương trình khuyến mãi nào đang diễn ra.
-            </div>
-          ) : promotions.map((promo) => (
-            <div key={promo.id} className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden group hover:shadow-xl transition-all duration-300">
-              <div className="relative h-48 overflow-hidden bg-slate-100 flex items-center justify-center text-slate-600">
-                <Zap className="w-12 h-12" />
-                <div className="absolute top-4 right-4 bg-rose-500 text-slate-900 font-black px-4 py-2 rounded-xl shadow-lg transform rotate-3">
-                  GIẢM {promo.discountPercent}%
-                </div>
-              </div>
+        {!loading && (
+          <div className="space-y-12">
+            {promotions.length === 0 ? (
+              <p className="text-center text-slate-600 py-12">Chưa có bài viết khuyến mại nào.</p>
+            ) : (
+              <>
+                {/* Featured Promotion (First item) */}
+                {promotions.length > 0 && (
+                  <div className="group flex flex-col md:flex-row items-stretch bg-white border border-transparent hover:border-slate-100 hover:shadow-lg transition-all duration-300">
+                    {/* Image Left */}
+                    <div className="md:w-[55%] relative overflow-hidden bg-slate-100 block min-h-[300px]">
+                      <div className="w-full h-full flex flex-col items-center justify-center text-red-600 bg-red-50 p-8 text-center group-hover:scale-105 transition-transform duration-700">
+                        <Zap className="w-20 h-20 mb-4 opacity-80" />
+                        <h2 className="text-4xl font-black uppercase tracking-widest">
+                          GIẢM {promotions[0].discountPercent}%
+                        </h2>
+                      </div>
+                    </div>
+                    {/* Content Right */}
+                    <div className="md:w-[45%] p-6 md:p-10 flex flex-col justify-center">
+                      <span className="text-sm text-slate-600 mb-3 block">
+                        {new Date(promotions[0].startDate).toLocaleDateString('vi-VN')} - {new Date(promotions[0].endDate).toLocaleDateString('vi-VN')}
+                      </span>
+                      <h2 className="text-2xl md:text-3xl lg:text-[28px] font-bold text-slate-800 uppercase leading-tight mb-4">
+                        ƯU ĐÃI ĐẶC BIỆT: GIẢM {promotions[0].discountPercent}% CÁC GÓI DỊCH VỤ
+                      </h2>
+                      <p className="text-base text-slate-600 line-clamp-3 md:line-clamp-4 leading-relaxed mb-8">
+                        Đăng ký ngay để nhận ưu đãi giảm {promotions[0].discountPercent}% cho tất cả các gói dịch vụ Cloud VPS, Hosting và Tên miền trong thời gian diễn ra chương trình. Đừng bỏ lỡ cơ hội nâng cấp hạ tầng với chi phí tối ưu nhất.
+                      </p>
+                      <Link 
+                        href="/services"
+                        className="mt-auto inline-flex items-center text-sm font-semibold text-red-600 uppercase tracking-wider hover:text-red-700"
+                      >
+                        ĐĂNG KÝ NGAY <ChevronRight className="w-4 h-4 ml-2" />
+                      </Link>
+                    </div>
+                  </div>
+                )}
 
-              <div className="p-6 md:p-8">
-                <div className="flex items-center gap-2 text-sm font-semibold text-emerald-600 mb-4 bg-emerald-50 w-fit px-3 py-1 rounded-full">
-                  <Calendar className="w-4 h-4" />
-                  {new Date(promo.startDate).toLocaleDateString('vi-VN')} - {new Date(promo.endDate).toLocaleDateString('vi-VN')}
-                </div>
-                
-                <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-[#1F1F1F] transition-colors line-clamp-2">
-                  Ưu đãi gói dịch vụ
-                </h3>
-                
-                <p className="text-slate-600 text-sm mb-8 line-clamp-3 leading-relaxed">
-                  Đăng ký ngay để nhận ưu đãi giảm {promo.discountPercent}% cho gói dịch vụ này.
-                </p>
+                {/* Rest of the promotions Grid */}
+                {promotions.length > 1 && (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {promotions.slice(1).map((promo) => (
+                      <div key={promo.id} className="bg-white group flex flex-col">
+                        {/* Thumbnail */}
+                        <div className="aspect-[16/10] w-full bg-slate-100 overflow-hidden relative block mb-4">
+                           <div className="w-full h-full flex flex-col items-center justify-center text-red-600 bg-red-50 p-4 text-center group-hover:scale-105 transition-transform duration-500">
+                             <Zap className="w-10 h-10 mb-2 opacity-80" />
+                             <h3 className="text-2xl font-black uppercase tracking-wider">
+                               GIẢM {promo.discountPercent}%
+                             </h3>
+                           </div>
+                        </div>
 
-                <Link 
-                  href="/services" 
-                  className="inline-flex items-center gap-2 font-bold text-[#1F1F1F] hover:text-[#1F1F1F] transition-colors"
-                >
-                  Đăng ký ngay <ChevronRight className="w-4 h-4" />
-                </Link>
-              </div>
-            </div>
-          ))}
-        </div>
-
+                        {/* Content */}
+                        <div className="flex flex-col flex-1">
+                          <span className="text-xs text-slate-600 mb-2 block">
+                             {new Date(promo.startDate).toLocaleDateString('vi-VN')} - {new Date(promo.endDate).toLocaleDateString('vi-VN')}
+                          </span>
+                          <h2 className="text-lg font-bold text-slate-800 uppercase leading-snug line-clamp-3">
+                            KHUYẾN MÃI LỚN: ƯU ĐÃI GIẢM {promo.discountPercent}%
+                          </h2>
+                          <Link 
+                            href="/services"
+                            className="mt-3 inline-flex items-center text-xs font-semibold text-red-600 uppercase tracking-wider hover:text-red-700"
+                          >
+                            ĐĂNG KÝ NGAY <ChevronRight className="w-4 h-4 ml-1" />
+                          </Link>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

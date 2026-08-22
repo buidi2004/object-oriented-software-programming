@@ -148,17 +148,17 @@ export default function AdminPermissionsPage() {
       <header className="bg-white border-b border-slate-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link href="/admin" className="p-2 rounded-lg hover:bg-slate-100 transition-colors">
+            <Link href="/admin" className="p-2 rounded-sm hover:bg-slate-100 transition-colors">
               <ArrowLeft className="w-5 h-5 text-slate-600" />
             </Link>
             <div>
               <h1 className="text-xl font-bold text-slate-900">Quản lý Phân quyền</h1>
-              <p className="text-sm text-slate-500">{permissions.length} quyền • {roles.length} vai trò</p>
+              <p className="text-sm text-slate-600">{permissions.length} quyền • {roles.length} vai trò</p>
             </div>
           </div>
           {/* <button 
             onClick={() => setShowAddModal(true)}
-            className="px-4 py-2 rounded-lg bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 transition-colors flex items-center gap-2"
+            className="px-4 py-2 rounded-sm bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 transition-colors flex items-center gap-2"
           >
             <Plus className="w-4 h-4" />
             Thêm quyền
@@ -168,7 +168,7 @@ export default function AdminPermissionsPage() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Permissions Table */}
-        <div className="bg-white rounded-xl border border-slate-200 overflow-hidden mb-6">
+        <div className="bg-white rounded border border-slate-200 overflow-hidden mb-6">
           <div className="px-6 py-4 border-b border-slate-200">
             <h2 className="text-lg font-bold text-slate-900">Danh sách quyền</h2>
           </div>
@@ -176,10 +176,10 @@ export default function AdminPermissionsPage() {
           <table className="w-full">
             <thead className="bg-slate-50 border-b border-slate-200">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Tên quyền</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Mô tả</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Thể loại</th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase">Thao tác</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-slate-600 uppercase">Tên quyền</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-slate-600 uppercase">Mô tả</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-slate-600 uppercase">Thể loại</th>
+                <th className="px-6 py-3 text-right text-xs font-medium text-slate-600 uppercase">Thao tác</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200">
@@ -191,7 +191,7 @@ export default function AdminPermissionsPage() {
                       <span className="font-medium text-slate-900">{perm.name}</span>
                     </div>
                   </td>
-                  <td className="px-6 py-4 text-sm text-slate-500">{perm.description}</td>
+                  <td className="px-6 py-4 text-sm text-slate-600">{perm.description}</td>
                   <td className="px-6 py-4">
                     <span className="px-2 py-1 rounded-full bg-slate-100 text-xs font-medium text-slate-600 capitalize">
                       {perm.category}
@@ -208,13 +208,13 @@ export default function AdminPermissionsPage() {
           {permissions.length === 0 && (
             <div className="text-center py-12">
               <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-700" />
-              <p className="font-medium text-slate-500">Chưa có quyền nào</p>
+              <p className="font-medium text-slate-600">Chưa có quyền nào</p>
             </div>
           )}
         </div>
 
         {/* Role Assignments */}
-        <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+        <div className="bg-white rounded border border-slate-200 overflow-hidden">
           <div className="px-6 py-4 border-b border-slate-200">
             <h2 className="text-lg font-bold text-slate-900">Phân quyền theo vai trò</h2>
           </div>
@@ -224,7 +224,7 @@ export default function AdminPermissionsPage() {
               <div key={role.roleId} className="p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="font-bold text-slate-900">{role.roleName}</h3>
-                  <span className="text-sm text-slate-500">{role.permissions.length} quyền</span>
+                  <span className="text-sm text-slate-600">{role.permissions.length} quyền</span>
                 </div>
                 
                 <div className="flex flex-wrap gap-2">
@@ -234,7 +234,7 @@ export default function AdminPermissionsPage() {
                       <button
                         key={perm.id}
                         onClick={() => handleAssignPermission(role.roleId, perm.id)}
-                        className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                        className={`px-3 py-1.5 rounded-sm text-xs font-medium transition-colors ${
                           isSelected
                             ? 'bg-blue-100 text-[#1F1F1F] border border-blue-200'
                             : 'bg-slate-100 text-slate-600 hover:bg-slate-200 border border-slate-200'
@@ -254,7 +254,7 @@ export default function AdminPermissionsPage() {
       {/* Add Modal */}
       {showAddModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl w-full max-w-md p-6">
+          <div className="bg-white rounded w-full max-w-md p-6">
             <h2 className="text-lg font-bold text-slate-900 mb-4">Thêm quyền mới</h2>
             
             <div className="space-y-4">
@@ -265,7 +265,7 @@ export default function AdminPermissionsPage() {
                   value={permName}
                   onChange={(e) => setPermName(e.target.value)}
                   placeholder="VD: CanManageUsers"
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full px-3 py-2 rounded-sm border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                 />
               </div>
 
@@ -276,7 +276,7 @@ export default function AdminPermissionsPage() {
                   onChange={(e) => setPermDescription(e.target.value)}
                   placeholder="Mô tả quyền này..."
                   rows={2}
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full px-3 py-2 rounded-sm border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                 />
               </div>
 
@@ -285,7 +285,7 @@ export default function AdminPermissionsPage() {
                 <select 
                   value={permCategory}
                   onChange={(e) => setPermCategory(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full px-3 py-2 rounded-sm border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                 >
                   <option value="">Chọn thể loại</option>
                   <option value="users">Người dùng</option>
@@ -300,13 +300,13 @@ export default function AdminPermissionsPage() {
             <div className="flex gap-3 mt-6">
               <button 
                 onClick={() => { setShowAddModal(false); resetForm(); }}
-                className="flex-1 py-2 rounded-lg bg-slate-100 text-slate-700 font-semibold hover:bg-slate-200 transition-colors"
+                className="flex-1 py-2 rounded-sm bg-slate-100 text-slate-700 font-semibold hover:bg-slate-200 transition-colors"
               >
                 Hủy
               </button>
               <button 
                 onClick={handleAddPermission}
-                className="flex-1 py-2 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors"
+                className="flex-1 py-2 rounded-sm bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors"
               >
                 Thêm mới
               </button>

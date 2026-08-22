@@ -85,7 +85,7 @@ export const DomainSearch: React.FC<DomainSearchProps> = ({ onAddToCart }) => {
           <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
             Tìm kiếm tên miền thương hiệu hoàn hảo cho bạn
           </h2>
-          <p className="text-slate-500 text-sm mt-1">
+          <p className="text-slate-600 text-sm mt-1">
             Tra cứu khởi tạo ngay lập tức. Miễn phí quản lý DNS & Bảo vệ thông tin WHOIS Privacy.
           </p>
           <a href="/services/domain" className="inline-flex items-center gap-1.5 mt-3 text-sm font-bold text-[#1F1F1F] hover:text-[#1F1F1F] transition-colors">
@@ -95,7 +95,7 @@ export const DomainSearch: React.FC<DomainSearchProps> = ({ onAddToCart }) => {
 
         {/* Domain Search Form */}
         <div className="max-w-3xl mx-auto">
-          <form onSubmit={handleSearch} className="relative flex flex-col sm:flex-row gap-2 bg-white p-2 rounded-2xl sm:rounded-full shadow-xl shadow-blue-500/10 border border-slate-200">
+          <form onSubmit={handleSearch} className="relative flex flex-col sm:flex-row gap-2 bg-white p-2 rounded-md sm:rounded-full shadow-xl shadow-blue-500/10 border border-slate-200">
             <div className="relative flex-1 flex items-center pl-4">
               <Search className="w-5 h-5 text-slate-600 mr-2" />
               <input
@@ -103,13 +103,13 @@ export const DomainSearch: React.FC<DomainSearchProps> = ({ onAddToCart }) => {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Nhập tên miền bạn muốn đăng ký (VD: mycompany.vn, tech.com)..."
-                className="w-full bg-transparent border-none text-slate-900 font-medium text-base focus:outline-none placeholder:text-slate-400 py-3"
+                className="w-full bg-transparent border-none text-slate-900 font-medium text-base focus:outline-none placeholder:text-slate-600 py-3"
               />
             </div>
             <button
               type="submit"
               disabled={isSearching}
-              className="px-8 py-3.5 rounded-xl sm:rounded-full bg-blue-600 hover:bg-blue-700 text-white font-bold text-base transition-all shadow-md shadow-blue-500/20 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-75"
+              className="px-8 py-3.5 rounded sm:rounded-full bg-blue-600 hover:bg-blue-700 text-white font-bold text-base transition-all shadow-md shadow-blue-500/20 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-75"
             >
               {isSearching ? (
                 <>
@@ -127,7 +127,7 @@ export const DomainSearch: React.FC<DomainSearchProps> = ({ onAddToCart }) => {
 
           {/* Search Result Box */}
           {searchResult && (
-            <div className={`mt-6 p-5 rounded-2xl border transition-all animate-in fade-in duration-300 ${
+            <div className={`mt-6 p-5 rounded-md border transition-all animate-in fade-in duration-300 ${
               searchResult.available 
                 ? 'bg-emerald-50/80 border-emerald-200 text-emerald-900' 
                 : 'bg-rose-50/80 border-rose-200 text-rose-900'
@@ -135,11 +135,11 @@ export const DomainSearch: React.FC<DomainSearchProps> = ({ onAddToCart }) => {
               <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div className="flex items-center gap-3">
                   {searchResult.available ? (
-                    <div className="p-2.5 rounded-xl bg-emerald-500 text-white shadow-md">
+                    <div className="p-2.5 rounded bg-emerald-500 text-white shadow-md">
                       <CheckCircle2 className="w-6 h-6" />
                     </div>
                   ) : (
-                    <div className="p-2.5 rounded-xl bg-rose-500 text-slate-900 shadow-md">
+                    <div className="p-2.5 rounded bg-rose-500 text-slate-900 shadow-md">
                       <AlertCircle className="w-6 h-6" />
                     </div>
                   )}
@@ -158,12 +158,12 @@ export const DomainSearch: React.FC<DomainSearchProps> = ({ onAddToCart }) => {
                     <div className="text-right">
                       <div className="text-2xl font-black text-emerald-700">
                         {searchResult.price.toLocaleString('vi-VN')} đ
-                        <span className="text-xs font-semibold text-slate-500">/năm</span>
+                        <span className="text-xs font-semibold text-slate-600">/năm</span>
                       </div>
                     </div>
                     <button
                       onClick={() => handleRegisterDomain(searchResult.domain, searchResult.price)}
-                      className="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-md transition-all flex items-center gap-2 cursor-pointer"
+                      className="px-6 py-2.5 rounded bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-md transition-all flex items-center gap-2 cursor-pointer"
                     >
                       <ShoppingCart className="w-4 h-4" />
                       Thêm vào giỏ
@@ -179,7 +179,7 @@ export const DomainSearch: React.FC<DomainSearchProps> = ({ onAddToCart }) => {
             {DOMAIN_EXTENSIONS.map((item) => (
               <div
                 key={item.extension}
-                className={`p-5 flex flex-col justify-between rounded-2xl border text-center transition-all bg-white hover:border-blue-300 hover:shadow-md relative overflow-hidden ${
+                className={`p-5 flex flex-col justify-between rounded-md border text-center transition-all bg-white hover:border-blue-300 hover:shadow-md relative overflow-hidden ${
                   item.isPopular ? 'border-blue-200 ring-2 ring-blue-500/10 shadow-sm' : 'border-slate-200/80'
                 }`}
               >
@@ -202,7 +202,7 @@ export const DomainSearch: React.FC<DomainSearchProps> = ({ onAddToCart }) => {
                 </div>
                 <button
                   onClick={() => handleRegisterDomain(`mybrand${item.extension}`, item.pricePerYear)}
-                  className="mt-4 w-full py-2 rounded-xl bg-slate-100 hover:bg-blue-50 text-slate-700 hover:text-[#1F1F1F] font-bold text-sm transition-colors cursor-pointer"
+                  className="mt-4 w-full py-2 rounded bg-slate-100 hover:bg-blue-50 text-slate-700 hover:text-[#1F1F1F] font-bold text-sm transition-colors cursor-pointer"
                 >
                   Đăng ký
                 </button>

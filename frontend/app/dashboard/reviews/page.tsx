@@ -41,14 +41,14 @@ export default function ReviewsDashboard() {
       
       {/* Header */}
       <div>
-        <Link href="/dashboard" className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-[#1F1F1F] mb-2 transition-colors">
+        <Link href="/dashboard" className="inline-flex items-center gap-2 text-sm text-slate-600 hover:text-[#1F1F1F] mb-2 transition-colors">
           <ArrowLeft className="w-4 h-4" /> Quay lại Dashboard
         </Link>
         <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 flex items-center gap-3">
           <MessageSquare className="w-8 h-8 text-[#1F1F1F]" />
           Đánh giá của tôi
         </h1>
-        <p className="text-slate-500 mt-2">Quản lý các đánh giá bạn đã viết cho các dịch vụ tại CloudHost VN.</p>
+        <p className="text-slate-600 mt-2">Quản lý các đánh giá bạn đã viết cho các dịch vụ tại CloudHost VN.</p>
       </div>
 
       {/* List */}
@@ -59,13 +59,13 @@ export default function ReviewsDashboard() {
       ) : (
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {reviews.length === 0 ? (
-          <div className="col-span-full py-12 text-center text-slate-500 bg-white rounded-2xl border border-slate-200 shadow-sm">
+          <div className="col-span-full py-12 text-center text-slate-600 bg-white rounded-md border border-slate-200 shadow-sm">
             <MessageSquare className="w-12 h-12 text-slate-700 mx-auto mb-3" />
             <p className="font-medium">Bạn chưa viết đánh giá nào.</p>
           </div>
         ) : (
           reviews.map(review => (
-            <div key={review.id} className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm flex flex-col relative overflow-hidden">
+            <div key={review.id} className="bg-white rounded-md p-6 border border-slate-200 shadow-sm flex flex-col relative overflow-hidden">
               {!review.isApproved && (
                 <div className="absolute top-0 right-0 bg-amber-100 text-amber-700 text-[10px] font-bold px-3 py-1 rounded-bl-lg">
                   Chờ duyệt
@@ -76,16 +76,16 @@ export default function ReviewsDashboard() {
                   <h3 className="font-bold text-slate-900 line-clamp-1 pr-12">{review.servicePlanName}</h3>
                   <div className="flex items-center gap-1 mt-1">
                     {[1, 2, 3, 4, 5].map(star => (
-                      <Star key={star} className={`w-4 h-4 ${star <= review.rating ? 'fill-amber-400 text-amber-400' : 'text-slate-200'}`} />
+                      <Star key={star} className={`w-4 h-4 ${star <= review.rating ? 'fill-amber-400 text-amber-400' : 'text-slate-700'}`} />
                     ))}
                   </div>
                 </div>
                 <div className="flex gap-2">
                   {/* Backend currently doesn't support edit/delete for customers, so buttons are disabled */}
-                  <button disabled title="Chức năng sửa tạm thời chưa khả dụng" className="p-2 text-slate-700 rounded-lg cursor-not-allowed">
+                  <button disabled title="Chức năng sửa tạm thời chưa khả dụng" className="p-2 text-slate-700 rounded-sm cursor-not-allowed">
                     <Edit2 className="w-4 h-4" />
                   </button>
-                  <button disabled title="Chức năng xóa tạm thời chưa khả dụng" className="p-2 text-slate-700 rounded-lg cursor-not-allowed">
+                  <button disabled title="Chức năng xóa tạm thời chưa khả dụng" className="p-2 text-slate-700 rounded-sm cursor-not-allowed">
                     <Trash2 className="w-4 h-4" />
                   </button>
                 </div>

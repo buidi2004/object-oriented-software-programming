@@ -36,14 +36,14 @@ export default function ForgotPasswordPage() {
           <ArrowLeft className="w-4 h-4" /> Quay lại đăng nhập
         </Link>
 
-        <div className="bg-white rounded-2xl shadow-xl border border-slate-100 p-8">
+        <div className="bg-white rounded-md shadow-xl border border-slate-100 p-8">
           <h1 className="text-2xl font-extrabold text-slate-900 mb-2">Quên mật khẩu</h1>
           <p className="text-sm text-slate-600 mb-6">
             Nhập email đăng ký. Chúng tôi sẽ gửi hướng dẫn đặt lại mật khẩu.
           </p>
 
           {sent ? (
-            <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-xl flex items-start gap-3">
+            <div className="p-4 bg-emerald-50 border border-emerald-200 rounded flex items-start gap-3">
               <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
               <div>
                 <p className="text-sm font-semibold text-emerald-800">Đã gửi yêu cầu</p>
@@ -55,7 +55,7 @@ export default function ForgotPasswordPage() {
           ) : (
             <>
               {error && (
-                <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2 text-sm text-red-700">
+                <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-sm flex items-center gap-2 text-sm text-red-700">
                   <AlertCircle className="w-4 h-4" />
                   {error}
                 </div>
@@ -71,7 +71,7 @@ export default function ForgotPasswordPage() {
                       required
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                      className="w-full pl-10 pr-4 py-3 border border-slate-200 rounded focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                       placeholder="example@company.vn"
                     />
                   </div>
@@ -79,7 +79,7 @@ export default function ForgotPasswordPage() {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold disabled:opacity-70"
+                  className="w-full py-3 rounded bg-blue-600 hover:bg-blue-700 text-white font-bold disabled:opacity-70"
                 >
                   {isLoading ? 'Đang gửi...' : 'Gửi liên kết đặt lại'}
                 </button>

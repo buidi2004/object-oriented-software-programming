@@ -90,7 +90,7 @@ export const HomeTestimonials: React.FC = () => {
           {items.map((item) => (
             <div
               key={item.id}
-              className="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1"
+              className="bg-white rounded-lg p-8 border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1"
             >
               <div>
                 {/* 5 Stars */}
@@ -116,7 +116,7 @@ export const HomeTestimonials: React.FC = () => {
                     {item.customerName}
                     <UserCheck className="w-3.5 h-3.5 text-emerald-500" />
                   </h4>
-                  <p className="text-xs text-slate-500 font-medium">{item.companyName}</p>
+                  <p className="text-xs text-slate-600 font-medium">{item.companyName}</p>
                 </div>
               </div>
             </div>

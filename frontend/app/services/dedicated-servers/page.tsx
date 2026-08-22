@@ -274,7 +274,7 @@ export default function DedicatedServersPage() {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           {/* Engineering Status Bar */}
-          <div className="flex flex-wrap items-center justify-between gap-4 p-3.5 mb-10 rounded-2xl bg-[#0d1424] border border-slate-200 text-xs font-mono">
+          <div className="flex flex-wrap items-center justify-between gap-4 p-3.5 mb-10 rounded-md bg-[#0d1424] border border-slate-200 text-xs font-mono">
             <div className="flex items-center gap-3">
               <span className="flex items-center gap-1.5 text-purple-400 font-bold">
                 <span className="w-2 h-2 rounded-full bg-purple-400 animate-pulse" />
@@ -297,7 +297,7 @@ export default function DedicatedServersPage() {
             
             {/* Left Headline */}
             <div className="lg:col-span-7 space-y-6">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-purple-950/60 border border-purple-800/60 text-purple-300 text-xs font-mono">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm bg-purple-950/60 border border-purple-800/60 text-purple-300 text-xs font-mono">
                 <Server className="w-3.5 h-3.5 text-purple-400" />
                 DELL POWEREDGE &amp; AMD EPYC ENTERPRISE BARE-METAL
               </div>
@@ -316,22 +316,22 @@ export default function DedicatedServersPage() {
 
               {/* Vendor Badges */}
               <div className="flex flex-wrap items-center gap-3 pt-2">
-                <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0f172a] border border-slate-200 text-xs font-mono text-slate-700">
+                <div className="flex items-center gap-2 px-3.5 py-2 rounded bg-[#0f172a] border border-slate-200 text-xs font-mono text-slate-700">
                   <SiDell className="w-4 h-4 text-slate-200" />
                   <span>Dell EMC PowerEdge</span>
                 </div>
-                <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0f172a] border border-slate-200 text-xs font-mono text-slate-700">
+                <div className="flex items-center gap-2 px-3.5 py-2 rounded bg-[#0f172a] border border-slate-200 text-xs font-mono text-slate-700">
                   <SiIntel className="w-4 h-4 text-slate-200" />
                   <span>Intel Xeon Scalable</span>
                 </div>
-                <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0f172a] border border-slate-200 text-xs font-mono text-slate-700">
+                <div className="flex items-center gap-2 px-3.5 py-2 rounded bg-[#0f172a] border border-slate-200 text-xs font-mono text-slate-700">
                   <SiAmd className="w-4 h-4 text-rose-500" />
                   <span>AMD EPYC Zen 2</span>
                 </div>
               </div>
 
               {/* Supported Hypervisors & OS */}
-              <div className="p-4 rounded-xl bg-white border border-slate-200 text-xs font-mono space-y-2">
+              <div className="p-4 rounded bg-white border border-slate-200 text-xs font-mono space-y-2">
                 <div className="text-slate-600 flex items-center justify-between">
                   <span>Supported OS &amp; Hypervisors:</span>
                   <span className="text-purple-400">1-Click ISO Mount</span>
@@ -349,7 +349,7 @@ export default function DedicatedServersPage() {
 
             {/* Right iDRAC Remote Console Simulator */}
             <div className="lg:col-span-5">
-              <div className="rounded-2xl bg-[#0b1320] border border-slate-200 p-6 shadow-2xl space-y-5">
+              <div className="rounded-md bg-[#0b1320] border border-slate-200 p-6 shadow-2xl space-y-5">
                 <div className="flex items-center justify-between pb-3 border-b border-slate-200">
                   <div className="flex items-center gap-2">
                     <span className="w-3 h-3 rounded-full bg-rose-500/80" />
@@ -370,35 +370,35 @@ export default function DedicatedServersPage() {
 
                 {/* Live Telemetry Sensors */}
                 <div className="grid grid-cols-3 gap-2 text-center font-mono">
-                  <div className="p-2.5 rounded-xl bg-[#0e1627] border border-slate-200">
-                    <div className="text-[10px] text-slate-500 uppercase">Chassis Temp</div>
+                  <div className="p-2.5 rounded bg-[#0e1627] border border-slate-200">
+                    <div className="text-[10px] text-slate-600 uppercase">Chassis Temp</div>
                     <div className="text-sm font-extrabold text-emerald-400 mt-0.5">23.5 °C</div>
                   </div>
-                  <div className="p-2.5 rounded-xl bg-[#0e1627] border border-slate-200">
-                    <div className="text-[10px] text-slate-500 uppercase">Fan Speed</div>
+                  <div className="p-2.5 rounded bg-[#0e1627] border border-slate-200">
+                    <div className="text-[10px] text-slate-600 uppercase">Fan Speed</div>
                     <div className="text-sm font-extrabold text-slate-200 mt-0.5">4,800 RPM</div>
                   </div>
-                  <div className="p-2.5 rounded-xl bg-[#0e1627] border border-slate-200">
-                    <div className="text-[10px] text-slate-500 uppercase">Power Draw</div>
+                  <div className="p-2.5 rounded bg-[#0e1627] border border-slate-200">
+                    <div className="text-[10px] text-slate-600 uppercase">Power Draw</div>
                     <div className="text-sm font-extrabold text-purple-400 mt-0.5">340 W</div>
                   </div>
                 </div>
 
                 {/* Interactive IPMI Actions */}
                 <div className="space-y-2 font-mono text-xs">
-                  <div className="text-slate-500">// Out-of-Band Hardware Controls</div>
+                  <div className="text-slate-600">// Out-of-Band Hardware Controls</div>
                   <div className="flex gap-2">
                     <button
                       onClick={() => handlePowerAction('reboot')}
                       disabled={serverPower === 'rebooting'}
-                      className="flex-1 py-2.5 rounded-xl bg-[#0f172a] hover:bg-slate-100 border border-slate-300 text-slate-900 font-bold transition-all flex items-center justify-center gap-1.5"
+                      className="flex-1 py-2.5 rounded bg-[#0f172a] hover:bg-slate-100 border border-slate-300 text-slate-900 font-bold transition-all flex items-center justify-center gap-1.5"
                     >
                       <RefreshCw className={`w-3.5 h-3.5 ${serverPower === 'rebooting' ? 'animate-spin' : ''}`} />
                       Hard Reboot
                     </button>
                     <button
                       onClick={() => handlePowerAction('toggle')}
-                      className="flex-1 py-2.5 rounded-xl bg-[#0f172a] hover:bg-slate-100 border border-slate-300 text-slate-900 font-bold transition-all flex items-center justify-center gap-1.5"
+                      className="flex-1 py-2.5 rounded bg-[#0f172a] hover:bg-slate-100 border border-slate-300 text-slate-900 font-bold transition-all flex items-center justify-center gap-1.5"
                     >
                       <Power className="w-3.5 h-3.5 text-rose-400" />
                       {serverPower === 'on' ? 'Power Down' : 'Power Up'}
@@ -409,7 +409,7 @@ export default function DedicatedServersPage() {
                 <div className="pt-2">
                   <a
                     href="#spec-matrix"
-                    className="w-full py-3.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs font-mono flex items-center justify-center gap-2 transition-all shadow-lg shadow-purple-600/20"
+                    className="w-full py-3.5 rounded bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs font-mono flex items-center justify-center gap-2 transition-all shadow-lg shadow-purple-600/20"
                   >
                     <span>XEM BẢNG CẤU HÌNH VÀ BÁO GIÁ</span>
                     <ArrowRight className="w-4 h-4" />
@@ -428,7 +428,7 @@ export default function DedicatedServersPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-purple-950 text-purple-400 text-xs font-mono mb-3 border border-purple-800">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm bg-purple-950 text-purple-400 text-xs font-mono mb-3 border border-purple-800">
               <Layers className="w-3.5 h-3.5" />
               ENTERPRISE BARE-METAL INFRASTRUCTURE
             </div>
@@ -443,10 +443,10 @@ export default function DedicatedServersPage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             
             {/* Schematic 1: Hardware RAID & NVMe Engine */}
-            <div className="p-6 rounded-3xl bg-white border border-slate-200 flex flex-col justify-between space-y-6">
+            <div className="p-6 rounded-lg bg-white border border-slate-200 flex flex-col justify-between space-y-6">
               <div>
-                <div className="p-4 rounded-2xl bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
-                  <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
+                <div className="p-4 rounded-md bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
+                  <div className="text-[10px] text-slate-600 uppercase mb-3 flex items-center justify-between">
                     <span>HARDWARE RAID-10 STORAGE</span>
                     <span className="text-emerald-400">800k IOPS</span>
                   </div>
@@ -480,10 +480,10 @@ export default function DedicatedServersPage() {
             </div>
 
             {/* Schematic 2: Out-of-Band Remote KVM */}
-            <div className="p-6 rounded-3xl bg-white border border-slate-200 flex flex-col justify-between space-y-6">
+            <div className="p-6 rounded-lg bg-white border border-slate-200 flex flex-col justify-between space-y-6">
               <div>
-                <div className="p-4 rounded-2xl bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
-                  <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
+                <div className="p-4 rounded-md bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
+                  <div className="text-[10px] text-slate-600 uppercase mb-3 flex items-center justify-between">
                     <span>ISOLATED IPMI NETWORK</span>
                     <span className="text-slate-200">OUT-OF-BAND</span>
                   </div>
@@ -517,10 +517,10 @@ export default function DedicatedServersPage() {
             </div>
 
             {/* Schematic 3: Tier-III 2N Redundancy */}
-            <div className="p-6 rounded-3xl bg-white border border-slate-200 flex flex-col justify-between space-y-6">
+            <div className="p-6 rounded-lg bg-white border border-slate-200 flex flex-col justify-between space-y-6">
               <div>
-                <div className="p-4 rounded-2xl bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
-                  <div className="text-[10px] text-slate-500 uppercase mb-3 flex items-center justify-between">
+                <div className="p-4 rounded-md bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
+                  <div className="text-[10px] text-slate-600 uppercase mb-3 flex items-center justify-between">
                     <span>2N POWER &amp; NETWORK BACKBONE</span>
                     <span className="text-amber-400">SLA 99.99%</span>
                   </div>
@@ -562,7 +562,7 @@ export default function DedicatedServersPage() {
       <section id="server-configurator" className="py-24 bg-white border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-purple-950 text-purple-400 text-xs font-mono mb-3 border border-purple-800">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm bg-purple-950 text-purple-400 text-xs font-mono mb-3 border border-purple-800">
               <Sliders className="w-3.5 h-3.5" />
               BUILD YOUR BARE-METAL SERVER
             </div>
@@ -580,7 +580,7 @@ export default function DedicatedServersPage() {
             <div className="lg:col-span-8 space-y-6">
               
               {/* CPU Selection */}
-              <div className="p-6 rounded-2xl bg-white border border-slate-200 space-y-3">
+              <div className="p-6 rounded-md bg-white border border-slate-200 space-y-3">
                 <div className="text-xs font-mono text-slate-600 uppercase tracking-wider flex items-center justify-between">
                   <span>1. Lựa Chọn Vi Xử Lý (Processor):</span>
                   <span className="text-purple-400 font-bold">{cpuPrices[cfgCpu].cores}</span>
@@ -593,14 +593,14 @@ export default function DedicatedServersPage() {
                       <button
                         key={key}
                         onClick={() => setCfgCpu(key)}
-                        className={`p-4 rounded-xl border text-left transition-all ${
+                        className={`p-4 rounded border text-left transition-all ${
                           active
                             ? 'bg-[#141b2d] border-purple-500 shadow-md shadow-purple-500/10'
                             : 'bg-[#060a12] border-slate-800 text-slate-400 hover:border-slate-700'
                         }`}
                       >
                         <div className="font-mono font-bold text-xs text-slate-900">{c.name}</div>
-                        <div className="text-[11px] text-slate-500 font-mono mt-1">{c.model}</div>
+                        <div className="text-[11px] text-slate-600 font-mono mt-1">{c.model}</div>
                         <div className="text-xs font-bold text-purple-400 font-mono mt-2">
                           {c.price.toLocaleString('vi-VN')} đ/tháng
                         </div>
@@ -611,7 +611,7 @@ export default function DedicatedServersPage() {
               </div>
 
               {/* RAM Selection */}
-              <div className="p-6 rounded-2xl bg-white border border-slate-200 space-y-3">
+              <div className="p-6 rounded-md bg-white border border-slate-200 space-y-3">
                 <div className="text-xs font-mono text-slate-600 uppercase tracking-wider">
                   2. Bộ Nhớ Trong (RAM DDR4 ECC Registered):
                 </div>
@@ -623,7 +623,7 @@ export default function DedicatedServersPage() {
                       <button
                         key={key}
                         onClick={() => setCfgRam(key)}
-                        className={`p-3 rounded-xl border text-center transition-all ${
+                        className={`p-3 rounded border text-center transition-all ${
                           active
                             ? 'bg-[#141b2d] border-purple-500 text-white font-bold'
                             : 'bg-[#060a12] border-slate-800 text-slate-400 hover:border-slate-700'
@@ -640,7 +640,7 @@ export default function DedicatedServersPage() {
               </div>
 
               {/* Storage Selection */}
-              <div className="p-6 rounded-2xl bg-white border border-slate-200 space-y-3">
+              <div className="p-6 rounded-md bg-white border border-slate-200 space-y-3">
                 <div className="text-xs font-mono text-slate-600 uppercase tracking-wider">
                   3. Ổ Cứng Lưu Trữ Enterprise (Hardware RAID):
                 </div>
@@ -652,7 +652,7 @@ export default function DedicatedServersPage() {
                       <button
                         key={key}
                         onClick={() => setCfgStorage(key)}
-                        className={`p-3.5 rounded-xl border text-left transition-all ${
+                        className={`p-3.5 rounded border text-left transition-all ${
                           active
                             ? 'bg-[#141b2d] border-purple-500 text-white'
                             : 'bg-[#060a12] border-slate-800 text-slate-400 hover:border-slate-700'
@@ -670,7 +670,7 @@ export default function DedicatedServersPage() {
 
               {/* Network Uplink & IP */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div className="p-6 rounded-2xl bg-white border border-slate-200 space-y-3">
+                <div className="p-6 rounded-md bg-white border border-slate-200 space-y-3">
                   <div className="text-xs font-mono text-slate-600 uppercase tracking-wider">
                     4. Cổng Mạng Uplink:
                   </div>
@@ -682,7 +682,7 @@ export default function DedicatedServersPage() {
                         <button
                           key={key}
                           onClick={() => setCfgUplink(key)}
-                          className={`w-full p-2.5 rounded-xl border text-left transition-all flex items-center justify-between text-xs font-mono ${
+                          className={`w-full p-2.5 rounded border text-left transition-all flex items-center justify-between text-xs font-mono ${
                             active
                               ? 'bg-[#141b2d] border-purple-500 text-white font-bold'
                               : 'bg-[#060a12] border-slate-800 text-slate-400 hover:border-slate-700'
@@ -698,7 +698,7 @@ export default function DedicatedServersPage() {
                   </div>
                 </div>
 
-                <div className="p-6 rounded-2xl bg-white border border-slate-200 space-y-3">
+                <div className="p-6 rounded-md bg-white border border-slate-200 space-y-3">
                   <div className="text-xs font-mono text-slate-600 uppercase tracking-wider">
                     5. Địa Chỉ Clean IPv4:
                   </div>
@@ -710,7 +710,7 @@ export default function DedicatedServersPage() {
                         <button
                           key={key}
                           onClick={() => setCfgIp(key)}
-                          className={`w-full p-2.5 rounded-xl border text-left transition-all flex items-center justify-between text-xs font-mono ${
+                          className={`w-full p-2.5 rounded border text-left transition-all flex items-center justify-between text-xs font-mono ${
                             active
                               ? 'bg-[#141b2d] border-purple-500 text-white font-bold'
                               : 'bg-[#060a12] border-slate-800 text-slate-400 hover:border-slate-700'
@@ -733,7 +733,7 @@ export default function DedicatedServersPage() {
             <div className="lg:col-span-4 space-y-6">
               
               {/* Summary Datasheet Box */}
-              <div className="p-6 rounded-2xl bg-white border border-purple-500/50 shadow-2xl space-y-4 font-mono text-xs">
+              <div className="p-6 rounded-md bg-white border border-purple-500/50 shadow-2xl space-y-4 font-mono text-xs">
                 <div className="flex items-center justify-between pb-3 border-b border-slate-200">
                   <span className="font-bold text-slate-900 uppercase">DATASHEET BÁO GIÁ</span>
                   <span className="px-2 py-0.5 rounded bg-purple-950 text-purple-400 border border-purple-800 text-[10px] font-bold">
@@ -743,27 +743,27 @@ export default function DedicatedServersPage() {
 
                 <div className="space-y-2 text-slate-700">
                   <div className="flex justify-between">
-                    <span className="text-slate-500">Chassis:</span>
+                    <span className="text-slate-600">Chassis:</span>
                     <span className="text-slate-900 font-bold">{cpuPrices[cfgCpu].model}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-500">Processor:</span>
+                    <span className="text-slate-600">Processor:</span>
                     <span className="text-slate-200">{cpuPrices[cfgCpu].name}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-500">Memory:</span>
+                    <span className="text-slate-600">Memory:</span>
                     <span className="text-slate-900">{ramPrices[cfgRam].label}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-500">Storage:</span>
+                    <span className="text-slate-600">Storage:</span>
                     <span className="text-emerald-400">{storagePrices[cfgStorage].label}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-500">Uplink:</span>
+                    <span className="text-slate-600">Uplink:</span>
                     <span className="text-slate-700">{uplinkPrices[cfgUplink].label}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-500">IP Subnet:</span>
+                    <span className="text-slate-600">IP Subnet:</span>
                     <span className="text-purple-300">{ipPrices[cfgIp].label}</span>
                   </div>
                 </div>
@@ -784,7 +784,7 @@ export default function DedicatedServersPage() {
 
                 <button
                   onClick={handleCustomOrder}
-                  className="w-full py-3.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs font-mono flex items-center justify-center gap-2 transition-all shadow-lg shadow-purple-600/30 hover:scale-[1.02]"
+                  className="w-full py-3.5 rounded bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs font-mono flex items-center justify-center gap-2 transition-all shadow-lg shadow-purple-600/30 hover:scale-[1.02]"
                 >
                   <ShoppingCart className="w-4 h-4" />
                   <span>ĐẶT CẤU HÌNH NÀY NGAY</span>
@@ -792,8 +792,8 @@ export default function DedicatedServersPage() {
               </div>
 
               {/* Rear Chassis Port Schematic */}
-              <div className="p-5 rounded-2xl bg-slate-100 border border-slate-200 font-mono text-[11px] space-y-3">
-                <div className="text-[10px] text-slate-500 uppercase flex items-center justify-between">
+              <div className="p-5 rounded-md bg-slate-100 border border-slate-200 font-mono text-[11px] space-y-3">
+                <div className="text-[10px] text-slate-600 uppercase flex items-center justify-between">
                   <span>REAR CHASSIS INTERFACES</span>
                   <span className="text-emerald-400">DELL R740 2U</span>
                 </div>
@@ -829,7 +829,7 @@ export default function DedicatedServersPage() {
           
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
             <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-purple-950 text-purple-400 text-xs font-mono mb-3 border border-purple-800">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm bg-purple-950 text-purple-400 text-xs font-mono mb-3 border border-purple-800">
                 <Sliders className="w-3.5 h-3.5" />
                 HARDWARE SPEC SHEET
               </div>
@@ -842,10 +842,10 @@ export default function DedicatedServersPage() {
             </div>
 
             {/* Billing Switch */}
-            <div className="inline-flex items-center p-1 rounded-xl bg-white border border-slate-200 font-mono text-xs">
+            <div className="inline-flex items-center p-1 rounded bg-white border border-slate-200 font-mono text-xs">
               <button
                 onClick={() => setBillingCycle('monthly')}
-                className={`px-4 py-2 rounded-lg font-bold transition-all ${
+                className={`px-4 py-2 rounded-sm font-bold transition-all ${
                   billingCycle === 'monthly'
                     ? 'bg-purple-600 text-white shadow'
                     : 'text-slate-400 hover:text-white'
@@ -855,7 +855,7 @@ export default function DedicatedServersPage() {
               </button>
               <button
                 onClick={() => setBillingCycle('yearly')}
-                className={`px-4 py-2 rounded-lg font-bold transition-all flex items-center gap-1.5 ${
+                className={`px-4 py-2 rounded-sm font-bold transition-all flex items-center gap-1.5 ${
                   billingCycle === 'yearly'
                     ? 'bg-purple-600 text-white shadow'
                     : 'text-slate-400 hover:text-white'
@@ -870,7 +870,7 @@ export default function DedicatedServersPage() {
           </div>
 
           {/* Matrix Table */}
-          <div className="rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-2xl">
+          <div className="rounded-md border border-slate-200 bg-white overflow-hidden shadow-2xl">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs font-mono">
                 <thead>
@@ -945,7 +945,7 @@ export default function DedicatedServersPage() {
                       <td key={p.id} className="p-5 border-l border-slate-200/60">
                         <button
                           onClick={() => handleOrder(p)}
-                          className={`w-full py-3 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-2 ${
+                          className={`w-full py-3 rounded font-bold text-xs transition-all flex items-center justify-center gap-2 ${
                             p.popular
                               ? 'bg-purple-600 hover:bg-purple-500 text-white shadow-lg shadow-purple-600/30'
                               : 'bg-slate-800 hover:bg-slate-700 text-white'
@@ -977,7 +977,7 @@ export default function DedicatedServersPage() {
             {faqs.map((faq, idx) => (
               <div
                 key={idx}
-                className="bg-white rounded-2xl border border-slate-200 overflow-hidden transition-all"
+                className="bg-white rounded-md border border-slate-200 overflow-hidden transition-all"
               >
                 <button
                   onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
@@ -987,7 +987,7 @@ export default function DedicatedServersPage() {
                   {openFaq === idx ? (
                     <ChevronUp className="w-5 h-5 text-purple-400 shrink-0" />
                   ) : (
-                    <ChevronDown className="w-5 h-5 text-slate-500 shrink-0" />
+                    <ChevronDown className="w-5 h-5 text-slate-600 shrink-0" />
                   )}
                 </button>
                 {openFaq === idx && (
@@ -1003,9 +1003,9 @@ export default function DedicatedServersPage() {
 
       {/* 5. CALL TO ACTION */}
       <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="rounded-3xl bg-gradient-to-r from-[#180e2b] via-[#0f091f] to-[#180e2b] p-8 sm:p-12 border border-purple-600/30 text-center relative overflow-hidden shadow-2xl">
+        <div className="rounded-lg bg-gradient-to-r from-[#180e2b] via-[#0f091f] to-[#180e2b] p-8 sm:p-12 border border-purple-600/30 text-center relative overflow-hidden shadow-2xl">
           <div className="relative z-10 max-w-3xl mx-auto space-y-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-purple-950 border border-purple-800 text-purple-400 text-xs font-mono">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm bg-purple-950 border border-purple-800 text-purple-400 text-xs font-mono">
               <Zap className="w-3.5 h-3.5" />
               PROVISIONING WITHIN 2 HOURS
             </div>
@@ -1024,13 +1024,13 @@ export default function DedicatedServersPage() {
                   const el = document.getElementById('spec-matrix');
                   el?.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className="px-8 py-3.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs font-mono shadow-xl shadow-purple-600/25 transition-all hover:scale-105"
+                className="px-8 py-3.5 rounded bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs font-mono shadow-xl shadow-purple-600/25 transition-all hover:scale-105"
               >
                 Khởi Tạo Server Ngay
               </button>
               <Link
                 href="/contact"
-                className="px-8 py-3.5 rounded-xl bg-white hover:bg-slate-200 text-slate-900 font-bold text-xs font-mono border border-slate-300 transition-all"
+                className="px-8 py-3.5 rounded bg-white hover:bg-slate-200 text-slate-900 font-bold text-xs font-mono border border-slate-300 transition-all"
               >
                 Yêu Cầu Báo Giá Tùy Biến
               </Link>

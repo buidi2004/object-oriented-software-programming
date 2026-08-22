@@ -81,11 +81,11 @@ export default function AutoRenewPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-black text-slate-900 tracking-tight">Tự động gia hạn</h1>
-        <p className="text-slate-500 mt-1">Quản lý tự động gia hạn cho các dịch vụ của bạn</p>
+        <p className="text-slate-600 mt-1">Quản lý tự động gia hạn cho các dịch vụ của bạn</p>
       </div>
 
       {/* Info Banner */}
-      <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 flex items-start gap-3">
+      <div className="bg-blue-50 border border-blue-200 rounded p-4 flex items-start gap-3">
         <AlertCircle className="w-5 h-5 text-[#1F1F1F] shrink-0 mt-0.5" />
         <div>
           <p className="font-semibold text-[#1F1F1F]">Tự động gia hạn là gì?</p>
@@ -97,10 +97,10 @@ export default function AutoRenewPage() {
       </div>
 
       {error && (
-        <div className="p-3 bg-red-50 border border-red-200 rounded-xl flex items-center gap-2 text-sm text-red-700">
+        <div className="p-3 bg-red-50 border border-red-200 rounded flex items-center gap-2 text-sm text-red-700">
           <AlertCircle className="w-4 h-4 shrink-0" />
           <span>{error}</span>
-          <button onClick={fetchData} className="ml-auto px-3 py-1 bg-red-100 hover:bg-red-200 rounded-lg text-xs font-semibold">
+          <button onClick={fetchData} className="ml-auto px-3 py-1 bg-red-100 hover:bg-red-200 rounded-sm text-xs font-semibold">
             Thử lại
           </button>
         </div>
@@ -109,19 +109,19 @@ export default function AutoRenewPage() {
       {/* Auto Renew List */}
       <div className="space-y-4">
         {autoRenewSettings.map((setting) => (
-          <div key={setting.orderId} className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+          <div key={setting.orderId} className="bg-white rounded-md border border-slate-200 shadow-sm p-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
-                <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
+                <div className={`w-12 h-12 rounded flex items-center justify-center ${
                   setting.isAutoRenewEnabled ? 'bg-emerald-100' : 'bg-slate-100'
                 }`}>
                   <Power className={`w-6 h-6 ${
-                    setting.isAutoRenewEnabled ? 'text-emerald-600' : 'text-slate-400'
+                    setting.isAutoRenewEnabled ? 'text-emerald-600' : 'text-slate-600'
                   }`} />
                 </div>
                 <div>
                   <h3 className="font-bold text-slate-900">{setting.serviceName}</h3>
-                  <p className="text-sm text-slate-500">{setting.serviceType}</p>
+                  <p className="text-sm text-slate-600">{setting.serviceType}</p>
                   {setting.nextBillingDate && (
                     <p className="text-xs text-slate-600 mt-1 flex items-center gap-1">
                       <Clock className="w-3 h-3" />
@@ -158,16 +158,16 @@ export default function AutoRenewPage() {
       </div>
 
       {autoRenewSettings.length === 0 && !error && (
-        <div className="text-center py-12 bg-white rounded-2xl border border-slate-200">
+        <div className="text-center py-12 bg-white rounded-md border border-slate-200">
           <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-700" />
-          <p className="font-medium text-slate-500">Bạn chưa có dịch vụ nào cần tự động gia hạn</p>
+          <p className="font-medium text-slate-600">Bạn chưa có dịch vụ nào cần tự động gia hạn</p>
         </div>
       )}
 
       <div className="flex justify-end">
         <button
           onClick={fetchData}
-          className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors"
+          className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-sm transition-colors"
         >
           <RefreshCw className="w-4 h-4" />
           Làm mới

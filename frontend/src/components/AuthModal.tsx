@@ -20,9 +20,9 @@ interface AuthModalProps {
 }
 
 const inputClass =
-  'w-full pl-10 pr-10 py-3 rounded-xl border border-slate-200 text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all';
+  'w-full pl-10 pr-10 py-3 rounded border border-slate-200 text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all';
 const selectClass =
-  'w-full px-3 py-2.5 rounded-xl border border-slate-200 text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all appearance-none bg-white';
+  'w-full px-3 py-2.5 rounded border border-slate-200 text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all appearance-none bg-white';
 const labelClass = 'block text-xs font-bold text-slate-700 mb-1.5';
 
 function PasswordStrengthBar({ password }: { password: string }) {
@@ -203,7 +203,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ initialMode, onClose, onSu
   return (
     <div className="fixed inset-0 z-50 bg-slate-50/70 backdrop-blur-md flex items-center justify-center p-4 sm:p-6">
       <div
-        className={`bg-white rounded-3xl w-full overflow-hidden shadow-2xl border border-slate-100 relative animate-in fade-in zoom-in duration-200 ${
+        className={`bg-white rounded-lg w-full overflow-hidden shadow-2xl border border-slate-100 relative animate-in fade-in zoom-in duration-200 ${
           isRegister ? 'max-w-3xl lg:max-w-4xl' : 'max-w-md lg:max-w-lg'
         }`}
       >
@@ -222,7 +222,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ initialMode, onClose, onSu
             <h3 className="text-2xl font-black text-slate-900">
               {mode === 'login' ? 'Đăng Nhập Tài Khoản' : mode === 'two_factor' ? 'Xác Thực 2 Bước' : 'Tạo Tài Khoản CloudHost'}
             </h3>
-            <p className="text-sm text-slate-500 mt-1.5 max-w-md mx-auto">
+            <p className="text-sm text-slate-600 mt-1.5 max-w-md mx-auto">
               {mode === 'login'
                 ? 'Truy cập Bảng quản lý máy chủ & dịch vụ Cloud'
                 : mode === 'two_factor'
@@ -233,7 +233,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ initialMode, onClose, onSu
 
           <form onSubmit={mode === 'two_factor' ? handleVerify2FA : handleSubmit} className="space-y-5">
             {errorMsg && (
-              <div className="bg-red-50 text-red-600 p-3 rounded-xl text-sm text-center border border-red-100">
+              <div className="bg-red-50 text-red-600 p-3 rounded text-sm text-center border border-red-100">
                 {errorMsg}
               </div>
             )}
@@ -248,7 +248,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ initialMode, onClose, onSu
                   value={otpCode}
                   onChange={(e) => setOtpCode(e.target.value)}
                   placeholder="Ví dụ: 123456"
-                  className="w-full text-center tracking-[0.2em] font-mono text-xl py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all"
+                  className="w-full text-center tracking-[0.2em] font-mono text-xl py-3 rounded border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all"
                 />
               </div>
             )}
@@ -492,7 +492,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ initialMode, onClose, onSu
             )}
           </form>
 
-          <div className="mt-6 text-center text-sm text-slate-500">
+          <div className="mt-6 text-center text-sm text-slate-600">
             {mode === 'login' ? (
               <p>
                 Chưa có tài khoản?{' '}

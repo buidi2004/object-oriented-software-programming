@@ -176,7 +176,7 @@ export default function TicketDetailPage() {
           </button>
           <div className="flex items-center gap-3">
             {ticket.status === 'open' && (
-              <button className="px-4 py-2 rounded-xl border border-slate-200 text-slate-600 font-semibold text-sm hover:bg-slate-50 transition-colors">
+              <button className="px-4 py-2 rounded border border-slate-200 text-slate-600 font-semibold text-sm hover:bg-slate-50 transition-colors">
                 Đóng ticket
               </button>
             )}
@@ -186,7 +186,7 @@ export default function TicketDetailPage() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Ticket Header */}
-        <div className="bg-white rounded-2xl p-6 border border-slate-200 mb-6">
+        <div className="bg-white rounded-md p-6 border border-slate-200 mb-6">
           <div className="flex items-start justify-between mb-4">
             <div>
               <div className="flex items-center gap-3 mb-2">
@@ -198,7 +198,7 @@ export default function TicketDetailPage() {
                   {getPriorityLabel(ticket.priority)}
                 </span>
               </div>
-              <div className="flex items-center gap-4 text-sm text-slate-500">
+              <div className="flex items-center gap-4 text-sm text-slate-600">
                 <span className="flex items-center gap-1.5">
                   <Tag className="w-4 h-4" />
                   {ticket.category}
@@ -222,7 +222,7 @@ export default function TicketDetailPage() {
             {ticket.messages.map((msg) => (
               <div
                 key={msg.id}
-                className={`rounded-2xl p-4 border ${
+                className={`rounded-md p-4 border ${
                   msg.sender === 'customer'
                     ? 'bg-blue-50 border-blue-200 ml-auto max-w-[80%]'
                     : 'bg-white border-slate-200 mr-auto max-w-[80%]'
@@ -234,7 +234,7 @@ export default function TicketDetailPage() {
                   </div>
                   <div>
                     <p className="font-bold text-slate-900 text-sm">{msg.senderName}</p>
-                    <p className="text-xs text-slate-500">
+                    <p className="text-xs text-slate-600">
                       {new Date(msg.timestamp).toLocaleString('vi-VN')}
                     </p>
                   </div>
@@ -249,13 +249,13 @@ export default function TicketDetailPage() {
             ))}
 
             {/* Message Input */}
-            <div className="bg-white rounded-2xl p-4 border border-slate-200 mt-6">
+            <div className="bg-white rounded-md p-4 border border-slate-200 mt-6">
               <textarea
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 placeholder="Nhập nội dung tin nhắn..."
                 rows={4}
-                className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 resize-none"
+                className="w-full px-4 py-3 rounded border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 resize-none"
               />
               <div className="flex items-center justify-between mt-3">
                 <button className="p-2 text-slate-600 hover:text-slate-600 transition-colors">
@@ -264,7 +264,7 @@ export default function TicketDetailPage() {
                 <button
                   onClick={handleSendMessage}
                   disabled={isSending || !message.trim()}
-                  className="px-6 py-2.5 rounded-xl bg-blue-600 text-white font-bold text-sm hover:bg-blue-700 transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-6 py-2.5 rounded bg-blue-600 text-white font-bold text-sm hover:bg-blue-700 transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isSending ? (
                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -280,25 +280,25 @@ export default function TicketDetailPage() {
           {/* Sidebar - Ticket Info */}
           <div className="space-y-6">
             {/* Ticket Details */}
-            <div className="bg-white rounded-2xl p-6 border border-slate-200">
+            <div className="bg-white rounded-md p-6 border border-slate-200">
               <h3 className="font-bold text-slate-900 mb-4">Thông tin ticket</h3>
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-slate-500">Mã ticket</span>
+                  <span className="text-slate-600">Mã ticket</span>
                   <span className="font-mono font-semibold text-slate-900">#{ticket.id.slice(0, 8)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-500">Danh mục</span>
+                  <span className="text-slate-600">Danh mục</span>
                   <span className="font-semibold text-slate-900">{ticket.category}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-500">Độ ưu tiên</span>
+                  <span className="text-slate-600">Độ ưu tiên</span>
                   <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${getPriorityColor(ticket.priority)}`}>
                     {getPriorityLabel(ticket.priority)}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-500">Trạng thái</span>
+                  <span className="text-slate-600">Trạng thái</span>
                   <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${getStatusColor(ticket.status)}`}>
                     {getStatusLabel(ticket.status)}
                   </span>
@@ -307,20 +307,20 @@ export default function TicketDetailPage() {
             </div>
 
             {/* Related Services */}
-            <div className="bg-white rounded-2xl p-6 border border-slate-200">
+            <div className="bg-white rounded-md p-6 border border-slate-200">
               <h3 className="font-bold text-slate-900 mb-4">Dịch vụ liên quan</h3>
               <div className="space-y-2">
-                <div className="p-3 bg-slate-50 rounded-xl">
+                <div className="p-3 bg-slate-50 rounded">
                   <p className="font-semibold text-slate-900 text-sm">Cloud VPS Hanoi-01</p>
-                  <p className="text-xs text-slate-500">103.149.28.112</p>
+                  <p className="text-xs text-slate-600">103.149.28.112</p>
                 </div>
               </div>
             </div>
 
             {/* Support Info */}
-            <div className="bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl p-6 text-slate-900">
+            <div className="bg-gradient-to-br from-blue-600 to-indigo-600 rounded-md p-6 text-slate-900">
               <h3 className="font-bold text-lg mb-2">Cần hỗ trợ thêm?</h3>
-              <div className="space-y-3 text-sm text-slate-200">
+              <div className="space-y-3 text-sm text-slate-700">
                 <p>📞 Hotline: 1900 6888</p>
                 <p>💬 Live chat 24/7</p>
                 <p>✉️ support@cloudhost.vn</p>

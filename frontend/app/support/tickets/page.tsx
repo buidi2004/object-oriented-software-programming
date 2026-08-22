@@ -36,7 +36,7 @@ export default function TicketsListPage() {
       <div className="flex flex-col items-center justify-center h-[60vh]">
         <AlertCircle className="w-12 h-12 text-slate-600 mb-4" />
         <h2 className="text-xl font-bold mb-2">Vui lòng đăng nhập</h2>
-        <p className="text-slate-500 mb-4">Bạn cần đăng nhập để xem các yêu cầu hỗ trợ.</p>
+        <p className="text-slate-600 mb-4">Bạn cần đăng nhập để xem các yêu cầu hỗ trợ.</p>
       </div>
     );
   }
@@ -68,11 +68,11 @@ export default function TicketsListPage() {
               <h1 className="text-2xl font-black text-slate-900 flex items-center gap-2">
                 <LifeBuoy className="w-6 h-6 text-[#1F1F1F]" /> Hỗ trợ (Tickets)
               </h1>
-              <p className="text-slate-500 mt-1">Quản lý các yêu cầu hỗ trợ kỹ thuật của bạn.</p>
+              <p className="text-slate-600 mt-1">Quản lý các yêu cầu hỗ trợ kỹ thuật của bạn.</p>
             </div>
             <Link
               href="/support/tickets/new"
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-bold flex items-center gap-2 text-sm transition-colors"
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-sm font-bold flex items-center gap-2 text-sm transition-colors"
             >
               <Plus className="w-4 h-4" /> Tạo Ticket
             </Link>
@@ -83,10 +83,10 @@ export default function TicketsListPage() {
               <Loader2 className="w-8 h-8 text-[#1F1F1F] animate-spin" />
             </div>
           ) : tickets.length === 0 ? (
-            <div className="bg-white rounded-xl border border-slate-200 p-12 flex flex-col items-center text-center">
+            <div className="bg-white rounded border border-slate-200 p-12 flex flex-col items-center text-center">
               <LifeBuoy className="w-12 h-12 text-slate-700 mb-4" />
               <h3 className="text-lg font-bold text-slate-700 mb-2">Chưa có Ticket nào</h3>
-              <p className="text-slate-500 mb-6">Bạn chưa có yêu cầu hỗ trợ nào. Nếu cần giúp đỡ, hãy tạo mới một Ticket.</p>
+              <p className="text-slate-600 mb-6">Bạn chưa có yêu cầu hỗ trợ nào. Nếu cần giúp đỡ, hãy tạo mới một Ticket.</p>
               <Link href="/support/tickets/new" className="text-[#1F1F1F] font-semibold hover:underline">
                 Tạo Ticket ngay &rarr;
               </Link>
@@ -97,7 +97,7 @@ export default function TicketsListPage() {
                 <Link
                   key={ticket.id}
                   href={`/support/tickets/${ticket.id}`}
-                  className="block bg-white border border-slate-200 rounded-xl p-5 hover:border-blue-300 hover:shadow-md transition-all group"
+                  className="block bg-white border border-slate-200 rounded p-5 hover:border-blue-300 hover:shadow-md transition-all group"
                 >
                   <div className="flex items-start justify-between">
                     <div>

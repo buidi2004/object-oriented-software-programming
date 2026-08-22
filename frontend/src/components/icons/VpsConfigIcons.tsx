@@ -17,7 +17,7 @@ export function OsTemplateIcon({ os, size = 'sm', className = '' }: OsTemplateIc
 
   const wrap = (src: string, alt: string) => (
     <span
-      className={`inline-flex shrink-0 items-center justify-center rounded-xl bg-white border border-slate-200 shadow-sm overflow-hidden p-1.5 ${className}`}
+      className={`inline-flex shrink-0 items-center justify-center rounded bg-white border border-slate-200 shadow-sm overflow-hidden p-1.5 ${className}`}
       style={{ width: px, height: px }}
     >
       <img src={src} alt={alt} className="w-full h-full object-contain" />
@@ -36,10 +36,10 @@ export function OsTemplateIcon({ os, size = 'sm', className = '' }: OsTemplateIc
     default:
       return (
         <span
-          className={`inline-flex shrink-0 items-center justify-center rounded-xl bg-slate-100 border border-slate-200 ${className}`}
+          className={`inline-flex shrink-0 items-center justify-center rounded bg-slate-100 border border-slate-200 ${className}`}
           style={{ width: px, height: px }}
         >
-          <span className="text-slate-500 text-xs font-bold">OS</span>
+          <span className="text-slate-600 text-xs font-bold">OS</span>
         </span>
       );
   }
@@ -61,7 +61,7 @@ export function DatacenterLocationIcon({ region, className = '' }: DatacenterLoc
 
   return (
     <span className={`inline-flex items-center gap-1.5 ${className}`}>
-      <span className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-slate-100 border border-slate-200 overflow-hidden">
+      <span className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded bg-slate-100 border border-slate-200 overflow-hidden">
         <span className="text-lg leading-none mt-0.5" role="img" aria-hidden>
           {f.emoji}
         </span>
@@ -129,7 +129,7 @@ export function ResourceIcon({
   };
 
   return (
-    <span className={`inline-flex items-center justify-center w-9 h-9 rounded-xl ${styles[type]} ${className}`}>
+    <span className={`inline-flex items-center justify-center w-9 h-9 rounded ${styles[type]} ${className}`}>
       {icons[type]}
     </span>
   );

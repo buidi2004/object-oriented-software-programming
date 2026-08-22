@@ -14,7 +14,7 @@ const jetbrainsMono = JetBrains_Mono({
   variable: '--font-mono',
 });
 
-import { LiveChatWidget } from '@/components/LiveChatWidget';
+import { LiveChatWidget } from '@/src/components/LiveChatWidget';
 import { GlobalUI } from '@/src/components/GlobalUI';
 import { AppShell } from '@/src/components/AppShell';
 import { GoogleOAuthProvider } from '@react-oauth/google';

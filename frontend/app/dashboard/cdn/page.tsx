@@ -87,16 +87,16 @@ export default function DashboardCdnPage() {
         {/* Top Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div>
-            <Link href="/dashboard" className="text-xs font-bold text-slate-500 hover:text-[#1F1F1F] flex items-center gap-1 mb-2">
+            <Link href="/dashboard" className="text-xs font-bold text-slate-600 hover:text-[#1F1F1F] flex items-center gap-1 mb-2">
               <ArrowLeft className="w-3.5 h-3.5" /> Quay lại Dashboard
             </Link>
             <h1 className="text-2xl sm:text-3xl font-black text-slate-900 flex items-center gap-3">
-              <div className="p-2.5 rounded-2xl bg-amber-100 text-amber-600">
+              <div className="p-2.5 rounded-md bg-amber-100 text-amber-600">
                 <Zap className="w-7 h-7" />
               </div>
               Quản Lý Cloud CDN
             </h1>
-            <p className="text-xs sm:text-sm text-slate-500 mt-1">
+            <p className="text-xs sm:text-sm text-slate-600 mt-1">
               Phân phối nội dung toàn cầu, tăng tốc độ tải trang và xóa cache tức thì.
             </p>
           </div>
@@ -104,14 +104,14 @@ export default function DashboardCdnPage() {
           <div className="flex items-center gap-3">
             <button
               onClick={fetchDistributions}
-              className="p-2.5 rounded-2xl bg-white border border-slate-200 text-slate-600 hover:text-amber-600 hover:border-amber-300 transition-all shadow-sm"
+              className="p-2.5 rounded-md bg-white border border-slate-200 text-slate-600 hover:text-amber-600 hover:border-amber-300 transition-all shadow-sm"
               title="Làm mới"
             >
               <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
             </button>
             <button
               onClick={() => setIsCreateOpen(true)}
-              className="px-5 py-2.5 rounded-2xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs sm:text-sm transition-all shadow-lg shadow-amber-500/25 flex items-center gap-2"
+              className="px-5 py-2.5 rounded-md bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs sm:text-sm transition-all shadow-lg shadow-amber-500/25 flex items-center gap-2"
             >
               <Plus className="w-4 h-4" />
               Tạo CDN Distribution Mới
@@ -120,13 +120,13 @@ export default function DashboardCdnPage() {
         </div>
 
         {success && (
-          <div className="mb-6 p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold flex items-center gap-2">
+          <div className="mb-6 p-4 rounded-md bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4" /> {success}
           </div>
         )}
 
         {/* CDN List */}
-        <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+        <div className="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden">
           <div className="p-6 border-b border-slate-100 flex items-center justify-between">
             <h2 className="text-base font-bold text-slate-900">Danh Sách CDN Distributions</h2>
             <span className="text-xs font-semibold px-3 py-1 rounded-full bg-slate-100 text-slate-600">
@@ -141,16 +141,16 @@ export default function DashboardCdnPage() {
             </div>
           ) : distributions.length === 0 ? (
             <div className="p-12 text-center">
-              <div className="w-16 h-16 rounded-3xl bg-amber-50 text-amber-500 flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 rounded-lg bg-amber-50 text-amber-500 flex items-center justify-center mx-auto mb-4">
                 <Zap className="w-8 h-8" />
               </div>
               <h3 className="text-base font-bold text-slate-900 mb-1">Chưa Có CDN Distribution Nào</h3>
-              <p className="text-xs text-slate-500 max-w-sm mx-auto mb-6">
+              <p className="text-xs text-slate-600 max-w-sm mx-auto mb-6">
                 Tăng tốc website và bảo vệ chống DDoS ngay bằng cách kết nối CDN với máy chủ gốc của bạn.
               </p>
               <button
                 onClick={() => setIsCreateOpen(true)}
-                className="px-5 py-2.5 rounded-2xl bg-amber-600 text-white font-bold text-xs shadow-md"
+                className="px-5 py-2.5 rounded-md bg-amber-600 text-white font-bold text-xs shadow-md"
               >
                 + Tạo CDN Đầu Tiên
               </button>
@@ -158,7 +158,7 @@ export default function DashboardCdnPage() {
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50/80 text-slate-500 font-extrabold uppercase tracking-wider border-b border-slate-100">
+                <thead className="bg-slate-50/80 text-slate-600 font-extrabold uppercase tracking-wider border-b border-slate-100">
                   <tr>
                     <th className="px-6 py-4">Tên Miền (Custom Domain)</th>
                     <th className="px-6 py-4">Máy Chủ Gốc (Origin)</th>
@@ -187,7 +187,7 @@ export default function DashboardCdnPage() {
                       <td className="px-6 py-4 text-right">
                         <button
                           onClick={() => handlePurgeCache(d.id)}
-                          className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-amber-50 text-slate-700 hover:text-amber-600 font-bold transition-all"
+                          className="inline-flex items-center gap-1 px-3 py-1.5 rounded bg-slate-100 hover:bg-amber-50 text-slate-700 hover:text-amber-600 font-bold transition-all"
                         >
                           <RotateCcw className="w-3.5 h-3.5" /> Xóa Cache
                         </button>
@@ -204,16 +204,16 @@ export default function DashboardCdnPage() {
       {/* Modal Create CDN */}
       {isCreateOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-white/60 backdrop-blur-sm animate-in fade-in">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100">
+          <div className="bg-white rounded-lg max-w-md w-full p-6 shadow-2xl border border-slate-100">
             <h3 className="text-lg font-black text-slate-900 mb-2 flex items-center gap-2">
               <Zap className="w-5 h-5 text-amber-600" /> Tạo Mạng Phân Phối CDN Mới
             </h3>
-            <p className="text-xs text-slate-500 mb-6">
+            <p className="text-xs text-slate-600 mb-6">
               Điền tên miền website và IP/Domain của máy chủ gốc để phân phối nội dung.
             </p>
 
             {error && (
-              <div className="mb-4 p-3 rounded-xl bg-rose-50 text-rose-600 text-xs font-bold flex items-center gap-2">
+              <div className="mb-4 p-3 rounded bg-rose-50 text-rose-600 text-xs font-bold flex items-center gap-2">
                 <AlertCircle className="w-4 h-4" /> {error}
               </div>
             )}
@@ -227,7 +227,7 @@ export default function DashboardCdnPage() {
                   placeholder="cdn.tenmien.com hoặc static.tenmien.com"
                   value={domain}
                   onChange={(e) => setDomain(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs text-slate-900 outline-none focus:ring-2 focus:ring-amber-500"
+                  className="w-full px-3.5 py-2.5 rounded border border-slate-200 text-xs text-slate-900 outline-none focus:ring-2 focus:ring-amber-500"
                 />
               </div>
 
@@ -239,7 +239,7 @@ export default function DashboardCdnPage() {
                   placeholder="103.145.xxx.xxx hoặc origin.tenmien.com"
                   value={originServer}
                   onChange={(e) => setOriginServer(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs text-slate-900 outline-none focus:ring-2 focus:ring-amber-500"
+                  className="w-full px-3.5 py-2.5 rounded border border-slate-200 text-xs text-slate-900 outline-none focus:ring-2 focus:ring-amber-500"
                 />
               </div>
 
@@ -260,14 +260,14 @@ export default function DashboardCdnPage() {
                 <button
                   type="button"
                   onClick={() => setIsCreateOpen(false)}
-                  className="px-4 py-2.5 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100"
+                  className="px-4 py-2.5 rounded text-xs font-bold text-slate-600 hover:bg-slate-100"
                 >
                   Hủy Bỏ
                 </button>
                 <button
                   type="submit"
                   disabled={creating}
-                  className="px-5 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs shadow-md flex items-center gap-2"
+                  className="px-5 py-2.5 rounded bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs shadow-md flex items-center gap-2"
                 >
                   {creating && <RefreshCw className="w-3.5 h-3.5 animate-spin" />}
                   Khởi Tạo CDN
