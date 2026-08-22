@@ -273,7 +273,7 @@ export const Header: React.FC<HeaderProps> = ({
 
                         {/* Bottom Bar */}
                         <div className="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-600">
-                          <span className="font-semibold text-slate-700">⚡ Triển khai tự động trong 30-60 giây</span>
+                          <span className="font-semibold text-slate-700">Triển khai tự động trong 30-60 giây</span>
                           <Link
                             href="/services"
                             onClick={() => setServicesDropdownOpen(false)}

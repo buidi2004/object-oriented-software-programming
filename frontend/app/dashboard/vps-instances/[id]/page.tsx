@@ -576,45 +576,62 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
               </div>
 
               {/* Card 2: CPU Line Chart */}
-              <div className="bg-white p-5 rounded border border-slate-200/80 shadow-sm relative">
-                <div className="flex justify-between items-center text-xs mb-2">
-                  <span className="font-bold text-slate-800">CPU</span>
-                  <span className="font-mono font-bold text-slate-700">{stats?.cpuUsagePercent ?? 4.8} %</span>
-                </div>
-                
-                <div className="h-28 w-full flex items-end pt-2">
-                  <div className="w-12 text-[9px] text-slate-600 font-mono flex flex-col justify-between h-full pr-1 text-right">
-                    <span>5.00 %</span>
-                    <span>4.00 %</span>
-                    <span>3.00 %</span>
-                    <span>2.00 %</span>
-                    <span>1.00 %</span>
-                    <span>0.00 %</span>
-                  </div>
-                  <div className="flex-1 h-full border-l border-b border-slate-200 relative flex items-end">
-                    <svg className="w-full h-full overflow-visible" viewBox="0 0 100 100" preserveAspectRatio="none">
-                      <line x1="0" y1="20" x2="100" y2="20" stroke="#f1f5f9" strokeWidth="1" />
-                      <line x1="0" y1="40" x2="100" y2="40" stroke="#f1f5f9" strokeWidth="1" />
-                      <line x1="0" y1="60" x2="100" y2="60" stroke="#f1f5f9" strokeWidth="1" />
-                      <line x1="0" y1="80" x2="100" y2="80" stroke="#f1f5f9" strokeWidth="1" />
-                      <polygon 
-                        points={`0,100 0,${100 - (cpuHistory[0] || 0) * 18} 20,${100 - (cpuHistory[1] || 0) * 18} 40,${100 - (cpuHistory[2] || 0) * 18} 60,${100 - (cpuHistory[3] || 0) * 18} 80,${100 - (cpuHistory[4] || 0) * 18} 100,${100 - (cpuHistory[5] || 4.8) * 18} 100,100`} 
-                        fill="rgba(59, 130, 246, 0.15)" 
-                      />
-                      <polyline 
-                        points={`0,${100 - (cpuHistory[0] || 0) * 18} 20,${100 - (cpuHistory[1] || 0) * 18} 40,${100 - (cpuHistory[2] || 0) * 18} 60,${100 - (cpuHistory[3] || 0) * 18} 80,${100 - (cpuHistory[4] || 0) * 18} 100,${100 - (cpuHistory[5] || 4.8) * 18}`} 
-                        fill="none" 
-                        stroke="#3b82f6" 
-                        strokeWidth="2" 
-                      />
-                    </svg>
-                  </div>
-                </div>
+              {(() => {
+                const currentCpu = stats?.cpuUsagePercent ?? 4.8;
+                const maxCpuScale = Math.max(10, Math.ceil(Math.max(...cpuHistory, currentCpu) / 10) * 10);
+                const points = cpuHistory.map((val, idx) => {
+                  const x = idx * 20;
+                  const clamped = Math.max(0, Math.min(val, maxCpuScale));
+                  const y = Math.max(5, Math.min(95, Math.round(100 - (clamped / maxCpuScale) * 85 - 5)));
+                  return { x, y };
+                });
+                const polylineStr = points.map(p => `${p.x},${p.y}`).join(' ');
+                const polygonStr = `0,100 ${polylineStr} 100,100`;
 
-                <div className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-700">
-                  <ChevronLeft className="w-4 h-4" />
-                </div>
-              </div>
+                return (
+                  <div className="bg-white p-5 rounded border border-slate-200/80 shadow-sm relative overflow-hidden">
+                    <div className="flex justify-between items-center text-xs mb-2">
+                      <span className="font-bold text-slate-800">CPU</span>
+                      <span className="font-mono font-bold text-slate-700">{currentCpu} %</span>
+                    </div>
+                    
+                    <div className="h-28 w-full flex items-end pt-2">
+                      <div className="w-12 text-[9px] text-slate-600 font-mono flex flex-col justify-between h-full pr-1 text-right">
+                        <span>{maxCpuScale.toFixed(2)} %</span>
+                        <span>{(maxCpuScale * 0.8).toFixed(2)} %</span>
+                        <span>{(maxCpuScale * 0.6).toFixed(2)} %</span>
+                        <span>{(maxCpuScale * 0.4).toFixed(2)} %</span>
+                        <span>{(maxCpuScale * 0.2).toFixed(2)} %</span>
+                        <span>0.00 %</span>
+                      </div>
+                      <div className="flex-1 h-full border-l border-b border-slate-200 relative flex items-end overflow-hidden">
+                        <svg className="w-full h-full overflow-hidden" viewBox="0 0 100 100" preserveAspectRatio="none">
+                          <line x1="0" y1="20" x2="100" y2="20" stroke="#f1f5f9" strokeWidth="1" />
+                          <line x1="0" y1="40" x2="100" y2="40" stroke="#f1f5f9" strokeWidth="1" />
+                          <line x1="0" y1="60" x2="100" y2="60" stroke="#f1f5f9" strokeWidth="1" />
+                          <line x1="0" y1="80" x2="100" y2="80" stroke="#f1f5f9" strokeWidth="1" />
+                          <polygon 
+                            points={polygonStr} 
+                            fill="rgba(59, 130, 246, 0.15)" 
+                          />
+                          <polyline 
+                            points={polylineStr} 
+                            fill="none" 
+                            stroke="#3b82f6" 
+                            strokeWidth="2" 
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+
+                    <div className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-700 pointer-events-none">
+                      <ChevronLeft className="w-4 h-4" />
+                    </div>
+                  </div>
+                );
+              })()}
 
               {/* Card 3: Bandwidth */}
               <div className="bg-white p-5 rounded border border-slate-200/80 shadow-sm space-y-4">
@@ -635,7 +652,7 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
               </div>
 
               {/* Card 4: Network Speed (MB/s) */}
-              <div className="bg-white p-5 rounded border border-slate-200/80 shadow-sm space-y-3">
+              <div className="bg-white p-5 rounded border border-slate-200/80 shadow-sm space-y-3 overflow-hidden">
                 <div className="flex justify-between items-center text-xs">
                   <span className="font-bold text-slate-800">Network Speed (MB/s)</span>
                   <span className="font-mono font-bold text-slate-700">0.00 MB/s</span>
@@ -649,8 +666,12 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
                     <span>500 B/S</span>
                     <span>0 B/S</span>
                   </div>
-                  <div className="flex-1 h-full border-l border-b border-slate-200 relative flex items-end">
-                    <svg className="w-full h-full overflow-visible" viewBox="0 0 100 100" preserveAspectRatio="none">
+                  <div className="flex-1 h-full border-l border-b border-slate-200 relative flex items-end overflow-hidden">
+                    <svg className="w-full h-full overflow-hidden" viewBox="0 0 100 100" preserveAspectRatio="none">
+                      <line x1="0" y1="20" x2="100" y2="20" stroke="#f1f5f9" strokeWidth="1" />
+                      <line x1="0" y1="40" x2="100" y2="40" stroke="#f1f5f9" strokeWidth="1" />
+                      <line x1="0" y1="60" x2="100" y2="60" stroke="#f1f5f9" strokeWidth="1" />
+                      <line x1="0" y1="80" x2="100" y2="80" stroke="#f1f5f9" strokeWidth="1" />
                       <polygon 
                         points="0,100 0,98 20,95 40,90 60,92 80,95 95,20 100,100" 
                         fill="rgba(13, 148, 136, 0.15)" 
@@ -660,6 +681,8 @@ export default function VpsDetailPage({ params }: { params: Promise<{ id: string
                         fill="none" 
                         stroke="#0d9488" 
                         strokeWidth="2" 
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
                       />
                     </svg>
                   </div>

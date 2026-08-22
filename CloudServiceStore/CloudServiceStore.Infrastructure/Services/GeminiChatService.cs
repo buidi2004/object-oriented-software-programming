@@ -17,7 +17,7 @@ public class GeminiChatService : IChatBotService
     {
         _http = http;
         _apiKey = config["Gemini:ApiKey"]!;
-        _model = config["Gemini:Model"] ?? "gemini-2.5-flash";
+        _model = config["Gemini:Model"] ?? "gemini-3.6-flash";
     }
 
     public async Task<string> AskAsync(string userMessage, string context)
