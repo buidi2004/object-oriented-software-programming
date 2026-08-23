@@ -16,6 +16,7 @@ public class ForgotPasswordCommandHandler : IRequestHandler<ForgotPasswordComman
     private readonly IUnitOfWork _uow;
     private readonly ITokenGenerator _tokenGenerator;
     private readonly IEmailService _emailService;
+    private readonly IPasswordHasher _passwordHasher;
     private readonly string _frontendBaseUrl;
 
     public ForgotPasswordCommandHandler(
@@ -24,6 +25,7 @@ public class ForgotPasswordCommandHandler : IRequestHandler<ForgotPasswordComman
         IUnitOfWork uow,
         ITokenGenerator tokenGenerator,
         IEmailService emailService,
+        IPasswordHasher passwordHasher,
         Microsoft.Extensions.Options.IOptions<FrontendSettings> frontendOptions)
     {
         _userRepo = userRepo;
@@ -31,34 +33,52 @@ public class ForgotPasswordCommandHandler : IRequestHandler<ForgotPasswordComman
         _uow = uow;
         _tokenGenerator = tokenGenerator;
         _emailService = emailService;
-        _frontendBaseUrl = frontendOptions.Value.BaseUrl.TrimEnd('/');
+        _passwordHasher = passwordHasher;
+        _frontendBaseUrl = (frontendOptions?.Value?.BaseUrl ?? "http://localhost:3000").TrimEnd('/');
     }
 
     public async Task<ForgotPasswordResult> Handle(ForgotPasswordCommand request, CancellationToken cancellationToken)
     {
-        var user = await _userRepo.FirstOrDefaultAsync(u => u.Email == request.Email, cancellationToken);
+        if (string.IsNullOrWhiteSpace(request.Email))
+            return new ForgotPasswordResult(false, false, "Vui lòng nhập địa chỉ email đã đăng ký.");
 
-        if (user != null)
+        var normalizedEmail = request.Email.Trim().ToLowerInvariant();
+        var user = await _userRepo.FirstOrDefaultAsync(u => u.Email.ToLower() == normalizedEmail, cancellationToken);
+
+        if (user == null)
         {
-            var plainToken = _tokenGenerator.GenerateRefreshToken();
-            var resetToken = new PasswordResetToken
-            {
-                Id = Guid.NewGuid(),
-                UserId = user.Id,
-                TokenHash = ResetTokenHasher.Hash(plainToken),
-                ExpiresAt = DateTime.UtcNow.AddHours(1),
-                IsUsed = false,
-                CreatedAt = DateTime.UtcNow
-            };
-
-            await _tokenRepo.AddAsync(resetToken, cancellationToken);
-
-            var resetLink = $"{_frontendBaseUrl}/reset-password?token={Uri.EscapeDataString(plainToken)}";
-            await _emailService.SendPasswordResetEmailAsync(user.Email, resetLink, cancellationToken);
-
-            await _uow.SaveChangesAsync(cancellationToken);
+            return new ForgotPasswordResult(
+                false, 
+                false, 
+                "Không tìm thấy tài khoản với email này trong hệ thống SEN CloudHost. Vui lòng kiểm tra lại chính tả hoặc đăng ký tài khoản mới.");
         }
 
-        return new ForgotPasswordResult(true);
+        // 1. Generate strong temporary password and update user password hash immediately
+        var tempPassword = $"SenCloud#{Random.Shared.Next(100000, 999999)}";
+        user.ChangePassword(_passwordHasher.Hash(tempPassword));
+        _userRepo.Update(user);
+
+        // 2. Generate secure 1-hour token if user wants to change custom password
+        var plainToken = _tokenGenerator.GenerateRefreshToken();
+        var resetToken = new PasswordResetToken
+        {
+            Id = Guid.NewGuid(),
+            UserId = user.Id,
+            TokenHash = ResetTokenHasher.Hash(plainToken),
+            ExpiresAt = DateTime.UtcNow.AddHours(1),
+            IsUsed = false,
+            CreatedAt = DateTime.UtcNow
+        };
+
+        await _tokenRepo.AddAsync(resetToken, cancellationToken);
+
+        var resetLink = $"{_frontendBaseUrl}/reset-password?token={Uri.EscapeDataString(plainToken)}";
+
+        // 3. Send email containing both the new temporary password and the self-service reset link
+        await _emailService.SendPasswordResetEmailAsync(user.Email, resetLink, tempPassword, cancellationToken);
+
+        await _uow.SaveChangesAsync(cancellationToken);
+
+        return new ForgotPasswordResult(true, true, "Đã tìm thấy tài khoản! Hệ thống đã tự động cấp mật khẩu mới và gửi về email của bạn.");
     }
 }

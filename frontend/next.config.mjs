@@ -16,6 +16,10 @@ const nextConfig = {
         destination: `${backendUrl}/images/:path*`, // Proxy static images to Backend
       },
       {
+        source: '/uploads/:path*',
+        destination: `${backendUrl}/uploads/:path*`, // Proxy uploads (CVs, attachments) to Backend
+      },
+      {
         source: '/swagger/:path*',
         destination: `${backendUrl}/swagger/:path*`, // Proxy Swagger UI to Backend
       },

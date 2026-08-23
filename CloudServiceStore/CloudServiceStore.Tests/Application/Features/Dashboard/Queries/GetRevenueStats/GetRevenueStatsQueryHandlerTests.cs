@@ -20,6 +20,10 @@ public class GetRevenueStatsQueryHandlerTests
     private readonly Mock<IRepository<ServiceCategory>> _mockCategoryRepo;
     private readonly Mock<IRepository<ServicePlan>> _mockPlanRepo;
     private readonly Mock<IRepository<AppUser>> _mockUserRepo;
+    private readonly Mock<IRepository<CloudServiceStore.Domain.Entities.Wallet>> _mockWalletRepo;
+    private readonly Mock<IRepository<WalletTransaction>> _mockWalletTxRepo;
+    private readonly Mock<IRepository<RefundRequest>> _mockRefundRepo;
+    private readonly Mock<IRepository<LoginHistory>> _mockLoginHistoryRepo;
     private readonly GetRevenueStatsQueryHandler _handler;
 
     public GetRevenueStatsQueryHandlerTests()
@@ -28,22 +32,25 @@ public class GetRevenueStatsQueryHandlerTests
         _mockCategoryRepo = new Mock<IRepository<ServiceCategory>>();
         _mockPlanRepo = new Mock<IRepository<ServicePlan>>();
         _mockUserRepo = new Mock<IRepository<AppUser>>();
+        _mockWalletRepo = new Mock<IRepository<CloudServiceStore.Domain.Entities.Wallet>>();
+        _mockWalletTxRepo = new Mock<IRepository<WalletTransaction>>();
+        _mockRefundRepo = new Mock<IRepository<RefundRequest>>();
+        _mockLoginHistoryRepo = new Mock<IRepository<LoginHistory>>();
+
         _handler = new GetRevenueStatsQueryHandler(
             _mockOrderRepo.Object, 
             _mockPlanRepo.Object,
             _mockCategoryRepo.Object, 
-            _mockUserRepo.Object);
+            _mockUserRepo.Object,
+            _mockWalletRepo.Object,
+            _mockWalletTxRepo.Object,
+            _mockRefundRepo.Object,
+            _mockLoginHistoryRepo.Object);
     }
 
     [Fact]
     public async Task Handle_ShouldExecuteSuccessfully_WhenRequestIsValid()
     {
-        // Arrange
-        // var request = new GetRevenueStatsQuery();
-
-        // Act
-        // var result = await _handler.Handle(request, cancellationToken);
-
         // Assert
         Assert.True(true);
     }

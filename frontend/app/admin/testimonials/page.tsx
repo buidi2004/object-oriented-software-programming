@@ -37,7 +37,10 @@ export default function AdminTestimonialsPage() {
       });
       if (response.ok) {
         const userData = await response.json();
-        if (userData.role !== 'Admin') { router.push('/dashboard'); return; }
+        const isAllowed = ['Admin', 'Editor', 'Support', 'Staff'].some(
+          r => r.toLowerCase() === (userData.role || '').toLowerCase()
+        );
+        if (!isAllowed) { router.push('/dashboard'); return; }
         fetchTestimonials();
       } else { 
         router.push('/login'); 

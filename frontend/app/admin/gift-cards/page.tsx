@@ -53,7 +53,10 @@ export default function AdminGiftCardsPage() {
     
     try {
       const response = await api.get('/users/me');
-      if (response.data?.role !== 'Admin') { 
+      const isAllowed = ['Admin', 'Accountant'].some(
+        r => r.toLowerCase() === (response.data?.role || '').toLowerCase()
+      );
+      if (!isAllowed) { 
         router.push('/dashboard'); 
         return; 
       }

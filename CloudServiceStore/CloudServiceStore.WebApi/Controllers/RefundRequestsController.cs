@@ -38,7 +38,7 @@ public class RefundRequestsController : ControllerBase
     }
 
     [HttpGet("refund-requests")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Accountant,Support,Staff")]
     public async Task<IActionResult> GetAll(CancellationToken ct)
     {
         var requests = await _mediator.Send(new GetAllRefundRequestsQuery(), ct);
@@ -46,27 +46,27 @@ public class RefundRequestsController : ControllerBase
     }
 
     [HttpGet("refund-requests/{id:guid}")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Accountant,Support,Staff")]
     public async Task<IActionResult> GetById(Guid id, CancellationToken ct)
     {
-        var result = await _mediator.Send(new GetRefundRequestByIdQuery(id), ct);
-        return Ok(result);
+        var request = await _mediator.Send(new GetRefundRequestByIdQuery(id), ct);
+        return Ok(request);
     }
 
-    [HttpPatch("refund-requests/{id}/approve")]
-    [Authorize(Roles = "Admin")]
+    [HttpPatch("refund-requests/{id:guid}/approve")]
+    [Authorize(Roles = "Admin,Accountant")]
     public async Task<IActionResult> Approve(Guid id, CancellationToken ct)
     {
-        var success = await _mediator.Send(new ApproveRefundRequestCommand(id), ct);
-        return Ok(new { success });
+        var result = await _mediator.Send(new ApproveRefundRequestCommand(id), ct);
+        return Ok(new { success = result });
     }
 
-    [HttpPatch("refund-requests/{id}/reject")]
-    [Authorize(Roles = "Admin")]
+    [HttpPatch("refund-requests/{id:guid}/reject")]
+    [Authorize(Roles = "Admin,Accountant")]
     public async Task<IActionResult> Reject(Guid id, CancellationToken ct)
     {
-        var success = await _mediator.Send(new RejectRefundRequestCommand(id), ct);
-        return Ok(new { success });
+        var result = await _mediator.Send(new RejectRefundRequestCommand(id), ct);
+        return Ok(new { success = result });
     }
 }
 

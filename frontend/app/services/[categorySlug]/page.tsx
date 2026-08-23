@@ -8,6 +8,7 @@ import { resolveCategorySlug } from '@/src/lib/categorySlugs';
 import { Cloud, Zap, ArrowRight, Loader2, Server } from 'lucide-react';
 import CategoryPricingGrid from '@/components/CategoryPricingGrid';
 import { Header } from '@/src/components/Header';
+import ProductServiceReviews from '@/src/components/ProductServiceReviews';
 
 interface Category {
   id: string;
@@ -121,6 +122,12 @@ export default function CategoryLandingPage() {
         </div>
       </section>
       
+      {/* Product & Service Reviews */}
+      <ProductServiceReviews 
+        serviceName={category.name}
+        serviceCategory={category.name}
+      />
+
       <footer className="bg-white text-slate-600 py-8">
         <div className="max-w-7xl mx-auto px-4 text-center text-sm">
           © 2024 CloudHost VN. Mọi quyền được bảo lưu.

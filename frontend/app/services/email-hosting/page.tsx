@@ -101,8 +101,10 @@ export default function EmailHostingPage() {
     const price = billingCycle === 'yearly' ? plan.yearlyPrice : plan.monthlyPrice;
     await addItem(plan.id, cycleMonths, false, {
       name: `${plan.name} (${billingCycle === 'yearly' ? '12 Tháng' : '1 Tháng'})`,
+      title: `${plan.name} (${billingCycle === 'yearly' ? '12 Tháng' : '1 Tháng'})`,
       price: price,
       billingCycle: cycleMonths,
+      type: 'email',
     });
     router.push('/cart');
   };

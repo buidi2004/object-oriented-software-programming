@@ -49,15 +49,6 @@ export const GlobalUI = () => {
         />
       )}
 
-      <CartDrawer
-        isOpen={ui.isCartOpen}
-        onClose={() => ui.setIsCartOpen(false)}
-        cartItems={cart.items as unknown as CartItem[]}
-        onRemoveItem={async (id) => {
-          await cart.removeItem(id);
-        }}
-        onClearCart={() => cart.clearCart()}
-      />
 
       {ui.isDashboardOpen && (
         <CloudDashboard onClose={() => ui.setIsDashboardOpen(false)} />

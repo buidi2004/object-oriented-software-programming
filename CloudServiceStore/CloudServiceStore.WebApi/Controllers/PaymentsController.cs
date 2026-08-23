@@ -17,7 +17,7 @@ public class PaymentsController : ControllerBase
     public PaymentsController(IMediator mediator) => _mediator = mediator;
 
     [HttpPost]
-    [Authorize(Roles = "Customer")]
+    [Authorize]
     public async Task<IActionResult> CreatePayment([FromBody] CreatePaymentCommand command, CancellationToken ct)
     {
         var paymentUrl = await _mediator.Send(command, ct);

@@ -8,6 +8,8 @@ import {
   ArrowLeftRight, Activity, LayoutTemplate, Compass
 } from 'lucide-react';
 import { api } from '@/src/lib/api';
+import { resolveCategorySlug } from '@/src/lib/categorySlugs';
+import ProductServiceReviews from '@/src/components/ProductServiceReviews';
 
 const CATEGORY_META: Record<string, {
   href: string;
@@ -410,6 +412,12 @@ export default function ServicesPage() {
           </div>
         </div>
       </main>
+
+      {/* Customer Reviews Section */}
+      <ProductServiceReviews 
+        serviceName="Tất Cả Dịch Vụ Cloud & Máy Chủ"
+        serviceCategory="Hạ Tầng Điện Toán Đám Mây"
+      />
 
       <footer className="bg-white text-slate-600 py-8 mt-16">
         <div className="max-w-7xl mx-auto px-4 text-center text-sm">

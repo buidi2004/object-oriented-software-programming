@@ -30,7 +30,7 @@ public class FaqsController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Editor,Support,Staff")]
     public async Task<IActionResult> Create([FromBody] CreateFaqItemCommand command)
     {
         var id = await _mediator.Send(command);
@@ -38,7 +38,7 @@ public class FaqsController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Editor,Support,Staff")]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateFaqItemCommand command)
     {
         if (id != command.Id)
@@ -52,7 +52,7 @@ public class FaqsController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Editor,Support,Staff")]
     public async Task<IActionResult> Delete(Guid id)
     {
         var result = await _mediator.Send(new DeleteFaqItemCommand(id));

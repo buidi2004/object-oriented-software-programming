@@ -25,7 +25,7 @@ public class TicketsController : ControllerBase
     public TicketsController(IMediator mediator) => _mediator = mediator;
 
     [HttpPost]
-    [Authorize(Roles = "Customer")]
+    [Authorize]
     public async Task<IActionResult> Create([FromBody] CreateTicketCommand command, CancellationToken ct)
     {
         var id = await _mediator.Send(command, ct);
@@ -79,7 +79,7 @@ public class TicketsController : ControllerBase
     }
 
     [HttpPatch("{id:guid}/assign")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Technician,Support,Staff")]
     public async Task<IActionResult> Assign(Guid id, [FromBody] AssignTicketRequest body, CancellationToken ct)
     {
         await _mediator.Send(new AssignTicketCommand(id, body.StaffId), ct);
@@ -87,7 +87,7 @@ public class TicketsController : ControllerBase
     }
 
     [HttpGet("me")]
-    [Authorize(Roles = "Customer")]
+    [Authorize]
     public async Task<IActionResult> GetMyTickets(CancellationToken ct)
     {
         var result = await _mediator.Send(new GetMyTicketsQuery(), ct);
@@ -95,7 +95,7 @@ public class TicketsController : ControllerBase
     }
 
     [HttpGet("queue")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Technician,Support,Staff")]
     public async Task<IActionResult> GetQueue(CancellationToken ct)
     {
         var result = await _mediator.Send(new GetTicketQueueQuery(), ct);
@@ -110,7 +110,7 @@ public class TicketsController : ControllerBase
         return Ok(result);
     }
     [HttpPost("{id:guid}/email")]
-    [Authorize(Roles = "Admin,Staff")]
+    [Authorize(Roles = "Admin,Technician,Support,Staff")]
     public async Task<IActionResult> SendEmail(Guid id, [FromBody] SendTicketEmailRequest dto, CancellationToken ct)
     {
         if (dto == null || string.IsNullOrWhiteSpace(dto.Subject) || string.IsNullOrWhiteSpace(dto.HtmlBody))

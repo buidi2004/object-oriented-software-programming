@@ -18,6 +18,7 @@ import {
 import { FaWindows } from 'react-icons/fa6';
 import { useCartStore } from '@/src/store/useCartStore';
 import { api } from '@/src/lib/api';
+import ProductServiceReviews from '@/src/components/ProductServiceReviews';
 
 // VPS Presets Data for 1-Click Fast Loading
 
@@ -981,6 +982,12 @@ export default function CloudVpsServicePage() {
 
         </div>
       </section>
+
+      {/* 5.5 CUSTOMER RATINGS & PRODUCT REVIEWS */}
+      <ProductServiceReviews 
+        serviceName="Cloud VPS & Máy Chủ Ảo KVM"
+        serviceCategory="Hạ Tầng Điện Toán Đám Mây"
+      />
 
       {/* 6. ZERO-DOWNTIME MIGRATION & FINAL CALL TO ACTION */}
       <section className="py-24 bg-gradient-to-b from-[#090d16] via-[#0b1528] to-[#090d16] relative overflow-hidden">

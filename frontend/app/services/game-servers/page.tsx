@@ -155,9 +155,10 @@ export default function GameServersServicePage() {
     const price = billingCycle === 'yearly' ? plan.yearlyPrice : plan.monthlyPrice;
     await addItem(plan.id, cycleMonths, false, {
       name: `${plan.name} (${selectedGame.toUpperCase()}) - ${billingCycle === 'yearly' ? '12 Tháng' : '1 Tháng'}`,
+      title: `${plan.name} (${selectedGame.toUpperCase()}) - ${billingCycle === 'yearly' ? '12 Tháng' : '1 Tháng'}`,
       price: price,
       billingCycle: cycleMonths,
-      type: 'vps',
+      type: 'game',
       details: `${plan.cpu} • ${plan.ram} • ${plan.storage}`
     });
     router.push('/cart');

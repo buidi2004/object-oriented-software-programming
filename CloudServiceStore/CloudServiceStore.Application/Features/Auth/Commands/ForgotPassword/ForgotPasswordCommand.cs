@@ -4,4 +4,4 @@ namespace CloudServiceStore.Application.Features.Auth.Commands.ForgotPassword;
 
 public record ForgotPasswordCommand(string Email) : IRequest<ForgotPasswordResult>;
 
-public record ForgotPasswordResult(bool Success);
+public record ForgotPasswordResult(bool Success, bool UserFound, string? Message = null);

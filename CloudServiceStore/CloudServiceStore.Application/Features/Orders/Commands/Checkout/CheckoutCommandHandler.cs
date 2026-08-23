@@ -39,7 +39,14 @@ public class CheckoutCommandHandler : IRequestHandler<CheckoutCommand, Guid>
         foreach (var item in cart.Items)
         {
             var prices = await _priceRepo.WhereAsync(p => p.ServicePlanId == item.ServicePlanId && p.BillingCycle == item.BillingCycle && p.Currency == "VND", ct);
-            var price = prices.OrderByDescending(p => p.EffectiveFrom).FirstOrDefault()?.Price ?? 100000m; // Default 100k if no price set
+            var priceObj = prices.OrderByDescending(p => p.EffectiveFrom).FirstOrDefault();
+            decimal price = priceObj?.Price ?? 0;
+
+            if (price <= 0)
+            {
+                var fallbackPrices = await _priceRepo.WhereAsync(p => p.ServicePlanId == item.ServicePlanId && p.Currency == "VND", ct);
+                price = fallbackPrices.OrderByDescending(p => p.EffectiveFrom).FirstOrDefault()?.Price ?? 149000m;
+            }
 
             decimal itemTotal = price * item.Quantity;
             subTotal += itemTotal;

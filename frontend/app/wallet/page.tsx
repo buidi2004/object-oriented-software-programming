@@ -1,31 +1,101 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { getAuthModalUrl } from '@/src/lib/authNavigation';
-import { Wallet, ArrowUpRight, ArrowDownLeft, Plus, CreditCard, History, AlertCircle } from 'lucide-react';
+import { 
+  Wallet, ArrowUpRight, ArrowDownLeft, Plus, CreditCard, History, 
+  AlertCircle, Banknote, ShieldCheck, RefreshCw, ShoppingBag, 
+  Search, Filter, CheckCircle2, ChevronRight, FileText, Printer,
+  Server, Globe, Gamepad2, Sparkles, TrendingUp, TrendingDown, Clock
+} from 'lucide-react';
+import { TopUpModal } from '@/src/components/TopUpModal';
+import { WithdrawModal } from '@/src/components/WithdrawModal';
+import { TransactionReceiptModal, ReceiptData } from '@/src/components/TransactionReceiptModal';
 
 interface Transaction {
   id: string;
   type: 'credit' | 'debit';
+  rawType: string;
   amount: number;
   description: string;
   date: string;
+}
+
+const AVAILABLE_SERVICES = [
+  {
+    id: 'vps-starter',
+    title: 'Cloud VPS Starter',
+    desc: '1 vCPU AMD EPYC, 2GB RAM, 30GB NVMe',
+    price: 120000,
+    cycle: '/tháng',
+    category: 'VPS NVMe',
+    link: '/services/cloud-vps',
+    icon: Server,
+    color: 'bg-blue-50 text-blue-600 border-blue-200',
+  },
+  {
+    id: 'vps-pro',
+    title: 'Cloud VPS Pro NVMe',
+    desc: '2 vCPU AMD EPYC, 4GB RAM, 60GB NVMe',
+    price: 250000,
+    cycle: '/tháng',
+    category: 'VPS Cao Cấp',
+    link: '/services/cloud-vps',
+    icon: Server,
+    color: 'bg-indigo-50 text-indigo-600 border-indigo-200',
+  },
+  {
+    id: 'hosting-nvme',
+    title: 'Web Hosting NVMe Lite',
+    desc: 'Băng thông không giới hạn, cPanel, SSL Miễn phí',
+    price: 45000,
+    cycle: '/tháng',
+    category: 'Web Hosting',
+    link: '/services/static-sites',
+    icon: Globe,
+    color: 'bg-emerald-50 text-emerald-600 border-emerald-200',
+  },
+  {
+    id: 'game-server',
+    title: 'Game Server Anti-DDoS',
+    desc: 'Minecraft, CS2, Rust tốc độ cao 500Gbps',
+    price: 150000,
+    cycle: '/tháng',
+    category: 'Game Server',
+    link: '/services/game-servers',
+    icon: Gamepad2,
+    color: 'bg-purple-50 text-purple-600 border-purple-200',
+  },
+];
+
+function parseTxType(type: any): { isCredit: boolean; rawName: string; label: string } {
+  if (type === 'TopUp' || type === 0 || type === '0') {
+    return { isCredit: true, rawName: 'TopUp', label: 'Nạp tiền vào ví (VietQR / Ngân hàng)' };
+  }
+  if (type === 'Refund' || type === 2 || type === '2') {
+    return { isCredit: true, rawName: 'Refund', label: 'Hoàn tiền vào ví' };
+  }
+  return { isCredit: false, rawName: 'Payment', label: 'Thanh toán dịch vụ / Thuê VPS' };
 }
 
 export default function WalletPage() {
   const router = useRouter();
   const [wallet, setWallet] = useState<{ balance: number; currency: string }>({ balance: 0, currency: 'VND' });
   const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [filterType, setFilterType] = useState<'all' | 'credit' | 'debit'>('all');
+  const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(true);
-  const [topUpAmount, setTopUpAmount] = useState('');
-  const [showTopUp, setShowTopUp] = useState(false);
+  const [showTopUpModal, setShowTopUpModal] = useState(false);
+  const [showWithdrawModal, setShowWithdrawModal] = useState(false);
+  const [selectedReceipt, setSelectedReceipt] = useState<ReceiptData | null>(null);
+  const [userInfo, setUserInfo] = useState<{ fullName: string; email: string }>({ fullName: '', email: '' });
+  const [suggestedAmount, setSuggestedAmount] = useState<number | undefined>(undefined);
   const [checkoutContext, setCheckoutContext] = useState<{
     orderId?: string;
     suggestedAmount?: number;
   } | null>(null);
-  const [topUpSuccess, setTopUpSuccess] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
@@ -37,12 +107,12 @@ export default function WalletPage() {
 
     if (typeof window === 'undefined') return;
     const params = new URLSearchParams(window.location.search);
-    if (params.get('topup') === '1') {
-      setShowTopUp(true);
-    }
     const amount = params.get('amount');
     if (amount && !Number.isNaN(Number(amount))) {
-      setTopUpAmount(amount);
+      setSuggestedAmount(Number(amount));
+    }
+    if (params.get('topup') === '1') {
+      setShowTopUpModal(true);
     }
     if (params.get('from') === 'checkout') {
       setCheckoutContext({
@@ -54,30 +124,37 @@ export default function WalletPage() {
 
   const fetchData = async (token: string) => {
     try {
-      const [walletRes, txRes] = await Promise.all([
+      const [walletRes, txRes, userRes] = await Promise.all([
         fetch('/api/wallet/me', { headers: { Authorization: `Bearer ${token}` } }),
         fetch('/api/wallet/transactions', { headers: { Authorization: `Bearer ${token}` } }),
+        fetch('/api/users/me', { headers: { Authorization: `Bearer ${token}` } }),
       ]);
 
       if (walletRes.ok) {
         const data = await walletRes.json();
         setWallet(data);
       }
+      if (userRes.ok) {
+        const uData = await userRes.json();
+        setUserInfo({
+          fullName: uData.fullName || uData.email || 'Khách hàng CloudHost',
+          email: uData.email || '',
+        });
+      }
       if (txRes.ok) {
         const data = await txRes.json();
         const mapped = Array.isArray(data)
-          ? data.map((t: { id: string; amount: number; type: string; createdAt: string }) => ({
-              id: t.id,
-              type: t.type === 'TopUp' ? 'credit' as const : 'debit' as const,
-              amount: Math.abs(Number(t.amount)),
-              description:
-                t.type === 'TopUp'
-                  ? 'Nạp tiền vào ví'
-                  : t.type === 'Refund'
-                    ? 'Hoàn tiền'
-                    : 'Thanh toán đơn hàng',
-              date: t.createdAt,
-            }))
+          ? data.map((t: { id: string; amount: number; type: any; createdAt: string }) => {
+              const parsed = parseTxType(t.type);
+              return {
+                id: t.id,
+                type: parsed.isCredit ? ('credit' as const) : ('debit' as const),
+                rawType: parsed.rawName,
+                amount: Math.abs(Number(t.amount)),
+                description: parsed.label,
+                date: t.createdAt,
+              };
+            })
           : [];
         setTransactions(mapped);
       }
@@ -88,197 +165,507 @@ export default function WalletPage() {
     }
   };
 
-  const handleTopUp = async () => {
-    const amount = parseInt(topUpAmount);
-    if (!amount || amount <= 0) return;
-
-    const token = localStorage.getItem('accessToken');
-    try {
-      const response = await fetch('/api/wallet/top-up', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ amount }),
-      });
-
-      if (response.ok) {
-        setShowTopUp(false);
-        setTopUpAmount('');
-        setTopUpSuccess(true);
-        fetchData(token!);
+  // Financial Stats
+  const { totalDeposited, totalSpent } = useMemo(() => {
+    let deposited = 0;
+    let spent = 0;
+    transactions.forEach((tx) => {
+      if (tx.type === 'credit') {
+        deposited += tx.amount;
+      } else {
+        spent += tx.amount;
       }
-    } catch (error) {
-      console.error('Top up failed:', error);
-    }
-  };
+    });
+    return { totalDeposited: deposited, totalSpent: spent };
+  }, [transactions]);
+
+  // Filtered transactions
+  const filteredTransactions = useMemo(() => {
+    return transactions.filter((t) => {
+      if (filterType === 'credit' && t.type !== 'credit') return false;
+      if (filterType === 'debit' && t.type !== 'debit') return false;
+      if (searchQuery.trim()) {
+        const q = searchQuery.toLowerCase();
+        return (
+          t.description.toLowerCase().includes(q) ||
+          t.id.toLowerCase().includes(q) ||
+          t.amount.toString().includes(q)
+        );
+      }
+      return true;
+    });
+  }, [transactions, filterType, searchQuery]);
 
   if (isLoading) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
+        <div className="w-10 h-10 border-4 border-[#1F1F1F] border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      {/* Header */}
-      <header className="bg-white border-b border-slate-200 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+    <div className="min-h-screen bg-slate-50/50 pb-16">
+      {/* Top Header */}
+      <header className="bg-white border-b border-slate-200 sticky top-0 z-30">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2.5">
-            <div className="w-10 h-10 rounded bg-gradient-to-tr from-blue-600 via-indigo-600 to-cyan-400 flex items-center justify-center text-slate-900">
-              <Wallet className="w-6 h-6" />
+            <div className="w-8 h-8 rounded bg-[#1F1F1F] flex items-center justify-center text-white font-black text-sm shadow-xs">
+              CH
             </div>
-            <span className="text-xl font-black text-slate-900">
-              CloudHost<span className="text-[#1F1F1F]"> VN</span>
+            <span className="text-lg font-black text-slate-900">
+              CloudHost<span className="text-slate-500 font-medium"> Quản Lý Số Dư Ví</span>
             </span>
           </Link>
-          <Link href="/dashboard" className="text-sm font-semibold text-slate-600 hover:text-[#1F1F1F]">
-            ← Quay lại Dashboard
-          </Link>
+          <div className="flex items-center gap-3">
+            <Link 
+              href="/dashboard" 
+              className="text-xs font-bold text-slate-600 hover:text-slate-900 px-3 py-1.5 rounded-md hover:bg-slate-100 transition-colors"
+            >
+              ← Bảng điều khiển
+            </Link>
+            <button
+              onClick={() => setShowTopUpModal(true)}
+              className="text-xs font-bold text-white bg-[#1F1F1F] hover:bg-black px-3.5 py-1.5 rounded-md transition-colors shadow-xs flex items-center gap-1.5"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              Nạp tiền
+            </button>
+          </div>
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 pt-8">
+        {/* Checkout Alert if redirected from cart */}
         {checkoutContext && (
-          <div className="mb-6 rounded-md border border-blue-200 bg-blue-50 p-4 flex items-start gap-3">
-            <AlertCircle className="w-5 h-5 text-[#1F1F1F] shrink-0 mt-0.5" />
-            <div className="min-w-0">
-              <p className="text-sm font-bold text-[#1F1F1F]">Hoàn tất thanh toán đơn hàng</p>
-              <p className="text-sm text-[#1F1F1F]/90 mt-1 leading-relaxed">
-                Số dư ví chưa đủ. Nạp thêm credit
-                {checkoutContext.suggestedAmount
-                  ? ` (gợi ý ${checkoutContext.suggestedAmount.toLocaleString('vi-VN')} đ)`
-                  : ''}
-                {' '}rồi quay lại giỏ hàng để thanh toán lại.
-              </p>
-            </div>
-          </div>
-        )}
-
-        {topUpSuccess && (
-          <div className="mb-6 rounded-md border border-emerald-200 bg-emerald-50 p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div className="mb-6 rounded-md border border-blue-200 bg-blue-50/90 p-4 flex items-start justify-between gap-3 shadow-xs">
             <div className="flex items-start gap-3">
-              <ArrowDownLeft className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
-              <div>
-                <p className="text-sm font-bold text-emerald-900">Nạp tiền thành công!</p>
-                <p className="text-sm text-emerald-800 mt-1">Bạn có thể quay lại giỏ hàng và bấm &quot;Thử thanh toán lại&quot;.</p>
+              <AlertCircle className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-bold text-blue-950">Nạp tiền hoàn tất thanh toán đơn hàng</p>
+                <p className="text-xs text-blue-800 mt-1 leading-relaxed">
+                  Số dư hiện tại của bạn chưa đủ để thanh toán. Vui lòng nạp thêm tối thiểu{' '}
+                  <strong className="font-bold">
+                    {checkoutContext.suggestedAmount
+                      ? `${checkoutContext.suggestedAmount.toLocaleString('vi-VN')} đ`
+                      : 'số tiền cần thiết'}
+                  </strong>{' '}
+                  rồi quay lại trang thanh toán.
+                </p>
               </div>
             </div>
-            <Link
-              href="/"
-              className="inline-flex items-center justify-center px-4 py-2.5 rounded bg-emerald-600 text-white text-sm font-bold hover:bg-emerald-700 transition-colors whitespace-nowrap"
+            <button
+              onClick={() => setShowTopUpModal(true)}
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded shadow-xs transition-colors shrink-0 flex items-center gap-1"
             >
-              Quay lại giỏ hàng
-            </Link>
+              <Plus className="w-3.5 h-3.5" />
+              Nạp ngay
+            </button>
           </div>
         )}
 
-        {/* Balance Card */}
-        <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-lg p-8 mb-8 text-slate-900 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-0 left-0 w-48 h-48 bg-cyan-500/10 rounded-full blur-3xl" />
-          
-          <div className="relative z-10">
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-md bg-white/10 backdrop-blur flex items-center justify-center">
-                  <Wallet className="w-6 h-6 text-[#1F1F1F]" />
+        {/* Hero Financial Summary & Actions */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+          {/* Main Balance Display */}
+          <div className="lg:col-span-2 bg-[#1F1F1F] text-white rounded-lg p-6 sm:p-8 shadow-xl relative overflow-hidden flex flex-col justify-between">
+            <div className="absolute top-0 right-0 w-80 h-80 bg-white/5 rounded-full blur-3xl pointer-events-none" />
+            <div className="relative z-10">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2 text-slate-300 text-xs font-bold tracking-wider uppercase">
+                  <Wallet className="w-4 h-4 text-emerald-400" />
+                  Số Dư Ví Khả Dụng
                 </div>
-                <div>
-                  <p className="text-sm text-slate-600">Số dư ví tiền</p>
-                  <p className="text-4xl font-black">{wallet.balance.toLocaleString('vi-VN')} đ</p>
+                <span className="px-2.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 text-[11px] font-bold border border-emerald-500/30">
+                  VNĐ (Chính thức)
+                </span>
+              </div>
+
+              <div className="my-2">
+                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white">
+                  {wallet.balance.toLocaleString('vi-VN')}{' '}
+                  <span className="text-lg sm:text-2xl font-bold text-slate-400">đ</span>
+                </h1>
+              </div>
+
+              {/* Sub Stats: Deposited vs Spent */}
+              <div className="grid grid-cols-2 gap-4 mt-6 pt-4 border-t border-white/10">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400">
+                    <TrendingUp className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <span className="text-[11px] text-slate-400 block">Tổng tiền đã nạp</span>
+                    <span className="text-sm font-bold text-emerald-400">
+                      +{totalDeposited.toLocaleString('vi-VN')} đ
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400">
+                    <TrendingDown className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <span className="text-[11px] text-slate-400 block">Tổng tiền đã chi</span>
+                    <span className="text-sm font-bold text-slate-200">
+                      -{totalSpent.toLocaleString('vi-VN')} đ
+                    </span>
+                  </div>
                 </div>
               </div>
-              
+            </div>
+
+            {/* Action Buttons */}
+            <div className="relative z-10 pt-6 mt-6 border-t border-white/10 flex flex-wrap items-center gap-3">
               <button
-                onClick={() => setShowTopUp(!showTopUp)}
-                className="px-5 py-3 rounded bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-900 font-bold text-sm hover:from-cyan-400 hover:to-blue-500 transition-all flex items-center gap-2"
+                onClick={() => setShowTopUpModal(true)}
+                className="px-5 py-2.5 rounded bg-white text-slate-900 font-bold text-xs hover:bg-slate-100 transition-all flex items-center gap-2 shadow-md"
               >
                 <Plus className="w-4 h-4" />
-                Nạp tiền
+                Nạp tiền vào ví
+              </button>
+
+              <button
+                onClick={() => setShowWithdrawModal(true)}
+                className="px-5 py-2.5 rounded bg-white/10 text-white font-bold text-xs hover:bg-white/20 transition-all flex items-center gap-2 border border-white/15"
+              >
+                <Banknote className="w-4 h-4 text-slate-300" />
+                Rút tiền / Hoàn tiền
+              </button>
+
+              <button
+                onClick={() => {
+                  const t = localStorage.getItem('accessToken');
+                  if (t) fetchData(t);
+                }}
+                className="p-2.5 rounded bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-colors"
+                title="Làm mới số dư"
+              >
+                <RefreshCw className="w-4 h-4" />
               </button>
             </div>
+          </div>
 
-            {showTopUp && (
-              <div className="bg-white/10 backdrop-blur rounded p-4 mb-4">
-                <input
-                  type="number"
-                  value={topUpAmount}
-                  onChange={(e) => setTopUpAmount(e.target.value)}
-                  placeholder="Nhập số tiền nạp (VNĐ)"
-                  className="w-full bg-white/10 border border-white/20 rounded-sm px-4 py-3 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-cyan-400 mb-3"
-                />
-                <div className="flex gap-2 mb-3">
-                  {[100000, 200000, 500000, 1000000].map((amount) => (
-                    <button
-                      key={amount}
-                      onClick={() => setTopUpAmount(amount.toString())}
-                      className="px-3 py-1.5 rounded-sm bg-white/10 text-xs font-medium hover:bg-white/20 transition-colors"
-                    >
-                      {amount.toLocaleString('vi-VN')}đ
-                    </button>
-                  ))}
-                </div>
-                <button
-                  onClick={handleTopUp}
-                  className="w-full py-3 rounded bg-emerald-500 text-white font-bold hover:bg-emerald-600 transition-colors"
-                >
-                  Xác nhận nạp tiền
-                </button>
-              </div>
-            )}
+          {/* Wallet Guide & Auto-Renew Card */}
+          <div className="bg-white border border-slate-200 rounded-lg p-6 flex flex-col justify-between shadow-xs">
+            <div>
+              <h2 className="text-sm font-bold text-slate-900 mb-3 flex items-center gap-2">
+                <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                Đặc Quyền Số Dư Ví
+              </h2>
+              <ul className="space-y-3 text-xs text-slate-600">
+                <li className="flex items-start gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#1F1F1F] mt-1.5 shrink-0" />
+                  <span><strong>Kích hoạt máy chủ tức thì:</strong> Cấp phát VPS ngay trong 10 giây sau khi bấm thanh toán.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#1F1F1F] mt-1.5 shrink-0" />
+                  <span><strong>Tự động gia hạn (Auto-Renew):</strong> Giữ hạ tầng máy chủ của bạn luôn hoạt động 24/7.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#1F1F1F] mt-1.5 shrink-0" />
+                  <span><strong>Rút tiền minh bạch:</strong> Yêu cầu hoàn tiền về STK ngân hàng chính chủ bất cứ lúc nào.</span>
+                </li>
+              </ul>
+            </div>
+
+            <div className="mt-6 pt-4 border-t border-slate-100">
+              <Link
+                href="/services/cloud-vps"
+                className="text-xs font-bold text-[#1F1F1F] hover:underline flex items-center justify-between group"
+              >
+                <span>Thuê máy chủ Cloud VPS ngay</span>
+                <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+              </Link>
+            </div>
           </div>
         </div>
 
-        {/* Transactions */}
-        <div className="bg-white rounded-md border border-slate-200 overflow-hidden">
-          <div className="p-6 border-b border-slate-200 flex items-center justify-between">
-            <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-              <History className="w-5 h-5 text-[#1F1F1F]" />
-              Lịch sử giao dịch
-            </h2>
-            <span className="text-sm text-slate-600">{transactions.length} giao dịch</span>
+        {/* What Can You Buy With Your Balance? */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
+                <ShoppingBag className="w-4 h-4 text-slate-700" />
+                Có thể mua gì với số dư ví hiện tại?
+              </h2>
+              <p className="text-xs text-slate-500 mt-0.5">
+                Các gói dịch vụ máy chủ, hosting và tên miền bạn có thể kích hoạt trực tiếp từ số dư ví
+              </p>
+            </div>
+            <Link href="/services" className="text-xs font-bold text-blue-600 hover:underline">
+              Xem tất cả dịch vụ →
+            </Link>
           </div>
 
-          {transactions.length === 0 ? (
-            <div className="p-12 text-center text-slate-600">
-              <History className="w-12 h-12 mx-auto mb-3 text-slate-700" />
-              <p className="font-medium">Chưa có giao dịch nào</p>
-              <p className="text-sm mt-1">Số dư ví của bạn hiện đang trống</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {AVAILABLE_SERVICES.map((srv) => {
+              const canAfford = wallet.balance >= srv.price;
+              const monthsAffordable = wallet.balance > 0 ? Math.floor(wallet.balance / srv.price) : 0;
+
+              return (
+                <div 
+                  key={srv.id}
+                  className="bg-white rounded-lg border border-slate-200 p-4.5 flex flex-col justify-between shadow-xs hover:border-[#1F1F1F] hover:shadow-md transition-all group"
+                >
+                <div className="flex-1 flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center justify-between mb-2.5">
+                      <div className={`w-8 h-8 rounded flex items-center justify-center border ${srv.color}`}>
+                        <srv.icon className="w-4 h-4" />
+                      </div>
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-600 border border-slate-200/60">
+                        {srv.category}
+                      </span>
+                    </div>
+
+                    <h3 className="font-bold text-sm text-slate-900 group-hover:text-blue-600 transition-colors leading-snug line-clamp-1">
+                      {srv.title}
+                    </h3>
+                    <p className="text-xs text-slate-500 mt-1 line-clamp-2 leading-relaxed min-h-[32px]">
+                      {srv.desc}
+                    </p>
+                  </div>
+
+                  <div className="mt-4 pt-3 border-t border-slate-100 space-y-2.5">
+                    <div className="flex items-baseline justify-between gap-1">
+                      <div className="flex items-baseline gap-0.5">
+                        <span className="text-base sm:text-lg font-black text-slate-900">
+                          {srv.price.toLocaleString('vi-VN')}
+                        </span>
+                        <span className="text-xs font-bold text-slate-900">đ</span>
+                        <span className="text-[11px] text-slate-400 font-medium">{srv.cycle}</span>
+                      </div>
+
+                      {canAfford ? (
+                        <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200/60 shrink-0">
+                          <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                          Đủ số dư
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200/60 shrink-0">
+                          Thiếu {(srv.price - wallet.balance).toLocaleString('vi-VN')}đ
+                        </span>
+                      )}
+                    </div>
+
+                    <Link
+                      href={srv.link}
+                      className={`w-full py-2.5 rounded text-xs font-bold flex items-center justify-center gap-1.5 transition-all shadow-2xs ${
+                        canAfford
+                          ? 'bg-[#1F1F1F] hover:bg-black text-white hover:shadow-sm'
+                          : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
+                      }`}
+                    >
+                      {canAfford ? 'Đặt mua ngay' : 'Xem cấu hình'}
+                      <ChevronRight className="w-3.5 h-3.5" />
+                    </Link>
+                  </div>
+                </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Detailed Transactions & Receipts Ledger */}
+        <div className="bg-white rounded-lg border border-slate-200 shadow-xs overflow-hidden">
+          {/* Section Header, Search & Filter Bar */}
+          <div className="p-5 border-b border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+              <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
+                <History className="w-4 h-4 text-slate-700" />
+                Lịch sử giao dịch & Hóa đơn nạp tiền
+              </h2>
+              <p className="text-xs text-slate-500 mt-0.5">
+                Xem thời gian, ngày giờ chi tiết và in biên lai điện tử cho từng giao dịch
+              </p>
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
+              {/* Search input */}
+              <div className="relative">
+                <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Tìm theo mã ID hoặc mô tả..."
+                  className="pl-8 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-md text-slate-900 focus:bg-white focus:border-[#1F1F1F] outline-none w-full sm:w-56"
+                />
+              </div>
+
+              {/* Filter Buttons */}
+              <div className="flex items-center gap-1 bg-slate-100/80 p-1 rounded-md">
+                <button
+                  type="button"
+                  onClick={() => setFilterType('all')}
+                  className={`px-3 py-1 text-xs font-bold rounded transition-all ${
+                    filterType === 'all'
+                      ? 'bg-white text-slate-900 shadow-xs'
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  Tất cả ({transactions.length})
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setFilterType('credit')}
+                  className={`px-3 py-1 text-xs font-bold rounded transition-all ${
+                    filterType === 'credit'
+                      ? 'bg-white text-emerald-700 shadow-xs'
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  Tiền vào (+)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setFilterType('debit')}
+                  className={`px-3 py-1 text-xs font-bold rounded transition-all ${
+                    filterType === 'debit'
+                      ? 'bg-white text-slate-900 shadow-xs'
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  Tiền ra (-)
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Transactions List */}
+          {filteredTransactions.length === 0 ? (
+            <div className="py-16 px-4 text-center">
+              <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-3 text-slate-400">
+                <History className="w-6 h-6" />
+              </div>
+              <h3 className="text-sm font-bold text-slate-800">Không tìm thấy giao dịch nào</h3>
+              <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
+                Khi bạn nạp tiền hoặc thanh toán dịch vụ, các giao dịch và hóa đơn điện tử sẽ được hiển thị chi tiết tại đây.
+              </p>
+              <button
+                onClick={() => setShowTopUpModal(true)}
+                className="mt-4 inline-flex items-center gap-1.5 px-4 py-2 rounded bg-[#1F1F1F] text-white text-xs font-bold hover:bg-black transition-colors"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                Nạp tiền ngay
+              </button>
             </div>
           ) : (
             <div className="divide-y divide-slate-100">
-              {transactions.map((tx) => (
-                <div key={tx.id} className="p-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
-                  <div className="flex items-center gap-3">
-                    <div className={`w-10 h-10 rounded flex items-center justify-center ${
-                      tx.type === 'credit' ? 'bg-emerald-100 text-emerald-600' : 'bg-blue-100 text-[#1F1F1F]'
-                    }`}>
-                      {tx.type === 'credit' ? (
-                        <ArrowDownLeft className="w-5 h-5" />
-                      ) : (
-                        <ArrowUpRight className="w-5 h-5" />
-                      )}
+              {filteredTransactions.map((tx) => {
+                const isCredit = tx.type === 'credit';
+                const txDate = new Date(tx.date);
+                const fullDateTime = txDate.toLocaleString('vi-VN', {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  second: '2-digit',
+                  day: '2-digit',
+                  month: '2-digit',
+                  year: 'numeric',
+                });
+
+                return (
+                  <div 
+                    key={tx.id} 
+                    onClick={() => setSelectedReceipt({
+                      ...tx,
+                      userFullName: userInfo.fullName,
+                      userEmail: userInfo.email,
+                    })}
+                    className="p-4 sm:px-6 flex items-center justify-between hover:bg-slate-50/70 transition-colors cursor-pointer group"
+                  >
+                    <div className="flex items-center gap-3.5 min-w-0">
+                      <div className={`w-10 h-10 rounded-full shrink-0 flex items-center justify-center ${
+                        isCredit 
+                          ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' 
+                          : 'bg-slate-100 text-slate-700 border border-slate-200'
+                      }`}>
+                        {isCredit ? (
+                          <ArrowDownLeft className="w-5 h-5" />
+                        ) : (
+                          <ArrowUpRight className="w-5 h-5" />
+                        )}
+                      </div>
+                      <div className="min-w-0">
+                        <p className="font-bold text-slate-900 text-xs sm:text-sm truncate group-hover:text-blue-600 transition-colors">
+                          {tx.description}
+                        </p>
+                        <div className="flex flex-wrap items-center gap-2 text-[11px] text-slate-500 mt-1">
+                          <span className="flex items-center gap-1 font-medium text-slate-700">
+                            <Clock className="w-3 h-3 text-slate-400" />
+                            {fullDateTime}
+                          </span>
+                          <span>•</span>
+                          <span className="font-mono text-[10px] text-slate-400">
+                            Mã GD: {tx.id.slice(0, 8).toUpperCase()}
+                          </span>
+                        </div>
+                      </div>
                     </div>
-                    <div>
-                      <p className="font-semibold text-slate-900 text-sm">{tx.description}</p>
-                      <p className="text-xs text-slate-600">{new Date(tx.date).toLocaleDateString('vi-VN')}</p>
+
+                    <div className="flex items-center gap-4 shrink-0 pl-3">
+                      <div className="text-right">
+                        <span className={`text-sm sm:text-base font-black ${
+                          isCredit ? 'text-emerald-600' : 'text-slate-900'
+                        }`}>
+                          {isCredit ? '+' : '-'}{tx.amount.toLocaleString('vi-VN')} đ
+                        </span>
+                        <p className="text-[10px] text-slate-400 font-medium mt-0.5">
+                          {isCredit ? 'Đã cộng vào ví' : 'Thanh toán thành công'}
+                        </p>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedReceipt({
+                            ...tx,
+                            userFullName: userInfo.fullName,
+                            userEmail: userInfo.email,
+                          });
+                        }}
+                        className="hidden sm:flex items-center gap-1 px-3 py-1.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-colors shadow-2xs"
+                      >
+                        <FileText className="w-3.5 h-3.5 text-slate-500" />
+                        <span>Biên lai</span>
+                      </button>
                     </div>
                   </div>
-                  <span className={`font-bold ${
-                    tx.type === 'credit' ? 'text-emerald-600' : 'text-slate-900'
-                  }`}>
-                    {tx.type === 'credit' ? '+' : '-'}{tx.amount.toLocaleString('vi-VN')} đ
-                  </span>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>
       </main>
+
+      {/* TopUp Modal */}
+      <TopUpModal
+        isOpen={showTopUpModal}
+        onClose={() => setShowTopUpModal(false)}
+        currentBalance={wallet.balance}
+        suggestedAmount={suggestedAmount}
+        onSuccess={() => {
+          const token = localStorage.getItem('accessToken');
+          if (token) fetchData(token);
+        }}
+      />
+
+      {/* Withdraw Modal */}
+      <WithdrawModal
+        isOpen={showWithdrawModal}
+        onClose={() => setShowWithdrawModal(false)}
+        currentBalance={wallet.balance}
+      />
+
+      {/* Transaction Receipt Modal */}
+      <TransactionReceiptModal
+        isOpen={!!selectedReceipt}
+        onClose={() => setSelectedReceipt(null)}
+        transaction={selectedReceipt}
+      />
     </div>
   );
 }

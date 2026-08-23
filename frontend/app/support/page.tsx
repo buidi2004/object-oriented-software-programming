@@ -3,218 +3,281 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { 
-  Headphones, 
-  MessageSquare, 
-  FileText, 
-  HelpCircle, 
-  ShieldCheck, 
-  Send, 
-  Clock, 
-  PhoneCall, 
-  Mail, 
-  ChevronRight, 
-  CheckCircle2, 
-  Zap 
+  Headphones, MessageSquare, FileText, HelpCircle, ShieldCheck, 
+  Send, Clock, PhoneCall, Mail, ChevronRight, CheckCircle2, 
+  Zap, LifeBuoy, AlertCircle, BookOpen, User, Phone, ArrowRight
 } from 'lucide-react';
+import { api } from '@/src/lib/api';
 
 export default function SupportCenterPage() {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [ticketSubject, setTicketSubject] = useState('');
   const [ticketMessage, setTicketMessage] = useState('');
   const [priority, setPriority] = useState('2');
   const [submitting, setSubmitting] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
 
   const handleCreateTicket = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!ticketSubject || !ticketMessage) return;
+    if (!ticketSubject.trim() || !ticketMessage.trim()) return;
 
     setSubmitting(true);
-    try {
-      const token = localStorage.getItem('accessToken');
-      const res = await fetch('http://localhost:5053/api/tickets', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(token ? { Authorization: `Bearer ${token}` } : {})
-        },
-        body: JSON.stringify({
-          subject: ticketSubject,
-          priority: parseInt(priority)
-        })
-      });
+    setSuccessMsg('');
+    setErrorMsg('');
 
-      if (res.ok) {
-        const data = await res.json();
-        if (data.id && token) {
-          await fetch(`http://localhost:5053/api/tickets/${data.id}/messages`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`
-            },
-            body: JSON.stringify({ message: ticketMessage })
+    try {
+      const token = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
+      
+      if (token) {
+        // Authenticated user creates standard ticket
+        const res = await api.post('/tickets', {
+          subject: ticketSubject.trim(),
+          priority: parseInt(priority)
+        });
+
+        if (res.data?.id) {
+          await api.post(`/tickets/${res.data.id}/messages`, { 
+            message: ticketMessage.trim() 
           });
         }
-        setSuccessMsg('Yêu cầu hỗ trợ của bạn đã được gửi thành công! Đội ngũ kỹ thuật sẽ phản hồi trong vòng 15 phút.');
-        setTicketSubject('');
-        setTicketMessage('');
       } else {
-        setSuccessMsg('Đã ghi nhận yêu cầu hỗ trợ. Chuyên viên sẽ liên hệ với bạn sớm nhất!');
+        // Guest user creates ticket via contact API with auto-generated ticket in backend
+        await api.post('/contact', {
+          name: name.trim() || 'Khách hàng vãng lai',
+          email: email.trim() || 'guest@khachhang.vn',
+          phone: phone.trim() || 'N/A',
+          subject: `[Support Khẩn Cấp] ${ticketSubject.trim()}`,
+          message: ticketMessage.trim()
+        });
       }
-    } catch {
-      setSuccessMsg('Đã tiếp nhận thông tin hỗ trợ khẩn cấp.');
+
+      setSuccessMsg('🎉 Yêu cầu hỗ trợ kỹ thuật của bạn đã được gửi thành công! Kỹ sư hệ thống SEN CloudHost sẽ tiếp nhận và phản hồi trong vòng dưới 15 phút.');
+      setTicketSubject('');
+      setTicketMessage('');
+      setName('');
+      setEmail('');
+      setPhone('');
+    } catch (err: any) {
+      console.error(err);
+      setSuccessMsg('Yêu cầu hỗ trợ đã được ghi nhận. Đội ngũ kỹ sư trực ban sẽ liên hệ xử lý ngay!');
     } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-slate-50 text-slate-900 py-12 px-4 sm:px-6 lg:px-8 font-sans">
       <div className="max-w-6xl mx-auto space-y-12">
         
         {/* Header Hero */}
-        <div className="text-center space-y-4">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-[#1F1F1F] text-xs font-semibold uppercase tracking-wider">
-            <Headphones className="w-4 h-4" /> Trung Tâm Hỗ Trợ 24/7/365
+        <div className="text-center space-y-4 max-w-3xl mx-auto">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 text-blue-700 text-xs font-bold border border-blue-200 shadow-2xs">
+            <Headphones className="w-4 h-4 text-blue-600" />
+            <span>TRUNG TÂM HỖ TRỢ KỸ THUẬT 24/7/365</span>
           </div>
-          <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-sky-300 to-indigo-400">
-            Chúng tôi luôn sẵn sàng hỗ trợ bạn
+          <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-slate-900">
+            Chúng Tôi Luôn Sẵn Sàng Đồng Hành Cùng Bạn
           </h1>
-          <p className="max-w-2xl mx-auto text-slate-600 text-base sm:text-lg">
-            Đội ngũ kỹ sư hạ tầng điện toán đám mây và chuyên gia mạng túc trực 24/7 với cam kết phản hồi SLA dưới 15 phút.
+          <p className="text-slate-600 text-xs sm:text-sm font-normal leading-relaxed">
+            Đội ngũ kỹ sư hạ tầng điện toán đám mây và chuyên gia mạng Level 3 túc trực 24/7/365 với cam kết phản hồi SLA dưới 15 phút.
           </p>
         </div>
 
         {/* 3 Quick Channels */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="p-6 rounded-md bg-white/60 border border-slate-200 hover:border-cyan-500/40 transition-all shadow-xl group">
-            <div className="w-12 h-12 rounded bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-[#1F1F1F] mb-4 group-hover:scale-110 transition-transform">
+          <div className="p-6 rounded-2xl bg-white border border-slate-200/90 hover:border-blue-300 transition-all shadow-2xs group">
+            <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-2xs">
               <MessageSquare className="w-6 h-6" />
             </div>
-            <h3 className="text-lg font-bold text-slate-900 mb-2">Live Chat Trực Tuyến</h3>
-            <p className="text-sm text-slate-600 mb-4">Trò chuyện ngay với kỹ thuật viên trực ca để giải quyết sự cố tức thì.</p>
-            <div className="flex items-center text-[#1F1F1F] text-sm font-semibold gap-1">
-              Phản hồi: &lt; 2 phút <Zap className="w-4 h-4 text-amber-400" />
+            <h3 className="text-base font-black text-slate-900 mb-1.5">Live Chat Trực Tuyến</h3>
+            <p className="text-xs text-slate-500 mb-4 leading-relaxed">Trò chuyện trực tiếp với kỹ thuật viên trực ca để giải quyết sự cố tức thì.</p>
+            <div className="flex items-center text-blue-600 text-xs font-bold gap-1">
+              <span>Phản hồi: &lt; 2 phút</span> <Zap className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
             </div>
           </div>
 
-          <Link href="/knowledge-base" className="p-6 rounded-md bg-white/60 border border-slate-200 hover:border-indigo-500/40 transition-all shadow-xl group block">
-            <div className="w-12 h-12 rounded bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-center text-slate-700 mb-4 group-hover:scale-110 transition-transform">
-              <FileText className="w-6 h-6" />
+          <Link href="/knowledge-base" className="p-6 rounded-2xl bg-white border border-slate-200/90 hover:border-blue-300 transition-all shadow-2xs group block">
+            <div className="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-2xs">
+              <BookOpen className="w-6 h-6" />
             </div>
-            <h3 className="text-lg font-bold text-slate-900 mb-2">Knowledge Base</h3>
-            <p className="text-sm text-slate-600 mb-4">Hơn 500+ tài liệu hướng dẫn kỹ thuật, cấu hình VPS, Web Server và bảo mật.</p>
-            <div className="flex items-center text-slate-700 text-sm font-semibold gap-1 group-hover:translate-x-1 transition-transform">
-              Xem tài liệu <ChevronRight className="w-4 h-4" />
+            <h3 className="text-base font-black text-slate-900 mb-1.5">Knowledge Base</h3>
+            <p className="text-xs text-slate-500 mb-4 leading-relaxed">Hơn 500+ tài liệu hướng dẫn kỹ thuật, cấu hình VPS, Nginx, Docker và bảo mật.</p>
+            <div className="flex items-center text-indigo-600 text-xs font-bold gap-1 group-hover:translate-x-1 transition-transform">
+              <span>Khám phá tài liệu</span> <ChevronRight className="w-4 h-4" />
             </div>
           </Link>
 
-          <Link href="/faqs" className="p-6 rounded-md bg-white/60 border border-slate-200 hover:border-emerald-500/40 transition-all shadow-xl group block">
-            <div className="w-12 h-12 rounded bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mb-4 group-hover:scale-110 transition-transform">
+          <Link href="/faqs" className="p-6 rounded-2xl bg-white border border-slate-200/90 hover:border-blue-300 transition-all shadow-2xs group block">
+            <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-2xs">
               <HelpCircle className="w-6 h-6" />
             </div>
-            <h3 className="text-lg font-bold text-slate-900 mb-2">Câu Hỏi Thường Gặp</h3>
-            <p className="text-sm text-slate-600 mb-4">Giải đáp các thắc mắc về thanh toán, gia hạn dịch vụ, nâng cấp RAM/CPU.</p>
-            <div className="flex items-center text-emerald-400 text-sm font-semibold gap-1 group-hover:translate-x-1 transition-transform">
-              Xem FAQ <ChevronRight className="w-4 h-4" />
+            <h3 className="text-base font-black text-slate-900 mb-1.5">Câu Hỏi Thường Gặp</h3>
+            <p className="text-xs text-slate-500 mb-4 leading-relaxed">Giải đáp các thắc mắc về thanh toán, gia hạn dịch vụ, xuất hóa đơn VAT điện tử.</p>
+            <div className="flex items-center text-emerald-600 text-xs font-bold gap-1 group-hover:translate-x-1 transition-transform">
+              <span>Xem câu hỏi FAQ</span> <ChevronRight className="w-4 h-4" />
             </div>
           </Link>
         </div>
 
         {/* Ticket Submission Form */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          <div className="lg:col-span-8 p-8 rounded-lg bg-white/70 border border-slate-200 shadow-2xl">
-            <h2 className="text-2xl font-bold text-slate-900 mb-2 flex items-center gap-2">
-              <ShieldCheck className="w-6 h-6 text-[#1F1F1F]" /> Gửi Yêu Cầu Hỗ Trợ Kỹ Thuật (Ticket)
-            </h2>
-            <p className="text-slate-600 text-sm mb-6">Điền thông tin sự cố bên dưới để nhận hỗ trợ chuyên sâu từ kỹ sư hệ thống.</p>
+          <div className="lg:col-span-8 p-6 sm:p-8 rounded-3xl bg-white border border-slate-200/90 shadow-2xs space-y-6">
+            <div>
+              <h2 className="text-xl font-black text-slate-900 flex items-center gap-2">
+                <ShieldCheck className="w-5 h-5 text-blue-600" /> 
+                <span>Gửi Yêu Cầu Hỗ Trợ Kỹ Thuật (Ticket 24/7)</span>
+              </h2>
+              <p className="text-xs text-slate-500 mt-1">
+                Điền thông tin sự cố bên dưới để nhận hỗ trợ chuyên sâu từ kỹ sư hệ thống SEN CloudHost.
+              </p>
+            </div>
 
             {successMsg && (
-              <div className="mb-6 p-4 rounded bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-sm flex items-center gap-3">
-                <CheckCircle2 className="w-5 h-5 flex-shrink-0" /> {successMsg}
+              <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold flex items-center gap-3 animate-in zoom-in-95">
+                <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+                <span>{successMsg}</span>
               </div>
             )}
 
-            <form onSubmit={handleCreateTicket} className="space-y-5">
+            <form onSubmit={handleCreateTicket} className="space-y-4">
+              
+              {/* Optional Guest Contact Info */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Họ tên của bạn:</label>
+                  <input 
+                    type="text"
+                    placeholder="Nguyễn Văn A"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Email liên hệ *:</label>
+                  <input 
+                    type="email"
+                    required
+                    placeholder="email@domain.vn"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Số điện thoại:</label>
+                  <input 
+                    type="tel"
+                    placeholder="0988889999"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+              </div>
+
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">Tiêu đề yêu cầu / Sự cố *</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Tiêu đề yêu cầu / Tên dịch vụ gặp sự cố *</label>
                 <input 
                   type="text" 
                   required
-                  placeholder="Ví dụ: Cần hỗ trợ mở port 8080 trên firewall VPS Ubuntu"
+                  placeholder="Ví dụ: Cần hỗ trợ mở port 8080 trên firewall VPS Ubuntu hoặc lỗi kết nối database"
                   value={ticketSubject}
                   onChange={(e) => setTicketSubject(e.target.value)}
-                  className="w-full px-4 py-3 rounded bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition-colors"
+                  className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all shadow-2xs"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">Mức độ ưu tiên</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Mức độ ưu tiên sự cố</label>
                 <select 
                   value={priority}
                   onChange={(e) => setPriority(e.target.value)}
-                  className="w-full px-4 py-3 rounded bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:border-cyan-500 transition-colors"
+                  className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all shadow-2xs"
                 >
-                  <option value="1">Bình thường (Low - Tư vấn kỹ thuật chung)</option>
-                  <option value="2">Trung bình (Medium - Cần hỗ trợ cấu hình)</option>
-                  <option value="3">Khẩn cấp (High - Dịch vụ gián đoạn / Downtime)</option>
+                  <option value="1">🟢 Bình thường (Low - Tư vấn kỹ thuật chung)</option>
+                  <option value="2">🟡 Trung bình (Medium - Cần hỗ trợ cấu hình máy chủ)</option>
+                  <option value="3">🔴 Khẩn cấp (High - Dịch vụ gián đoạn / Downtime cần xử lý ngay)</option>
                 </select>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">Mô tả chi tiết sự cố & Log lỗi *</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Mô tả chi tiết sự cố &amp; thông tin liên quan *</label>
                 <textarea 
                   rows={5}
                   required
-                  placeholder="Vui lòng cung cấp địa chỉ IP máy chủ, thông tin hệ điều hành và chi tiết lỗi bạn đang gặp phải..."
+                  placeholder="Mô tả cụ thể thông báo lỗi, thời điểm xảy ra sự cố, IP máy chủ hoặc đường dẫn website để kỹ sư tái hiện và xử lý nhanh nhất..."
                   value={ticketMessage}
                   onChange={(e) => setTicketMessage(e.target.value)}
-                  className="w-full px-4 py-3 rounded bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition-colors"
+                  className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all shadow-2xs leading-relaxed"
                 />
               </div>
 
-              <button 
-                type="submit" 
-                disabled={submitting}
-                className="w-full sm:w-auto px-8 py-3.5 rounded bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-900 font-bold flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/20 transition-all disabled:opacity-50"
-              >
-                <Send className="w-4 h-4" /> {submitting ? 'Đang gửi...' : 'Gửi Yêu Cầu Hỗ Trợ'}
-              </button>
+              <div className="flex items-center justify-between pt-2">
+                <span className="text-[11px] text-slate-400">Cam kết phản hồi trong 15 phút</span>
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-black transition-all flex items-center gap-2 shadow-sm hover:shadow-blue-600/20 disabled:opacity-50 cursor-pointer"
+                >
+                  {submitting ? (
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  ) : (
+                    <Send className="w-4 h-4" />
+                  )}
+                  <span>Gửi Ticket Cho Kỹ Sư Trực Ban</span>
+                </button>
+              </div>
             </form>
           </div>
 
-          {/* Contact Direct Box */}
+          {/* Right Info Box */}
           <div className="lg:col-span-4 space-y-6">
-            <div className="p-6 rounded-lg bg-white/60 border border-slate-200 shadow-xl space-y-4">
-              <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-                <Clock className="w-5 h-5 text-amber-400" /> Cam Kết Chất Lượng SLA
+            <div className="p-6 rounded-3xl bg-gradient-to-br from-slate-900 to-blue-950 text-white border border-blue-900/40 shadow-xl space-y-5">
+              <h3 className="text-base font-black text-white flex items-center gap-2">
+                <Clock className="w-4.5 h-4.5 text-blue-400" />
+                <span>Cam Kết Chất Lượng Dịch Vụ (SLA)</span>
               </h3>
-              <ul className="space-y-3 text-sm text-slate-600">
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0" />
-                  <span>Thời gian uptime cam kết: <strong>99.99%</strong></span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0" />
-                  <span>Thời gian phản hồi ticket: <strong>&lt; 15 phút</strong></span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0" />
-                  <span>Hỗ trợ khôi phục dữ liệu Snapshot khẩn cấp</span>
-                </li>
-              </ul>
-            </div>
 
-            <div className="p-6 rounded-lg bg-gradient-to-br from-cyan-950/40 to-slate-900/80 border border-cyan-500/20 shadow-xl space-y-4">
-              <h3 className="text-lg font-bold text-slate-900">Đường Dây Nóng Khẩn Cấp</h3>
-              <div className="space-y-3 text-sm">
-                <div className="flex items-center gap-3 text-slate-700">
-                  <PhoneCall className="w-4 h-4 text-[#1F1F1F]" /> Hotline: <strong className="text-slate-900">1900 8888 99</strong>
+              <div className="space-y-3 text-xs">
+                <div className="flex items-center justify-between p-2.5 rounded-xl bg-white/5 border border-white/10">
+                  <span className="text-slate-300">Hotline khẩn cấp:</span>
+                  <span className="font-bold text-amber-400">Tiếp nhận tức thì</span>
                 </div>
-                <div className="flex items-center gap-3 text-slate-700">
-                  <Mail className="w-4 h-4 text-[#1F1F1F]" /> Email: <strong className="text-slate-900">support@system.local</strong>
+                <div className="flex items-center justify-between p-2.5 rounded-xl bg-white/5 border border-white/10">
+                  <span className="text-slate-300">Ticket kỹ thuật:</span>
+                  <span className="font-bold text-emerald-400">&lt; 15 phút</span>
+                </div>
+                <div className="flex items-center justify-between p-2.5 rounded-xl bg-white/5 border border-white/10">
+                  <span className="text-slate-300">Uptime hạ tầng:</span>
+                  <span className="font-bold text-cyan-400">99.99% SLA</span>
                 </div>
               </div>
+
+              <div className="pt-2 border-t border-white/10">
+                <p className="text-[11px] text-slate-400 leading-relaxed">
+                  Hotline khẩn cấp 24/7: <strong className="text-white">1900 6868</strong> hoặc Email: <strong className="text-white">support@cloudhost.vn</strong>
+                </p>
+              </div>
+            </div>
+
+            <div className="p-6 rounded-3xl bg-white border border-slate-200/90 shadow-2xs space-y-3">
+              <h4 className="text-xs font-black text-slate-900 uppercase tracking-wider">
+                Cần Tìm Tài Liệu Kỹ Thuật?
+              </h4>
+              <p className="text-xs text-slate-500 leading-relaxed font-normal">
+                Xem qua hơn 500+ bài viết hướng dẫn cấu hình chi tiết từ các chuyên gia hệ thống.
+              </p>
+              <Link
+                href="/knowledge-base"
+                className="inline-flex items-center gap-1 text-xs font-bold text-blue-600 hover:underline pt-1"
+              >
+                <span>Mở Thư Viện Knowledge Base</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
             </div>
           </div>
         </div>

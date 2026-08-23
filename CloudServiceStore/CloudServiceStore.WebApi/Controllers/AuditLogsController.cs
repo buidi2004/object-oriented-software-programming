@@ -15,7 +15,7 @@ public class AuditLogsController : ControllerBase
     public AuditLogsController(IMediator mediator) => _mediator = mediator;
 
     [HttpGet]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Accountant,Technician,Editor,Support,Staff")]
     public async Task<IActionResult> GetAll(CancellationToken ct)
     {
         var result = await _mediator.Send(new GetAuditLogsQuery(), ct);

@@ -52,7 +52,10 @@ export default function AdminTicketsPage() {
       
       if (response.ok) {
         const userData = await response.json();
-        if (userData.role !== 'Admin' && userData.role !== 'Staff') {
+        const isAllowed = ['Admin', 'Support', 'Technician', 'Staff'].some(
+          r => r.toLowerCase() === (userData.role || '').toLowerCase()
+        );
+        if (!isAllowed) {
           router.push('/dashboard');
           return;
         }

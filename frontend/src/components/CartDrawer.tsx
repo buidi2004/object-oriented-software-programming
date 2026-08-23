@@ -15,8 +15,6 @@ import {
   Loader2,
 } from 'lucide-react';
 import { CartItem } from '../types';
-import confetti from 'canvas-confetti';
-import { api } from '../lib/api';
 import {
   getApiErrorMessage,
   isInsufficientWalletBalance,
@@ -59,7 +57,8 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
   if (!isOpen) return null;
 
-  const totalAmount = cartItems.reduce((acc, item) => acc + item.price, 0);
+  // Correctly account for quantity so Drawer total matches Cart & Checkout totals
+  const totalAmount = cartItems.reduce((acc, item) => acc + (item.price || 0) * (item.quantity || 1), 0);
 
   const handleExploreServices = () => {
     onClose();
@@ -108,8 +107,10 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
     setCheckoutNotice(null);
     onClearCart();
     onClose();
-    window.location.reload();
+    // Use router.refresh() instead of window.location.reload() to avoid jarring full-page reload
+    router.refresh();
   };
+
 
   const insufficientNotice =
     checkoutNotice?.kind === 'insufficient_balance' ? checkoutNotice : null;
@@ -120,7 +121,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
   return (
     <div className="fixed inset-0 z-50 overflow-hidden">
       <div 
-        className="absolute inset-0 bg-slate-50/60 backdrop-blur-xs transition-opacity" 
+        className="absolute inset-0 bg-black/60 backdrop-blur-xs transition-opacity" 
         onClick={onClose} 
       />
 
@@ -128,18 +129,18 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
         <div className="w-screen max-w-md h-full bg-white shadow-2xl flex flex-col">
           
           {/* Header */}
-          <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50 shrink-0">
+          <div className="p-6 border-b border-zinc-200 flex items-center justify-between bg-zinc-50 shrink-0">
             <div className="flex items-center gap-2 min-w-0">
-              <ShoppingBag className="w-5 h-5 text-[#1F1F1F] shrink-0" />
-              <h3 className="text-lg font-black text-slate-900 whitespace-nowrap">Giỏ Hàng Của Bạn</h3>
-              <span className="ml-3 shrink-0 text-xs font-bold px-2.5 py-0.5 bg-blue-100 text-[#1F1F1F] rounded-full">
+              <ShoppingBag className="w-5 h-5 text-black shrink-0" />
+              <h3 className="text-lg font-black text-black whitespace-nowrap">Giỏ Hàng Của Bạn</h3>
+              <span className="ml-3 shrink-0 text-xs font-bold px-2.5 py-0.5 bg-zinc-200 text-black rounded-full border border-zinc-300">
                 {cartItems.length} dịch vụ
               </span>
             </div>
 
             <button
               onClick={onClose}
-              className="p-2 rounded-full text-slate-600 hover:text-slate-800 hover:bg-slate-200 transition-colors cursor-pointer"
+              className="p-2 rounded-full text-zinc-500 hover:text-black hover:bg-zinc-200 transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
@@ -149,33 +150,33 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
           <div className="flex-1 flex flex-col min-h-0 overflow-y-auto">
             {isCheckedOut ? (
               <div className="flex-1 flex flex-col items-center justify-center p-6 text-center space-y-4">
-                <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center animate-bounce">
+                <div className="w-16 h-16 rounded-full bg-zinc-100 text-black border border-zinc-300 flex items-center justify-center animate-bounce">
                   <CheckCircle2 className="w-10 h-10" />
                 </div>
-                <h4 className="text-2xl font-black text-slate-900">Thanh Toán Thành Công!</h4>
-                <p className="text-sm text-slate-600 max-w-xs mx-auto leading-relaxed">
+                <h4 className="text-2xl font-black text-black">Thanh Toán Thành Công!</h4>
+                <p className="text-sm text-zinc-600 max-w-xs mx-auto leading-relaxed">
                   Đơn hàng Cloud VPS / Domain của bạn đã được ghi nhận. Hệ thống đang tiến hành kích hoạt tự động trong 30 giây.
                 </p>
                 <button
                   onClick={handleFinish}
-                  className="px-6 py-3 rounded bg-blue-600 text-white font-bold text-sm shadow-md hover:bg-blue-700 cursor-pointer"
+                  className="px-6 py-3 rounded-full bg-black text-white font-bold text-sm shadow-md hover:bg-zinc-800 cursor-pointer"
                 >
-                  Hoàn Tất & Về Trang Chủ
+                  Hoàn Tất &amp; Về Trang Chủ
                 </button>
               </div>
             ) : cartItems.length === 0 ? (
               <div className="flex-1 flex flex-col items-center justify-center p-6 text-center">
-                <div className="w-16 h-16 rounded-md bg-slate-100 text-slate-600 flex items-center justify-center mb-4">
+                <div className="w-16 h-16 rounded-2xl bg-zinc-100 text-black flex items-center justify-center mb-4 border border-zinc-200">
                   <ShoppingBag className="w-8 h-8 stroke-[1.5]" />
                 </div>
-                <p className="text-base font-bold text-slate-800">Giỏ hàng của bạn đang trống</p>
-                <p className="text-sm text-slate-600 max-w-[260px] mt-2 leading-relaxed">
+                <p className="text-base font-black text-black">Giỏ hàng của bạn đang trống</p>
+                <p className="text-sm text-zinc-500 max-w-[260px] mt-2 leading-relaxed font-medium">
                   Hãy chọn một gói Cloud VPS, Hosting hoặc Tên miền để bắt đầu.
                 </p>
                 <button
                   type="button"
                   onClick={handleExploreServices}
-                  className="mt-6 inline-flex items-center justify-center gap-2 px-6 py-3 rounded bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-slate-900 font-bold text-sm shadow-lg shadow-blue-500/20 transition-all cursor-pointer"
+                  className="mt-6 inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-black hover:bg-zinc-800 text-white font-bold text-sm shadow-md transition-all cursor-pointer"
                 >
                   Khám phá dịch vụ
                   <ArrowRight className="w-4 h-4" />
@@ -186,28 +187,28 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                 {cartItems.map((item) => (
                   <div
                     key={item.id}
-                    className="p-4 rounded-md border border-slate-200 bg-slate-50/50 flex items-start justify-between gap-3"
+                    className="p-4 rounded-2xl border border-zinc-200 bg-zinc-50/50 flex items-start justify-between gap-3 shadow-xs"
                   >
                     <div>
-                      <div className="text-xs font-bold text-[#1F1F1F] uppercase tracking-wider">
+                      <div className="text-[11px] font-black text-black uppercase tracking-wider">
                         {item.type === 'vps' ? 'Cloud VPS' : item.type === 'hosting' ? 'Web Hosting' : 'Tên miền'}
                       </div>
-                      <div className="text-sm font-extrabold text-slate-900 mt-0.5">{item.title}</div>
-                      <div className="text-xs text-slate-600 mt-1">{item.details}</div>
-                      <div className="text-xs font-semibold text-slate-700 mt-2">
-                        Chu kỳ: <span className="font-bold text-[#1F1F1F]">{item.billingCycle}</span>
+                      <div className="text-sm font-extrabold text-black mt-0.5">{item.title}</div>
+                      <div className="text-xs text-zinc-500 mt-1">{item.details}</div>
+                      <div className="text-xs font-semibold text-zinc-700 mt-2">
+                        Chu kỳ: <span className="font-black text-black">{item.billingCycle}</span>
                       </div>
                     </div>
 
                     <div className="text-right flex flex-col justify-between items-end h-full">
                       <button
                         onClick={() => onRemoveItem(item.id)}
-                        className="p-1 text-slate-600 hover:text-rose-600 transition-colors cursor-pointer"
+                        className="p-1 text-zinc-400 hover:text-red-600 transition-colors cursor-pointer"
                         title="Xóa khỏi giỏ"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
-                      <div className="text-sm font-black text-slate-900 mt-3">
+                      <div className="text-sm font-black text-black mt-3">
                         {item.price.toLocaleString('vi-VN')} đ
                       </div>
                     </div>
@@ -219,37 +220,37 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
           {/* Footer Checkout */}
           {!isCheckedOut && cartItems.length > 0 && (
-            <div className="p-6 border-t border-slate-100 bg-white space-y-4 shrink-0">
+            <div className="p-6 border-t border-zinc-200 bg-white space-y-4 shrink-0">
               {insufficientNotice && (
-                <div className="rounded-md border border-amber-200 bg-amber-50 p-4 space-y-3">
+                <div className="rounded-2xl border border-zinc-300 bg-zinc-100 p-4 space-y-3">
                   <div className="flex items-start gap-3">
-                    <div className="w-10 h-10 rounded bg-amber-100 text-amber-700 flex items-center justify-center shrink-0">
+                    <div className="w-10 h-10 rounded-xl bg-black text-white flex items-center justify-center shrink-0">
                       <Wallet className="w-5 h-5" />
                     </div>
                     <div className="min-w-0">
-                      <p className="text-sm font-bold text-amber-950">Số dư ví không đủ để thanh toán</p>
-                      <p className="text-xs text-amber-900/80 mt-1 leading-relaxed">
+                      <p className="text-sm font-bold text-black">Số dư ví không đủ để thanh toán</p>
+                      <p className="text-xs text-zinc-600 mt-1 leading-relaxed">
                         Nạp thêm credit vào ví để hoàn tất đơn hàng. Đơn hàng đã được tạo và đang chờ thanh toán.
                       </p>
                     </div>
                   </div>
 
                   <div className="grid grid-cols-2 gap-2 text-xs">
-                    <div className="rounded bg-white/70 px-3 py-2">
-                      <p className="text-amber-800/70">Số dư hiện tại</p>
-                      <p className="font-bold text-amber-950 mt-0.5">
+                    <div className="rounded-xl bg-white px-3 py-2 border border-zinc-200">
+                      <p className="text-zinc-500">Số dư hiện tại</p>
+                      <p className="font-bold text-black mt-0.5">
                         {insufficientNotice.balance.toLocaleString('vi-VN')} đ
                       </p>
                     </div>
-                    <div className="rounded bg-white/70 px-3 py-2">
-                      <p className="text-amber-800/70">Cần thanh toán</p>
-                      <p className="font-bold text-amber-950 mt-0.5">
+                    <div className="rounded-xl bg-white px-3 py-2 border border-zinc-200">
+                      <p className="text-zinc-500">Cần thanh toán</p>
+                      <p className="font-bold text-black mt-0.5">
                         {insufficientNotice.required.toLocaleString('vi-VN')} đ
                       </p>
                     </div>
-                    <div className="col-span-2 rounded bg-amber-100/80 px-3 py-2">
-                      <p className="text-amber-900/80">Còn thiếu</p>
-                      <p className="font-black text-amber-950 mt-0.5">
+                    <div className="col-span-2 rounded-xl bg-zinc-200 px-3 py-2">
+                      <p className="text-zinc-700">Còn thiếu</p>
+                      <p className="font-black text-black mt-0.5">
                         {shortfall.toLocaleString('vi-VN')} đ
                       </p>
                     </div>
@@ -258,7 +259,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                   <button
                     type="button"
                     onClick={() => handleGoToTopUp(insufficientNotice)}
-                    className="w-full py-3 rounded bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-900 font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2"
+                    className="w-full py-3 rounded-full bg-black hover:bg-zinc-800 text-white font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
                   >
                     <Wallet className="w-4 h-4" />
                     Nạp tiền vào ví ngay
@@ -267,18 +268,18 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               )}
 
               {checkoutNotice?.kind === 'error' && (
-                <div className="rounded-md border border-rose-200 bg-rose-50 p-4 flex items-start gap-3">
-                  <AlertCircle className="w-5 h-5 text-rose-600 shrink-0 mt-0.5" />
+                <div className="rounded-2xl border border-red-200 bg-red-50 p-4 flex items-start gap-3">
+                  <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
                   <div className="min-w-0">
-                    <p className="text-sm font-bold text-rose-900">Không thể thanh toán</p>
-                    <p className="text-xs text-rose-800 mt-1 leading-relaxed">{checkoutNotice.message}</p>
+                    <p className="text-sm font-bold text-red-900">Không thể thanh toán</p>
+                    <p className="text-xs text-red-800 mt-1 leading-relaxed">{checkoutNotice.message}</p>
                   </div>
                 </div>
               )}
 
-              <div className="flex justify-between items-center text-slate-900">
+              <div className="flex justify-between items-center text-black">
                 <span className="text-sm font-bold">Tổng Thanh Toán:</span>
-                <span className="text-2xl font-black text-[#1F1F1F]">
+                <span className="text-2xl font-black text-black">
                   {totalAmount.toLocaleString('vi-VN')} đ
                 </span>
               </div>
@@ -286,7 +287,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               <button
                 onClick={handleCheckout}
                 disabled={isCheckingOut}
-                className="w-full py-3.5 rounded-md bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-slate-900 font-extrabold text-sm shadow-xl shadow-blue-500/25 flex items-center justify-center gap-2 cursor-pointer transition-all disabled:opacity-70 disabled:cursor-not-allowed"
+                className="w-full py-3.5 rounded-full bg-black hover:bg-zinc-800 text-white font-black text-sm shadow-lg flex items-center justify-center gap-2 cursor-pointer transition-all disabled:opacity-50"
               >
                 {isCheckingOut ? (
                   <>
@@ -306,14 +307,14 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                   onClose();
                   router.push('/cart');
                 }}
-                className="w-full py-2.5 rounded border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-xs transition-colors flex items-center justify-center gap-1.5"
+                className="w-full py-2.5 rounded-full border border-zinc-300 hover:bg-zinc-100 text-black font-bold text-xs transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
               >
                 <ShoppingBag className="w-3.5 h-3.5" />
                 <span>Xem Giỏ Hàng Chi Tiết</span>
               </button>
 
-              <div className="flex items-center justify-center gap-1.5 text-[11px] text-slate-600 pt-1">
-                <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
+              <div className="flex items-center justify-center gap-1.5 text-[11px] text-zinc-500 pt-1 font-medium">
+                <ShieldCheck className="w-3.5 h-3.5 text-black" />
                 Hỗ trợ thanh toán VietQR, MoMo, VNPAY &amp; Số Dư Ví
               </div>
             </div>
@@ -324,12 +325,3 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
     </div>
   );
 };
-
-function isAxiosUnauthorized(error: unknown): boolean {
-  return (
-    typeof error === 'object' &&
-    error !== null &&
-    'response' in error &&
-    (error as { response?: { status?: number } }).response?.status === 401
-  );
-}

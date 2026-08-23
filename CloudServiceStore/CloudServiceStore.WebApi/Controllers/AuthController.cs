@@ -75,7 +75,21 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest body, CancellationToken ct)
     {
         var result = await _mediator.Send(new ForgotPasswordCommand(body.Email), ct);
-        return Ok(new { success = result.Success });
+        if (!result.Success)
+        {
+            return BadRequest(new
+            {
+                success = false,
+                userFound = result.UserFound,
+                message = result.Message ?? "Địa chỉ email này chưa được đăng ký trong hệ thống SEN CloudHost."
+            });
+        }
+        return Ok(new
+        {
+            success = true,
+            userFound = true,
+            message = result.Message ?? "Đã tìm thấy tài khoản! Hệ thống đã gửi mật khẩu mới về email của bạn."
+        });
     }
 
     [HttpPost("reset-password")]

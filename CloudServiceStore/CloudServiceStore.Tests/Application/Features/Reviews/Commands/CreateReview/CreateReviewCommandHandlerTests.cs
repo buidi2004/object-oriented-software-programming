@@ -18,6 +18,7 @@ public class CreateReviewCommandHandlerTests
 {
     private readonly Mock<IRepository<Review>> _mockRepositoryReview;
     private readonly Mock<IRepository<ServicePlan>> _mockRepositoryServicePlan;
+    private readonly Mock<IRepository<AppUser>> _mockRepositoryUser;
     private readonly Mock<ICurrentUserService> _mockCurrentUserService;
     private readonly Mock<IUnitOfWork> _mockUnitOfWork;
     private readonly CreateReviewCommandHandler _handler;
@@ -26,9 +27,15 @@ public class CreateReviewCommandHandlerTests
     {
         _mockRepositoryReview = new Mock<IRepository<Review>>();
         _mockRepositoryServicePlan = new Mock<IRepository<ServicePlan>>();
+        _mockRepositoryUser = new Mock<IRepository<AppUser>>();
         _mockCurrentUserService = new Mock<ICurrentUserService>();
         _mockUnitOfWork = new Mock<IUnitOfWork>();
-        _handler = new CreateReviewCommandHandler(_mockRepositoryReview.Object, _mockRepositoryServicePlan.Object, _mockCurrentUserService.Object, _mockUnitOfWork.Object);
+        _handler = new CreateReviewCommandHandler(
+            _mockRepositoryReview.Object,
+            _mockRepositoryServicePlan.Object,
+            _mockRepositoryUser.Object,
+            _mockCurrentUserService.Object,
+            _mockUnitOfWork.Object);
     }
 
     [Fact]

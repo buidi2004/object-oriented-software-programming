@@ -196,18 +196,27 @@ public class UsersController : ControllerBase
     public async Task<IActionResult> Delete(
         Guid id,
         [FromServices] CloudServiceStore.Domain.Interfaces.IRepository<CloudServiceStore.Domain.Entities.AppUser> userRepo,
+        [FromServices] CloudServiceStore.Domain.Interfaces.IRepository<CloudServiceStore.Domain.Entities.OrderRequest> orderRepo,
         [FromServices] CloudServiceStore.Domain.Interfaces.IUnitOfWork uow,
         CancellationToken ct)
     {
         var user = await userRepo.GetByIdAsync(id, ct);
         if (user == null) return NotFound(new { message = "Không tìm thấy người dùng." });
 
-        // Soft delete / deactivate to avoid breaking foreign key constraints on past orders
-        user.Deactivate();
-        userRepo.Update(user);
-        await uow.SaveChangesAsync(ct);
-
-        return Ok(new { message = "Đã vô hiệu hóa tài khoản thành công!" });
+        var hasOrders = await orderRepo.AnyAsync(o => o.UserId == id, ct);
+        if (hasOrders)
+        {
+            user.Deactivate();
+            userRepo.Update(user);
+            await uow.SaveChangesAsync(ct);
+            return Ok(new { message = "Tài khoản có lịch sử đơn hàng nên đã được chuyển sang trạng thái Vô hiệu hóa (Khóa) để bảo toàn dữ liệu tài chính." });
+        }
+        else
+        {
+            userRepo.Delete(user);
+            await uow.SaveChangesAsync(ct);
+            return Ok(new { message = "Đã xóa tài khoản khỏi hệ thống thành công!" });
+        }
     }
 }
 

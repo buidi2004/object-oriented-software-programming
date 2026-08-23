@@ -3,9 +3,9 @@ import { create } from 'zustand';
 interface UIState {
   isCartOpen: boolean;
   setIsCartOpen: (open: boolean) => void;
-  authModal: { isOpen: boolean; mode: 'login' | 'register' };
+  authModal: { isOpen: boolean; mode: 'login' | 'register' | 'forgot_password' };
   authRedirect: string | null;
-  setAuthModal: (open: boolean, mode?: 'login' | 'register') => void;
+  setAuthModal: (open: boolean, mode?: 'login' | 'register' | 'forgot_password') => void;
   setAuthRedirect: (url: string | null) => void;
   isDashboardOpen: boolean;
   setIsDashboardOpen: (open: boolean) => void;

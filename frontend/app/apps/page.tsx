@@ -141,7 +141,7 @@ export default function AppMarketplacePage() {
       setAuthModal(true, 'login');
       return;
     }
-    router.push(`/dashboard/vps-instances?install=${appId}`);
+    router.push(`/dashboard/apps?install=${appId}`);
   };
 
   const faqs = [

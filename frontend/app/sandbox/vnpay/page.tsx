@@ -24,8 +24,8 @@ function VNPaySandboxContent() {
       if (res.ok) {
         setStatus('success');
         setTimeout(() => {
-          router.push('/orders');
-        }, 3000);
+          router.push('/dashboard/orders');
+        }, 2000);
       } else {
         setStatus('error');
       }
@@ -43,27 +43,27 @@ function VNPaySandboxContent() {
   if (!key || !amount) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50">
-        <p className="text-slate-500">Thiếu thông tin thanh toán.</p>
+        <p className="text-slate-600">Thiếu thông tin thanh toán.</p>
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-slate-50 flex items-center justify-center py-12 px-4">
-      <div className="max-w-md w-full bg-white rounded-2xl p-8 shadow-xl border border-slate-100">
+      <div className="max-w-md w-full bg-white rounded-md p-8 shadow-xl border border-slate-100">
         <div className="flex flex-col items-center mb-8">
-          <div className="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center text-white mb-4 shadow-lg">
+          <div className="w-16 h-16 bg-blue-600 rounded-md flex items-center justify-center text-white mb-4 shadow-lg">
             <CreditCard className="w-8 h-8" />
           </div>
           <h1 className="text-2xl font-black text-slate-900">VNPAY Sandbox</h1>
-          <p className="text-slate-500 text-sm flex items-center gap-1 mt-1">
+          <p className="text-slate-600 text-sm flex items-center gap-1 mt-1">
             <Shield className="w-4 h-4" /> Môi trường thử nghiệm
           </p>
         </div>
 
         {status === 'idle' && (
           <>
-            <div className="bg-slate-50 rounded-xl p-4 mb-6 border border-slate-100">
+            <div className="bg-slate-50 rounded p-4 mb-6 border border-slate-100">
               <div className="flex justify-between items-center mb-2">
                 <span className="text-slate-600 text-sm">Mã giao dịch</span>
                 <span className="font-mono text-sm font-semibold text-slate-900 truncate max-w-[150px]">{key}</span>
@@ -80,7 +80,7 @@ function VNPaySandboxContent() {
               <button
                 onClick={handlePay}
                 disabled={isLoading}
-                className="w-full py-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-base shadow-md transition-all flex items-center justify-center gap-2 disabled:opacity-70"
+                className="w-full py-4 rounded bg-blue-600 hover:bg-blue-700 text-white font-bold text-base shadow-md transition-all flex items-center justify-center gap-2 disabled:opacity-70"
               >
                 {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Thanh Toán Thành Công'}
               </button>
@@ -88,7 +88,7 @@ function VNPaySandboxContent() {
               <button
                 onClick={handleCancel}
                 disabled={isLoading}
-                className="w-full py-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-base transition-all flex items-center justify-center gap-2 disabled:opacity-70"
+                className="w-full py-4 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-base transition-all flex items-center justify-center gap-2 disabled:opacity-70"
               >
                 Hủy Giao Dịch
               </button>
@@ -102,7 +102,7 @@ function VNPaySandboxContent() {
               <CheckCircle className="w-8 h-8 text-emerald-600" />
             </div>
             <h2 className="text-xl font-bold text-slate-900 mb-2">Thanh Toán Thành Công</h2>
-            <p className="text-slate-500 text-sm">Đang chuyển hướng về trang đơn hàng...</p>
+            <p className="text-slate-600 text-sm">Đang chuyển hướng về trang đơn hàng...</p>
           </div>
         )}
 
@@ -112,10 +112,10 @@ function VNPaySandboxContent() {
               <XCircle className="w-8 h-8 text-red-600" />
             </div>
             <h2 className="text-xl font-bold text-slate-900 mb-2">Giao Dịch Thất Bại</h2>
-            <p className="text-slate-500 text-sm mb-6">Đã xảy ra lỗi khi giả lập webhook.</p>
+            <p className="text-slate-600 text-sm mb-6">Đã xảy ra lỗi khi giả lập webhook.</p>
             <button
               onClick={() => setStatus('idle')}
-              className="w-full py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold"
+              className="w-full py-3 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold"
             >
               Thử Lại
             </button>

@@ -15,6 +15,8 @@ public class OrderItemDto
 {
     public Guid ServicePlanId { get; set; }
     public string ServicePlanName { get; set; } = string.Empty;
+    /// <summary>Slug của ServiceCategory — dùng để redirect đúng dashboard sau thanh toán (vps, hosting, domain, game-server, v.v.)</summary>
+    public string CategorySlug { get; set; } = string.Empty;
     public BillingCycle BillingCycle { get; set; }
     public int Quantity { get; set; }
     public decimal Price { get; set; }
@@ -37,11 +39,16 @@ public record GetMyOrdersQuery(string? Status = null) : IRequest<List<OrderDto>>
 public class GetMyOrdersQueryHandler : IRequestHandler<GetMyOrdersQuery, List<OrderDto>>
 {
     private readonly IRepository<OrderRequest> _orderRepository;
+    private readonly IRepository<ServicePlan> _planRepository;
     private readonly ICurrentUserService _currentUserService;
 
-    public GetMyOrdersQueryHandler(IRepository<OrderRequest> orderRepository, ICurrentUserService currentUserService)
+    public GetMyOrdersQueryHandler(
+        IRepository<OrderRequest> orderRepository,
+        IRepository<ServicePlan> planRepository,
+        ICurrentUserService currentUserService)
     {
         _orderRepository = orderRepository;
+        _planRepository = planRepository;
         _currentUserService = currentUserService;
     }
 
@@ -49,21 +56,23 @@ public class GetMyOrdersQueryHandler : IRequestHandler<GetMyOrdersQuery, List<Or
     {
         var userId = _currentUserService.UserId;
         
-        // This is a simple query. The UI may filter by status (like ?status=Active).
-        // Since we want to load the ServicePlan name, we include it.
-        // IRepository may not support Includes easily in this mock if not configured, but we can try WhereAsync and manual map.
-        var orders = await _orderRepository.WhereAsync(o => o.UserId == userId);
+        var orders = await _orderRepository.WhereAsync(o => o.UserId == userId, cancellationToken, o => o.Items);
         
         if (!string.IsNullOrEmpty(request.Status) && Enum.TryParse<OrderStatus>(request.Status, true, out var statusEnum))
         {
             orders = orders.Where(o => o.Status == statusEnum).ToList();
         }
 
-        // We assume we have IRepository<ServicePlan> if we can't do .Include() on IRepository directly.
-        // Actually since we don't have EF tracking in this naive repo sometimes, we can just return ServicePlanName as empty if not included.
-        // Let's assume EntityFramework eager loading is not guaranteed here unless we use a custom method, so we will just return basic properties.
-        // Wait, the UI only needs basic properties, but "ServicePlanName" is helpful. We will leave it empty if o.ServicePlan is null.
-        
+        var allPlanIds = orders.SelectMany(o => o.Items ?? Enumerable.Empty<OrderItem>())
+            .Select(i => i.ServicePlanId)
+            .Distinct()
+            .ToList();
+
+        var plans = allPlanIds.Any()
+            ? await _planRepository.WhereAsync(p => allPlanIds.Contains(p.Id), cancellationToken, p => p.Category)
+            : new List<ServicePlan>();
+        var planDict = plans.ToDictionary(p => p.Id);
+
         return orders.Select(o => new OrderDto
         {
             Id = o.Id,
@@ -73,13 +82,18 @@ public class GetMyOrdersQueryHandler : IRequestHandler<GetMyOrdersQuery, List<Or
             TotalAmount = o.TotalAmount,
             AutoRenew = o.AutoRenew,
             CreatedAt = o.CreatedAt,
-            Items = o.Items?.Select(i => new OrderItemDto
+            Items = o.Items?.Select(i =>
             {
-                ServicePlanId = i.ServicePlanId,
-                ServicePlanName = i.ServicePlan?.Name ?? "Dịch vụ " + i.ServicePlanId.ToString()[..8],
-                BillingCycle = i.BillingCycle,
-                Quantity = i.Quantity,
-                Price = i.Price
+                planDict.TryGetValue(i.ServicePlanId, out var plan);
+                return new OrderItemDto
+                {
+                    ServicePlanId = i.ServicePlanId,
+                    ServicePlanName = plan?.Name ?? i.ServicePlan?.Name ?? ("Dịch vụ " + i.ServicePlanId.ToString()[..8]),
+                    CategorySlug = plan?.Category?.Slug ?? i.ServicePlan?.Category?.Slug ?? string.Empty,
+                    BillingCycle = i.BillingCycle,
+                    Quantity = i.Quantity,
+                    Price = i.Price
+                };
             }).ToList() ?? new List<OrderItemDto>()
         }).OrderByDescending(x => x.CreatedAt).ToList();
     }

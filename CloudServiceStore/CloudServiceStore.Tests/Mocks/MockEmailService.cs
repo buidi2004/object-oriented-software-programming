@@ -21,7 +21,7 @@ public class MockEmailService : IEmailService
         return Task.CompletedTask;
     }
 
-    public Task SendPasswordResetEmailAsync(string toEmail, string resetLink, CancellationToken cancellationToken = default)
+    public Task SendPasswordResetEmailAsync(string toEmail, string resetLink, string? temporaryPassword = null, CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("MOCK EMAIL SENT: Password Reset to {ToEmail}", toEmail);
         return Task.CompletedTask;

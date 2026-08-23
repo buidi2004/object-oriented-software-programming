@@ -18,4 +18,6 @@ public class InvoiceDto
     public string? PaymentMethod { get; set; }
     public string? TransactionCode { get; set; }
     public string? Status { get; set; }
+    public string? CustomerEmail { get; set; }
+    public string? Type { get; set; }
 }

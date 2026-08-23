@@ -116,7 +116,10 @@ function AdminServicePlansContent() {
   const checkAdminAccess = async () => {
     try {
       const res = await api.get('/users/me');
-      if (res.data.role !== 'Admin' && res.data.role !== 'Editor') {
+      const isAllowed = ['Admin', 'Technician', 'Editor', 'Staff'].some(
+        r => r.toLowerCase() === (res.data?.role || '').toLowerCase()
+      );
+      if (!isAllowed) {
         router.push('/dashboard');
         return;
       }

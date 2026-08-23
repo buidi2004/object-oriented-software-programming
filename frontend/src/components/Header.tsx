@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import {
   Cloud, Server, Globe, Shield, ShoppingCart, Menu, X, Cpu, ChevronDown, LogOut, Wallet,
   Gamepad2, Mail, Database, HardDrive, ShieldCheck, Zap, Layers, Palette, ShoppingBag, Activity, ArrowRight, Compass,
-  LifeBuoy, Megaphone, BookOpen, DownloadCloud, ActivitySquare, Search, LayoutTemplate, Boxes, ArrowLeftRight, User
+  LifeBuoy, Megaphone, BookOpen, DownloadCloud, ActivitySquare, Search, LayoutTemplate, Boxes, ArrowLeftRight, User, HelpCircle
 } from 'lucide-react';
 import { useAuthStore } from '../store/useAuthStore';
 import { useUIStore } from '../store/useUIStore';
@@ -13,6 +13,7 @@ import { api } from '../lib/api';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import GlobalSearch from './GlobalSearch';
+import { TopUpModal } from './TopUpModal';
 
 const serviceCategories = [
   {
@@ -46,6 +47,52 @@ const serviceCategories = [
     ]
   }
 ];
+export const getStaffPanelInfo = (role?: string) => {
+  const r = (role || '').toLowerCase();
+  if (r === 'admin') {
+    return {
+      title: 'Admin Panel',
+      className: 'bg-gradient-to-r from-red-600 to-rose-600 text-white shadow-xs hover:shadow-red-500/20 hover:from-red-500 hover:to-rose-500',
+      mobileClass: 'bg-red-50 text-red-700 border border-red-200'
+    };
+  }
+  if (r === 'accountant' || r.includes('kế toán') || r.includes('ketoan')) {
+    return {
+      title: 'Kế Toán Panel',
+      className: 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-xs hover:shadow-emerald-500/20 hover:from-emerald-500 hover:to-teal-500',
+      mobileClass: 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+    };
+  }
+  if (r === 'technician' || r.includes('kỹ thuật') || r.includes('kythuat')) {
+    return {
+      title: 'Kỹ Thuật Panel',
+      className: 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-xs hover:shadow-blue-500/20 hover:from-blue-500 hover:to-indigo-500',
+      mobileClass: 'bg-blue-50 text-blue-700 border border-blue-200'
+    };
+  }
+  if (r === 'support' || r.includes('chăm sóc') || r.includes('cskh')) {
+    return {
+      title: 'CSKH Panel',
+      className: 'bg-gradient-to-r from-amber-600 to-orange-600 text-white shadow-xs hover:shadow-amber-500/20 hover:from-amber-500 hover:to-orange-500',
+      mobileClass: 'bg-amber-50 text-amber-700 border border-amber-200'
+    };
+  }
+  if (r === 'editor' || r.includes('biên tập') || r.includes('bientap')) {
+    return {
+      title: 'Biên Tập Panel',
+      className: 'bg-gradient-to-r from-purple-600 to-violet-600 text-white shadow-xs hover:shadow-purple-500/20 hover:from-purple-500 hover:to-violet-500',
+      mobileClass: 'bg-purple-50 text-purple-700 border border-purple-200'
+    };
+  }
+  if (r === 'staff') {
+    return {
+      title: 'Bảng Quản Trị',
+      className: 'bg-gradient-to-r from-slate-800 to-slate-900 text-white shadow-xs hover:bg-black',
+      mobileClass: 'bg-slate-100 text-slate-800 border border-slate-200'
+    };
+  }
+  return null;
+};
 
 export interface HeaderProps {
   onOpenAuth?: (mode: 'login' | 'register') => void;
@@ -85,32 +132,44 @@ export const Header: React.FC<HeaderProps> = ({
   const [activeServiceCategory, setActiveServiceCategory] = useState(0);
   const [supportDropdownOpen, setSupportDropdownOpen] = useState(false);
   const [newsDropdownOpen, setNewsDropdownOpen] = useState(false);
+  const [isTopUpOpen, setIsTopUpOpen] = useState(false);
   const { user, setUser, logout, token } = useAuthStore();
   const walletBalance = user?.walletBalance ?? 0;
 
   useEffect(() => {
     const savedToken = token || (typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null);
-    if (savedToken && !user) {
-      api.get('/users/me')
-        .then(res => {
-          if (res.data) {
-            setUser({
-              id: res.data.id,
-              email: res.data.email,
-              fullName: res.data.fullName || res.data.email,
-              role: res.data.role || res.data.roleName || (res.data.roles && res.data.roles[0]),
-              walletBalance: res.data.walletBalance ?? 0
-            });
-          }
-        })
-        .catch(() => { });
+    if (savedToken) {
+      Promise.all([
+        api.get('/users/me').catch(() => null),
+        api.get('/wallet/me').catch(() => null),
+      ]).then(([userRes, walletRes]) => {
+        if (userRes?.data) {
+          const u = userRes.data;
+          const balance = (walletRes?.data && typeof walletRes.data.balance === 'number') 
+            ? walletRes.data.balance 
+            : (u.walletBalance ?? 0);
+          setUser({
+            id: u.id,
+            email: u.email,
+            fullName: u.fullName || u.email || 'User',
+            role: u.role || u.roleName || (u.roles && u.roles[0]) || 'Customer',
+            walletBalance: balance,
+          });
+        } else if (walletRes?.data && typeof walletRes.data.balance === 'number') {
+          setUser((prev: any) => (prev ? { ...prev, walletBalance: walletRes.data.balance } : prev));
+        }
+      });
     }
-  }, [token, user, setUser]);
+  }, [token, setUser]);
 
   const navLinkBase =
-    'px-3.5 py-2 rounded text-xs font-bold transition-all flex items-center shrink-0';
-  const isServicesActive = pathname.startsWith('/services') || servicesDropdownOpen;
-  const isHomeActive = pathname === '/' && !servicesDropdownOpen;
+    'relative px-3.5 py-2 text-xs transition-colors flex items-center shrink-0 bg-transparent';
+  const isServicesActive = pathname.startsWith('/services') || pathname.startsWith('/apps') || pathname.startsWith('/domains') || servicesDropdownOpen;
+  const isNewsActive = pathname.startsWith('/news') || pathname.startsWith('/promotions') || newsDropdownOpen;
+  const isSupportActive = pathname.startsWith('/support') || pathname.startsWith('/faqs') || pathname.startsWith('/resources') || pathname.startsWith('/status') || supportDropdownOpen;
+  const isKnowledgeActive = pathname.startsWith('/knowledge-base');
+  const isContactActive = pathname === '/contact';
+  const isHomeActive = pathname === '/' && !isServicesActive && !isNewsActive && !isSupportActive && !isKnowledgeActive && !isContactActive;
 
   const navItems = [
     { id: 'home', label: 'Trang chủ', href: '/' },
@@ -146,17 +205,14 @@ export const Header: React.FC<HeaderProps> = ({
           </Link>
 
           {/* Desktop nav */}
-          <nav className="hidden lg:flex flex-1 items-center justify-center gap-1.5 min-w-0">
+          <nav className="hidden lg:flex flex-1 items-center justify-center gap-2 min-w-0">
             <Link
               href="/"
-              className={`${navLinkBase} relative ${isHomeActive
-                  ? 'text-[#1F1F1F] bg-blue-50/80 font-black'
-                  : 'text-slate-700 hover:text-[#1F1F1F] hover:bg-slate-50'
-                }`}
+              className={`${navLinkBase} ${isHomeActive ? 'text-slate-900 font-black' : 'text-slate-600 hover:text-slate-900 font-bold'}`}
             >
-              Trang chủ
+              <span>Trang chủ</span>
               {isHomeActive && (
-                <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-4 h-0.5 bg-blue-600 rounded-full" />
+                <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-8 h-[2.5px] bg-[#1F1F1F] rounded-full transition-all duration-300" />
               )}
             </Link>
 
@@ -170,13 +226,12 @@ export const Header: React.FC<HeaderProps> = ({
                 onClick={() => setServicesDropdownOpen(open => !open)}
                 aria-expanded={servicesDropdownOpen}
                 aria-haspopup="true"
-                className={`${navLinkBase} gap-1 ${servicesDropdownOpen || pathname.startsWith('/services')
-                    ? 'text-[#1F1F1F] bg-blue-50/80 font-black'
-                    : 'text-slate-700 hover:text-[#1F1F1F] hover:bg-slate-50'
-                  }`}
+                className={`${navLinkBase} ${isServicesActive ? 'text-slate-900 font-black' : 'text-slate-600 hover:text-slate-900 font-bold'}`}
               >
-                Dịch vụ
-                <ChevronDown className={`w-4 h-4 shrink-0 transition-transform ${servicesDropdownOpen ? 'rotate-180 text-[#1F1F1F]' : ''}`} />
+                <span>Dịch vụ</span>
+                {isServicesActive && (
+                  <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-8 h-[2.5px] bg-[#1F1F1F] rounded-full transition-all duration-300" />
+                )}
               </button>
 
               {servicesDropdownOpen && (
@@ -203,7 +258,7 @@ export const Header: React.FC<HeaderProps> = ({
                             >
                               <span>{cat.name}</span>
                               <span className={`text-xs px-2 py-0.5 rounded-full font-bold ${
-                                activeServiceCategory === idx ? 'bg-blue-100 text-[#1F1F1F]' : 'bg-slate-200 text-slate-600'
+                                activeServiceCategory === idx ? 'bg-black text-white' : 'bg-zinc-100 text-zinc-600'
                               }`}>
                                 {cat.services.length}
                               </span>
@@ -216,13 +271,13 @@ export const Header: React.FC<HeaderProps> = ({
                           <Link
                             href="/services"
                             onClick={() => setServicesDropdownOpen(false)}
-                            className="block p-3 rounded-md bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 hover:border-blue-300 transition-all group"
+                            className="block p-3 rounded-md bg-zinc-50 hover:bg-zinc-100 border border-zinc-200 hover:border-black transition-all group"
                           >
-                            <div className="text-xs font-black text-[#1F1F1F] group-hover:text-[#1F1F1F] flex items-center justify-between">
+                            <div className="text-xs font-black text-black flex items-center justify-between">
                               <span>Xem Tất Cả 12 Gói Dịch Vụ</span>
-                              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform text-black" />
                             </div>
-                            <p className="text-[11px] text-[#1F1F1F]/80 mt-0.5 font-medium">Bảng giá tổng hợp & so sánh</p>
+                            <p className="text-[11px] text-zinc-500 mt-0.5 font-medium">Bảng giá tổng hợp &amp; so sánh</p>
                           </Link>
                         </div>
                       </div>
@@ -301,13 +356,12 @@ export const Header: React.FC<HeaderProps> = ({
                 onClick={() => setNewsDropdownOpen(open => !open)}
                 aria-expanded={newsDropdownOpen}
                 aria-haspopup="true"
-                className={`${navLinkBase} gap-1 ${newsDropdownOpen || pathname.startsWith('/news') || pathname.startsWith('/promotions')
-                    ? 'text-[#1F1F1F] bg-blue-50/80 font-black'
-                    : 'text-slate-700 hover:text-[#1F1F1F] hover:bg-slate-50'
-                  }`}
+                className={`${navLinkBase} ${isNewsActive ? 'text-slate-900 font-black' : 'text-slate-600 hover:text-slate-900 font-bold'}`}
               >
-                Tin tức
-                <ChevronDown className={`w-4 h-4 shrink-0 transition-transform ${newsDropdownOpen ? 'rotate-180 text-[#1F1F1F]' : ''}`} />
+                <span>Tin tức</span>
+                {isNewsActive && (
+                  <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-8 h-[2.5px] bg-[#1F1F1F] rounded-full transition-all duration-300" />
+                )}
               </button>
 
               {newsDropdownOpen && (
@@ -353,18 +407,34 @@ export const Header: React.FC<HeaderProps> = ({
                 onClick={() => setSupportDropdownOpen(open => !open)}
                 aria-expanded={supportDropdownOpen}
                 aria-haspopup="true"
-                className={`${navLinkBase} gap-1 ${supportDropdownOpen || pathname.startsWith('/support') || pathname.startsWith('/knowledge-base') || pathname.startsWith('/resources') || pathname.startsWith('/status')
-                    ? 'text-[#1F1F1F] bg-blue-50/80 font-black'
-                    : 'text-slate-700 hover:text-[#1F1F1F] hover:bg-slate-50'
-                  }`}
+                className={`${navLinkBase} ${isSupportActive ? 'text-slate-900 font-black' : 'text-slate-600 hover:text-slate-900 font-bold'}`}
               >
-                Hỗ trợ
-                <ChevronDown className={`w-4 h-4 shrink-0 transition-transform ${supportDropdownOpen ? 'rotate-180 text-[#1F1F1F]' : ''}`} />
+                <span>Hỗ trợ</span>
+                {isSupportActive && (
+                  <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-8 h-[2.5px] bg-[#1F1F1F] rounded-full transition-all duration-300" />
+                )}
               </button>
 
               {supportDropdownOpen && (
                 <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 w-[280px] z-50">
                   <div className="bg-white rounded-md shadow-xl border border-slate-100 p-2 animate-in fade-in slide-in-from-top-2 duration-200 flex flex-col gap-1">
+                    <Link
+                      href="/knowledge-base"
+                      onClick={() => setSupportDropdownOpen(false)}
+                      className="flex items-center gap-3 p-2.5 rounded hover:bg-zinc-50 transition-colors group bg-zinc-50 border border-zinc-200"
+                    >
+                      <div className="w-8 h-8 rounded-sm bg-black text-white flex items-center justify-center shrink-0 shadow-2xs">
+                        <BookOpen className="w-4 h-4" />
+                      </div>
+                      <div className="min-w-0">
+                        <div className="text-sm font-black text-black group-hover:text-zinc-700 flex items-center gap-1.5">
+                          <span>Knowledge Base</span>
+                          <span className="text-[10px] font-bold bg-black text-white px-1.5 py-0.2 rounded-full">Hot</span>
+                        </div>
+                        <p className="text-[11px] text-zinc-500 font-medium">Tài liệu kỹ thuật &amp; hướng dẫn cài đặt</p>
+                      </div>
+                    </Link>
+
                     <Link
                       href="/support/tickets"
                       onClick={() => setSupportDropdownOpen(false)}
@@ -374,33 +444,22 @@ export const Header: React.FC<HeaderProps> = ({
                         <LifeBuoy className="w-4 h-4" />
                       </div>
                       <div>
-                        <div className="text-sm font-bold text-slate-700 group-hover:text-[#1F1F1F]">Yêu cầu hỗ trợ</div>
+                        <div className="text-sm font-bold text-slate-700 group-hover:text-[#1F1F1F]">Yêu cầu hỗ trợ (Tickets)</div>
+                        <p className="text-[11px] text-slate-500 font-medium">Hỗ trợ kỹ thuật 24/7/365</p>
                       </div>
                     </Link>
 
                     <Link
-                      href="/news"
+                      href="/faqs"
                       onClick={() => setSupportDropdownOpen(false)}
                       className="flex items-center gap-3 p-2.5 rounded hover:bg-slate-50 transition-colors group"
                     >
                       <div className="w-8 h-8 rounded-sm bg-slate-100/70 text-[#1F1F1F] flex items-center justify-center shrink-0">
-                        <Megaphone className="w-4 h-4" />
+                        <HelpCircle className="w-4 h-4" />
                       </div>
                       <div>
-                        <div className="text-sm font-bold text-slate-700 group-hover:text-[#1F1F1F]">Thông báo</div>
-                      </div>
-                    </Link>
-
-                    <Link
-                      href="/knowledge-base"
-                      onClick={() => setSupportDropdownOpen(false)}
-                      className="flex items-center gap-3 p-2.5 rounded hover:bg-slate-50 transition-colors group"
-                    >
-                      <div className="w-8 h-8 rounded-sm bg-slate-100/70 text-[#1F1F1F] flex items-center justify-center shrink-0">
-                        <BookOpen className="w-4 h-4" />
-                      </div>
-                      <div>
-                        <div className="text-sm font-bold text-slate-700 group-hover:text-[#1F1F1F]">Thư viện tài liệu</div>
+                        <div className="text-sm font-bold text-slate-700 group-hover:text-[#1F1F1F]">Câu hỏi thường gặp (FAQ)</div>
+                        <p className="text-[11px] text-slate-500 font-medium">Giải đáp thắc mắc dịch vụ</p>
                       </div>
                     </Link>
 
@@ -414,6 +473,7 @@ export const Header: React.FC<HeaderProps> = ({
                       </div>
                       <div>
                         <div className="text-sm font-bold text-slate-700 group-hover:text-[#1F1F1F]">Tài nguyên & Phần mềm</div>
+                        <p className="text-[11px] text-slate-500 font-medium">Tool SSH, template & scripts</p>
                       </div>
                     </Link>
 
@@ -427,6 +487,7 @@ export const Header: React.FC<HeaderProps> = ({
                       </div>
                       <div>
                         <div className="text-sm font-bold text-slate-700 group-hover:text-[#1F1F1F]">Trạng thái hệ thống</div>
+                        <p className="text-[11px] text-slate-500 font-medium">Uptime mạng & máy chủ</p>
                       </div>
                     </Link>
                   </div>
@@ -435,58 +496,65 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
 
             <Link
-              href="/contact"
-              className={`${navLinkBase} ${pathname === '/contact'
-                  ? 'text-[#1F1F1F] bg-blue-50/80 font-black'
-                  : 'text-slate-700 hover:text-[#1F1F1F] hover:bg-slate-50'
-                }`}
+              href="/knowledge-base"
+              className={`${navLinkBase} ${isKnowledgeActive ? 'text-slate-900 font-black' : 'text-slate-600 hover:text-slate-900 font-bold'}`}
             >
-              Liên hệ
+              <span>Tài liệu</span>
+              {isKnowledgeActive && (
+                <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-8 h-[2.5px] bg-[#1F1F1F] rounded-full transition-all duration-300" />
+              )}
             </Link>
 
-            {/* Admin Panel Quick Link for Staff / Admin */}
-            {(user?.role === 'Admin' || user?.role === 'Editor') && (
-              <Link
-                href="/admin"
-                className="px-3.5 py-2 rounded text-xs font-black bg-gradient-to-r from-red-600 to-rose-600 text-slate-900 shadow-xs hover:shadow-red-500/20 hover:from-red-500 hover:to-rose-500 transition-all flex items-center gap-1.5 shrink-0"
-              >
-                <Shield className="w-3.5 h-3.5" />
-                <span>Admin Panel</span>
-              </Link>
-            )}
+            <Link
+              href="/contact"
+              className={`${navLinkBase} ${isContactActive ? 'text-slate-900 font-black' : 'text-slate-600 hover:text-slate-900 font-bold'}`}
+            >
+              <span>Liên hệ</span>
+              {isContactActive && (
+                <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-8 h-[2.5px] bg-[#1F1F1F] rounded-full transition-all duration-300" />
+              )}
+            </Link>
+
+            {/* Staff / Admin Panel Quick Link with Role-Specific Color Coding */}
+            {(() => {
+              const panelInfo = getStaffPanelInfo(user?.role);
+              if (!panelInfo) return null;
+              return (
+                <Link
+                  href="/admin"
+                  className={`px-3.5 py-2 rounded text-xs font-black transition-all flex items-center gap-1.5 shrink-0 ${panelInfo.className}`}
+                >
+                  <Shield className="w-3.5 h-3.5" />
+                  <span>{panelInfo.title}</span>
+                </Link>
+              );
+            })()}
           </nav>
 
           {/* Action Icons & Profile */}
           <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             <GlobalSearch />
 
-            <button
-              onClick={handleOpenCart}
-              className="relative p-2 text-slate-700 hover:bg-slate-100 rounded transition-colors shrink-0"
+            <Link
+              href="/cart"
+              className="relative p-2 text-slate-700 hover:bg-slate-100 rounded transition-colors shrink-0 flex items-center justify-center"
               aria-label="Giỏ hàng"
             >
               <ShoppingCart className="w-5 h-5" />
               {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-gradient-to-r from-rose-500 to-red-600 text-slate-900 text-[10px] font-black w-4 h-4 rounded-full flex items-center justify-center border-2 border-white animate-pulse">
+                <span className="absolute -top-1 -right-1 bg-gradient-to-r from-rose-500 to-red-600 text-white text-[10px] font-black w-4 h-4 rounded-full flex items-center justify-center border-2 border-white animate-pulse">
                   {cartCount}
                 </span>
               )}
-            </button>
+            </Link>
 
             {user ? (
               <div className="hidden sm:flex items-center gap-1.5 shrink-0">
                 <button
                   type="button"
-                  className="flex items-center gap-1.5 bg-slate-50 border border-slate-100 p-2 lg:px-3 lg:py-1.5 rounded-full hover:bg-slate-100 transition shrink-0"
-                  onClick={() => {
-                    const amountStr = prompt('Nhập số tiền muốn nạp vào ví (VNĐ):', '500000');
-                    if (amountStr) {
-                      api.post('/wallet/top-up', { amount: parseInt(amountStr) })
-                        .then(() => { alert('Nạp tiền thành công!'); window.location.reload(); })
-                        .catch(() => alert('Nạp tiền thất bại!'));
-                    }
-                  }}
-                  title="Nạp tiền vào ví"
+                  className="flex items-center gap-1.5 bg-slate-50 border border-slate-200 p-2 lg:px-3 lg:py-1.5 rounded-full hover:bg-slate-100 transition shrink-0"
+                  onClick={() => setIsTopUpOpen(true)}
+                  title="Nạp tiền vào ví CloudHost"
                 >
                   <Wallet className="w-4 h-4 text-emerald-600 shrink-0" />
                   <span className="hidden xl:inline text-xs font-bold text-slate-800 whitespace-nowrap">
@@ -497,9 +565,9 @@ export const Header: React.FC<HeaderProps> = ({
                 <Link
                   href="/dashboard"
                   className="w-8 h-8 rounded-full bg-blue-100 hover:bg-blue-200 flex items-center justify-center text-[#1F1F1F] font-bold shrink-0 transition-colors shadow-xs"
-                  title={`Bảng điều khiển - ${user.fullName}`}
+                  title={`Bảng điều khiển - ${user?.fullName || user?.email || 'Tài khoản'}`}
                 >
-                  {user.fullName.charAt(0).toUpperCase()}
+                  {(user?.fullName || user?.email || 'U').charAt(0).toUpperCase()}
                 </Link>
 
                 <button
@@ -513,12 +581,12 @@ export const Header: React.FC<HeaderProps> = ({
               </div>
             ) : (
               <>
-                <button onClick={() => handleOpenAuth('login')} className="hidden lg:flex items-center gap-1.5 px-4 py-2 text-slate-700 font-bold hover:text-[#1F1F1F] hover:bg-slate-100 rounded-full transition-colors">
-                  <User className="w-4 h-4" />
-                  Đăng nhập
+                <button onClick={() => handleOpenAuth('login')} className="hidden lg:flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-full transition-colors cursor-pointer">
+                  <User className="w-3.5 h-3.5" />
+                  <span>Đăng nhập</span>
                 </button>
-                <button onClick={() => handleOpenAuth('register')} className="hidden lg:block px-5 py-2 bg-[#1F1F1F] hover:bg-black text-white font-bold rounded-full transition-all shadow-sm">
-                  Đăng ký
+                <button onClick={() => handleOpenAuth('register')} className="hidden lg:block px-4 py-2 bg-[#1F1F1F] hover:bg-black text-white text-xs font-bold rounded-full transition-all shadow-xs cursor-pointer">
+                  <span>Đăng ký</span>
                 </button>
               </>
             )}
@@ -603,10 +671,10 @@ export const Header: React.FC<HeaderProps> = ({
                   <div className="flex items-center justify-between p-3 bg-blue-50/70 rounded border border-blue-100">
                     <div className="flex items-center gap-2">
                       <div className="w-8 h-8 rounded-full bg-blue-600 text-white font-bold text-xs flex items-center justify-center">
-                        {user.fullName.charAt(0).toUpperCase()}
+                        {(user?.fullName || user?.email || 'U').charAt(0).toUpperCase()}
                       </div>
                       <div>
-                        <div className="text-xs font-bold text-slate-900 truncate max-w-[160px]">{user.fullName}</div>
+                        <div className="text-xs font-bold text-slate-900 truncate max-w-[160px]">{user?.fullName || user?.email || 'Khách hàng'}</div>
                         <div className="text-[11px] font-semibold text-emerald-600">{walletBalance.toLocaleString('vi-VN')} đ</div>
                       </div>
                     </div>
@@ -617,16 +685,20 @@ export const Header: React.FC<HeaderProps> = ({
                     </Link>
                   </div>
 
-                  {(user.role === 'Admin' || user.role === 'Editor') && (
-                    <Link
-                      href="/admin"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded bg-indigo-50 text-[#1F1F1F] font-bold text-sm"
-                    >
-                      <Shield className="w-4 h-4" />
-                      Admin Panel
-                    </Link>
-                  )}
+                  {(() => {
+                    const panelInfo = getStaffPanelInfo(user.role);
+                    if (!panelInfo) return null;
+                    return (
+                      <Link
+                        href="/admin"
+                        onClick={() => setMobileMenuOpen(false)}
+                        className={`w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded font-bold text-xs ${panelInfo.mobileClass}`}
+                      >
+                        <Shield className="w-4 h-4" />
+                        {panelInfo.title}
+                      </Link>
+                    );
+                  })()}
 
                   <button
                     onClick={() => {
@@ -660,6 +732,12 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
         )}
       </div>
+
+      <TopUpModal
+        isOpen={isTopUpOpen}
+        onClose={() => setIsTopUpOpen(false)}
+        currentBalance={walletBalance}
+      />
     </header>
   );
 };

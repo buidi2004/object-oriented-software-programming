@@ -63,6 +63,7 @@ public class AppDbContext : DbContext
     public DbSet<DomainRecord> DomainRecords => Set<DomainRecord>();
     public DbSet<MigrationRequest> MigrationRequests => Set<MigrationRequest>();
     public DbSet<RenewalJob> RenewalJobs => Set<RenewalJob>();
+    public DbSet<JobApplication> JobApplications => Set<JobApplication>();
     public DbSet<ServiceStatusLog> ServiceStatusLogs => Set<ServiceStatusLog>();
     public DbSet<SslCertificate> SslCertificates => Set<SslCertificate>();
     public DbSet<Wallet> Wallets => Set<Wallet>();

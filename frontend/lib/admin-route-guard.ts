@@ -16,6 +16,8 @@ export function decodeJwtPayload(token: string): Record<string, unknown> | null 
   }
 }
 
+export const STAFF_ROLES = ['Admin', 'Accountant', 'Technician', 'Support', 'Editor', 'Staff'];
+
 export function hasAdminRole(token: string | undefined): boolean {
   if (!token) return false;
   const payload = decodeJwtPayload(token);
@@ -26,7 +28,7 @@ export function hasAdminRole(token: string | undefined): boolean {
     (payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] as string | undefined);
 
   if (!role) return false;
-  return role === 'Admin' || role === 'Staff' || role === 'Editor';
+  return STAFF_ROLES.some(r => r.toLowerCase() === role.toLowerCase());
 }
 
 export function buildLoginRedirect(pathname: string, origin: string): string {

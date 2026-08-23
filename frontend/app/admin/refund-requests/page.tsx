@@ -37,7 +37,10 @@ export default function AdminRefundRequestsPage() {
       const response = await fetch('/api/users/me', { headers: { Authorization: `Bearer ${token}` } });
       if (response.ok) {
         const userData = await response.json();
-        if (userData.role !== 'Admin') { router.push('/dashboard'); return; }
+        const isAllowed = ['Admin', 'Accountant', 'Support', 'Staff'].some(
+          r => r.toLowerCase() === (userData.role || '').toLowerCase()
+        );
+        if (!isAllowed) { router.push('/dashboard'); return; }
         fetchRefunds(token);
       } else { router.push('/login'); }
     } catch (error) { router.push('/login'); }

@@ -112,14 +112,33 @@ function PlanDetailInner() {
   const handleBuy = async () => {
     if (!plan) return;
 
-    const token = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
-    if (!token) {
-      requestAuth('login', `/services/plans/${planId}`);
-      return;
-    }
-
     try {
-      await addItem(plan.id, isYearly ? 2 : 1, true);
+      const cycleMonths = isYearly ? 12 : 1;
+      const displayPrice = isYearly ? plan.yearlyPrice : plan.monthlyPrice;
+      const slug = (plan.categorySlug || '').toLowerCase();
+      let resolvedType: any = 'vps';
+      if (slug.includes('host')) resolvedType = 'hosting';
+      else if (slug.includes('domain') || slug.includes('ten-mien')) resolvedType = 'domain';
+      else if (slug.includes('database') || slug.includes('db')) resolvedType = 'database';
+      else if (slug.includes('storage') || slug.includes('s3')) resolvedType = 'storage';
+      else if (slug.includes('sec') || slug.includes('waf')) resolvedType = 'security';
+      else if (slug.includes('migrat')) resolvedType = 'migration';
+      else if (slug.includes('game')) resolvedType = 'game';
+      else if (slug.includes('ssl')) resolvedType = 'ssl';
+      else if (slug.includes('dedicat')) resolvedType = 'dedicated';
+      else if (slug.includes('mail')) resolvedType = 'email';
+      else if (slug.includes('static')) resolvedType = 'static';
+      else if (slug.includes('cdn')) resolvedType = 'cdn';
+      else if (slug.includes('app')) resolvedType = 'app';
+
+      await addItem(plan.id, cycleMonths, true, {
+        name: `${plan.name} - ${isYearly ? '12 Tháng' : '1 Tháng'}`,
+        title: `${plan.name} - ${isYearly ? '12 Tháng' : '1 Tháng'}`,
+        price: displayPrice || 149000,
+        billingCycle: cycleMonths,
+        type: resolvedType,
+        details: Object.values(plan.attributes || {}).join(' • ')
+      });
       router.push('/cart');
     } catch (err) {
       console.error(err);

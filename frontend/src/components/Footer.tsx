@@ -183,6 +183,7 @@ export const Footer: React.FC = () => {
               <h4 className="text-[15px] font-bold text-slate-800 uppercase tracking-wide mb-6">TRỢ GIÚP</h4>
               <ul className="space-y-3.5 text-[14px] text-slate-600">
                 <li><Link href="/contact" className="hover:text-red-600 transition-colors">Liên hệ hỗ trợ, khiếu nại</Link></li>
+                <li><Link href="/careers" className="hover:text-red-600 transition-colors">Tuyển dụng nhân sự (Careers)</Link></li>
                 <li><Link href="/knowledge-base" className="hover:text-red-600 transition-colors">Cơ sở kiến thức (Knowledge Base)</Link></li>
                 <li><Link href="/faqs" className="hover:text-red-600 transition-colors">Câu hỏi thường gặp (FAQ)</Link></li>
                 <li><Link href="/legal/terms" className="hover:text-red-600 transition-colors">Thỏa thuận sử dụng</Link></li>

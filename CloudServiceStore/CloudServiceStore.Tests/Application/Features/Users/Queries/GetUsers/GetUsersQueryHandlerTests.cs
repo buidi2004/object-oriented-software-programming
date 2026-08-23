@@ -17,24 +17,19 @@ namespace CloudServiceStore.Tests.Application.Features.Users.Queries.GetUsers;
 public class GetUsersQueryHandlerTests
 {
     private readonly Mock<IRepository<AppUser>> _mockRepositoryAppUser;
+    private readonly Mock<IRepository<Role>> _mockRepositoryRole;
     private readonly GetUsersQueryHandler _handler;
 
     public GetUsersQueryHandlerTests()
     {
         _mockRepositoryAppUser = new Mock<IRepository<AppUser>>();
-        _handler = new GetUsersQueryHandler(_mockRepositoryAppUser.Object);
+        _mockRepositoryRole = new Mock<IRepository<Role>>();
+        _handler = new GetUsersQueryHandler(_mockRepositoryAppUser.Object, _mockRepositoryRole.Object);
     }
 
     [Fact]
     public async Task Handle_ShouldExecuteSuccessfully_WhenRequestIsValid()
     {
-        // Arrange
-        // var request = new GetUsersQuery();
-
-        // Act
-        // var result = await _handler.Handle(request, cancellationToken);
-
-        // Assert
         Assert.True(true);
     }
 }

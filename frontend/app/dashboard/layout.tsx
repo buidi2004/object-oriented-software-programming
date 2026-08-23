@@ -69,6 +69,7 @@ const menuGroups: MenuGroup[] = [
   {
     title: 'Tài Chính & Đơn Hàng',
     items: [
+      { id: 'wallet', name: 'Ví tiền & Nạp tiền', href: '/dashboard/wallet', icon: WalletIcon },
       { id: 'orders', name: 'Đơn hàng', href: '/dashboard/orders', icon: ShoppingCart },
       { id: 'invoices', name: 'Hóa đơn', href: '/dashboard/invoices', icon: FileText },
       { id: 'payments', name: 'Thanh toán & Giao dịch', href: '/dashboard/payments', icon: CreditCard },

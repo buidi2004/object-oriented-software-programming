@@ -58,11 +58,14 @@ export interface CloudInstance {
 
 export interface CartItem {
   id: string;
-  type: 'vps' | 'hosting' | 'domain';
+  type: 'vps' | 'hosting' | 'domain' | 'game' | 'database' | 'storage' | 'ssl' | 'app' | 'security' | 'migration' | 'static' | 'cdn' | 'dedicated' | 'email';
   title: string;
+  name?: string;
   details: string;
   price: number;
-  billingCycle: string;
+  billingCycle: string | number;
+  quantity?: number;
+  servicePlanId?: string;
 }
 
 export interface ServicePlanPriceDto {

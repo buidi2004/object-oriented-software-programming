@@ -2,6 +2,41 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  :root {
+    --surface: #FFFFFF;
+    --on-surface: #0F172A;
+    --on-surface-variant: #475569;
+    --primary-button-bg: #0F172A;
+    --primary-button-text: #FFFFFF;
+    --badge-bg: #F1F5F9;
+    --badge-text: #0F172A;
+    --outline: #E2E8F0;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    color: #0F172A;
+    background-color: #FFFFFF;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Prevent text blurring on transforms and webkit */
+  h1, h2, h3, h4, h5, h6, p, span, a, button, input, label, select, textarea {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+  }
+}
+
 @layer components {
   .vps-tier-range {
     @apply h-2.5 w-full cursor-pointer appearance-none bg-transparent;
@@ -12,7 +47,7 @@
   }
 
   .vps-tier-range:focus-visible {
-    @apply ring-2 ring-offset-2 ring-blue-500/40 rounded-full;
+    @apply ring-2 ring-offset-2 ring-black/40 rounded-full;
   }
 
   .vps-tier-range::-webkit-slider-runnable-track {
@@ -20,8 +55,8 @@
     border-radius: 9999px;
     background: linear-gradient(
       to right,
-      var(--vps-range-accent, #8c5a3d) 0%,
-      var(--vps-range-accent, #8c5a3d) var(--vps-range-fill, 0%),
+      var(--vps-range-accent, #0F172A) 0%,
+      var(--vps-range-accent, #0F172A) var(--vps-range-fill, 0%),
       #e2e8f0 var(--vps-range-fill, 0%),
       #e2e8f0 100%
     );
@@ -35,7 +70,7 @@
     margin-top: -0.3125rem;
     border-radius: 9999px;
     border: 2px solid #ffffff;
-    background: var(--vps-range-accent, #8c5a3d);
+    background: var(--vps-range-accent, #0F172A);
     box-shadow: 0 1px 4px rgb(15 23 42 / 0.2);
     cursor: pointer;
   }
@@ -49,7 +84,7 @@
   .vps-tier-range::-moz-range-progress {
     height: 0.625rem;
     border-radius: 9999px;
-    background: var(--vps-range-accent, #8c5a3d);
+    background: var(--vps-range-accent, #0F172A);
   }
 
   .vps-tier-range::-moz-range-thumb {
@@ -57,22 +92,9 @@
     height: 1.25rem;
     border-radius: 9999px;
     border: 2px solid #ffffff;
-    background: var(--vps-range-accent, #8c5a3d);
+    background: var(--vps-range-accent, #0F172A);
     box-shadow: 0 1px 4px rgb(15 23 42 / 0.2);
     cursor: pointer;
-  }
-}
-
-@layer base {
-  :root {
-    --surface: #FFFFFF;
-    --on-surface: #1F1F1F;
-    --on-surface-variant: #5F6368;
-    --primary-button-bg: #1F1F1F;
-    --primary-button-text: #FFFFFF;
-    --badge-bg: #E8F0FE;
-    --badge-text: #1967D2;
-    --outline: #DADCE0;
   }
 }
 
@@ -92,7 +114,7 @@
     color: var(--primary-button-text);
     border-radius: 999px;
     padding: 0.75em 1.5em;
-    font-weight: 500;
+    font-weight: 600;
     border: none;
   }
 

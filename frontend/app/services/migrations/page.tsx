@@ -130,9 +130,10 @@ export default function MigrationsServicePage() {
   const handleOrder = async (plan: typeof plans[0]) => {
     await addItem(plan.id, 1, false, {
       name: plan.name,
+      title: plan.name,
       price: plan.price,
       billingCycle: 1,
-      type: 'vps',
+      type: 'migration',
       details: `${plan.tier} • ${plan.turnaround}`
     });
     router.push('/cart');

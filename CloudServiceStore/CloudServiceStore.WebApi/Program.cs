@@ -151,11 +151,22 @@ if (!System.IO.Directory.Exists(imagesDirectory))
     System.IO.Directory.CreateDirectory(imagesDirectory);
 }
 
+var uploadsDirectory = System.IO.Path.Combine(app.Environment.ContentRootPath, "uploads");
+if (!System.IO.Directory.Exists(uploadsDirectory))
+{
+    System.IO.Directory.CreateDirectory(uploadsDirectory);
+}
+
 app.UseStaticFiles();
 app.UseStaticFiles(new StaticFileOptions
 {
     FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(imagesDirectory),
     RequestPath = "/images"
+});
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(uploadsDirectory),
+    RequestPath = "/uploads"
 });
 
 app.UseRateLimiter();

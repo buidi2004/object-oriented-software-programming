@@ -23,15 +23,18 @@ public class GetOrderByIdQueryHandler : IRequestHandler<GetOrderByIdQuery, Order
 {
     private readonly IRepository<OrderRequest> _orderRepository;
     private readonly IRepository<AppUser> _userRepository;
+    private readonly IRepository<ServicePlan> _planRepository;
     private readonly ICurrentUserService _currentUserService;
 
     public GetOrderByIdQueryHandler(
         IRepository<OrderRequest> orderRepository,
         IRepository<AppUser> userRepository,
+        IRepository<ServicePlan> planRepository,
         ICurrentUserService currentUserService)
     {
         _orderRepository = orderRepository;
         _userRepository = userRepository;
+        _planRepository = planRepository;
         _currentUserService = currentUserService;
     }
 
@@ -39,13 +42,17 @@ public class GetOrderByIdQueryHandler : IRequestHandler<GetOrderByIdQuery, Order
     {
         var userId = _currentUserService.UserId ?? throw new UnauthorizedException("Chưa đăng nhập");
 
-        var order = await _orderRepository.GetByIdAsync(request.Id, cancellationToken)
+        var order = await _orderRepository.GetByIdAsync(request.Id, cancellationToken, o => o.Items)
             ?? throw new NotFoundException("Đơn hàng không tồn tại.");
 
         if (order.UserId != userId && !_currentUserService.IsInRole("Admin"))
             throw new UnauthorizedException("Bạn không có quyền xem đơn hàng này.");
 
         var customer = await _userRepository.GetByIdAsync(order.UserId, cancellationToken);
+
+        var planIds = order.Items?.Select(i => i.ServicePlanId).Distinct().ToList() ?? new List<Guid>();
+        var plans = planIds.Any() ? await _planRepository.WhereAsync(p => planIds.Contains(p.Id), cancellationToken, p => p.Category) : new List<ServicePlan>();
+        var planDict = plans.ToDictionary(p => p.Id);
 
         return new OrderDetailDto
         {
@@ -59,14 +66,19 @@ public class GetOrderByIdQueryHandler : IRequestHandler<GetOrderByIdQuery, Order
             TotalAmount = order.TotalAmount,
             AutoRenew = order.AutoRenew,
             CreatedAt = order.CreatedAt,
-            Items = order.Items?.Select(i => new OrderItemDto
+            Items = order.Items?.Select(i =>
             {
-                ServicePlanId = i.ServicePlanId,
-                ServicePlanName = i.ServicePlan?.Name ?? "Dịch vụ " + i.ServicePlanId.ToString()[..8],
-                BillingCycle = i.BillingCycle,
-                Quantity = i.Quantity,
-                Price = i.Price
-            }).ToList() ?? new System.Collections.Generic.List<OrderItemDto>()
+                planDict.TryGetValue(i.ServicePlanId, out var plan);
+                return new OrderItemDto
+                {
+                    ServicePlanId = i.ServicePlanId,
+                    ServicePlanName = plan?.Name ?? i.ServicePlan?.Name ?? ("Dịch vụ " + i.ServicePlanId.ToString()[..8]),
+                    CategorySlug = plan?.Category?.Slug ?? i.ServicePlan?.Category?.Slug ?? string.Empty,
+                    BillingCycle = i.BillingCycle,
+                    Quantity = i.Quantity,
+                    Price = i.Price
+                };
+            }).ToList() ?? new List<OrderItemDto>()
         };
     }
 }

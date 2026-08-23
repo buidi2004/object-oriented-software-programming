@@ -200,33 +200,93 @@ public static class DbSeeder
                 logger.LogInformation("Successfully seeded {Count} new service plans and prices!", newPlans.Count);
             }
 
-            if (!context.Roles.Any())
+            // Seed Roles & Permissions
+            var standardRoles = new (string Name, string Description)[]
             {
-                logger.LogInformation("Seeding Roles and Permissions...");
-                var adminRole = new Role { Id = Guid.NewGuid(), Name = "Admin" };
-                var editorRole = new Role { Id = Guid.NewGuid(), Name = "Editor" };
-                var customerRole = new Role { Id = Guid.NewGuid(), Name = "Customer" };
-                await context.Roles.AddRangeAsync(adminRole, editorRole, customerRole);
+                ("Admin", "Quản trị viên tối cao (Toàn quyền hệ thống)"),
+                ("Accountant", "Kế toán viên (Quản lý hóa đơn, ví tiền, doanh thu)"),
+                ("Technician", "Kỹ thuật viên (Quản lý máy chủ VPS, hạ tầng, tickets)"),
+                ("Editor", "Biên tập viên (Quản lý tin tức, khuyến mãi, bài viết)"),
+                ("Support", "Chăm sóc khách hàng (Hỗ trợ tickets, đơn hàng, khách hàng)"),
+                ("Customer", "Khách hàng người dùng")
+            };
 
-                var permissions = new[]
+            foreach (var r in standardRoles)
+            {
+                if (!await context.Roles.AnyAsync(x => x.Name == r.Name))
                 {
-                    new Permission { Id = Guid.NewGuid(), Code = "manage_users", Name = "Quản lý Người dùng" },
-                    new Permission { Id = Guid.NewGuid(), Code = "manage_roles", Name = "Quản lý Phân quyền" },
-                    new Permission { Id = Guid.NewGuid(), Code = "manage_orders", Name = "Quản lý Đơn hàng" },
-                    new Permission { Id = Guid.NewGuid(), Code = "manage_services", Name = "Quản lý Dịch vụ" },
-                    new Permission { Id = Guid.NewGuid(), Code = "manage_billing", Name = "Quản lý Thanh toán" },
-                    new Permission { Id = Guid.NewGuid(), Code = "manage_tickets", Name = "Hỗ trợ (Tickets)" },
-                    new Permission { Id = Guid.NewGuid(), Code = "manage_content", Name = "Quản lý Nội dung (Blog/FAQ)" }
-                };
-                await context.Permissions.AddRangeAsync(permissions);
-
-                foreach (var p in permissions)
-                {
-                    await context.RolePermissions.AddAsync(new RolePermission { RoleId = adminRole.Id, PermissionId = p.Id });
+                    await context.Roles.AddAsync(new Role { Id = Guid.NewGuid(), Name = r.Name });
                 }
-                
-                await context.SaveChangesAsync();
             }
+            await context.SaveChangesAsync();
+
+            var standardPermissions = new (string Code, string Name)[]
+            {
+                ("manage_users", "Quản lý Người dùng & Tài khoản"),
+                ("manage_roles", "Quản lý Nhóm Quyền & Phân Bổ"),
+                ("manage_orders", "Quản lý Đơn hàng & Dịch vụ"),
+                ("manage_services", "Quản lý Bảng giá & Gói Cloud VPS"),
+                ("manage_billing", "Quản lý Hóa đơn VAT & Doanh thu"),
+                ("manage_wallet", "Quản lý Ví tiền & Duyệt nạp tiền"),
+                ("manage_tickets", "Hỗ trợ Kỹ thuật & Tickets"),
+                ("manage_vps", "Vận hành Máy chủ VPS & Backup"),
+                ("manage_content", "Quản lý Nội dung & Tin tức"),
+                ("manage_promotions", "Quản lý Khuyến mãi & Mã giảm giá"),
+                ("manage_security", "Nhật ký Audit Logs & Bảo mật WAF")
+            };
+
+            foreach (var p in standardPermissions)
+            {
+                if (!await context.Permissions.AnyAsync(x => x.Code == p.Code))
+                {
+                    await context.Permissions.AddAsync(new Permission { Id = Guid.NewGuid(), Code = p.Code, Name = p.Name });
+                }
+            }
+            await context.SaveChangesAsync();
+
+            // Link Admin to all permissions
+            var dbAdminRole = await context.Roles.FirstOrDefaultAsync(r => r.Name == "Admin");
+            var allDbPermissions = await context.Permissions.ToListAsync();
+            if (dbAdminRole != null)
+            {
+                foreach (var perm in allDbPermissions)
+                {
+                    if (!await context.RolePermissions.AnyAsync(rp => rp.RoleId == dbAdminRole.Id && rp.PermissionId == perm.Id))
+                    {
+                        await context.RolePermissions.AddAsync(new RolePermission { RoleId = dbAdminRole.Id, PermissionId = perm.Id });
+                    }
+                }
+            }
+
+            // Link Accountant to Billing, Wallet, Orders permissions
+            var dbAccRole = await context.Roles.FirstOrDefaultAsync(r => r.Name == "Accountant");
+            if (dbAccRole != null)
+            {
+                var accPermCodes = new[] { "manage_billing", "manage_wallet", "manage_orders" };
+                foreach (var perm in allDbPermissions.Where(p => accPermCodes.Contains(p.Code)))
+                {
+                    if (!await context.RolePermissions.AnyAsync(rp => rp.RoleId == dbAccRole.Id && rp.PermissionId == perm.Id))
+                    {
+                        await context.RolePermissions.AddAsync(new RolePermission { RoleId = dbAccRole.Id, PermissionId = perm.Id });
+                    }
+                }
+            }
+
+            // Link Technician to VPS, Tickets, Services permissions
+            var dbTechRole = await context.Roles.FirstOrDefaultAsync(r => r.Name == "Technician");
+            if (dbTechRole != null)
+            {
+                var techPermCodes = new[] { "manage_vps", "manage_tickets", "manage_services", "manage_security" };
+                foreach (var perm in allDbPermissions.Where(p => techPermCodes.Contains(p.Code)))
+                {
+                    if (!await context.RolePermissions.AnyAsync(rp => rp.RoleId == dbTechRole.Id && rp.PermissionId == perm.Id))
+                    {
+                        await context.RolePermissions.AddAsync(new RolePermission { RoleId = dbTechRole.Id, PermissionId = perm.Id });
+                    }
+                }
+            }
+
+            await context.SaveChangesAsync();
 
             if (!context.AppUsers.Any(u => u.Email == "admin@system.local"))
             {

@@ -5,13 +5,14 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import {
   Server, ShoppingCart, CreditCard, Globe, ShieldCheck,
-  Activity, Clock, TrendingUp, AlertCircle, ArrowRight, FileText
+  Activity, Clock, TrendingUp, AlertCircle, ArrowRight, FileText, Wallet as WalletIcon
 } from 'lucide-react';
 import RecentlyViewed from '../../src/components/RecentlyViewed';
 import { api } from '@/src/lib/api';
 import { DashboardLoyaltyWidgets } from '@/src/components/team-features/DashboardLoyaltyWidgets';
 
 interface DashboardStats {
+  walletBalance: number;
   totalOrders: number;
   activeServices: number;
   totalSpent: number;     // API: totalSpent
@@ -64,14 +65,16 @@ export default function DashboardPage() {
 
   const fetchDashboardData = async () => {
     try {
-      const [dashboardRes, loyaltyRes, ticketsRes] = await Promise.all([
+      const [dashboardRes, loyaltyRes, ticketsRes, walletRes] = await Promise.all([
         api.get('/dashboard/me').catch(() => null),
         api.get('/loyalty/me').catch(() => null),
         api.get('/tickets/me').catch(() => ({ data: [] })),
+        api.get('/wallet/me').catch(() => null),
       ]);
 
       const dash = dashboardRes?.data || {};
       setStats({
+        walletBalance: walletRes?.data?.balance ?? 0,
         totalOrders:   dash.totalOrders   ?? 0,
         activeServices: Array.isArray(dash.activeServices) ? dash.activeServices.length : (dash.activeServices ?? 0),
         totalSpent:    dash.totalSpent     ?? 0,
@@ -113,7 +116,7 @@ export default function DashboardPage() {
         <h1 className="text-3xl font-extrabold text-slate-900">
           Xin chào, {user?.fullName || 'Khách hàng'}! 👋
         </h1>
-        <p className="text-slate-600 mt-1">Quản lý tất cả dịch vụ Cloud của bạn tại đây</p>
+        <p className="text-slate-600 mt-1">Quản lý tất cả dịch vụ Cloud và số dư ví của bạn tại đây</p>
       </div>
 
       {error && (
@@ -131,23 +134,29 @@ export default function DashboardPage() {
       {/* Stats Grid */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         {[
-          { label: 'Đơn hàng', value: stats?.totalOrders || 0, icon: ShoppingCart, colorKey: 'blue' },
-          { label: 'Dịch vụ đang chạy', value: stats?.activeServices || 0, icon: Server, colorKey: 'emerald' },
-          { label: 'Hóa đơn chờ', value: stats?.invoicesCount || 0, icon: FileText, colorKey: 'rose' },
-          { label: 'Điểm thưởng', value: stats?.loyaltyPoints || 0, icon: ShieldCheck, colorKey: 'purple' },
-          { label: 'Hóa đơn tháng', value: stats?.totalSpent ? `${(stats.totalSpent / 1000).toFixed(0)}K₫` : '0đ', icon: TrendingUp, colorKey: 'rose' },
+          { label: 'Số dư ví', value: `${(stats?.walletBalance || 0).toLocaleString('vi-VN')} đ`, icon: WalletIcon, colorKey: 'emerald', href: '/dashboard/wallet' },
+          { label: 'Đơn hàng', value: stats?.totalOrders || 0, icon: ShoppingCart, colorKey: 'blue', href: '/dashboard/orders' },
+          { label: 'Dịch vụ chạy', value: stats?.activeServices || 0, icon: Server, colorKey: 'emerald', href: '/dashboard/vps-instances' },
+          { label: 'Hóa đơn chờ', value: stats?.invoicesCount || 0, icon: FileText, colorKey: 'rose', href: '/dashboard/invoices' },
+          { label: 'Điểm thưởng', value: stats?.loyaltyPoints || 0, icon: ShieldCheck, colorKey: 'purple', href: '/dashboard' },
+          { label: 'Tổng chi tiêu', value: stats?.totalSpent ? `${(stats.totalSpent / 1000).toFixed(0)}K₫` : '0đ', icon: TrendingUp, colorKey: 'rose', href: '/dashboard/payments' },
         ].map((stat) => (
-          <div key={`stat-${stat.label}`} className="bg-white rounded-md p-4 border border-slate-200 hover:border-slate-400 transition-colors">
-            <stat.icon className={`w-6 h-6 ${colorClasses[stat.colorKey]} mb-2`} />
-            <p className="text-2xl font-black text-slate-900">{stat.value}</p>
-            <p className="text-xs text-slate-600 font-medium">{stat.label}</p>
-          </div>
+          <Link 
+            key={`stat-${stat.label}`} 
+            href={stat.href} 
+            className="bg-white rounded-md p-4 border border-slate-200 hover:border-slate-400 hover:shadow-xs transition-all block group"
+          >
+            <stat.icon className={`w-6 h-6 ${colorClasses[stat.colorKey]} mb-2 group-hover:scale-110 transition-transform`} />
+            <p className="text-xl font-black text-slate-900 truncate">{stat.value}</p>
+            <p className="text-xs text-slate-600 font-medium mt-0.5">{stat.label}</p>
+          </Link>
         ))}
       </div>
 
       {/* Quick Actions */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {[
+          { title: 'Ví tiền & Nạp tiền', desc: 'Nạp VietQR 24/7 và kiểm soát số dư ví', href: '/dashboard/wallet', icon: WalletIcon, colorKey: 'emerald' },
           { title: 'Quản lý VPS', desc: 'Máy chủ đám mây của bạn', href: '/dashboard/vps-instances', icon: Server, colorKey: 'blue' },
           { title: 'Quản lý SSL', desc: 'Chứng chỉ bảo mật', href: '/dashboard/ssl-certificates', icon: ShieldCheck, colorKey: 'emerald' },
           { title: 'Hỗ trợ kỹ thuật', desc: 'Gửi yêu cầu hoặc theo dõi ticket', href: '/dashboard/tickets', icon: Activity, colorKey: 'blue' },
@@ -155,7 +164,6 @@ export default function DashboardPage() {
           { title: 'Tự động gia hạn', desc: 'Quản lý gia hạn tự động', href: '/dashboard/auto-renew', icon: Clock, colorKey: 'violet' },
           { title: 'Backup VPS', desc: 'Sao lưu và khôi phục', href: '/dashboard/vps-backups', icon: Clock, colorKey: 'teal' },
           { title: 'Hóa đơn', desc: 'Tải xuống hóa đơn', href: '/dashboard/invoices', icon: FileText, colorKey: 'sky' },
-          { title: 'Thông báo', desc: 'Cài đặt thông báo', href: '/dashboard/notifications', icon: Activity, colorKey: 'amber' },
         ].map((action) => (
           <Link
             key={`action-${action.href}`}

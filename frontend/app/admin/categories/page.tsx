@@ -46,7 +46,10 @@ export default function AdminCategoriesPage() {
     
     try {
       const response = await api.get('/users/me');
-      if (response.data?.role !== 'Admin') { 
+      const isAllowed = ['Admin', 'Editor', 'Staff'].some(
+        r => r.toLowerCase() === (response.data?.role || '').toLowerCase()
+      );
+      if (!isAllowed) { 
         router.push('/dashboard'); 
         return; 
       }

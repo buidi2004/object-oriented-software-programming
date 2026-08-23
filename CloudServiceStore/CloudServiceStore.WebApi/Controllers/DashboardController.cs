@@ -18,7 +18,7 @@ public class DashboardController : ControllerBase
     public DashboardController(IMediator mediator) => _mediator = mediator;
 
     [HttpGet("me")]
-    [Authorize(Roles = "Customer")]
+    [Authorize]
     public async Task<IActionResult> GetMyDashboard(CancellationToken ct)
     {
         var result = await _mediator.Send(new GetMyDashboardQuery(), ct);
@@ -26,7 +26,7 @@ public class DashboardController : ControllerBase
     }
 
     [HttpGet("revenue-stats")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Accountant,Technician,Editor,Support,Staff")]
     public async Task<IActionResult> GetRevenueStats([FromQuery] DateTime startDate, [FromQuery] DateTime endDate, CancellationToken ct)
     {
         var result = await _mediator.Send(new GetRevenueStatsQuery(startDate, endDate), ct);
@@ -34,7 +34,7 @@ public class DashboardController : ControllerBase
     }
 
     [HttpGet("order-trend")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Accountant,Technician,Editor,Support,Staff")]
     public async Task<IActionResult> GetOrderTrend([FromQuery] DateTime startDate, [FromQuery] DateTime endDate, CancellationToken ct)
     {
         var result = await _mediator.Send(new GetOrderTrendQuery(startDate, endDate), ct);

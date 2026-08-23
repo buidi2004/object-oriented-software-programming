@@ -149,9 +149,10 @@ export default function DedicatedServersPage() {
     const price = billingCycle === 'yearly' ? plan.yearlyPrice : plan.monthlyPrice;
     await addItem(plan.id, cycleMonths, false, {
       name: `${plan.name} - ${billingCycle === 'yearly' ? '12 Tháng' : '1 Tháng'}`,
+      title: `${plan.name} - ${billingCycle === 'yearly' ? '12 Tháng' : '1 Tháng'}`,
       price: price,
       billingCycle: cycleMonths,
-      type: 'vps',
+      type: 'dedicated',
       details: `${plan.cpu} • ${plan.ram} • ${plan.storage}`
     });
     router.push('/cart');
@@ -229,9 +230,10 @@ export default function DedicatedServersPage() {
 
     await addItem('d9a48911-3755-46ae-a2e6-7649d363296c', cycleMonths, false, {
       name: `Dedicated Custom (${cpuInfo.name}) - ${billingCycle === 'yearly' ? '12 Tháng' : '1 Tháng'}`,
+      title: `Dedicated Custom (${cpuInfo.name}) - ${billingCycle === 'yearly' ? '12 Tháng' : '1 Tháng'}`,
       price: finalPrice,
       billingCycle: cycleMonths,
-      type: 'vps',
+      type: 'dedicated',
       details: `${cpuInfo.cores} • ${ramInfo.label} • ${storageInfo.label} • ${uplinkPrices[cfgUplink].label}`
     });
     router.push('/cart');

@@ -73,16 +73,16 @@ export const CouponInput: React.FC<CouponInputProps> = ({
 
   return (
     <div className="space-y-3">
-      <h3 className="text-sm font-semibold text-slate-700">Mã giảm giá</h3>
+      <h3 className="text-sm font-bold text-black">Mã giảm giá</h3>
       
       {appliedCoupon ? (
-        <div className="flex items-center gap-3 p-3 bg-emerald-50 border border-emerald-200 rounded-xl">
-          <CheckCircle className="w-5 h-5 text-emerald-600 shrink-0" />
+        <div className="flex items-center gap-3 p-3 bg-zinc-100 border border-zinc-300 rounded-xl">
+          <CheckCircle className="w-5 h-5 text-black shrink-0" />
           <div className="flex-1">
-            <p className="text-sm font-semibold text-emerald-900">
+            <p className="text-sm font-black text-black">
               {appliedCoupon.code}
             </p>
-            <p className="text-xs text-emerald-700">
+            <p className="text-xs text-zinc-600 font-medium">
               {appliedCoupon.discountType === 'percentage' 
                 ? `Giảm ${appliedCoupon.discountValue}%` 
                 : `Giảm ${appliedCoupon.discountValue.toLocaleString('vi-VN')}đ`}
@@ -90,29 +90,29 @@ export const CouponInput: React.FC<CouponInputProps> = ({
           </div>
           <button
             onClick={handleRemove}
-            className="p-1 hover:bg-emerald-100 rounded-lg transition-colors"
+            className="p-1 hover:bg-zinc-200 rounded-lg transition-colors cursor-pointer"
             title="Xóa mã giảm giá"
           >
-            <XCircle className="w-4 h-4 text-emerald-600" />
+            <XCircle className="w-4 h-4 text-black" />
           </button>
         </div>
       ) : (
         <div className="flex gap-2">
           <div className="flex-1 relative">
-            <Gift className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <Gift className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
             <input
               type="text"
               value={code}
               onChange={(e) => setCode(e.target.value.toUpperCase())}
               placeholder="NHẬP MÃ GIẢM GIÁ"
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 text-sm font-mono"
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-zinc-200 focus:outline-none focus:ring-1 focus:ring-black focus:border-black text-sm font-mono text-black bg-zinc-50"
               onKeyDown={(e) => e.key === 'Enter' && handleCheckCoupon()}
             />
           </div>
           <button
             onClick={handleCheckCoupon}
             disabled={isLoading || !code.trim()}
-            className="px-4 py-2.5 bg-slate-100 text-slate-700 rounded-xl font-semibold hover:bg-slate-200 transition-colors disabled:opacity-50 text-sm"
+            className="px-4 py-2.5 bg-black hover:bg-zinc-800 text-white rounded-xl font-bold transition-all disabled:opacity-40 text-sm cursor-pointer shadow-xs"
           >
             {isLoading ? (
               <Loader2 className="w-4 h-4 animate-spin" />
@@ -124,14 +124,14 @@ export const CouponInput: React.FC<CouponInputProps> = ({
       )}
 
       {error && (
-        <p className="text-xs text-red-600 flex items-center gap-1">
+        <p className="text-xs text-red-600 flex items-center gap-1 font-medium">
           <XCircle className="w-3 h-3" />
           {error}
         </p>
       )}
 
       {!appliedCoupon && !error && (
-        <p className="text-xs text-slate-500">
+        <p className="text-xs text-zinc-500">
           Chưa có mã giảm giá? Liên hệ chúng tôi để nhận ưu đãi!
         </p>
       )}

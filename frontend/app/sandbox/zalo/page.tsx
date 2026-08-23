@@ -7,7 +7,8 @@ import {
   QrCode, CheckCircle, Copy, Check, Clock, ShieldCheck, 
   ArrowRight, Loader2, Building2, RefreshCw, AlertCircle, Sparkles
 } from 'lucide-react';
-import confetti from 'canvas-confetti';
+import { getServiceDashboardUrl, getPaymentSuccessMessage } from '@/src/lib/serviceRedirect';
+import { PaymentSuccessReceipt } from '@/src/components/PaymentSuccessReceipt';
 
 function ZaloPaySandboxContent() {
   const searchParams = useSearchParams();
@@ -16,6 +17,7 @@ function ZaloPaySandboxContent() {
   const orderId = searchParams.get('orderId') || 'PAY_SAMPLE_ORDER';
   const amountStr = searchParams.get('amount') || '500000';
   const [amount, setAmount] = useState<number>(() => parseFloat(amountStr) || 500000);
+  const [orderData, setOrderData] = useState<any>(null);
 
   const [copiedField, setCopiedField] = useState<string | null>(null);
   const [timeLeft, setTimeLeft] = useState(900); // 15 minutes
@@ -40,7 +42,8 @@ function ZaloPaySandboxContent() {
   // Clean short alphanumeric transfer content conforming strictly to NAPAS 24/7 ZaloPay EMVCo spec (tag 62.08)
   const rawClean = orderId.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
   const shortOrderCode = rawClean.length > 10 ? rawClean.slice(0, 8) : (rawClean || 'TEST');
-  const cleanContent = `PAY${shortOrderCode}`;
+  const isTopUp = Boolean(searchParams.get('type') === 'topup' || (orderId && orderId.startsWith('TOPUP')));
+  const cleanContent = isTopUp ? (orderId.startsWith('TOPUP') ? orderId : `TOPUP${shortOrderCode}`) : `PAY${shortOrderCode}`;
 
   const zalopayInfo = {
     bankName: currentBankObj.name,
@@ -58,7 +61,7 @@ function ZaloPaySandboxContent() {
 
   // Sync actual order amount from backend
   useEffect(() => {
-    if (orderId && orderId !== 'PAY_SAMPLE_ORDER') {
+    if (!isTopUp && orderId && orderId !== 'PAY_SAMPLE_ORDER') {
       const token = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
       const headers: Record<string, string> = {};
       if (token) headers['Authorization'] = `Bearer ${token}`;
@@ -66,13 +69,16 @@ function ZaloPaySandboxContent() {
       fetch(`/api/orders/${orderId}`, { headers })
         .then(r => r.ok ? r.json() : null)
         .then(order => {
-          if (order && order.totalAmount) {
-            setAmount(order.totalAmount);
+          if (order) {
+            setOrderData(order);
+            if (order.totalAmount) {
+              setAmount(order.totalAmount);
+            }
           }
         })
         .catch(() => {});
     }
-  }, [orderId]);
+  }, [orderId, isTopUp]);
 
   // Fetch configured system settings if available
   useEffect(() => {
@@ -97,7 +103,18 @@ function ZaloPaySandboxContent() {
     return () => clearInterval(timer);
   }, []);
 
-  // Trigger Instant Payment & VPS Provisioning
+  const firstItem = orderData?.items?.[0];
+  const searchCat = searchParams.get('category') || searchParams.get('type') || '';
+  const searchName = searchParams.get('name') || searchParams.get('serviceName') || '';
+
+  const categorySlug = firstItem?.categorySlug || searchCat;
+  const servicePlanName = (firstItem?.servicePlanName && !firstItem.servicePlanName.startsWith('Dịch vụ '))
+    ? firstItem.servicePlanName
+    : (searchName || firstItem?.servicePlanName || '');
+
+  const serviceInfo = getServiceDashboardUrl(categorySlug, servicePlanName);
+
+  // Trigger Instant Payment & VPS/Service Provisioning / Wallet TopUp
   const handleSimulatePaymentSuccess = async () => {
     setIsLoading(true);
     try {
@@ -105,36 +122,49 @@ function ZaloPaySandboxContent() {
       const headers: Record<string, string> = { 'Content-Type': 'application/json' };
       if (token) headers['Authorization'] = `Bearer ${token}`;
 
-      const res = await fetch('/api/payments/sandbox/simulate-sepay', {
-        method: 'POST',
-        headers,
-        body: JSON.stringify({
-          idempotencyKey: cleanContent,
-          amount: amount,
-        }),
-      });
+      if (isTopUp) {
+        await fetch('/api/wallet/top-up', {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({ amount: Math.round(amount) }),
+        });
+        setStatus('success');
+        setMessage(`Hệ thống đã nhận được tiền ZaloPay và nạp thành công ${amount.toLocaleString('vi-VN')} đ vào ví của bạn!`);
+      } else {
+        await fetch('/api/payments/sandbox/simulate-sepay', {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({
+            idempotencyKey: cleanContent,
+            amount: amount,
+          }),
+        });
 
-      setStatus('success');
-      setMessage('Hệ thống đã nhận được tiền, kích hoạt máy ảo VPS và gửi email bàn giao thông số máy chủ tới hòm thư Gmail của bạn!');
-      confetti({
-        particleCount: 120,
-        spread: 80,
-        origin: { y: 0.6 }
-      });
+        if (orderId && orderId !== 'PAY_SAMPLE_ORDER') {
+          try {
+            const orderRes = await fetch(`/api/orders/${orderId}`, { headers });
+            if (orderRes.ok) {
+              const freshOrder = await orderRes.json();
+              setOrderData(freshOrder);
+              const cat = freshOrder.items?.[0]?.categorySlug || categorySlug;
+              const name = freshOrder.items?.[0]?.servicePlanName || servicePlanName;
+              setStatus('success');
+              setMessage(getPaymentSuccessMessage(cat, name));
+              return;
+            }
+          } catch {}
+        }
+
+        setStatus('success');
+        setMessage(getPaymentSuccessMessage(categorySlug, servicePlanName));
+      }
     } catch {
       setStatus('success');
-      setMessage('Giao dịch đã được xác nhận thành công!');
-      confetti({
-        particleCount: 80,
-        spread: 60,
-        origin: { y: 0.6 }
-      });
+      setMessage(isTopUp ? 'Nạp tiền vào ví thành công!' : getPaymentSuccessMessage(categorySlug, servicePlanName));
     } finally {
       setIsLoading(false);
     }
   };
-
-
 
   // Real-time polling to check if order has been paid in background
   useEffect(() => {
@@ -149,15 +179,13 @@ function ZaloPaySandboxContent() {
         const res = await fetch(`/api/orders/${orderId}`, { headers });
         if (res.ok) {
           const order = await res.json();
+          setOrderData(order);
           const isPaid = order.status === 2 || order.status === 'Paid' || String(order.status).toLowerCase() === 'paid';
           if (isPaid) {
             setStatus('success');
-            setMessage('Hệ thống đã nhận được tiền, kích hoạt máy ảo VPS và gửi email bàn giao thành công!');
-            confetti({
-              particleCount: 120,
-              spread: 80,
-              origin: { y: 0.6 }
-            });
+            const cat = order.items?.[0]?.categorySlug || '';
+            const name = order.items?.[0]?.servicePlanName || '';
+            setMessage(getPaymentSuccessMessage(cat, name));
             clearInterval(pollInterval);
           }
         }
@@ -183,64 +211,27 @@ function ZaloPaySandboxContent() {
 
   if (status === 'success') {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-blue-50 to-slate-50 flex items-center justify-center p-4">
-        <div className="max-w-lg w-full bg-white rounded-3xl p-8 sm:p-10 shadow-2xl border border-blue-100 text-center animate-in fade-in zoom-in-95 duration-300">
-          <div className="w-20 h-20 rounded-full bg-emerald-100 flex items-center justify-center mx-auto mb-6 shadow-inner">
-            <CheckCircle className="w-12 h-12 text-emerald-600" />
-          </div>
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold mb-3">
-            <Sparkles className="w-3.5 h-3.5" /> Giao Dịch Hoàn Tất
-          </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 mb-2">Thanh Toán Thành Công!</h1>
-          <p className="text-slate-500 mb-8 text-sm">
-            {message}
-          </p>
-
-          <div className="bg-slate-50 rounded-2xl p-5 mb-8 text-left border border-slate-200/80 space-y-3 text-sm">
-            <div className="flex justify-between items-center">
-              <span className="text-slate-500">Mã đơn hàng:</span>
-              <span className="font-mono font-bold text-slate-900 bg-white px-2 py-0.5 rounded border border-slate-200">{orderId}</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-slate-500">Số tiền:</span>
-              <span className="font-black text-lg text-[#1F1F1F]">{amount.toLocaleString('vi-VN')} đ</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-slate-500">Phương thức:</span>
-              <span className="font-bold text-slate-800 flex items-center gap-1.5">
-                <Building2 className="w-4 h-4 text-[#1F1F1F]" /> ZaloPay
-              </span>
-            </div>
-          </div>
-
-          <div className="space-y-3">
-            <Link
-              href="/dashboard/vps-instances"
-              className="w-full py-4 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-slate-900 font-bold text-base shadow-lg shadow-blue-500/20 hover:shadow-xl transition-all flex items-center justify-center gap-2"
-            >
-              Truy Cập Máy Chủ VPS Của Bạn
-              <ArrowRight className="w-5 h-5" />
-            </Link>
-            <Link
-              href="/dashboard/orders"
-              className="w-full py-3.5 rounded-xl border border-slate-200 text-slate-700 font-semibold text-sm hover:bg-slate-50 transition-all flex items-center justify-center"
-            >
-              Xem danh sách đơn hàng
-            </Link>
-          </div>
-        </div>
-      </div>
+      <PaymentSuccessReceipt
+        orderId={orderId}
+        amount={amount}
+        paymentMethod="Ví ZaloPay (ZaloPay QR)"
+        categorySlug={categorySlug}
+        servicePlanName={servicePlanName}
+        isTopUp={Boolean(isTopUp)}
+        customMessage={message}
+        orderData={orderData}
+      />
     );
   }
 
   return (
     <div className="min-h-screen bg-white py-10 px-4 flex items-center justify-center">
-      <div className="max-w-4xl w-full bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-100">
+      <div className="max-w-4xl w-full bg-white rounded-lg shadow-2xl overflow-hidden border border-slate-100">
         
         {/* Header Bar */}
         <div className="bg-gradient-to-r from-blue-700 via-indigo-700 to-blue-900 text-slate-900 p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center p-1.5 shadow-md">
+            <div className="w-12 h-12 rounded-md bg-white flex items-center justify-center p-1.5 shadow-md">
               <span className="font-black text-[#1F1F1F] text-lg tracking-tighter">MB</span>
             </div>
             <div>
@@ -254,7 +245,7 @@ function ZaloPaySandboxContent() {
             </div>
           </div>
 
-          <div className="flex items-center gap-2 bg-black/20 backdrop-blur-md px-4 py-2 rounded-2xl border border-white/10">
+          <div className="flex items-center gap-2 bg-black/20 backdrop-blur-md px-4 py-2 rounded-md border border-white/10">
             <Clock className="w-4 h-4 text-slate-200" />
             <span className="text-xs text-slate-200">Hết hạn sau:</span>
             <span className="font-mono font-black text-slate-200 text-sm">{formatTime(timeLeft)}</span>
@@ -265,9 +256,9 @@ function ZaloPaySandboxContent() {
         <div className="p-6 sm:p-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
           {/* Left: QR Code Section */}
-          <div className="lg:col-span-5 flex flex-col items-center justify-center bg-slate-50 p-6 rounded-3xl border border-slate-200/80 text-center">
+          <div className="lg:col-span-5 flex flex-col items-center justify-center bg-slate-50 p-6 rounded-lg border border-slate-200/80 text-center">
             {isFakeAccount ? (
-              <div className="w-60 h-60 flex flex-col items-center justify-center bg-red-50 border-2 border-dashed border-red-300 rounded-2xl p-4">
+              <div className="w-60 h-60 flex flex-col items-center justify-center bg-red-50 border-2 border-dashed border-red-300 rounded-md p-4">
                 <AlertCircle className="w-12 h-12 text-red-400 mb-3" />
                 <p className="text-sm font-bold text-red-600 mb-1">Chưa có STK thật</p>
                 <p className="text-[11px] text-red-500 leading-relaxed">
@@ -275,13 +266,13 @@ function ZaloPaySandboxContent() {
                 </p>
               </div>
             ) : (
-              <div className="bg-white p-3 rounded-2xl shadow-md border border-slate-200 relative group mb-4">
+              <div className="bg-white p-3 rounded-md shadow-md border border-slate-200 relative group mb-4">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   key={qrImageUrl}
                   src={qrImageUrl}
                   alt={`ZaloPay ${zalopayInfo.bankName} Payment`}
-                  className="w-60 h-60 object-contain rounded-lg transition-all"
+                  className="w-60 h-60 object-contain rounded-sm transition-all"
                   onError={(e) => {
                     const target = e.currentTarget;
                     const sepayFallback = `https://qr.sepay.vn/img?acc=${customAccNumber}&bank=${selectedBank}&amount=${Math.round(amount)}&des=${cleanContent}&template=compact`;
@@ -290,7 +281,7 @@ function ZaloPaySandboxContent() {
                     }
                   }}
                 />
-                <div className="absolute inset-0 bg-[#0068FF]/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
+                <div className="absolute inset-0 bg-[#0068FF]/10 rounded-md opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
                   <span className="text-xs font-bold bg-white text-[#1F1F1F] px-3 py-1.5 rounded-full shadow">
                     Quét bằng App Ngân hàng
                   </span>
@@ -319,31 +310,31 @@ function ZaloPaySandboxContent() {
           <div className="lg:col-span-7 space-y-4">
 
 
-            <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-3">
+            <div className="bg-slate-50 p-5 rounded-md border border-slate-200 space-y-3">
               <h3 className="text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">
                 Thông Tin Chuyển Khoản Thủ Công
               </h3>
 
               {/* Ngân hàng */}
               <div className="flex items-center justify-between py-2 border-b border-slate-200 text-sm">
-                <span className="text-slate-500">Ngân hàng</span>
+                <span className="text-slate-600">Ngân hàng</span>
                 <span className="font-bold text-slate-900">{zalopayInfo.bankName}</span>
               </div>
 
               {/* Chủ tài khoản */}
               <div className="flex items-center justify-between py-2 border-b border-slate-200 text-sm">
-                <span className="text-slate-500">Chủ tài khoản</span>
+                <span className="text-slate-600">Chủ tài khoản</span>
                 <span className="font-bold text-slate-900">{zalopayInfo.accountName}</span>
               </div>
 
               {/* Số tài khoản */}
               <div className="flex items-center justify-between py-2 border-b border-slate-200 text-sm">
-                <span className="text-slate-500">Số tài khoản</span>
+                <span className="text-slate-600">Số tài khoản</span>
                 <div className="flex items-center gap-2">
                   <span className="font-mono font-black text-base text-[#1F1F1F]">{zalopayInfo.accountNumber}</span>
                   <button
                     onClick={() => copyToClipboard(zalopayInfo.accountNumber, 'accountNumber')}
-                    className="p-1.5 rounded-lg bg-[#e3f2fd] text-[#1F1F1F] hover:bg-[#e3f2fd] transition-colors"
+                    className="p-1.5 rounded-sm bg-[#e3f2fd] text-[#1F1F1F] hover:bg-[#e3f2fd] transition-colors"
                     title="Sao chép"
                   >
                     {copiedField === 'accountNumber' ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
@@ -353,12 +344,12 @@ function ZaloPaySandboxContent() {
 
               {/* Số tiền */}
               <div className="flex items-center justify-between py-2 border-b border-slate-200 text-sm">
-                <span className="text-slate-500">Số tiền chính xác</span>
+                <span className="text-slate-600">Số tiền chính xác</span>
                 <div className="flex items-center gap-2">
                   <span className="font-black text-xl text-emerald-600">{amount.toLocaleString('vi-VN')} đ</span>
                   <button
                     onClick={() => copyToClipboard(amount.toString(), 'amount')}
-                    className="p-1.5 rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-colors"
+                    className="p-1.5 rounded-sm bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-colors"
                     title="Sao chép"
                   >
                     {copiedField === 'amount' ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
@@ -367,14 +358,14 @@ function ZaloPaySandboxContent() {
               </div>
 
               {/* Nội dung */}
-              <div className="flex items-center justify-between py-2 text-sm bg-amber-50/80 -mx-2 px-3 rounded-xl border border-amber-200">
+              <div className="flex items-center justify-between py-2 text-sm bg-amber-50/80 -mx-2 px-3 rounded border border-amber-200">
                 <div>
                   <span className="text-amber-800 text-xs block font-semibold">Nội dung chuyển khoản (Bắt buộc)</span>
                   <span className="font-mono font-black text-slate-900 text-base">{zalopayInfo.content}</span>
                 </div>
                 <button
                   onClick={() => copyToClipboard(zalopayInfo.content, 'content')}
-                  className="px-3 py-1.5 rounded-lg bg-amber-600 text-white font-bold text-xs hover:bg-amber-700 transition-colors flex items-center gap-1"
+                  className="px-3 py-1.5 rounded-sm bg-amber-600 text-white font-bold text-xs hover:bg-amber-700 transition-colors flex items-center gap-1"
                 >
                   {copiedField === 'content' ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
                   {copiedField === 'content' ? 'Đã chép' : 'Sao chép'}
@@ -384,16 +375,16 @@ function ZaloPaySandboxContent() {
 
             {/* Auto-confirm notice */}
             <div className="pt-2 space-y-3">
-              <div className="w-full py-4 rounded-2xl bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 text-center">
+              <div className="w-full py-4 rounded-md bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 text-center">
                 <p className="text-sm font-bold text-amber-800 flex items-center justify-center gap-2">
                   <ShieldCheck className="w-5 h-5 text-emerald-500" />
                   Hệ thống tự động xác nhận khi nhận được tiền
                 </p>
-                <button onClick={handleSimulatePaymentSuccess} disabled={isLoading} className="mt-3 w-full py-3 bg-slate-900 text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2">
+                <button onClick={handleSimulatePaymentSuccess} disabled={isLoading} className="mt-3 w-full py-3 bg-slate-900 text-white font-bold rounded shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2">
                   {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Sparkles className="w-5 h-5 text-amber-300" />}
                   Mô phỏng thanh toán thành công (Bypass)
                 </button>
-                <p className="text-xs text-amber-600 mt-1">Sau khi chuyển khoản, VPS sẽ được kích hoạt tự động trong vài giây</p>
+                <p className="text-xs text-amber-600 mt-1">Sau khi thanh toán qua ZaloPay, dịch vụ sẽ được kích hoạt tự động trong vài giây</p>
               </div>
 
               <div className="flex items-center justify-between text-xs text-slate-600 px-1">

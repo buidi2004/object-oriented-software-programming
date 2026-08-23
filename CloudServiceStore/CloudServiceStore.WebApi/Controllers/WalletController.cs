@@ -13,7 +13,7 @@ namespace CloudServiceStore.WebApi.Controllers;
 
 [ApiController]
 [Route("api/wallet")]
-[Authorize(Roles = "Customer")]
+[Authorize]
 public class WalletController : ControllerBase
 {
     private readonly IMediator _mediator;

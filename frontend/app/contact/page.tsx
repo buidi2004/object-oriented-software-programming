@@ -50,8 +50,6 @@ const SERVICE_TOPICS: Record<string, string> = {
 function ContactFormInner() {
   const searchParams = useSearchParams();
   const rawTopic = searchParams.get('topic') || searchParams.get('service') || searchParams.get('ref') || 'general';
-  
-  // Normalize topic key
   const defaultTopic = SERVICE_TOPICS[rawTopic] ? rawTopic : 'general';
 
   const [name, setName] = useState('');
@@ -101,469 +99,358 @@ function ContactFormInner() {
           name,
           email,
           phone,
-          subject: SERVICE_TOPICS[serviceTopic] || serviceTopic,
+          serviceTopic: SERVICE_TOPICS[serviceTopic] || serviceTopic,
           message
         });
       }
 
-      showToast('Yêu cầu đã được gửi thành công! Kỹ sư SEN CloudHost sẽ liên hệ với bạn trong vòng 15 phút.');
+      showToast('Yêu cầu của bạn đã được gửi thành công! Chuyên viên sẽ liên hệ trong 15 phút.');
       setName('');
       setEmail('');
       setPhone('');
       setMessage('');
-    } catch {
-      showToast('Yêu cầu đã được ghi nhận. Chúng tôi sẽ liên hệ lại với bạn sớm nhất!', 'success');
+    } catch (err: any) {
+      console.error(err);
+      showToast('Có lỗi xảy ra khi gửi tin nhắn. Vui lòng liên hệ Hotline 1900 6868!', 'error');
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-blue-500 selection:text-white">
+    <div className="min-h-screen bg-zinc-50 font-sans text-zinc-900 selection:bg-black selection:text-white">
       
-      {/* Toast Notification */}
-      {toast && (
-        <div className={`fixed bottom-6 right-6 z-50 px-6 py-4 rounded-md shadow-2xl text-white font-bold text-xs font-mono flex items-center gap-3 animate-in slide-in-from-bottom-5 border ${
-          toast.type === 'success' ? 'bg-emerald-950 border-emerald-500 text-emerald-300' : 'bg-rose-950 border-rose-500 text-rose-300'
-        }`}>
-          {toast.type === 'success' ? <CheckCircle2 className="w-5 h-5 text-emerald-400" /> : <AlertCircle className="w-5 h-5 text-rose-400" />}
-          <span>{toast.message}</span>
+      {/* 1. HERO SECTION - MONOCHROME DARK */}
+      <section className="bg-[#121212] text-white py-16 px-4 sm:px-6 lg:px-8 border-b border-zinc-800 relative">
+        <div className="max-w-4xl mx-auto text-center space-y-6">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-zinc-800 text-zinc-300 text-xs font-mono border border-zinc-700">
+            <Headphones className="w-3.5 h-3.5" />
+            <span>24/7 TECHNICAL SUPPORT &amp; ENTERPRISE CONSULTING</span>
+          </div>
+
+          <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-white leading-tight">
+            Liên Hệ &amp; Tư Vấn Giải Pháp Đám Mây
+          </h1>
+
+          <p className="text-zinc-400 text-xs sm:text-sm max-w-2xl mx-auto font-normal leading-relaxed">
+            Đội ngũ chuyên gia và kỹ sư Level 3 của SEN CloudHost sẵn sàng lắng nghe, tư vấn kiến trúc hạ tầng và đồng hành cùng sự phát triển của bạn.
+          </p>
+
+          <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+            <a
+              href="tel:19006868"
+              className="px-5 py-2.5 rounded-xl bg-white hover:bg-zinc-200 text-black font-black text-xs transition-all shadow-md flex items-center gap-2"
+            >
+              <Phone className="w-4 h-4" />
+              <span>Hotline: 1900 6868 (24/7)</span>
+            </a>
+            <a
+              href="https://t.me/cloudhost_vn"
+              target="_blank"
+              rel="noreferrer"
+              className="px-5 py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white border border-zinc-700 font-bold text-xs transition-all flex items-center gap-2"
+            >
+              <FaTelegram className="w-4 h-4" />
+              <span>Telegram Hỗ Trợ Nhanh</span>
+            </a>
+          </div>
         </div>
-      )}
+      </section>
 
-      {/* 1. COMPACT FUNCTIONAL SUPPORT HEADER (ZERO MARKETING FLUFF) */}
-      <section className="pt-10 pb-12 bg-slate-100 border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-12">
+
+        {/* 2. DIRECT CHANNELS GRID - MONOCHROME */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           
-          {/* Breadcrumb */}
-          <nav className="flex items-center gap-2 text-xs font-mono text-slate-600 mb-6">
-            <Link href="/" className="hover:text-slate-700 transition-colors">HOME</Link>
-            <span>/</span>
-            <span className="text-slate-700 font-bold">CONTACT &amp; SUPPORT</span>
-          </nav>
-
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="bg-white p-5 rounded-2xl border border-zinc-200 shadow-2xs hover:border-black transition-all space-y-3">
+            <div className="w-10 h-10 rounded-xl bg-zinc-100 text-black flex items-center justify-center font-bold">
+              <Phone className="w-5 h-5" />
+            </div>
             <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm bg-blue-950 text-slate-700 text-xs font-mono mb-3 border border-blue-800">
-                <Headphones className="w-3.5 h-3.5" />
-                24/7 TECHNICAL SUPPORT CENTER
-              </div>
-              <h1 className="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight">
-                Liên Hệ &amp; Trung Tâm Hỗ Trợ Kỹ Thuật
-              </h1>
-              <p className="text-slate-600 text-xs sm:text-sm mt-1 font-normal">
-                Kênh tiếp nhận sự cố, tư vấn kiến trúc hạ tầng và giải đáp thắc mắc dịch vụ trực tiếp từ kỹ sư SEN CloudHost.
+              <div className="text-xs text-zinc-500 font-mono">TỔNG ĐÀI 24/7</div>
+              <a href="tel:19006868" className="text-base font-black text-black hover:underline">1900 6868</a>
+              <p className="text-[11px] text-zinc-500 mt-1">Hỗ trợ sự cố khẩn cấp máy chủ</p>
+            </div>
+          </div>
+
+          <div className="bg-white p-5 rounded-2xl border border-zinc-200 shadow-2xs hover:border-black transition-all space-y-3">
+            <div className="w-10 h-10 rounded-xl bg-zinc-100 text-black flex items-center justify-center font-bold">
+              <Mail className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="text-xs text-zinc-500 font-mono">EMAIL KỸ THUẬT</div>
+              <a href="mailto:support@cloudhost.vn" className="text-sm font-black text-black hover:underline truncate block">support@cloudhost.vn</a>
+              <p className="text-[11px] text-zinc-500 mt-1">Phản hồi cam kết &lt; 15 phút</p>
+            </div>
+          </div>
+
+          <div className="bg-white p-5 rounded-2xl border border-zinc-200 shadow-2xs hover:border-black transition-all space-y-3">
+            <div className="w-10 h-10 rounded-xl bg-zinc-100 text-black flex items-center justify-center font-bold">
+              <FaTelegram className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="text-xs text-zinc-500 font-mono">TELEGRAM VIP</div>
+              <a href="https://t.me/cloudhost_vn" target="_blank" rel="noreferrer" className="text-sm font-black text-black hover:underline">@cloudhost_vn</a>
+              <p className="text-[11px] text-zinc-500 mt-1">Kỹ sư trực tiếp 24/7</p>
+            </div>
+          </div>
+
+          <div className="bg-white p-5 rounded-2xl border border-zinc-200 shadow-2xs hover:border-black transition-all space-y-3">
+            <div className="w-10 h-10 rounded-xl bg-zinc-100 text-black flex items-center justify-center font-bold">
+              <SiZalo className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="text-xs text-zinc-500 font-mono">ZALO OFFICIAL</div>
+              <a href="https://zalo.me/0912345678" target="_blank" rel="noreferrer" className="text-sm font-black text-black hover:underline">SEN CloudHost OA</a>
+              <p className="text-[11px] text-zinc-500 mt-1">Tư vấn kinh doanh &amp; hóa đơn</p>
+            </div>
+          </div>
+
+        </div>
+
+        {/* 3. MAIN FORM & SIDEBAR INFO */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          
+          {/* Left: Contact Form */}
+          <div className="lg:col-span-7 bg-white rounded-3xl border border-zinc-200 p-6 sm:p-8 shadow-2xs space-y-6">
+            <div className="border-b border-zinc-100 pb-4">
+              <span className="text-[11px] font-mono font-bold text-zinc-500 uppercase tracking-wider">FORM YÊU CẦU</span>
+              <h2 className="text-2xl font-black text-black mt-1">Gửi Yêu Cầu Tư Vấn Cho Kỹ Sư</h2>
+              <p className="text-xs text-zinc-500 mt-1">
+                Điền thông tin của bạn bên dưới, hệ thống sẽ tự động chuyển tiếp tới đúng kỹ sư chuyên trách.
               </p>
             </div>
 
-            {/* Live Operations Telemetry Status */}
-            <div className="p-3.5 rounded-md bg-white border border-slate-200 font-mono text-xs space-y-1.5 shrink-0">
-              <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" />
-                <span className="text-slate-900 font-bold text-[11px]">HỆ THỐNG VẬN HÀNH BÌNH THƯỜNG</span>
+            {toast && (
+              <div className={`p-4 rounded-xl text-xs font-bold flex items-center gap-2 ${
+                toast.type === 'success'
+                  ? 'bg-zinc-900 text-white'
+                  : 'bg-zinc-100 text-black border border-zinc-300'
+              }`}>
+                {toast.type === 'success' ? <CheckCircle2 className="w-4 h-4 text-white shrink-0" /> : <AlertCircle className="w-4 h-4 text-black shrink-0" />}
+                <span>{toast.message}</span>
               </div>
-              <div className="text-[10px] text-slate-600 flex items-center justify-between gap-4">
-                <span>NOC Response SLA:</span>
-                <span className="text-emerald-400 font-bold">&lt; 5 Phút</span>
-              </div>
-            </div>
-          </div>
+            )}
 
-        </div>
-      </section>
-
-      {/* 2. PRIMARY CONTACT CHANNELS (SINGLE SOURCE FOR HOTLINE) */}
-      <section className="py-10 bg-slate-50 border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 font-mono text-xs">
-            
-            {/* Channel 1: Primary Hotline (Only place printing full number) */}
-            <div className="p-5 rounded-md bg-white border border-slate-200 hover:border-blue-500/50 transition-all flex flex-col justify-between space-y-4 group">
-              <div className="flex items-center justify-between">
-                <div className="w-10 h-10 rounded bg-blue-950 text-slate-700 border border-blue-900 flex items-center justify-center">
-                  <Phone className="w-5 h-5" />
-                </div>
-                <span className="text-[10px] px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-900 font-bold">
-                  24/7 MIỄN CƯỚC
-                </span>
-              </div>
-              <div>
-                <div className="text-slate-600 text-[11px]">Tổng Đài Khẩn Cấp (Hotline):</div>
-                <a href="tel:19006888" className="text-lg font-black text-slate-900 hover:text-slate-700 transition-colors block mt-0.5">
-                  1900 6888
-                </a>
-                <div className="text-[10px] text-slate-600 mt-1">Hỗ trợ kỹ thuật &amp; cứu hộ server tức thì</div>
-              </div>
-            </div>
-
-            {/* Channel 2: Official Support Email */}
-            <div className="p-5 rounded-md bg-white border border-slate-200 hover:border-sky-500/50 transition-all flex flex-col justify-between space-y-4 group">
-              <div className="flex items-center justify-between">
-                <div className="w-10 h-10 rounded bg-sky-950 text-slate-700 border border-sky-900 flex items-center justify-center">
-                  <Mail className="w-5 h-5" />
-                </div>
-                <span className="text-[10px] px-2 py-0.5 rounded bg-sky-950 text-slate-700 border border-sky-900 font-bold">
-                  SLA &lt; 15M
-                </span>
-              </div>
-              <div>
-                <div className="text-slate-600 text-[11px]">Hộp Thư Kỹ Thuật (Email):</div>
-                <a href="mailto:support@cloudhost.vn" className="text-sm font-bold text-slate-700 hover:underline block mt-0.5 truncate">
-                  support@cloudhost.vn
-                </a>
-                <div className="text-[10px] text-slate-600 mt-1">Lưu vết và tiếp nhận yêu cầu có biên bản</div>
-              </div>
-            </div>
-
-            {/* Channel 3: Technical Ticket System */}
-            <div className="p-5 rounded-md bg-white border border-slate-200 hover:border-amber-500/50 transition-all flex flex-col justify-between space-y-4 group">
-              <div className="flex items-center justify-between">
-                <div className="w-10 h-10 rounded bg-amber-950 text-amber-400 border border-amber-900 flex items-center justify-center">
-                  <MessageSquare className="w-5 h-5" />
-                </div>
-                <span className="text-[10px] px-2 py-0.5 rounded bg-amber-950 text-amber-400 border border-amber-900 font-bold">
-                  KHUYÊN DÙNG
-                </span>
-              </div>
-              <div>
-                <div className="text-slate-600 text-[11px]">Hệ Thống Yêu Cầu (Ticket):</div>
-                <Link href="/support/tickets" className="text-sm font-bold text-amber-400 hover:text-amber-300 flex items-center gap-1 mt-0.5">
-                  <span>Mở Ticket Kỹ Thuật</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </Link>
-                <div className="text-[10px] text-slate-600 mt-1">Kỹ sư Level 3 xử lý trực tiếp trên hệ thống</div>
-              </div>
-            </div>
-
-            {/* Channel 4: VIP Direct Messaging */}
-            <div className="p-5 rounded-md bg-white border border-slate-200 hover:border-purple-500/50 transition-all flex flex-col justify-between space-y-4 group">
-              <div className="flex items-center justify-between">
-                <div className="w-10 h-10 rounded bg-purple-950 text-purple-400 border border-purple-900 flex items-center justify-center">
-                  <MessageCircle className="w-5 h-5" />
-                </div>
-                <span className="text-[10px] px-2 py-0.5 rounded bg-purple-950 text-purple-400 border border-purple-900 font-bold">
-                  REALTIME
-                </span>
-              </div>
-              <div>
-                <div className="text-slate-600 text-[11px]">Kênh Telegram / Zalo VIP:</div>
-                <a href="https://t.me" target="_blank" rel="noreferrer" className="text-sm font-bold text-purple-400 hover:text-purple-300 flex items-center gap-1 mt-0.5">
-                  <span>@sencloud_support</span>
-                  <ExternalLink className="w-3 h-3" />
-                </a>
-                <div className="text-[10px] text-slate-600 mt-1">Tư vấn cấu hình máy chủ &amp; giải pháp 1-1</div>
-              </div>
-            </div>
-
-          </div>
-
-        </div>
-      </section>
-
-      {/* 3. MAIN INTERACTIVE FORM & VIP CONSULTATION CHANNELS */}
-      <section className="py-16 bg-white border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            
-            {/* Left Column (7 Cols): Dynamic Contact & Inquiry Form */}
-            <div className="lg:col-span-7 p-6 sm:p-8 rounded-lg bg-white border border-slate-200 shadow-xl space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-4">
               
               <div>
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-sm bg-blue-950 text-slate-700 text-xs font-mono uppercase mb-2 border border-blue-900">
-                  <SendHorizontal className="w-3.5 h-3.5" />
-                  YÊU CẦU TƯ VẤN &amp; HỖ TRỢ DỰ ÁN
-                </div>
-                <h2 className="text-xl sm:text-2xl font-black text-slate-900">
-                  Gửi Thông Tin Nhu Cầu Của Bạn
-                </h2>
-                <p className="text-xs text-slate-600 mt-1 font-normal">
-                  Chuyên viên giải pháp hạ tầng sẽ phân tích yêu cầu và liên hệ lại trong vòng 15 phút.
-                </p>
+                <label className="block text-xs font-bold text-zinc-700 mb-1">Chủ Đề Cần Tư Vấn *</label>
+                <select
+                  value={serviceTopic}
+                  onChange={(e) => setServiceTopic(e.target.value)}
+                  className="w-full px-4 py-2.5 rounded-xl bg-zinc-50 border border-zinc-200 text-xs font-bold text-black focus:outline-none focus:ring-1 focus:ring-black focus:border-black"
+                >
+                  {Object.entries(SERVICE_TOPICS).map(([key, label]) => (
+                    <option key={key} value={key}>{label}</option>
+                  ))}
+                </select>
               </div>
 
-              <form onSubmit={handleSubmit} className="space-y-4 font-mono text-xs">
-                
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
-                    <label className="text-slate-700 font-bold uppercase text-[10px]">Họ và Tên *</label>
-                    <input
-                      type="text"
-                      required
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      placeholder="Nguyễn Văn A"
-                      className="w-full px-4 py-3 rounded bg-slate-100 border border-slate-200 text-slate-900 font-sans text-xs focus:outline-none focus:border-blue-500 transition-all"
-                    />
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <label className="text-slate-700 font-bold uppercase text-[10px]">Email Công Việc *</label>
-                    <input
-                      type="email"
-                      required
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="ten@doanhnghiep.com"
-                      className="w-full px-4 py-3 rounded bg-slate-100 border border-slate-200 text-slate-900 font-sans text-xs focus:outline-none focus:border-blue-500 transition-all"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
-                    <label className="text-slate-700 font-bold uppercase text-[10px]">Số Điện Thoại</label>
-                    <input
-                      type="tel"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      placeholder="0987 654 321"
-                      className="w-full px-4 py-3 rounded bg-slate-100 border border-slate-200 text-slate-900 font-sans text-xs focus:outline-none focus:border-blue-500 transition-all"
-                    />
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <label className="text-slate-700 font-bold uppercase text-[10px]">Chủ Đề Quan Tâm</label>
-                    <select
-                      value={serviceTopic}
-                      onChange={(e) => setServiceTopic(e.target.value)}
-                      className="w-full px-4 py-3 rounded bg-slate-100 border border-slate-200 text-slate-700 font-bold text-xs focus:outline-none focus:border-blue-500 transition-all"
-                    >
-                      {Object.entries(SERVICE_TOPICS).map(([key, label]) => (
-                        <option key={key} value={key} className="bg-white text-slate-800">
-                          {label}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="text-slate-700 font-bold uppercase text-[10px]">Nội Dung Chi Tiết Hoặc Câu Hỏi *</label>
-                  <textarea
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-zinc-700 mb-1">Họ Và Tên Của Bạn *</label>
+                  <input
+                    type="text"
                     required
-                    rows={4}
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    placeholder="Mô tả cấu hình mong muốn, lưu lượng truy cập dự kiến, bài toán kỹ thuật cần xử lý..."
-                    className="w-full px-4 py-3 rounded bg-slate-100 border border-slate-200 text-slate-900 font-sans text-xs focus:outline-none focus:border-blue-500 transition-all resize-none leading-relaxed"
+                    placeholder="Ví dụ: Nguyễn Văn Hùng"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="w-full px-4 py-2.5 rounded-xl bg-zinc-50 border border-zinc-200 text-xs text-black focus:outline-none focus:ring-1 focus:ring-black focus:border-black"
                   />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-zinc-700 mb-1">Số Điện Thoại / Zalo *</label>
+                  <input
+                    type="tel"
+                    placeholder="0988 888 999"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    className="w-full px-4 py-2.5 rounded-xl bg-zinc-50 border border-zinc-200 text-xs text-black focus:outline-none focus:ring-1 focus:ring-black focus:border-black"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-zinc-700 mb-1">Địa Chỉ Email Nhận Phản Hồi *</label>
+                <input
+                  type="email"
+                  required
+                  placeholder="your.email@company.vn"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full px-4 py-2.5 rounded-xl bg-zinc-50 border border-zinc-200 text-xs text-black focus:outline-none focus:ring-1 focus:ring-black focus:border-black"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-zinc-700 mb-1">Nội Dung Yêu Cầu Hoặc Mô Tả Bài Toán Của Bạn *</label>
+                <textarea
+                  required
+                  rows={4}
+                  placeholder="Mô tả số lượng máy chủ, cấu hình CPU/RAM mong muốn, lượng traffic hàng ngày hoặc các vấn đề kỹ thuật đang gặp phải..."
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  className="w-full px-4 py-2.5 rounded-xl bg-zinc-50 border border-zinc-200 text-xs text-black focus:outline-none focus:ring-1 focus:ring-black focus:border-black leading-relaxed"
+                />
+              </div>
+
+              <div className="flex items-center justify-between pt-2">
+                <div className="text-[11px] text-zinc-400">
+                  Cam kết bảo mật thông tin &bull; Phản hồi &lt; 15 phút
                 </div>
 
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full py-3.5 rounded bg-blue-600 hover:bg-blue-500 text-white font-mono font-bold text-xs uppercase tracking-wider transition-all shadow-lg shadow-blue-600/30 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                  className="px-6 py-3 rounded-xl bg-black hover:bg-zinc-800 text-white font-black text-xs transition-all shadow-md flex items-center gap-2 cursor-pointer disabled:opacity-50"
                 >
                   {isSubmitting ? (
                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                   ) : (
-                    <>
-                      <Send className="w-4 h-4" />
-                      <span>GỬI YÊU CẦU TƯ VẤN NGAY</span>
-                    </>
+                    <Send className="w-4 h-4" />
                   )}
+                  <span>Gửi Yêu Cầu Ngay</span>
                 </button>
-
-                <div className="pt-2 text-[10px] text-slate-600 text-center flex items-center justify-center gap-1.5">
-                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-                  <span>Cam kết bảo mật thông tin doanh nghiệp theo tiêu chuẩn ISO 27001</span>
-                </div>
-
-              </form>
-
-            </div>
-
-            {/* Right Column (5 Cols): Unique VIP Channels & Office Details */}
-            <div className="lg:col-span-5 space-y-6">
-              
-              {/* VIP Direct Channels (Replaces duplicate box with high-value actions) */}
-              <div className="p-6 rounded-lg bg-white border border-slate-200 space-y-4 font-mono text-xs">
-                <div className="flex items-center justify-between pb-3 border-b border-slate-200">
-                  <span className="font-bold text-slate-900 uppercase flex items-center gap-2">
-                    <Zap className="w-4 h-4 text-amber-400" />
-                    KÊNH KẾT NỐI KỸ SƯ 1-1
-                  </span>
-                  <span className="text-[10px] px-2 py-0.5 rounded bg-amber-950 text-amber-400 border border-amber-800">
-                    ONLINE
-                  </span>
-                </div>
-
-                <p className="text-slate-600 text-[11px] leading-relaxed font-sans font-normal">
-                  Dành cho các doanh nghiệp, dự án cần tư vấn thiết kế cụm máy chủ chuyên biệt hoặc xử lý cứu hộ dữ liệu khẩn cấp.
-                </p>
-
-                <div className="space-y-2">
-                  <a
-                    href="https://t.me"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="p-3 rounded bg-slate-100 border border-slate-200 hover:border-sky-500/50 transition-all flex items-center justify-between group"
-                  >
-                    <div className="flex items-center gap-3">
-                      <FaTelegram className="w-5 h-5 text-slate-700" />
-                      <div>
-                        <div className="font-bold text-slate-900 text-xs">Telegram Support VIP</div>
-                        <div className="text-[10px] text-slate-600">@sencloud_support</div>
-                      </div>
-                    </div>
-                    <ArrowRight className="w-4 h-4 text-slate-600 group-hover:text-slate-700 transition-colors" />
-                  </a>
-
-                  <a
-                    href="https://zalo.me"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="p-3 rounded bg-slate-100 border border-slate-200 hover:border-blue-500/50 transition-all flex items-center justify-between group"
-                  >
-                    <div className="flex items-center gap-3">
-                      <SiZalo className="w-5 h-5 text-slate-700" />
-                      <div>
-                        <div className="font-bold text-slate-900 text-xs">Zalo Official Account</div>
-                        <div className="text-[10px] text-slate-600">SEN CloudHost Vietnam</div>
-                      </div>
-                    </div>
-                    <ArrowRight className="w-4 h-4 text-slate-600 group-hover:text-slate-700 transition-colors" />
-                  </a>
-                </div>
               </div>
 
-              {/* Physical Office Details (Without repeating full numbers 4 times) */}
-              <div className="p-6 rounded-lg bg-white border border-slate-200 space-y-4 font-mono text-xs">
-                <div className="text-slate-900 font-bold uppercase pb-2 border-b border-slate-200 flex items-center gap-2">
-                  <Building2 className="w-4 h-4 text-slate-700" />
-                  ĐỊA ĐIỂM VĂN PHÒNG &amp; PHÒNG MÁY
-                </div>
-
-                {/* Hanoi */}
-                <div className="space-y-1">
-                  <div className="font-bold text-slate-900 text-[11px] flex items-center justify-between">
-                    <span>Trụ Sở Chính (Hà Nội):</span>
-                    <a href="tel:19006888" className="text-slate-700 text-[10px] hover:underline">Gọi ngay →</a>
-                  </div>
-                  <p className="text-slate-600 text-[11px] font-sans">
-                    Tầng 12, Tòa nhà HITC, 239 Xuân Thủy, Cầu Giấy, TP. Hà Nội
-                  </p>
-                </div>
-
-                {/* HCM */}
-                <div className="space-y-1 pt-2 border-t border-slate-200/60">
-                  <div className="font-bold text-slate-900 text-[11px] flex items-center justify-between">
-                    <span>Chi Nhánh (TP. Hồ Chí Minh):</span>
-                    <a href="tel:19006888" className="text-slate-700 text-[10px] hover:underline">Gọi ngay →</a>
-                  </div>
-                  <p className="text-slate-600 text-[11px] font-sans">
-                    Tòa nhà Viettel Complex, 285 Cách Mạng Tháng Tám, Quận 10, TP.HCM
-                  </p>
-                </div>
-              </div>
-
-            </div>
-
+            </form>
           </div>
 
-        </div>
-      </section>
-
-      {/* 4. INTERACTIVE EMBEDDED MAP & FAQS (NO EMPTY GRAY BOXES) */}
-      <section className="py-16 bg-slate-50 border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          {/* Right: Office Locations & SLA Commitments */}
+          <div className="lg:col-span-5 space-y-6">
             
-            {/* Left: Interactive Real Embedded Map (7 Cols) */}
-            <div className="lg:col-span-7 p-6 rounded-lg bg-white border border-slate-200 space-y-4">
-              <div className="flex items-center justify-between pb-2 border-b border-slate-200 font-mono text-xs">
-                <div className="flex items-center gap-2">
-                  <MapPin className="w-4 h-4 text-emerald-400" />
-                  <span className="font-bold text-slate-900 uppercase">BẢN ĐỒ VĂN PHÒNG</span>
+            {/* SLA Commitments */}
+            <div className="bg-white rounded-3xl border border-zinc-200 p-6 shadow-2xs space-y-4">
+              <h3 className="text-base font-black text-black flex items-center gap-2">
+                <ShieldCheck className="w-5 h-5 text-black" />
+                <span>Cam Kết Chất Lượng Dịch Vụ (SLA)</span>
+              </h3>
+
+              <div className="space-y-3 text-xs">
+                <div className="flex items-start gap-3 p-3 rounded-xl bg-zinc-50 border border-zinc-200">
+                  <Clock className="w-4 h-4 text-black shrink-0 mt-0.5" />
+                  <div>
+                    <div className="font-bold text-black">Tiếp Nhận Khẩn Cấp Trong 30s</div>
+                    <p className="text-[11px] text-zinc-500 mt-0.5">Hotline 1900 6868 và Telegram phản hồi trực tiếp 24/7/365.</p>
+                  </div>
                 </div>
-                
-                {/* Location Switch Tabs */}
-                <div className="flex items-center gap-1.5 p-1 rounded bg-slate-100 border border-slate-200">
+
+                <div className="flex items-start gap-3 p-3 rounded-xl bg-zinc-50 border border-zinc-200">
+                  <Zap className="w-4 h-4 text-black shrink-0 mt-0.5" />
+                  <div>
+                    <div className="font-bold text-black">Phản Hồi Ticket &lt; 15 Phút</div>
+                    <p className="text-[11px] text-zinc-500 mt-0.5">Kỹ sư Level 3 trực tiếp kiểm tra và phân tích log hệ thống.</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3 p-3 rounded-xl bg-zinc-50 border border-zinc-200">
+                  <Activity className="w-4 h-4 text-black shrink-0 mt-0.5" />
+                  <div>
+                    <div className="font-bold text-black">Cam Kết 99.99% Uptime Mạng</div>
+                    <p className="text-[11px] text-zinc-500 mt-0.5">Hạ tầng Tier III tiêu chuẩn quốc tế tại Viettel &amp; VNPT IDC.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Office Locations Map Tab */}
+            <div className="bg-white rounded-3xl border border-zinc-200 p-6 shadow-2xs space-y-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-base font-black text-black flex items-center gap-2">
+                  <Building2 className="w-5 h-5 text-black" />
+                  <span>Văn Phòng Làm Việc</span>
+                </h3>
+
+                <div className="flex items-center gap-1 bg-zinc-100 p-1 rounded-xl">
                   <button
                     onClick={() => setActiveMapTab('hn')}
-                    className={`px-3 py-1 rounded-sm text-[10px] font-bold transition-all ${
-                      activeMapTab === 'hn'
-                        ? 'bg-blue-600 text-white shadow'
-                        : 'text-slate-600 hover:text-white'
+                    className={`px-3 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
+                      activeMapTab === 'hn' ? 'bg-black text-white shadow-xs' : 'text-zinc-600 hover:text-black'
                     }`}
                   >
-                    Hà Nội (HITC)
+                    Hà Nội
                   </button>
                   <button
                     onClick={() => setActiveMapTab('hcm')}
-                    className={`px-3 py-1 rounded-sm text-[10px] font-bold transition-all ${
-                      activeMapTab === 'hcm'
-                        ? 'bg-blue-600 text-white shadow'
-                        : 'text-slate-600 hover:text-white'
+                    className={`px-3 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
+                      activeMapTab === 'hcm' ? 'bg-black text-white shadow-xs' : 'text-zinc-600 hover:text-black'
                     }`}
                   >
-                    TP.HCM (Viettel)
+                    TP.HCM
                   </button>
                 </div>
               </div>
 
-              {/* Real Google Maps iframe embed */}
-              <div className="w-full h-[320px] rounded-md overflow-hidden border border-slate-200 relative bg-slate-100">
-                {activeMapTab === 'hn' ? (
-                  <iframe
-                    title="Hanoi Office Map"
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3723.9244031580227!2d105.78715871540237!3d21.03571059291881!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab483ed5c935%3A0x6b306443c224af86!2sHITC%20Building!5e0!3m2!1svi!2s!4v1689617260589!5m2!1svi!2s"
-                    className="w-full h-full border-0 grayscale invert contrast-125 opacity-90"
-                    allowFullScreen={false}
-                    loading="lazy"
-                  />
-                ) : (
-                  <iframe
-                    title="HCM Office Map"
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.460233076123!2d106.67784361533418!3d10.776019462148154!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f20536ec6f9%3A0x2a987dcfc7c8c83a!2sViettel%20Complex%20Building!5e0!3m2!1svi!2s!4v1689617380123!5m2!1svi!2s"
-                    className="w-full h-full border-0 grayscale invert contrast-125 opacity-90"
-                    allowFullScreen={false}
-                    loading="lazy"
-                  />
-                )}
-              </div>
-            </div>
-
-            {/* Right: Technical Support FAQ Accordion (5 Cols) */}
-            <div className="lg:col-span-5 p-6 rounded-lg bg-white border border-slate-200 space-y-4">
-              <div className="font-mono text-xs text-slate-900 font-bold uppercase pb-2 border-b border-slate-200 flex items-center gap-2">
-                <HelpCircle className="w-4 h-4 text-slate-700" />
-                CÂU HỎI THƯỜNG GẶP KHI LIÊN HỆ
-              </div>
-
-              <div className="space-y-3 font-sans">
-                {FAQS.map((faq, idx) => (
-                  <div
-                    key={idx}
-                    className="rounded bg-slate-100 border border-slate-200 overflow-hidden transition-all"
-                  >
-                    <button
-                      onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
-                      className="w-full p-3.5 text-left flex items-center justify-between gap-3 focus:outline-none"
-                    >
-                      <span className="font-bold text-xs text-slate-800">{faq.question}</span>
-                      <div className="w-5 h-5 rounded bg-white border border-slate-200 flex items-center justify-center shrink-0 text-slate-700">
-                        {openFaq === idx ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
-                      </div>
-                    </button>
-
-                    {openFaq === idx && (
-                      <div className="px-3.5 pb-3.5 text-[11px] text-slate-600 leading-relaxed border-t border-slate-200/80 pt-2.5">
-                        {faq.answer}
-                      </div>
-                    )}
+              {activeMapTab === 'hn' ? (
+                <div className="space-y-3 text-xs">
+                  <div className="flex items-start gap-2 text-zinc-700">
+                    <MapPin className="w-4 h-4 text-black shrink-0 mt-0.5" />
+                    <div>
+                      <div className="font-bold text-black">Trụ Sở Chính - Hà Nội:</div>
+                      <p className="text-zinc-500 mt-0.5">Tầng 18, Tòa nhà Keangnam Landmark 72, Đường Phạm Hùng, Q. Nam Từ Liêm, Hà Nội.</p>
+                    </div>
                   </div>
-                ))}
-              </div>
+                  <div className="flex items-center gap-2 text-zinc-500 font-mono text-[11px]">
+                    <Clock className="w-3.5 h-3.5 text-zinc-400" />
+                    <span>Giờ làm việc: 08:00 - 18:00 (Thứ 2 - Thứ 7)</span>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-3 text-xs">
+                  <div className="flex items-start gap-2 text-zinc-700">
+                    <MapPin className="w-4 h-4 text-black shrink-0 mt-0.5" />
+                    <div>
+                      <div className="font-bold text-black">Chi Nhánh - TP. Hồ Chí Minh:</div>
+                      <p className="text-zinc-500 mt-0.5">Tầng 12, Tòa nhà Bitexco Financial Tower, Số 2 Hải Triều, Bến Nghé, Quận 1, TP.HCM.</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 text-zinc-500 font-mono text-[11px]">
+                    <Clock className="w-3.5 h-3.5 text-zinc-400" />
+                    <span>Giờ làm việc: 08:00 - 18:00 (Thứ 2 - Thứ 7)</span>
+                  </div>
+                </div>
+              )}
             </div>
 
           </div>
 
         </div>
-      </section>
+
+        {/* 4. FREQUENTLY ASKED QUESTIONS */}
+        <div className="bg-white rounded-3xl border border-zinc-200 p-6 sm:p-10 shadow-2xs space-y-6">
+          <div className="border-b border-zinc-100 pb-4">
+            <span className="text-[11px] font-mono font-bold text-zinc-500 uppercase tracking-wider">HỎI ĐÁP NHANH</span>
+            <h2 className="text-2xl font-black text-black mt-1">Câu Hỏi Thường Gặp Khi Liên Hệ</h2>
+          </div>
+
+          <div className="divide-y divide-zinc-100">
+            {FAQS.map((faq, index) => {
+              const isOpen = openFaq === index;
+              return (
+                <div key={index} className="py-4">
+                  <button
+                    onClick={() => setOpenFaq(isOpen ? null : index)}
+                    className="w-full flex items-center justify-between text-left gap-4 font-bold text-sm text-black hover:text-zinc-600 transition-colors cursor-pointer"
+                  >
+                    <span>{faq.question}</span>
+                    <span className="w-6 h-6 rounded-full bg-zinc-100 flex items-center justify-center shrink-0">
+                      {isOpen ? <Minus className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
+                    </span>
+                  </button>
+                  {isOpen && (
+                    <p className="mt-3 text-xs text-zinc-600 leading-relaxed font-normal animate-in fade-in">
+                      {faq.answer}
+                    </p>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+      </div>
 
     </div>
   );
@@ -571,7 +458,11 @@ function ContactFormInner() {
 
 export default function ContactPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-slate-50 flex items-center justify-center text-slate-600 font-mono">Loading Contact Center...</div>}>
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-zinc-50">
+        <div className="w-8 h-8 border-3 border-black border-t-transparent rounded-full animate-spin" />
+      </div>
+    }>
       <ContactFormInner />
     </Suspense>
   );

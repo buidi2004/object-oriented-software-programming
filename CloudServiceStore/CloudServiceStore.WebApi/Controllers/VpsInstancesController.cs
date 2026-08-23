@@ -56,8 +56,8 @@ public class VpsInstancesController : ControllerBase
     }
 
     [HttpGet("admin")]
-    [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> GetAllForAdmin()
+    [Authorize(Roles = "Admin,Technician,Staff")]
+    public async Task<IActionResult> GetAllForAdmin(CancellationToken ct)
     {
         var result = await _mediator.Send(new GetVpsInstancesQuery { AdminAll = true });
         return Ok(result);

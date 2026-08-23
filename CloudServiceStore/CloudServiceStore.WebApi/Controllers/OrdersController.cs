@@ -35,7 +35,7 @@ public class OrdersController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Accountant,Technician,Editor,Support,Staff")]
     public async Task<IActionResult> GetOrders([FromQuery] string? status, CancellationToken ct)
     {
         var orders = await _mediator.Send(new GetOrdersQuery(status), ct);
@@ -51,7 +51,7 @@ public class OrdersController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
-    [Authorize(Roles = "Customer,Admin")]
+    [Authorize]
     public async Task<IActionResult> GetById(Guid id, CancellationToken ct)
     {
         var order = await _mediator.Send(new GetOrderByIdQuery(id), ct);
@@ -61,7 +61,7 @@ public class OrdersController : ControllerBase
     // --- BACKUPS ---
 
     [HttpGet("{id:guid}/backups")]
-    [Authorize(Roles = "Customer")]
+    [Authorize]
     public async Task<IActionResult> GetBackups(Guid id, CancellationToken ct)
     {
         var backups = await _mediator.Send(new GetBackupsForOrderQuery(id), ct);
@@ -69,7 +69,7 @@ public class OrdersController : ControllerBase
     }
 
     [HttpPost("{id:guid}/backups/schedule")]
-    [Authorize(Roles = "Customer")]
+    [Authorize]
     public async Task<IActionResult> ScheduleBackup(Guid id, [FromBody] ScheduleBackupCommand command, CancellationToken ct)
     {
         if (id != command.OrderId) return BadRequest("Mismatched Order Id");
@@ -80,7 +80,7 @@ public class OrdersController : ControllerBase
     // --- UPTIME ---
 
     [HttpGet("{id:guid}/uptime")]
-    [Authorize(Roles = "Customer")]
+    [Authorize]
     public async Task<IActionResult> GetOrderUptime(Guid id, CancellationToken ct)
     {
         var uptime = await _mediator.Send(new GetOrderUptimeQuery(id), ct);
@@ -88,7 +88,7 @@ public class OrdersController : ControllerBase
     }
 
     [HttpPatch("{id:guid}/auto-renew")]
-    [Authorize(Roles = "Customer")]
+    [Authorize]
     public async Task<IActionResult> ToggleAutoRenew(Guid id, CancellationToken ct)
     {
         var result = await _mediator.Send(new CloudServiceStore.Application.Features.AutoRenew.Commands.ToggleAutoRenew.ToggleAutoRenewCommand(id), ct);
@@ -107,7 +107,7 @@ public class OrdersController : ControllerBase
     // --- INVOICES ---
 
     [HttpGet("{id:guid}/invoice")]
-    [Authorize(Roles = "Customer,Admin")]
+    [Authorize]
     public async Task<IActionResult> GetInvoice(Guid id, CancellationToken ct)
     {
         var invoice = await _mediator.Send(new GetInvoiceQuery { OrderRequestId = id }, ct);
@@ -115,7 +115,7 @@ public class OrdersController : ControllerBase
     }
     
     [HttpPost("{id:guid}/invoice")]
-    [Authorize(Roles = "Customer")]
+    [Authorize]
     public async Task<IActionResult> GenerateInvoice(Guid id, CancellationToken ct)
     {
         var invoiceId = await _mediator.Send(new GenerateInvoiceCommand { OrderRequestId = id }, ct);
@@ -123,7 +123,7 @@ public class OrdersController : ControllerBase
     }
 
     [HttpGet("me/invoices")]
-    [Authorize(Roles = "Customer")]
+    [Authorize]
     public async Task<IActionResult> GetMyInvoices(CancellationToken ct)
     {
         var invoices = await _mediator.Send(new GetMyInvoicesQuery(), ct);
@@ -131,7 +131,7 @@ public class OrdersController : ControllerBase
     }
 
     [HttpGet("invoices/admin")]
-    [Authorize(Roles = "Admin,Editor")]
+    [Authorize(Roles = "Admin,Accountant,Technician,Editor,Support,Staff")]
     public async Task<IActionResult> GetAllInvoicesForAdmin(CancellationToken ct)
     {
         var invoices = await _mediator.Send(new GetAllInvoicesQuery(), ct);

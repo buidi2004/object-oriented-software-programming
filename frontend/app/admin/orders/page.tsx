@@ -46,7 +46,10 @@ export default function AdminOrdersPage() {
       
       if (response.ok) {
         const userData = await response.json();
-        if (userData.role !== 'Admin') {
+        const isAllowed = ['Admin', 'Accountant', 'Support', 'Staff'].some(
+          r => r.toLowerCase() === (userData.role || '').toLowerCase()
+        );
+        if (!isAllowed) {
           router.push('/dashboard');
           return;
         }

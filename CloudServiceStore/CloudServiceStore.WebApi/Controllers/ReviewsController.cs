@@ -16,7 +16,7 @@ public class ReviewsController : ControllerBase
     public ReviewsController(IMediator mediator) => _mediator = mediator;
 
     [HttpGet]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Editor,Support,Staff,Accountant,Technician")]
     public async Task<IActionResult> GetAll(CancellationToken ct)
     {
         var result = await _mediator.Send(new CloudServiceStore.Application.Features.Reviews.Queries.GetAllReviews.GetAllReviewsQuery(), ct);
@@ -31,7 +31,7 @@ public class ReviewsController : ControllerBase
     }
 
     [HttpGet("me")]
-    [Authorize(Roles = "Customer")]
+    [Authorize]
     public async Task<IActionResult> GetMyReviews(CancellationToken ct)
     {
         var result = await _mediator.Send(new CloudServiceStore.Application.Features.Reviews.Queries.GetMyReviews.GetMyReviewsQuery(), ct);
@@ -39,7 +39,6 @@ public class ReviewsController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Roles = "Customer")]
     public async Task<IActionResult> Create([FromBody] CloudServiceStore.Application.Features.Reviews.Commands.CreateReview.CreateReviewCommand command, CancellationToken ct)
     {
         var id = await _mediator.Send(command, ct);
@@ -47,7 +46,7 @@ public class ReviewsController : ControllerBase
     }
 
     [HttpPatch("{id:guid}/approve")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Editor,Support,Staff,Accountant,Technician")]
     public async Task<IActionResult> Approve(Guid id, CancellationToken ct)
     {
         var result = await _mediator.Send(new CloudServiceStore.Application.Features.Reviews.Commands.ApproveReview.ApproveReviewCommand(id), ct);
@@ -55,7 +54,7 @@ public class ReviewsController : ControllerBase
     }
 
     [HttpPatch("{id:guid}/feature")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Editor,Support,Staff,Accountant,Technician")]
     public async Task<IActionResult> Feature(Guid id, [FromBody] FeatureTestimonialCommand command, CancellationToken ct)
     {
         command.ReviewId = id;
@@ -64,7 +63,7 @@ public class ReviewsController : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Editor,Support,Staff,Accountant,Technician")]
     public async Task<IActionResult> Delete(
         Guid id,
         [FromServices] CloudServiceStore.Domain.Interfaces.IRepository<CloudServiceStore.Domain.Entities.Review> repo,

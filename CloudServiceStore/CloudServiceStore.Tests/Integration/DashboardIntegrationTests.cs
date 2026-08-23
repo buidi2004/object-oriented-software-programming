@@ -49,8 +49,8 @@ public class DashboardIntegrationTests : BaseIntegrationTest, IClassFixture<Cust
         // 3. Admin gets RevenueStats and OrderTrend
         AuthenticateAdmin();
         
-        var customerDashboardFail = await Client.GetAsync("/api/dashboard/me");
-        customerDashboardFail.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+        var adminDashboardResponse = await Client.GetAsync("/api/dashboard/me");
+        adminDashboardResponse.EnsureSuccessStatusCode();
 
         var adminRevenueResponse = await Client.GetAsync($"/api/dashboard/revenue-stats?startDate={DateTime.UtcNow.AddDays(-1):yyyy-MM-dd}&endDate={DateTime.UtcNow.AddDays(1):yyyy-MM-dd}");
         adminRevenueResponse.EnsureSuccessStatusCode();

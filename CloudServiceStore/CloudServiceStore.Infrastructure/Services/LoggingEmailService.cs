@@ -23,9 +23,9 @@ public class LoggingEmailService : IEmailService
         return Task.CompletedTask;
     }
 
-    public Task SendPasswordResetEmailAsync(string toEmail, string resetLink, CancellationToken cancellationToken = default)
+    public Task SendPasswordResetEmailAsync(string toEmail, string resetLink, string? temporaryPassword = null, CancellationToken cancellationToken = default)
     {
-        _logger.LogInformation("[EMAIL-LOG] Password reset email to {Email}: {ResetLink}", toEmail, resetLink);
+        _logger.LogInformation("[EMAIL-LOG] Password reset email to {Email}: {ResetLink} | TempPass: {TempPass}", toEmail, resetLink, temporaryPassword);
         return Task.CompletedTask;
     }
 

@@ -21,7 +21,7 @@ public class GmailEmailService : IEmailService
     {
         _settings = settings.Value;
         _logger = logger;
-        _frontendBaseUrl = frontendOptions.Value.BaseUrl.TrimEnd('/');
+        _frontendBaseUrl = (frontendOptions?.Value?.BaseUrl ?? "http://localhost:3000").TrimEnd('/');
     }
 
     public async Task SendEmailAsync(string toEmail, string subject, string htmlBody, CancellationToken cancellationToken = default)
@@ -43,7 +43,6 @@ public class GmailEmailService : IEmailService
         catch (Exception ex)
         {
             _logger.LogError(ex, "❌ Failed to send email to {ToEmail} | Subject: {Subject}", toEmail, subject);
-            // Don't rethrow — email failure should not crash the main business flow
         }
         finally
         {
@@ -58,157 +57,191 @@ public class GmailEmailService : IEmailService
         }
     }
 
-    public async Task SendPasswordResetEmailAsync(string toEmail, string resetLink, CancellationToken cancellationToken = default)
+    public async Task SendPasswordResetEmailAsync(string toEmail, string resetLink, string? temporaryPassword = null, CancellationToken cancellationToken = default)
     {
-        var html = WrapInTemplate("Đặt lại mật khẩu", $@"
-            <h2 style='color: #1a1a2e; margin-bottom: 16px;'>Yêu cầu đặt lại mật khẩu</h2>
-            <p style='color: #555; font-size: 15px; line-height: 1.6;'>
-                Chúng tôi nhận được yêu cầu đặt lại mật khẩu cho tài khoản của bạn tại <strong>CloudHost VN</strong>.
-                Nhấn nút bên dưới để tạo mật khẩu mới:
-            </p>
-            <div style='text-align: center; margin: 32px 0;'>
-                <a href='{resetLink}' 
-                   style='background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 14px 40px; 
-                          text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; display: inline-block;
-                          box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);'>
-                    🔑 Đặt lại mật khẩu
-                </a>
+        var passwordBlock = string.IsNullOrWhiteSpace(temporaryPassword) ? "" : $@"
+            <div style='background: #0f172a; color: #ffffff; border-radius: 12px; padding: 22px; margin: 20px 0; text-align: center;'>
+                <p style='color: #94a3b8; font-size: 12px; margin: 0 0 8px 0; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;'>
+                    Mật Khẩu Mới Của Bạn:
+                </p>
+                <div style='font-family: monospace; font-size: 24px; font-weight: 800; color: #38bdf8; letter-spacing: 3px; padding: 10px 20px; background: rgba(255,255,255,0.08); border-radius: 8px; display: inline-block;'>
+                    {temporaryPassword}
+                </div>
+                <p style='color: #94a3b8; font-size: 12px; margin: 10px 0 0 0;'>
+                    Bạn có thể copy và sử dụng mật khẩu này để đăng nhập ngay vào hệ thống.
+                </p>
             </div>
-            <p style='color: #888; font-size: 13px;'>
-                Link có hiệu lực trong <strong>1 giờ</strong>. Nếu bạn không yêu cầu, hãy bỏ qua email này.
+            <div style='text-align: center; margin: 24px 0;'>
+                <a href='{_frontendBaseUrl}/?auth=login' 
+                   style='background: #0f172a; color: #ffffff; padding: 14px 40px; 
+                          text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 15px; display: inline-block; border: 1px solid #334155;'>
+                    🚀 Đăng Nhập Với Mật Khẩu Này
+                </a>
+            </div>";
+
+        var html = WrapInTemplate("Cấp lại mật khẩu tài khoản", $@"
+            <h2 style='color: #0f172a; margin-bottom: 16px; font-size: 20px; font-weight: 800;'>🔐 Khôi Phục &amp; Cấp Mật Khẩu Mới</h2>
+            <p style='color: #475569; font-size: 14px; line-height: 1.6;'>
+                Chúng tôi đã nhận được yêu cầu khôi phục mật khẩu cho tài khoản <strong>{toEmail}</strong> tại <strong>SEN CloudHost</strong>.
+            </p>
+            {passwordBlock}
+            <div style='background: #f8fafc; border-radius: 8px; padding: 16px; border: 1px solid #e2e8f0; margin-top: 20px;'>
+                <p style='margin: 0; font-size: 13px; color: #64748b; line-height: 1.6;'>
+                    Hoặc bạn có thể tự thiết lập mật khẩu tùy chọn mới theo ý muốn qua liên kết bảo mật (có hiệu lực trong 1 giờ):<br/>
+                    <a href='{resetLink}' style='color: #0284c7; font-weight: 700; text-decoration: none;'>👉 Nhấp vào đây để đổi mật khẩu theo ý bạn</a>
+                </p>
+            </div>
+            <p style='color: #94a3b8; font-size: 12px; margin-top: 20px;'>
+                Nếu bạn không thực hiện yêu cầu này, vui lòng liên hệ ngay với Hotline 1900 6868 để được hỗ trợ bảo vệ tài khoản.
             </p>");
 
-        await SendEmailAsync(toEmail, "🔐 Đặt lại mật khẩu - CloudHost VN", html, cancellationToken);
+        await SendEmailAsync(toEmail, "🔐 [SEN CloudHost] Khôi phục và cấp mật khẩu mới của bạn", html, cancellationToken);
     }
 
     public async Task SendOrderConfirmationEmailAsync(string toEmail, string orderId, decimal totalAmount, CancellationToken cancellationToken = default)
     {
         var shortId = orderId.Length > 8 ? orderId[..8].ToUpper() : orderId.ToUpper();
         var html = WrapInTemplate("Xác nhận đơn hàng", $@"
-            <h2 style='color: #1a1a2e; margin-bottom: 16px;'>📦 Đơn hàng đã được tạo</h2>
-            <div style='background: linear-gradient(135deg, #f0f4ff, #e8ecf8); border-radius: 12px; padding: 24px; margin: 20px 0;'>
+            <h2 style='color: #0f172a; margin-bottom: 16px; font-size: 20px; font-weight: 800;'>📦 Đơn Hàng Mới Đã Được Tạo</h2>
+            <div style='background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin: 20px 0;'>
                 <table style='width: 100%; border-collapse: collapse;'>
                     <tr>
-                        <td style='padding: 8px 0; color: #666; font-size: 14px;'>Mã đơn hàng:</td>
-                        <td style='padding: 8px 0; text-align: right; font-weight: 700; color: #1a1a2e; font-size: 16px;'>#{shortId}</td>
+                        <td style='padding: 8px 0; color: #64748b; font-size: 14px;'>Mã đơn hàng:</td>
+                        <td style='padding: 8px 0; text-align: right; font-weight: 800; color: #0f172a; font-size: 15px; font-family: monospace;'>#{shortId}</td>
                     </tr>
                     <tr>
-                        <td style='padding: 8px 0; color: #666; font-size: 14px;'>Tổng thanh toán:</td>
-                        <td style='padding: 8px 0; text-align: right; font-weight: 700; color: #e74c3c; font-size: 18px;'>{totalAmount:N0} ₫</td>
+                        <td style='padding: 8px 0; color: #64748b; font-size: 14px;'>Tổng thanh toán:</td>
+                        <td style='padding: 8px 0; text-align: right; font-weight: 800; color: #0f172a; font-size: 18px;'>{totalAmount:N0} ₫</td>
                     </tr>
                     <tr>
-                        <td style='padding: 8px 0; color: #666; font-size: 14px;'>Trạng thái:</td>
+                        <td style='padding: 8px 0; color: #64748b; font-size: 14px;'>Trạng thái:</td>
                         <td style='padding: 8px 0; text-align: right;'>
-                            <span style='background: #fff3cd; color: #856404; padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 600;'>⏳ Chờ thanh toán</span>
+                            <span style='background: #fef3c7; color: #92400e; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700;'>⏳ Chờ thanh toán</span>
                         </td>
                     </tr>
                 </table>
             </div>
-            <p style='color: #555; font-size: 14px; line-height: 1.6;'>
-                Vui lòng hoàn tất thanh toán qua mã QR VietQR trên trang thanh toán. 
-                Hệ thống sẽ tự động kích hoạt dịch vụ sau khi nhận được tiền.
-            </p>");
+            <p style='color: #475569; font-size: 14px; line-height: 1.6;'>
+                Vui lòng hoàn tất thanh toán để hệ thống tự động khởi tạo dịch vụ đám mây cho bạn trong 30 giây.
+            </p>
+            <div style='text-align: center; margin: 28px 0;'>
+                <a href='{_frontendBaseUrl}/dashboard/orders' 
+                   style='background: #0f172a; color: #ffffff; padding: 14px 36px; 
+                          text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 14px; display: inline-block;'>
+                    💳 Thanh Toán &amp; Xem Chi Tiết Đơn Hàng
+                </a>
+            </div>");
 
-        await SendEmailAsync(toEmail, $"📦 Đơn hàng #{shortId} đã được tạo - CloudHost VN", html, cancellationToken);
+        await SendEmailAsync(toEmail, $"📦 Đơn hàng #{shortId} đã được tạo - SEN CloudHost", html, cancellationToken);
     }
 
     public async Task SendPaymentSuccessEmailAsync(string toEmail, string orderId, string serviceName, CancellationToken cancellationToken = default)
     {
         var shortId = orderId.Length > 8 ? orderId[..8].ToUpper() : orderId.ToUpper();
         var html = WrapInTemplate("Thanh toán thành công", $@"
-            <h2 style='color: #1a1a2e; margin-bottom: 16px;'>🎉 Thanh toán thành công!</h2>
-            <div style='background: linear-gradient(135deg, #d4edda, #c3e6cb); border-radius: 12px; padding: 24px; margin: 20px 0; text-align: center;'>
-                <div style='font-size: 48px; margin-bottom: 12px;'>✅</div>
-                <p style='color: #155724; font-size: 18px; font-weight: 700; margin: 0;'>Thanh toán đã được xác nhận</p>
-                <p style='color: #155724; font-size: 14px; margin: 8px 0 0 0;'>Mã đơn: <strong>#{shortId}</strong></p>
+            <h2 style='color: #0f172a; margin-bottom: 16px; font-size: 20px; font-weight: 800;'>🎉 Thanh Toán Đơn Hàng Thành Công!</h2>
+            
+            <div style='background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 12px; padding: 24px; margin: 20px 0; text-align: center;'>
+                <div style='font-size: 40px; margin-bottom: 8px;'>✅</div>
+                <p style='color: #0f172a; font-size: 18px; font-weight: 800; margin: 0;'>Thanh toán đã được xác nhận</p>
+                <p style='color: #475569; font-size: 14px; margin: 6px 0 0 0;'>Mã đơn hàng: <strong style='font-family: monospace; color: #0f172a;'>#{shortId}</strong></p>
             </div>
-            <p style='color: #555; font-size: 15px; line-height: 1.6;'>
-                Dịch vụ <strong>{serviceName}</strong> của bạn đang được khởi tạo tự động.
-                Bạn có thể theo dõi trạng thái tại trang <strong>Dashboard</strong>.
+
+            <p style='color: #334155; font-size: 14px; line-height: 1.6;'>
+                Dịch vụ <strong>{serviceName}</strong> (Đơn #{shortId}) của bạn đang được hệ thống tự động khởi tạo. Bạn có thể truy cập các đường dẫn bên dưới để quản trị dịch vụ:
             </p>
+
             <div style='text-align: center; margin: 28px 0;'>
                 <a href='{_frontendBaseUrl}/dashboard' 
-                   style='background: linear-gradient(135deg, #00b894 0%, #00cec9 100%); color: white; padding: 14px 40px; 
-                          text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; display: inline-block;
-                          box-shadow: 0 4px 15px rgba(0, 184, 148, 0.4);'>
-                    🖥️ Vào Dashboard
+                   style='background: #0f172a; color: #ffffff; padding: 14px 40px; 
+                          text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 15px; display: inline-block;'>
+                    🖥️ Vào Trang Quản Trị Dashboard
                 </a>
+            </div>
+
+            <!-- Direct Quick Action Links -->
+            <div style='background: #f8fafc; border-radius: 8px; padding: 16px; border: 1px solid #e2e8f0; margin-top: 20px;'>
+                <p style='margin: 0 0 10px 0; font-size: 13px; font-weight: 700; color: #0f172a;'>Liên kết truy cập nhanh cho bạn:</p>
+                <ul style='margin: 0; padding-left: 20px; font-size: 13px; color: #475569; line-height: 1.8;'>
+                    <li><a href='{_frontendBaseUrl}/dashboard/vps-instances' style='color: #0284c7; font-weight: 600; text-decoration: none;'>☁️ Danh sách máy chủ VPS đang hoạt động</a></li>
+                    <li><a href='{_frontendBaseUrl}/dashboard/invoices' style='color: #0284c7; font-weight: 600; text-decoration: none;'>🧾 Xem và tải hóa đơn điện tử (VAT)</a></li>
+                    <li><a href='{_frontendBaseUrl}/knowledge-base' style='color: #0284c7; font-weight: 600; text-decoration: none;'>📚 Hướng dẫn kết nối SSH &amp; Cài đặt Web Server</a></li>
+                    <li><a href='{_frontendBaseUrl}/contact' style='color: #0284c7; font-weight: 600; text-decoration: none;'>📞 Liên hệ đội ngũ kỹ sư trực tuyến 24/7</a></li>
+                </ul>
             </div>");
 
-        await SendEmailAsync(toEmail, $"✅ Thanh toán thành công #{shortId} - CloudHost VN", html, cancellationToken);
+        await SendEmailAsync(toEmail, $"✅ Thanh toán thành công #{shortId} - SEN CloudHost", html, cancellationToken);
     }
 
     public async Task SendWelcomeEmailAsync(string toEmail, string fullName, CancellationToken cancellationToken = default)
     {
-        var html = WrapInTemplate("Chào mừng", $@"
-            <h2 style='color: #1a1a2e; margin-bottom: 16px;'>🚀 Chào mừng đến với CloudHost VN!</h2>
-            <p style='color: #555; font-size: 15px; line-height: 1.6;'>
+        var html = WrapInTemplate("Chào mừng bạn", $@"
+            <h2 style='color: #0f172a; margin-bottom: 16px; font-size: 20px; font-weight: 800;'>🚀 Chào Mừng Đến Với SEN CloudHost!</h2>
+            <p style='color: #475569; font-size: 14px; line-height: 1.6;'>
                 Xin chào <strong>{fullName}</strong>,<br><br>
-                Cảm ơn bạn đã đăng ký tài khoản tại <strong>CloudHost VN</strong> — nền tảng Cloud hosting hàng đầu Việt Nam.
+                Cảm ơn bạn đã đăng ký tài khoản tại <strong>SEN CloudHost</strong> — nền tảng Điện toán đám mây &amp; Trung tâm dữ liệu tốc độ cao hàng đầu Việt Nam.
             </p>
-            <div style='background: linear-gradient(135deg, #f0f4ff, #e8ecf8); border-radius: 12px; padding: 24px; margin: 20px 0;'>
-                <h3 style='color: #1a1a2e; margin: 0 0 12px 0; font-size: 16px;'>Bạn có thể:</h3>
-                <ul style='color: #555; font-size: 14px; line-height: 2; padding-left: 20px; margin: 0;'>
-                    <li>☁️ Thuê Cloud VPS hiệu năng cao</li>
-                    <li>🌐 Đăng ký tên miền</li>
-                    <li>🔒 Mua chứng chỉ SSL</li>
-                    <li>🎮 Thuê Game Server</li>
-                    <li>💾 Sao lưu dữ liệu tự động</li>
+            <div style='background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin: 20px 0;'>
+                <h3 style='color: #0f172a; margin: 0 0 10px 0; font-size: 14px; font-weight: 700;'>Hệ sinh thái dịch vụ sẵn sàng cho bạn:</h3>
+                <ul style='color: #475569; font-size: 13px; line-height: 1.9; padding-left: 20px; margin: 0;'>
+                    <li>☁️ <strong>Cloud VPS NVMe</strong> — Khởi tạo tự động trong 30 giây</li>
+                    <li>🌐 <strong>Tên Miền &amp; DNS</strong> — Đăng ký &amp; phân giải tức thì</li>
+                    <li>🔒 <strong>Chứng chỉ SSL Doanh Nghiệp</strong> — Bảo mật cấp cao</li>
+                    <li>🎮 <strong>Game Server</strong> — Chống DDoS 500Gbps chuyên dụng</li>
+                    <li>💾 <strong>Object Storage S3</strong> — Lưu trữ an toàn, mở rộng không giới hạn</li>
                 </ul>
             </div>
             <div style='text-align: center; margin: 28px 0;'>
-                <a href='{_frontendBaseUrl}/marketplace' 
-                   style='background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 14px 40px; 
-                          text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; display: inline-block;
-                          box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);'>
-                    🛒 Khám phá dịch vụ ngay
+                <a href='{_frontendBaseUrl}/services' 
+                   style='background: #0f172a; color: #ffffff; padding: 14px 36px; 
+                          text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 14px; display: inline-block;'>
+                    🛒 Khám Phá Bảng Giá Dịch Vụ Ngay
                 </a>
             </div>");
 
-        await SendEmailAsync(toEmail, "🚀 Chào mừng bạn đến với CloudHost VN!", html, cancellationToken);
+        await SendEmailAsync(toEmail, "🚀 Chào mừng bạn đến với SEN CloudHost!", html, cancellationToken);
     }
 
     public async Task SendPasswordChangedSecurityAlertAsync(string toEmail, string fullName, CancellationToken cancellationToken = default)
     {
         var nowStr = DateTime.UtcNow.ToString("HH:mm:ss dd/MM/yyyy") + " (UTC)";
         var html = WrapInTemplate("Cảnh báo bảo mật", $@"
-            <h2 style='color: #1a1a2e; margin-bottom: 16px;'>🔐 Cảnh báo bảo mật tài khoản</h2>
-            <div style='background: linear-gradient(135deg, #fff3cd, #ffeaa7); border-radius: 12px; padding: 20px; margin: 20px 0;'>
-                <p style='color: #856404; font-size: 15px; margin: 0; line-height: 1.6;'>
+            <h2 style='color: #0f172a; margin-bottom: 16px; font-size: 20px; font-weight: 800;'>🔐 Cảnh Báo Bảo Mật Tài Khoản</h2>
+            <div style='background: #fef2f2; border: 1px solid #fecaca; border-radius: 12px; padding: 18px; margin: 20px 0;'>
+                <p style='color: #991b1b; font-size: 14px; margin: 0; line-height: 1.6;'>
                     Xin chào <strong>{fullName}</strong>,<br>
-                    Mật khẩu tài khoản của bạn tại <strong>CloudHost VN</strong> vừa được thay đổi thành công vào lúc <strong>{nowStr}</strong>.
+                    Mật khẩu tài khoản của bạn tại <strong>SEN CloudHost</strong> vừa được thay đổi thành công vào lúc <strong>{nowStr}</strong>.
                 </p>
             </div>
-            <p style='color: #e74c3c; font-size: 14px; line-height: 1.6; font-weight: 600;'>
-                ⚠️ Nếu bạn không thực hiện thay đổi này, hãy liên hệ ngay với đội ngũ hỗ trợ khẩn cấp của chúng tôi để bảo vệ tài khoản.
+            <p style='color: #b91c1c; font-size: 13px; line-height: 1.6; font-weight: 600;'>
+                ⚠️ Nếu bạn không thực hiện thay đổi này, tài khoản của bạn có thể đã bị truy cập trái phép. Hãy liên hệ ngay với đội ngũ hỗ trợ khẩn cấp:
             </p>
             <div style='text-align: center; margin: 28px 0;'>
                 <a href='{_frontendBaseUrl}/contact' 
-                   style='background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); color: white; padding: 14px 40px; 
-                          text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 15px; display: inline-block;
-                          box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);'>
-                    🛡️ Liên hệ hỗ trợ khẩn cấp
+                   style='background: #0f172a; color: #ffffff; padding: 14px 36px; 
+                          text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 14px; display: inline-block;'>
+                    🛡️ Liên Hệ Hỗ Trợ Khẩn Cấp (1900 6868)
                 </a>
             </div>");
 
-        await SendEmailAsync(toEmail, "🔐 [Cảnh báo] Mật khẩu tài khoản của bạn đã được thay đổi - CloudHost VN", html, cancellationToken);
+        await SendEmailAsync(toEmail, "🔐 [Cảnh báo] Mật khẩu tài khoản đã thay đổi - SEN CloudHost", html, cancellationToken);
     }
 
     public async Task SendVpsProvisionedEmailAsync(string toEmail, string vpsName, string ipAddress, string sshUser, string initialPassword, int sshPort, CancellationToken cancellationToken = default)
     {
         var html = WrapInTemplate("Thông tin máy chủ", $@"
-            <h2 style='color: #1a1a2e; margin-bottom: 16px;'>🖥️ Máy chủ Cloud VPS đã sẵn sàng!</h2>
-            <p style='color: #555; font-size: 15px; line-height: 1.6;'>
-                Dịch vụ <strong>{vpsName}</strong> của bạn đã được khởi tạo và cấu hình hoàn tất. Dưới đây là thông tin đăng nhập:
+            <h2 style='color: #0f172a; margin-bottom: 16px; font-size: 20px; font-weight: 800;'>🖥️ Máy Chủ Cloud VPS Đã Sẵn Sàng!</h2>
+            <p style='color: #475569; font-size: 14px; line-height: 1.6;'>
+                Dịch vụ <strong>{vpsName}</strong> của bạn đã được hệ thống KVM ảo hóa khởi tạo hoàn tất. Dưới đây là thông tin đăng nhập máy chủ:
             </p>
-            <div style='background: #1e293b; border-radius: 12px; padding: 24px; margin: 20px 0; color: #f8fafc; font-family: monospace;'>
+            <div style='background: #0f172a; border-radius: 12px; padding: 24px; margin: 20px 0; color: #f8fafc; font-family: monospace;'>
                 <table style='width: 100%; border-collapse: collapse;'>
                     <tr>
-                        <td style='padding: 6px 0; color: #94a3b8; font-size: 13px;'>Địa chỉ IP:</td>
+                        <td style='padding: 6px 0; color: #94a3b8; font-size: 13px;'>Địa chỉ IPv4:</td>
                         <td style='padding: 6px 0; text-align: right; font-weight: 700; color: #38bdf8; font-size: 15px;'>{ipAddress}</td>
                     </tr>
                     <tr>
-                        <td style='padding: 6px 0; color: #94a3b8; font-size: 13px;'>SSH Port:</td>
+                        <td style='padding: 6px 0; color: #94a3b8; font-size: 13px;'>Cổng SSH:</td>
                         <td style='padding: 6px 0; text-align: right; font-weight: 700; color: #38bdf8; font-size: 15px;'>{sshPort}</td>
                     </tr>
                     <tr>
@@ -216,56 +249,59 @@ public class GmailEmailService : IEmailService
                         <td style='padding: 6px 0; text-align: right; font-weight: 700; color: #4ade80; font-size: 15px;'>{sshUser}</td>
                     </tr>
                     <tr>
-                        <td style='padding: 6px 0; color: #94a3b8; font-size: 13px;'>Mật khẩu khởi tạo:</td>
+                        <td style='padding: 6px 0; color: #94a3b8; font-size: 13px;'>Mật khẩu Root:</td>
                         <td style='padding: 6px 0; text-align: right; font-weight: 700; color: #facc15; font-size: 15px;'>{initialPassword}</td>
                     </tr>
                 </table>
                 <div style='margin-top: 16px; padding-top: 12px; border-top: 1px solid #334155; font-size: 12px; color: #94a3b8;'>
-                    Lệnh kết nối nhanh: <br>
-                    <code style='color: #38bdf8; font-size: 13px;'>ssh {sshUser}@{ipAddress} -p {sshPort}</code>
+                    Lệnh kết nối SSH nhanh: <br>
+                    <code style='color: #38bdf8; font-size: 13px; font-weight: bold;'>ssh {sshUser}@{ipAddress} -p {sshPort}</code>
                 </div>
             </div>
-            <p style='color: #e74c3c; font-size: 13px; line-height: 1.5;'>
-                🔒 <em>Vui lòng đổi mật khẩu ngay sau lần đăng nhập đầu tiên để đảm bảo an toàn.</em>
+            <p style='color: #b91c1c; font-size: 13px; line-height: 1.5;'>
+                🔒 <em>Vui lòng đổi mật khẩu ngay sau lần đăng nhập đầu tiên để đảm bảo an toàn tuyệt đối.</em>
             </p>
             <div style='text-align: center; margin: 28px 0;'>
-                <a href='{_frontendBaseUrl}/dashboard/vps' 
-                   style='background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%); color: white; padding: 14px 40px; 
-                          text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 15px; display: inline-block;
-                          box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);'>
-                    🚀 Quản lý VPS tại Dashboard
+                <a href='{_frontendBaseUrl}/dashboard/vps-instances' 
+                   style='background: #0f172a; color: #ffffff; padding: 14px 36px; 
+                          text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 14px; display: inline-block;'>
+                    🚀 Quản Lý Máy Chủ Tại Dashboard
+                </a>
+            </div>
+            <div style='text-align: center;'>
+                <a href='{_frontendBaseUrl}/knowledge-base' style='color: #0284c7; font-size: 13px; text-decoration: none; font-weight: 600;'>
+                    📚 Xem tài liệu hướng dẫn bảo mật &amp; cài đặt Nginx/Docker
                 </a>
             </div>");
 
-        await SendEmailAsync(toEmail, $"🖥️ Thông tin bàn giao máy chủ {vpsName} - CloudHost VN", html, cancellationToken);
+        await SendEmailAsync(toEmail, $"🖥️ Thông tin bàn giao máy chủ {vpsName} - SEN CloudHost", html, cancellationToken);
     }
 
     public async Task SendServiceExpiryReminderEmailAsync(string toEmail, string serviceName, int daysLeft, DateTime expiresAt, CancellationToken cancellationToken = default)
     {
         var expiresAtStr = expiresAt.ToString("dd/MM/yyyy");
         var html = WrapInTemplate("Nhắc nhở gia hạn", $@"
-            <h2 style='color: #1a1a2e; margin-bottom: 16px;'>⏰ Dịch vụ của bạn sắp hết hạn</h2>
-            <p style='color: #555; font-size: 15px; line-height: 1.6;'>
-                Dịch vụ <strong>{serviceName}</strong> sẽ hết hạn sau <strong>{daysLeft} ngày</strong> (ngày {expiresAtStr}).
+            <h2 style='color: #0f172a; margin-bottom: 16px; font-size: 20px; font-weight: 800;'>⏰ Dịch Vụ Của Bạn Sắp Hết Hạn</h2>
+            <p style='color: #475569; font-size: 14px; line-height: 1.6;'>
+                Dịch vụ <strong>{serviceName}</strong> sẽ hết hạn sau <strong>{daysLeft} ngày</strong> (vào ngày {expiresAtStr}).
             </p>
-            <div style='background: linear-gradient(135deg, #fff3cd, #feeaa7); border-radius: 12px; padding: 20px; margin: 20px 0;'>
-                <p style='color: #856404; font-size: 14px; margin: 0; line-height: 1.6;'>
-                    Để tránh gián đoạn dịch vụ và nguy cơ mất dữ liệu, vui lòng gia hạn hoặc nạp tiền vào ví trước ngày hết hạn.
+            <div style='background: #fffbeb; border: 1px solid #fde68a; border-radius: 12px; padding: 18px; margin: 20px 0;'>
+                <p style='color: #92400e; font-size: 13px; margin: 0; line-height: 1.6;'>
+                    Để tránh gián đoạn website và rủi ro gián đoạn dịch vụ, vui lòng gia hạn hoặc nạp tiền vào ví trước ngày hết hạn.
                 </p>
             </div>
             <div style='text-align: center; margin: 28px 0;'>
-                <a href='{_frontendBaseUrl}/dashboard' 
-                   style='background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 14px 40px; 
-                          text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 15px; display: inline-block;
-                          box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);'>
-                    💳 Gia hạn dịch vụ ngay
+                <a href='{_frontendBaseUrl}/dashboard/orders' 
+                   style='background: #0f172a; color: #ffffff; padding: 14px 36px; 
+                          text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 14px; display: inline-block;'>
+                    💳 Gia Hạn Dịch Vụ Ngay
                 </a>
             </div>");
 
-        await SendEmailAsync(toEmail, $"⏰ [Nhắc nhở] Dịch vụ {serviceName} còn {daysLeft} ngày sẽ hết hạn - CloudHost VN", html, cancellationToken);
+        await SendEmailAsync(toEmail, $"⏰ [Nhắc nhở] Dịch vụ {serviceName} còn {daysLeft} ngày sẽ hết hạn - SEN CloudHost", html, cancellationToken);
     }
 
-    private static string WrapInTemplate(string preheader, string bodyContent)
+    private string WrapInTemplate(string preheader, string bodyContent)
     {
         return $@"
 <!DOCTYPE html>
@@ -273,42 +309,53 @@ public class GmailEmailService : IEmailService
 <head>
     <meta charset='utf-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-    <title>{preheader} - CloudHost VN</title>
+    <title>{preheader} - SEN CloudHost VN</title>
 </head>
-<body style='margin: 0; padding: 0; background-color: #f4f6f9; font-family: -apple-system, BlinkMacSystemFont, ""Segoe UI"", Roboto, ""Helvetica Neue"", Arial, sans-serif;'>
-    <!-- Preheader text (hidden, for email preview) -->
+<body style='margin: 0; padding: 0; background-color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, ""Segoe UI"", Roboto, ""Helvetica Neue"", Arial, sans-serif;'>
     <span style='display: none; max-height: 0; overflow: hidden;'>{preheader}</span>
     
-    <table role='presentation' cellpadding='0' cellspacing='0' width='100%' style='background-color: #f4f6f9;'>
+    <table role='presentation' cellpadding='0' cellspacing='0' width='100%' style='background-color: #f8fafc;'>
         <tr>
             <td align='center' style='padding: 40px 16px;'>
                 <table role='presentation' cellpadding='0' cellspacing='0' width='600' style='max-width: 600px; width: 100%;'>
                     
-                    <!-- Header -->
+                    <!-- Header with Lotus Flower Logo -->
                     <tr>
-                        <td style='background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); padding: 32px 40px; border-radius: 16px 16px 0 0; text-align: center;'>
-                            <h1 style='margin: 0; color: white; font-size: 24px; font-weight: 700; letter-spacing: -0.5px;'>
-                                ☁️ CloudHost <span style='color: #60a5fa;'>VN</span>
-                            </h1>
-                            <p style='margin: 8px 0 0 0; color: #94a3b8; font-size: 13px;'>Enterprise Cloud Solutions</p>
+                        <td style='background: #0f172a; padding: 28px 32px; border-radius: 16px 16px 0 0; text-align: center; border-bottom: 2px solid #1e293b;'>
+                            <div style='margin-bottom: 6px;'>
+                                <span style='font-size: 28px; vertical-align: middle; display: inline-block; margin-right: 8px;'>🪷</span>
+                                <span style='color: #ffffff; font-size: 22px; font-weight: 800; vertical-align: middle; letter-spacing: -0.5px;'>
+                                    SEN CloudHost <span style='color: #38bdf8;'>VN</span>
+                                </span>
+                            </div>
+                            <p style='margin: 0; color: #94a3b8; font-size: 11px; font-weight: 600; letter-spacing: 0.8px;'>
+                                NỀN TẢNG ĐIỆN TOÁN ĐÁM MÂY CHUẨN DOANH NGHIỆP
+                            </p>
                         </td>
                     </tr>
 
-                    <!-- Body -->
+                    <!-- Body Content -->
                     <tr>
-                        <td style='background: white; padding: 40px; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;'>
+                        <td style='background: #ffffff; padding: 36px 32px; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;'>
                             {bodyContent}
                         </td>
                     </tr>
 
-                    <!-- Footer -->
+                    <!-- Footer with Links for Customer -->
                     <tr>
-                        <td style='background: #f8fafc; padding: 24px 40px; border-radius: 0 0 16px 16px; border: 1px solid #e2e8f0; border-top: none; text-align: center;'>
-                            <p style='margin: 0 0 8px 0; color: #94a3b8; font-size: 12px;'>
-                                © {DateTime.UtcNow.Year} CloudHost VN — Nền tảng Cloud hosting hàng đầu Việt Nam
+                        <td style='background: #f1f5f9; padding: 24px 32px; border-radius: 0 0 16px 16px; border: 1px solid #e2e8f0; border-top: none; text-align: center;'>
+                            <div style='margin-bottom: 12px; font-size: 12px; font-weight: 600;'>
+                                <a href='{_frontendBaseUrl}' style='color: #0f172a; text-decoration: none; margin: 0 8px;'>Trang chủ</a> &bull;
+                                <a href='{_frontendBaseUrl}/services' style='color: #0f172a; text-decoration: none; margin: 0 8px;'>Dịch vụ</a> &bull;
+                                <a href='{_frontendBaseUrl}/knowledge-base' style='color: #0f172a; text-decoration: none; margin: 0 8px;'>Tài liệu</a> &bull;
+                                <a href='{_frontendBaseUrl}/contact' style='color: #0f172a; text-decoration: none; margin: 0 8px;'>Liên hệ</a> &bull;
+                                <a href='{_frontendBaseUrl}/careers' style='color: #0f172a; text-decoration: none; margin: 0 8px;'>Tuyển dụng</a>
+                            </div>
+                            <p style='margin: 0 0 6px 0; color: #64748b; font-size: 11px;'>
+                                © {DateTime.UtcNow.Year} SEN CloudHost VN &bull; Hotline: 1900 6868 &bull; Email: support@cloudhost.vn
                             </p>
-                            <p style='margin: 0; color: #cbd5e1; font-size: 11px;'>
-                                Email này được gửi tự động, vui lòng không trả lời trực tiếp.
+                            <p style='margin: 0; color: #94a3b8; font-size: 10px;'>
+                                Email này được gửi tự động từ hệ thống SEN CloudHost.
                             </p>
                         </td>
                     </tr>
