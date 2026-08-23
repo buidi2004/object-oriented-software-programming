@@ -35,7 +35,6 @@ export default function PublicFaqsPage() {
       if (res.ok) {
         const data = await res.json();
         setFaqs(Array.isArray(data) ? data : []);
-        // Open first item by default if exists
         if (Array.isArray(data) && data.length > 0) {
           setOpenId(data[0].id);
         }
@@ -49,10 +48,8 @@ export default function PublicFaqsPage() {
     }
   };
 
-  // Distinct category tags
   const tags = Array.from(new Set(faqs.map(f => f.categoryTag || 'General'))).filter(Boolean);
 
-  // Filtered FAQs
   const filteredFaqs = faqs.filter(faq => {
     const matchSearch = faq.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
                         faq.answer.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -62,41 +59,37 @@ export default function PublicFaqsPage() {
   }).sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0));
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-zinc-950">
       
       {/* HERO SECTION */}
-      <section className="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white py-16 px-4 relative overflow-hidden">
-        {/* Subtle background glow */}
-        <div className="absolute top-0 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
-
+      <section className="bg-zinc-950 text-white py-16 px-4 relative overflow-hidden border-b border-zinc-900">
         <div className="max-w-4xl mx-auto text-center relative z-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/15 text-xs font-bold text-blue-300 mb-4 backdrop-blur-xs">
-            <Sparkles className="w-3.5 h-3.5 text-blue-400" />
-            <span>Trung Tâm Giải Đáp Thắc Mắc &amp; Hỗ Trợ 24/7</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-xs font-bold text-amber-400 mb-4">
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>Trung Tâm Giải Đáp Thắc Mắc & Hỗ Trợ 24/7</span>
           </div>
 
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white mb-4">
             Câu Hỏi Thường Gặp (FAQ)
           </h1>
-          <p className="text-sm sm:text-base text-slate-300 max-w-2xl mx-auto leading-relaxed mb-8">
+          <p className="text-sm sm:text-base text-zinc-400 max-w-2xl mx-auto leading-relaxed mb-8">
             Tìm kiếm câu trả lời nhanh chóng về dịch vụ Cloud VPS, Hosting, Tên miền, Thanh toán và Chính sách hoàn tiền.
           </p>
 
           {/* Search Box */}
           <div className="max-w-2xl mx-auto relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
             <input
               type="text"
               placeholder="Nhập từ khóa cần tìm kiếm (VD: kích hoạt VPS, thanh toán, hoàn tiền...)"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-12 pr-4 py-3.5 rounded-xl bg-white text-slate-900 placeholder-slate-400 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-blue-500/30 shadow-xl"
+              className="w-full pl-12 pr-4 py-3.5 rounded-xl bg-zinc-900/50 border border-zinc-800 text-zinc-100 placeholder-zinc-500 text-sm font-medium focus:outline-none focus:border-amber-500/50 focus:ring-1 focus:ring-amber-500/50 transition-all"
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery('')}
-                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400 hover:text-slate-600 bg-slate-100 px-2 py-1 rounded"
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-zinc-400 hover:text-zinc-200 bg-zinc-800 px-2 py-1 rounded transition-colors"
               >
                 Xóa
               </button>
@@ -115,8 +108,8 @@ export default function PublicFaqsPage() {
               onClick={() => setSelectedTag('all')}
               className={`px-4 py-2 rounded-xl transition-all shrink-0 ${
                 selectedTag === 'all'
-                  ? 'bg-slate-900 text-white shadow-sm'
-                  : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
+                  ? 'bg-zinc-100 text-zinc-950 shadow-sm'
+                  : 'bg-zinc-900/50 text-zinc-400 border border-zinc-800 hover:bg-zinc-800 hover:text-zinc-200'
               }`}
             >
               Tất Cả ({faqs.length})
@@ -127,8 +120,8 @@ export default function PublicFaqsPage() {
                 onClick={() => setSelectedTag(tag)}
                 className={`px-4 py-2 rounded-xl transition-all shrink-0 ${
                   selectedTag === tag
-                    ? 'bg-blue-600 text-white shadow-sm'
-                    : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
+                    ? 'bg-amber-500 text-zinc-950 shadow-sm'
+                    : 'bg-zinc-900/50 text-zinc-400 border border-zinc-800 hover:bg-zinc-800 hover:text-zinc-200'
                 }`}
               >
                 {tag} ({faqs.filter(f => f.categoryTag === tag).length})
@@ -140,21 +133,21 @@ export default function PublicFaqsPage() {
         {/* Loading Spinner */}
         {isLoading && (
           <div className="py-16 text-center">
-            <div className="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-            <p className="text-xs text-slate-500 font-bold">Đang tải danh sách câu hỏi FAQ...</p>
+            <div className="w-10 h-10 border-4 border-zinc-800 border-t-amber-500 rounded-full animate-spin mx-auto mb-3" />
+            <p className="text-xs text-zinc-500 font-bold">Đang tải danh sách câu hỏi FAQ...</p>
           </div>
         )}
 
         {/* Error Box */}
         {error && (
-          <div className="p-4 bg-rose-50 border border-rose-200 rounded-xl flex items-center justify-between gap-3 text-rose-700 text-xs font-bold mb-6">
+          <div className="p-4 bg-zinc-900/80 border border-red-500/20 rounded-xl flex items-center justify-between gap-3 text-red-400 text-xs font-bold mb-6">
             <div className="flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+              <AlertCircle className="w-4 h-4 shrink-0" />
               <span>{error}</span>
             </div>
             <button
               onClick={fetchFaqs}
-              className="px-3 py-1.5 bg-rose-100 hover:bg-rose-200 rounded-lg text-rose-800 flex items-center gap-1 shrink-0"
+              className="px-3 py-1.5 bg-zinc-800 hover:bg-zinc-700 rounded-lg text-zinc-300 flex items-center gap-1 shrink-0 transition-colors"
             >
               <RefreshCw className="w-3 h-3" /> Thử lại
             </button>
@@ -169,28 +162,28 @@ export default function PublicFaqsPage() {
               return (
                 <div
                   key={faq.id}
-                  className={`bg-white rounded-xl border transition-all overflow-hidden ${
-                    isOpen ? 'border-blue-400 shadow-md ring-2 ring-blue-500/10' : 'border-slate-200/90 hover:border-slate-300 shadow-2xs'
+                  className={`bg-zinc-900/50 rounded-xl border transition-all overflow-hidden ${
+                    isOpen ? 'border-amber-500/50 shadow-md ring-1 ring-amber-500/20 bg-zinc-900' : 'border-zinc-800 hover:border-zinc-700'
                   }`}
                 >
                   <button
                     onClick={() => setOpenId(isOpen ? null : faq.id)}
-                    className="w-full p-4.5 sm:p-5 flex items-center justify-between text-left hover:bg-slate-50/50 transition-colors gap-4"
+                    className="w-full p-4.5 sm:p-5 flex items-center justify-between text-left hover:bg-zinc-800/50 transition-colors gap-4"
                   >
                     <div className="flex items-start gap-3.5 flex-1 min-w-0">
                       <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 mt-0.5 transition-colors ${
-                        isOpen ? 'bg-blue-600 text-white' : 'bg-blue-50 text-blue-600 border border-blue-100'
+                        isOpen ? 'bg-amber-500/10 text-amber-500' : 'bg-zinc-800 text-zinc-400'
                       }`}>
                         <HelpCircle className="w-4 h-4" />
                       </div>
                       <div>
                         <h3 className={`font-bold text-sm sm:text-base leading-snug transition-colors ${
-                          isOpen ? 'text-blue-700' : 'text-slate-900'
+                          isOpen ? 'text-zinc-100' : 'text-zinc-300'
                         }`}>
                           {faq.question}
                         </h3>
                         <div className="flex items-center gap-2 mt-1.5">
-                          <span className="px-2 py-0.5 rounded-md bg-slate-100 text-[10px] font-bold text-slate-600 border border-slate-200/60">
+                          <span className="px-2 py-0.5 rounded-md bg-zinc-800 text-[10px] font-bold text-zinc-400 border border-zinc-700/50">
                             {faq.categoryTag || 'General'}
                           </span>
                         </div>
@@ -198,14 +191,14 @@ export default function PublicFaqsPage() {
                     </div>
 
                     <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-transform ${
-                      isOpen ? 'rotate-180 bg-blue-50 text-blue-600' : 'bg-slate-100 text-slate-500'
+                      isOpen ? 'rotate-180 bg-zinc-800 text-zinc-300' : 'bg-zinc-800/50 text-zinc-500'
                     }`}>
                       <ChevronDown className="w-4 h-4" />
                     </div>
                   </button>
 
                   {isOpen && (
-                    <div className="px-5 sm:px-6 pb-5 pt-2 text-xs sm:text-sm text-slate-700 leading-relaxed border-t border-slate-100 bg-slate-50/30 whitespace-pre-line">
+                    <div className="px-5 sm:px-6 pb-5 pt-2 text-xs sm:text-sm text-zinc-400 leading-relaxed border-t border-zinc-800/50 bg-zinc-900/30 whitespace-pre-line">
                       {faq.answer}
                     </div>
                   )}
@@ -217,37 +210,39 @@ export default function PublicFaqsPage() {
 
         {/* Empty State */}
         {!isLoading && !error && filteredFaqs.length === 0 && (
-          <div className="text-center py-16 bg-white rounded-2xl border border-slate-200 shadow-2xs p-8">
-            <div className="w-12 h-12 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-3">
+          <div className="text-center py-16 bg-zinc-900/50 rounded-2xl border border-zinc-800 p-8">
+            <div className="w-12 h-12 rounded-full bg-zinc-800 text-zinc-500 flex items-center justify-center mx-auto mb-3">
               <HelpCircle className="w-6 h-6" />
             </div>
-            <h3 className="font-bold text-slate-900 text-base">Không tìm thấy câu hỏi phù hợp</h3>
-            <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
+            <h3 className="font-bold text-zinc-100 text-base">Không tìm thấy câu hỏi phù hợp</h3>
+            <p className="text-xs text-zinc-400 mt-1 max-w-sm mx-auto">
               Không có câu hỏi nào khớp với từ khóa "{searchQuery}". Bạn có thể gửi yêu cầu hỗ trợ trực tiếp.
             </p>
           </div>
         )}
 
         {/* CONTACT / CTA CARD */}
-        <div className="mt-12 bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 rounded-2xl p-6 sm:p-8 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="space-y-1 text-center md:text-left">
-            <h3 className="text-lg sm:text-xl font-black">Vẫn chưa tìm thấy câu trả lời?</h3>
-            <p className="text-xs sm:text-sm text-slate-300 max-w-md">
-              Đội ngũ kỹ sư và chuyên viên CSKH của CloudServiceStore luôn sẵn sàng giải đáp 24/7/365.
+        <div className="mt-12 bg-zinc-900 border border-zinc-800 rounded-2xl p-6 sm:p-8 text-white flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-2xl pointer-events-none" />
+          
+          <div className="space-y-1 text-center md:text-left relative z-10">
+            <h3 className="text-lg sm:text-xl font-black text-zinc-100">Vẫn chưa tìm thấy câu trả lời?</h3>
+            <p className="text-xs sm:text-sm text-zinc-400 max-w-md">
+              Đội ngũ kỹ sư và chuyên viên CSKH của SEN CloudHost luôn sẵn sàng giải đáp 24/7/365.
             </p>
           </div>
 
-          <div className="flex items-center gap-3 shrink-0">
+          <div className="flex items-center gap-3 shrink-0 relative z-10">
             <Link
               href="/support/tickets"
-              className="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition-all shadow-lg flex items-center gap-2"
+              className="px-4 py-2.5 rounded-xl bg-zinc-100 hover:bg-white text-zinc-950 font-bold text-xs transition-all flex items-center gap-2"
             >
               <LifeBuoy className="w-4 h-4" />
               <span>Gửi Ticket Hỗ Trợ</span>
             </Link>
             <Link
               href="/contact"
-              className="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold text-xs transition-all flex items-center gap-2"
+              className="px-4 py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-zinc-100 font-bold text-xs transition-all flex items-center gap-2"
             >
               <MessageSquare className="w-4 h-4" />
               <span>Liên Hệ Trực Tiếp</span>

@@ -75,11 +75,11 @@ export default function StatusPage() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'Operational': return 'text-emerald-500 bg-emerald-50 border-emerald-200';
-      case 'Degraded': return 'text-amber-500 bg-amber-50 border-amber-200';
-      case 'Outage': return 'text-rose-500 bg-rose-50 border-rose-200';
-      case 'Maintenance': return 'text-[#1F1F1F] bg-blue-50 border-blue-200';
-      default: return 'text-slate-600 bg-slate-50 border-slate-200';
+      case 'Operational': return 'text-zinc-100 bg-zinc-900 border-zinc-800';
+      case 'Degraded': return 'text-amber-500 bg-zinc-900 border-amber-500/20';
+      case 'Outage': return 'text-zinc-500 bg-zinc-900 border-zinc-800';
+      case 'Maintenance': return 'text-zinc-400 bg-zinc-900 border-zinc-800';
+      default: return 'text-zinc-500 bg-zinc-900 border-zinc-800';
     }
   };
 
@@ -104,30 +104,30 @@ export default function StatusPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 py-12">
+    <div className="min-h-screen bg-zinc-950 py-12">
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
         
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-black text-slate-900 tracking-tight mb-4 flex items-center justify-center gap-3">
-            <Activity className="w-10 h-10 text-[#1F1F1F]" />
+          <h1 className="text-4xl font-black text-zinc-100 tracking-tight mb-4 flex items-center justify-center gap-3">
+            <Activity className="w-10 h-10 text-amber-500" />
             Trạng thái Hệ thống
           </h1>
-          <p className="text-lg text-slate-600">
-            Cập nhật liên tục tình trạng hoạt động của các dịch vụ tại CloudHost VN.
+          <p className="text-lg text-zinc-400">
+            Cập nhật liên tục tình trạng hoạt động của các dịch vụ tại SEN CloudHost.
           </p>
         </div>
 
         {loading && !data ? (
           <div className="flex items-center justify-center py-20">
-            <RefreshCw className="w-8 h-8 text-[#1F1F1F] animate-spin" />
+            <RefreshCw className="w-8 h-8 text-zinc-500 animate-spin" />
           </div>
         ) : data ? (
           <div className="space-y-6">
             
             {/* Overall Status Banner */}
-            <div className={`rounded-md p-6 border-2 flex items-center gap-4 ${getStatusColor(data.overallStatus)}`}>
-              <div className="bg-white/50 p-3 rounded-full">
+            <div className={`rounded-md p-6 border flex items-center gap-4 ${getStatusColor(data.overallStatus)}`}>
+              <div className="bg-zinc-800 p-3 rounded-full">
                 {getStatusIcon(data.overallStatus)}
               </div>
               <div className="flex-1">
@@ -138,23 +138,23 @@ export default function StatusPage() {
                   Cập nhật lần cuối: {formatDistanceToNow(new Date(data.lastUpdate), { addSuffix: true, locale: vi })}
                 </p>
               </div>
-              <button onClick={fetchStatus} disabled={loading} className="p-2 hover:bg-white/50 rounded-full transition-colors">
+              <button onClick={fetchStatus} disabled={loading} className="p-2 hover:bg-zinc-800 rounded-full transition-colors">
                 <RefreshCw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
               </button>
             </div>
 
             {/* Services List */}
-            <div className="bg-white border border-slate-200 rounded-md overflow-hidden shadow-sm">
-              <div className="px-6 py-4 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
-                <h3 className="font-bold text-slate-700">Trạng thái dịch vụ</h3>
-                <span className="text-sm font-medium text-slate-600">Uptime 30 ngày</span>
+            <div className="bg-zinc-900/50 border border-zinc-800 rounded-md overflow-hidden shadow-sm">
+              <div className="px-6 py-4 border-b border-zinc-800 bg-zinc-900 flex justify-between items-center">
+                <h3 className="font-bold text-zinc-100">Trạng thái dịch vụ</h3>
+                <span className="text-sm font-medium text-zinc-400">Uptime 30 ngày</span>
               </div>
-              <div className="divide-y divide-slate-100">
+              <div className="divide-y divide-zinc-800">
                 {data.services.map((service) => (
                   <div key={service.id} className="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
-                      <div className="font-bold text-slate-900 text-lg">{service.serviceName}</div>
-                      <div className="text-sm text-slate-600 mt-1 flex items-center gap-2">
+                      <div className="font-bold text-zinc-100 text-lg">{service.serviceName}</div>
+                      <div className="text-sm text-zinc-500 mt-1 flex items-center gap-2">
                         <Clock className="w-3.5 h-3.5" />
                         Kiểm tra: {formatDistanceToNow(new Date(service.lastChecked), { addSuffix: true, locale: vi })}
                       </div>
@@ -169,7 +169,7 @@ export default function StatusPage() {
                       </div>
                       
                       <div className="text-right min-w-[80px]">
-                        <div className="text-xl font-black text-slate-700">
+                        <div className="text-xl font-black text-zinc-300">
                           {service.uptimePercentage}%
                         </div>
                       </div>
@@ -180,7 +180,7 @@ export default function StatusPage() {
             </div>
           </div>
         ) : (
-          <div className="text-center py-20 text-rose-500">
+          <div className="text-center py-20 text-zinc-500">
             Không thể tải dữ liệu trạng thái. Vui lòng thử lại sau.
           </div>
         )}
