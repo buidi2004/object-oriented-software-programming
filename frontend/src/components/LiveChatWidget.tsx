@@ -107,13 +107,23 @@ export const LiveChatWidget: React.FC = () => {
 
   const syncMessages = async (sId: string, uId: string) => {
     try {
-      const res = await api.get(`/chats/${sId}/messages`);
+      const res = await api.get(`/chats/${sId}/messages?_t=${Date.now()}`);
       if (res.data && res.data.length > 0) {
         const history = res.data.map((m: any) => ({
           sender: m.senderId?.toLowerCase() !== uId?.toLowerCase() ? 'bot' : 'user',
           text: m.message
         }));
-        setMessages(history);
+        
+        setMessages(prev => {
+          const merged = [...prev];
+          history.forEach((hMsg: any) => {
+            if (!merged.some(m => m.text === hMsg.text && m.sender === hMsg.sender)) {
+              merged.push(hMsg);
+            }
+          });
+          return merged;
+        });
+        
         return history;
       }
     } catch (e) {
@@ -191,25 +201,29 @@ export const LiveChatWidget: React.FC = () => {
         headers: { 'Content-Type': 'application/json' }
       });
 
-      // Fallback polling in case SignalR is not connected or blocked on proxy/production
+      // Lấy số lượng tin nhắn thực tế từ DB TRƯỚC KHI gửi (để so sánh chính xác)
+      const currentDbHistory = await syncMessages(sessionId, userId);
+      const dbBaseCount = currentDbHistory ? currentDbHistory.length : 0;
+      
       let attempts = 0;
-      const initialMsgCount = messages.length + 1; // including current user msg
-
       pollIntervalRef.current = setInterval(async () => {
         attempts++;
         const currentHistory = await syncMessages(sessionId, userId);
-        if (currentHistory && currentHistory.length > initialMsgCount) {
+        
+        // Nếu DB có thêm ít nhất 2 tin (1 của user vừa gửi + 1 của bot trả lời)
+        if (currentHistory && currentHistory.length >= dbBaseCount + 2) {
           const lastMsg = currentHistory[currentHistory.length - 1];
           if (lastMsg.sender === 'bot') {
             clearPolling();
             setLoading(false);
           }
         }
+        
         if (attempts >= 10) {
           clearPolling();
           setLoading(false);
         }
-      }, 1500);
+      }, 2000);
 
     } catch (err) {
       console.error("Lỗi gửi tin nhắn:", err);
