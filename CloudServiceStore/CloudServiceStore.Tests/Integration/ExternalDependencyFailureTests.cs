@@ -75,8 +75,13 @@ public class ExternalDependencyFailureTests : IClassFixture<CustomWebApplication
         var response = await _client.GetAsync("/api/vpsinstances/health/docker");
 
         // 2. Assert: Must return 200 OK without crashing with 500
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
         var body = await response.Content.ReadAsStringAsync();
+        if (response.StatusCode != HttpStatusCode.OK)
+        {
+            throw new Exception($"Expected 200 OK, got {response.StatusCode}. Body: {body}");
+        }
+        
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
         body.Should().Contain("available");
     }
 }

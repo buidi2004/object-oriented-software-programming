@@ -20,22 +20,28 @@ public sealed class DockerClientFactory : IDisposable
         {
             try
             {
-                var dockerUri = Environment.OSVersion.Platform == PlatformID.Win32NT
-                    ? "npipe://./pipe/docker_engine"
-                    : "unix:///var/run/docker.sock";
-
-                var client = new DockerClientConfiguration(new Uri(dockerUri))
-                    .CreateClient();
-
-                _logger.LogInformation("DockerClient created successfully, connecting to {DockerUri}", dockerUri);
-                return client;
+                return CreateClientSafe();
             }
             catch (Exception ex)
             {
-                _logger.LogWarning(ex, "Failed to create DockerClient. Docker-based provisioning will be unavailable.");
+                _logger.LogWarning(ex, "Failed to create DockerClient due to missing assembly or type. Docker-based provisioning will be unavailable.");
                 return null;
             }
         });
+    }
+
+    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+    private IDockerClient? CreateClientSafe()
+    {
+        var dockerUri = Environment.OSVersion.Platform == PlatformID.Win32NT
+            ? "npipe://./pipe/docker_engine"
+            : "unix:///var/run/docker.sock";
+
+        var client = new DockerClientConfiguration(new Uri(dockerUri))
+            .CreateClient();
+
+        _logger.LogInformation("DockerClient created successfully, connecting to {DockerUri}", dockerUri);
+        return client;
     }
 
     /// <summary>
