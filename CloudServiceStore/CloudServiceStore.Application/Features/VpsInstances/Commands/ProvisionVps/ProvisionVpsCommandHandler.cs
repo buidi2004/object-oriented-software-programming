@@ -107,9 +107,12 @@ public class ProvisionVpsCommandHandler : IRequestHandler<ProvisionVpsCommand, S
                 v => v.UserId == order.UserId && v.Status != VpsInstanceStatus.Terminated,
                 cancellationToken);
 
-            if (activeVpsList?.Count >= 10)
+            var user = await _userRepo.GetByIdAsync(order.UserId, cancellationToken);
+            var maxQuota = user?.VpsQuota ?? 10;
+
+            if (activeVpsList?.Count >= maxQuota)
             {
-                throw new BadRequestException("Bạn đã đạt giới hạn tối đa 10 máy chủ Cloud VPS hoạt động cùng lúc.");
+                throw new BadRequestException($"Bạn đã đạt giới hạn tối đa {maxQuota} máy chủ Cloud VPS hoạt động cùng lúc.");
             }
 
             var (cpuCores, memoryBytes, diskGb) = _specParser.Parse(plan);

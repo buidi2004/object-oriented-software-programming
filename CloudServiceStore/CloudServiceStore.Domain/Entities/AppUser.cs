@@ -22,6 +22,7 @@ public class AppUser : AggregateRoot
     public bool IsActive { get; internal set; }
     public DateTime CreatedAt { get; internal set; }
     public string? AvatarUrl { get; internal set; }
+    public int VpsQuota { get; internal set; } = 10;
     
     public bool IsTwoFactorEnabled { get; private set; } = false;
     public string? TwoFactorSecretKey { get; private set; }

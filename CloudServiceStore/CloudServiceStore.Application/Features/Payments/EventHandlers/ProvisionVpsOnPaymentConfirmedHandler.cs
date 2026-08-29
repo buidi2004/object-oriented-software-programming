@@ -11,6 +11,7 @@ using CloudServiceStore.Domain.Enums;
 using CloudServiceStore.Domain.Interfaces;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CloudServiceStore.Application.Features.Payments.EventHandlers;
 
@@ -28,6 +29,7 @@ public class ProvisionVpsOnPaymentConfirmedHandler : INotificationHandler<Paymen
     private readonly IGameServerProvisioningService _gameProvisioningService;
     private readonly IUnitOfWork _uow;
     private readonly ILogger<ProvisionVpsOnPaymentConfirmedHandler> _logger;
+    private readonly IServiceScopeFactory _scopeFactory;
 
     public ProvisionVpsOnPaymentConfirmedHandler(
         IMediator mediator,
@@ -41,7 +43,8 @@ public class ProvisionVpsOnPaymentConfirmedHandler : INotificationHandler<Paymen
         IRepository<ObjectStorageBucket> storageRepo,
         IGameServerProvisioningService gameProvisioningService,
         IUnitOfWork uow,
-        ILogger<ProvisionVpsOnPaymentConfirmedHandler> logger)
+        ILogger<ProvisionVpsOnPaymentConfirmedHandler> logger,
+        IServiceScopeFactory scopeFactory)
     {
         _mediator = mediator;
         _orderRepo = orderRepo;
@@ -55,6 +58,7 @@ public class ProvisionVpsOnPaymentConfirmedHandler : INotificationHandler<Paymen
         _gameProvisioningService = gameProvisioningService;
         _uow = uow;
         _logger = logger;
+        _scopeFactory = scopeFactory;
     }
 
     public async Task Handle(PaymentConfirmedEvent notification, CancellationToken cancellationToken)
@@ -115,8 +119,10 @@ public class ProvisionVpsOnPaymentConfirmedHandler : INotificationHandler<Paymen
                         {
                             try
                             {
+                                using var scope = _scopeFactory.CreateScope();
+                                var provisioningSvc = scope.ServiceProvider.GetRequiredService<IGameServerProvisioningService>();
                                 using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(60));
-                                await _gameProvisioningService.ProvisionGameServerAsync(newServer, cts.Token);
+                                await provisioningSvc.ProvisionGameServerAsync(newServer, cts.Token);
                                 _logger.LogInformation("Auto-provisioned Game Server {Id} for order {OrderId}", newServer.Id, order.Id);
                             }
                             catch (Exception provEx)
@@ -252,8 +258,10 @@ public class ProvisionVpsOnPaymentConfirmedHandler : INotificationHandler<Paymen
             {
                 try
                 {
+                    using var scope = _scopeFactory.CreateScope();
+                    var scopedMediator = scope.ServiceProvider.GetRequiredService<IMediator>();
                     using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(60));
-                    await _mediator.Send(new ProvisionVpsCommand { OrderId = order.Id }, cts.Token);
+                    await scopedMediator.Send(new ProvisionVpsCommand { OrderId = order.Id }, cts.Token);
                     _logger.LogInformation("Auto-provisioned VPS for order {OrderId}", order.Id);
                 }
                 catch (Exception ex)
