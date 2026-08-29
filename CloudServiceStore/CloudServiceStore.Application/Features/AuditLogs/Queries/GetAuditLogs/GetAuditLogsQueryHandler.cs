@@ -35,7 +35,8 @@ public class GetAuditLogsQueryHandler : IRequestHandler<GetAuditLogsQuery, IRead
                 l.EntityName, 
                 l.EntityId, 
                 l.IpAddress, 
-                l.Timestamp
+                l.Timestamp,
+                l.Details
             )).ToList().AsReadOnly();
     }
 }

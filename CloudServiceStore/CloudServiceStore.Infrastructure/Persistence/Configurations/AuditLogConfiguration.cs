@@ -8,6 +8,7 @@ public class AuditLogConfiguration : IEntityTypeConfiguration<AuditLog>
 {
     public void Configure(EntityTypeBuilder<AuditLog> builder)
     {
-        // Default configuration for AuditLog
+        builder.Property(a => a.IpAddress).HasMaxLength(45); // IPv6 max length
+        builder.Property(a => a.Details).HasColumnType("nvarchar(max)").IsRequired(false);
     }
 }

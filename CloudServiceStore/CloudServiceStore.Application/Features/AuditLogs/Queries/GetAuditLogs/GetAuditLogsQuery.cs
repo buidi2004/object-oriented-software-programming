@@ -4,6 +4,6 @@ using MediatR;
 
 namespace CloudServiceStore.Application.Features.AuditLogs.Queries.GetAuditLogs;
 
-public record AuditLogDto(Guid Id, Guid? UserId, string? UserEmail, string Action, string EntityName, string EntityId, string IpAddress, DateTime Timestamp);
+public record AuditLogDto(Guid Id, Guid? UserId, string? UserEmail, string Action, string EntityName, string EntityId, string IpAddress, DateTime Timestamp, string? Details);
 
 public record GetAuditLogsQuery() : IRequest<IReadOnlyList<AuditLogDto>>;

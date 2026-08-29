@@ -12,6 +12,7 @@ public class AuditLog : AggregateRoot
     public string EntityId { get; set; } = null!;
     public string IpAddress { get; set; } = null!; // varchar(45) for IPv6
     public DateTime Timestamp { get; set; }
+    public string? Details { get; set; } // JSON payload / change details
     
     public AppUser? User { get; set; }
 }
