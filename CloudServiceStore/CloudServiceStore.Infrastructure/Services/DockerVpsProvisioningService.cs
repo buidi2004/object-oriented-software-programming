@@ -78,6 +78,14 @@ public class DockerVpsProvisioningService : IVpsProvisioningService
             {
                 Image = spec.ImageName,
                 Name = spec.ContainerName,
+                Env = new List<string>
+                {
+                    "USER_NAME=root",
+                    "USER_PASSWORD=root",
+                    "PASSWORD_ACCESS=true",
+                    "PUID=1000",
+                    "PGID=1000"
+                },
                 HostConfig = new HostConfig
                 {
                     Memory = requiredMemory,
@@ -87,7 +95,7 @@ public class DockerVpsProvisioningService : IVpsProvisioningService
                     // BUG #2 FIX: Bind SSH port so the user can actually connect to their VPS
                     PortBindings = new Dictionary<string, IList<PortBinding>>
                     {
-                        ["22/tcp"] = new List<PortBinding>
+                        ["2222/tcp"] = new List<PortBinding>
                         {
                             new() { HostPort = sshPort.ToString() }
                         }
@@ -96,7 +104,7 @@ public class DockerVpsProvisioningService : IVpsProvisioningService
                 },
                 ExposedPorts = new Dictionary<string, EmptyStruct>
                 {
-                    ["22/tcp"] = default
+                    ["2222/tcp"] = default
                 },
                 Tty = true,
                 AttachStdin = true,

@@ -10,7 +10,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=CloudServiceStoreDb;User Id=sa;Password=${DB_SA_PASSWORD};TrustServerCertificate=True;
-      - Vps__DefaultImage=vps-demo-image
+      - Vps__DefaultImage=lscr.io/linuxserver/openssh-server:latest
       - Cache__Enabled=true
       - Cache__RedisConnectionString=redis:6379
       - EmailSettings__SmtpHost=smtp.gmail.com
