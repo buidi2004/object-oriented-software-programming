@@ -29,6 +29,23 @@ export default function AdminVpsInstancesPage() {
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [bulkDeleting, setBulkDeleting] = useState(false);
 
+  const [isCreating, setIsCreating] = useState(false);
+  const [editingVps, setEditingVps] = useState<VpsInstanceDto | null>(null);
+  const [createForm, setCreateForm] = useState({
+    containerName: '',
+    cpuCores: 2,
+    ramMb: 4096,
+    diskGb: 50,
+    planName: 'Cloud VPS Pro'
+  });
+  const [editForm, setEditForm] = useState({
+    cpuCores: 2,
+    ramMb: 4096,
+    diskGb: 50,
+    planName: 'Cloud VPS Pro',
+    status: 'Running'
+  });
+
   useEffect(() => {
     checkAdminAccess();
   }, []);
@@ -103,6 +120,71 @@ export default function AdminVpsInstancesPage() {
     }
   };
 
+  const handleCreateVps = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const token = localStorage.getItem('accessToken');
+    if (!token) return;
+
+    try {
+      const res = await fetch('/api/VpsInstances/admin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          containerName: createForm.containerName.trim(),
+          cpuCores: Number(createForm.cpuCores) || 2,
+          ramMb: Number(createForm.ramMb) || 4096,
+          diskGb: Number(createForm.diskGb) || 50,
+          planName: createForm.planName
+        })
+      });
+      if (res.ok) {
+        setIsCreating(false);
+        alert('Cấp phát VPS mới thành công!');
+        fetchInstances(token);
+      } else {
+        alert('Lỗi cấp phát VPS: ' + res.status);
+      }
+    } catch {
+      alert('Lỗi khi cấp phát VPS.');
+    }
+  };
+
+  const handleUpdateVps = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingVps) return;
+    const token = localStorage.getItem('accessToken');
+    if (!token) return;
+
+    try {
+      const res = await fetch(`/api/VpsInstances/${editingVps.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          cpuCores: Number(editForm.cpuCores),
+          ramMb: Number(editForm.ramMb),
+          diskGb: Number(editForm.diskGb),
+          planName: editForm.planName,
+          status: editForm.status
+        })
+      });
+      if (res.ok) {
+        setEditingVps(null);
+        alert('Cập nhật cấu hình VPS thành công!');
+        fetchInstances(token);
+      } else {
+        alert('Lỗi khi cập nhật cấu hình: ' + res.status);
+      }
+    } catch {
+      alert('Lỗi khi cập nhật cấu hình VPS.');
+    }
+  };
+
   const handleBulkDeleteTerminated = async () => {
     const terminated = instances.filter(i => i.status === 'Terminated');
     if (terminated.length === 0) { alert('Không có VPS nào ở trạng thái Terminated.'); return; }
@@ -163,6 +245,12 @@ export default function AdminVpsInstancesPage() {
             </div>
           </div>
           <div className="flex items-center gap-3">
+            <button
+              onClick={() => setIsCreating(true)}
+              className="px-3 py-1.5 rounded-sm bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold flex items-center gap-1.5 transition-colors shadow-sm"
+            >
+              + Cấp Phát VPS
+            </button>
             <span className="px-3 py-1.5 rounded-sm bg-emerald-100 text-emerald-700 text-sm font-semibold">
               {runningCount} Running
             </span>
@@ -255,18 +343,35 @@ export default function AdminVpsInstancesPage() {
                   </div>
                 </div>
 
-                <button
-                  onClick={() => handleDelete(instance)}
-                  disabled={deletingId === instance.id}
-                  className="w-full mt-2 py-2 rounded-sm border border-red-200 text-red-600 hover:bg-red-50 text-sm font-semibold flex items-center justify-center gap-2 transition-colors disabled:opacity-50"
-                >
-                  {deletingId === instance.id ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                  ) : (
-                    <Trash2 className="w-4 h-4" />
-                  )}
-                  Xóa VPS
-                </button>
+                <div className="flex items-center gap-2 mt-2">
+                  <button
+                    onClick={() => {
+                      setEditingVps(instance);
+                      setEditForm({
+                        cpuCores: instance.cpuCores,
+                        ramMb: instance.ramMb,
+                        diskGb: instance.diskGb || 50,
+                        planName: instance.planName,
+                        status: instance.status
+                      });
+                    }}
+                    className="flex-1 py-2 rounded-sm border border-blue-200 text-blue-600 hover:bg-blue-50 text-sm font-semibold flex items-center justify-center gap-1 transition-colors"
+                  >
+                    Sửa
+                  </button>
+                  <button
+                    onClick={() => handleDelete(instance)}
+                    disabled={deletingId === instance.id}
+                    className="flex-1 py-2 rounded-sm border border-red-200 text-red-600 hover:bg-red-50 text-sm font-semibold flex items-center justify-center gap-1 transition-colors disabled:opacity-50"
+                  >
+                    {deletingId === instance.id ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <Trash2 className="w-4 h-4" />
+                    )}
+                    Xóa
+                  </button>
+                </div>
               </div>
             );
           })}
@@ -279,6 +384,173 @@ export default function AdminVpsInstancesPage() {
           </div>
         )}
       </main>
+
+      {/* Modal Cấp Phát VPS */}
+      {isCreating && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl max-w-md w-full p-6 shadow-2xl animate-in fade-in zoom-in-95">
+            <h3 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+              <Server className="w-5 h-5 text-blue-600" />
+              Cấp Phát VPS Thủ Công
+            </h3>
+            <form onSubmit={handleCreateVps} className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Tên Máy Chủ / Hostname</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="vps-prod-worker"
+                  value={createForm.containerName}
+                  onChange={(e) => setCreateForm({ ...createForm, containerName: e.target.value })}
+                  className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                />
+              </div>
+              <div className="grid grid-cols-3 gap-2">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">vCPU</label>
+                  <input
+                    type="number"
+                    min="1"
+                    value={createForm.cpuCores}
+                    onChange={(e) => setCreateForm({ ...createForm, cpuCores: Number(e.target.value) })}
+                    className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">RAM (MB)</label>
+                  <input
+                    type="number"
+                    min="1024"
+                    step="1024"
+                    value={createForm.ramMb}
+                    onChange={(e) => setCreateForm({ ...createForm, ramMb: Number(e.target.value) })}
+                    className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Disk (GB)</label>
+                  <input
+                    type="number"
+                    min="10"
+                    value={createForm.diskGb}
+                    onChange={(e) => setCreateForm({ ...createForm, diskGb: Number(e.target.value) })}
+                    className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Tên Gói Cước</label>
+                <input
+                  type="text"
+                  value={createForm.planName}
+                  onChange={(e) => setCreateForm({ ...createForm, planName: e.target.value })}
+                  className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                />
+              </div>
+              <div className="flex justify-end gap-2 pt-3 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setIsCreating(false)}
+                  className="px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded"
+                >
+                  Hủy
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white rounded"
+                >
+                  Cấp Phát Ngay
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Sửa Cấu Hình VPS */}
+      {editingVps && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl max-w-md w-full p-6 shadow-2xl animate-in fade-in zoom-in-95">
+            <h3 className="text-lg font-bold text-slate-900 mb-4">Sửa Cấu Hình VPS: {editingVps.containerName}</h3>
+            <form onSubmit={handleUpdateVps} className="space-y-4">
+              <div className="grid grid-cols-3 gap-2">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">vCPU</label>
+                  <input
+                    type="number"
+                    min="1"
+                    required
+                    value={editForm.cpuCores}
+                    onChange={(e) => setEditForm({ ...editForm, cpuCores: Number(e.target.value) })}
+                    className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">RAM (MB)</label>
+                  <input
+                    type="number"
+                    min="1024"
+                    step="1024"
+                    required
+                    value={editForm.ramMb}
+                    onChange={(e) => setEditForm({ ...editForm, ramMb: Number(e.target.value) })}
+                    className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Disk (GB)</label>
+                  <input
+                    type="number"
+                    min="10"
+                    required
+                    value={editForm.diskGb}
+                    onChange={(e) => setEditForm({ ...editForm, diskGb: Number(e.target.value) })}
+                    className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Tên Gói</label>
+                <input
+                  type="text"
+                  required
+                  value={editForm.planName}
+                  onChange={(e) => setEditForm({ ...editForm, planName: e.target.value })}
+                  className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Trạng Thái</label>
+                <select
+                  value={editForm.status}
+                  onChange={(e) => setEditForm({ ...editForm, status: e.target.value })}
+                  className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                >
+                  <option value="Running">Running</option>
+                  <option value="Stopped">Stopped</option>
+                  <option value="Suspended">Suspended</option>
+                  <option value="Terminated">Terminated</option>
+                </select>
+              </div>
+              <div className="flex justify-end gap-2 pt-3 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setEditingVps(null)}
+                  className="px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded"
+                >
+                  Hủy
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white rounded"
+                >
+                  Lưu Cấu Hình
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

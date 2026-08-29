@@ -32,6 +32,21 @@ export default function AdminDatabasesPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
 
+  const [isCreating, setIsCreating] = useState(false);
+  const [editingDb, setEditingDb] = useState<AdminDatabaseDto | null>(null);
+  const [createForm, setCreateForm] = useState({
+    name: '',
+    engine: 1, // 1 for PostgreSQL, 0 for MySQL
+    version: '16',
+    adminUser: 'dbadmin',
+    adminPassword: ''
+  });
+  const [editForm, setEditForm] = useState({
+    name: '',
+    adminUser: '',
+    adminPassword: ''
+  });
+
   useEffect(() => {
     fetchDatabases();
   }, []);
@@ -45,6 +60,53 @@ export default function AdminDatabasesPage() {
       console.warn('Failed to fetch databases:', error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleCreateDatabase = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!createForm.name.trim()) return alert('Vui lòng nhập tên database');
+    try {
+      await api.post('/admin/databases', {
+        name: createForm.name.trim(),
+        engine: Number(createForm.engine),
+        version: createForm.version,
+        adminUser: createForm.adminUser,
+        adminPassword: createForm.adminPassword || 'Pass123!@#'
+      });
+      setIsCreating(false);
+      alert('Tạo database thành công!');
+      fetchDatabases();
+    } catch (err: any) {
+      alert(err?.response?.data?.message || 'Lỗi khi tạo database');
+    }
+  };
+
+  const handleUpdateDatabase = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingDb) return;
+    try {
+      await api.put(`/admin/databases/${editingDb.id}`, {
+        name: editForm.name,
+        adminUser: editForm.adminUser,
+        adminPassword: editForm.adminPassword
+      });
+      setEditingDb(null);
+      alert('Cập nhật database thành công!');
+      fetchDatabases();
+    } catch (err: any) {
+      alert(err?.response?.data?.message || 'Lỗi khi cập nhật database');
+    }
+  };
+
+  const handleDeleteDatabase = async (id: string, name: string) => {
+    if (!confirm(`Bạn có chắc chắn muốn xóa database ${name}?`)) return;
+    try {
+      await api.delete(`/admin/databases/${id}`);
+      alert('Đã xóa database thành công!');
+      fetchDatabases();
+    } catch (err: any) {
+      alert(err?.response?.data?.message || 'Lỗi khi xóa database');
     }
   };
 
@@ -100,6 +162,12 @@ export default function AdminDatabasesPage() {
             </div>
           </div>
           <div className="flex items-center gap-3">
+            <button
+              onClick={() => setIsCreating(true)}
+              className="px-3.5 py-1.5 rounded bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs flex items-center gap-1.5 transition-colors shadow-sm"
+            >
+              + Tạo Database Mới
+            </button>
             <button
               onClick={fetchDatabases}
               className="p-2 rounded border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 transition-colors"
@@ -183,12 +251,31 @@ export default function AdminDatabasesPage() {
                     <td className="px-6 py-4">
                       <AdminDatabaseStatusCell db={db} onRetry={() => handleForceRetry(db.id)} onMarkFailed={() => handleMarkFailed(db.id)} />
                     </td>
-                    <td className="px-6 py-4 text-right">
+                    <td className="px-6 py-4 text-right space-x-1.5 whitespace-nowrap">
+                      <button
+                        onClick={() => {
+                          setEditingDb(db);
+                          setEditForm({
+                            name: db.name,
+                            adminUser: db.adminUser || 'dbadmin',
+                            adminPassword: db.adminPassword || ''
+                          });
+                        }}
+                        className="px-2.5 py-1.5 rounded bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold transition-colors text-[11px]"
+                      >
+                        Sửa
+                      </button>
                       <button
                         onClick={() => handleForceRetry(db.id)}
-                        className="px-3 py-1.5 rounded bg-slate-100 hover:bg-teal-50 text-slate-700 hover:text-teal-700 font-bold transition-colors text-[11px]"
+                        className="px-2.5 py-1.5 rounded bg-slate-100 hover:bg-teal-50 text-slate-700 hover:text-teal-700 font-bold transition-colors text-[11px]"
                       >
-                        Force Retry
+                        Retry
+                      </button>
+                      <button
+                        onClick={() => handleDeleteDatabase(db.id, db.name)}
+                        className="px-2.5 py-1.5 rounded bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold transition-colors text-[11px]"
+                      >
+                        Xóa
                       </button>
                     </td>
                   </tr>
@@ -205,6 +292,144 @@ export default function AdminDatabasesPage() {
           )}
         </div>
       </main>
+
+      {/* Modal Tạo Database */}
+      {isCreating && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl max-w-md w-full p-6 shadow-2xl animate-in fade-in zoom-in-95">
+            <h3 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+              <Database className="w-5 h-5 text-teal-600" />
+              Tạo Managed Database Mới
+            </h3>
+            <form onSubmit={handleCreateDatabase} className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Tên Database</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. prod-db-customer"
+                  value={createForm.name}
+                  onChange={(e) => setCreateForm({ ...createForm, name: e.target.value })}
+                  className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Engine</label>
+                  <select
+                    value={createForm.engine}
+                    onChange={(e) => setCreateForm({ ...createForm, engine: Number(e.target.value) })}
+                    className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                  >
+                    <option value={1}>PostgreSQL</option>
+                    <option value={0}>MySQL</option>
+                    <option value={2}>MongoDB</option>
+                    <option value={3}>Redis</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Phiên bản</label>
+                  <input
+                    type="text"
+                    value={createForm.version}
+                    onChange={(e) => setCreateForm({ ...createForm, version: e.target.value })}
+                    className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">User Quản Trị</label>
+                <input
+                  type="text"
+                  value={createForm.adminUser}
+                  onChange={(e) => setCreateForm({ ...createForm, adminUser: e.target.value })}
+                  className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Mật khẩu Quản Trị</label>
+                <input
+                  type="password"
+                  placeholder="Pass123!@#"
+                  value={createForm.adminPassword}
+                  onChange={(e) => setCreateForm({ ...createForm, adminPassword: e.target.value })}
+                  className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                />
+              </div>
+              <div className="flex justify-end gap-2 pt-3 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setIsCreating(false)}
+                  className="px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded"
+                >
+                  Hủy
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 text-xs font-bold bg-teal-600 hover:bg-teal-700 text-white rounded"
+                >
+                  Khởi Tạo Database
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Sửa Database */}
+      {editingDb && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl max-w-md w-full p-6 shadow-2xl animate-in fade-in zoom-in-95">
+            <h3 className="text-lg font-bold text-slate-900 mb-4">Sửa Cấu Hình Database</h3>
+            <form onSubmit={handleUpdateDatabase} className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Tên Database</label>
+                <input
+                  type="text"
+                  required
+                  value={editForm.name}
+                  onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+                  className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">User Quản Trị</label>
+                <input
+                  type="text"
+                  value={editForm.adminUser}
+                  onChange={(e) => setEditForm({ ...editForm, adminUser: e.target.value })}
+                  className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Mật khẩu Mới (để trống nếu không đổi)</label>
+                <input
+                  type="password"
+                  placeholder="Nhập mật khẩu mới..."
+                  value={editForm.adminPassword}
+                  onChange={(e) => setEditForm({ ...editForm, adminPassword: e.target.value })}
+                  className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                />
+              </div>
+              <div className="flex justify-end gap-2 pt-3 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setEditingDb(null)}
+                  className="px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded"
+                >
+                  Hủy
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white rounded"
+                >
+                  Lưu Thay Đổi
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

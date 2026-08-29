@@ -97,34 +97,50 @@ export default function AdminDedicatedServersPage() {
   ];
 
   useEffect(() => {
-    const saved = localStorage.getItem('admin_dedicated_servers');
-    if (saved) {
-      try {
-        setServers(JSON.parse(saved));
-      } catch {
-        setServers(initialServers);
-      }
-    } else {
-      setServers(initialServers);
-    }
+    fetchServers();
   }, []);
 
-  const saveServers = (items: DedicatedServerItem[]) => {
-    setServers(items);
-    localStorage.setItem('admin_dedicated_servers', JSON.stringify(items));
+  const fetchServers = async () => {
+    try {
+      const res = await api.get('/dedicated-servers');
+      if (Array.isArray(res.data) && res.data.length > 0) {
+        setServers(res.data.map((s: any) => ({
+          id: s.id,
+          serverName: s.serverName,
+          datacenter: s.location || 'Viettel IDC Song Day (Ha Noi)',
+          rackLocation: 'Rack A-12 / U14',
+          cpu: s.cpuSpec || '2x Intel Xeon Gold 6248R',
+          ram: s.ramSpec || '128 GB DDR4 ECC Reg',
+          storage: s.diskSpec || '2x 1.92TB NVMe Enterprise RAID 1',
+          ipWan: s.ipAddress || '103.142.120.50',
+          ipmiIp: '10.10.12.14',
+          assignedUser: 'admin@cloudhost.vn',
+          monthlyCost: 6500000,
+          status: (s.status === 'Running' || s.status === 'Online') ? 'Online' : (s.status === 'Maintenance' ? 'Maintenance' : 'Offline')
+        })));
+      } else {
+        setServers(initialServers);
+      }
+    } catch {
+      setServers(initialServers);
+    }
   };
 
-  const handleCreateServer = (e: React.FormEvent) => {
+  const handleCreateServer = async (e: React.FormEvent) => {
     e.preventDefault();
-    const newServer: DedicatedServerItem = {
-      id: `srv-${Date.now()}`,
-      ...formData,
-    };
-
-    const updated = [newServer, ...servers];
-    saveServers(updated);
-    setIsCreating(false);
-    showToast('Đã thêm máy chủ vật lý riêng vào hệ thống!');
+    try {
+      await api.post('/dedicated-servers', {
+        serverName: formData.serverName,
+        cpuModel: formData.cpu,
+        ramGb: parseInt(formData.ram) || 128,
+        osImage: 'Ubuntu 24.04 LTS'
+      });
+      showToast('Đã thêm máy chủ vật lý riêng vào hệ thống!');
+      setIsCreating(false);
+      fetchServers();
+    } catch {
+      showToast('Lỗi khi thêm máy chủ', 'error');
+    }
   };
 
   const handleOpenEdit = (srv: DedicatedServerItem) => {
@@ -144,35 +160,48 @@ export default function AdminDedicatedServersPage() {
     });
   };
 
-  const handleUpdateServer = (e: React.FormEvent) => {
+  const handleUpdateServer = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingServer) return;
 
-    const updated = servers.map(s => s.id === editingServer.id ? { ...s, ...formData } : s);
-    saveServers(updated);
-    setEditingServer(null);
-    showToast('Đã cập nhật thông tin máy chủ thành công!');
+    try {
+      await api.put(`/dedicated-servers/${editingServer.id}`, {
+        serverName: formData.serverName,
+        cpuModel: formData.cpu,
+        status: formData.status
+      });
+      setEditingServer(null);
+      showToast('Đã cập nhật thông tin máy chủ thành công!');
+      fetchServers();
+    } catch {
+      showToast('Lỗi khi cập nhật máy chủ', 'error');
+    }
   };
 
-  const handleToggleStatus = (id: string) => {
+  const handleToggleStatus = async (id: string) => {
     const statusCycle: Array<DedicatedServerItem['status']> = ['Online', 'Maintenance', 'Offline'];
-    const updated = servers.map(s => {
-      if (s.id === id) {
-        const nextIdx = (statusCycle.indexOf(s.status) + 1) % statusCycle.length;
-        const nextStatus = statusCycle[nextIdx];
-        showToast(`Đã chuyển trạng thái máy chủ thành ${nextStatus}`);
-        return { ...s, status: nextStatus };
-      }
-      return s;
-    });
-    saveServers(updated);
+    const srv = servers.find(s => s.id === id);
+    if (!srv) return;
+    const nextIdx = (statusCycle.indexOf(srv.status) + 1) % statusCycle.length;
+    const nextStatus = statusCycle[nextIdx];
+    try {
+      await api.put(`/dedicated-servers/${id}`, { status: nextStatus });
+      showToast(`Đã chuyển trạng thái máy chủ thành ${nextStatus}`);
+      fetchServers();
+    } catch {
+      showToast('Lỗi khi đổi trạng thái', 'error');
+    }
   };
 
-  const handleDeleteServer = (id: string, name: string) => {
+  const handleDeleteServer = async (id: string, name: string) => {
     if (!confirm(`Bạn có chắc muốn xóa máy chủ ${name}?`)) return;
-    const updated = servers.filter(s => s.id !== id);
-    saveServers(updated);
-    showToast(`Đã xóa máy chủ ${name}!`);
+    try {
+      await api.delete(`/dedicated-servers/${id}`);
+      showToast(`Đã xóa máy chủ ${name}!`);
+      fetchServers();
+    } catch {
+      showToast('Lỗi khi xóa máy chủ', 'error');
+    }
   };
 
   const filtered = servers.filter(s => 

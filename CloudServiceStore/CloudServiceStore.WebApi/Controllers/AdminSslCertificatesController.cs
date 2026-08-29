@@ -62,6 +62,22 @@ public class AdminSslCertificatesController : ControllerBase
         return Ok(new { success = true, privateKey });
     }
 
+    [HttpPut("{id:guid}")]
+    public async Task<IActionResult> UpdateCertificate(Guid id, [FromBody] AdminUpdateSslRequest request, CancellationToken ct)
+    {
+        var cert = await _sslRepo.GetByIdAsync(id, ct);
+        if (cert == null) return NotFound();
+
+        if (!string.IsNullOrWhiteSpace(request.Status) && request.Status.Equals("Expired", StringComparison.OrdinalIgnoreCase))
+        {
+            cert.MarkAsExpired();
+        }
+
+        _sslRepo.Update(cert);
+        await _uow.SaveChangesAsync(ct);
+        return Ok(new { success = true, cert });
+    }
+
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> DeleteCertificate(Guid id, CancellationToken ct)
     {
@@ -74,3 +90,5 @@ public class AdminSslCertificatesController : ControllerBase
         return Ok(new { success = true });
     }
 }
+
+public record AdminUpdateSslRequest(string? Status, DateTime? ExpiryDate);

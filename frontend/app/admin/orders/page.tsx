@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, Search, Filter, Eye, Download, Calendar, User, DollarSign, Clock, CheckCircle2, AlertCircle } from 'lucide-react';
+import { ArrowLeft, Search, Filter, Eye, Download, Calendar, User, DollarSign, Clock, CheckCircle2, AlertCircle, Trash2 } from 'lucide-react';
 
 interface Order {
   id: string;
@@ -75,6 +75,49 @@ export default function AdminOrdersPage() {
       console.error('Failed to fetch orders:', error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleUpdateStatus = async (id: string, newStatus: string) => {
+    const token = localStorage.getItem('accessToken');
+    if (!token) return;
+    try {
+      const res = await fetch(`/api/orders/${id}/status`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ status: newStatus })
+      });
+      if (res.ok) {
+        alert('Cập nhật trạng thái đơn hàng thành công!');
+        fetchOrders(token);
+      } else {
+        alert('Lỗi cập nhật trạng thái đơn hàng');
+      }
+    } catch {
+      alert('Lỗi kết nối đến máy chủ');
+    }
+  };
+
+  const handleDeleteOrder = async (id: string) => {
+    if (!confirm(`Bạn có chắc muốn xóa đơn hàng #${id.slice(0, 8)}?`)) return;
+    const token = localStorage.getItem('accessToken');
+    if (!token) return;
+    try {
+      const res = await fetch(`/api/orders/${id}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.ok) {
+        alert('Đã xóa đơn hàng thành công!');
+        fetchOrders(token);
+      } else {
+        alert('Lỗi khi xóa đơn hàng');
+      }
+    } catch {
+      alert('Lỗi kết nối máy chủ');
     }
   };
 
@@ -195,17 +238,31 @@ export default function AdminOrdersPage() {
                       {order.totalAmount.toLocaleString('vi-VN')} đ
                     </td>
                     <td className="py-3 px-4">
-                      <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${getStatusColor(order.status)}`}>
-                        {getStatusLabel(order.status)}
-                      </span>
+                      <select
+                        value={order.status}
+                        onChange={(e) => handleUpdateStatus(order.id, e.target.value)}
+                        className={`px-2 py-1 rounded text-xs font-bold border border-transparent hover:border-slate-300 focus:outline-none cursor-pointer ${getStatusColor(order.status)}`}
+                      >
+                        <option value="pending">Chờ thanh toán</option>
+                        <option value="processing">Đang xử lý</option>
+                        <option value="completed">Hoàn thành</option>
+                        <option value="cancelled">Đã hủy</option>
+                      </select>
                     </td>
                     <td className="py-3 px-4 text-slate-600">
                       {new Date(order.createdAt).toLocaleDateString('vi-VN')}
                     </td>
-                    <td className="py-3 px-4 text-right">
-                      <Link href={`/orders/${order.id}`} className="inline-flex p-2 text-slate-600 hover:text-[#1F1F1F] hover:bg-blue-50 rounded-sm transition-colors">
+                    <td className="py-3 px-4 text-right space-x-1 whitespace-nowrap">
+                      <Link href={`/orders/${order.id}`} className="inline-flex p-1.5 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors" title="Xem chi tiết">
                         <Eye className="w-4 h-4" />
                       </Link>
+                      <button
+                        onClick={() => handleDeleteOrder(order.id)}
+                        className="inline-flex p-1.5 text-slate-600 hover:text-rose-600 hover:bg-rose-50 rounded transition-colors"
+                        title="Xóa đơn hàng"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
                     </td>
                   </tr>
                 ))}

@@ -26,6 +26,15 @@ export default function AdminAppInstallationsPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
 
+  const [isCreating, setIsCreating] = useState(false);
+  const [editingApp, setEditingApp] = useState<AdminAppDto | null>(null);
+  const [createForm, setCreateForm] = useState({
+    appName: 'WordPress'
+  });
+  const [editForm, setEditForm] = useState({
+    installUrl: ''
+  });
+
   const fetchApps = async () => {
     setIsLoading(true);
     try {
@@ -35,6 +44,46 @@ export default function AdminAppInstallationsPage() {
       console.warn('Failed to fetch app installations:', error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleCreateApp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await api.post('/admin/app-installer', {
+        appName: createForm.appName
+      });
+      setIsCreating(false);
+      alert('Đã bắt đầu cài đặt ứng dụng!');
+      fetchApps();
+    } catch (err: any) {
+      alert(err?.response?.data?.message || 'Lỗi khi cài đặt ứng dụng');
+    }
+  };
+
+  const handleUpdateApp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingApp) return;
+    try {
+      await api.put(`/admin/app-installer/${editingApp.id}`, {
+        installUrl: editForm.installUrl
+      });
+      setEditingApp(null);
+      alert('Cập nhật ứng dụng thành công!');
+      fetchApps();
+    } catch (err: any) {
+      alert(err?.response?.data?.message || 'Lỗi khi cập nhật ứng dụng');
+    }
+  };
+
+  const handleDeleteApp = async (id: string, name: string) => {
+    if (!confirm(`Bạn có chắc muốn gỡ cài đặt ứng dụng ${name}?`)) return;
+    try {
+      await api.delete(`/admin/app-installer/${id}`);
+      alert('Đã gỡ cài đặt ứng dụng thành công!');
+      fetchApps();
+    } catch (err: any) {
+      alert(err?.response?.data?.message || 'Lỗi khi gỡ cài đặt');
     }
   };
 
@@ -68,13 +117,21 @@ export default function AdminAppInstallationsPage() {
               <p className="text-xs text-slate-600">{apps.length} ứng dụng đã triển khai</p>
             </div>
           </div>
-          <button
-            onClick={fetchApps}
-            className="p-2 rounded border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 transition-colors"
-            title="Làm mới"
-          >
-            <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setIsCreating(true)}
+              className="px-3.5 py-1.5 rounded bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs flex items-center gap-1.5 transition-colors shadow-sm"
+            >
+              + Cài Đặt Ứng Dụng
+            </button>
+            <button
+              onClick={fetchApps}
+              className="p-2 rounded border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 transition-colors"
+              title="Làm mới"
+            >
+              <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
+            </button>
+          </div>
         </div>
       </header>
 
@@ -112,6 +169,7 @@ export default function AdminAppInstallationsPage() {
                   <th className="px-6 py-4">Mẫu Template &amp; Port</th>
                   <th className="px-6 py-4">URL Ứng Dụng</th>
                   <th className="px-6 py-4">Trạng Thái</th>
+                  <th className="px-6 py-4 text-right">Thao Tác</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -142,6 +200,25 @@ export default function AdminAppInstallationsPage() {
                       <td className="px-6 py-4">
                         <AdminAppStatusCell app={a} />
                       </td>
+                      <td className="px-6 py-4 text-right space-x-1.5 whitespace-nowrap">
+                        <button
+                          onClick={() => {
+                            setEditingApp(a);
+                            setEditForm({
+                              installUrl: a.url || ''
+                            });
+                          }}
+                          className="px-2.5 py-1.5 rounded bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold transition-colors text-[11px]"
+                        >
+                          Sửa
+                        </button>
+                        <button
+                          onClick={() => handleDeleteApp(a.id, displayName)}
+                          className="px-2.5 py-1.5 rounded bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold transition-colors text-[11px]"
+                        >
+                          Gỡ bỏ
+                        </button>
+                      </td>
                     </tr>
                   );
                 })}
@@ -157,6 +234,85 @@ export default function AdminAppInstallationsPage() {
           )}
         </div>
       </main>
+
+      {/* Modal Cài Đặt App */}
+      {isCreating && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl max-w-md w-full p-6 shadow-2xl animate-in fade-in zoom-in-95">
+            <h3 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+              <Package className="w-5 h-5 text-indigo-600" />
+              Cài Đặt Ứng Dụng Mới (1-Click)
+            </h3>
+            <form onSubmit={handleCreateApp} className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Chọn Mẫu Ứng Dụng</label>
+                <select
+                  value={createForm.appName}
+                  onChange={(e) => setCreateForm({ appName: e.target.value })}
+                  className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                >
+                  <option value="WordPress">WordPress 6.4 + MySQL</option>
+                  <option value="Node-RED">Node-RED IoT Hub</option>
+                  <option value="Nextcloud">Nextcloud Enterprise Storage</option>
+                  <option value="Adminer">Adminer Database Manager</option>
+                  <option value="Ghost">Ghost Publishing Platform</option>
+                </select>
+              </div>
+              <div className="flex justify-end gap-2 pt-3 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setIsCreating(false)}
+                  className="px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded"
+                >
+                  Hủy
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white rounded"
+                >
+                  Bắt Đầu Cài Đặt
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Sửa Cấu Hình App */}
+      {editingApp && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl max-w-md w-full p-6 shadow-2xl animate-in fade-in zoom-in-95">
+            <h3 className="text-lg font-bold text-slate-900 mb-4">Sửa URL Ứng Dụng</h3>
+            <form onSubmit={handleUpdateApp} className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Đường Dẫn URL Ứng Dụng</label>
+                <input
+                  type="text"
+                  required
+                  value={editForm.installUrl}
+                  onChange={(e) => setEditForm({ installUrl: e.target.value })}
+                  className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                />
+              </div>
+              <div className="flex justify-end gap-2 pt-3 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setEditingApp(null)}
+                  className="px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded"
+                >
+                  Hủy
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white rounded"
+                >
+                  Lưu Thay Đổi
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

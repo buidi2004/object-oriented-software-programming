@@ -60,6 +60,43 @@ public class AdminStaticSitesController : ControllerBase
         return Ok(new { success = true, deployId });
     }
 
+    [HttpPost]
+    public async Task<IActionResult> CreateSite([FromBody] AdminCreateStaticSiteRequest request, CancellationToken ct)
+    {
+        var host = HttpContext.Request.Host.Host;
+        if (string.IsNullOrWhiteSpace(host) || host == "0.0.0.0") host = "127.0.0.1";
+
+        var site = new StaticSite
+        {
+            Id = Guid.NewGuid(),
+            UserId = request.UserId != Guid.Empty ? request.UserId : Guid.NewGuid(),
+            Name = string.IsNullOrWhiteSpace(request.Name) ? "my-static-site" : request.Name,
+            CustomDomain = request.CustomDomain ?? "",
+            DeployUrl = $"http://{request.Name?.ToLower() ?? "site"}.{host}:8080",
+            CreatedAt = DateTime.UtcNow
+        };
+        site.MarkAsProvisioning();
+        site.MarkAsActive();
+
+        await _repo.AddAsync(site, ct);
+        await _uow.SaveChangesAsync(ct);
+        return Ok(site);
+    }
+
+    [HttpPut("{id:guid}")]
+    public async Task<IActionResult> UpdateSite(Guid id, [FromBody] AdminUpdateStaticSiteRequest request, CancellationToken ct)
+    {
+        var site = await _repo.GetByIdAsync(id, ct);
+        if (site == null) return NotFound();
+
+        if (!string.IsNullOrWhiteSpace(request.Name)) site.Name = request.Name;
+        if (request.CustomDomain != null) site.CustomDomain = request.CustomDomain;
+
+        _repo.Update(site);
+        await _uow.SaveChangesAsync(ct);
+        return Ok(new { success = true, site });
+    }
+
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> DeleteSite(Guid id, CancellationToken ct)
     {
@@ -72,3 +109,6 @@ public class AdminStaticSitesController : ControllerBase
         return Ok(new { success = true });
     }
 }
+
+public record AdminCreateStaticSiteRequest(Guid UserId, string Name, string? CustomDomain);
+public record AdminUpdateStaticSiteRequest(string? Name, string? CustomDomain);

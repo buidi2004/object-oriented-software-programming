@@ -83,49 +83,42 @@ export default function AdminBackupsPage() {
   ];
 
   useEffect(() => {
-    const saved = localStorage.getItem('admin_backups_list');
-    if (saved) {
-      try {
-        setBackups(JSON.parse(saved));
-      } catch {
-        setBackups(initialBackups);
-      }
-    } else {
-      setBackups(initialBackups);
-    }
+    fetchBackups();
   }, []);
 
-  const saveBackups = (items: BackupAdminItem[]) => {
-    setBackups(items);
-    localStorage.setItem('admin_backups_list', JSON.stringify(items));
+  const fetchBackups = async () => {
+    try {
+      const res = await api.get('/backups/admin');
+      if (Array.isArray(res.data) && res.data.length > 0) {
+        setBackups(res.data);
+      } else {
+        setBackups(initialBackups);
+      }
+    } catch {
+      setBackups(initialBackups);
+    }
   };
 
-  const handleCreateBackup = (e: React.FormEvent) => {
+  const handleCreateBackup = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsTriggering(true);
-    setShowAddModal(false);
 
-    setTimeout(() => {
-      const newBackup: BackupAdminItem = {
-        id: `bk-${Date.now()}`,
-        orderId: `ord-${Math.floor(1000 + Math.random() * 9000)}`,
+    try {
+      await api.post('/backups/admin/trigger', {
         instanceName: formData.instanceName,
-        ownerEmail: formData.ownerEmail,
-        sizeGb: formData.sizeGb,
-        storageTarget: formData.storageTarget,
-        createdAt: new Date().toISOString(),
-        retentionDays: formData.retentionDays,
-        status: 'Completed',
-      };
-      const updated = [newBackup, ...backups];
-      saveBackups(updated);
+        sizeGb: formData.sizeGb
+      });
+      setShowAddModal(false);
+      showToast(`Đã kích hoạt tạo bản sao lưu ${formData.instanceName}!`);
+      fetchBackups();
+    } catch {
+      showToast('Lỗi khi kích hoạt sao lưu', 'error');
+    } finally {
       setIsTriggering(false);
-      showToast(`Đã tạo thành công bản sao lưu ${newBackup.instanceName} (${newBackup.sizeGb} GB)!`);
-    }, 1200);
+    }
   };
 
   const handleDownloadBackup = (bk: BackupAdminItem) => {
-    // Generate dummy archive download
     const blob = new Blob([`Snapshot Archive for ${bk.instanceName}\nCreated at: ${bk.createdAt}\nSize: ${bk.sizeGb} GB`], { type: 'application/gzip' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -144,11 +137,15 @@ export default function AdminBackupsPage() {
     setRestoringBackup(null);
   };
 
-  const handleDelete = (id: string, name: string) => {
+  const handleDelete = async (id: string, name: string) => {
     if (!confirm(`Bạn có chắc muốn xóa bản sao lưu ${name}?`)) return;
-    const updated = backups.filter(b => b.id !== id);
-    saveBackups(updated);
-    showToast(`Đã xóa bản sao lưu ${name}!`);
+    try {
+      await api.delete(`/backups/${id}`);
+      showToast(`Đã xóa bản sao lưu ${name}!`);
+      fetchBackups();
+    } catch {
+      showToast('Lỗi khi xóa bản sao lưu', 'error');
+    }
   };
 
   const filtered = backups.filter(b => {

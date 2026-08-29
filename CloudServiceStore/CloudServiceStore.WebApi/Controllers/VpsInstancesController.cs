@@ -246,8 +246,56 @@ public class VpsInstancesController : ControllerBase
         }
         return res.ToString();
     }
+
+    [HttpPut("{id:guid}")]
+    [Authorize(Roles = "Admin,Technician,Staff")]
+    public async Task<IActionResult> UpdateVps(Guid id, [FromBody] UpdateVpsRequest request, CancellationToken ct)
+    {
+        var vps = await _vpsRepo.GetByIdAsync(id, ct);
+        if (vps == null) return NotFound();
+
+        if (request.CpuCores.HasValue && request.CpuCores.Value > 0) vps.CpuCores = request.CpuCores.Value;
+        if (request.RamMb.HasValue && request.RamMb.Value > 0) vps.RamMb = request.RamMb.Value;
+        if (request.DiskGb.HasValue && request.DiskGb.Value > 0) vps.DiskGb = request.DiskGb.Value;
+        if (!string.IsNullOrWhiteSpace(request.PlanName)) vps.PlanName = request.PlanName;
+        if (request.ExpiresAt.HasValue) vps.ExpiresAt = request.ExpiresAt.Value;
+        if (!string.IsNullOrWhiteSpace(request.Status) && Enum.TryParse<VpsInstanceStatus>(request.Status, true, out var status))
+        {
+            vps.Status = status;
+        }
+
+        _vpsRepo.Update(vps);
+        await _uow.SaveChangesAsync(ct);
+        return Ok(new { success = true, vps });
+    }
+
+    [HttpPost("admin")]
+    [Authorize(Roles = "Admin,Technician,Staff")]
+    public async Task<IActionResult> AdminCreateVps([FromBody] AdminCreateVpsRequest request, CancellationToken ct)
+    {
+        var vps = new VpsInstance
+        {
+            Id = Guid.NewGuid(),
+            UserId = request.UserId != Guid.Empty ? request.UserId : Guid.NewGuid(),
+            ContainerName = string.IsNullOrWhiteSpace(request.ContainerName) ? $"vps-{Guid.NewGuid():N}".Substring(0, 12) : request.ContainerName,
+            ContainerId = $"docker-{Guid.NewGuid():N}",
+            CpuCores = request.CpuCores > 0 ? request.CpuCores : 2,
+            RamMb = request.RamMb > 0 ? request.RamMb : 4096,
+            DiskGb = request.DiskGb > 0 ? request.DiskGb : 50,
+            PlanName = string.IsNullOrWhiteSpace(request.PlanName) ? "Cloud VPS Pro" : request.PlanName,
+            Status = VpsInstanceStatus.Running,
+            CreatedAt = DateTime.UtcNow,
+            ExpiresAt = DateTime.UtcNow.AddMonths(1)
+        };
+
+        await _vpsRepo.AddAsync(vps, ct);
+        await _uow.SaveChangesAsync(ct);
+        return Ok(vps);
+    }
 }
 
 public record RebuildOsRequest(string? OsName, string? RootPassword = null);
 public record ResetPasswordRequest(string? NewPassword = null);
 public record CreateSnapshotRequest(string? Name = null);
+public record UpdateVpsRequest(int? CpuCores = null, int? RamMb = null, int? DiskGb = null, string? PlanName = null, string? Status = null, DateTime? ExpiresAt = null);
+public record AdminCreateVpsRequest(Guid UserId, string? ContainerName, int CpuCores, int RamMb, int DiskGb, string? PlanName);

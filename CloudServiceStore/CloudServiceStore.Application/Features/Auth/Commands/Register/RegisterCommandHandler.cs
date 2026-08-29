@@ -74,15 +74,14 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, RegisterR
 
         await _uow.SaveChangesAsync(ct);
         
-        _ = Task.Run(async () =>
+        try
         {
-            try
-            {
-                using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
-                await _emailService.SendWelcomeEmailAsync(user.Email, user.FullName, cts.Token);
-            }
-            catch { }
-        });
+            await _emailService.SendWelcomeEmailAsync(user.Email, user.FullName, ct);
+        }
+        catch
+        {
+            // Email dispatch failure should not prevent user registration
+        }
 
         return new RegisterResult(user.Id, user.Email);
     }

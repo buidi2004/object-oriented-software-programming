@@ -27,6 +27,18 @@ export default function AdminStoragePage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
 
+  const [isCreating, setIsCreating] = useState(false);
+  const [editingBucket, setEditingBucket] = useState<AdminBucketDto | null>(null);
+  const [createForm, setCreateForm] = useState({
+    bucketName: '',
+    region: 'ap-southeast-1',
+    capacityGb: 100
+  });
+  const [editForm, setEditForm] = useState({
+    capacityGb: 100,
+    region: 'ap-southeast-1'
+  });
+
   const fetchBuckets = async () => {
     setIsLoading(true);
     try {
@@ -36,6 +48,50 @@ export default function AdminStoragePage() {
       console.warn('Failed to fetch storage buckets:', error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleCreateBucket = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!createForm.bucketName.trim()) return alert('Vui lòng nhập tên bucket');
+    try {
+      await api.post('/admin/storage/buckets', {
+        bucketName: createForm.bucketName.trim().toLowerCase(),
+        region: createForm.region,
+        capacityGb: Number(createForm.capacityGb) || 100
+      });
+      setIsCreating(false);
+      alert('Tạo bucket thành công!');
+      fetchBuckets();
+    } catch (err: any) {
+      alert(err?.response?.data?.message || 'Lỗi khi tạo bucket');
+    }
+  };
+
+  const handleUpdateBucket = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingBucket) return;
+    try {
+      await api.put(`/admin/storage/buckets/${editingBucket.id}`, {
+        capacityGb: Number(editForm.capacityGb),
+        region: editForm.region
+      });
+      setEditingBucket(null);
+      alert('Cập nhật cấu hình bucket thành công!');
+      fetchBuckets();
+    } catch (err: any) {
+      alert(err?.response?.data?.message || 'Lỗi khi cập nhật bucket');
+    }
+  };
+
+  const handleDeleteBucket = async (id: string, name: string) => {
+    if (!confirm(`Bạn có chắc muốn xóa bucket ${name}?`)) return;
+    try {
+      await api.delete(`/admin/storage/buckets/${id}`);
+      alert('Đã xóa bucket thành công!');
+      fetchBuckets();
+    } catch (err: any) {
+      alert(err?.response?.data?.message || 'Lỗi khi xóa bucket');
     }
   };
 
@@ -68,13 +124,21 @@ export default function AdminStoragePage() {
               <p className="text-xs text-slate-600">{buckets.length} buckets trên hệ thống MinIO</p>
             </div>
           </div>
-          <button
-            onClick={fetchBuckets}
-            className="p-2 rounded border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 transition-colors"
-            title="Làm mới"
-          >
-            <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setIsCreating(true)}
+              className="px-3.5 py-1.5 rounded bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs flex items-center gap-1.5 transition-colors shadow-sm"
+            >
+              + Tạo Bucket Mới
+            </button>
+            <button
+              onClick={fetchBuckets}
+              className="p-2 rounded border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 transition-colors"
+              title="Làm mới"
+            >
+              <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
+            </button>
+          </div>
         </div>
       </header>
 
@@ -134,15 +198,33 @@ export default function AdminStoragePage() {
                     <td className="px-6 py-4">
                       <AdminStorageStatusCell bucket={b} />
                     </td>
-                    <td className="px-6 py-4 text-right">
+                    <td className="px-6 py-4 text-right space-x-1.5 whitespace-nowrap">
+                      <button
+                        onClick={() => {
+                          setEditingBucket(b);
+                          setEditForm({
+                            capacityGb: 100,
+                            region: b.region
+                          });
+                        }}
+                        className="px-2.5 py-1.5 rounded bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold transition-colors text-[11px]"
+                      >
+                        Sửa
+                      </button>
+                      <button
+                        onClick={() => handleDeleteBucket(b.id, b.name)}
+                        className="px-2.5 py-1.5 rounded bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold transition-colors text-[11px]"
+                      >
+                        Xóa
+                      </button>
                       <a
                         href={`http://localhost:9001/browser/${b.name}`}
                         target="_blank"
                         rel="noreferrer"
-                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded bg-slate-100 hover:bg-blue-50 text-slate-700 hover:text-[#1F1F1F] font-bold transition-colors text-[11px]"
+                        className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded bg-slate-100 hover:bg-blue-50 text-slate-700 hover:text-[#1F1F1F] font-bold transition-colors text-[11px]"
                       >
                         <ExternalLink className="w-3.5 h-3.5" />
-                        MinIO Console
+                        MinIO
                       </a>
                     </td>
                   </tr>
@@ -159,6 +241,116 @@ export default function AdminStoragePage() {
           )}
         </div>
       </main>
+
+      {/* Modal Tạo Bucket */}
+      {isCreating && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl max-w-md w-full p-6 shadow-2xl animate-in fade-in zoom-in-95">
+            <h3 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+              <Cloud className="w-5 h-5 text-blue-600" />
+              Tạo S3 Object Storage Bucket Mới
+            </h3>
+            <form onSubmit={handleCreateBucket} className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Tên Bucket</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="my-storage-bucket"
+                  value={createForm.bucketName}
+                  onChange={(e) => setCreateForm({ ...createForm, bucketName: e.target.value })}
+                  className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Region</label>
+                  <select
+                    value={createForm.region}
+                    onChange={(e) => setCreateForm({ ...createForm, region: e.target.value })}
+                    className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  >
+                    <option value="ap-southeast-1">Hà Nội (ap-southeast-1)</option>
+                    <option value="ap-southeast-2">TP.HCM (ap-southeast-2)</option>
+                    <option value="us-east-1">Global S3 (us-east-1)</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Dung lượng Quota (GB)</label>
+                  <input
+                    type="number"
+                    min="10"
+                    value={createForm.capacityGb}
+                    onChange={(e) => setCreateForm({ ...createForm, capacityGb: Number(e.target.value) })}
+                    className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  />
+                </div>
+              </div>
+              <div className="flex justify-end gap-2 pt-3 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setIsCreating(false)}
+                  className="px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded"
+                >
+                  Hủy
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white rounded"
+                >
+                  Tạo Bucket
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Sửa Cấu Hình Quota Bucket */}
+      {editingBucket && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl max-w-md w-full p-6 shadow-2xl animate-in fade-in zoom-in-95">
+            <h3 className="text-lg font-bold text-slate-900 mb-4">Cấu Hình Quota Bucket: {editingBucket.name}</h3>
+            <form onSubmit={handleUpdateBucket} className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Dung lượng Quota (GB)</label>
+                <input
+                  type="number"
+                  min="10"
+                  required
+                  value={editForm.capacityGb}
+                  onChange={(e) => setEditForm({ ...editForm, capacityGb: Number(e.target.value) })}
+                  className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Vùng lưu trữ (Region)</label>
+                <input
+                  type="text"
+                  value={editForm.region}
+                  onChange={(e) => setEditForm({ ...editForm, region: e.target.value })}
+                  className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                />
+              </div>
+              <div className="flex justify-end gap-2 pt-3 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setEditingBucket(null)}
+                  className="px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded"
+                >
+                  Hủy
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white rounded"
+                >
+                  Lưu Cấu Hình
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

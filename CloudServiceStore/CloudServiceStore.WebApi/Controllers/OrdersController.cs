@@ -12,6 +12,9 @@ using CloudServiceStore.Application.Features.Invoices.Queries.GetInvoice;
 using CloudServiceStore.Application.Features.Invoices.Queries.GetMyInvoices;
 using CloudServiceStore.Application.Features.Invoices.Queries.GetAllInvoices;
 using CloudServiceStore.Application.Features.Invoices.Commands.GenerateInvoice;
+using CloudServiceStore.Domain.Entities;
+using CloudServiceStore.Domain.Enums;
+using CloudServiceStore.Domain.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -24,7 +27,18 @@ namespace CloudServiceStore.WebApi.Controllers;
 public class OrdersController : ControllerBase
 {
     private readonly IMediator _mediator;
-    public OrdersController(IMediator mediator) => _mediator = mediator;
+    private readonly IRepository<OrderRequest> _orderRepo;
+    private readonly IUnitOfWork _uow;
+
+    public OrdersController(
+        IMediator mediator,
+        IRepository<OrderRequest> orderRepo,
+        IUnitOfWork uow)
+    {
+        _mediator = mediator;
+        _orderRepo = orderRepo;
+        _uow = uow;
+    }
 
     [HttpPost("checkout")]
     [Authorize]
@@ -146,4 +160,36 @@ public class OrdersController : ControllerBase
         var invoices = await _mediator.Send(new GetAllInvoicesQuery(), ct);
         return Ok(invoices);
     }
+
+    [HttpPut("{id:guid}/status")]
+    [Authorize(Roles = "Admin,Accountant,Staff")]
+    public async Task<IActionResult> UpdateOrderStatus(Guid id, [FromBody] UpdateOrderStatusRequest request, CancellationToken ct)
+    {
+        var order = await _orderRepo.GetByIdAsync(id, ct);
+        if (order == null) return NotFound();
+
+        if (Enum.TryParse<OrderStatus>(request.Status, true, out var newStatus))
+        {
+            order.Status = newStatus;
+            _orderRepo.Update(order);
+            await _uow.SaveChangesAsync(ct);
+            return Ok(new { success = true, status = order.Status.ToString() });
+        }
+
+        return BadRequest(new { message = "Trạng thái đơn hàng không hợp lệ." });
+    }
+
+    [HttpDelete("{id:guid}")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> DeleteOrder(Guid id, CancellationToken ct)
+    {
+        var order = await _orderRepo.GetByIdAsync(id, ct);
+        if (order == null) return NotFound();
+
+        _orderRepo.Delete(order);
+        await _uow.SaveChangesAsync(ct);
+        return Ok(new { success = true });
+    }
 }
+
+public record UpdateOrderStatusRequest(string Status);

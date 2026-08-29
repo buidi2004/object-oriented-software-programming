@@ -53,6 +53,45 @@ public class AdminAppInstallerController : ControllerBase
         return Ok(result);
     }
 
+    [HttpPost]
+    public async Task<IActionResult> CreateApp([FromBody] AdminCreateAppRequest request, CancellationToken ct)
+    {
+        var templates = await _templateRepo.GetAllAsync(ct);
+        var templateId = request.TemplateId != Guid.Empty ? request.TemplateId : (templates.FirstOrDefault()?.Id ?? Guid.NewGuid());
+
+        var host = HttpContext.Request.Host.Host;
+        if (string.IsNullOrWhiteSpace(host) || host == "0.0.0.0") host = "127.0.0.1";
+
+        var app = new AppInstallation
+        {
+            Id = Guid.NewGuid(),
+            UserId = request.UserId != Guid.Empty ? request.UserId : Guid.NewGuid(),
+            TemplateId = templateId,
+            HostingAccountId = Guid.NewGuid(),
+            InstallUrl = $"http://app-{Guid.NewGuid():N}.{host}:8080".Substring(0, 35),
+            CreatedAt = DateTime.UtcNow
+        };
+        app.MarkAsInstalling();
+        app.MarkAsCompleted(app.InstallUrl);
+
+        await _repo.AddAsync(app, ct);
+        await _uow.SaveChangesAsync(ct);
+        return Ok(app);
+    }
+
+    [HttpPut("{id:guid}")]
+    public async Task<IActionResult> UpdateApp(Guid id, [FromBody] AdminUpdateAppRequest request, CancellationToken ct)
+    {
+        var app = await _repo.GetByIdAsync(id, ct);
+        if (app == null) return NotFound();
+
+        if (!string.IsNullOrWhiteSpace(request.InstallUrl)) app.InstallUrl = request.InstallUrl;
+
+        _repo.Update(app);
+        await _uow.SaveChangesAsync(ct);
+        return Ok(new { success = true, app });
+    }
+
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> DeleteApp(Guid id, CancellationToken ct)
     {
@@ -65,3 +104,6 @@ public class AdminAppInstallerController : ControllerBase
         return Ok(new { success = true });
     }
 }
+
+public record AdminCreateAppRequest(Guid UserId, Guid TemplateId, string? AppName);
+public record AdminUpdateAppRequest(string? InstallUrl, string? Status);

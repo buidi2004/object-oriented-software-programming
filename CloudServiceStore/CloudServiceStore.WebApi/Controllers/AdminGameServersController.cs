@@ -104,6 +104,41 @@ public class AdminGameServersController : ControllerBase
         return Ok(new { success = true, message = "Đã gửi lệnh restart Game Server container." });
     }
 
+    [HttpPost]
+    public async Task<IActionResult> CreateServer([FromBody] AdminCreateGameServerRequest request, CancellationToken ct)
+    {
+        var server = new GameServerInstance
+        {
+            Id = Guid.NewGuid(),
+            UserId = request.UserId != Guid.Empty ? request.UserId : Guid.NewGuid(),
+            ServerName = string.IsNullOrWhiteSpace(request.ServerName) ? "Dedicated Game Server" : request.ServerName,
+            GameType = request.GameType,
+            CreatedAt = DateTime.UtcNow,
+            ExpiresAt = DateTime.UtcNow.AddMonths(1)
+        };
+        server.MarkAsProvisioning();
+        server.MarkAsRunning(request.Port > 0 ? request.Port : 25565);
+
+        await _repo.AddAsync(server, ct);
+        await _uow.SaveChangesAsync(ct);
+        return Ok(server);
+    }
+
+    [HttpPut("{id:guid}")]
+    public async Task<IActionResult> UpdateServer(Guid id, [FromBody] AdminUpdateGameServerRequest request, CancellationToken ct)
+    {
+        var server = await _repo.GetByIdAsync(id, ct);
+        if (server == null) return NotFound();
+
+        if (!string.IsNullOrWhiteSpace(request.ServerName)) server.ServerName = request.ServerName;
+        if (request.GameType.HasValue) server.GameType = request.GameType.Value;
+        if (request.Port.HasValue && request.Port.Value > 0) server.Port = request.Port.Value;
+
+        _repo.Update(server);
+        await _uow.SaveChangesAsync(ct);
+        return Ok(new { success = true, server });
+    }
+
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> DeleteServer(Guid id, CancellationToken cancellationToken)
     {
@@ -116,3 +151,6 @@ public class AdminGameServersController : ControllerBase
         return Ok(new { success = true });
     }
 }
+
+public record AdminCreateGameServerRequest(Guid UserId, string ServerName, GameType GameType, int Port);
+public record AdminUpdateGameServerRequest(string? ServerName, GameType? GameType, int? Port);

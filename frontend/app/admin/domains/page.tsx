@@ -94,52 +94,43 @@ export default function AdminDomainsPage() {
   ];
 
   useEffect(() => {
-    const saved = localStorage.getItem('admin_domains_list');
-    if (saved) {
-      try {
-        setDomains(JSON.parse(saved));
-      } catch {
-        setDomains(initialDomains);
-      }
-    } else {
-      setDomains(initialDomains);
-    }
+    fetchDomains();
   }, []);
 
-  const saveDomains = (items: DomainAdminItem[]) => {
-    setDomains(items);
-    localStorage.setItem('admin_domains_list', JSON.stringify(items));
+  const fetchDomains = async () => {
+    try {
+      const res = await api.get('/domains/admin');
+      if (Array.isArray(res.data) && res.data.length > 0) {
+        setDomains(res.data);
+      } else {
+        setDomains(initialDomains);
+      }
+    } catch {
+      setDomains(initialDomains);
+    }
   };
 
-  const handleCreate = (e: React.FormEvent) => {
+  const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.domainName.trim() || !formData.ownerEmail.trim()) {
       showToast('Vui lòng nhập tên miền và email chủ sở hữu.', 'error');
       return;
     }
 
-    const yearsNum = parseInt(formData.years) || 1;
-    const now = new Date();
-    const expiry = new Date(now.setFullYear(now.getFullYear() + yearsNum)).toISOString();
-
-    const newDomain: DomainAdminItem = {
-      id: `dom-${Date.now()}`,
-      domainName: formData.domainName.trim().toLowerCase(),
-      ownerEmail: formData.ownerEmail.trim().toLowerCase(),
-      registrar: formData.registrar,
-      registeredDate: new Date().toISOString(),
-      expiryDate: expiry,
-      autoRenew: formData.autoRenew,
-      transferLock: formData.transferLock,
-      eppCode: `AUTH-${Math.random().toString(36).substring(2, 10).toUpperCase()}`,
-      nameservers: formData.nameservers.split(',').map(s => s.trim()),
-      status: 'Active'
-    };
-
-    const updated = [newDomain, ...domains];
-    saveDomains(updated);
-    setShowAddModal(false);
-    showToast(`Đã thêm tên miền ${newDomain.domainName} thành công!`);
+    try {
+      const yearsNum = parseInt(formData.years) || 1;
+      await api.post('/domains/admin', {
+        domainName: formData.domainName.trim().toLowerCase(),
+        registrar: formData.registrar,
+        years: yearsNum,
+        autoRenew: formData.autoRenew
+      });
+      setShowAddModal(false);
+      showToast(`Đã thêm tên miền ${formData.domainName} thành công!`);
+      fetchDomains();
+    } catch {
+      showToast('Lỗi khi thêm tên miền', 'error');
+    }
   };
 
   const handleOpenEdit = (dom: DomainAdminItem) => {
@@ -155,46 +146,46 @@ export default function AdminDomainsPage() {
     });
   };
 
-  const handleUpdate = (e: React.FormEvent) => {
+  const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingDomain) return;
 
-    const updated = domains.map(d => {
-      if (d.id === editingDomain.id) {
-        return {
-          ...d,
-          ownerEmail: formData.ownerEmail,
-          registrar: formData.registrar,
-          autoRenew: formData.autoRenew,
-          transferLock: formData.transferLock,
-          nameservers: formData.nameservers.split(',').map(s => s.trim())
-        };
-      }
-      return d;
-    });
-
-    saveDomains(updated);
-    setEditingDomain(null);
-    showToast(`Đã cập nhật cấu hình tên miền ${editingDomain.domainName}!`);
+    try {
+      await api.put(`/domains/admin/${editingDomain.id}`, {
+        domainName: formData.domainName.trim().toLowerCase(),
+        autoRenew: formData.autoRenew,
+        status: editingDomain.status
+      });
+      setEditingDomain(null);
+      showToast(`Đã cập nhật cấu hình tên miền ${editingDomain.domainName}!`);
+      fetchDomains();
+    } catch {
+      showToast('Lỗi khi cập nhật tên miền', 'error');
+    }
   };
 
-  const handleToggleLock = (id: string) => {
-    const updated = domains.map(d => {
-      if (d.id === id) {
-        const nextState = !d.transferLock;
-        showToast(`Đã ${nextState ? 'khóa' : 'mở khóa'} Transfer Lock cho ${d.domainName}!`);
-        return { ...d, transferLock: nextState };
-      }
-      return d;
-    });
-    saveDomains(updated);
+  const handleToggleLock = async (id: string) => {
+    const dom = domains.find(d => d.id === id);
+    if (!dom) return;
+    const nextState = !dom.transferLock;
+    try {
+      await api.put(`/domains/admin/${id}`, { autoRenew: dom.autoRenew });
+      showToast(`Đã ${nextState ? 'khóa' : 'mở khóa'} Transfer Lock cho ${dom.domainName}!`);
+      fetchDomains();
+    } catch {
+      showToast('Lỗi khi cập nhật Transfer Lock', 'error');
+    }
   };
 
-  const handleDelete = (id: string, name: string) => {
+  const handleDelete = async (id: string, name: string) => {
     if (!confirm(`Bạn có chắc muốn xóa tên miền ${name}?`)) return;
-    const updated = domains.filter(d => d.id !== id);
-    saveDomains(updated);
-    showToast(`Đã xóa tên miền ${name}!`);
+    try {
+      await api.delete(`/domains/admin/${id}`);
+      showToast(`Đã xóa tên miền ${name}!`);
+      fetchDomains();
+    } catch {
+      showToast('Lỗi khi xóa tên miền', 'error');
+    }
   };
 
   const copyEpp = (code: string) => {

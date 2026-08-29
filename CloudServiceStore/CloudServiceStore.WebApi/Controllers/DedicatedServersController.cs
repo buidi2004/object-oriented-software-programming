@@ -128,9 +128,10 @@ public class DedicatedServersController : ControllerBase
     public async Task<IActionResult> GetMyServers(CancellationToken ct)
     {
         var userId = _currentUser.UserId;
-        var servers = userId.HasValue
-            ? await _repo.WhereAsync(s => s.UserId == userId.Value, ct)
-            : await _repo.GetAllAsync(ct);
+        var isAdmin = User.IsInRole("Admin") || User.IsInRole("Technician") || User.IsInRole("Staff");
+        var servers = (isAdmin || !userId.HasValue)
+            ? await _repo.GetAllAsync(ct)
+            : await _repo.WhereAsync(s => s.UserId == userId.Value, ct);
 
         // Auto-seed default server if none exists so user has an immediate working server
         if (servers.Count == 0 && userId.HasValue)
@@ -431,6 +432,35 @@ public class DedicatedServersController : ControllerBase
             networkTxKbps = 18.2,
             isRunning = true
         });
+    }
+
+    public class UpdateServerDto
+    {
+        public string? ServerName { get; set; }
+        public string? CpuModel { get; set; }
+        public int? RamGb { get; set; }
+        public string? OsImage { get; set; }
+        public string? Status { get; set; }
+    }
+
+    [HttpPut("{id:guid}")]
+    public async Task<IActionResult> UpdateServer(Guid id, [FromBody] UpdateServerDto dto, CancellationToken ct)
+    {
+        var server = await _repo.GetByIdAsync(id, ct);
+        if (server == null) return NotFound();
+
+        if (!string.IsNullOrWhiteSpace(dto.ServerName)) server.ServerName = dto.ServerName;
+        if (!string.IsNullOrWhiteSpace(dto.CpuModel)) server.CpuModel = dto.CpuModel;
+        if (dto.RamGb.HasValue && dto.RamGb.Value > 0) server.RamGb = dto.RamGb.Value;
+        if (!string.IsNullOrWhiteSpace(dto.OsImage)) server.OsImage = dto.OsImage;
+        if (!string.IsNullOrWhiteSpace(dto.Status) && Enum.TryParse<DedicatedServerStatus>(dto.Status, true, out var status))
+        {
+            server.Status = status;
+        }
+
+        _repo.Update(server);
+        await _uow.SaveChangesAsync(ct);
+        return Ok(new { success = true, server });
     }
 
     [HttpDelete("{id:guid}")]

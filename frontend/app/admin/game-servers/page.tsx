@@ -25,6 +25,18 @@ export default function AdminGameServersPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
 
+  const [isCreating, setIsCreating] = useState(false);
+  const [editingServer, setEditingServer] = useState<AdminGameServerDto | null>(null);
+  const [createForm, setCreateForm] = useState({
+    serverName: '',
+    gameType: 0, // 0 for Minecraft
+    port: 25565
+  });
+  const [editForm, setEditForm] = useState({
+    serverName: '',
+    port: 25565
+  });
+
   const fetchServers = async () => {
     setIsLoading(true);
     try {
@@ -37,9 +49,49 @@ export default function AdminGameServersPage() {
     }
   };
 
-  useEffect(() => {
-    fetchServers();
-  }, []);
+  const handleCreateServer = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!createForm.serverName.trim()) return alert('Vui lòng nhập tên server');
+    try {
+      await api.post('/admin/game-servers', {
+        serverName: createForm.serverName.trim(),
+        gameType: Number(createForm.gameType),
+        port: Number(createForm.port) || 25565
+      });
+      setIsCreating(false);
+      alert('Khởi tạo Game Server thành công!');
+      fetchServers();
+    } catch (err: any) {
+      alert(err?.response?.data?.message || 'Lỗi khi tạo game server');
+    }
+  };
+
+  const handleUpdateServer = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingServer) return;
+    try {
+      await api.put(`/admin/game-servers/${editingServer.id}`, {
+        serverName: editForm.serverName,
+        port: Number(editForm.port)
+      });
+      setEditingServer(null);
+      alert('Cập nhật Game Server thành công!');
+      fetchServers();
+    } catch (err: any) {
+      alert(err?.response?.data?.message || 'Lỗi khi cập nhật game server');
+    }
+  };
+
+  const handleDeleteServer = async (id: string, name: string) => {
+    if (!confirm(`Bạn có chắc muốn xóa Game Server ${name}?`)) return;
+    try {
+      await api.delete(`/admin/game-servers/${id}`);
+      alert('Đã xóa game server thành công!');
+      fetchServers();
+    } catch (err: any) {
+      alert(err?.response?.data?.message || 'Lỗi khi xóa game server');
+    }
+  };
 
   const handleRestart = async (id: string) => {
     try {
@@ -50,6 +102,10 @@ export default function AdminGameServersPage() {
       alert('Đã gửi tín hiệu khởi động lại.');
     }
   };
+
+  useEffect(() => {
+    fetchServers();
+  }, []);
 
   const filteredServers = servers.filter((s) => {
     const name = s.serverName || '';
@@ -77,13 +133,21 @@ export default function AdminGameServersPage() {
               <p className="text-xs text-slate-600">{servers.length} máy chủ game trên hạ tầng Docker</p>
             </div>
           </div>
-          <button
-            onClick={fetchServers}
-            className="p-2 rounded border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 transition-colors"
-            title="Làm mới"
-          >
-            <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setIsCreating(true)}
+              className="px-3.5 py-1.5 rounded bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs flex items-center gap-1.5 transition-colors shadow-sm"
+            >
+              + Khởi Tạo Game Server
+            </button>
+            <button
+              onClick={fetchServers}
+              className="p-2 rounded border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 transition-colors"
+              title="Làm mới"
+            >
+              <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
+            </button>
+          </div>
         </div>
       </header>
 
@@ -147,12 +211,30 @@ export default function AdminGameServersPage() {
                       <td className="px-6 py-4">
                         <AdminGameServerStatusCell server={s} />
                       </td>
-                      <td className="px-6 py-4 text-right">
+                      <td className="px-6 py-4 text-right space-x-1.5 whitespace-nowrap">
+                        <button
+                          onClick={() => {
+                            setEditingServer(s);
+                            setEditForm({
+                              serverName: s.serverName,
+                              port: s.port || 25565
+                            });
+                          }}
+                          className="px-2.5 py-1.5 rounded bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold transition-colors text-[11px]"
+                        >
+                          Sửa
+                        </button>
                         <button
                           onClick={() => handleRestart(s.id)}
-                          className="px-3 py-1.5 rounded bg-slate-100 hover:bg-purple-50 text-slate-700 hover:text-purple-700 font-bold transition-colors text-[11px]"
+                          className="px-2.5 py-1.5 rounded bg-slate-100 hover:bg-purple-50 text-slate-700 hover:text-purple-700 font-bold transition-colors text-[11px]"
                         >
                           Restart
+                        </button>
+                        <button
+                          onClick={() => handleDeleteServer(s.id, s.serverName)}
+                          className="px-2.5 py-1.5 rounded bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold transition-colors text-[11px]"
+                        >
+                          Xóa
                         </button>
                       </td>
                     </tr>
@@ -170,6 +252,117 @@ export default function AdminGameServersPage() {
           )}
         </div>
       </main>
+
+      {/* Modal Tạo Game Server */}
+      {isCreating && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl max-w-md w-full p-6 shadow-2xl animate-in fade-in zoom-in-95">
+            <h3 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+              <Gamepad2 className="w-5 h-5 text-purple-600" />
+              Khởi Tạo Máy Chủ Game
+            </h3>
+            <form onSubmit={handleCreateServer} className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Tên Máy Chủ Game</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="Minecraft Survival Season 5"
+                  value={createForm.serverName}
+                  onChange={(e) => setCreateForm({ ...createForm, serverName: e.target.value })}
+                  className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:outline-none"
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Tựa Game</label>
+                  <select
+                    value={createForm.gameType}
+                    onChange={(e) => setCreateForm({ ...createForm, gameType: Number(e.target.value) })}
+                    className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:outline-none"
+                  >
+                    <option value={0}>Minecraft Java</option>
+                    <option value={1}>Counter-Strike 2</option>
+                    <option value={2}>Valheim</option>
+                    <option value={3}>Rust Dedicated</option>
+                    <option value={4}>Palworld</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Cổng Port</label>
+                  <input
+                    type="number"
+                    value={createForm.port}
+                    onChange={(e) => setCreateForm({ ...createForm, port: Number(e.target.value) })}
+                    className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:outline-none"
+                  />
+                </div>
+              </div>
+              <div className="flex justify-end gap-2 pt-3 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setIsCreating(false)}
+                  className="px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded"
+                >
+                  Hủy
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 text-xs font-bold bg-purple-600 hover:bg-purple-700 text-white rounded"
+                >
+                  Khởi Tạo
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Sửa Game Server */}
+      {editingServer && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl max-w-md w-full p-6 shadow-2xl animate-in fade-in zoom-in-95">
+            <h3 className="text-lg font-bold text-slate-900 mb-4">Sửa Máy Chủ Game: {editingServer.serverName}</h3>
+            <form onSubmit={handleUpdateServer} className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Tên Máy Chủ</label>
+                <input
+                  type="text"
+                  required
+                  value={editForm.serverName}
+                  onChange={(e) => setEditForm({ ...editForm, serverName: e.target.value })}
+                  className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:outline-none"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Cổng Port</label>
+                <input
+                  type="number"
+                  required
+                  value={editForm.port}
+                  onChange={(e) => setEditForm({ ...editForm, port: Number(e.target.value) })}
+                  className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:outline-none"
+                />
+              </div>
+              <div className="flex justify-end gap-2 pt-3 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setEditingServer(null)}
+                  className="px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded"
+                >
+                  Hủy
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 text-xs font-bold bg-purple-600 hover:bg-purple-700 text-white rounded"
+                >
+                  Lưu Thay Đổi
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

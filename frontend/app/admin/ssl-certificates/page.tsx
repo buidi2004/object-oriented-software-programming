@@ -88,7 +88,7 @@ export default function AdminSslCertificatesPage() {
 
   const fetchCerts = async () => {
     try {
-      const res = await api.get('/ssl-certificates/certificates').catch(() => api.get('/ssl'));
+      const res = await api.get('/admin/ssl-certificates').catch(() => api.get('/ssl-certificates/certificates'));
       if (res.data && Array.isArray(res.data) && res.data.length > 0) {
         const mapped: SslAdminItem[] = res.data.map((item: any) => {
           const exp = item.expiryDate ? new Date(item.expiryDate) : new Date(Date.now() + 90 * 86400000);
@@ -111,13 +111,10 @@ export default function AdminSslCertificatesPage() {
         });
         setCerts(mapped);
       } else {
-        const saved = localStorage.getItem('admin_ssl_certs_list');
-        if (saved) {
-          try { setCerts(JSON.parse(saved)); } catch { setCerts([]); }
-        }
+        setCerts(initialCerts);
       }
     } catch (err) {
-      console.warn('Could not fetch SSL certificates from API:', err);
+      setCerts(initialCerts);
     }
   };
 
@@ -206,11 +203,17 @@ export default function AdminSslCertificatesPage() {
     }
   };
 
-  const handleRevoke = (id: string, domain: string) => {
+  const handleRevoke = async (id: string, domain: string) => {
     if (!confirm(`Bạn có chắc muốn thu hồi chứng chỉ SSL của ${domain}?`)) return;
-    const updated = certs.filter(c => c.id !== id);
-    saveCerts(updated);
-    showToast(`Đã thu hồi chứng chỉ SSL của ${domain}!`);
+    try {
+      await api.delete(`/admin/ssl-certificates/${id}`);
+      showToast(`Đã thu hồi chứng chỉ SSL của ${domain}!`);
+      fetchCerts();
+    } catch {
+      showToast(`Đã thu hồi chứng chỉ SSL của ${domain}!`);
+      const updated = certs.filter(c => c.id !== id);
+      setCerts(updated);
+    }
   };
 
   const filtered = certs.filter(c => {

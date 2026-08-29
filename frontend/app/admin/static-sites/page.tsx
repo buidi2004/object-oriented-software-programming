@@ -25,6 +25,17 @@ export default function AdminStaticSitesPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
 
+  const [isCreating, setIsCreating] = useState(false);
+  const [editingSite, setEditingSite] = useState<AdminStaticSiteDto | null>(null);
+  const [createForm, setCreateForm] = useState({
+    name: '',
+    customDomain: ''
+  });
+  const [editForm, setEditForm] = useState({
+    name: '',
+    customDomain: ''
+  });
+
   const fetchSites = async () => {
     setIsLoading(true);
     try {
@@ -40,6 +51,49 @@ export default function AdminStaticSitesPage() {
   useEffect(() => {
     fetchSites();
   }, []);
+
+  const handleCreateSite = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!createForm.name.trim()) return alert('Vui lòng nhập tên website');
+    try {
+      await api.post('/admin/static-sites', {
+        name: createForm.name.trim().toLowerCase(),
+        customDomain: createForm.customDomain.trim()
+      });
+      setIsCreating(false);
+      alert('Tạo website thành công!');
+      fetchSites();
+    } catch (err: any) {
+      alert(err?.response?.data?.message || 'Lỗi khi tạo website');
+    }
+  };
+
+  const handleUpdateSite = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingSite) return;
+    try {
+      await api.put(`/admin/static-sites/${editingSite.id}`, {
+        name: editForm.name,
+        customDomain: editForm.customDomain
+      });
+      setEditingSite(null);
+      alert('Cập nhật website thành công!');
+      fetchSites();
+    } catch (err: any) {
+      alert(err?.response?.data?.message || 'Lỗi khi cập nhật website');
+    }
+  };
+
+  const handleDeleteSite = async (id: string, name: string) => {
+    if (!confirm(`Bạn có chắc muốn xóa website ${name}?`)) return;
+    try {
+      await api.delete(`/admin/static-sites/${id}`);
+      alert('Đã xóa website thành công!');
+      fetchSites();
+    } catch (err: any) {
+      alert(err?.response?.data?.message || 'Lỗi khi xóa website');
+    }
+  };
 
   const handleForceRedeploy = async (id: string) => {
     try {
@@ -78,13 +132,21 @@ export default function AdminStaticSitesPage() {
               <p className="text-xs text-slate-600">{sites.length} websites trên hạ tầng Nginx</p>
             </div>
           </div>
-          <button
-            onClick={fetchSites}
-            className="p-2 rounded border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 transition-colors"
-            title="Làm mới"
-          >
-            <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setIsCreating(true)}
+              className="px-3.5 py-1.5 rounded bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center gap-1.5 transition-colors shadow-sm"
+            >
+              + Tạo Website Mới
+            </button>
+            <button
+              onClick={fetchSites}
+              className="p-2 rounded border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 transition-colors"
+              title="Làm mới"
+            >
+              <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
+            </button>
+          </div>
         </div>
       </header>
 
@@ -143,12 +205,30 @@ export default function AdminStaticSitesPage() {
                     <td className="px-6 py-4">
                       <AdminStaticSiteStatusCell site={s} />
                     </td>
-                    <td className="px-6 py-4 text-right">
+                    <td className="px-6 py-4 text-right space-x-1.5 whitespace-nowrap">
+                      <button
+                        onClick={() => {
+                          setEditingSite(s);
+                          setEditForm({
+                            name: s.name,
+                            customDomain: s.customDomain || ''
+                          });
+                        }}
+                        className="px-2.5 py-1.5 rounded bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold transition-colors text-[11px]"
+                      >
+                        Sửa
+                      </button>
                       <button
                         onClick={() => handleForceRedeploy(s.id)}
-                        className="px-3 py-1.5 rounded bg-slate-100 hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 font-bold transition-colors text-[11px]"
+                        className="px-2.5 py-1.5 rounded bg-slate-100 hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 font-bold transition-colors text-[11px]"
                       >
-                        Force Deploy
+                        Deploy
+                      </button>
+                      <button
+                        onClick={() => handleDeleteSite(s.id, s.name)}
+                        className="px-2.5 py-1.5 rounded bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold transition-colors text-[11px]"
+                      >
+                        Xóa
                       </button>
                     </td>
                   </tr>
@@ -165,6 +245,102 @@ export default function AdminStaticSitesPage() {
           )}
         </div>
       </main>
+
+      {/* Modal Tạo Static Site */}
+      {isCreating && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl max-w-md w-full p-6 shadow-2xl animate-in fade-in zoom-in-95">
+            <h3 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+              <Globe className="w-5 h-5 text-emerald-600" />
+              Khởi Tạo Static Site Mới
+            </h3>
+            <form onSubmit={handleCreateSite} className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Tên Dự Án (Site Name)</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="my-portfolio"
+                  value={createForm.name}
+                  onChange={(e) => setCreateForm({ ...createForm, name: e.target.value })}
+                  className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Custom Domain (Tùy chọn)</label>
+                <input
+                  type="text"
+                  placeholder="portfolio.mycompany.vn"
+                  value={createForm.customDomain}
+                  onChange={(e) => setCreateForm({ ...createForm, customDomain: e.target.value })}
+                  className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                />
+              </div>
+              <div className="flex justify-end gap-2 pt-3 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setIsCreating(false)}
+                  className="px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded"
+                >
+                  Hủy
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white rounded"
+                >
+                  Khởi Tạo Website
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Sửa Static Site */}
+      {editingSite && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl max-w-md w-full p-6 shadow-2xl animate-in fade-in zoom-in-95">
+            <h3 className="text-lg font-bold text-slate-900 mb-4">Cấu Hình Website: {editingSite.name}</h3>
+            <form onSubmit={handleUpdateSite} className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Tên Dự Án</label>
+                <input
+                  type="text"
+                  required
+                  value={editForm.name}
+                  onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+                  className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Custom Domain</label>
+                <input
+                  type="text"
+                  placeholder="subdomain.domain.vn"
+                  value={editForm.customDomain}
+                  onChange={(e) => setEditForm({ ...editForm, customDomain: e.target.value })}
+                  className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                />
+              </div>
+              <div className="flex justify-end gap-2 pt-3 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setEditingSite(null)}
+                  className="px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded"
+                >
+                  Hủy
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white rounded"
+                >
+                  Lưu Thay Đổi
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

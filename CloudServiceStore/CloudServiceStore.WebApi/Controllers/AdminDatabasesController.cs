@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using CloudServiceStore.Application.Features.ManagedDatabases.Queries.GetAdminDatabases;
 using CloudServiceStore.Application.Interfaces;
 using CloudServiceStore.Domain.Entities;
+using CloudServiceStore.Domain.Enums;
 using CloudServiceStore.Domain.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -99,6 +100,43 @@ public class AdminDatabasesController : ControllerBase
         return Ok(new { success = true, message = "Đã cập nhật trạng thái Failed." });
     }
 
+    [HttpPost]
+    public async Task<IActionResult> CreateDatabase([FromBody] AdminCreateDatabaseRequest request, CancellationToken ct)
+    {
+        var db = new ManagedDatabaseInstance
+        {
+            Id = Guid.NewGuid(),
+            UserId = request.UserId != Guid.Empty ? request.UserId : Guid.NewGuid(),
+            Name = string.IsNullOrWhiteSpace(request.Name) ? "production-db" : request.Name,
+            Engine = request.Engine,
+            Version = string.IsNullOrWhiteSpace(request.Version) ? "16" : request.Version,
+            AdminUser = string.IsNullOrWhiteSpace(request.AdminUser) ? "dbadmin" : request.AdminUser,
+            AdminPassword = string.IsNullOrWhiteSpace(request.AdminPassword) ? "SecurePass123!" : request.AdminPassword,
+            CreatedAt = DateTime.UtcNow
+        };
+        db.MarkAsProvisioning();
+        db.MarkAsRunning(request.Engine == ManagedDatabaseEngine.PostgreSQL ? 5432 : 3306);
+
+        await _repo.AddAsync(db, ct);
+        await _uow.SaveChangesAsync(ct);
+        return Ok(db);
+    }
+
+    [HttpPut("{id:guid}")]
+    public async Task<IActionResult> UpdateDatabase(Guid id, [FromBody] AdminUpdateDatabaseRequest request, CancellationToken ct)
+    {
+        var db = await _repo.GetByIdAsync(id, ct);
+        if (db == null) return NotFound();
+
+        if (!string.IsNullOrWhiteSpace(request.Name)) db.Name = request.Name;
+        if (!string.IsNullOrWhiteSpace(request.AdminUser)) db.AdminUser = request.AdminUser;
+        if (!string.IsNullOrWhiteSpace(request.AdminPassword)) db.AdminPassword = request.AdminPassword;
+
+        _repo.Update(db);
+        await _uow.SaveChangesAsync(ct);
+        return Ok(new { success = true, database = db });
+    }
+
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> DeleteDatabase(Guid id, CancellationToken cancellationToken)
     {
@@ -111,3 +149,6 @@ public class AdminDatabasesController : ControllerBase
         return Ok(new { success = true });
     }
 }
+
+public record AdminCreateDatabaseRequest(Guid UserId, string Name, ManagedDatabaseEngine Engine, string Version, string? AdminUser, string? AdminPassword);
+public record AdminUpdateDatabaseRequest(string? Name, string? AdminUser, string? AdminPassword, int? Port, string? Status);
