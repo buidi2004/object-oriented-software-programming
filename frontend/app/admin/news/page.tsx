@@ -42,7 +42,7 @@ export default function AdminNewsPage() {
     content: '',
     thumbnailUrl: '',
     tags: '',
-    status: 1 // 0: Draft, 1: Published
+    status: 2 // 1: Draft, 2: Published
   });
 
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
@@ -98,7 +98,7 @@ export default function AdminNewsPage() {
       content: '',
       thumbnailUrl: '',
       tags: '',
-      status: 1
+      status: 2
     });
     setShowModal(true);
   };
@@ -112,7 +112,7 @@ export default function AdminNewsPage() {
       content: item.content || '',
       thumbnailUrl: item.thumbnailUrl || '',
       tags: item.tags || '',
-      status: isPub ? 1 : 0
+      status: isPub ? 2 : 1
     });
     setShowModal(true);
   };
@@ -211,7 +211,7 @@ export default function AdminNewsPage() {
 
   const isItemPublished = (itemStatus: any) => {
     const s = String(itemStatus || '').toLowerCase();
-    return s === 'published' || s === '1';
+    return s === 'published' || s === '2';
   };
 
   const filteredNews = news.filter(n => {
@@ -526,8 +526,8 @@ export default function AdminNewsPage() {
                     onChange={(e) => setFormData({ ...formData, status: Number(e.target.value) })}
                     className="w-full px-4 py-2.5 rounded border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                   >
-                    <option value={1}>Xuất bản công khai (Published)</option>
-                    <option value={0}>Lưu bản nháp (Draft)</option>
+                    <option value={2}>Xuất bản công khai (Published)</option>
+                    <option value={1}>Lưu bản nháp (Draft)</option>
                   </select>
                 </div>
               </div>
