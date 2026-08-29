@@ -208,6 +208,18 @@ public class VpsInstancesController : ControllerBase
         return NoContent();
     }
 
+    [HttpDelete("{id:guid}/hard")]
+    [Authorize]
+    public async Task<IActionResult> HardDelete(Guid id, CancellationToken ct)
+    {
+        var vps = await _vpsRepo.GetByIdAsync(id, ct);
+        if (vps == null) return NotFound();
+
+        _vpsRepo.Delete(vps);
+        await _uow.SaveChangesAsync(ct);
+        return NoContent();
+    }
+
     [HttpPost("{id:guid}/start")]
     [Authorize]
     public async Task<IActionResult> Start(Guid id)

@@ -97,7 +97,7 @@ export default function AdminVpsInstancesPage() {
   };
 
   const handleDelete = async (instance: VpsInstanceDto) => {
-    if (!confirm(`Bạn có chắc muốn xóa VPS "${instance.containerName}"?\nHành động này không thể hoàn tác!`)) return;
+    if (!confirm(`Bạn có chắc muốn hủy/xóa VPS "${instance.containerName}"?\n(Dữ liệu container sẽ bị xóa, trạng thái chuyển sang Đã huỷ)`)) return;
     const token = localStorage.getItem('accessToken');
     if (!token) return;
 
@@ -108,13 +108,15 @@ export default function AdminVpsInstancesPage() {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (response.ok || response.status === 204) {
-        setInstances(prev => prev.filter(i => i.id !== instance.id));
+        // Just mark as terminated in UI instead of hiding it, since it's a soft delete
+        setInstances(prev => prev.map(i => i.id === instance.id ? { ...i, status: 'Terminated' } : i));
+        alert('Đã huỷ VPS thành công!');
       } else {
-        alert('Xóa VPS thất bại. Lỗi: ' + response.status);
+        alert('Huỷ VPS thất bại. Lỗi: ' + response.status);
       }
     } catch (err) {
       console.error('Delete failed:', err);
-      alert('Xóa VPS thất bại.');
+      alert('Huỷ VPS thất bại.');
     } finally {
       setDeletingId(null);
     }
@@ -188,7 +190,7 @@ export default function AdminVpsInstancesPage() {
   const handleBulkDeleteTerminated = async () => {
     const terminated = instances.filter(i => i.status === 'Terminated');
     if (terminated.length === 0) { alert('Không có VPS nào ở trạng thái Terminated.'); return; }
-    if (!confirm(`Xóa tất cả ${terminated.length} VPS đã huỷ (Terminated)?\nHành động này không thể hoàn tác!`)) return;
+    if (!confirm(`Xóa vĩnh viễn ${terminated.length} bản ghi VPS đã huỷ khỏi cơ sở dữ liệu?\nHành động này không thể hoàn tác!`)) return;
 
     const token = localStorage.getItem('accessToken');
     if (!token) return;
@@ -197,7 +199,7 @@ export default function AdminVpsInstancesPage() {
     const deletedIds: string[] = [];
     for (const inst of terminated) {
       try {
-        const res = await fetch(`/api/VpsInstances/${inst.id}`, {
+        const res = await fetch(`/api/VpsInstances/${inst.id}/hard`, {
           method: 'DELETE',
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -206,7 +208,7 @@ export default function AdminVpsInstancesPage() {
     }
     setInstances(prev => prev.filter(i => !deletedIds.includes(i.id)));
     setBulkDeleting(false);
-    alert(`Đã xóa ${deletedIds.length}/${terminated.length} VPS thành công.`);
+    alert(`Đã xóa vĩnh viễn ${deletedIds.length}/${terminated.length} bản ghi VPS thành công.`);
   };
 
   const filteredInstances = instances.filter((instance) => {
