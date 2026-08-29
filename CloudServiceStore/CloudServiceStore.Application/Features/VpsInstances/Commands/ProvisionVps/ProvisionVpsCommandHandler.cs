@@ -109,6 +109,7 @@ public class ProvisionVpsCommandHandler : IRequestHandler<ProvisionVpsCommand, S
 
             var user = await _userRepo.GetByIdAsync(order.UserId, cancellationToken);
             var maxQuota = user?.VpsQuota ?? 10;
+            if (maxQuota <= 0) maxQuota = 10;
 
             if (activeVpsList?.Count >= maxQuota)
             {
