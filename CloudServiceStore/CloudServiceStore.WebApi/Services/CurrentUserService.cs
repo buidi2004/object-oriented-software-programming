@@ -19,23 +19,52 @@ public class CurrentUserService : ICurrentUserService
     {
         get
         {
-            var user = _httpContextAccessor.HttpContext?.User;
-            if (user == null) return null;
-
-            var idClaim = user.FindFirst(ClaimTypes.NameIdentifier)
-                ?? user.FindFirst(JwtRegisteredClaimNames.Sub)
-                ?? user.FindFirst("sub");
-
-            if (idClaim != null && Guid.TryParse(idClaim.Value, out var id))
+            try
             {
-                return id;
+                var user = _httpContextAccessor.HttpContext?.User;
+                if (user == null) return null;
+
+                var idClaim = user.FindFirst(ClaimTypes.NameIdentifier)
+                    ?? user.FindFirst(JwtRegisteredClaimNames.Sub)
+                    ?? user.FindFirst("sub");
+
+                if (idClaim != null && Guid.TryParse(idClaim.Value, out var id))
+                {
+                    return id;
+                }
+                return null;
             }
-            return null;
+            catch
+            {
+                return null;
+            }
         }
     }
 
-    public string? IpAddress => _httpContextAccessor.HttpContext?.Connection?.RemoteIpAddress?.ToString();
+    public string? IpAddress
+    {
+        get
+        {
+            try
+            {
+                return _httpContextAccessor.HttpContext?.Connection?.RemoteIpAddress?.ToString();
+            }
+            catch
+            {
+                return null;
+            }
+        }
+    }
 
-    public bool IsInRole(string role) =>
-        _httpContextAccessor.HttpContext?.User?.IsInRole(role) ?? false;
+    public bool IsInRole(string role)
+    {
+        try
+        {
+            return _httpContextAccessor.HttpContext?.User?.IsInRole(role) ?? false;
+        }
+        catch
+        {
+            return false;
+        }
+    }
 }

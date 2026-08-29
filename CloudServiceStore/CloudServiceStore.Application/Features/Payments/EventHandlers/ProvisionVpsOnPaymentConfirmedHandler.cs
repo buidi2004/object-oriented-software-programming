@@ -121,7 +121,7 @@ public class ProvisionVpsOnPaymentConfirmedHandler : INotificationHandler<Paymen
                             {
                                 using var scope = _scopeFactory.CreateScope();
                                 var provisioningSvc = scope.ServiceProvider.GetRequiredService<IGameServerProvisioningService>();
-                                using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(60));
+                                using var cts = new CancellationTokenSource(TimeSpan.FromMinutes(10));
                                 await provisioningSvc.ProvisionGameServerAsync(newServer, cts.Token);
                                 _logger.LogInformation("Auto-provisioned Game Server {Id} for order {OrderId}", newServer.Id, order.Id);
                             }
@@ -260,7 +260,7 @@ public class ProvisionVpsOnPaymentConfirmedHandler : INotificationHandler<Paymen
                 {
                     using var scope = _scopeFactory.CreateScope();
                     var scopedMediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-                    using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(60));
+                    using var cts = new CancellationTokenSource(TimeSpan.FromMinutes(10));
                     await scopedMediator.Send(new ProvisionVpsCommand { OrderId = order.Id }, cts.Token);
                     _logger.LogInformation("Auto-provisioned VPS for order {OrderId}", order.Id);
                 }
