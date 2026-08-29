@@ -54,7 +54,7 @@ public class AddTicketMessageCommandHandler : IRequestHandler<AddTicketMessageCo
         {
             var sender = await _userRepo.GetByIdAsync(userId, ct);
             var shortId = ticket.Id.ToString().Substring(0, 8);
-            var frontendUrl = "http://localhost:3000";
+            var frontendUrl = "https://object-oriented-software-programmin-sable.vercel.app";
             var ticketUrl = $"{frontendUrl}/tickets/{ticket.Id}";
 
             if (userId != ticket.UserId)
@@ -66,7 +66,10 @@ public class AddTicketMessageCommandHandler : IRequestHandler<AddTicketMessageCo
                     var emailSubject = $"[Phản hồi Support Ticket #{shortId}] {ticket.Subject}";
                     var emailBody = $@"
                         <div style=""font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px;"">
-                            <h2 style=""color: #2563eb;"">CloudHost VN - Hỗ Trợ Khách Hàng</h2>
+                            <div style=""text-align: center; margin-bottom: 20px;"">
+                                <img src=""https://object-oriented-software-programmin-sable.vercel.app/images/logo.png"" alt=""CloudHost VN Logo"" style=""height: 50px;"" />
+                            </div>
+                            <h2 style=""color: #2563eb; text-align: center;"">CloudHost VN - Hỗ Trợ Khách Hàng</h2>
                             <p>Xin chào <strong>{customer.FullName ?? customer.Email}</strong>,</p>
                             <p>Yêu cầu hỗ trợ <strong>#{shortId}</strong> của bạn vừa có phản hồi mới từ bộ phận Kỹ thuật ({sender?.FullName ?? "Kỹ thuật viên"}):</p>
                             <div style=""padding: 15px; border-left: 4px solid #2563eb; background-color: #f8fafc; margin: 15px 0; border-radius: 4px; line-height: 1.6;"">
@@ -86,7 +89,10 @@ public class AddTicketMessageCommandHandler : IRequestHandler<AddTicketMessageCo
                 var emailSubject = $"[Khách hàng phản hồi Ticket #{shortId}] {ticket.Subject}";
                 var emailBody = $@"
                     <div style=""font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px;"">
-                        <h2 style=""color: #0284c7;"">Thông Báo Phản Hồi Ticket Mới</h2>
+                        <div style=""text-align: center; margin-bottom: 20px;"">
+                            <img src=""https://object-oriented-software-programmin-sable.vercel.app/images/logo.png"" alt=""CloudHost VN Logo"" style=""height: 50px;"" />
+                        </div>
+                        <h2 style=""color: #0284c7; text-align: center;"">Thông Báo Phản Hồi Ticket Mới</h2>
                         <p>Khách hàng <strong>{sender?.FullName ?? sender?.Email}</strong> vừa gửi tin nhắn mới cho Ticket <strong>#{shortId}</strong>:</p>
                         <div style=""padding: 15px; border-left: 4px solid #0284c7; background-color: #f8fafc; margin: 15px 0; border-radius: 4px; line-height: 1.6;"">
                             {request.Message.Replace("\n", "<br/>")}

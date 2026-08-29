@@ -50,7 +50,7 @@ public class SendAbandonedCartRemindersCommandHandler : IRequestHandler<SendAban
                 var user = await _userRepo.GetByIdAsync(cart.UserId, ct);
                 if (user != null && !string.IsNullOrEmpty(user.Email))
                 {
-                    var html = $"<p>Xin chào <strong>{user.FullName}</strong>,</p><p>Bạn đang có sản phẩm chưa hoàn tất thanh toán trong giỏ hàng tại CloudHost VN. Hãy hoàn tất đơn hàng để nhận dịch vụ ngay hôm nay!</p><p><a href='http://localhost:3000/cart'>🛒 Xem lại giỏ hàng</a></p>";
+                    var html = $"<div style='text-align: center; margin-bottom: 20px;'><img src='https://object-oriented-software-programmin-sable.vercel.app/images/logo.png' alt='CloudHost VN Logo' style='height: 50px;' /></div><p>Xin chào <strong>{user.FullName}</strong>,</p><p>Bạn đang có sản phẩm chưa hoàn tất thanh toán trong giỏ hàng tại CloudHost VN. Hãy hoàn tất đơn hàng để nhận dịch vụ ngay hôm nay!</p><p><a href='https://object-oriented-software-programmin-sable.vercel.app/cart'>🛒 Xem lại giỏ hàng</a></p>";
                     await _emailService.SendEmailAsync(user.Email, "🛒 [Nhắc nhở] Giỏ hàng của bạn đang chờ hoàn tất - CloudHost VN", html, ct);
                 }
             }

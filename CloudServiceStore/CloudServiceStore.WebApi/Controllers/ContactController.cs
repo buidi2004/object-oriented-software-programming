@@ -111,7 +111,7 @@ public class ContactController : ControllerBase
         string autoReplyHtml = $@"
             <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; background-color: #ffffff;'>
                 <div style='background: #0f172a; padding: 24px; text-align: center; color: white;'>
-                    <div style='font-size: 26px; margin-bottom: 4px;'>🪷</div>
+                    <img src='https://object-oriented-software-programmin-sable.vercel.app/images/logo.png' alt='CloudHost VN Logo' style='height: 50px; margin-bottom: 10px;' />
                     <h2 style='margin: 0; font-size: 20px; font-weight: 800;'>SEN CloudHost VN</h2>
                     <p style='margin: 4px 0 0 0; font-size: 11px; color: #94a3b8;'>TIẾP NHẬN YÊU CẦU TƯ VẤN &amp; HỖ TRỢ</p>
                 </div>
@@ -128,7 +128,7 @@ public class ContactController : ControllerBase
                         Chuyên viên kỹ thuật Level 3 của SEN CloudHost cam kết liên hệ lại với bạn trong vòng <strong>15 phút</strong>.
                     </p>
                     <div style='text-align: center; margin: 24px 0;'>
-                        <a href='http://localhost:3000/knowledge-base' 
+                        <a href='https://object-oriented-software-programmin-sable.vercel.app/knowledge-base' 
                            style='background: #0f172a; color: #ffffff; padding: 12px 30px; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 13px; display: inline-block;'>
                             📚 Xem Trung Tâm Tài Liệu Kỹ Thuật
                         </a>

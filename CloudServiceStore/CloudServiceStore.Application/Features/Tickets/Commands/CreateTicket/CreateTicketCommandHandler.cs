@@ -47,8 +47,11 @@ public class CreateTicketCommandHandler : IRequestHandler<CreateTicketCommand, G
                 var shortId = ticket.Id.ToString().Substring(0, 8);
                 var subject = $"[CloudHost VN] Đã nhận yêu cầu hỗ trợ #{shortId}: {ticket.Subject}";
                 var body = $@"
-                    <div style=""font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; rounded: 8px;"">
-                        <h2 style=""color: #2563eb;"">CloudHost VN - Hỗ Trợ Khách Hàng</h2>
+                    <div style=""font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px;"">
+                        <div style=""text-align: center; margin-bottom: 20px;"">
+                            <img src=""https://object-oriented-software-programmin-sable.vercel.app/images/logo.png"" alt=""CloudHost VN Logo"" style=""height: 50px;"" />
+                        </div>
+                        <h2 style=""color: #2563eb; text-align: center;"">CloudHost VN - Hỗ Trợ Khách Hàng</h2>
                         <p>Xin chào <strong>{user.FullName ?? user.Email}</strong>,</p>
                         <p>Chúng tôi đã tiếp nhận yêu cầu hỗ trợ của bạn với thông tin sau:</p>
                         <table style=""width: 100%; border-collapse: collapse; margin: 15px 0;"">
@@ -58,9 +61,11 @@ public class CreateTicketCommandHandler : IRequestHandler<CreateTicketCommand, G
                             <tr><td style=""padding: 8px; border: 1px solid #e2e8f0; font-weight: bold;"">Trạng thái:</td><td style=""padding: 8px; border: 1px solid #e2e8f0;"">Đang mở (Open)</td></tr>
                         </table>
                         <p>Đội ngũ kỹ thuật viên sẽ xem xét và phản hồi cho bạn trong thời gian sớm nhất.</p>
-                        <p><a href=""http://localhost:3000/tickets/{ticket.Id}"" style=""display: inline-block; padding: 10px 20px; background-color: #2563eb; color: #ffffff; text-decoration: none; border-radius: 6px; font-weight: bold;"">Xem Ticket Của Bạn</a></p>
+                        <p style=""text-align: center; margin-top: 20px;"">
+                            <a href=""https://object-oriented-software-programmin-sable.vercel.app/tickets/{ticket.Id}"" style=""display: inline-block; padding: 10px 20px; background-color: #2563eb; color: #ffffff; text-decoration: none; border-radius: 6px; font-weight: bold;"">Xem Ticket Của Bạn</a>
+                        </p>
                         <hr style=""border: none; border-top: 1px solid #e2e8f0; margin: 20px 0;"" />
-                        <p style=""font-size: 12px; color: #64748b;"">Email tự động từ hệ thống hỗ trợ CloudHost VN.</p>
+                        <p style=""font-size: 12px; color: #64748b; text-align: center;"">Email tự động từ hệ thống hỗ trợ CloudHost VN.</p>
                     </div>";
 
                 await _emailService.SendEmailAsync(user.Email, subject, body);
