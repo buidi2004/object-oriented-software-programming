@@ -60,38 +60,38 @@ export default function AdminMarketplacePage() {
       case 1: return <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-700">Pending Review</span>;
       case 2: return <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700"><CheckCircle className="w-3 h-3"/> Active</span>;
       case 3: return <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-700"><XCircle className="w-3 h-3"/> Suspended</span>;
-      default: return <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-700">Unknown</span>;
+      default: return <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold bg-white/10 text-slate-200">Unknown</span>;
     }
   };
 
   return (
     <>
       {toast && <Toast message={toast.message} type={toast.type} onClose={() => showToast('', 'info')} />}
-      <div className="min-h-screen bg-slate-50 py-8 px-4 sm:px-6 lg:px-8">
+      <div className="min-h-screen bg-[#0F172A] py-8 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto space-y-6">
           <div className="flex items-center justify-between">
             <div>
-              <Link href="/admin" className="text-sm text-slate-600 hover:text-[#1F1F1F] flex items-center gap-1 mb-2">
+              <Link href="/admin" className="text-sm text-slate-500 hover:text-[#1F1F1F] flex items-center gap-1 mb-2">
                 <ArrowLeft className="w-4 h-4" /> Quay lại Dashboard
               </Link>
-              <h1 className="text-2xl font-black text-slate-900 flex items-center gap-2">
+              <h1 className="text-2xl font-black text-white flex items-center gap-2">
                 <ShoppingBag className="w-6 h-6 text-fuchsia-600" />
                 Quản Lý Marketplace Listings
               </h1>
-              <p className="text-slate-600 mt-1">Duyệt và kiểm soát các sản phẩm trên chợ ứng dụng</p>
+              <p className="text-slate-500 mt-1">Duyệt và kiểm soát các sản phẩm trên chợ ứng dụng</p>
             </div>
             <button
               onClick={fetchListings}
-              className="p-2 rounded bg-white border border-slate-200 hover:text-fuchsia-600 transition-colors"
+              className="p-2 rounded bg-[#1E293B] bg-opacity-70 backdrop-blur-md border border-white/10 hover:text-fuchsia-600 transition-colors"
             >
               <RefreshCw className="w-5 h-5" />
             </button>
           </div>
 
-          <div className="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden">
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-lg border border-white/10 shadow-sm overflow-hidden">
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-sm text-slate-600">
-                <thead className="bg-slate-50/80 border-b border-slate-200 text-slate-600">
+              <table className="w-full text-left text-sm text-slate-500">
+                <thead className="bg-[#0F172A]/80 border-b border-white/10 text-slate-500">
                   <tr>
                     <th className="p-4 font-semibold">Listing ID</th>
                     <th className="p-4 font-semibold">Tiêu Đề</th>
@@ -101,18 +101,18 @@ export default function AdminMarketplacePage() {
                     <th className="p-4 font-semibold">Hành Động</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-white/10">
                   {listings.length === 0 ? (
                     <tr>
-                      <td colSpan={6} className="p-8 text-center text-slate-600">Chưa có sản phẩm nào</td>
+                      <td colSpan={6} className="p-8 text-center text-slate-500">Chưa có sản phẩm nào</td>
                     </tr>
                   ) : (
                     listings.map((listing) => (
-                      <tr key={listing.id} className="hover:bg-slate-50/50">
-                        <td className="p-4 text-xs font-mono font-bold text-slate-900">{listing.id.substring(0, 8)}...</td>
+                      <tr key={listing.id} className="hover:bg-[#0F172A]/50">
+                        <td className="p-4 text-xs font-mono font-bold text-white">{listing.id.substring(0, 8)}...</td>
                         <td className="p-4 font-bold">{listing.title}</td>
                         <td className="p-4 text-xs font-mono">{listing.sellerId}</td>
-                        <td className="p-4 font-bold text-slate-900 flex items-center gap-1">
+                        <td className="p-4 font-bold text-white flex items-center gap-1">
                           {listing.price.toLocaleString('vi-VN')}đ
                         </td>
                         <td className="p-4">{getStatusBadge(listing.status)}</td>

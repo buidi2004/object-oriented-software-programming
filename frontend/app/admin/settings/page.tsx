@@ -119,29 +119,29 @@ export default function AdminSettingsPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[#0F172A] flex items-center justify-center">
         <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <header className="bg-white border-b border-slate-200 sticky top-0 z-40">
+    <div className="min-h-screen bg-[#0F172A]">
+      <header className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md border-b border-white/10 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link href="/admin" className="p-2 rounded-sm hover:bg-slate-100 transition-colors">
-              <ArrowLeft className="w-5 h-5 text-slate-600" />
+            <Link href="/admin" className="p-2 rounded-sm hover:bg-white/10 transition-colors">
+              <ArrowLeft className="w-5 h-5 text-slate-500" />
             </Link>
             <div>
-              <h1 className="text-xl font-bold text-slate-900">Cài đặt hệ thống</h1>
-              <p className="text-sm text-slate-600">Quản lý cấu hình toàn hệ thống CloudServiceStore</p>
+              <h1 className="text-xl font-bold text-white">Cài đặt hệ thống</h1>
+              <p className="text-sm text-slate-500">Quản lý cấu hình toàn hệ thống CloudServiceStore</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
             <button 
               onClick={fetchSettings}
-              className="p-2 rounded-sm text-slate-600 hover:bg-slate-100 transition-colors"
+              className="p-2 rounded-sm text-slate-500 hover:bg-white/10 transition-colors"
               title="Tải lại cài đặt"
             >
               <RefreshCw className="w-5 h-5" />
@@ -169,7 +169,7 @@ export default function AdminSettingsPage() {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Sidebar Tabs */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-md border border-slate-200 p-3 space-y-1.5 shadow-sm">
+            <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-md border border-white/10 p-3 space-y-1.5 shadow-sm">
               {[
                 { id: 'general', label: 'Cài đặt Chung', icon: SettingsIcon },
                 { id: 'payment', label: 'Cổng Thanh Toán', icon: Database },
@@ -182,7 +182,7 @@ export default function AdminSettingsPage() {
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
                   className={`w-full flex items-center gap-3 px-4 py-3 rounded text-sm font-semibold transition-all ${
-                    activeTab === tab.id ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20' : 'text-slate-600 hover:bg-slate-50'
+                    activeTab === tab.id ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20' : 'text-slate-500 hover:bg-[#0F172A]'
                   }`}
                 >
                   <tab.icon className="w-5 h-5" />
@@ -195,93 +195,93 @@ export default function AdminSettingsPage() {
           {/* Tab Contents */}
           <div className="lg:col-span-3 space-y-6">
             {activeTab === 'general' && (
-              <div className="bg-white rounded-md border border-slate-200 p-6 shadow-sm">
-                <h2 className="text-lg font-bold text-slate-900 mb-6">Cài đặt thông tin thương hiệu & Website</h2>
+              <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-md border border-white/10 p-6 shadow-sm">
+                <h2 className="text-lg font-bold text-white mb-6">Cài đặt thông tin thương hiệu & Website</h2>
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Tên website / Thương hiệu</label>
+                    <label className="block text-xs font-semibold text-slate-200 uppercase mb-1.5">Tên website / Thương hiệu</label>
                     <input 
                       type="text" 
                       value={settings.site_name || ''} 
                       onChange={(e) => handleValueChange('site_name', e.target.value)}
-                      className="w-full px-4 py-2.5 rounded border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20" 
+                      className="w-full px-4 py-2.5 rounded border border-white/10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20" 
                     />
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Hotline Hỗ Trợ 24/7</label>
+                      <label className="block text-xs font-semibold text-slate-200 uppercase mb-1.5">Hotline Hỗ Trợ 24/7</label>
                       <input 
                         type="text" 
                         value={settings.hotline || ''} 
                         onChange={(e) => handleValueChange('hotline', e.target.value)}
                         placeholder="1900 6888"
-                        className="w-full px-4 py-2.5 rounded border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 font-semibold text-red-600" 
+                        className="w-full px-4 py-2.5 rounded border border-white/10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 font-semibold text-red-600" 
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Email CSKH / Support</label>
+                      <label className="block text-xs font-semibold text-slate-200 uppercase mb-1.5">Email CSKH / Support</label>
                       <input 
                         type="email" 
                         value={settings.support_email || ''} 
                         onChange={(e) => handleValueChange('support_email', e.target.value)}
                         placeholder="support@cloudhost.vn"
-                        className="w-full px-4 py-2.5 rounded border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 font-semibold text-[#1F1F1F]" 
+                        className="w-full px-4 py-2.5 rounded border border-white/10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 font-semibold text-[#1F1F1F]" 
                       />
                     </div>
                   </div>
 
                   <div className="pt-4 border-t border-slate-100 space-y-4">
-                    <h3 className="text-sm font-bold text-slate-800">Thông Tin Pháp Lý & Cơ Quan Chủ Quản (Chân Trang)</h3>
+                    <h3 className="text-sm font-bold text-slate-100">Thông Tin Pháp Lý & Cơ Quan Chủ Quản (Chân Trang)</h3>
 
                     <div>
-                      <label className="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Cơ Quan Chủ Quản / Tên Công Ty</label>
+                      <label className="block text-xs font-semibold text-slate-200 uppercase mb-1.5">Cơ Quan Chủ Quản / Tên Công Ty</label>
                       <textarea 
                         rows={2}
                         value={settings.company_name || ''} 
                         onChange={(e) => handleValueChange('company_name', e.target.value)}
                         placeholder="Công ty Cổ phần Công nghệ Hạ Tầng Số Việt Nam, trực thuộc Tập đoàn Công nghệ Việt Nam."
-                        className="w-full px-4 py-2.5 rounded border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20" 
+                        className="w-full px-4 py-2.5 rounded border border-white/10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20" 
                       />
                     </div>
 
                     <div>
-                      <label className="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Mã Số Doanh Nghiệp & Giấy Phép</label>
+                      <label className="block text-xs font-semibold text-slate-200 uppercase mb-1.5">Mã Số Doanh Nghiệp & Giấy Phép</label>
                       <textarea 
                         rows={3}
                         value={settings.business_license || ''} 
                         onChange={(e) => handleValueChange('business_license', e.target.value)}
                         placeholder="0500589150 do Ban Quản lý các Khu công nghệ cao và Khu công nghiệp - UBND thành phố Hà Nội cấp lần đầu..."
-                        className="w-full px-4 py-2.5 rounded border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20" 
+                        className="w-full px-4 py-2.5 rounded border border-white/10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20" 
                       />
                     </div>
 
                     <div>
-                      <label className="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Chịu Trách Nhiệm Nội Dung</label>
+                      <label className="block text-xs font-semibold text-slate-200 uppercase mb-1.5">Chịu Trách Nhiệm Nội Dung</label>
                       <input 
                         type="text" 
                         value={settings.content_responsible || ''} 
                         onChange={(e) => handleValueChange('content_responsible', e.target.value)}
                         placeholder="Ông Lê Bá Tân."
-                        className="w-full px-4 py-2.5 rounded border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20" 
+                        className="w-full px-4 py-2.5 rounded border border-white/10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20" 
                       />
                     </div>
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Đơn vị tiền tệ mặc định</label>
+                    <label className="block text-xs font-semibold text-slate-200 uppercase mb-1.5">Đơn vị tiền tệ mặc định</label>
                     <select
                       value={settings.default_currency || 'VND'}
                       onChange={(e) => handleValueChange('default_currency', e.target.value)}
-                      className="w-full px-4 py-2.5 rounded border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                      className="w-full px-4 py-2.5 rounded border border-white/10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                     >
                       <option value="VND">VND (Việt Nam Đồng)</option>
                       <option value="USD">USD (Đô la Mỹ)</option>
                       <option value="EUR">EUR (Euro)</option>
                     </select>
                   </div>
-                  <div className="flex items-center justify-between p-4 bg-slate-50 rounded border border-slate-100 mt-6">
+                  <div className="flex items-center justify-between p-4 bg-[#0F172A] rounded border border-slate-100 mt-6">
                     <div>
-                      <p className="font-semibold text-slate-900">Chế độ Bảo trì Toàn hệ thống</p>
-                      <p className="text-xs text-slate-600 mt-0.5">Tạm dừng truy cập người dùng để nâng cấp máy chủ</p>
+                      <p className="font-semibold text-white">Chế độ Bảo trì Toàn hệ thống</p>
+                      <p className="text-xs text-slate-500 mt-0.5">Tạm dừng truy cập người dùng để nâng cấp máy chủ</p>
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer">
                       <input 
@@ -290,7 +290,7 @@ export default function AdminSettingsPage() {
                         onChange={(e) => handleValueChange('maintenance_mode', e.target.checked ? 'true' : 'false')}
                         className="sr-only peer" 
                       />
-                      <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600" />
+                      <div className="w-11 h-6 bg-white/20 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-[#1E293B] bg-opacity-70 backdrop-blur-md after:border-white/20 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600" />
                     </label>
                   </div>
                 </div>
@@ -298,12 +298,12 @@ export default function AdminSettingsPage() {
             )}
 
             {activeTab === 'payment' && (
-              <div className="bg-white rounded-md border border-slate-200 p-6 shadow-sm">
-                <h2 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
+              <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-md border border-white/10 p-6 shadow-sm">
+                <h2 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
                   <Database className="w-5 h-5 text-[#1F1F1F]" /> Cấu Hình Cổng Thanh Toán VietQR (SePay)
                 </h2>
                 
-                <div className="bg-blue-50 border border-blue-200 rounded p-4 mb-6">
+                <div className="bg-blue-900/30 border border-blue-200 rounded p-4 mb-6">
                   <p className="text-sm font-semibold text-[#1F1F1F]">🔔 Kết nối với tài khoản SePay của bạn</p>
                   <p className="text-xs text-[#1F1F1F] mt-1 leading-relaxed">
                     Đảm bảo bạn đã thêm tài khoản ngân hàng thật trên <strong>my.sepay.vn</strong>. 
@@ -315,45 +315,45 @@ export default function AdminSettingsPage() {
                 <div className="space-y-4">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Ngân Hàng Nhận (Mã BIN/Tên viết tắt)</label>
+                      <label className="block text-xs font-semibold text-slate-200 uppercase mb-1.5">Ngân Hàng Nhận (Mã BIN/Tên viết tắt)</label>
                       <input 
                         type="text" 
                         value={settings.vietqr_bank_id || ''} 
                         onChange={(e) => handleValueChange('vietqr_bank_id', e.target.value.toUpperCase())}
                         placeholder="VD: MB hoặc 970422, VCB hoặc 970436"
-                        className="w-full px-4 py-2.5 rounded border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20" 
+                        className="w-full px-4 py-2.5 rounded border border-white/10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20" 
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Số Tài Khoản Nhận (Thật)</label>
+                      <label className="block text-xs font-semibold text-slate-200 uppercase mb-1.5">Số Tài Khoản Nhận (Thật)</label>
                       <input 
                         type="text" 
                         value={settings.vietqr_account_no || ''} 
                         onChange={(e) => handleValueChange('vietqr_account_no', e.target.value.replace(/\s/g, ''))}
                         placeholder="VD: 0347894561"
-                        className="w-full px-4 py-2.5 rounded border border-slate-200 text-sm font-mono font-bold focus:outline-none focus:ring-2 focus:ring-blue-500/20" 
+                        className="w-full px-4 py-2.5 rounded border border-white/10 text-sm font-mono font-bold focus:outline-none focus:ring-2 focus:ring-blue-500/20" 
                       />
                     </div>
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Tên Chủ Tài Khoản (In Hoa Không Dấu)</label>
+                    <label className="block text-xs font-semibold text-slate-200 uppercase mb-1.5">Tên Chủ Tài Khoản (In Hoa Không Dấu)</label>
                     <input 
                       type="text" 
                       value={settings.vietqr_account_name || ''} 
                       onChange={(e) => handleValueChange('vietqr_account_name', e.target.value.toUpperCase())}
                       placeholder="VD: NGUYEN VAN A"
-                      className="w-full px-4 py-2.5 rounded border border-slate-200 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-blue-500/20" 
+                      className="w-full px-4 py-2.5 rounded border border-white/10 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-blue-500/20" 
                     />
                   </div>
-                  <div className="flex items-center justify-between p-4 bg-slate-50 rounded border border-slate-100 mt-6">
+                  <div className="flex items-center justify-between p-4 bg-[#0F172A] rounded border border-slate-100 mt-6">
                     <div>
-                      <p className="font-semibold text-slate-900">Mẫu QR (Template)</p>
-                      <p className="text-xs text-slate-600 mt-0.5">compact, compact2, print, hoặc qr_only</p>
+                      <p className="font-semibold text-white">Mẫu QR (Template)</p>
+                      <p className="text-xs text-slate-500 mt-0.5">compact, compact2, print, hoặc qr_only</p>
                     </div>
                     <select
                       value={settings.vietqr_template || 'compact2'}
                       onChange={(e) => handleValueChange('vietqr_template', e.target.value)}
-                      className="px-4 py-2 rounded border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                      className="px-4 py-2 rounded border border-white/10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                     >
                       <option value="compact2">Compact 2 (Đẹp nhất)</option>
                       <option value="compact">Compact 1</option>
@@ -366,24 +366,24 @@ export default function AdminSettingsPage() {
             )}
 
             {activeTab === 'server' && (
-              <div className="bg-white rounded-md border border-slate-200 p-6 shadow-sm">
-                <h2 className="text-lg font-bold text-slate-900 mb-6">Cấu hình Tải lên & Dung lượng</h2>
+              <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-md border border-white/10 p-6 shadow-sm">
+                <h2 className="text-lg font-bold text-white mb-6">Cấu hình Tải lên & Dung lượng</h2>
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Kích thước file tải lên tối đa</label>
+                    <label className="block text-xs font-semibold text-slate-200 uppercase mb-1.5">Kích thước file tải lên tối đa</label>
                     <input 
                       type="text" 
                       value={settings.max_upload_size || '64MB'} 
                       onChange={(e) => handleValueChange('max_upload_size', e.target.value)}
-                      className="w-full px-4 py-2.5 rounded border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20" 
+                      className="w-full px-4 py-2.5 rounded border border-white/10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20" 
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Timeout phiên kết nối (phút)</label>
+                    <label className="block text-xs font-semibold text-slate-200 uppercase mb-1.5">Timeout phiên kết nối (phút)</label>
                     <input 
                       type="number" 
                       defaultValue="30"
-                      className="w-full px-4 py-2.5 rounded border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20" 
+                      className="w-full px-4 py-2.5 rounded border border-white/10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20" 
                     />
                   </div>
                 </div>
@@ -391,13 +391,13 @@ export default function AdminSettingsPage() {
             )}
 
             {activeTab === 'security' && (
-              <div className="bg-white rounded-md border border-slate-200 p-6 shadow-sm">
-                <h2 className="text-lg font-bold text-slate-900 mb-6">Chính sách Bảo mật & Truy cập</h2>
+              <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-md border border-white/10 p-6 shadow-sm">
+                <h2 className="text-lg font-bold text-white mb-6">Chính sách Bảo mật & Truy cập</h2>
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between p-4 bg-slate-50 rounded border border-slate-100">
+                  <div className="flex items-center justify-between p-4 bg-[#0F172A] rounded border border-slate-100">
                     <div>
-                      <p className="font-semibold text-slate-900">Bắt buộc Xác thực 2 bước (2FA)</p>
-                      <p className="text-xs text-slate-600 mt-0.5">Yêu cầu OTP Authenticator khi đăng nhập quyền Admin</p>
+                      <p className="font-semibold text-white">Bắt buộc Xác thực 2 bước (2FA)</p>
+                      <p className="text-xs text-slate-500 mt-0.5">Yêu cầu OTP Authenticator khi đăng nhập quyền Admin</p>
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer">
                       <input 
@@ -406,7 +406,7 @@ export default function AdminSettingsPage() {
                         onChange={(e) => handleValueChange('two_factor_auth_required', e.target.checked ? 'true' : 'false')}
                         className="sr-only peer" 
                       />
-                      <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600" />
+                      <div className="w-11 h-6 bg-white/20 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-[#1E293B] bg-opacity-70 backdrop-blur-md after:border-white/20 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600" />
                     </label>
                   </div>
                 </div>
@@ -414,26 +414,26 @@ export default function AdminSettingsPage() {
             )}
 
             {activeTab === 'email' && (
-              <div className="bg-white rounded-md border border-slate-200 p-6 shadow-sm">
-                <h2 className="text-lg font-bold text-slate-900 mb-6">Cấu hình Gửi Mail Hệ Thống (SMTP)</h2>
+              <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-md border border-white/10 p-6 shadow-sm">
+                <h2 className="text-lg font-bold text-white mb-6">Cấu hình Gửi Mail Hệ Thống (SMTP)</h2>
                 <div className="space-y-4">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-semibold text-slate-700 uppercase mb-1.5">SMTP Host</label>
+                      <label className="block text-xs font-semibold text-slate-200 uppercase mb-1.5">SMTP Host</label>
                       <input 
                         type="text" 
                         value={settings.smtp_host || ''} 
                         onChange={(e) => handleValueChange('smtp_host', e.target.value)}
-                        className="w-full px-4 py-2.5 rounded border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20" 
+                        className="w-full px-4 py-2.5 rounded border border-white/10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20" 
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-semibold text-slate-700 uppercase mb-1.5">SMTP Port</label>
+                      <label className="block text-xs font-semibold text-slate-200 uppercase mb-1.5">SMTP Port</label>
                       <input 
                         type="text" 
                         value={settings.smtp_port || ''} 
                         onChange={(e) => handleValueChange('smtp_port', e.target.value)}
-                        className="w-full px-4 py-2.5 rounded border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20" 
+                        className="w-full px-4 py-2.5 rounded border border-white/10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20" 
                       />
                     </div>
                   </div>
@@ -442,12 +442,12 @@ export default function AdminSettingsPage() {
             )}
 
             {activeTab === 'custom' && (
-              <div className="bg-white rounded-md border border-slate-200 p-6 shadow-sm">
+              <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-md border border-white/10 p-6 shadow-sm">
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-lg font-bold text-slate-900">Danh sách Cấu hình Tùy biến</h2>
+                  <h2 className="text-lg font-bold text-white">Danh sách Cấu hình Tùy biến</h2>
                   <button 
                     onClick={() => setShowAddCustom(!showAddCustom)}
-                    className="px-3 py-1.5 rounded-sm bg-blue-50 text-[#1F1F1F] font-semibold text-xs hover:bg-blue-100 flex items-center gap-1.5"
+                    className="px-3 py-1.5 rounded-sm bg-blue-900/30 text-[#1F1F1F] font-semibold text-xs hover:bg-blue-900/50 flex items-center gap-1.5"
                   >
                     <Plus className="w-4 h-4" />
                     Thêm Key Tùy Biến
@@ -455,28 +455,28 @@ export default function AdminSettingsPage() {
                 </div>
 
                 {showAddCustom && (
-                  <form onSubmit={handleAddCustomSetting} className="p-4 mb-6 rounded bg-slate-50 border border-slate-200 space-y-3">
+                  <form onSubmit={handleAddCustomSetting} className="p-4 mb-6 rounded bg-[#0F172A] border border-white/10 space-y-3">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-xs font-semibold text-slate-700 uppercase mb-1">Key Name</label>
+                        <label className="block text-xs font-semibold text-slate-200 uppercase mb-1">Key Name</label>
                         <input 
                           type="text" 
                           required 
                           placeholder="VD: telegram_alert_token" 
                           value={newKey} 
                           onChange={(e) => setNewKey(e.target.value)}
-                          className="w-full px-3 py-2 rounded-sm border border-slate-200 text-xs font-mono" 
+                          className="w-full px-3 py-2 rounded-sm border border-white/10 text-xs font-mono" 
                         />
                       </div>
                       <div>
-                        <label className="block text-xs font-semibold text-slate-700 uppercase mb-1">Value</label>
+                        <label className="block text-xs font-semibold text-slate-200 uppercase mb-1">Value</label>
                         <input 
                           type="text" 
                           required 
                           placeholder="Giá trị cấu hình" 
                           value={newValue} 
                           onChange={(e) => setNewValue(e.target.value)}
-                          className="w-full px-3 py-2 rounded-sm border border-slate-200 text-xs" 
+                          className="w-full px-3 py-2 rounded-sm border border-white/10 text-xs" 
                         />
                       </div>
                     </div>
@@ -484,7 +484,7 @@ export default function AdminSettingsPage() {
                       <button 
                         type="button" 
                         onClick={() => setShowAddCustom(false)}
-                        className="px-3 py-1.5 rounded-sm text-slate-600 text-xs"
+                        className="px-3 py-1.5 rounded-sm text-slate-500 text-xs"
                       >
                         Hủy
                       </button>
@@ -498,15 +498,15 @@ export default function AdminSettingsPage() {
                   </form>
                 )}
 
-                <div className="divide-y divide-slate-100">
+                <div className="divide-y divide-white/10">
                   {Object.entries(settings).map(([k, v]) => (
                     <div key={k} className="py-3 flex items-center justify-between gap-4">
-                      <span className="font-mono text-xs font-semibold text-slate-700">{k}</span>
+                      <span className="font-mono text-xs font-semibold text-slate-200">{k}</span>
                       <input 
                         type="text" 
                         value={v} 
                         onChange={(e) => handleValueChange(k, e.target.value)}
-                        className="max-w-md w-full px-3 py-1.5 rounded-sm border border-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500" 
+                        className="max-w-md w-full px-3 py-1.5 rounded-sm border border-white/10 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500" 
                       />
                     </div>
                   ))}

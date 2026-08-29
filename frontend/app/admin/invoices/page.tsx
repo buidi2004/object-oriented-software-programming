@@ -189,23 +189,23 @@ export default function AdminInvoicesPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center py-20">
+      <div className="min-h-screen bg-[#0F172A] flex items-center justify-center py-20">
         <div className="w-12 h-12 border-4 border-[#1F1F1F] border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#0F172A] py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto space-y-6">
         
         {/* Header Bar */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <Link href="/admin" className="text-xs font-bold text-slate-600 hover:text-[#1F1F1F] flex items-center gap-1 mb-2">
+            <Link href="/admin" className="text-xs font-bold text-slate-500 hover:text-[#1F1F1F] flex items-center gap-1 mb-2">
               <ArrowLeft className="w-4 h-4" /> Quay lại Admin Panel
             </Link>
-            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 flex items-center gap-2.5">
+            <h1 className="text-2xl sm:text-3xl font-black text-white flex items-center gap-2.5">
               <FileText className="w-7 h-7 text-[#1F1F1F]" />
               Quản Lý Hóa Đơn Toàn Hệ Thống
             </h1>
@@ -224,7 +224,7 @@ export default function AdminInvoicesPage() {
             </button>
             <button
               onClick={fetchInvoices}
-              className="p-2.5 rounded bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 transition-colors shadow-2xs flex items-center gap-1.5 text-xs font-bold"
+              className="p-2.5 rounded bg-[#1E293B] bg-opacity-70 backdrop-blur-md border border-white/10 hover:bg-[#0F172A] text-slate-500 transition-colors shadow-2xs flex items-center gap-1.5 text-xs font-bold"
               title="Làm mới danh sách"
             >
               <RefreshCw className="w-4 h-4" />
@@ -235,14 +235,14 @@ export default function AdminInvoicesPage() {
 
         {/* Overview Stats Cards */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-white p-4.5 rounded-lg border border-slate-200 shadow-2xs">
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md p-4.5 rounded-lg border border-white/10 shadow-2xs">
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Tổng Doanh Thu</span>
               <div className="w-8 h-8 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">
                 ₫
               </div>
             </div>
-            <p className="text-xl sm:text-2xl font-black text-slate-900">
+            <p className="text-xl sm:text-2xl font-black text-white">
               {stats.totalRevenue.toLocaleString('vi-VN')} đ
             </p>
             <p className="text-[11px] text-emerald-600 font-bold mt-1">
@@ -250,14 +250,14 @@ export default function AdminInvoicesPage() {
             </p>
           </div>
 
-          <div className="bg-white p-4.5 rounded-lg border border-slate-200 shadow-2xs">
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md p-4.5 rounded-lg border border-white/10 shadow-2xs">
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Hóa Đơn Dịch Vụ</span>
-              <div className="w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center">
+              <div className="w-8 h-8 rounded-full bg-blue-900/30 text-blue-400 flex items-center justify-center">
                 <ShoppingCart className="w-4 h-4" />
               </div>
             </div>
-            <p className="text-xl sm:text-2xl font-black text-slate-900">
+            <p className="text-xl sm:text-2xl font-black text-white">
               {stats.orderCount}
             </p>
             <p className="text-[11px] text-slate-500 mt-1">
@@ -265,14 +265,14 @@ export default function AdminInvoicesPage() {
             </p>
           </div>
 
-          <div className="bg-white p-4.5 rounded-lg border border-slate-200 shadow-2xs">
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md p-4.5 rounded-lg border border-white/10 shadow-2xs">
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Hóa Đơn Nạp Ví</span>
               <div className="w-8 h-8 rounded-full bg-purple-50 text-purple-600 flex items-center justify-center">
                 <Wallet className="w-4 h-4" />
               </div>
             </div>
-            <p className="text-xl sm:text-2xl font-black text-slate-900">
+            <p className="text-xl sm:text-2xl font-black text-white">
               {stats.topUpCount}
             </p>
             <p className="text-[11px] text-slate-500 mt-1">
@@ -280,14 +280,14 @@ export default function AdminInvoicesPage() {
             </p>
           </div>
 
-          <div className="bg-white p-4.5 rounded-lg border border-slate-200 shadow-2xs">
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md p-4.5 rounded-lg border border-white/10 shadow-2xs">
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Chờ Thanh Toán</span>
               <div className="w-8 h-8 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center">
                 <Clock className="w-4 h-4" />
               </div>
             </div>
-            <p className="text-xl sm:text-2xl font-black text-slate-900">
+            <p className="text-xl sm:text-2xl font-black text-white">
               {stats.pendingCount}
             </p>
             <p className="text-[11px] text-amber-600 font-medium mt-1">
@@ -297,47 +297,47 @@ export default function AdminInvoicesPage() {
         </div>
 
         {/* Filter and Search Bar */}
-        <div className="bg-white rounded-lg border border-slate-200 p-4 shadow-2xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-lg border border-white/10 p-4 shadow-2xs flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex flex-wrap items-center gap-2">
             {/* Type filters */}
-            <div className="flex items-center bg-slate-100 p-1 rounded-md text-xs font-bold">
+            <div className="flex items-center bg-white/10 p-1 rounded-md text-xs font-bold">
               <button
                 onClick={() => setTypeFilter('all')}
-                className={`px-3 py-1.5 rounded transition-colors ${typeFilter === 'all' ? 'bg-white text-slate-900 shadow-2xs' : 'text-slate-600 hover:text-slate-900'}`}
+                className={`px-3 py-1.5 rounded transition-colors ${typeFilter === 'all' ? 'bg-[#1E293B] bg-opacity-70 backdrop-blur-md text-white shadow-2xs' : 'text-slate-500 hover:text-white'}`}
               >
                 Tất cả loại ({invoices.length})
               </button>
               <button
                 onClick={() => setTypeFilter('Order')}
-                className={`px-3 py-1.5 rounded transition-colors ${typeFilter === 'Order' ? 'bg-white text-blue-700 shadow-2xs' : 'text-slate-600 hover:text-slate-900'}`}
+                className={`px-3 py-1.5 rounded transition-colors ${typeFilter === 'Order' ? 'bg-[#1E293B] bg-opacity-70 backdrop-blur-md text-blue-300 shadow-2xs' : 'text-slate-500 hover:text-white'}`}
               >
                 Mua dịch vụ ({stats.orderCount})
               </button>
               <button
                 onClick={() => setTypeFilter('TopUp')}
-                className={`px-3 py-1.5 rounded transition-colors ${typeFilter === 'TopUp' ? 'bg-white text-purple-700 shadow-2xs' : 'text-slate-600 hover:text-slate-900'}`}
+                className={`px-3 py-1.5 rounded transition-colors ${typeFilter === 'TopUp' ? 'bg-[#1E293B] bg-opacity-70 backdrop-blur-md text-purple-700 shadow-2xs' : 'text-slate-500 hover:text-white'}`}
               >
                 Nạp tiền ví ({stats.topUpCount})
               </button>
             </div>
 
             {/* Status filters */}
-            <div className="flex items-center bg-slate-100 p-1 rounded-md text-xs font-bold">
+            <div className="flex items-center bg-white/10 p-1 rounded-md text-xs font-bold">
               <button
                 onClick={() => setStatusFilter('all')}
-                className={`px-3 py-1.5 rounded transition-colors ${statusFilter === 'all' ? 'bg-white text-slate-900 shadow-2xs' : 'text-slate-600 hover:text-slate-900'}`}
+                className={`px-3 py-1.5 rounded transition-colors ${statusFilter === 'all' ? 'bg-[#1E293B] bg-opacity-70 backdrop-blur-md text-white shadow-2xs' : 'text-slate-500 hover:text-white'}`}
               >
                 Tất cả
               </button>
               <button
                 onClick={() => setStatusFilter('paid')}
-                className={`px-3 py-1.5 rounded transition-colors ${statusFilter === 'paid' ? 'bg-white text-emerald-700 shadow-2xs' : 'text-slate-600 hover:text-slate-900'}`}
+                className={`px-3 py-1.5 rounded transition-colors ${statusFilter === 'paid' ? 'bg-[#1E293B] bg-opacity-70 backdrop-blur-md text-emerald-700 shadow-2xs' : 'text-slate-500 hover:text-white'}`}
               >
                 Đã thanh toán
               </button>
               <button
                 onClick={() => setStatusFilter('pending')}
-                className={`px-3 py-1.5 rounded transition-colors ${statusFilter === 'pending' ? 'bg-white text-amber-700 shadow-2xs' : 'text-slate-600 hover:text-slate-900'}`}
+                className={`px-3 py-1.5 rounded transition-colors ${statusFilter === 'pending' ? 'bg-[#1E293B] bg-opacity-70 backdrop-blur-md text-amber-700 shadow-2xs' : 'text-slate-500 hover:text-white'}`}
               >
                 Chờ thanh toán
               </button>
@@ -346,22 +346,22 @@ export default function AdminInvoicesPage() {
 
           {/* Search box */}
           <div className="relative w-full md:w-80">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Tìm theo mã HĐ, tên khách, email..."
-              className="w-full pl-9 pr-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-md focus:bg-white focus:border-[#1F1F1F] outline-none"
+              className="w-full pl-9 pr-3 py-2 text-xs bg-[#0F172A] border border-white/10 rounded-md focus:bg-[#1E293B] bg-opacity-70 backdrop-blur-md focus:border-[#1F1F1F] outline-none"
             />
           </div>
         </div>
 
         {/* Invoices Master Table */}
-        <div className="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden">
+        <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-lg border border-white/10 shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs text-slate-600">
-              <thead className="bg-[#f8fafc] border-b border-slate-200 text-slate-700 font-bold uppercase tracking-wider text-[11px]">
+            <table className="w-full text-left text-xs text-slate-500">
+              <thead className="bg-[#f8fafc] border-b border-white/10 text-slate-200 font-bold uppercase tracking-wider text-[11px]">
                 <tr>
                   <th className="p-4">Mã Hóa Đơn</th>
                   <th className="p-4">Loại</th>
@@ -373,15 +373,15 @@ export default function AdminInvoicesPage() {
                   <th className="p-4 text-right">Thao tác</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-white/10">
                 {filteredInvoices.length === 0 ? (
                   <tr>
                     <td colSpan={8} className="p-12 text-center text-slate-500">
-                      <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-3 text-slate-400">
+                      <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center mx-auto mb-3 text-slate-500">
                         <FileText className="w-6 h-6" />
                       </div>
-                      <p className="font-bold text-slate-700">Không tìm thấy hóa đơn nào</p>
-                      <p className="text-xs text-slate-400 mt-0.5">Thử thay đổi bộ lọc hoặc từ khóa tìm kiếm</p>
+                      <p className="font-bold text-slate-200">Không tìm thấy hóa đơn nào</p>
+                      <p className="text-xs text-slate-500 mt-0.5">Thử thay đổi bộ lọc hoặc từ khóa tìm kiếm</p>
                     </td>
                   </tr>
                 ) : (
@@ -390,8 +390,8 @@ export default function AdminInvoicesPage() {
                     const isTopUp = inv.type === 'TopUp';
 
                     return (
-                      <tr key={inv.id} className="hover:bg-slate-50/70 transition-colors">
-                        <td className="p-4 font-mono font-bold text-slate-900">
+                      <tr key={inv.id} className="hover:bg-[#0F172A]/70 transition-colors">
+                        <td className="p-4 font-mono font-bold text-white">
                           {inv.invoiceNumber}
                         </td>
 
@@ -399,7 +399,7 @@ export default function AdminInvoicesPage() {
                           <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
                             isTopUp 
                               ? 'bg-purple-50 text-purple-700 border border-purple-200/60' 
-                              : 'bg-blue-50 text-blue-700 border border-blue-200/60'
+                              : 'bg-blue-900/30 text-blue-300 border border-blue-200/60'
                           }`}>
                             {isTopUp ? <Wallet className="w-3 h-3" /> : <ShoppingCart className="w-3 h-3" />}
                             {isTopUp ? 'Nạp tiền ví' : 'Mua dịch vụ'}
@@ -407,11 +407,11 @@ export default function AdminInvoicesPage() {
                         </td>
 
                         <td className="p-4">
-                          <p className="font-bold text-slate-900">{inv.customerName}</p>
-                          <p className="text-[11px] text-slate-400">{inv.customerEmail}</p>
+                          <p className="font-bold text-white">{inv.customerName}</p>
+                          <p className="text-[11px] text-slate-500">{inv.customerEmail}</p>
                         </td>
 
-                        <td className="p-4 text-slate-600">
+                        <td className="p-4 text-slate-500">
                           {new Date(inv.issuedAt).toLocaleString('vi-VN', {
                             day: '2-digit',
                             month: '2-digit',
@@ -421,11 +421,11 @@ export default function AdminInvoicesPage() {
                           })}
                         </td>
 
-                        <td className="p-4 font-black text-slate-900 text-sm">
+                        <td className="p-4 font-black text-white text-sm">
                           {inv.amount?.toLocaleString('vi-VN')} đ
                         </td>
 
-                        <td className="p-4 text-[11px] text-slate-600 max-w-[180px] truncate">
+                        <td className="p-4 text-[11px] text-slate-500 max-w-[180px] truncate">
                           {inv.paymentMethod}
                         </td>
 
@@ -435,7 +435,7 @@ export default function AdminInvoicesPage() {
                               <CheckCircle2 className="w-3.5 h-3.5" /> Đã thanh toán
                             </span>
                           ) : inv.status?.toLowerCase() === 'cancelled' ? (
-                            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-slate-100 text-slate-600">
+                            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-white/10 text-slate-500">
                               <XCircle className="w-3.5 h-3.5" /> Đã hủy
                             </span>
                           ) : (
@@ -448,7 +448,7 @@ export default function AdminInvoicesPage() {
                         <td className="p-4 text-right space-x-1.5 whitespace-nowrap">
                           <button
                             onClick={() => handleOpenReceipt(inv)}
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-slate-100 hover:bg-[#1F1F1F] hover:text-white font-bold text-slate-700 transition-all shadow-2xs text-[11px]"
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-white/10 hover:bg-[#1F1F1F] hover:text-white font-bold text-slate-200 transition-all shadow-2xs text-[11px]"
                             title="Xem hóa đơn chi tiết"
                           >
                             <Eye className="w-3.5 h-3.5" />
@@ -476,25 +476,25 @@ export default function AdminInvoicesPage() {
       {/* Modal Tạo Hóa Đơn Mới */}
       {isCreating && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl max-w-md w-full p-6 shadow-2xl animate-in fade-in zoom-in-95">
-            <h3 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
-              <FileText className="w-5 h-5 text-blue-600" />
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-xl max-w-md w-full p-6 shadow-2xl animate-in fade-in zoom-in-95">
+            <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+              <FileText className="w-5 h-5 text-blue-400" />
               Lập Hóa Đơn Mới
             </h3>
             <form onSubmit={handleCreateInvoice} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Tên Khách Hàng</label>
+                <label className="block text-xs font-bold text-slate-200 mb-1">Tên Khách Hàng</label>
                 <input
                   type="text"
                   required
                   placeholder="Công ty TNHH Giải Pháp Số"
                   value={createForm.customerName}
                   onChange={(e) => setCreateForm({ ...createForm, customerName: e.target.value })}
-                  className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  className="w-full text-sm border border-white/20 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 />
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Số Tiền Hóa Đơn (VNĐ)</label>
+                <label className="block text-xs font-bold text-slate-200 mb-1">Số Tiền Hóa Đơn (VNĐ)</label>
                 <input
                   type="number"
                   required
@@ -502,14 +502,14 @@ export default function AdminInvoicesPage() {
                   step="1000"
                   value={createForm.amount}
                   onChange={(e) => setCreateForm({ ...createForm, amount: Number(e.target.value) })}
-                  className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  className="w-full text-sm border border-white/20 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 />
               </div>
               <div className="flex justify-end gap-2 pt-3 border-t border-slate-100">
                 <button
                   type="button"
                   onClick={() => setIsCreating(false)}
-                  className="px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded"
+                  className="px-4 py-2 text-xs font-bold text-slate-500 hover:bg-white/10 rounded"
                 >
                   Hủy
                 </button>

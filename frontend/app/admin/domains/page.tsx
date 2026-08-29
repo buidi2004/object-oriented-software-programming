@@ -204,7 +204,7 @@ export default function AdminDomainsPage() {
   });
 
   return (
-    <div className="min-h-screen bg-slate-50 py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#0F172A] py-8 px-4 sm:px-6 lg:px-8">
       {/* Toast */}
       {toast && (
         <div className={`fixed bottom-5 right-5 z-50 px-5 py-3 rounded shadow-xl text-white font-semibold text-sm flex items-center gap-2.5 animate-in slide-in-from-bottom-5 ${
@@ -219,26 +219,26 @@ export default function AdminDomainsPage() {
         {/* Navigation */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div>
-            <Link href="/admin" className="text-xs font-bold text-slate-600 hover:text-[#1F1F1F] flex items-center gap-1 mb-2">
+            <Link href="/admin" className="text-xs font-bold text-slate-500 hover:text-[#1F1F1F] flex items-center gap-1 mb-2">
               <ArrowLeft className="w-3.5 h-3.5" /> Quay lại Admin Panel
             </Link>
-            <h1 className="text-2xl font-black text-slate-900 flex items-center gap-2.5">
+            <h1 className="text-2xl font-black text-white flex items-center gap-2.5">
               <Globe className="w-6 h-6 text-[#1F1F1F]" /> Quản Lý Tên Miền &amp; Bản Ghi DNS (Domains)
             </h1>
-            <p className="text-xs text-slate-600 mt-0.5">
+            <p className="text-xs text-slate-500 mt-0.5">
               Quản lý danh sách tên miền khách hàng, ngày hết hạn, mã EPP Auth Code và khóa chuyển nhượng.
             </p>
           </div>
 
           <div className="flex items-center gap-3">
             <div className="relative">
-              <Search className="w-4 h-4 text-slate-600 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Search className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 placeholder="Tìm tên miền / email / registrar..."
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                className="pl-9 pr-4 py-2.5 rounded bg-white border border-slate-200 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm w-64"
+                className="pl-9 pr-4 py-2.5 rounded bg-[#1E293B] bg-opacity-70 backdrop-blur-md border border-white/10 text-xs text-white focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm w-64"
               />
             </div>
             <button
@@ -275,7 +275,7 @@ export default function AdminDomainsPage() {
               className={`px-4 py-2 rounded text-xs font-semibold transition-colors ${
                 filter === tab.id
                   ? 'bg-blue-600 text-white shadow-sm'
-                  : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200'
+                  : 'bg-[#1E293B] bg-opacity-70 backdrop-blur-md text-slate-500 hover:bg-[#0F172A] border border-white/10'
               }`}
             >
               {tab.label}
@@ -284,10 +284,10 @@ export default function AdminDomainsPage() {
         </div>
 
         {/* Domains Table */}
-        <div className="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden mb-8">
+        <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-lg border border-white/10 shadow-sm overflow-hidden mb-8">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold uppercase tracking-wider">
+              <thead className="bg-[#0F172A] border-b border-white/10 text-slate-500 font-bold uppercase tracking-wider">
                 <tr>
                   <th className="py-4 px-6">Tên Miền</th>
                   <th className="py-4 px-6">Chủ Sở Hữu</th>
@@ -297,20 +297,20 @@ export default function AdminDomainsPage() {
                   <th className="py-4 px-6 text-right">Thao Tác</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-white/10">
                 {filtered.map((dom) => (
-                  <tr key={dom.id} className="hover:bg-slate-50/80 transition-colors">
-                    <td className="py-4 px-6 font-bold text-slate-900">
+                  <tr key={dom.id} className="hover:bg-[#0F172A]/80 transition-colors">
+                    <td className="py-4 px-6 font-bold text-white">
                       <div className="flex items-center gap-2">
                         <Globe className="w-4 h-4 text-[#1F1F1F]" />
                         <span>{dom.domainName}</span>
                       </div>
                     </td>
-                    <td className="py-4 px-6 text-slate-600 font-mono">{dom.ownerEmail}</td>
-                    <td className="py-4 px-6 text-slate-600">{dom.registrar}</td>
+                    <td className="py-4 px-6 text-slate-500 font-mono">{dom.ownerEmail}</td>
+                    <td className="py-4 px-6 text-slate-500">{dom.registrar}</td>
                     <td className="py-4 px-6">
-                      <div className="flex items-center gap-1.5 text-slate-700 font-medium">
-                        <Calendar className="w-3.5 h-3.5 text-slate-600" />
+                      <div className="flex items-center gap-1.5 text-slate-200 font-medium">
+                        <Calendar className="w-3.5 h-3.5 text-slate-500" />
                         {new Date(dom.expiryDate).toLocaleDateString('vi-VN')}
                       </div>
                     </td>
@@ -332,20 +332,20 @@ export default function AdminDomainsPage() {
                       <div className="flex items-center justify-end gap-1.5">
                         <button
                           onClick={() => setSelectedEpp({ domain: dom.domainName, code: dom.eppCode })}
-                          className="px-2.5 py-1.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[11px] flex items-center gap-1 transition-colors"
+                          className="px-2.5 py-1.5 rounded bg-white/10 hover:bg-white/20 text-slate-200 font-bold text-[11px] flex items-center gap-1 transition-colors"
                         >
-                          <Key className="w-3 h-3 text-slate-600" /> Mã EPP
+                          <Key className="w-3 h-3 text-slate-500" /> Mã EPP
                         </button>
                         <button
                           onClick={() => handleOpenEdit(dom)}
-                          className="p-1.5 text-slate-600 hover:text-[#1F1F1F] hover:bg-blue-50 rounded-sm transition-colors"
+                          className="p-1.5 text-slate-500 hover:text-[#1F1F1F] hover:bg-blue-900/30 rounded-sm transition-colors"
                           title="Sửa cấu hình"
                         >
                           <Edit2 className="w-3.5 h-3.5" />
                         </button>
                         <button
                           onClick={() => handleDelete(dom.id, dom.domainName)}
-                          className="p-1.5 text-slate-600 hover:text-rose-600 hover:bg-rose-50 rounded-sm transition-colors"
+                          className="p-1.5 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-sm transition-colors"
                           title="Xóa tên miền"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
@@ -361,27 +361,27 @@ export default function AdminDomainsPage() {
 
         {/* EPP Modal */}
         {selectedEpp && (
-          <div className="fixed inset-0 bg-white/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-lg p-6 max-w-sm w-full border border-slate-200 shadow-2xl">
+          <div className="fixed inset-0 bg-[#1E293B] bg-opacity-70 backdrop-blur-md/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-lg p-6 max-w-sm w-full border border-white/10 shadow-2xl">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-base font-black text-slate-900">Mã EPP Auth Code</h2>
-                <button onClick={() => setSelectedEpp(null)} className="p-1.5 text-slate-600 hover:text-slate-600 rounded-sm hover:bg-slate-100">
+                <h2 className="text-base font-black text-white">Mã EPP Auth Code</h2>
+                <button onClick={() => setSelectedEpp(null)} className="p-1.5 text-slate-500 hover:text-slate-500 rounded-sm hover:bg-white/10">
                   <X className="w-4 h-4" />
                 </button>
               </div>
-              <p className="text-xs text-slate-600 mb-3">Tên miền: <strong>{selectedEpp.domain}</strong></p>
-              <div className="p-3 bg-slate-50 border border-slate-200 rounded-md flex items-center justify-between font-mono text-xs font-bold text-slate-900 mb-4">
+              <p className="text-xs text-slate-500 mb-3">Tên miền: <strong>{selectedEpp.domain}</strong></p>
+              <div className="p-3 bg-[#0F172A] border border-white/10 rounded-md flex items-center justify-between font-mono text-xs font-bold text-white mb-4">
                 <span>{selectedEpp.code}</span>
                 <button
                   onClick={() => copyEpp(selectedEpp.code)}
-                  className="p-1 text-slate-600 hover:text-[#1F1F1F] rounded-sm hover:bg-white transition-colors"
+                  className="p-1 text-slate-500 hover:text-[#1F1F1F] rounded-sm hover:bg-[#1E293B] bg-opacity-70 backdrop-blur-md transition-colors"
                 >
                   {copiedCode ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
                 </button>
               </div>
               <button
                 onClick={() => setSelectedEpp(null)}
-                className="w-full py-2.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold"
+                className="w-full py-2.5 rounded bg-white/10 hover:bg-white/20 text-slate-200 text-xs font-bold"
               >
                 Đóng
               </button>
@@ -391,20 +391,20 @@ export default function AdminDomainsPage() {
 
         {/* Add / Edit Modal */}
         {(showAddModal || editingDomain) && (
-          <div className="fixed inset-0 bg-white/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-lg p-6 sm:p-8 max-w-lg w-full border border-slate-200 shadow-2xl">
+          <div className="fixed inset-0 bg-[#1E293B] bg-opacity-70 backdrop-blur-md/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-lg p-6 sm:p-8 max-w-lg w-full border border-white/10 shadow-2xl">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-base font-black text-slate-900">
+                <h2 className="text-base font-black text-white">
                   {editingDomain ? 'Cấu Hình Tên Miền' : 'Đăng Ký / Thêm Tên Miền Mới'}
                 </h2>
-                <button onClick={() => { setShowAddModal(false); setEditingDomain(null); }} className="p-1.5 text-slate-600 hover:text-slate-600 rounded-sm hover:bg-slate-100">
+                <button onClick={() => { setShowAddModal(false); setEditingDomain(null); }} className="p-1.5 text-slate-500 hover:text-slate-500 rounded-sm hover:bg-white/10">
                   <X className="w-5 h-5" />
                 </button>
               </div>
 
               <form onSubmit={editingDomain ? handleUpdate : handleCreate} className="space-y-3">
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Tên Miền</label>
+                  <label className="block text-xs font-bold text-slate-200 mb-1">Tên Miền</label>
                   <input
                     type="text"
                     required
@@ -412,29 +412,29 @@ export default function AdminDomainsPage() {
                     value={formData.domainName}
                     onChange={e => setFormData({ ...formData, domainName: e.target.value })}
                     placeholder="example.vn"
-                    className="w-full px-3 py-2 text-xs rounded border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none font-mono disabled:bg-slate-100"
+                    className="w-full px-3 py-2 text-xs rounded border border-white/10 focus:ring-2 focus:ring-blue-500 outline-none font-mono disabled:bg-white/10"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Email Chủ Sở Hữu</label>
+                  <label className="block text-xs font-bold text-slate-200 mb-1">Email Chủ Sở Hữu</label>
                   <input
                     type="email"
                     required
                     value={formData.ownerEmail}
                     onChange={e => setFormData({ ...formData, ownerEmail: e.target.value })}
                     placeholder="customer@domain.com"
-                    className="w-full px-3 py-2 text-xs rounded border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none"
+                    className="w-full px-3 py-2 text-xs rounded border border-white/10 focus:ring-2 focus:ring-blue-500 outline-none"
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1">Nhà Đăng Ký (Registrar)</label>
+                    <label className="block text-xs font-bold text-slate-200 mb-1">Nhà Đăng Ký (Registrar)</label>
                     <select
                       value={formData.registrar}
                       onChange={e => setFormData({ ...formData, registrar: e.target.value })}
-                      className="w-full px-3 py-2 text-xs rounded border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none bg-white"
+                      className="w-full px-3 py-2 text-xs rounded border border-white/10 focus:ring-2 focus:ring-blue-500 outline-none bg-[#1E293B] bg-opacity-70 backdrop-blur-md"
                     >
                       <option value="VNNIC / PA Vietnam">VNNIC / PA Vietnam</option>
                       <option value="VNNIC / Mat Bao">VNNIC / Mắt Bão</option>
@@ -444,7 +444,7 @@ export default function AdminDomainsPage() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1">Thời Hạn (Năm)</label>
+                    <label className="block text-xs font-bold text-slate-200 mb-1">Thời Hạn (Năm)</label>
                     <input
                       type="number"
                       required
@@ -453,24 +453,24 @@ export default function AdminDomainsPage() {
                       disabled={!!editingDomain}
                       value={formData.years}
                       onChange={e => setFormData({ ...formData, years: e.target.value })}
-                      className="w-full px-3 py-2 text-xs rounded border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none disabled:bg-slate-100"
+                      className="w-full px-3 py-2 text-xs rounded border border-white/10 focus:ring-2 focus:ring-blue-500 outline-none disabled:bg-white/10"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Nameservers (DNS)</label>
+                  <label className="block text-xs font-bold text-slate-200 mb-1">Nameservers (DNS)</label>
                   <input
                     type="text"
                     value={formData.nameservers}
                     onChange={e => setFormData({ ...formData, nameservers: e.target.value })}
                     placeholder="ns1.cloudhost.vn, ns2.cloudhost.vn"
-                    className="w-full px-3 py-2 text-xs rounded border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none font-mono"
+                    className="w-full px-3 py-2 text-xs rounded border border-white/10 focus:ring-2 focus:ring-blue-500 outline-none font-mono"
                   />
                 </div>
 
                 <div className="flex items-center gap-4 pt-2">
-                  <label className="flex items-center gap-2 text-xs font-bold text-slate-700 cursor-pointer">
+                  <label className="flex items-center gap-2 text-xs font-bold text-slate-200 cursor-pointer">
                     <input
                       type="checkbox"
                       checked={formData.autoRenew}
@@ -479,7 +479,7 @@ export default function AdminDomainsPage() {
                     />
                     Tự động gia hạn (Auto-Renew)
                   </label>
-                  <label className="flex items-center gap-2 text-xs font-bold text-slate-700 cursor-pointer">
+                  <label className="flex items-center gap-2 text-xs font-bold text-slate-200 cursor-pointer">
                     <input
                       type="checkbox"
                       checked={formData.transferLock}
@@ -494,7 +494,7 @@ export default function AdminDomainsPage() {
                   <button
                     type="button"
                     onClick={() => { setShowAddModal(false); setEditingDomain(null); }}
-                    className="px-4 py-2.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold"
+                    className="px-4 py-2.5 rounded bg-white/10 hover:bg-white/20 text-slate-200 text-xs font-bold"
                   >
                     Hủy
                   </button>

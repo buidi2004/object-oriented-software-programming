@@ -176,7 +176,7 @@ export default function AdminKnowledgeBasePage() {
           setContent(prev => prev + imgSnippet);
           setUploadSuccess(`Đã tải lên hình ảnh ${file.name} và tự động chèn vào bài viết!`);
         } else {
-          const fileSnippet = `\n<a href="${fileUrl}" target="_blank" download class="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-700 rounded-lg border border-blue-200 font-bold text-xs my-2">📥 Tải file đính kèm: ${file.name}</a>\n`;
+          const fileSnippet = `\n<a href="${fileUrl}" target="_blank" download class="inline-flex items-center gap-2 px-4 py-2 bg-blue-900/30 text-blue-300 rounded-lg border border-blue-200 font-bold text-xs my-2">📥 Tải file đính kèm: ${file.name}</a>\n`;
           setContent(prev => prev + fileSnippet);
           setUploadSuccess(`Đã tải lên tệp tin ${file.name} và chèn link tải vào bài viết!`);
         }
@@ -268,22 +268,22 @@ export default function AdminKnowledgeBasePage() {
   const draftCount = articles.filter(a => !a.isPublished).length;
 
   return (
-    <div className="min-h-screen bg-slate-50 p-4 sm:p-6 lg:p-8 font-sans">
+    <div className="min-h-screen bg-[#0F172A] p-4 sm:p-6 lg:p-8 font-sans">
       <div className="max-w-7xl mx-auto space-y-6">
         
         {/* Header Bar */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-200 shadow-2xs">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#1E293B] bg-opacity-70 backdrop-blur-md p-6 rounded-2xl border border-white/10 shadow-2xs">
           <div className="flex items-center gap-3">
             <Link 
               href="/admin" 
-              className="p-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-600 hover:text-slate-900 transition-colors shadow-2xs"
+              className="p-2.5 rounded-xl border border-white/10 hover:bg-[#0F172A] text-slate-500 hover:text-white transition-colors shadow-2xs"
             >
               <ArrowLeft className="w-5 h-5" />
             </Link>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-xl sm:text-2xl font-black text-slate-900">Quản Lý Thư Viện Tài Liệu (Knowledge Base)</h1>
-                <span className="px-2.5 py-0.5 text-xs font-bold bg-blue-100 text-blue-800 rounded-full">CRM Docs</span>
+                <h1 className="text-xl sm:text-2xl font-black text-white">Quản Lý Thư Viện Tài Liệu (Knowledge Base)</h1>
+                <span className="px-2.5 py-0.5 text-xs font-bold bg-blue-900/50 text-blue-800 rounded-full">CRM Docs</span>
               </div>
               <p className="text-xs text-slate-500 mt-0.5">Soạn thảo, quản lý bài viết hướng dẫn kỹ thuật, đính kèm file và hình ảnh minh họa</p>
             </div>
@@ -292,7 +292,7 @@ export default function AdminKnowledgeBasePage() {
           <div className="flex items-center gap-2">
             <button
               onClick={handleSeedArticles}
-              className="px-4 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs transition-all shadow-2xs flex items-center gap-2 cursor-pointer"
+              className="px-4 py-2.5 rounded-xl border border-white/10 bg-[#1E293B] bg-opacity-70 backdrop-blur-md hover:bg-[#0F172A] text-slate-200 font-bold text-xs transition-all shadow-2xs flex items-center gap-2 cursor-pointer"
               title="Khôi phục hoặc tiêm 6 bài viết chuẩn vào CSDL"
             >
               <RefreshCw className="w-4 h-4 text-indigo-600" />
@@ -302,7 +302,7 @@ export default function AdminKnowledgeBasePage() {
             <Link
               href="/knowledge-base"
               target="_blank"
-              className="px-4 py-2.5 rounded-xl border border-blue-200 bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold text-xs transition-all shadow-2xs flex items-center gap-2"
+              className="px-4 py-2.5 rounded-xl border border-blue-200 bg-blue-900/30 hover:bg-blue-900/50 text-blue-300 font-bold text-xs transition-all shadow-2xs flex items-center gap-2"
             >
               <ExternalLink className="w-4 h-4" />
               <span>Xem Trang Khách</span>
@@ -320,17 +320,17 @@ export default function AdminKnowledgeBasePage() {
 
         {/* 4 KPI Summary Cards */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md p-5 rounded-2xl border border-white/10 shadow-2xs flex items-center gap-4">
+            <div className="w-12 h-12 rounded-xl bg-blue-900/30 text-blue-400 flex items-center justify-center shrink-0">
               <FileText className="w-6 h-6" />
             </div>
             <div>
-              <div className="text-2xl font-black text-slate-900">{articles.length}</div>
+              <div className="text-2xl font-black text-white">{articles.length}</div>
               <div className="text-xs text-slate-500 font-medium">Tổng Bài Viết</div>
             </div>
           </div>
 
-          <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs flex items-center gap-4">
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md p-5 rounded-2xl border border-white/10 shadow-2xs flex items-center gap-4">
             <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
               <CheckCircle2 className="w-6 h-6" />
             </div>
@@ -340,7 +340,7 @@ export default function AdminKnowledgeBasePage() {
             </div>
           </div>
 
-          <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs flex items-center gap-4">
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md p-5 rounded-2xl border border-white/10 shadow-2xs flex items-center gap-4">
             <div className="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
               <AlertCircle className="w-6 h-6" />
             </div>
@@ -350,7 +350,7 @@ export default function AdminKnowledgeBasePage() {
             </div>
           </div>
 
-          <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs flex items-center gap-4">
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md p-5 rounded-2xl border border-white/10 shadow-2xs flex items-center gap-4">
             <div className="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center shrink-0">
               <Eye className="w-6 h-6" />
             </div>
@@ -362,7 +362,7 @@ export default function AdminKnowledgeBasePage() {
         </div>
 
         {/* Filter and Search Bar */}
-        <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-2xs flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md p-4 rounded-2xl border border-white/10 shadow-2xs flex flex-col sm:flex-row items-center justify-between gap-4">
           
           {/* Category Tabs */}
           <div className="flex flex-wrap items-center gap-1.5 w-full sm:w-auto">
@@ -371,7 +371,7 @@ export default function AdminKnowledgeBasePage() {
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                 selectedCategory === 'all'
                   ? 'bg-blue-600 text-white shadow-xs'
-                  : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                  : 'bg-white/10 text-slate-200 hover:bg-white/20'
               }`}
             >
               Tất Cả ({articles.length})
@@ -383,7 +383,7 @@ export default function AdminKnowledgeBasePage() {
                 className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                   selectedCategory === cat
                     ? 'bg-blue-600 text-white shadow-xs'
-                    : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                    : 'bg-white/10 text-slate-200 hover:bg-white/20'
                 }`}
               >
                 {cat}
@@ -393,20 +393,20 @@ export default function AdminKnowledgeBasePage() {
 
           {/* Search Input */}
           <div className="relative w-full sm:w-72">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               placeholder="Tìm theo tiêu đề, slug, tag..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full pl-9 pr-4 py-2 rounded-xl bg-[#0F172A] border border-white/10 text-xs text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
         </div>
 
         {/* Articles Table */}
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-2xs overflow-hidden">
+        <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-2xl border border-white/10 shadow-2xs overflow-hidden">
           {isLoading ? (
             <div className="p-12 text-center text-slate-500 text-xs flex flex-col items-center gap-3">
               <div className="w-8 h-8 border-3 border-blue-600 border-t-transparent rounded-full animate-spin" />
@@ -418,15 +418,15 @@ export default function AdminKnowledgeBasePage() {
               <p>Chưa có bài viết nào phù hợp với bộ lọc.</p>
               <button
                 onClick={handleSeedArticles}
-                className="px-4 py-2 bg-blue-50 text-blue-700 font-bold text-xs rounded-xl border border-blue-200 hover:bg-blue-100 transition-colors inline-flex items-center gap-1.5"
+                className="px-4 py-2 bg-blue-900/30 text-blue-300 font-bold text-xs rounded-xl border border-blue-200 hover:bg-blue-900/50 transition-colors inline-flex items-center gap-1.5"
               >
                 <Sparkles className="w-3.5 h-3.5" /> Tiêm 6 Bài Viết Chuẩn Vào CSDL
               </button>
             </div>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs text-slate-600">
-                <thead className="bg-slate-50 border-b border-slate-200 text-slate-700 font-black uppercase text-[11px] tracking-wider">
+              <table className="w-full text-left text-xs text-slate-500">
+                <thead className="bg-[#0F172A] border-b border-white/10 text-slate-200 font-black uppercase text-[11px] tracking-wider">
                   <tr>
                     <th className="py-3.5 px-4">Bài Viết &amp; Tiêu Đề</th>
                     <th className="py-3.5 px-4">Chuyên Mục</th>
@@ -435,21 +435,21 @@ export default function AdminKnowledgeBasePage() {
                     <th className="py-3.5 px-4 text-right">Thao Tác</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-white/10">
                   {filteredArticles.map((art) => (
-                    <tr key={art.id} className="hover:bg-slate-50/80 transition-colors">
+                    <tr key={art.id} className="hover:bg-[#0F172A]/80 transition-colors">
                       <td className="py-4 px-4">
-                        <div className="font-bold text-slate-900 text-sm">{art.title}</div>
-                        <div className="text-[11px] font-mono text-slate-400 mt-0.5">slug: {art.slug}</div>
+                        <div className="font-bold text-white text-sm">{art.title}</div>
+                        <div className="text-[11px] font-mono text-slate-500 mt-0.5">slug: {art.slug}</div>
                       </td>
 
                       <td className="py-4 px-4">
-                        <span className="px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 font-bold text-[11px] border border-blue-200/60">
+                        <span className="px-2.5 py-1 rounded-lg bg-blue-900/30 text-blue-300 font-bold text-[11px] border border-blue-200/60">
                           {art.categoryTag || 'VPS'}
                         </span>
                       </td>
 
-                      <td className="py-4 px-4 text-center font-mono font-bold text-slate-700">
+                      <td className="py-4 px-4 text-center font-mono font-bold text-slate-200">
                         {(art.viewCount || 0).toLocaleString()}
                       </td>
 
@@ -470,7 +470,7 @@ export default function AdminKnowledgeBasePage() {
                           <Link
                             href={`/knowledge-base/${art.id}`}
                             target="_blank"
-                            className="p-2 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                            className="p-2 text-slate-500 hover:text-blue-400 hover:bg-blue-900/30 rounded-lg transition-colors"
                             title="Xem trang khách hàng"
                           >
                             <ExternalLink className="w-4 h-4" />
@@ -506,12 +506,12 @@ export default function AdminKnowledgeBasePage() {
       {/* Modal: Create / Edit Article */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in">
-          <div className="bg-white rounded-3xl border border-slate-200 shadow-2xl max-w-3xl w-full p-6 sm:p-8 space-y-6 max-h-[90vh] overflow-y-auto">
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-3xl border border-white/10 shadow-2xl max-w-3xl w-full p-6 sm:p-8 space-y-6 max-h-[90vh] overflow-y-auto">
             
             <div className="flex items-center justify-between border-b border-slate-100 pb-4">
               <div>
-                <h3 className="text-lg font-black text-slate-900 flex items-center gap-2">
-                  <FileText className="w-5 h-5 text-blue-600" />
+                <h3 className="text-lg font-black text-white flex items-center gap-2">
+                  <FileText className="w-5 h-5 text-blue-400" />
                   <span>{editingArticle ? 'Chỉnh Sửa Bài Viết' : 'Tạo Bài Viết Hướng Dẫn Mới'}</span>
                 </h3>
                 <p className="text-xs text-slate-500 mt-0.5">Tích hợp upload hình ảnh, file đính kèm và định dạng HTML/Markdown</p>
@@ -519,7 +519,7 @@ export default function AdminKnowledgeBasePage() {
 
               <button 
                 onClick={() => setShowModal(false)}
-                className="p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-full transition-colors cursor-pointer"
+                className="p-2 text-slate-500 hover:text-slate-200 hover:bg-white/10 rounded-full transition-colors cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -535,36 +535,36 @@ export default function AdminKnowledgeBasePage() {
             <form onSubmit={handleSave} className="space-y-4">
               
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Tiêu Đề Bài Viết *</label>
+                <label className="block text-xs font-bold text-slate-200 mb-1">Tiêu Đề Bài Viết *</label>
                 <input
                   type="text"
                   required
                   placeholder="Ví dụ: Hướng Dẫn Cấu Hình SSL Nginx Let's Encrypt Tự Động"
                   value={title}
                   onChange={handleTitleChange}
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-900 font-bold focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-2.5 rounded-xl bg-[#0F172A] border border-white/10 text-xs text-white font-bold focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Đường Dẫn Slug URL *</label>
+                  <label className="block text-xs font-bold text-slate-200 mb-1">Đường Dẫn Slug URL *</label>
                   <input
                     type="text"
                     required
                     placeholder="huong-dan-cau-hinh-ssl-nginx"
                     value={slug}
                     onChange={(e) => setSlug(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-mono text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-2.5 rounded-xl bg-[#0F172A] border border-white/10 text-xs font-mono text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Chuyên Mục Kỹ Thuật</label>
+                  <label className="block text-xs font-bold text-slate-200 mb-1">Chuyên Mục Kỹ Thuật</label>
                   <select
                     value={categoryTag}
                     onChange={(e) => setCategoryTag(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-2.5 rounded-xl bg-[#0F172A] border border-white/10 text-xs font-bold text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     {CATEGORIES.map((c, i) => (
                       <option key={i} value={c}>{c}</option>
@@ -574,9 +574,9 @@ export default function AdminKnowledgeBasePage() {
               </div>
 
               {/* Upload Attachment & Image Bar */}
-              <div className="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 flex flex-wrap items-center justify-between gap-3">
+              <div className="bg-[#0F172A] p-3.5 rounded-2xl border border-white/10 flex flex-wrap items-center justify-between gap-3">
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-bold text-slate-700">Tải tệp &amp; hình ảnh:</span>
+                  <span className="text-xs font-bold text-slate-200">Tải tệp &amp; hình ảnh:</span>
                   <input
                     type="file"
                     ref={fileInputRef}
@@ -588,21 +588,21 @@ export default function AdminKnowledgeBasePage() {
                     type="button"
                     disabled={uploading}
                     onClick={() => fileInputRef.current?.click()}
-                    className="px-3 py-1.5 bg-white hover:bg-slate-100 text-slate-700 font-bold text-xs rounded-lg border border-slate-200 transition-colors shadow-2xs flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                    className="px-3 py-1.5 bg-[#1E293B] bg-opacity-70 backdrop-blur-md hover:bg-white/10 text-slate-200 font-bold text-xs rounded-lg border border-white/10 transition-colors shadow-2xs flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
                   >
                     {uploading ? (
                       <div className="w-3.5 h-3.5 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
                     ) : (
-                      <ImageIcon className="w-3.5 h-3.5 text-blue-600" />
+                      <ImageIcon className="w-3.5 h-3.5 text-blue-400" />
                     )}
                     <span>{uploading ? 'Đang tải lên...' : 'Tải Ảnh / Tệp Đính Kèm'}</span>
                   </button>
                 </div>
-                <span className="text-[11px] text-slate-400 font-mono">Hỗ trợ JPG, PNG, WebP, PDF, Zip, Config (tối đa 20MB)</span>
+                <span className="text-[11px] text-slate-500 font-mono">Hỗ trợ JPG, PNG, WebP, PDF, Zip, Config (tối đa 20MB)</span>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
+                <label className="block text-xs font-bold text-slate-200 mb-1">
                   Nội Dung Bài Viết (HTML / Markdown) *
                 </label>
                 <textarea
@@ -611,7 +611,7 @@ export default function AdminKnowledgeBasePage() {
                   placeholder="Nhập nội dung bài viết hướng dẫn. Bạn có thể dùng các thẻ HTML như <h3>, <p>, <pre><code>, <img>, <a>..."
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
-                  className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-mono text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 leading-relaxed"
+                  className="w-full px-4 py-3 rounded-2xl bg-[#0F172A] border border-white/10 text-xs font-mono text-white focus:outline-none focus:ring-2 focus:ring-blue-500 leading-relaxed"
                 />
               </div>
 
@@ -621,16 +621,16 @@ export default function AdminKnowledgeBasePage() {
                     type="checkbox"
                     checked={isPublished}
                     onChange={(e) => setIsPublished(e.target.checked)}
-                    className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500 border-slate-300"
+                    className="w-4 h-4 text-blue-400 rounded focus:ring-blue-500 border-white/20"
                   />
-                  <span className="text-xs font-bold text-slate-700">Xuất bản công khai trên website</span>
+                  <span className="text-xs font-bold text-slate-200">Xuất bản công khai trên website</span>
                 </label>
 
                 <div className="flex items-center gap-2">
                   <button
                     type="button"
                     onClick={() => setShowModal(false)}
-                    className="px-4 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 transition-colors"
+                    className="px-4 py-2 rounded-xl text-xs font-bold text-slate-500 hover:bg-white/10 transition-colors"
                   >
                     Hủy
                   </button>

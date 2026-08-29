@@ -157,7 +157,7 @@ export default function AdminBackupsPage() {
   });
 
   return (
-    <div className="min-h-screen bg-slate-50 py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#0F172A] py-8 px-4 sm:px-6 lg:px-8">
       {/* Toast */}
       {toast && (
         <div className={`fixed bottom-5 right-5 z-50 px-5 py-3 rounded shadow-xl text-white font-semibold text-sm flex items-center gap-2.5 animate-in slide-in-from-bottom-5 ${
@@ -172,32 +172,32 @@ export default function AdminBackupsPage() {
         {/* Navigation */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div>
-            <Link href="/admin" className="text-xs font-bold text-slate-600 hover:text-[#1F1F1F] flex items-center gap-1 mb-2">
+            <Link href="/admin" className="text-xs font-bold text-slate-500 hover:text-[#1F1F1F] flex items-center gap-1 mb-2">
               <ArrowLeft className="w-3.5 h-3.5" /> Quay lại Admin Panel
             </Link>
-            <h1 className="text-2xl font-black text-slate-900 flex items-center gap-2.5">
+            <h1 className="text-2xl font-black text-white flex items-center gap-2.5">
               <Database className="w-6 h-6 text-teal-600" /> Quản Lý Sao Lưu Toàn Hệ Thống (Backups &amp; Snapshots)
             </h1>
-            <p className="text-xs text-slate-600 mt-0.5">
+            <p className="text-xs text-slate-500 mt-0.5">
               Theo dõi dung lượng snapshot máy chủ khách hàng, vị trí lưu trữ S3, khôi phục và tải về bản sao lưu.
             </p>
           </div>
 
           <div className="flex items-center gap-3">
             <div className="relative">
-              <Search className="w-4 h-4 text-slate-600 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Search className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 placeholder="Tìm máy chủ / email / storage..."
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                className="pl-9 pr-4 py-2.5 rounded bg-white border border-slate-200 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-teal-500 shadow-sm w-60"
+                className="pl-9 pr-4 py-2.5 rounded bg-[#1E293B] bg-opacity-70 backdrop-blur-md border border-white/10 text-xs text-white focus:outline-none focus:ring-2 focus:ring-teal-500 shadow-sm w-60"
               />
             </div>
             <button
               onClick={() => setShowAddModal(true)}
               disabled={isTriggering}
-              className="px-4 py-2.5 rounded bg-teal-600 hover:bg-teal-700 text-slate-900 font-bold text-xs transition-colors flex items-center gap-1.5 shadow-sm disabled:opacity-50"
+              className="px-4 py-2.5 rounded bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs transition-colors flex items-center gap-1.5 shadow-sm disabled:opacity-50"
             >
               {isTriggering ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
               {isTriggering ? 'Đang Sao Lưu...' : 'Tạo Bản Sao Lưu'}
@@ -219,7 +219,7 @@ export default function AdminBackupsPage() {
               className={`px-4 py-2 rounded text-xs font-semibold transition-colors ${
                 filter === tab.id
                   ? 'bg-teal-600 text-white shadow-sm'
-                  : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200'
+                  : 'bg-[#1E293B] bg-opacity-70 backdrop-blur-md text-slate-500 hover:bg-[#0F172A] border border-white/10'
               }`}
             >
               {tab.label}
@@ -228,10 +228,10 @@ export default function AdminBackupsPage() {
         </div>
 
         {/* Backups Table */}
-        <div className="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden mb-8">
+        <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-lg border border-white/10 shadow-sm overflow-hidden mb-8">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 text-slate-600 font-extrabold uppercase tracking-wider border-b border-slate-100">
+              <thead className="bg-[#0F172A] text-slate-500 font-extrabold uppercase tracking-wider border-b border-slate-100">
                 <tr>
                   <th className="px-6 py-4">Tên Bản Sao Lưu / VPS</th>
                   <th className="px-6 py-4">Chủ Sở Hữu</th>
@@ -241,50 +241,50 @@ export default function AdminBackupsPage() {
                   <th className="px-6 py-4 text-right">Thao Tác</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-white/10">
                 {filtered.map((bk) => (
-                  <tr key={bk.id} className="hover:bg-slate-50/60 transition-colors">
-                    <td className="px-6 py-4 font-bold text-slate-900">
+                  <tr key={bk.id} className="hover:bg-[#0F172A]/60 transition-colors">
+                    <td className="px-6 py-4 font-bold text-white">
                       <div className="flex items-center gap-2">
                         <FileArchive className="w-4 h-4 text-teal-600 shrink-0" />
                         <div>
                           <span>{bk.instanceName}</span>
-                          <span className="block text-[10px] text-slate-600 font-mono">{bk.id}</span>
+                          <span className="block text-[10px] text-slate-500 font-mono">{bk.id}</span>
                         </div>
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-slate-600">{bk.ownerEmail}</td>
-                    <td className="px-6 py-4 font-black text-slate-800">
+                    <td className="px-6 py-4 text-slate-500">{bk.ownerEmail}</td>
+                    <td className="px-6 py-4 font-black text-slate-100">
                       {bk.sizeGb} GB
                     </td>
                     <td className="px-6 py-4">
-                      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-slate-100 text-slate-700">
-                        <HardDrive className="w-3 h-3 text-slate-600" />
+                      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-white/10 text-slate-200">
+                        <HardDrive className="w-3 h-3 text-slate-500" />
                         {bk.storageTarget}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-slate-600">
+                    <td className="px-6 py-4 text-slate-500">
                       {new Date(bk.createdAt).toLocaleString('vi-VN')}
                     </td>
                     <td className="px-6 py-4 text-right">
                       <div className="flex items-center justify-end gap-1.5">
                         <button
                           onClick={() => handleDownloadBackup(bk)}
-                          className="p-1.5 text-slate-600 hover:text-teal-600 hover:bg-teal-50 rounded-sm transition-colors"
+                          className="p-1.5 text-slate-500 hover:text-teal-600 hover:bg-teal-50 rounded-sm transition-colors"
                           title="Tải về tệp .tar.gz"
                         >
                           <Download className="w-3.5 h-3.5" />
                         </button>
                         <button
                           onClick={() => setRestoringBackup(bk)}
-                          className="p-1.5 text-slate-600 hover:text-amber-600 hover:bg-amber-50 rounded-sm transition-colors"
+                          className="p-1.5 text-slate-500 hover:text-amber-600 hover:bg-amber-50 rounded-sm transition-colors"
                           title="Khôi phục hệ thống"
                         >
                           <RotateCcw className="w-3.5 h-3.5" />
                         </button>
                         <button
                           onClick={() => handleDelete(bk.id, bk.instanceName)}
-                          className="p-1.5 text-slate-600 hover:text-rose-600 hover:bg-rose-50 rounded-sm transition-colors"
+                          className="p-1.5 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-sm transition-colors"
                           title="Xóa bản sao lưu"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
@@ -300,33 +300,33 @@ export default function AdminBackupsPage() {
 
         {/* Create Backup Modal */}
         {showAddModal && (
-          <div className="fixed inset-0 bg-white/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-lg p-6 sm:p-8 max-w-md w-full border border-slate-200 shadow-2xl">
+          <div className="fixed inset-0 bg-[#1E293B] bg-opacity-70 backdrop-blur-md/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-lg p-6 sm:p-8 max-w-md w-full border border-white/10 shadow-2xl">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-base font-black text-slate-900">Tạo Bản Sao Lưu Thủ Công</h3>
-                <button onClick={() => setShowAddModal(false)} className="p-1.5 text-slate-600 hover:text-slate-600 rounded-sm hover:bg-slate-100">
+                <h3 className="text-base font-black text-white">Tạo Bản Sao Lưu Thủ Công</h3>
+                <button onClick={() => setShowAddModal(false)} className="p-1.5 text-slate-500 hover:text-slate-500 rounded-sm hover:bg-white/10">
                   <X className="w-5 h-5" />
                 </button>
               </div>
 
               <form onSubmit={handleCreateBackup} className="space-y-3">
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Mục Tiêu Sao Lưu</label>
+                  <label className="block text-xs font-bold text-slate-200 mb-1">Mục Tiêu Sao Lưu</label>
                   <input
                     type="text"
                     required
                     value={formData.instanceName}
                     onChange={e => setFormData({ ...formData, instanceName: e.target.value })}
-                    className="w-full px-3 py-2 text-xs rounded border border-slate-200 focus:ring-2 focus:ring-teal-500 outline-none"
+                    className="w-full px-3 py-2 text-xs rounded border border-white/10 focus:ring-2 focus:ring-teal-500 outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Vị Trí Lưu Trữ</label>
+                  <label className="block text-xs font-bold text-slate-200 mb-1">Vị Trí Lưu Trữ</label>
                   <select
                     value={formData.storageTarget}
                     onChange={e => setFormData({ ...formData, storageTarget: e.target.value as any })}
-                    className="w-full px-3 py-2 text-xs rounded border border-slate-200 focus:ring-2 focus:ring-teal-500 outline-none bg-white"
+                    className="w-full px-3 py-2 text-xs rounded border border-white/10 focus:ring-2 focus:ring-teal-500 outline-none bg-[#1E293B] bg-opacity-70 backdrop-blur-md"
                   >
                     <option value="S3 Object Storage">S3 Object Storage (AWS / Wasabi)</option>
                     <option value="Cold Archive">Cold Archive (Glacier Backup)</option>
@@ -336,7 +336,7 @@ export default function AdminBackupsPage() {
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1">Thời Gian Lưu Giữ (Ngày)</label>
+                    <label className="block text-xs font-bold text-slate-200 mb-1">Thời Gian Lưu Giữ (Ngày)</label>
                     <input
                       type="number"
                       required
@@ -344,18 +344,18 @@ export default function AdminBackupsPage() {
                       max={365}
                       value={formData.retentionDays}
                       onChange={e => setFormData({ ...formData, retentionDays: Number(e.target.value) })}
-                      className="w-full px-3 py-2 text-xs rounded border border-slate-200 focus:ring-2 focus:ring-teal-500 outline-none font-bold"
+                      className="w-full px-3 py-2 text-xs rounded border border-white/10 focus:ring-2 focus:ring-teal-500 outline-none font-bold"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1">Dung Lượng Ước Tính (GB)</label>
+                    <label className="block text-xs font-bold text-slate-200 mb-1">Dung Lượng Ước Tính (GB)</label>
                     <input
                       type="number"
                       required
                       step="0.1"
                       value={formData.sizeGb}
                       onChange={e => setFormData({ ...formData, sizeGb: Number(e.target.value) })}
-                      className="w-full px-3 py-2 text-xs rounded border border-slate-200 focus:ring-2 focus:ring-teal-500 outline-none font-bold"
+                      className="w-full px-3 py-2 text-xs rounded border border-white/10 focus:ring-2 focus:ring-teal-500 outline-none font-bold"
                     />
                   </div>
                 </div>
@@ -364,13 +364,13 @@ export default function AdminBackupsPage() {
                   <button
                     type="button"
                     onClick={() => setShowAddModal(false)}
-                    className="px-4 py-2.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold"
+                    className="px-4 py-2.5 rounded bg-white/10 hover:bg-white/20 text-slate-200 text-xs font-bold"
                   >
                     Hủy
                   </button>
                   <button
                     type="submit"
-                    className="px-5 py-2.5 rounded bg-teal-600 hover:bg-teal-700 text-slate-900 text-xs font-bold shadow-md"
+                    className="px-5 py-2.5 rounded bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold shadow-md"
                   >
                     Kích Hoạt Sao Lưu
                   </button>
@@ -382,22 +382,22 @@ export default function AdminBackupsPage() {
 
         {/* Restore Confirmation Modal */}
         {restoringBackup && (
-          <div className="fixed inset-0 bg-white/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-lg p-6 sm:p-8 max-w-md w-full border border-slate-200 shadow-2xl">
+          <div className="fixed inset-0 bg-[#1E293B] bg-opacity-70 backdrop-blur-md/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-lg p-6 sm:p-8 max-w-md w-full border border-white/10 shadow-2xl">
               <div className="w-12 h-12 rounded-md bg-amber-50 text-amber-600 flex items-center justify-center mx-auto mb-4">
                 <AlertTriangle className="w-6 h-6" />
               </div>
-              <h3 className="text-base font-black text-slate-900 text-center mb-1">
+              <h3 className="text-base font-black text-white text-center mb-1">
                 Xác Nhận Khôi Phục Hệ Thống
               </h3>
-              <p className="text-xs text-slate-600 text-center mb-6 leading-relaxed">
+              <p className="text-xs text-slate-500 text-center mb-6 leading-relaxed">
                 Bạn có chắc chắn muốn khôi phục máy chủ từ bản sao lưu <strong>{restoringBackup.instanceName}</strong> (Tạo lúc {new Date(restoringBackup.createdAt).toLocaleDateString('vi-VN')})? Dữ liệu phát sinh sau thời điểm này có thể bị ghi đè!
               </p>
 
               <div className="flex gap-2">
                 <button
                   onClick={() => setRestoringBackup(null)}
-                  className="flex-1 py-2.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold"
+                  className="flex-1 py-2.5 rounded bg-white/10 hover:bg-white/20 text-slate-200 text-xs font-bold"
                 >
                   Hủy Bỏ
                 </button>

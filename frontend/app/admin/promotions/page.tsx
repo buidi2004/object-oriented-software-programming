@@ -181,8 +181,8 @@ export default function AdminPromotionsPage() {
     const start = new Date(promo.startDate);
     const end = new Date(promo.endDate);
     
-    if (now < start) return { text: 'Sắp diễn ra', class: 'bg-blue-100 text-[#1F1F1F]' };
-    if (now > end) return { text: 'Đã kết thúc', class: 'bg-slate-100 text-slate-600' };
+    if (now < start) return { text: 'Sắp diễn ra', class: 'bg-blue-900/50 text-[#1F1F1F]' };
+    if (now > end) return { text: 'Đã kết thúc', class: 'bg-white/10 text-slate-500' };
     return { text: 'Đang diễn ra', class: 'bg-emerald-100 text-emerald-700' };
   };
 
@@ -200,14 +200,14 @@ export default function AdminPromotionsPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[#0F172A] flex items-center justify-center">
         <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-[#0F172A]">
       {/* Toast */}
       {toast && (
         <div className={`fixed bottom-5 right-5 z-50 px-5 py-3 rounded shadow-xl text-white font-semibold text-sm flex items-center gap-2.5 animate-in slide-in-from-bottom-5 ${
@@ -219,21 +219,21 @@ export default function AdminPromotionsPage() {
       )}
 
       {/* Header */}
-      <header className="bg-white border-b border-slate-200 sticky top-0 z-40">
+      <header className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md border-b border-white/10 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link href="/admin" className="p-2 rounded-sm hover:bg-slate-100 transition-colors">
-              <ArrowLeft className="w-5 h-5 text-slate-600" />
+            <Link href="/admin" className="p-2 rounded-sm hover:bg-white/10 transition-colors">
+              <ArrowLeft className="w-5 h-5 text-slate-500" />
             </Link>
             <div>
-              <h1 className="text-xl font-bold text-slate-900">Quản lý Khuyến Mãi & Flash Sale</h1>
-              <p className="text-xs text-slate-600">{promotions.length} chiến dịch khuyến mãi</p>
+              <h1 className="text-xl font-bold text-white">Quản lý Khuyến Mãi & Flash Sale</h1>
+              <p className="text-xs text-slate-500">{promotions.length} chiến dịch khuyến mãi</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
             <button
               onClick={fetchData}
-              className="p-2 text-slate-600 hover:bg-slate-100 rounded transition-colors"
+              className="p-2 text-slate-500 hover:bg-white/10 rounded transition-colors"
               title="Tải lại danh sách"
             >
               <RefreshCw className="w-5 h-5" />
@@ -251,23 +251,23 @@ export default function AdminPromotionsPage() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Search */}
-        <div className="bg-white rounded-md p-4 border border-slate-200 mb-6 flex items-center justify-between shadow-sm">
+        <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-md p-4 border border-white/10 mb-6 flex items-center justify-between shadow-sm">
           <div className="relative w-full max-w-md">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-600" />
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
             <input
               type="text"
               placeholder="Tìm kiếm theo tên gói dịch vụ hoặc mức giảm..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 rounded border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/20"
+              className="w-full pl-10 pr-4 py-2.5 rounded border border-white/10 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/20"
             />
           </div>
         </div>
 
         {/* Promotions Table */}
-        <div className="bg-white rounded-md border border-slate-200 overflow-hidden shadow-sm">
+        <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-md border border-white/10 overflow-hidden shadow-sm">
           <table className="w-full text-sm">
-            <thead className="bg-slate-50 border-b border-slate-200 text-xs uppercase tracking-wider text-slate-600">
+            <thead className="bg-[#0F172A] border-b border-white/10 text-xs uppercase tracking-wider text-slate-500">
               <tr>
                 <th className="px-6 py-3.5 text-left font-bold">Phạm vi áp dụng</th>
                 <th className="px-6 py-3.5 text-left font-bold">Mức giảm giá</th>
@@ -276,19 +276,19 @@ export default function AdminPromotionsPage() {
                 <th className="px-6 py-3.5 text-right font-bold">Thao tác</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-white/10">
               {filteredPromotions.map((promo) => {
                 const status = getStatusColor(promo);
                 return (
-                  <tr key={promo.id} className="hover:bg-slate-50 transition-colors">
+                  <tr key={promo.id} className="hover:bg-[#0F172A] transition-colors">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2.5">
                         <div className="w-8 h-8 rounded bg-orange-50 text-orange-600 flex items-center justify-center font-bold">
                           <Tag className="w-4 h-4" />
                         </div>
                         <div>
-                          <p className="font-bold text-slate-900">{getPlanName(promo.servicePlanId)}</p>
-                          <p className="text-xs text-slate-600 font-mono">
+                          <p className="font-bold text-white">{getPlanName(promo.servicePlanId)}</p>
+                          <p className="text-xs text-slate-500 font-mono">
                             {promo.servicePlanId ? `ID: ${promo.servicePlanId}` : 'Flash Sale toàn sàn'}
                           </p>
                         </div>
@@ -301,12 +301,12 @@ export default function AdminPromotionsPage() {
                       </span>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="text-xs text-slate-600 space-y-0.5">
+                      <div className="text-xs text-slate-500 space-y-0.5">
                         <div className="flex items-center gap-1.5 font-medium">
-                          <Calendar className="w-3.5 h-3.5 text-slate-600" />
+                          <Calendar className="w-3.5 h-3.5 text-slate-500" />
                           <span>Từ: {new Date(promo.startDate).toLocaleDateString('vi-VN')}</span>
                         </div>
-                        <div className="flex items-center gap-1.5 text-slate-600">
+                        <div className="flex items-center gap-1.5 text-slate-500">
                           <span>Đến: {promo.endDate ? new Date(promo.endDate).toLocaleDateString('vi-VN') : 'Vô thời hạn'}</span>
                         </div>
                       </div>
@@ -320,14 +320,14 @@ export default function AdminPromotionsPage() {
                       <div className="flex items-center justify-end gap-1.5">
                         <button 
                           onClick={() => handleOpenEdit(promo)}
-                          className="p-2 text-slate-600 hover:text-orange-600 hover:bg-orange-50 rounded transition-colors"
+                          className="p-2 text-slate-500 hover:text-orange-600 hover:bg-orange-50 rounded transition-colors"
                           title="Sửa khuyến mãi"
                         >
                           <Edit2 className="w-4 h-4" />
                         </button>
                         <button 
                           onClick={() => handleDelete(promo.id)}
-                          className="p-2 text-slate-600 hover:text-rose-600 hover:bg-rose-50 rounded transition-colors"
+                          className="p-2 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded transition-colors"
                           title="Xóa khuyến mãi"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -341,10 +341,10 @@ export default function AdminPromotionsPage() {
           </table>
 
           {filteredPromotions.length === 0 && (
-            <div className="text-center py-16 text-slate-600">
-              <Percent className="w-12 h-12 mx-auto mb-3 text-slate-700" />
-              <p className="font-bold text-slate-700">Không có chương trình khuyến mãi nào</p>
-              <p className="text-xs text-slate-600 mt-1">Bấm "Tạo Khuyến Mãi Mới" để bắt đầu</p>
+            <div className="text-center py-16 text-slate-500">
+              <Percent className="w-12 h-12 mx-auto mb-3 text-slate-200" />
+              <p className="font-bold text-slate-200">Không có chương trình khuyến mãi nào</p>
+              <p className="text-xs text-slate-500 mt-1">Bấm "Tạo Khuyến Mãi Mới" để bắt đầu</p>
             </div>
           )}
         </div>
@@ -353,26 +353,26 @@ export default function AdminPromotionsPage() {
       {/* Add / Edit Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg p-6 sm:p-8 max-w-lg w-full shadow-2xl">
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-lg p-6 sm:p-8 max-w-lg w-full shadow-2xl">
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h3 className="text-xl font-bold text-slate-900">
+                <h3 className="text-xl font-bold text-white">
                   {editingId ? 'Chỉnh Sửa Khuyến Mãi' : 'Tạo Chiến Dịch Khuyến Mãi Mới'}
                 </h3>
-                <p className="text-xs text-slate-600 mt-0.5">Thiết lập giảm giá dịch vụ theo % thời gian thực</p>
+                <p className="text-xs text-slate-500 mt-0.5">Thiết lập giảm giá dịch vụ theo % thời gian thực</p>
               </div>
-              <button onClick={() => setShowModal(false)} className="p-2 text-slate-600 hover:text-slate-600 rounded-sm hover:bg-slate-100">
+              <button onClick={() => setShowModal(false)} className="p-2 text-slate-500 hover:text-slate-500 rounded-sm hover:bg-white/10">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Phạm vi áp dụng</label>
+                <label className="block text-xs font-semibold text-slate-200 uppercase mb-1.5">Phạm vi áp dụng</label>
                 <select
                   value={formData.servicePlanId}
                   onChange={(e) => setFormData({ ...formData, servicePlanId: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded border border-slate-200 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-orange-500/20 bg-white"
+                  className="w-full px-4 py-2.5 rounded border border-white/10 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-orange-500/20 bg-[#1E293B] bg-opacity-70 backdrop-blur-md"
                 >
                   <option value="">Toàn bộ trang web (Tất cả dịch vụ)</option>
                   {plans.map((p, idx) => {
@@ -383,7 +383,7 @@ export default function AdminPromotionsPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Mức giảm giá (%)</label>
+                <label className="block text-xs font-semibold text-slate-200 uppercase mb-1.5">Mức giảm giá (%)</label>
                 <div className="relative">
                   <input
                     type="number"
@@ -393,31 +393,31 @@ export default function AdminPromotionsPage() {
                     placeholder="20"
                     value={formData.discountPercent}
                     onChange={(e) => setFormData({ ...formData, discountPercent: e.target.value })}
-                    className="w-full pl-4 pr-10 py-2.5 rounded border border-slate-200 text-sm font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-orange-500/20"
+                    className="w-full pl-4 pr-10 py-2.5 rounded border border-white/10 text-sm font-bold text-white focus:outline-none focus:ring-2 focus:ring-orange-500/20"
                   />
-                  <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-sm font-bold text-slate-600">%</span>
+                  <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-sm font-bold text-slate-500">%</span>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Ngày bắt đầu</label>
+                  <label className="block text-xs font-semibold text-slate-200 uppercase mb-1.5">Ngày bắt đầu</label>
                   <input
                     type="date"
                     required
                     value={formData.startDate}
                     onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/20"
+                    className="w-full px-4 py-2.5 rounded border border-white/10 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/20"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Ngày kết thúc</label>
+                  <label className="block text-xs font-semibold text-slate-200 uppercase mb-1.5">Ngày kết thúc</label>
                   <input
                     type="date"
                     required
                     value={formData.endDate}
                     onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/20"
+                    className="w-full px-4 py-2.5 rounded border border-white/10 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/20"
                   />
                 </div>
               </div>
@@ -426,7 +426,7 @@ export default function AdminPromotionsPage() {
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="flex-1 py-3 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm transition-colors"
+                  className="flex-1 py-3 rounded bg-white/10 hover:bg-white/20 text-slate-200 font-semibold text-sm transition-colors"
                 >
                   Hủy bỏ
                 </button>

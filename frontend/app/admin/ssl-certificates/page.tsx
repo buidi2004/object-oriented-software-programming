@@ -225,7 +225,7 @@ export default function AdminSslCertificatesPage() {
   });
 
   return (
-    <div className="min-h-screen bg-slate-50 py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#0F172A] py-8 px-4 sm:px-6 lg:px-8">
       {/* Toast */}
       {toast && (
         <div className={`fixed bottom-5 right-5 z-50 px-5 py-3 rounded shadow-xl text-white font-semibold text-sm flex items-center gap-2.5 animate-in slide-in-from-bottom-5 ${
@@ -240,26 +240,26 @@ export default function AdminSslCertificatesPage() {
         {/* Navigation */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div>
-            <Link href="/admin" className="text-xs font-bold text-slate-600 hover:text-[#1F1F1F] flex items-center gap-1 mb-2">
+            <Link href="/admin" className="text-xs font-bold text-slate-500 hover:text-[#1F1F1F] flex items-center gap-1 mb-2">
               <ArrowLeft className="w-3.5 h-3.5" /> Quay lại Admin Panel
             </Link>
-            <h1 className="text-2xl font-black text-slate-900 flex items-center gap-2.5">
+            <h1 className="text-2xl font-black text-white flex items-center gap-2.5">
               <ShieldCheck className="w-6 h-6 text-emerald-600" /> Quản Lý Chứng Chỉ SSL (Admin)
             </h1>
-            <p className="text-xs text-slate-600 mt-0.5">
+            <p className="text-xs text-slate-500 mt-0.5">
               Theo dõi thời hạn chứng chỉ bảo mật HTTPS, nhà phát hành và hỗ trợ khách hàng tải chứng chỉ bảo mật.
             </p>
           </div>
 
           <div className="flex items-center gap-3">
             <div className="relative">
-              <Search className="w-4 h-4 text-slate-600 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <Search className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 placeholder="Tìm tên miền / email / CA..."
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                className="pl-10 pr-4 py-2.5 rounded bg-white border border-slate-200 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm w-60"
+                className="pl-10 pr-4 py-2.5 rounded bg-[#1E293B] bg-opacity-70 backdrop-blur-md border border-white/10 text-xs text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm w-60"
               />
             </div>
             <button
@@ -288,7 +288,7 @@ export default function AdminSslCertificatesPage() {
               className={`px-4 py-2 rounded text-xs font-semibold transition-colors ${
                 filter === tab.id
                   ? 'bg-emerald-600 text-white shadow-sm'
-                  : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200'
+                  : 'bg-[#1E293B] bg-opacity-70 backdrop-blur-md text-slate-500 hover:bg-[#0F172A] border border-white/10'
               }`}
             >
               {tab.label}
@@ -297,10 +297,10 @@ export default function AdminSslCertificatesPage() {
         </div>
 
         {/* SSL Table */}
-        <div className="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden mb-8">
+        <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-lg border border-white/10 shadow-sm overflow-hidden mb-8">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 text-slate-600 font-extrabold uppercase tracking-wider border-b border-slate-100">
+              <thead className="bg-[#0F172A] text-slate-500 font-extrabold uppercase tracking-wider border-b border-slate-100">
                 <tr>
                   <th className="px-6 py-4">Tên Miền Bảo Mật</th>
                   <th className="px-6 py-4">Nhà Phát Hành (CA)</th>
@@ -310,24 +310,24 @@ export default function AdminSslCertificatesPage() {
                   <th className="px-6 py-4 text-right">Thao Tác</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-white/10">
                 {filtered.map((cert) => (
-                  <tr key={cert.id} className="hover:bg-slate-50/60 transition-colors">
-                    <td className="px-6 py-4 font-bold text-slate-900">
+                  <tr key={cert.id} className="hover:bg-[#0F172A]/60 transition-colors">
+                    <td className="px-6 py-4 font-bold text-white">
                       <div className="flex items-center gap-2">
                         <Lock className="w-4 h-4 text-emerald-600" />
                         <span className="font-mono">{cert.domainName}</span>
                       </div>
                     </td>
-                    <td className="px-6 py-4 font-semibold text-slate-700">{cert.issuer}</td>
-                    <td className="px-6 py-4 text-slate-600 font-mono">{cert.ownerEmail}</td>
+                    <td className="px-6 py-4 font-semibold text-slate-200">{cert.issuer}</td>
+                    <td className="px-6 py-4 text-slate-500 font-mono">{cert.ownerEmail}</td>
                     <td className="px-6 py-4">
                       <span className={`font-black ${
-                        cert.daysRemaining <= 30 ? 'text-amber-600' : 'text-slate-800'
+                        cert.daysRemaining <= 30 ? 'text-amber-600' : 'text-slate-100'
                       }`}>
                         {cert.daysRemaining} ngày
                       </span>
-                      <span className="block text-[10px] text-slate-600">Hết hạn: {new Date(cert.expiryDate).toLocaleDateString('vi-VN')}</span>
+                      <span className="block text-[10px] text-slate-500">Hết hạn: {new Date(cert.expiryDate).toLocaleDateString('vi-VN')}</span>
                     </td>
                     <td className="px-6 py-4">
                       <span className={`px-2.5 py-1 rounded-full font-bold text-[10px] uppercase tracking-wider ${
@@ -350,21 +350,21 @@ export default function AdminSslCertificatesPage() {
                         </button>
                         <button
                           onClick={() => handleDownloadFullchain(cert)}
-                          className="p-1.5 text-slate-600 hover:text-[#1F1F1F] hover:bg-blue-50 rounded-sm transition-colors"
+                          className="p-1.5 text-slate-500 hover:text-[#1F1F1F] hover:bg-blue-900/30 rounded-sm transition-colors"
                           title="Tải Cert (Fullchain.pem)"
                         >
                           <Download className="w-3.5 h-3.5" />
                         </button>
                         <button
                           onClick={() => setConfirmKeyCert(cert)}
-                          className="p-1.5 text-slate-600 hover:text-rose-600 hover:bg-rose-50 rounded-sm transition-colors"
+                          className="p-1.5 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-sm transition-colors"
                           title="Tải Private Key (Yêu cầu xác nhận Admin)"
                         >
                           <Key className="w-3.5 h-3.5 text-rose-500" />
                         </button>
                         <button
                           onClick={() => handleRevoke(cert.id, cert.domainName)}
-                          className="p-1.5 text-slate-600 hover:text-rose-600 hover:bg-rose-50 rounded-sm transition-colors"
+                          className="p-1.5 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-sm transition-colors"
                           title="Thu hồi chứng chỉ"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
@@ -380,8 +380,8 @@ export default function AdminSslCertificatesPage() {
 
         {/* Confirmation Modal for Admin Private Key Download */}
         {confirmKeyCert && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-white/60 backdrop-blur-sm animate-in fade-in">
-            <div className="bg-white rounded-lg max-w-md w-full p-6 shadow-2xl border border-slate-100 space-y-4">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#1E293B] bg-opacity-70 backdrop-blur-md/60 backdrop-blur-sm animate-in fade-in">
+            <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-lg max-w-md w-full p-6 shadow-2xl border border-slate-100 space-y-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2.5 text-rose-600 font-black text-base">
                   <ShieldAlert className="w-6 h-6" />
@@ -389,7 +389,7 @@ export default function AdminSslCertificatesPage() {
                 </div>
                 <button 
                   onClick={() => setConfirmKeyCert(null)}
-                  className="p-1 rounded-sm text-slate-600 hover:text-slate-600 hover:bg-slate-100"
+                  className="p-1 rounded-sm text-slate-500 hover:text-slate-500 hover:bg-white/10"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -411,7 +411,7 @@ export default function AdminSslCertificatesPage() {
                 <button
                   type="button"
                   onClick={() => setConfirmKeyCert(null)}
-                  className="px-4 py-2 rounded text-xs font-bold text-slate-600 hover:bg-slate-100"
+                  className="px-4 py-2 rounded text-xs font-bold text-slate-500 hover:bg-white/10"
                 >
                   Hủy Bỏ
                 </button>
@@ -419,7 +419,7 @@ export default function AdminSslCertificatesPage() {
                   type="button"
                   onClick={handleConfirmDownloadPrivateKey}
                   disabled={downloadingKey}
-                  className="px-5 py-2 rounded bg-rose-600 hover:bg-rose-700 text-slate-900 font-bold text-xs shadow-md flex items-center gap-2"
+                  className="px-5 py-2 rounded bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shadow-md flex items-center gap-2"
                 >
                   {downloadingKey && <RefreshCw className="w-3.5 h-3.5 animate-spin" />}
                   Xác Nhận Quyền Admin &amp; Tải
@@ -431,46 +431,46 @@ export default function AdminSslCertificatesPage() {
 
         {/* Add Modal */}
         {showAddModal && (
-          <div className="fixed inset-0 bg-white/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-lg p-6 sm:p-8 max-w-md w-full border border-slate-200 shadow-2xl">
+          <div className="fixed inset-0 bg-[#1E293B] bg-opacity-70 backdrop-blur-md/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-lg p-6 sm:p-8 max-w-md w-full border border-white/10 shadow-2xl">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-base font-black text-slate-900">Yêu Cầu Cấp Chứng Chỉ SSL Mới</h3>
-                <button onClick={() => setShowAddModal(false)} className="p-1.5 text-slate-600 hover:text-slate-600 rounded-sm hover:bg-slate-100">
+                <h3 className="text-base font-black text-white">Yêu Cầu Cấp Chứng Chỉ SSL Mới</h3>
+                <button onClick={() => setShowAddModal(false)} className="p-1.5 text-slate-500 hover:text-slate-500 rounded-sm hover:bg-white/10">
                   <X className="w-5 h-5" />
                 </button>
               </div>
 
               <form onSubmit={handleCreateCert} className="space-y-3">
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Tên Miền Cần Bảo Mật</label>
+                  <label className="block text-xs font-bold text-slate-200 mb-1">Tên Miền Cần Bảo Mật</label>
                   <input
                     type="text"
                     required
                     value={formData.domainName}
                     onChange={e => setFormData({ ...formData, domainName: e.target.value })}
                     placeholder="*.example.vn hoặc secure.example.com"
-                    className="w-full px-3 py-2 text-xs rounded border border-slate-200 focus:ring-2 focus:ring-emerald-500 outline-none font-mono"
+                    className="w-full px-3 py-2 text-xs rounded border border-white/10 focus:ring-2 focus:ring-emerald-500 outline-none font-mono"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Email Chủ Sở Hữu</label>
+                  <label className="block text-xs font-bold text-slate-200 mb-1">Email Chủ Sở Hữu</label>
                   <input
                     type="email"
                     required
                     value={formData.ownerEmail}
                     onChange={e => setFormData({ ...formData, ownerEmail: e.target.value })}
                     placeholder="admin@example.com"
-                    className="w-full px-3 py-2 text-xs rounded border border-slate-200 focus:ring-2 focus:ring-emerald-500 outline-none"
+                    className="w-full px-3 py-2 text-xs rounded border border-white/10 focus:ring-2 focus:ring-emerald-500 outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Nhà Phát Hành (Certificate Authority)</label>
+                  <label className="block text-xs font-bold text-slate-200 mb-1">Nhà Phát Hành (Certificate Authority)</label>
                   <select
                     value={formData.issuer}
                     onChange={e => setFormData({ ...formData, issuer: e.target.value as any })}
-                    className="w-full px-3 py-2 text-xs rounded border border-slate-200 focus:ring-2 focus:ring-emerald-500 outline-none bg-white"
+                    className="w-full px-3 py-2 text-xs rounded border border-white/10 focus:ring-2 focus:ring-emerald-500 outline-none bg-[#1E293B] bg-opacity-70 backdrop-blur-md"
                   >
                     <option value="Let's Encrypt">Let's Encrypt (Miễn phí 90 ngày / Tự động gia hạn)</option>
                     <option value="Sectigo PositiveSSL">Sectigo PositiveSSL (Bảo hiểm $10,000 / 1 Năm)</option>
@@ -479,7 +479,7 @@ export default function AdminSslCertificatesPage() {
                 </div>
 
                 <div className="pt-2">
-                  <label className="flex items-center gap-2 text-xs font-bold text-slate-700 cursor-pointer">
+                  <label className="flex items-center gap-2 text-xs font-bold text-slate-200 cursor-pointer">
                     <input
                       type="checkbox"
                       checked={formData.autoRenew}
@@ -494,7 +494,7 @@ export default function AdminSslCertificatesPage() {
                   <button
                     type="button"
                     onClick={() => setShowAddModal(false)}
-                    className="px-4 py-2.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold"
+                    className="px-4 py-2.5 rounded bg-white/10 hover:bg-white/20 text-slate-200 text-xs font-bold"
                   >
                     Hủy
                   </button>

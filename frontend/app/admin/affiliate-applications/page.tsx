@@ -70,7 +70,7 @@ export default function AdminAffiliateApplicationsPage() {
     <div className="p-8 max-w-7xl mx-auto">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
+          <h1 className="text-3xl font-bold text-white flex items-center gap-3">
             <Users className="w-8 h-8 text-[#1F1F1F]" />
             Xét duyệt Đối tác (Affiliates)
           </h1>
@@ -78,7 +78,7 @@ export default function AdminAffiliateApplicationsPage() {
         </div>
       </div>
 
-      <div className="bg-white rounded shadow-sm border border-gray-100 overflow-hidden">
+      <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded shadow-sm border border-gray-100 overflow-hidden">
         <table className="w-full text-left">
           <thead className="bg-gray-50 border-b border-gray-100 text-gray-500 font-medium text-sm">
             <tr>
@@ -88,7 +88,7 @@ export default function AdminAffiliateApplicationsPage() {
               <th className="px-6 py-4 text-right">Thao tác (Approve/Reject)</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100">
+          <tbody className="divide-y divide-white/10">
             {loading ? (
               <tr>
                 <td colSpan={4} className="px-6 py-12 text-center text-gray-500">
@@ -104,9 +104,9 @@ export default function AdminAffiliateApplicationsPage() {
             ) : (
               apps.map((app) => (
                 <tr key={app.id} className="hover:bg-gray-50/50 transition-colors">
-                  <td className="px-6 py-4 font-medium text-gray-900">
+                  <td className="px-6 py-4 font-medium text-white">
                     {app.companyName}
-                    <div className="text-xs text-gray-600 font-normal mt-1">User ID: {app.userId.substring(0, 8)}...</div>
+                    <div className="text-xs text-gray-400 font-normal mt-1">User ID: {app.userId.substring(0, 8)}...</div>
                   </td>
                   <td className="px-6 py-4">
                     <span className="font-bold text-[#1F1F1F]">{app.commissionRate}%</span>

@@ -199,7 +199,7 @@ export default function AdminAuditLogsPage() {
     if (a.includes('ORDER') || a.includes('PAYMENT')) {
       return { 
         label: 'Thanh Toán Đơn Hàng', 
-        badge: 'bg-blue-50 text-blue-700 border-blue-200', 
+        badge: 'bg-blue-900/30 text-blue-300 border-blue-200', 
         icon: ShoppingCart,
         category: 'FINANCE'
       };
@@ -230,7 +230,7 @@ export default function AdminAuditLogsPage() {
     }
     return { 
       label: 'Hệ Thống / Cấu Hình', 
-      badge: 'bg-slate-100 text-slate-700 border-slate-200', 
+      badge: 'bg-white/10 text-slate-200 border-white/10', 
       icon: Activity,
       category: 'SYSTEM'
     };
@@ -298,14 +298,14 @@ export default function AdminAuditLogsPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center py-20">
+      <div className="min-h-screen bg-[#0F172A] flex items-center justify-center py-20">
         <div className="w-12 h-12 border-4 border-[#1F1F1F] border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#0F172A] py-8 px-4 sm:px-6 lg:px-8">
       {/* Toast Notification */}
       {toast && (
         <div className={`fixed bottom-5 right-5 z-50 px-5 py-3 rounded-lg shadow-xl text-white font-semibold text-xs flex items-center gap-2.5 animate-in slide-in-from-bottom-5 ${
@@ -321,10 +321,10 @@ export default function AdminAuditLogsPage() {
         {/* Header Bar */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <Link href="/admin" className="text-xs font-bold text-slate-600 hover:text-[#1F1F1F] flex items-center gap-1 mb-2">
+            <Link href="/admin" className="text-xs font-bold text-slate-500 hover:text-[#1F1F1F] flex items-center gap-1 mb-2">
               <ArrowLeft className="w-4 h-4" /> Quay lại Admin Panel
             </Link>
-            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 flex items-center gap-2.5">
+            <h1 className="text-2xl sm:text-3xl font-black text-white flex items-center gap-2.5">
               <ShieldAlert className="w-7 h-7 text-[#1F1F1F]" />
               Nhật Ký Thao Tác Hệ Thống (Audit Logs)
             </h1>
@@ -336,14 +336,14 @@ export default function AdminAuditLogsPage() {
           <div className="flex items-center gap-2.5">
             <button
               onClick={handleExportCsv}
-              className="px-3.5 py-2 rounded bg-white border border-slate-200 text-slate-700 text-xs font-bold hover:bg-slate-50 transition-colors flex items-center gap-1.5 shadow-2xs"
+              className="px-3.5 py-2 rounded bg-[#1E293B] bg-opacity-70 backdrop-blur-md border border-white/10 text-slate-200 text-xs font-bold hover:bg-[#0F172A] transition-colors flex items-center gap-1.5 shadow-2xs"
             >
               <Download className="w-3.5 h-3.5 text-slate-500" />
               <span>Xuất CSV</span>
             </button>
             <button
               onClick={fetchAuditLogs}
-              className="p-2 rounded bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 transition-colors shadow-2xs flex items-center gap-1.5 text-xs font-bold"
+              className="p-2 rounded bg-[#1E293B] bg-opacity-70 backdrop-blur-md border border-white/10 hover:bg-[#0F172A] text-slate-500 transition-colors shadow-2xs flex items-center gap-1.5 text-xs font-bold"
               title="Làm mới danh sách"
             >
               <RefreshCw className="w-4 h-4" />
@@ -353,14 +353,14 @@ export default function AdminAuditLogsPage() {
 
         {/* Overview Stats Cards */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-white p-4.5 rounded-lg border border-slate-200 shadow-2xs">
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md p-4.5 rounded-lg border border-white/10 shadow-2xs">
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Tổng Nhật Ký</span>
-              <div className="w-8 h-8 rounded-full bg-slate-100 text-slate-700 flex items-center justify-center font-bold">
+              <div className="w-8 h-8 rounded-full bg-white/10 text-slate-200 flex items-center justify-center font-bold">
                 <Activity className="w-4 h-4" />
               </div>
             </div>
-            <p className="text-xl sm:text-2xl font-black text-slate-900">
+            <p className="text-xl sm:text-2xl font-black text-white">
               {stats.total}
             </p>
             <p className="text-[11px] text-slate-500 mt-1">
@@ -368,14 +368,14 @@ export default function AdminAuditLogsPage() {
             </p>
           </div>
 
-          <div className="bg-white p-4.5 rounded-lg border border-slate-200 shadow-2xs">
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md p-4.5 rounded-lg border border-white/10 shadow-2xs">
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Tài Chính & Ví</span>
               <div className="w-8 h-8 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center">
                 <Wallet className="w-4 h-4" />
               </div>
             </div>
-            <p className="text-xl sm:text-2xl font-black text-slate-900">
+            <p className="text-xl sm:text-2xl font-black text-white">
               {stats.financeCount}
             </p>
             <p className="text-[11px] text-emerald-600 font-bold mt-1">
@@ -383,14 +383,14 @@ export default function AdminAuditLogsPage() {
             </p>
           </div>
 
-          <div className="bg-white p-4.5 rounded-lg border border-slate-200 shadow-2xs">
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md p-4.5 rounded-lg border border-white/10 shadow-2xs">
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Dịch Vụ & Máy Chủ</span>
               <div className="w-8 h-8 rounded-full bg-purple-50 text-purple-600 flex items-center justify-center">
                 <Server className="w-4 h-4" />
               </div>
             </div>
-            <p className="text-xl sm:text-2xl font-black text-slate-900">
+            <p className="text-xl sm:text-2xl font-black text-white">
               {stats.servicesCount}
             </p>
             <p className="text-[11px] text-slate-500 mt-1">
@@ -398,14 +398,14 @@ export default function AdminAuditLogsPage() {
             </p>
           </div>
 
-          <div className="bg-white p-4.5 rounded-lg border border-slate-200 shadow-2xs">
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md p-4.5 rounded-lg border border-white/10 shadow-2xs">
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Bảo Mật & Khóa Acc</span>
               <div className="w-8 h-8 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center">
                 <Lock className="w-4 h-4" />
               </div>
             </div>
-            <p className="text-xl sm:text-2xl font-black text-slate-900">
+            <p className="text-xl sm:text-2xl font-black text-white">
               {stats.authCount}
             </p>
             <p className="text-[11px] text-rose-600 font-medium mt-1">
@@ -415,32 +415,32 @@ export default function AdminAuditLogsPage() {
         </div>
 
         {/* Filter and Search Bar */}
-        <div className="bg-white rounded-lg border border-slate-200 p-4 shadow-2xs space-y-3.5">
+        <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-lg border border-white/10 p-4 shadow-2xs space-y-3.5">
           {/* Top Row: Categories & Time Filter */}
           <div className="flex flex-wrap items-center justify-between gap-3">
             {/* Category tabs */}
-            <div className="flex flex-wrap items-center bg-slate-100 p-1 rounded-md text-xs font-bold">
+            <div className="flex flex-wrap items-center bg-white/10 p-1 rounded-md text-xs font-bold">
               <button
                 onClick={() => { setSelectedCategory('ALL'); setCurrentPage(1); }}
-                className={`px-3 py-1.5 rounded transition-colors ${selectedCategory === 'ALL' ? 'bg-white text-slate-900 shadow-2xs' : 'text-slate-600 hover:text-slate-900'}`}
+                className={`px-3 py-1.5 rounded transition-colors ${selectedCategory === 'ALL' ? 'bg-[#1E293B] bg-opacity-70 backdrop-blur-md text-white shadow-2xs' : 'text-slate-500 hover:text-white'}`}
               >
                 Tất cả ({logs.length})
               </button>
               <button
                 onClick={() => { setSelectedCategory('FINANCE'); setCurrentPage(1); }}
-                className={`px-3 py-1.5 rounded transition-colors ${selectedCategory === 'FINANCE' ? 'bg-white text-emerald-700 shadow-2xs' : 'text-slate-600 hover:text-slate-900'}`}
+                className={`px-3 py-1.5 rounded transition-colors ${selectedCategory === 'FINANCE' ? 'bg-[#1E293B] bg-opacity-70 backdrop-blur-md text-emerald-700 shadow-2xs' : 'text-slate-500 hover:text-white'}`}
               >
                 Tài chính & Ví ({stats.financeCount})
               </button>
               <button
                 onClick={() => { setSelectedCategory('SERVICES'); setCurrentPage(1); }}
-                className={`px-3 py-1.5 rounded transition-colors ${selectedCategory === 'SERVICES' ? 'bg-white text-purple-700 shadow-2xs' : 'text-slate-600 hover:text-slate-900'}`}
+                className={`px-3 py-1.5 rounded transition-colors ${selectedCategory === 'SERVICES' ? 'bg-[#1E293B] bg-opacity-70 backdrop-blur-md text-purple-700 shadow-2xs' : 'text-slate-500 hover:text-white'}`}
               >
                 Dịch vụ ({stats.servicesCount})
               </button>
               <button
                 onClick={() => { setSelectedCategory('AUTH'); setCurrentPage(1); }}
-                className={`px-3 py-1.5 rounded transition-colors ${selectedCategory === 'AUTH' ? 'bg-white text-rose-700 shadow-2xs' : 'text-slate-600 hover:text-slate-900'}`}
+                className={`px-3 py-1.5 rounded transition-colors ${selectedCategory === 'AUTH' ? 'bg-[#1E293B] bg-opacity-70 backdrop-blur-md text-rose-700 shadow-2xs' : 'text-slate-500 hover:text-white'}`}
               >
                 Bảo mật ({stats.authCount})
               </button>
@@ -448,11 +448,11 @@ export default function AdminAuditLogsPage() {
 
             {/* Time Filter */}
             <div className="flex items-center gap-1.5 text-xs">
-              <span className="text-slate-400 font-medium">Thời gian:</span>
+              <span className="text-slate-500 font-medium">Thời gian:</span>
               <select
                 value={timeFilter}
                 onChange={(e) => { setTimeFilter(e.target.value as any); setCurrentPage(1); }}
-                className="px-2.5 py-1.5 rounded bg-slate-50 border border-slate-200 text-xs font-bold text-slate-700 outline-none"
+                className="px-2.5 py-1.5 rounded bg-[#0F172A] border border-white/10 text-xs font-bold text-slate-200 outline-none"
               >
                 <option value="ALL">Toàn thời gian</option>
                 <option value="TODAY">24 giờ qua</option>
@@ -465,22 +465,22 @@ export default function AdminAuditLogsPage() {
           {/* Bottom Row: Search Box & Entity Selector */}
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2 border-t border-slate-100">
             <div className="relative w-full sm:w-96">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Search className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 placeholder="Tìm theo email, hành động, IP hoặc mã thực thể..."
                 value={searchTerm}
                 onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1); }}
-                className="w-full pl-9 pr-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-md focus:bg-white focus:border-[#1F1F1F] outline-none"
+                className="w-full pl-9 pr-3 py-2 text-xs bg-[#0F172A] border border-white/10 rounded-md focus:bg-[#1E293B] bg-opacity-70 backdrop-blur-md focus:border-[#1F1F1F] outline-none"
               />
             </div>
 
             <div className="flex items-center gap-2 w-full sm:w-auto">
-              <span className="text-xs text-slate-400 whitespace-nowrap">Thực thể:</span>
+              <span className="text-xs text-slate-500 whitespace-nowrap">Thực thể:</span>
               <select
                 value={selectedEntity}
                 onChange={(e) => { setSelectedEntity(e.target.value); setCurrentPage(1); }}
-                className="w-full sm:w-auto px-3 py-2 rounded bg-slate-50 border border-slate-200 text-xs font-bold text-slate-700 outline-none"
+                className="w-full sm:w-auto px-3 py-2 rounded bg-[#0F172A] border border-white/10 text-xs font-bold text-slate-200 outline-none"
               >
                 <option value="ALL">Tất cả thực thể</option>
                 <option value="ServicePlan">ServicePlan (Gói dịch vụ)</option>
@@ -495,10 +495,10 @@ export default function AdminAuditLogsPage() {
         </div>
 
         {/* Audit Logs Master Table */}
-        <div className="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden">
+        <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-lg border border-white/10 shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs text-slate-600">
-              <thead className="bg-[#f8fafc] border-b border-slate-200 text-slate-700 font-bold uppercase tracking-wider text-[11px]">
+            <table className="w-full text-left text-xs text-slate-500">
+              <thead className="bg-[#f8fafc] border-b border-white/10 text-slate-200 font-bold uppercase tracking-wider text-[11px]">
                 <tr>
                   <th className="p-4">Người Thực Hiện</th>
                   <th className="p-4">Hành Động</th>
@@ -508,15 +508,15 @@ export default function AdminAuditLogsPage() {
                   <th className="p-4 text-right">Chi Tiết Payload</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-white/10">
                 {currentLogs.length === 0 ? (
                   <tr>
                     <td colSpan={6} className="p-12 text-center text-slate-500">
-                      <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-3 text-slate-400">
+                      <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center mx-auto mb-3 text-slate-500">
                         <ShieldAlert className="w-6 h-6" />
                       </div>
-                      <p className="font-bold text-slate-700">Không tìm thấy bản ghi nhật ký nào</p>
-                      <p className="text-xs text-slate-400 mt-0.5">Thử thay đổi từ khóa hoặc thiết lập lại bộ lọc</p>
+                      <p className="font-bold text-slate-200">Không tìm thấy bản ghi nhật ký nào</p>
+                      <p className="text-xs text-slate-500 mt-0.5">Thử thay đổi từ khóa hoặc thiết lập lại bộ lọc</p>
                     </td>
                   </tr>
                 ) : (
@@ -525,18 +525,18 @@ export default function AdminAuditLogsPage() {
                     const ActionIcon = info.icon;
 
                     return (
-                      <tr key={log.id} className="hover:bg-slate-50/70 transition-colors">
+                      <tr key={log.id} className="hover:bg-[#0F172A]/70 transition-colors">
                         {/* User / Actor */}
                         <td className="p-4">
                           <div className="flex items-center gap-2.5">
-                            <div className="w-8 h-8 rounded-full bg-slate-100 text-slate-700 flex items-center justify-center font-bold shrink-0">
+                            <div className="w-8 h-8 rounded-full bg-white/10 text-slate-200 flex items-center justify-center font-bold shrink-0">
                               <User className="w-4 h-4" />
                             </div>
                             <div>
-                              <p className="font-bold text-slate-900 leading-snug">
+                              <p className="font-bold text-white leading-snug">
                                 {log.userEmail || 'Hệ Thống Tự Động'}
                               </p>
-                              <p className="text-[10px] text-slate-400 font-mono">
+                              <p className="text-[10px] text-slate-500 font-mono">
                                 ID: {log.userId || 'system'}
                               </p>
                             </div>
@@ -559,10 +559,10 @@ export default function AdminAuditLogsPage() {
                         {/* Entity and ID */}
                         <td className="p-4">
                           <div>
-                            <span className="font-bold text-slate-900 text-xs">
+                            <span className="font-bold text-white text-xs">
                               {log.entityName}
                             </span>
-                            <span className="block text-[10px] text-slate-400 font-mono mt-0.5">
+                            <span className="block text-[10px] text-slate-500 font-mono mt-0.5">
                               {log.entityId}
                             </span>
                           </div>
@@ -570,15 +570,15 @@ export default function AdminAuditLogsPage() {
 
                         {/* IP Address */}
                         <td className="p-4">
-                          <span className="font-mono text-[11px] text-slate-700 bg-slate-100 px-2 py-0.5 rounded border border-slate-200/60">
+                          <span className="font-mono text-[11px] text-slate-200 bg-white/10 px-2 py-0.5 rounded border border-white/10/60">
                             {log.ipAddress}
                           </span>
                         </td>
 
                         {/* Timestamp */}
-                        <td className="p-4 text-slate-600 whitespace-nowrap">
+                        <td className="p-4 text-slate-500 whitespace-nowrap">
                           <div className="flex items-center gap-1.5 text-xs">
-                            <Clock className="w-3.5 h-3.5 text-slate-400" />
+                            <Clock className="w-3.5 h-3.5 text-slate-500" />
                             <span>
                               {new Date(log.timestamp).toLocaleString('vi-VN', {
                                 day: '2-digit',
@@ -596,7 +596,7 @@ export default function AdminAuditLogsPage() {
                         <td className="p-4 text-right">
                           <button
                             onClick={() => setSelectedLog(log)}
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-slate-100 hover:bg-[#1F1F1F] hover:text-white font-bold text-slate-700 transition-all shadow-2xs text-[11px]"
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-white/10 hover:bg-[#1F1F1F] hover:text-white font-bold text-slate-200 transition-all shadow-2xs text-[11px]"
                             title="Xem chi tiết Payload"
                           >
                             <Eye className="w-3.5 h-3.5" />
@@ -615,23 +615,23 @@ export default function AdminAuditLogsPage() {
           {totalPages > 1 && (
             <div className="p-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500 bg-[#f8fafc]">
               <div>
-                Hiển thị trang <strong className="text-slate-900">{currentPage}</strong> / <strong>{totalPages}</strong> (Tổng cộng {filteredLogs.length} nhật ký)
+                Hiển thị trang <strong className="text-white">{currentPage}</strong> / <strong>{totalPages}</strong> (Tổng cộng {filteredLogs.length} nhật ký)
               </div>
               <div className="flex items-center gap-1.5">
                 <button
                   onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                   disabled={currentPage === 1}
-                  className="p-1.5 rounded bg-white border border-slate-200 disabled:opacity-40 hover:bg-slate-50 transition-colors shadow-2xs"
+                  className="p-1.5 rounded bg-[#1E293B] bg-opacity-70 backdrop-blur-md border border-white/10 disabled:opacity-40 hover:bg-[#0F172A] transition-colors shadow-2xs"
                 >
                   <ChevronLeft className="w-4 h-4" />
                 </button>
-                <span className="px-2.5 py-1 text-xs font-bold text-slate-700 bg-white rounded border border-slate-200">
+                <span className="px-2.5 py-1 text-xs font-bold text-slate-200 bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded border border-white/10">
                   {currentPage}
                 </span>
                 <button
                   onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                   disabled={currentPage === totalPages}
-                  className="p-1.5 rounded bg-white border border-slate-200 disabled:opacity-40 hover:bg-slate-50 transition-colors shadow-2xs"
+                  className="p-1.5 rounded bg-[#1E293B] bg-opacity-70 backdrop-blur-md border border-white/10 disabled:opacity-40 hover:bg-[#0F172A] transition-colors shadow-2xs"
                 >
                   <ChevronRight className="w-4 h-4" />
                 </button>
@@ -643,46 +643,46 @@ export default function AdminAuditLogsPage() {
         {/* Payload Detail Modal */}
         {selectedLog && (
           <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center z-50 p-4 animate-in fade-in duration-200">
-            <div className="bg-white rounded-lg p-6 sm:p-8 max-w-xl w-full shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[90vh]">
+            <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-lg p-6 sm:p-8 max-w-xl w-full shadow-2xl border border-white/10 overflow-hidden flex flex-col max-h-[90vh]">
               <div className="flex items-center justify-between pb-3 border-b border-slate-100">
                 <div className="flex items-center gap-2">
                   <ShieldAlert className="w-5 h-5 text-[#1F1F1F]" />
-                  <h3 className="text-base font-black text-slate-900">Chi Tiết Payload Nhật Ký</h3>
+                  <h3 className="text-base font-black text-white">Chi Tiết Payload Nhật Ký</h3>
                 </div>
                 <button 
                   onClick={() => setSelectedLog(null)} 
-                  className="p-1.5 text-slate-400 hover:text-slate-700 rounded-full hover:bg-slate-100 transition-colors"
+                  className="p-1.5 text-slate-500 hover:text-slate-200 rounded-full hover:bg-white/10 transition-colors"
                 >
                   <X className="w-5 h-5" />
                 </button>
               </div>
 
               <div className="py-4 space-y-3 text-xs overflow-y-auto">
-                <div className="grid grid-cols-2 gap-3 bg-slate-50 p-3.5 rounded border border-slate-100">
+                <div className="grid grid-cols-2 gap-3 bg-[#0F172A] p-3.5 rounded border border-slate-100">
                   <div>
-                    <span className="text-slate-400 block font-medium">Hành động:</span>
-                    <span className="font-bold text-slate-900 font-mono">{selectedLog.action}</span>
+                    <span className="text-slate-500 block font-medium">Hành động:</span>
+                    <span className="font-bold text-white font-mono">{selectedLog.action}</span>
                   </div>
                   <div>
-                    <span className="text-slate-400 block font-medium">Thực thể & ID:</span>
-                    <span className="font-bold text-slate-900">{selectedLog.entityName} ({selectedLog.entityId})</span>
+                    <span className="text-slate-500 block font-medium">Thực thể & ID:</span>
+                    <span className="font-bold text-white">{selectedLog.entityName} ({selectedLog.entityId})</span>
                   </div>
                   <div>
-                    <span className="text-slate-400 block font-medium">Người thực hiện:</span>
-                    <span className="font-bold text-slate-900">{selectedLog.userEmail || 'Hệ thống'}</span>
+                    <span className="text-slate-500 block font-medium">Người thực hiện:</span>
+                    <span className="font-bold text-white">{selectedLog.userEmail || 'Hệ thống'}</span>
                   </div>
                   <div>
-                    <span className="text-slate-400 block font-medium">Địa chỉ IP & Thời gian:</span>
-                    <span className="font-bold text-slate-900">{selectedLog.ipAddress} • {new Date(selectedLog.timestamp).toLocaleTimeString('vi-VN')}</span>
+                    <span className="text-slate-500 block font-medium">Địa chỉ IP & Thời gian:</span>
+                    <span className="font-bold text-white">{selectedLog.ipAddress} • {new Date(selectedLog.timestamp).toLocaleTimeString('vi-VN')}</span>
                   </div>
                 </div>
 
                 <div>
                   <div className="flex items-center justify-between mb-1.5">
-                    <span className="text-xs font-bold text-slate-700">Dữ Liệu JSON (Payload / Changes):</span>
+                    <span className="text-xs font-bold text-slate-200">Dữ Liệu JSON (Payload / Changes):</span>
                     <button
                       onClick={handleCopyPayload}
-                      className="inline-flex items-center gap-1 text-[11px] font-bold text-blue-600 hover:text-blue-800"
+                      className="inline-flex items-center gap-1 text-[11px] font-bold text-blue-400 hover:text-blue-800"
                     >
                       {isCopied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
                       <span>{isCopied ? 'Đã sao chép!' : 'Sao chép JSON'}</span>

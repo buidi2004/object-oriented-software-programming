@@ -613,7 +613,7 @@ export default function AdminLandingContentPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[#0F172A] flex items-center justify-center">
         <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
       </div>
     );
@@ -633,17 +633,17 @@ export default function AdminLandingContentPage() {
   );
 
   return (
-    <div className="min-h-screen bg-slate-50 pb-20">
+    <div className="min-h-screen bg-[#0F172A] pb-20">
       {/* Header */}
-      <header className="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+      <header className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md border-b border-white/10 sticky top-0 z-40 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link href="/admin" className="p-2 rounded hover:bg-slate-100 transition-colors">
-              <ArrowLeft className="w-5 h-5 text-slate-600" />
+            <Link href="/admin" className="p-2 rounded hover:bg-white/10 transition-colors">
+              <ArrowLeft className="w-5 h-5 text-slate-500" />
             </Link>
             <div>
-              <h1 className="text-lg sm:text-xl font-bold text-slate-900">Quản Lý Nội Dung Trang Chủ</h1>
-              <p className="text-xs text-slate-600">Banner, Giới Thiệu, Giải Pháp & Thông Tin Chân Trang</p>
+              <h1 className="text-lg sm:text-xl font-bold text-white">Quản Lý Nội Dung Trang Chủ</h1>
+              <p className="text-xs text-slate-500">Banner, Giới Thiệu, Giải Pháp & Thông Tin Chân Trang</p>
             </div>
           </div>
 
@@ -673,13 +673,13 @@ export default function AdminLandingContentPage() {
 
       {/* Main Navigation Tabs */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
-        <div className="flex flex-wrap gap-2 p-1.5 bg-slate-200/70 rounded-md w-fit mb-6">
+        <div className="flex flex-wrap gap-2 p-1.5 bg-white/20/70 rounded-md w-fit mb-6">
           <button
             onClick={() => setActiveSection('banners')}
             className={`px-4 sm:px-5 py-2 sm:py-2.5 rounded font-bold text-xs sm:text-sm transition-all flex items-center gap-2 ${
               activeSection === 'banners' 
-                ? 'bg-white text-[#1F1F1F] shadow-sm' 
-                : 'text-slate-600 hover:text-slate-900'
+                ? 'bg-[#1E293B] bg-opacity-70 backdrop-blur-md text-[#1F1F1F] shadow-sm' 
+                : 'text-slate-500 hover:text-white'
             }`}
           >
             <ImageIcon className="w-4 h-4" />
@@ -689,8 +689,8 @@ export default function AdminLandingContentPage() {
             onClick={() => setActiveSection('about')}
             className={`px-4 sm:px-5 py-2 sm:py-2.5 rounded font-bold text-xs sm:text-sm transition-all flex items-center gap-2 ${
               activeSection === 'about' 
-                ? 'bg-white text-[#1F1F1F] shadow-sm' 
-                : 'text-slate-600 hover:text-slate-900'
+                ? 'bg-[#1E293B] bg-opacity-70 backdrop-blur-md text-[#1F1F1F] shadow-sm' 
+                : 'text-slate-500 hover:text-white'
             }`}
           >
             <Building2 className="w-4 h-4" />
@@ -700,8 +700,8 @@ export default function AdminLandingContentPage() {
             onClick={() => setActiveSection('solutions')}
             className={`px-4 sm:px-5 py-2 sm:py-2.5 rounded font-bold text-xs sm:text-sm transition-all flex items-center gap-2 ${
               activeSection === 'solutions' 
-                ? 'bg-white text-[#1F1F1F] shadow-sm' 
-                : 'text-slate-600 hover:text-slate-900'
+                ? 'bg-[#1E293B] bg-opacity-70 backdrop-blur-md text-[#1F1F1F] shadow-sm' 
+                : 'text-slate-500 hover:text-white'
             }`}
           >
             <Layers className="w-4 h-4" />
@@ -711,8 +711,8 @@ export default function AdminLandingContentPage() {
             onClick={() => setActiveSection('footer')}
             className={`px-4 sm:px-5 py-2 sm:py-2.5 rounded font-bold text-xs sm:text-sm transition-all flex items-center gap-2 ${
               activeSection === 'footer' 
-                ? 'bg-white text-[#1F1F1F] shadow-sm' 
-                : 'text-slate-600 hover:text-slate-900'
+                ? 'bg-[#1E293B] bg-opacity-70 backdrop-blur-md text-[#1F1F1F] shadow-sm' 
+                : 'text-slate-500 hover:text-white'
             }`}
           >
             <ShieldCheck className="w-4 h-4" />
@@ -724,25 +724,25 @@ export default function AdminLandingContentPage() {
         {activeSection === 'banners' && (
           <div className="space-y-6">
             {/* Action Bar */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-4 sm:p-6 rounded-lg border border-slate-200 shadow-xs">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#1E293B] bg-opacity-70 backdrop-blur-md p-4 sm:p-6 rounded-lg border border-white/10 shadow-xs">
               <div className="relative flex-1 max-w-md">
-                <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-600" />
+                <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
                 <input
                   type="text"
                   value={bannerSearchTerm}
                   onChange={(e) => setBannerSearchTerm(e.target.value)}
                   placeholder="Tìm kiếm banner theo liên kết hoặc thứ tự..."
-                  className="w-full pl-10 pr-4 py-2 bg-slate-50 rounded border border-slate-200 text-sm focus:outline-none focus:border-blue-500"
+                  className="w-full pl-10 pr-4 py-2 bg-[#0F172A] rounded border border-white/10 text-sm focus:outline-none focus:border-blue-500"
                 />
               </div>
 
               <div className="flex items-center gap-3">
                 <button
                   onClick={handleResetDefaultBanners}
-                  className="px-4 py-2 rounded border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-xs sm:text-sm transition-all flex items-center gap-2"
+                  className="px-4 py-2 rounded border border-white/10 hover:bg-[#0F172A] text-slate-200 font-bold text-xs sm:text-sm transition-all flex items-center gap-2"
                   title="Khôi phục 5 banner chuẩn mặc định"
                 >
-                  <RotateCcw className="w-4 h-4 text-slate-600" /> Khôi Phục 5 Mẫu
+                  <RotateCcw className="w-4 h-4 text-slate-500" /> Khôi Phục 5 Mẫu
                 </button>
                 <button
                   onClick={handleOpenAddBanner}
@@ -755,12 +755,12 @@ export default function AdminLandingContentPage() {
 
             {/* Banners Grid */}
             {filteredBanners.length === 0 ? (
-              <div className="text-center py-16 bg-white rounded-lg border border-slate-200 shadow-sm max-w-md mx-auto">
-                <div className="w-14 h-14 rounded-md bg-blue-50 text-[#1F1F1F] flex items-center justify-center mx-auto mb-3">
+              <div className="text-center py-16 bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-lg border border-white/10 shadow-sm max-w-md mx-auto">
+                <div className="w-14 h-14 rounded-md bg-blue-900/30 text-[#1F1F1F] flex items-center justify-center mx-auto mb-3">
                   <ImageIcon className="w-7 h-7" />
                 </div>
-                <h3 className="text-base font-bold text-slate-900 mb-1">Không tìm thấy banner</h3>
-                <p className="text-slate-600 text-xs mb-4">Thêm banner mới hoặc khôi phục 5 banner chuẩn.</p>
+                <h3 className="text-base font-bold text-white mb-1">Không tìm thấy banner</h3>
+                <p className="text-slate-500 text-xs mb-4">Thêm banner mới hoặc khôi phục 5 banner chuẩn.</p>
                 <button
                   onClick={handleResetDefaultBanners}
                   className="px-4 py-2 bg-blue-600 text-white text-xs font-bold rounded"
@@ -773,12 +773,12 @@ export default function AdminLandingContentPage() {
                 {filteredBanners.map((b) => (
                   <div
                     key={b.id}
-                    className={`bg-white rounded-md border transition-all duration-200 overflow-hidden flex flex-col ${
-                      b.isActive ? 'border-slate-200 shadow-sm hover:shadow-md' : 'border-slate-200 opacity-70 bg-slate-50/50'
+                    className={`bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-md border transition-all duration-200 overflow-hidden flex flex-col ${
+                      b.isActive ? 'border-white/10 shadow-sm hover:shadow-md' : 'border-white/10 opacity-70 bg-[#0F172A]/50'
                     }`}
                   >
                     {/* Banner Image Preview */}
-                    <div className="relative aspect-[16/9] bg-white overflow-hidden group">
+                    <div className="relative aspect-[16/9] bg-[#1E293B] bg-opacity-70 backdrop-blur-md overflow-hidden group">
                       <img
                         src={b.imageUrl}
                         alt="Banner"
@@ -795,7 +795,7 @@ export default function AdminLandingContentPage() {
                         </span>
                       </div>
                       <div className="absolute top-3 left-3">
-                        <span className="px-2 py-0.5 rounded-sm bg-black/60 backdrop-blur-sm text-slate-900 text-[11px] font-bold">
+                        <span className="px-2 py-0.5 rounded-sm bg-black/60 backdrop-blur-sm text-white text-[11px] font-bold">
                           Thứ tự: #{b.displayOrder}
                         </span>
                       </div>
@@ -804,7 +804,7 @@ export default function AdminLandingContentPage() {
                     {/* Banner Details */}
                     <div className="p-4 flex-1 flex flex-col justify-between">
                       <div>
-                        <div className="flex items-center gap-2 text-xs text-slate-600 mb-2">
+                        <div className="flex items-center gap-2 text-xs text-slate-500 mb-2">
                           <ExternalLink className="w-3.5 h-3.5 text-[#1F1F1F] shrink-0" />
                           <span className="font-mono truncate">{b.linkUrl || 'Không có liên kết'}</span>
                         </div>
@@ -822,7 +822,7 @@ export default function AdminLandingContentPage() {
                         </button>
                         <button
                           onClick={() => handleOpenEditBanner(b)}
-                          className="p-1.5 rounded border border-slate-200 text-slate-600 hover:bg-slate-100"
+                          className="p-1.5 rounded border border-white/10 text-slate-500 hover:bg-white/10"
                           title="Sửa banner"
                         >
                           <Edit2 className="w-3.5 h-3.5" />
@@ -848,47 +848,47 @@ export default function AdminLandingContentPage() {
           <div className="grid lg:grid-cols-12 gap-8">
             {/* Form Edit Left */}
             <div className="lg:col-span-7 space-y-6">
-              <div className="bg-white p-6 rounded-lg border border-slate-200 shadow-sm space-y-4">
+              <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md p-6 rounded-lg border border-white/10 shadow-sm space-y-4">
                 <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-                  <h3 className="font-bold text-slate-900 text-lg">Thông Tin Giới Thiệu Chung</h3>
+                  <h3 className="font-bold text-white text-lg">Thông Tin Giới Thiệu Chung</h3>
                   <button
                     onClick={() => {
                       if (confirm('Khôi phục lại nội dung mặc định của mục Về Chúng Tôi?')) {
                         setAboutData(DEFAULT_ABOUT);
                       }
                     }}
-                    className="text-xs font-bold text-slate-600 hover:text-[#1F1F1F] flex items-center gap-1"
+                    className="text-xs font-bold text-slate-500 hover:text-[#1F1F1F] flex items-center gap-1"
                   >
                     <RotateCcw className="w-3.5 h-3.5" /> Mặc định
                   </button>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                  <label className="block text-xs font-bold text-slate-200 uppercase tracking-wider mb-1.5">
                     Tiêu Đề Khối
                   </label>
                   <input
                     type="text"
                     value={aboutData.title}
                     onChange={(e) => setAboutData({ ...aboutData, title: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded border border-slate-300 text-sm font-semibold focus:outline-none focus:border-blue-500"
+                    className="w-full px-4 py-2.5 rounded border border-white/20 text-sm font-semibold focus:outline-none focus:border-blue-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                  <label className="block text-xs font-bold text-slate-200 uppercase tracking-wider mb-1.5">
                     Đoạn Văn Giới Thiệu
                   </label>
                   <textarea
                     rows={4}
                     value={aboutData.description}
                     onChange={(e) => setAboutData({ ...aboutData, description: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded border border-slate-300 text-sm focus:outline-none focus:border-blue-500"
+                    className="w-full px-4 py-2.5 rounded border border-white/20 text-sm focus:outline-none focus:border-blue-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                  <label className="block text-xs font-bold text-slate-200 uppercase tracking-wider mb-1.5">
                     Ảnh Lớn Tòa Nhà / Data Center
                   </label>
                   <div className="flex gap-2">
@@ -897,7 +897,7 @@ export default function AdminLandingContentPage() {
                       value={aboutData.imageUrl}
                       onChange={(e) => setAboutData({ ...aboutData, imageUrl: e.target.value })}
                       placeholder="https://images.unsplash.com/..."
-                      className="flex-1 px-4 py-2.5 rounded border border-slate-300 text-sm focus:outline-none focus:border-blue-500"
+                      className="flex-1 px-4 py-2.5 rounded border border-white/20 text-sm focus:outline-none focus:border-blue-500"
                     />
                     <input
                       type="file"
@@ -909,7 +909,7 @@ export default function AdminLandingContentPage() {
                     <button
                       type="button"
                       onClick={() => fileInputRef.current?.click()}
-                      className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded text-xs font-bold transition-colors flex items-center gap-1.5 shrink-0"
+                      className="px-4 py-2.5 bg-white/10 hover:bg-white/20 text-slate-200 rounded text-xs font-bold transition-colors flex items-center gap-1.5 shrink-0"
                     >
                       <Upload className="w-4 h-4" /> Tải Ảnh
                     </button>
@@ -917,28 +917,28 @@ export default function AdminLandingContentPage() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                  <label className="block text-xs font-bold text-slate-200 uppercase tracking-wider mb-1.5">
                     Đường Dẫn "Xem thêm"
                   </label>
                   <input
                     type="text"
                     value={aboutData.moreLink}
                     onChange={(e) => setAboutData({ ...aboutData, moreLink: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded border border-slate-300 text-sm focus:outline-none focus:border-blue-500"
+                    className="w-full px-4 py-2.5 rounded border border-white/20 text-sm focus:outline-none focus:border-blue-500"
                   />
                 </div>
               </div>
 
               {/* 4 Stats Cards */}
-              <div className="bg-white p-6 rounded-lg border border-slate-200 shadow-sm space-y-4">
+              <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md p-6 rounded-lg border border-white/10 shadow-sm space-y-4">
                 <div className="flex items-center justify-between pb-3 border-b border-slate-100">
                   <div>
-                    <h3 className="font-bold text-slate-900 text-lg">Các Khối Số Liệu Nổi Bật</h3>
-                    <p className="text-xs text-slate-600">Hiển thị ở cột bên trái mục Về Chúng Tôi</p>
+                    <h3 className="font-bold text-white text-lg">Các Khối Số Liệu Nổi Bật</h3>
+                    <p className="text-xs text-slate-500">Hiển thị ở cột bên trái mục Về Chúng Tôi</p>
                   </div>
                   <button
                     onClick={handleAddStat}
-                    className="px-3 py-1.5 rounded bg-blue-50 hover:bg-blue-100 text-[#1F1F1F] text-xs font-bold flex items-center gap-1 transition-colors"
+                    className="px-3 py-1.5 rounded bg-blue-900/30 hover:bg-blue-900/50 text-[#1F1F1F] text-xs font-bold flex items-center gap-1 transition-colors"
                   >
                     <Plus className="w-3.5 h-3.5" /> Thêm Số Liệu
                   </button>
@@ -946,33 +946,33 @@ export default function AdminLandingContentPage() {
 
                 <div className="grid sm:grid-cols-2 gap-4">
                   {aboutData.stats.map((st, idx) => (
-                    <div key={idx} className="p-4 rounded-md border border-slate-200 bg-slate-50/50 relative group">
+                    <div key={idx} className="p-4 rounded-md border border-white/10 bg-[#0F172A]/50 relative group">
                       <button
                         onClick={() => handleRemoveStat(idx)}
-                        className="absolute top-2 right-2 p-1.5 rounded-sm text-slate-600 hover:text-red-600 hover:bg-red-50 transition-colors opacity-0 group-hover:opacity-100"
+                        className="absolute top-2 right-2 p-1.5 rounded-sm text-slate-500 hover:text-red-600 hover:bg-red-50 transition-colors opacity-0 group-hover:opacity-100"
                         title="Xóa số liệu"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
 
                       <div className="mb-2">
-                        <label className="block text-[11px] font-bold text-slate-600 mb-1">Số / Tiêu đề lớn</label>
+                        <label className="block text-[11px] font-bold text-slate-500 mb-1">Số / Tiêu đề lớn</label>
                         <input
                           type="text"
                           value={st.title}
                           onChange={(e) => handleStatChange(idx, 'title', e.target.value)}
                           placeholder="Số 1, 26.000+..."
-                          className="w-full px-3 py-1.5 bg-white rounded-sm border border-slate-300 text-sm font-bold text-[#1F1F1F] focus:outline-none focus:border-blue-500"
+                          className="w-full px-3 py-1.5 bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-sm border border-white/20 text-sm font-bold text-[#1F1F1F] focus:outline-none focus:border-blue-500"
                         />
                       </div>
                       <div>
-                        <label className="block text-[11px] font-bold text-slate-600 mb-1">Mô tả chi tiết</label>
+                        <label className="block text-[11px] font-bold text-slate-500 mb-1">Mô tả chi tiết</label>
                         <input
                           type="text"
                           value={st.desc}
                           onChange={(e) => handleStatChange(idx, 'desc', e.target.value)}
                           placeholder="Mô tả số liệu..."
-                          className="w-full px-3 py-1.5 bg-white rounded-sm border border-slate-300 text-xs text-slate-700 focus:outline-none focus:border-blue-500"
+                          className="w-full px-3 py-1.5 bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-sm border border-white/20 text-xs text-slate-200 focus:outline-none focus:border-blue-500"
                         />
                       </div>
                     </div>
@@ -983,19 +983,19 @@ export default function AdminLandingContentPage() {
 
             {/* Preview Right */}
             <div className="lg:col-span-5">
-              <div className="sticky top-24 bg-white p-6 rounded-lg border border-slate-200 shadow-sm space-y-4">
+              <div className="sticky top-24 bg-[#1E293B] bg-opacity-70 backdrop-blur-md p-6 rounded-lg border border-white/10 shadow-sm space-y-4">
                 <div className="flex items-center justify-between pb-2 border-b border-slate-100">
-                  <span className="text-xs font-bold uppercase tracking-wider text-slate-600 flex items-center gap-1.5">
+                  <span className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
                     <Eye className="w-4 h-4 text-[#1F1F1F]" /> Xem Trước Trực Quan
                   </span>
-                  <span className="text-xs text-slate-600">Trang chủ</span>
+                  <span className="text-xs text-slate-500">Trang chủ</span>
                 </div>
 
                 <div className="space-y-4">
-                  <h3 className="text-2xl font-black text-slate-900">{aboutData.title}</h3>
-                  <p className="text-xs text-slate-600 leading-relaxed">{aboutData.description}</p>
+                  <h3 className="text-2xl font-black text-white">{aboutData.title}</h3>
+                  <p className="text-xs text-slate-500 leading-relaxed">{aboutData.description}</p>
 
-                  <div className="relative aspect-[16/10] rounded-md overflow-hidden bg-slate-100 border border-slate-200 shadow-md">
+                  <div className="relative aspect-[16/10] rounded-md overflow-hidden bg-white/10 border border-white/10 shadow-md">
                     <img
                       src={aboutData.imageUrl}
                       alt="Preview"
@@ -1008,9 +1008,9 @@ export default function AdminLandingContentPage() {
 
                   <div className="grid grid-cols-2 gap-3 pt-2">
                     {aboutData.stats.slice(0, 4).map((st, idx) => (
-                      <div key={idx} className="p-3 bg-slate-50 rounded border border-slate-100">
+                      <div key={idx} className="p-3 bg-[#0F172A] rounded border border-slate-100">
                         <div className="text-lg font-black text-[#1F1F1F]">{st.title}</div>
-                        <div className="text-[11px] text-slate-600 leading-tight">{st.desc}</div>
+                        <div className="text-[11px] text-slate-500 leading-tight">{st.desc}</div>
                       </div>
                     ))}
                   </div>
@@ -1024,9 +1024,9 @@ export default function AdminLandingContentPage() {
         {activeSection === 'solutions' && (
           <div className="space-y-6">
             {/* Header & Section Title */}
-            <div className="bg-white p-6 rounded-lg border border-slate-200 shadow-sm space-y-4">
+            <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md p-6 rounded-lg border border-white/10 shadow-sm space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-                <h3 className="font-bold text-slate-900 text-lg">Tiêu Đề Khối Giải Pháp</h3>
+                <h3 className="font-bold text-white text-lg">Tiêu Đề Khối Giải Pháp</h3>
                 <button
                   onClick={() => {
                     if (confirm('Khôi phục cấu hình Giải Pháp mặc định?')) {
@@ -1034,7 +1034,7 @@ export default function AdminLandingContentPage() {
                       setSelectedTabId('chinh-phu');
                     }
                   }}
-                  className="text-xs font-bold text-slate-600 hover:text-[#1F1F1F] flex items-center gap-1"
+                  className="text-xs font-bold text-slate-500 hover:text-[#1F1F1F] flex items-center gap-1"
                 >
                   <RotateCcw className="w-3.5 h-3.5" /> Mặc định
                 </button>
@@ -1042,29 +1042,29 @@ export default function AdminLandingContentPage() {
 
               <div className="grid sm:grid-cols-2 gap-4 items-center">
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                  <label className="block text-xs font-bold text-slate-200 uppercase tracking-wider mb-1.5">
                     Tiêu Đề Khối Lớn
                   </label>
                   <input
                     type="text"
                     value={solutionsData.sectionTitle}
                     onChange={(e) => setSolutionsData({ ...solutionsData, sectionTitle: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded border border-slate-300 text-sm font-semibold focus:outline-none focus:border-blue-500"
+                    className="w-full px-4 py-2.5 rounded border border-white/20 text-sm font-semibold focus:outline-none focus:border-blue-500"
                   />
                 </div>
 
                 <div className="relative">
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                  <label className="block text-xs font-bold text-slate-200 uppercase tracking-wider mb-1.5">
                     Tìm Kiếm Thẻ Giải Pháp
                   </label>
                   <div className="relative">
-                    <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-600" />
+                    <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
                     <input
                       type="text"
                       value={solutionSearchTerm}
                       onChange={(e) => setSolutionSearchTerm(e.target.value)}
                       placeholder="Lọc thẻ trong tab này..."
-                      className="w-full pl-9 pr-4 py-2 bg-slate-50 rounded border border-slate-200 text-xs focus:outline-none focus:border-blue-500"
+                      className="w-full pl-9 pr-4 py-2 bg-[#0F172A] rounded border border-white/10 text-xs focus:outline-none focus:border-blue-500"
                     />
                   </div>
                 </div>
@@ -1072,15 +1072,15 @@ export default function AdminLandingContentPage() {
             </div>
 
             {/* Tabs Manager */}
-            <div className="bg-white p-6 rounded-lg border border-slate-200 shadow-sm space-y-4">
+            <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md p-6 rounded-lg border border-white/10 shadow-sm space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-slate-100">
                 <div>
-                  <h3 className="font-bold text-slate-900 text-lg">Danh Sách Tab Ngành Nghề</h3>
-                  <p className="text-xs text-slate-600">Bấm vào tab để chỉnh sửa danh sách thẻ giải pháp bên trong</p>
+                  <h3 className="font-bold text-white text-lg">Danh Sách Tab Ngành Nghề</h3>
+                  <p className="text-xs text-slate-500">Bấm vào tab để chỉnh sửa danh sách thẻ giải pháp bên trong</p>
                 </div>
                 <button
                   onClick={() => setIsAddingTab(true)}
-                  className="px-3.5 py-2 rounded bg-blue-50 hover:bg-blue-100 text-[#1F1F1F] text-xs font-bold flex items-center gap-1.5 transition-colors"
+                  className="px-3.5 py-2 rounded bg-blue-900/30 hover:bg-blue-900/50 text-[#1F1F1F] text-xs font-bold flex items-center gap-1.5 transition-colors"
                 >
                   <Plus className="w-4 h-4" /> Thêm Tab Ngành Mới
                 </button>
@@ -1096,7 +1096,7 @@ export default function AdminLandingContentPage() {
                       className={`flex items-center rounded-md border transition-all ${
                         isSelected 
                           ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/20' 
-                          : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
+                          : 'bg-[#0F172A] text-slate-200 border-white/10 hover:bg-white/10'
                       }`}
                     >
                       <button
@@ -1105,7 +1105,7 @@ export default function AdminLandingContentPage() {
                       >
                         {tab.label}
                         <span className={`px-1.5 py-0.5 rounded-full text-[10px] ${
-                          isSelected ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-600'
+                          isSelected ? 'bg-[#1E293B] bg-opacity-70 backdrop-blur-md/20 text-white' : 'bg-white/20 text-slate-500'
                         }`}>
                           {count}
                         </span>
@@ -1113,7 +1113,7 @@ export default function AdminLandingContentPage() {
                       <button
                         onClick={() => handleRemoveTab(tab.id)}
                         className={`p-2 hover:text-red-300 transition-colors ${
-                          isSelected ? 'text-white/70' : 'text-slate-400 hover:text-red-600'
+                          isSelected ? 'text-white/70' : 'text-slate-500 hover:text-red-600'
                         }`}
                         title="Xóa Tab này"
                       >
@@ -1126,13 +1126,13 @@ export default function AdminLandingContentPage() {
             </div>
 
             {/* Cards List in Selected Tab */}
-            <div className="bg-white p-6 rounded-lg border border-slate-200 shadow-sm space-y-6">
+            <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md p-6 rounded-lg border border-white/10 shadow-sm space-y-6">
               <div className="flex items-center justify-between pb-3 border-b border-slate-100">
                 <div>
-                  <h3 className="font-bold text-slate-900 text-lg">
+                  <h3 className="font-bold text-white text-lg">
                     Thẻ Giải Pháp Cho Ngành: <span className="text-[#1F1F1F]">{solutionsData.tabs.find(t => t.id === selectedTabId)?.label}</span>
                   </h3>
-                  <p className="text-xs text-slate-600">Mỗi ngành nên có từ 3 đến 6 thẻ giải pháp</p>
+                  <p className="text-xs text-slate-500">Mỗi ngành nên có từ 3 đến 6 thẻ giải pháp</p>
                 </div>
                 <button
                   onClick={handleOpenAddCard}
@@ -1143,11 +1143,11 @@ export default function AdminLandingContentPage() {
               </div>
 
               {currentTabSolutions.length === 0 ? (
-                <div className="text-center py-12 border-2 border-dashed border-slate-200 rounded-md">
-                  <p className="text-sm text-slate-600 mb-3">Chưa có thẻ giải pháp nào trong ngành này.</p>
+                <div className="text-center py-12 border-2 border-dashed border-white/10 rounded-md">
+                  <p className="text-sm text-slate-500 mb-3">Chưa có thẻ giải pháp nào trong ngành này.</p>
                   <button
                     onClick={handleOpenAddCard}
-                    className="px-4 py-2 bg-blue-50 hover:bg-blue-100 text-[#1F1F1F] text-xs font-bold rounded"
+                    className="px-4 py-2 bg-blue-900/30 hover:bg-blue-900/50 text-[#1F1F1F] text-xs font-bold rounded"
                   >
                     + Tạo Thẻ Đầu Tiên
                   </button>
@@ -1157,7 +1157,7 @@ export default function AdminLandingContentPage() {
                   {currentTabSolutions.map((sol, idx) => (
                     <div
                       key={idx}
-                      className="group relative rounded-md overflow-hidden border border-slate-200 bg-white shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-end min-h-[260px]"
+                      className="group relative rounded-md overflow-hidden border border-white/10 bg-[#1E293B] bg-opacity-70 backdrop-blur-md shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-end min-h-[260px]"
                     >
                       {/* Background Image */}
                       <div
@@ -1170,14 +1170,14 @@ export default function AdminLandingContentPage() {
                       <div className="absolute top-3 right-3 flex items-center gap-1.5 z-20">
                         <button
                           onClick={() => handleOpenEditCard(idx)}
-                          className="p-2 rounded bg-white/90 text-slate-700 hover:bg-white hover:text-[#1F1F1F] backdrop-blur-sm shadow-sm transition-all"
+                          className="p-2 rounded bg-[#1E293B] bg-opacity-70 backdrop-blur-md/90 text-slate-200 hover:bg-[#1E293B] bg-opacity-70 backdrop-blur-md hover:text-[#1F1F1F] backdrop-blur-sm shadow-sm transition-all"
                           title="Sửa thẻ này"
                         >
                           <Edit2 className="w-3.5 h-3.5" />
                         </button>
                         <button
                           onClick={() => handleRemoveCard(idx)}
-                          className="p-2 rounded bg-white/90 text-slate-700 hover:bg-red-500 hover:text-slate-900 backdrop-blur-sm shadow-sm transition-all"
+                          className="p-2 rounded bg-[#1E293B] bg-opacity-70 backdrop-blur-md/90 text-slate-200 hover:bg-red-500 hover:text-white backdrop-blur-sm shadow-sm transition-all"
                           title="Xóa thẻ này"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
@@ -1185,15 +1185,15 @@ export default function AdminLandingContentPage() {
                       </div>
 
                       {/* Content */}
-                      <div className="relative p-5 text-slate-900 z-10 space-y-2">
-                        <h4 className="font-bold text-lg text-slate-900 group-hover:text-slate-200 transition-colors">
+                      <div className="relative p-5 text-white z-10 space-y-2">
+                        <h4 className="font-bold text-lg text-white group-hover:text-slate-200 transition-colors">
                           {sol.title}
                         </h4>
-                        <p className="text-xs text-slate-700 line-clamp-2 leading-relaxed">
+                        <p className="text-xs text-slate-200 line-clamp-2 leading-relaxed">
                           {sol.desc}
                         </p>
                         <div className="pt-2 flex items-center justify-between text-xs">
-                          <span className="font-mono text-slate-600 truncate max-w-[150px]">{sol.link}</span>
+                          <span className="font-mono text-slate-500 truncate max-w-[150px]">{sol.link}</span>
                           <span className="px-3 py-1 rounded-sm bg-blue-600 text-white font-bold text-[11px]">
                             Xem chi tiết
                           </span>
@@ -1212,11 +1212,11 @@ export default function AdminLandingContentPage() {
           <div className="grid lg:grid-cols-12 gap-8">
             {/* Form Left */}
             <div className="lg:col-span-7 space-y-6">
-              <div className="bg-white p-6 rounded-lg border border-slate-200 shadow-sm space-y-4">
+              <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md p-6 rounded-lg border border-white/10 shadow-sm space-y-4">
                 <div className="flex items-center justify-between pb-3 border-b border-slate-100">
                   <div>
-                    <h3 className="font-bold text-slate-900 text-lg">Thông Tin Pháp Lý & Liên Hệ Chân Trang</h3>
-                    <p className="text-xs text-slate-600">Hiển thị ở góc trái phần Chân trang (Footer) toàn hệ thống</p>
+                    <h3 className="font-bold text-white text-lg">Thông Tin Pháp Lý & Liên Hệ Chân Trang</h3>
+                    <p className="text-xs text-slate-500">Hiển thị ở góc trái phần Chân trang (Footer) toàn hệ thống</p>
                   </div>
                   <button
                     onClick={() => {
@@ -1224,14 +1224,14 @@ export default function AdminLandingContentPage() {
                         setFooterData(DEFAULT_FOOTER);
                       }
                     }}
-                    className="text-xs font-bold text-slate-600 hover:text-[#1F1F1F] flex items-center gap-1"
+                    className="text-xs font-bold text-slate-500 hover:text-[#1F1F1F] flex items-center gap-1"
                   >
                     <RotateCcw className="w-3.5 h-3.5" /> Mặc định
                   </button>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                  <label className="block text-xs font-bold text-slate-200 uppercase tracking-wider mb-1.5">
                     Cơ Quan Chủ Quản / Tên Doanh Nghiệp *
                   </label>
                   <textarea
@@ -1239,12 +1239,12 @@ export default function AdminLandingContentPage() {
                     value={footerData.company_name}
                     onChange={(e) => setFooterData({ ...footerData, company_name: e.target.value })}
                     placeholder="Công ty Cổ phần Công nghệ Hạ Tầng Số Việt Nam, trực thuộc Tập đoàn Công nghệ Việt Nam."
-                    className="w-full px-4 py-2.5 rounded border border-slate-300 text-sm font-semibold focus:outline-none focus:border-blue-500"
+                    className="w-full px-4 py-2.5 rounded border border-white/20 text-sm font-semibold focus:outline-none focus:border-blue-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                  <label className="block text-xs font-bold text-slate-200 uppercase tracking-wider mb-1.5">
                     Mã Số Doanh Nghiệp & Giấy Phép Hoạt Động *
                   </label>
                   <textarea
@@ -1252,12 +1252,12 @@ export default function AdminLandingContentPage() {
                     value={footerData.business_license}
                     onChange={(e) => setFooterData({ ...footerData, business_license: e.target.value })}
                     placeholder="0500589150 do Ban Quản lý các Khu công nghệ cao..."
-                    className="w-full px-4 py-2.5 rounded border border-slate-300 text-sm focus:outline-none focus:border-blue-500"
+                    className="w-full px-4 py-2.5 rounded border border-white/20 text-sm focus:outline-none focus:border-blue-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                  <label className="block text-xs font-bold text-slate-200 uppercase tracking-wider mb-1.5">
                     Chịu Trách Nhiệm Nội Dung *
                   </label>
                   <input
@@ -1265,13 +1265,13 @@ export default function AdminLandingContentPage() {
                     value={footerData.content_responsible}
                     onChange={(e) => setFooterData({ ...footerData, content_responsible: e.target.value })}
                     placeholder="Ông Lê Bá Tân."
-                    className="w-full px-4 py-2.5 rounded border border-slate-300 text-sm font-semibold focus:outline-none focus:border-blue-500"
+                    className="w-full px-4 py-2.5 rounded border border-white/20 text-sm font-semibold focus:outline-none focus:border-blue-500"
                   />
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
                   <div>
-                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                    <label className="block text-xs font-bold text-slate-200 uppercase tracking-wider mb-1.5">
                       Hotline (Số Điện Thoại) *
                     </label>
                     <input
@@ -1279,12 +1279,12 @@ export default function AdminLandingContentPage() {
                       value={footerData.hotline}
                       onChange={(e) => setFooterData({ ...footerData, hotline: e.target.value })}
                       placeholder="1900 6888"
-                      className="w-full px-4 py-2.5 rounded border border-slate-300 text-sm font-bold text-red-600 focus:outline-none focus:border-blue-500"
+                      className="w-full px-4 py-2.5 rounded border border-white/20 text-sm font-bold text-red-600 focus:outline-none focus:border-blue-500"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                    <label className="block text-xs font-bold text-slate-200 uppercase tracking-wider mb-1.5">
                       Email Hỗ Trợ (Gmail) *
                     </label>
                     <input
@@ -1292,7 +1292,7 @@ export default function AdminLandingContentPage() {
                       value={footerData.support_email}
                       onChange={(e) => setFooterData({ ...footerData, support_email: e.target.value })}
                       placeholder="support@cloudhost.vn"
-                      className="w-full px-4 py-2.5 rounded border border-slate-300 text-sm font-bold text-[#1F1F1F] focus:outline-none focus:border-blue-500"
+                      className="w-full px-4 py-2.5 rounded border border-white/20 text-sm font-bold text-[#1F1F1F] focus:outline-none focus:border-blue-500"
                     />
                   </div>
                 </div>
@@ -1301,28 +1301,28 @@ export default function AdminLandingContentPage() {
 
             {/* Preview Right */}
             <div className="lg:col-span-5">
-              <div className="sticky top-24 bg-white p-6 rounded-lg border border-slate-200 shadow-sm space-y-4">
+              <div className="sticky top-24 bg-[#1E293B] bg-opacity-70 backdrop-blur-md p-6 rounded-lg border border-white/10 shadow-sm space-y-4">
                 <div className="flex items-center justify-between pb-2 border-b border-slate-100">
-                  <span className="text-xs font-bold uppercase tracking-wider text-slate-600 flex items-center gap-1.5">
+                  <span className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
                     <Eye className="w-4 h-4 text-[#1F1F1F]" /> Xem Trước Ở Chân Trang (Footer)
                   </span>
-                  <span className="text-xs text-slate-600">Chân trang</span>
+                  <span className="text-xs text-slate-500">Chân trang</span>
                 </div>
 
-                <div className="bg-[#f8f8f8] p-5 rounded-md border border-slate-200 space-y-3">
-                  <div className="font-bold text-sm text-slate-900 flex items-center gap-2">
+                <div className="bg-[#f8f8f8] p-5 rounded-md border border-white/10 space-y-3">
+                  <div className="font-bold text-sm text-white flex items-center gap-2">
                     <div className="w-3 h-3 rounded-full bg-red-600" /> CloudHost VN
                   </div>
-                  <p className="text-[13px] text-slate-700 leading-relaxed">
+                  <p className="text-[13px] text-slate-200 leading-relaxed">
                     Cơ quan chủ quản: <strong>{footerData.company_name}</strong>
                   </p>
-                  <p className="text-[13px] text-slate-700 leading-relaxed">
+                  <p className="text-[13px] text-slate-200 leading-relaxed">
                     Mã số doanh nghiệp: {footerData.business_license}
                   </p>
-                  <p className="text-[13px] text-slate-700 leading-relaxed">
+                  <p className="text-[13px] text-slate-200 leading-relaxed">
                     Chịu trách nhiệm nội dung: {footerData.content_responsible}
                   </p>
-                  <div className="pt-2 text-[14px] text-slate-700 border-t border-slate-200">
+                  <div className="pt-2 text-[14px] text-slate-200 border-t border-white/10">
                     <div>Hotline: <strong className="text-red-600">{footerData.hotline}</strong></div>
                     <div>Email: <span className="text-red-600 font-semibold">{footerData.support_email}</span></div>
                   </div>
@@ -1336,14 +1336,14 @@ export default function AdminLandingContentPage() {
       {/* Modal Thêm / Sửa Banner */}
       {showBannerModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in">
-          <div className="bg-white rounded-lg max-w-lg w-full p-6 shadow-2xl border border-slate-100 max-h-[90vh] overflow-y-auto">
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-lg max-w-lg w-full p-6 shadow-2xl border border-slate-100 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between pb-3 mb-4 border-b border-slate-100">
-              <h3 className="text-lg font-bold text-slate-900">
+              <h3 className="text-lg font-bold text-white">
                 {editingBanner ? 'Chỉnh Sửa Banner' : 'Thêm Banner Mới'}
               </h3>
               <button
                 onClick={() => setShowBannerModal(false)}
-                className="p-1 rounded-sm text-slate-600 hover:text-slate-600"
+                className="p-1 rounded-sm text-slate-500 hover:text-slate-500"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -1351,7 +1351,7 @@ export default function AdminLandingContentPage() {
 
             <form onSubmit={handleSaveBanner} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-bold text-slate-200 uppercase tracking-wider mb-1.5">
                   Hình Ảnh Banner (URL hoặc Tải lên) *
                 </label>
                 <div className="flex gap-2">
@@ -1361,7 +1361,7 @@ export default function AdminLandingContentPage() {
                     value={bannerFormData.imageUrl}
                     onChange={(e) => setBannerFormData({ ...bannerFormData, imageUrl: e.target.value })}
                     placeholder="https://..."
-                    className="flex-1 px-3.5 py-2.5 rounded border border-slate-300 text-sm focus:outline-none focus:border-blue-500"
+                    className="flex-1 px-3.5 py-2.5 rounded border border-white/20 text-sm focus:outline-none focus:border-blue-500"
                   />
                   <input
                     type="file"
@@ -1374,7 +1374,7 @@ export default function AdminLandingContentPage() {
                     type="button"
                     disabled={uploadingBannerImage}
                     onClick={() => bannerFileInputRef.current?.click()}
-                    className="px-3.5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded text-xs font-bold flex items-center gap-1 shrink-0 disabled:opacity-50"
+                    className="px-3.5 py-2.5 bg-white/10 hover:bg-white/20 text-slate-200 rounded text-xs font-bold flex items-center gap-1 shrink-0 disabled:opacity-50"
                   >
                     {uploadingBannerImage ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
                     Tải Ảnh
@@ -1383,7 +1383,7 @@ export default function AdminLandingContentPage() {
               </div>
 
               {bannerFormData.imageUrl && (
-                <div className="aspect-[16/9] rounded overflow-hidden bg-white border border-slate-200">
+                <div className="aspect-[16/9] rounded overflow-hidden bg-[#1E293B] bg-opacity-70 backdrop-blur-md border border-white/10">
                   <img
                     src={bannerFormData.imageUrl}
                     alt="Preview"
@@ -1396,7 +1396,7 @@ export default function AdminLandingContentPage() {
               )}
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-bold text-slate-200 uppercase tracking-wider mb-1.5">
                   Liên Kết Đích (Link URL)
                 </label>
                 <input
@@ -1404,13 +1404,13 @@ export default function AdminLandingContentPage() {
                   value={bannerFormData.linkUrl}
                   onChange={(e) => setBannerFormData({ ...bannerFormData, linkUrl: e.target.value })}
                   placeholder="/services/cloud-vps hoặc https://..."
-                  className="w-full px-3.5 py-2.5 rounded border border-slate-300 text-sm focus:outline-none focus:border-blue-500"
+                  className="w-full px-3.5 py-2.5 rounded border border-white/20 text-sm focus:outline-none focus:border-blue-500"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                  <label className="block text-xs font-bold text-slate-200 uppercase tracking-wider mb-1.5">
                     Thứ Tự Hiển Thị
                   </label>
                   <input
@@ -1418,7 +1418,7 @@ export default function AdminLandingContentPage() {
                     min={1}
                     value={bannerFormData.displayOrder}
                     onChange={(e) => setBannerFormData({ ...bannerFormData, displayOrder: Number(e.target.value) })}
-                    className="w-full px-3.5 py-2.5 rounded border border-slate-300 text-sm focus:outline-none focus:border-blue-500 font-bold"
+                    className="w-full px-3.5 py-2.5 rounded border border-white/20 text-sm focus:outline-none focus:border-blue-500 font-bold"
                   />
                 </div>
                 <div className="flex items-center pt-6">
@@ -1429,32 +1429,32 @@ export default function AdminLandingContentPage() {
                       onChange={(e) => setBannerFormData({ ...bannerFormData, isActive: e.target.checked })}
                       className="w-4 h-4 text-[#1F1F1F] rounded"
                     />
-                    <span className="text-xs font-bold text-slate-700">Kích hoạt hiển thị</span>
+                    <span className="text-xs font-bold text-slate-200">Kích hoạt hiển thị</span>
                   </label>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                  <label className="block text-xs font-bold text-slate-200 uppercase tracking-wider mb-1.5">
                     Ngày Bắt Đầu
                   </label>
                   <input
                     type="date"
                     value={bannerFormData.startDate}
                     onChange={(e) => setBannerFormData({ ...bannerFormData, startDate: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded border border-slate-300 text-xs focus:outline-none focus:border-blue-500"
+                    className="w-full px-3.5 py-2.5 rounded border border-white/20 text-xs focus:outline-none focus:border-blue-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                  <label className="block text-xs font-bold text-slate-200 uppercase tracking-wider mb-1.5">
                     Ngày Kết Thúc
                   </label>
                   <input
                     type="date"
                     value={bannerFormData.endDate}
                     onChange={(e) => setBannerFormData({ ...bannerFormData, endDate: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded border border-slate-300 text-xs focus:outline-none focus:border-blue-500"
+                    className="w-full px-3.5 py-2.5 rounded border border-white/20 text-xs focus:outline-none focus:border-blue-500"
                   />
                 </div>
               </div>
@@ -1463,7 +1463,7 @@ export default function AdminLandingContentPage() {
                 <button
                   type="button"
                   onClick={() => setShowBannerModal(false)}
-                  className="px-5 py-2.5 rounded border border-slate-200 text-slate-600 hover:bg-slate-50 font-bold text-sm"
+                  className="px-5 py-2.5 rounded border border-white/10 text-slate-500 hover:bg-[#0F172A] font-bold text-sm"
                 >
                   Hủy
                 </button>
@@ -1483,14 +1483,14 @@ export default function AdminLandingContentPage() {
       {/* Modal Thêm / Sửa Thẻ Giải Pháp */}
       {isAddingCard && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in">
-          <div className="bg-white rounded-lg max-w-lg w-full p-6 shadow-2xl border border-slate-100">
-            <h3 className="text-lg font-bold text-slate-900 mb-4 pb-3 border-b border-slate-100">
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-lg max-w-lg w-full p-6 shadow-2xl border border-slate-100">
+            <h3 className="text-lg font-bold text-white mb-4 pb-3 border-b border-slate-100">
               {editingCardIndex !== null ? 'Chỉnh Sửa Thẻ Giải Pháp' : 'Thêm Thẻ Giải Pháp Mới'}
             </h3>
 
             <form onSubmit={handleSaveCard} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-bold text-slate-200 uppercase tracking-wider mb-1.5">
                   Tiêu Đề Giải Pháp *
                 </label>
                 <input
@@ -1499,12 +1499,12 @@ export default function AdminLandingContentPage() {
                   value={cardFormData.title}
                   onChange={(e) => setCardFormData({ ...cardFormData, title: e.target.value })}
                   placeholder="Ví dụ: Chính quyền điện tử, Ngân hàng số..."
-                  className="w-full px-3.5 py-2.5 rounded border border-slate-300 text-sm focus:outline-none focus:border-blue-500 font-semibold"
+                  className="w-full px-3.5 py-2.5 rounded border border-white/20 text-sm focus:outline-none focus:border-blue-500 font-semibold"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-bold text-slate-200 uppercase tracking-wider mb-1.5">
                   Mô Tả Ngắn *
                 </label>
                 <textarea
@@ -1513,12 +1513,12 @@ export default function AdminLandingContentPage() {
                   value={cardFormData.desc}
                   onChange={(e) => setCardFormData({ ...cardFormData, desc: e.target.value })}
                   placeholder="Đoạn mô tả ngắn về giải pháp..."
-                  className="w-full px-3.5 py-2.5 rounded border border-slate-300 text-sm focus:outline-none focus:border-blue-500"
+                  className="w-full px-3.5 py-2.5 rounded border border-white/20 text-sm focus:outline-none focus:border-blue-500"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-bold text-slate-200 uppercase tracking-wider mb-1.5">
                   Ảnh Nền Thẻ *
                 </label>
                 <div className="flex gap-2">
@@ -1528,7 +1528,7 @@ export default function AdminLandingContentPage() {
                     value={cardFormData.img}
                     onChange={(e) => setCardFormData({ ...cardFormData, img: e.target.value })}
                     placeholder="https://images.unsplash.com/..."
-                    className="flex-1 px-3.5 py-2.5 rounded border border-slate-300 text-sm focus:outline-none focus:border-blue-500"
+                    className="flex-1 px-3.5 py-2.5 rounded border border-white/20 text-sm focus:outline-none focus:border-blue-500"
                   />
                   <input
                     type="file"
@@ -1540,7 +1540,7 @@ export default function AdminLandingContentPage() {
                   <button
                     type="button"
                     onClick={() => cardFileInputRef.current?.click()}
-                    className="px-3.5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded text-xs font-bold flex items-center gap-1 shrink-0"
+                    className="px-3.5 py-2.5 bg-white/10 hover:bg-white/20 text-slate-200 rounded text-xs font-bold flex items-center gap-1 shrink-0"
                   >
                     <Upload className="w-4 h-4" /> Tải Ảnh
                   </button>
@@ -1548,7 +1548,7 @@ export default function AdminLandingContentPage() {
               </div>
 
               {cardFormData.img && (
-                <div className="aspect-[16/9] rounded overflow-hidden bg-slate-100 border border-slate-200">
+                <div className="aspect-[16/9] rounded overflow-hidden bg-white/10 border border-white/10">
                   <img
                     src={cardFormData.img}
                     alt="Preview"
@@ -1561,7 +1561,7 @@ export default function AdminLandingContentPage() {
               )}
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-bold text-slate-200 uppercase tracking-wider mb-1.5">
                   Liên Kết Chi Tiết (Link)
                 </label>
                 <input
@@ -1569,7 +1569,7 @@ export default function AdminLandingContentPage() {
                   value={cardFormData.link}
                   onChange={(e) => setCardFormData({ ...cardFormData, link: e.target.value })}
                   placeholder="/services/cloud-vps hoặc https://..."
-                  className="w-full px-3.5 py-2.5 rounded border border-slate-300 text-sm focus:outline-none focus:border-blue-500"
+                  className="w-full px-3.5 py-2.5 rounded border border-white/20 text-sm focus:outline-none focus:border-blue-500"
                 />
               </div>
 
@@ -1577,7 +1577,7 @@ export default function AdminLandingContentPage() {
                 <button
                   type="button"
                   onClick={() => setIsAddingCard(false)}
-                  className="px-5 py-2.5 rounded border border-slate-200 text-slate-600 hover:bg-slate-50 font-bold text-sm"
+                  className="px-5 py-2.5 rounded border border-white/10 text-slate-500 hover:bg-[#0F172A] font-bold text-sm"
                 >
                   Hủy
                 </button>
@@ -1596,14 +1596,14 @@ export default function AdminLandingContentPage() {
       {/* Modal Thêm Tab Ngành Mới */}
       {isAddingTab && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in">
-          <div className="bg-white rounded-lg max-w-md w-full p-6 shadow-2xl border border-slate-100">
-            <h3 className="text-lg font-bold text-slate-900 mb-4 pb-3 border-b border-slate-100">
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-lg max-w-md w-full p-6 shadow-2xl border border-slate-100">
+            <h3 className="text-lg font-bold text-white mb-4 pb-3 border-b border-slate-100">
               Thêm Tab Ngành Nghề Mới
             </h3>
 
             <div className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-bold text-slate-200 uppercase tracking-wider mb-1.5">
                   Tên Ngành Nghề *
                 </label>
                 <input
@@ -1611,7 +1611,7 @@ export default function AdminLandingContentPage() {
                   value={newTabLabel}
                   onChange={(e) => setNewTabLabel(e.target.value)}
                   placeholder="Ví dụ: Nông nghiệp công nghệ cao, Bất động sản..."
-                  className="w-full px-3.5 py-2.5 rounded border border-slate-300 text-sm focus:outline-none focus:border-blue-500 font-semibold"
+                  className="w-full px-3.5 py-2.5 rounded border border-white/20 text-sm focus:outline-none focus:border-blue-500 font-semibold"
                   autoFocus
                 />
               </div>
@@ -1623,7 +1623,7 @@ export default function AdminLandingContentPage() {
                     setIsAddingTab(false);
                     setNewTabLabel('');
                   }}
-                  className="px-5 py-2.5 rounded border border-slate-200 text-slate-600 hover:bg-slate-50 font-bold text-sm"
+                  className="px-5 py-2.5 rounded border border-white/10 text-slate-500 hover:bg-[#0F172A] font-bold text-sm"
                 >
                   Hủy
                 </button>

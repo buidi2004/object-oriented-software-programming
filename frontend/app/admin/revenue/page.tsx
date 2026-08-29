@@ -260,7 +260,7 @@ export default function AdminRevenuePage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[#0F172A] flex items-center justify-center">
         <div className="w-12 h-12 border-4 border-[#1F1F1F] border-t-transparent rounded-full animate-spin" />
       </div>
     );
@@ -269,7 +269,7 @@ export default function AdminRevenuePage() {
   const rangeLabel = dateRange === '7d' ? '7 ngày trước' : dateRange === '30d' ? 'tháng trước' : dateRange === '90d' ? 'quý trước' : 'năm trước';
 
   return (
-    <div className="min-h-screen bg-slate-50 py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#0F172A] py-8 px-4 sm:px-6 lg:px-8">
       {/* Toast */}
       {toast && (
         <div className={`fixed bottom-5 right-5 z-50 px-4 py-3 rounded-lg shadow-xl text-white font-bold text-xs flex items-center gap-2.5 animate-in slide-in-from-bottom-5 ${
@@ -283,12 +283,12 @@ export default function AdminRevenuePage() {
       <div className="max-w-7xl mx-auto space-y-6">
         
         {/* Header & Controls */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-200/90 shadow-2xs">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-[#1E293B] bg-opacity-70 backdrop-blur-md p-6 rounded-2xl border border-white/10/90 shadow-2xs">
           <div>
-            <Link href="/admin" className="text-xs font-bold text-slate-500 hover:text-slate-900 flex items-center gap-1 mb-2">
+            <Link href="/admin" className="text-xs font-bold text-slate-500 hover:text-white flex items-center gap-1 mb-2">
               <ArrowLeft className="w-3.5 h-3.5" /> Quay lại Admin Panel
             </Link>
-            <h1 className="text-xl sm:text-2xl font-black text-slate-900 flex items-center gap-2.5">
+            <h1 className="text-xl sm:text-2xl font-black text-white flex items-center gap-2.5">
               <TrendingUp className="w-6 h-6 text-emerald-600" />
               <span>Báo Cáo Doanh Thu, Tăng Trưởng &amp; Người Dùng</span>
             </h1>
@@ -298,15 +298,15 @@ export default function AdminRevenuePage() {
           </div>
 
           <div className="flex items-center gap-3 self-start md:self-auto">
-            <div className="flex items-center bg-slate-100 p-1 rounded-lg text-xs font-bold">
+            <div className="flex items-center bg-white/10 p-1 rounded-lg text-xs font-bold">
               {(['7d', '30d', '90d', '365d'] as const).map((r) => (
                 <button
                   key={r}
                   onClick={() => setDateRange(r)}
                   className={`px-3 py-1.5 rounded-md transition-colors ${
                     dateRange === r
-                      ? 'bg-white text-slate-900 shadow-2xs'
-                      : 'text-slate-600 hover:text-slate-900'
+                      ? 'bg-[#1E293B] bg-opacity-70 backdrop-blur-md text-white shadow-2xs'
+                      : 'text-slate-500 hover:text-white'
                   }`}
                 >
                   {r === '7d' ? '7 Ngày' : r === '30d' ? '30 Ngày' : r === '90d' ? '3 Tháng' : '1 Năm'}
@@ -333,9 +333,9 @@ export default function AdminRevenuePage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           
           {/* Card 1: Tiền Khách Mua Hàng + Growth % Badge */}
-          <div className="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-2xs hover:shadow-md transition-all">
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-2xl p-5 border border-white/10/90 shadow-2xs hover:shadow-md transition-all">
             <div className="flex items-center justify-between mb-3">
-              <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
+              <div className="w-10 h-10 rounded-xl bg-blue-900/30 text-blue-400 flex items-center justify-center font-bold">
                 <ShoppingCart className="w-5 h-5" />
               </div>
               
@@ -349,19 +349,19 @@ export default function AdminRevenuePage() {
               </span>
             </div>
 
-            <p className="text-2xl font-black text-slate-900 tracking-tight">
+            <p className="text-2xl font-black text-white tracking-tight">
               {formatCurrency(stats.totalRevenue)}
             </p>
-            <p className="text-xs font-bold text-slate-600 mt-1">
+            <p className="text-xs font-bold text-slate-500 mt-1">
               🛒 Tiền Khách Mua Hàng (Doanh Thu Dịch Vụ)
             </p>
-            <p className="text-[11px] text-slate-400 mt-1">
+            <p className="text-[11px] text-slate-500 mt-1">
               {stats.isGrowthPositive ? 'Tăng' : 'Giảm'} so với {rangeLabel} ({formatCurrency(stats.previousPeriodRevenue)})
             </p>
           </div>
 
           {/* Card 2: Tiền Khách Nạp Ví */}
-          <div className="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-2xs hover:shadow-md transition-all">
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-2xl p-5 border border-white/10/90 shadow-2xs hover:shadow-md transition-all">
             <div className="flex items-center justify-between mb-3">
               <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">
                 <ArrowDownLeft className="w-5 h-5" />
@@ -373,16 +373,16 @@ export default function AdminRevenuePage() {
             <p className="text-2xl font-black text-emerald-700 tracking-tight">
               {formatCurrency(stats.totalWalletTopUp)}
             </p>
-            <p className="text-xs font-bold text-slate-600 mt-1">
+            <p className="text-xs font-bold text-slate-500 mt-1">
               💳 Tiền Khách Nạp Vào Ví Tài Khoản
             </p>
-            <p className="text-[11px] text-slate-400 mt-1">
+            <p className="text-[11px] text-slate-500 mt-1">
               Dòng tiền nạp qua VNPay, MoMo, Chuyển khoản ngân hàng.
             </p>
           </div>
 
           {/* Card 3: Tiền Khách Rút / Hoàn Ví */}
-          <div className="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-2xs hover:shadow-md transition-all">
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-2xl p-5 border border-white/10/90 shadow-2xs hover:shadow-md transition-all">
             <div className="flex items-center justify-between mb-3">
               <div className="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center font-bold">
                 <ArrowUpRight className="w-5 h-5" />
@@ -394,16 +394,16 @@ export default function AdminRevenuePage() {
             <p className="text-2xl font-black text-rose-600 tracking-tight">
               {formatCurrency(stats.totalRefunds)}
             </p>
-            <p className="text-xs font-bold text-slate-600 mt-1">
+            <p className="text-xs font-bold text-slate-500 mt-1">
               💸 Tiền Khách Rút Ví / Hoàn Trả Ngân Hàng
             </p>
-            <p className="text-[11px] text-slate-400 mt-1">
+            <p className="text-[11px] text-slate-500 mt-1">
               Các khoản hoàn tiền dịch vụ đã được kế toán xét duyệt thành công.
             </p>
           </div>
 
           {/* Card 4: Số Dư Ví Đang Lưu Hành */}
-          <div className="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-2xs hover:shadow-md transition-all">
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-2xl p-5 border border-white/10/90 shadow-2xs hover:shadow-md transition-all">
             <div className="flex items-center justify-between mb-3">
               <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold">
                 <Wallet className="w-5 h-5" />
@@ -412,19 +412,19 @@ export default function AdminRevenuePage() {
                 Ví Lưu Hành
               </span>
             </div>
-            <p className="text-2xl font-black text-slate-900 tracking-tight">
+            <p className="text-2xl font-black text-white tracking-tight">
               {formatCurrency(stats.totalWalletBalance)}
             </p>
-            <p className="text-xs font-bold text-slate-600 mt-1">
+            <p className="text-xs font-bold text-slate-500 mt-1">
               💰 Tổng Số Dư Khách Đang Giữ Trong Ví
             </p>
-            <p className="text-[11px] text-slate-400 mt-1">
+            <p className="text-[11px] text-slate-500 mt-1">
               Khoản tiền khả dụng trong ví của {stats.totalUsers} khách hàng.
             </p>
           </div>
 
           {/* Card 5: Dòng Tiền Ròng Thực Tế */}
-          <div className="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-2xs hover:shadow-md transition-all">
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-2xl p-5 border border-white/10/90 shadow-2xs hover:shadow-md transition-all">
             <div className="flex items-center justify-between mb-3">
               <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold">
                 <DollarSign className="w-5 h-5" />
@@ -436,31 +436,31 @@ export default function AdminRevenuePage() {
             <p className="text-2xl font-black text-indigo-700 tracking-tight">
               {formatCurrency(stats.netCashFlow)}
             </p>
-            <p className="text-xs font-bold text-slate-600 mt-1">
+            <p className="text-xs font-bold text-slate-500 mt-1">
               📈 Dòng Tiền Ròng Thực Thu (Net Cash Flow)
             </p>
-            <p className="text-[11px] text-slate-400 mt-1">
+            <p className="text-[11px] text-slate-500 mt-1">
               = (Tiền Mua Hàng + Nạp Ví) - Tiền Rút/Hoàn Ví.
             </p>
           </div>
 
           {/* Card 6: Giá Trị Đơn Trung Bình */}
-          <div className="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-2xs hover:shadow-md transition-all">
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-2xl p-5 border border-white/10/90 shadow-2xs hover:shadow-md transition-all">
             <div className="flex items-center justify-between mb-3">
-              <div className="w-10 h-10 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center font-bold">
+              <div className="w-10 h-10 rounded-xl bg-white/10 text-slate-200 flex items-center justify-center font-bold">
                 <Users className="w-5 h-5" />
               </div>
-              <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 text-[10px] font-bold">
+              <span className="px-2 py-0.5 rounded-full bg-white/10 text-slate-200 text-[10px] font-bold">
                 {stats.totalOrders} đơn hàng
               </span>
             </div>
-            <p className="text-2xl font-black text-slate-900 tracking-tight">
+            <p className="text-2xl font-black text-white tracking-tight">
               {formatCurrency(stats.averageOrderValue)}
             </p>
-            <p className="text-xs font-bold text-slate-600 mt-1">
+            <p className="text-xs font-bold text-slate-500 mt-1">
               📊 Giá Trị Trung Bình Mỗi Đơn Hàng (AOV)
             </p>
-            <p className="text-[11px] text-slate-400 mt-1">
+            <p className="text-[11px] text-slate-500 mt-1">
               Tổng số {stats.totalOrders} đơn hàng đã hoàn tất thanh toán.
             </p>
           </div>
@@ -468,15 +468,15 @@ export default function AdminRevenuePage() {
         </div>
 
         {/* Multi-Series Chart 1: Revenue Streams */}
-        <div className="bg-white rounded-2xl p-6 border border-slate-200/90 shadow-2xs space-y-4">
+        <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-2xl p-6 border border-white/10/90 shadow-2xs space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
             <div>
-              <h2 className="text-base font-black text-slate-900">Biểu Đồ Đối Soát Dòng Tiền Theo Thời Gian</h2>
+              <h2 className="text-base font-black text-white">Biểu Đồ Đối Soát Dòng Tiền Theo Thời Gian</h2>
               <p className="text-xs text-slate-500">So sánh trực quan: Tiền Mua Hàng (Xanh dương), Tiền Nạp Ví (Xanh lá) và Tiền Hoàn Trả (Đỏ).</p>
             </div>
 
             <div className="flex items-center gap-4 text-xs font-bold">
-              <span className="flex items-center gap-1.5 text-blue-600">
+              <span className="flex items-center gap-1.5 text-blue-400">
                 <span className="w-3 h-3 rounded-full bg-blue-500 inline-block" /> Mua Hàng
               </span>
               <span className="flex items-center gap-1.5 text-emerald-600">
@@ -489,7 +489,7 @@ export default function AdminRevenuePage() {
           </div>
 
           <div className="h-[280px] w-full pt-2">
-            <React.Suspense fallback={<div className="h-full flex items-center justify-center text-xs text-slate-400">Đang tải biểu đồ...</div>}>
+            <React.Suspense fallback={<div className="h-full flex items-center justify-center text-xs text-slate-500">Đang tải biểu đồ...</div>}>
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={revenueData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                   <defs>
@@ -539,7 +539,7 @@ export default function AdminRevenuePage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           
           {/* User Card 1: Tổng Người Dùng */}
-          <div className="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-2xs hover:shadow-md transition-all">
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-2xl p-5 border border-white/10/90 shadow-2xs hover:shadow-md transition-all">
             <div className="flex items-center justify-between mb-2">
               <div className="w-9 h-9 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center font-bold">
                 <Users className="w-4.5 h-4.5" />
@@ -548,32 +548,32 @@ export default function AdminRevenuePage() {
                 Toàn Hệ Thống
               </span>
             </div>
-            <p className="text-2xl font-black text-slate-900 tracking-tight">
+            <p className="text-2xl font-black text-white tracking-tight">
               {stats.totalUsers} <span className="text-xs font-normal text-slate-500">khách hàng</span>
             </p>
-            <p className="text-xs font-bold text-slate-600 mt-1">👥 Tổng Tài Khoản Người Dùng</p>
-            <p className="text-[11px] text-slate-400 mt-0.5">Tất cả khách hàng đã kích hoạt tài khoản</p>
+            <p className="text-xs font-bold text-slate-500 mt-1">👥 Tổng Tài Khoản Người Dùng</p>
+            <p className="text-[11px] text-slate-500 mt-0.5">Tất cả khách hàng đã kích hoạt tài khoản</p>
           </div>
 
           {/* User Card 2: Người Dùng Mới Đăng Ký */}
-          <div className="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-2xs hover:shadow-md transition-all">
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-2xl p-5 border border-white/10/90 shadow-2xs hover:shadow-md transition-all">
             <div className="flex items-center justify-between mb-2">
-              <div className="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
+              <div className="w-9 h-9 rounded-xl bg-blue-900/30 text-blue-400 flex items-center justify-center font-bold">
                 <UserPlus className="w-4.5 h-4.5" />
               </div>
-              <span className="px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 text-[10px] font-bold border border-blue-200">
+              <span className="px-2 py-0.5 rounded-full bg-blue-900/30 text-blue-300 text-[10px] font-bold border border-blue-200">
                 {dateRange}
               </span>
             </div>
-            <p className="text-2xl font-black text-blue-600 tracking-tight">
+            <p className="text-2xl font-black text-blue-400 tracking-tight">
               +{stats.newUsersInPeriod} <span className="text-xs font-normal text-slate-500">đăng ký mới</span>
             </p>
-            <p className="text-xs font-bold text-slate-600 mt-1">🚀 Khách Hàng Đăng Ký Mới</p>
-            <p className="text-[11px] text-slate-400 mt-0.5">Số lượng tài khoản mới mở trong kỳ</p>
+            <p className="text-xs font-bold text-slate-500 mt-1">🚀 Khách Hàng Đăng Ký Mới</p>
+            <p className="text-[11px] text-slate-500 mt-0.5">Số lượng tài khoản mới mở trong kỳ</p>
           </div>
 
           {/* User Card 3: Người Dùng Đang Hoạt Động */}
-          <div className="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-2xs hover:shadow-md transition-all">
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-2xl p-5 border border-white/10/90 shadow-2xs hover:shadow-md transition-all">
             <div className="flex items-center justify-between mb-2">
               <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">
                 <UserCheck className="w-4.5 h-4.5" />
@@ -585,12 +585,12 @@ export default function AdminRevenuePage() {
             <p className="text-2xl font-black text-emerald-600 tracking-tight">
               {stats.activeUsersInPeriod} <span className="text-xs font-normal text-slate-500">tài khoản</span>
             </p>
-            <p className="text-xs font-bold text-slate-600 mt-1">⚡ Đang Hoạt Động Tích Cực</p>
-            <p className="text-[11px] text-slate-400 mt-0.5">Có đăng nhập hoặc phát sinh đơn hàng gần đây</p>
+            <p className="text-xs font-bold text-slate-500 mt-1">⚡ Đang Hoạt Động Tích Cực</p>
+            <p className="text-[11px] text-slate-500 mt-0.5">Có đăng nhập hoặc phát sinh đơn hàng gần đây</p>
           </div>
 
           {/* User Card 4: Người Dùng Không Truy Cập Lâu */}
-          <div className="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-2xs hover:shadow-md transition-all">
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-2xl p-5 border border-white/10/90 shadow-2xs hover:shadow-md transition-all">
             <div className="flex items-center justify-between mb-2">
               <div className="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold">
                 <UserX className="w-4.5 h-4.5" />
@@ -602,17 +602,17 @@ export default function AdminRevenuePage() {
             <p className="text-2xl font-black text-amber-600 tracking-tight">
               {stats.dormantUsersCount} <span className="text-xs font-normal text-slate-500">tài khoản</span>
             </p>
-            <p className="text-xs font-bold text-slate-600 mt-1">💤 Chưa Truy Cập Lâu (&gt;30 ngày)</p>
-            <p className="text-[11px] text-slate-400 mt-0.5">Tỷ lệ mua hàng: <strong>{stats.userConversionRate}%</strong></p>
+            <p className="text-xs font-bold text-slate-500 mt-1">💤 Chưa Truy Cập Lâu (&gt;30 ngày)</p>
+            <p className="text-[11px] text-slate-500 mt-0.5">Tỷ lệ mua hàng: <strong>{stats.userConversionRate}%</strong></p>
           </div>
 
         </div>
 
         {/* CHART 2: USER REGISTRATION & ENGAGEMENT TREND */}
-        <div className="bg-white rounded-2xl p-6 border border-slate-200/90 shadow-2xs space-y-4">
+        <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-2xl p-6 border border-white/10/90 shadow-2xs space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
             <div>
-              <h2 className="text-base font-black text-slate-900 flex items-center gap-2">
+              <h2 className="text-base font-black text-white flex items-center gap-2">
                 <Activity className="w-5 h-5 text-purple-600" />
                 <span>Biểu Đồ Theo Dõi Hoạt Động &amp; Tăng Trưởng Khách Hàng</span>
               </h2>
@@ -633,7 +633,7 @@ export default function AdminRevenuePage() {
           </div>
 
           <div className="h-[260px] w-full pt-2">
-            <React.Suspense fallback={<div className="h-full flex items-center justify-center text-xs text-slate-400">Đang tải biểu đồ khách hàng...</div>}>
+            <React.Suspense fallback={<div className="h-full flex items-center justify-center text-xs text-slate-500">Đang tải biểu đồ khách hàng...</div>}>
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={userTrendData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                   <defs>
@@ -682,9 +682,9 @@ export default function AdminRevenuePage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           
           {/* TOP 5 DỊCH VỤ ĐƯỢC MUA NHIỀU NHẤT */}
-          <div className="bg-white rounded-2xl p-6 border border-slate-200/90 shadow-2xs space-y-4">
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-2xl p-6 border border-white/10/90 shadow-2xs space-y-4">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="text-sm font-black text-slate-900 flex items-center gap-2">
+              <h3 className="text-sm font-black text-white flex items-center gap-2">
                 <Flame className="w-4 h-4 text-orange-500" />
                 <span>Top Gói Dịch Vụ Được Mua Nhiều Nhất</span>
               </h3>
@@ -694,25 +694,25 @@ export default function AdminRevenuePage() {
             </div>
 
             {topSellingServices.length === 0 ? (
-              <div className="text-center py-10 text-slate-400 text-xs">Chưa có dữ liệu đơn hàng trong kỳ này.</div>
+              <div className="text-center py-10 text-slate-500 text-xs">Chưa có dữ liệu đơn hàng trong kỳ này.</div>
             ) : (
               <div className="space-y-3.5">
                 {topSellingServices.map((svc, idx) => (
-                  <div key={idx} className="p-3 rounded-xl bg-slate-50 border border-slate-200/60 flex items-center justify-between gap-3 hover:bg-slate-100/70 transition-colors">
+                  <div key={idx} className="p-3 rounded-xl bg-[#0F172A] border border-white/10/60 flex items-center justify-between gap-3 hover:bg-white/10/70 transition-colors">
                     <div className="flex items-center gap-3 min-w-0 flex-1">
                       <span className={`w-6 h-6 rounded-md flex items-center justify-center text-xs font-black shrink-0 ${
-                        idx === 0 ? 'bg-amber-500 text-white' : idx === 1 ? 'bg-slate-400 text-white' : idx === 2 ? 'bg-amber-700 text-white' : 'bg-slate-200 text-slate-700'
+                        idx === 0 ? 'bg-amber-500 text-white' : idx === 1 ? 'bg-slate-400 text-white' : idx === 2 ? 'bg-amber-700 text-white' : 'bg-white/20 text-slate-200'
                       }`}>
                         #{idx + 1}
                       </span>
                       <div className="min-w-0 flex-1">
-                        <p className="text-xs font-bold text-slate-900 truncate">{svc.planName}</p>
-                        <p className="text-[11px] text-slate-500">{svc.categoryName} • <strong className="text-slate-700 font-bold">{svc.totalUnitsSold} lượt mua</strong></p>
+                        <p className="text-xs font-bold text-white truncate">{svc.planName}</p>
+                        <p className="text-[11px] text-slate-500">{svc.categoryName} • <strong className="text-slate-200 font-bold">{svc.totalUnitsSold} lượt mua</strong></p>
                       </div>
                     </div>
 
                     <div className="text-right shrink-0">
-                      <p className="text-xs font-black text-blue-600">{formatCurrency(svc.totalRevenue)}</p>
+                      <p className="text-xs font-black text-blue-400">{formatCurrency(svc.totalRevenue)}</p>
                       <span className="text-[10px] font-bold text-slate-500 font-mono">Chiếm {svc.revenueSharePercentage}</span>
                     </div>
                   </div>
@@ -722,9 +722,9 @@ export default function AdminRevenuePage() {
           </div>
 
           {/* TOP DỊCH VỤ BỊ YÊU CẦU HOÀN TIỀN & LÝ DO */}
-          <div className="bg-white rounded-2xl p-6 border border-slate-200/90 shadow-2xs space-y-4">
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-2xl p-6 border border-white/10/90 shadow-2xs space-y-4">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="text-sm font-black text-slate-900 flex items-center gap-2">
+              <h3 className="text-sm font-black text-white flex items-center gap-2">
                 <AlertTriangle className="w-4 h-4 text-rose-500" />
                 <span>Dịch Vụ Bị Yêu Cầu Hoàn Tiền &amp; Lý Do</span>
               </h3>
@@ -743,12 +743,12 @@ export default function AdminRevenuePage() {
                   <div key={idx} className="p-3 rounded-xl bg-rose-50/40 border border-rose-200/70 flex items-center justify-between gap-3">
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
-                        <p className="text-xs font-bold text-slate-900 truncate">{ref.serviceName}</p>
+                        <p className="text-xs font-bold text-white truncate">{ref.serviceName}</p>
                         <span className="px-1.5 py-0.2 rounded text-[9px] font-bold bg-rose-100 text-rose-700 border border-rose-200">
                           {ref.refundCount} yêu cầu
                         </span>
                       </div>
-                      <p className="text-[11px] text-slate-600 mt-1 italic leading-tight line-clamp-1">
+                      <p className="text-[11px] text-slate-500 mt-1 italic leading-tight line-clamp-1">
                         " {ref.reason} "
                       </p>
                     </div>
@@ -769,23 +769,23 @@ export default function AdminRevenuePage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           
           {/* Category Breakdown */}
-          <div className="bg-white rounded-2xl p-6 border border-slate-200/90 shadow-2xs space-y-4">
-            <h3 className="text-sm font-black text-slate-900 flex items-center gap-2">
-              <PieChart className="w-4 h-4 text-slate-700" />
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-2xl p-6 border border-white/10/90 shadow-2xs space-y-4">
+            <h3 className="text-sm font-black text-white flex items-center gap-2">
+              <PieChart className="w-4 h-4 text-slate-200" />
               <span>Cơ Cấu Doanh Thu Theo Danh Mục</span>
             </h3>
 
             {categoryBreakdown.length === 0 ? (
-              <p className="text-xs text-slate-400 py-8 text-center">Chưa có dữ liệu cơ cấu doanh thu.</p>
+              <p className="text-xs text-slate-500 py-8 text-center">Chưa có dữ liệu cơ cấu doanh thu.</p>
             ) : (
               <div className="space-y-3.5">
                 {categoryBreakdown.map((cat, idx) => (
                   <div key={idx} className="space-y-1.5">
                     <div className="flex items-center justify-between text-xs font-bold">
-                      <span className="text-slate-800">{cat.name}</span>
+                      <span className="text-slate-100">{cat.name}</span>
                       <span className="text-slate-500 font-mono">{cat.sharePercentage} ({formatCurrency(cat.revenue)})</span>
                     </div>
-                    <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                    <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
                       <div 
                         className={`h-full rounded-full ${cat.color || 'bg-blue-600'}`}
                         style={{ width: `${parseFloat(cat.sharePercentage) || 0}%` }}
@@ -798,10 +798,10 @@ export default function AdminRevenuePage() {
           </div>
 
           {/* Daily Table Log */}
-          <div className="lg:col-span-2 bg-white rounded-2xl p-6 border border-slate-200/90 shadow-2xs space-y-4">
+          <div className="lg:col-span-2 bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-2xl p-6 border border-white/10/90 shadow-2xs space-y-4">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="text-sm font-black text-slate-900 flex items-center gap-2">
-                <Calendar className="w-4 h-4 text-slate-700" />
+              <h3 className="text-sm font-black text-white flex items-center gap-2">
+                <Calendar className="w-4 h-4 text-slate-200" />
                 <span>Bảng Kê Đối Soát Thu - Chi Chi Tiết ({revenueData.length} ngày)</span>
               </h3>
               <button
@@ -815,7 +815,7 @@ export default function AdminRevenuePage() {
 
             <div className="overflow-x-auto max-h-[300px]">
               <table className="w-full text-left text-xs border-collapse">
-                <thead className="bg-slate-50 text-slate-700 font-bold sticky top-0 border-b border-slate-200">
+                <thead className="bg-[#0F172A] text-slate-200 font-bold sticky top-0 border-b border-white/10">
                   <tr>
                     <th className="p-2.5">Ngày</th>
                     <th className="p-2.5">Tiền Mua Hàng</th>
@@ -825,16 +825,16 @@ export default function AdminRevenuePage() {
                     <th className="p-2.5">Số Đơn</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 text-slate-700 font-mono text-[11px]">
+                <tbody className="divide-y divide-white/10 text-slate-200 font-mono text-[11px]">
                   {revenueData.slice(-15).reverse().map((row, idx) => {
                     const netDay = (row.revenue + (row.walletTopUp || 0)) - (row.refunds || 0);
                     return (
-                      <tr key={idx} className="hover:bg-slate-50">
-                        <td className="p-2.5 font-bold text-slate-900">{row.date}</td>
-                        <td className="p-2.5 text-blue-600 font-bold">{formatCurrency(row.revenue)}</td>
+                      <tr key={idx} className="hover:bg-[#0F172A]">
+                        <td className="p-2.5 font-bold text-white">{row.date}</td>
+                        <td className="p-2.5 text-blue-400 font-bold">{formatCurrency(row.revenue)}</td>
                         <td className="p-2.5 text-emerald-600 font-bold">{formatCurrency(row.walletTopUp || 0)}</td>
                         <td className="p-2.5 text-rose-600 font-bold">{formatCurrency(row.refunds || 0)}</td>
-                        <td className={`p-2.5 font-bold ${netDay >= 0 ? 'text-slate-900' : 'text-rose-600'}`}>
+                        <td className={`p-2.5 font-bold ${netDay >= 0 ? 'text-white' : 'text-rose-600'}`}>
                           {formatCurrency(netDay)}
                         </td>
                         <td className="p-2.5 text-slate-500">{row.orders} đơn</td>

@@ -157,14 +157,14 @@ export default function AdminAbandonedCartsPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[#0F172A] flex items-center justify-center">
         <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-[#0F172A]">
       {/* Toast */}
       {toast && (
         <div className={`fixed bottom-5 right-5 z-50 px-5 py-3 rounded shadow-xl text-white font-semibold text-sm flex items-center gap-2.5 animate-in slide-in-from-bottom-5 ${
@@ -175,20 +175,20 @@ export default function AdminAbandonedCartsPage() {
         </div>
       )}
 
-      <header className="bg-white border-b border-slate-200 sticky top-0 z-40">
+      <header className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md border-b border-white/10 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link href="/admin" className="p-2 rounded-sm hover:bg-slate-100 transition-colors">
-              <ArrowLeft className="w-5 h-5 text-slate-600" />
+            <Link href="/admin" className="p-2 rounded-sm hover:bg-white/10 transition-colors">
+              <ArrowLeft className="w-5 h-5 text-slate-500" />
             </Link>
             <div>
-              <h1 className="text-xl font-bold text-slate-900">Giỏ Hàng Bỏ Quên & Khôi Phục (Recovery)</h1>
-              <p className="text-xs text-slate-600">{carts.length} giỏ hàng đang theo dõi</p>
+              <h1 className="text-xl font-bold text-white">Giỏ Hàng Bỏ Quên & Khôi Phục (Recovery)</h1>
+              <p className="text-xs text-slate-500">{carts.length} giỏ hàng đang theo dõi</p>
             </div>
           </div>
           <button
             onClick={fetchCarts}
-            className="p-2 text-slate-600 hover:bg-slate-100 rounded transition-colors"
+            className="p-2 text-slate-500 hover:bg-white/10 rounded transition-colors"
             title="Tải lại danh sách"
           >
             <RefreshCw className="w-5 h-5" />
@@ -199,19 +199,19 @@ export default function AdminAbandonedCartsPage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          <div className="bg-white rounded-md p-5 border border-slate-200 shadow-sm flex items-center gap-4">
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-md p-5 border border-white/10 shadow-sm flex items-center gap-4">
             <div className="w-12 h-12 rounded bg-amber-50 text-amber-600 flex items-center justify-center font-bold">
               <ShoppingCart className="w-6 h-6" />
             </div>
             <div>
-              <p className="text-2xl font-black text-slate-900">
+              <p className="text-2xl font-black text-white">
                 {carts.filter(c => c.status === 'abandoned').length}
               </p>
-              <p className="text-xs text-slate-600 font-semibold">Chưa hoàn tất thanh toán</p>
+              <p className="text-xs text-slate-500 font-semibold">Chưa hoàn tất thanh toán</p>
             </div>
           </div>
           
-          <div className="bg-white rounded-md p-5 border border-slate-200 shadow-sm flex items-center gap-4">
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-md p-5 border border-white/10 shadow-sm flex items-center gap-4">
             <div className="w-12 h-12 rounded bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">
               <DollarSign className="w-6 h-6" />
             </div>
@@ -219,19 +219,19 @@ export default function AdminAbandonedCartsPage() {
               <p className="text-2xl font-black text-emerald-600">
                 {formatCurrency(carts.filter(c => c.status === 'recovered').reduce((sum, c) => sum + c.totalAmount, 0))}
               </p>
-              <p className="text-xs text-slate-600 font-semibold">Doanh thu đã khôi phục</p>
+              <p className="text-xs text-slate-500 font-semibold">Doanh thu đã khôi phục</p>
             </div>
           </div>
 
-          <div className="bg-white rounded-md p-5 border border-slate-200 shadow-sm flex items-center gap-4">
-            <div className="w-12 h-12 rounded bg-blue-50 text-[#1F1F1F] flex items-center justify-center font-bold">
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-md p-5 border border-white/10 shadow-sm flex items-center gap-4">
+            <div className="w-12 h-12 rounded bg-blue-900/30 text-[#1F1F1F] flex items-center justify-center font-bold">
               <Package className="w-6 h-6" />
             </div>
             <div>
-              <p className="text-2xl font-black text-slate-900">
+              <p className="text-2xl font-black text-white">
                 {formatCurrency(carts.reduce((sum, c) => sum + c.totalAmount, 0))}
               </p>
-              <p className="text-xs text-slate-600 font-semibold">Tổng giá trị đơn hàng</p>
+              <p className="text-xs text-slate-500 font-semibold">Tổng giá trị đơn hàng</p>
             </div>
           </div>
         </div>
@@ -239,13 +239,13 @@ export default function AdminAbandonedCartsPage() {
         {/* Filter & Search */}
         <div className="flex flex-col sm:flex-row gap-4 mb-6 items-center justify-between">
           <div className="relative w-full sm:max-w-md">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-600" />
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
             <input
               type="text"
               placeholder="Tìm kiếm theo tên khách hàng hoặc email..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 bg-white rounded border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 shadow-sm"
+              className="w-full pl-10 pr-4 py-2.5 bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded border border-white/10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 shadow-sm"
             />
           </div>
 
@@ -262,7 +262,7 @@ export default function AdminAbandonedCartsPage() {
                 className={`px-4 py-2 rounded text-xs font-semibold transition-colors ${
                   filter === tab.key
                     ? 'bg-blue-600 text-white shadow-sm'
-                    : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200'
+                    : 'bg-[#1E293B] bg-opacity-70 backdrop-blur-md text-slate-500 hover:bg-[#0F172A] border border-white/10'
                 }`}
               >
                 {tab.label}
@@ -274,31 +274,31 @@ export default function AdminAbandonedCartsPage() {
         {/* Cart List */}
         <div className="space-y-4">
           {filteredCarts.map((cart) => (
-            <div key={cart.id} className="bg-white rounded-md border border-slate-200 p-6 shadow-sm hover:shadow-md transition-shadow">
+            <div key={cart.id} className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-md border border-white/10 p-6 shadow-sm hover:shadow-md transition-shadow">
               <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
                 <div>
                   <div className="flex items-center gap-3 mb-1.5">
-                    <h3 className="font-black text-slate-900 text-base">{cart.customerName}</h3>
+                    <h3 className="font-black text-white text-base">{cart.customerName}</h3>
                     <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold ${
                       cart.status === 'abandoned' ? 'bg-amber-100 text-amber-700' :
                       cart.status === 'recovered' ? 'bg-emerald-100 text-emerald-700' :
-                      'bg-blue-100 text-[#1F1F1F]'
+                      'bg-blue-900/50 text-[#1F1F1F]'
                     }`}>
                       {cart.status === 'abandoned' ? 'Bỏ quên' :
                        cart.status === 'recovered' ? 'Đã thanh toán' : 'Đã gửi mã ưu đãi'}
                     </span>
                   </div>
-                  <p className="text-xs text-slate-600 flex items-center gap-1.5">
-                    <Mail className="w-3.5 h-3.5 text-slate-600" /> {cart.customerEmail}
+                  <p className="text-xs text-slate-500 flex items-center gap-1.5">
+                    <Mail className="w-3.5 h-3.5 text-slate-500" /> {cart.customerEmail}
                   </p>
-                  <p className="text-xs text-slate-600 mt-1 flex items-center gap-1">
+                  <p className="text-xs text-slate-500 mt-1 flex items-center gap-1">
                     <Clock className="w-3.5 h-3.5" />
                     Tạo lúc: {new Date(cart.createdAt).toLocaleString('vi-VN')}
                   </p>
                 </div>
                 
                 <div className="text-left sm:text-right">
-                  <p className="text-xl font-black text-slate-900">
+                  <p className="text-xl font-black text-white">
                     {formatCurrency(cart.totalAmount)}
                   </p>
                   {cart.recoveredAt && (
@@ -310,13 +310,13 @@ export default function AdminAbandonedCartsPage() {
               </div>
 
               {/* Items */}
-              <div className="mt-4 pt-4 border-t border-slate-100 bg-slate-50/60 rounded p-3">
-                <p className="text-xs font-bold text-slate-700 uppercase mb-2">Chi tiết sản phẩm:</p>
+              <div className="mt-4 pt-4 border-t border-slate-100 bg-[#0F172A]/60 rounded p-3">
+                <p className="text-xs font-bold text-slate-200 uppercase mb-2">Chi tiết sản phẩm:</p>
                 <div className="space-y-1.5">
                   {cart.items.map((item, idx) => (
-                    <div key={idx} className="flex items-center justify-between text-xs text-slate-600">
-                      <span>{item.name} <strong className="text-slate-900">x{item.quantity}</strong></span>
-                      <span className="font-bold text-slate-800">{formatCurrency(item.price * item.quantity)}</span>
+                    <div key={idx} className="flex items-center justify-between text-xs text-slate-500">
+                      <span>{item.name} <strong className="text-white">x{item.quantity}</strong></span>
+                      <span className="font-bold text-slate-100">{formatCurrency(item.price * item.quantity)}</span>
                     </div>
                   ))}
                 </div>
@@ -326,7 +326,7 @@ export default function AdminAbandonedCartsPage() {
               <div className="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between">
                 <button
                   onClick={() => handleDeleteCart(cart.id)}
-                  className="p-2 text-slate-600 hover:text-rose-600 hover:bg-rose-50 rounded transition-colors"
+                  className="p-2 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded transition-colors"
                   title="Xóa giỏ hàng"
                 >
                   <Trash2 className="w-4 h-4" />
@@ -348,10 +348,10 @@ export default function AdminAbandonedCartsPage() {
         </div>
 
         {filteredCarts.length === 0 && (
-          <div className="text-center py-16 bg-white rounded-md border border-slate-200">
-            <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-700" />
-            <p className="font-bold text-slate-700">Không có giỏ hàng bỏ quên nào</p>
-            <p className="text-xs text-slate-600 mt-1">Hệ thống đang hoạt động tối ưu</p>
+          <div className="text-center py-16 bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-md border border-white/10">
+            <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-200" />
+            <p className="font-bold text-slate-200">Không có giỏ hàng bỏ quên nào</p>
+            <p className="text-xs text-slate-500 mt-1">Hệ thống đang hoạt động tối ưu</p>
           </div>
         )}
       </main>

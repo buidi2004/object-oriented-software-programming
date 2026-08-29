@@ -17,7 +17,7 @@ interface MigrationApp {
 
 const statusMap = {
   0: { label: 'Pending', icon: <Clock className="w-4 h-4" />, color: 'bg-amber-50 text-amber-700 border-amber-200' },
-  1: { label: 'Processing', icon: <ArrowRightLeft className="w-4 h-4" />, color: 'bg-blue-50 text-[#1F1F1F] border-blue-200' },
+  1: { label: 'Processing', icon: <ArrowRightLeft className="w-4 h-4" />, color: 'bg-blue-900/30 text-[#1F1F1F] border-blue-200' },
   2: { label: 'Completed', icon: <CheckCircle2 className="w-4 h-4" />, color: 'bg-green-50 text-green-700 border-green-200' },
   3: { label: 'Failed', icon: <XCircle className="w-4 h-4" />, color: 'bg-red-50 text-red-700 border-red-200' },
 };
@@ -63,7 +63,7 @@ export default function AdminMigrationsPage() {
     <div className="p-8 max-w-7xl mx-auto">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
+          <h1 className="text-3xl font-bold text-white flex items-center gap-3">
             <Database className="w-8 h-8 text-[#1F1F1F]" />
             Yêu cầu Migration (Chuyển dữ liệu)
           </h1>
@@ -71,7 +71,7 @@ export default function AdminMigrationsPage() {
         </div>
       </div>
 
-      <div className="bg-white rounded shadow-sm border border-gray-100 overflow-hidden">
+      <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded shadow-sm border border-gray-100 overflow-hidden">
         <table className="w-full text-left">
           <thead className="bg-gray-50 border-b border-gray-100 text-gray-500 font-medium text-sm">
             <tr>
@@ -81,7 +81,7 @@ export default function AdminMigrationsPage() {
               <th className="px-6 py-4">Trạng thái & Cập nhật</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100">
+          <tbody className="divide-y divide-white/10">
             {loading ? (
               <tr>
                 <td colSpan={4} className="px-6 py-12 text-center text-gray-500">
@@ -100,16 +100,16 @@ export default function AdminMigrationsPage() {
                 return (
                   <tr key={mig.id} className="hover:bg-gray-50/50 transition-colors">
                     <td className="px-6 py-4">
-                      <div className="font-medium text-gray-900">User: {mig.userId.substring(0, 8)}...</div>
+                      <div className="font-medium text-white">User: {mig.userId.substring(0, 8)}...</div>
                       <div className="text-xs text-gray-500 font-mono mt-1">Order: {mig.orderRequestId.substring(0, 8)}...</div>
-                      <div className="text-xs text-gray-600 mt-1">{new Date(mig.createdAt).toLocaleString('vi-VN')}</div>
+                      <div className="text-xs text-gray-400 mt-1">{new Date(mig.createdAt).toLocaleString('vi-VN')}</div>
                     </td>
-                    <td className="px-6 py-4 font-medium text-gray-900">
+                    <td className="px-6 py-4 font-medium text-white">
                       {mig.fromProvider}
                     </td>
                     <td className="px-6 py-4">
-                      <div className="text-sm text-gray-600 bg-gray-50 p-3 rounded-sm border border-gray-200 min-h-[60px] whitespace-pre-wrap font-mono">
-                        {mig.note || <span className="italic text-gray-600">Không có ghi chú</span>}
+                      <div className="text-sm text-gray-400 bg-gray-50 p-3 rounded-sm border border-white/10 min-h-[60px] whitespace-pre-wrap font-mono">
+                        {mig.note || <span className="italic text-gray-400">Không có ghi chú</span>}
                       </div>
                     </td>
                     <td className="px-6 py-4">
@@ -123,7 +123,7 @@ export default function AdminMigrationsPage() {
                           disabled={updating === mig.id}
                           value={mig.status}
                           onChange={(e) => handleUpdateStatus(mig.id, Number(e.target.value))}
-                          className="mt-2 text-sm border border-gray-300 rounded-sm py-1.5 pl-2 pr-8 focus:ring-indigo-500 focus:border-indigo-500 disabled:opacity-50"
+                          className="mt-2 text-sm border border-white/20 rounded-sm py-1.5 pl-2 pr-8 focus:ring-indigo-500 focus:border-indigo-500 disabled:opacity-50"
                         >
                           <option value={0}>Pending</option>
                           <option value={1}>Processing</option>

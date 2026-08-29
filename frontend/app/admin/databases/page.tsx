@@ -146,19 +146,19 @@ export default function AdminDatabasesPage() {
   const failedCount = databases.filter((i) => i.status === 'Failed').length;
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <header className="bg-white border-b border-slate-200 sticky top-0 z-50">
+    <div className="min-h-screen bg-[#0F172A]">
+      <header className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md border-b border-white/10 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link href="/admin" className="p-2 rounded-sm hover:bg-slate-100 transition-colors">
-              <ArrowLeft className="w-5 h-5 text-slate-600" />
+            <Link href="/admin" className="p-2 rounded-sm hover:bg-white/10 transition-colors">
+              <ArrowLeft className="w-5 h-5 text-slate-500" />
             </Link>
             <div>
-              <h1 className="text-xl font-black text-slate-900 flex items-center gap-2">
+              <h1 className="text-xl font-black text-white flex items-center gap-2">
                 <Database className="w-6 h-6 text-teal-600" />
                 Quản lý Managed Databases (Admin)
               </h1>
-              <p className="text-xs text-slate-600">{databases.length} instances trên hệ thống</p>
+              <p className="text-xs text-slate-500">{databases.length} instances trên hệ thống</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
@@ -170,7 +170,7 @@ export default function AdminDatabasesPage() {
             </button>
             <button
               onClick={fetchDatabases}
-              className="p-2 rounded border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 transition-colors"
+              className="p-2 rounded border border-white/10 bg-[#1E293B] bg-opacity-70 backdrop-blur-md hover:bg-[#0F172A] text-slate-500 transition-colors"
               title="Làm mới"
             >
               <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
@@ -186,21 +186,21 @@ export default function AdminDatabasesPage() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
-        <div className="bg-white rounded-md p-4 border border-slate-200 flex flex-wrap gap-4 items-center shadow-sm">
+        <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-md p-4 border border-white/10 flex flex-wrap gap-4 items-center shadow-sm">
           <div className="flex-1 min-w-[200px] relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-600" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
             <input
               type="text"
               placeholder="Tìm theo tên, email khách, Instance ID..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 rounded border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-teal-500"
+              className="w-full pl-9 pr-4 py-2 rounded border border-white/10 text-xs focus:outline-none focus:ring-2 focus:ring-teal-500"
             />
           </div>
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
-            className="px-3 py-2 rounded border border-slate-200 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white"
+            className="px-3 py-2 rounded border border-white/10 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-teal-500 bg-[#1E293B] bg-opacity-70 backdrop-blur-md"
           >
             <option value="all">Tất cả trạng thái</option>
             <option value="Running">Running / Active</option>
@@ -209,10 +209,10 @@ export default function AdminDatabasesPage() {
           </select>
         </div>
 
-        <div className="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden">
+        <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-lg border border-white/10 shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs text-slate-600">
-              <thead className="bg-slate-50 text-slate-900 border-b border-slate-200 font-extrabold uppercase tracking-wider text-[11px]">
+            <table className="w-full text-left text-xs text-slate-500">
+              <thead className="bg-[#0F172A] text-white border-b border-white/10 font-extrabold uppercase tracking-wider text-[11px]">
                 <tr>
                   <th className="px-6 py-4">Database Info</th>
                   <th className="px-6 py-4">Khách Hàng</th>
@@ -222,21 +222,21 @@ export default function AdminDatabasesPage() {
                   <th className="px-6 py-4 text-right">Thao Tác</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-white/10">
                 {filteredDatabases.map((db) => (
-                  <tr key={db.id} className="hover:bg-slate-50/60 transition-colors">
+                  <tr key={db.id} className="hover:bg-[#0F172A]/60 transition-colors">
                     <td className="px-6 py-4">
-                      <div className="font-bold text-slate-900">{db.name}</div>
-                      <div className="text-[10px] font-mono text-slate-600 mt-0.5">ID: {db.id}</div>
+                      <div className="font-bold text-white">{db.name}</div>
+                      <div className="text-[10px] font-mono text-slate-500 mt-0.5">ID: {db.id}</div>
                     </td>
-                    <td className="px-6 py-4 font-medium text-slate-700">{db.ownerEmail || 'customer@cloudhost.vn'}</td>
+                    <td className="px-6 py-4 font-medium text-slate-200">{db.ownerEmail || 'customer@cloudhost.vn'}</td>
                     <td className="px-6 py-4">
-                      <span className="font-bold text-slate-800">{db.engine} {db.version}</span>
+                      <span className="font-bold text-slate-100">{db.engine} {db.version}</span>
                       <div className="font-mono text-[11px] text-teal-600 mt-0.5">Port: {db.port || '-'}</div>
                     </td>
                     <td className="px-6 py-4">
                       <div className="space-y-1">
-                        <div className="font-mono text-[11px] text-slate-600">User: {db.adminUser || 'postgres'}</div>
+                        <div className="font-mono text-[11px] text-slate-500">User: {db.adminUser || 'postgres'}</div>
                         {db.adminPassword && (
                           <SensitiveDataField
                             value={db.adminPassword}
@@ -261,13 +261,13 @@ export default function AdminDatabasesPage() {
                             adminPassword: db.adminPassword || ''
                           });
                         }}
-                        className="px-2.5 py-1.5 rounded bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold transition-colors text-[11px]"
+                        className="px-2.5 py-1.5 rounded bg-blue-900/30 hover:bg-blue-900/50 text-blue-300 font-bold transition-colors text-[11px]"
                       >
                         Sửa
                       </button>
                       <button
                         onClick={() => handleForceRetry(db.id)}
-                        className="px-2.5 py-1.5 rounded bg-slate-100 hover:bg-teal-50 text-slate-700 hover:text-teal-700 font-bold transition-colors text-[11px]"
+                        className="px-2.5 py-1.5 rounded bg-white/10 hover:bg-teal-50 text-slate-200 hover:text-teal-700 font-bold transition-colors text-[11px]"
                       >
                         Retry
                       </button>
@@ -285,8 +285,8 @@ export default function AdminDatabasesPage() {
           </div>
 
           {filteredDatabases.length === 0 && (
-            <div className="text-center py-12 text-slate-600">
-              <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-700" />
+            <div className="text-center py-12 text-slate-500">
+              <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-200" />
               <p className="font-medium">Không tìm thấy database nào</p>
             </div>
           )}
@@ -296,30 +296,30 @@ export default function AdminDatabasesPage() {
       {/* Modal Tạo Database */}
       {isCreating && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl max-w-md w-full p-6 shadow-2xl animate-in fade-in zoom-in-95">
-            <h3 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-xl max-w-md w-full p-6 shadow-2xl animate-in fade-in zoom-in-95">
+            <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
               <Database className="w-5 h-5 text-teal-600" />
               Tạo Managed Database Mới
             </h3>
             <form onSubmit={handleCreateDatabase} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Tên Database</label>
+                <label className="block text-xs font-bold text-slate-200 mb-1">Tên Database</label>
                 <input
                   type="text"
                   required
                   placeholder="e.g. prod-db-customer"
                   value={createForm.name}
                   onChange={(e) => setCreateForm({ ...createForm, name: e.target.value })}
-                  className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                  className="w-full text-sm border border-white/20 rounded px-3 py-2 focus:ring-2 focus:ring-teal-500 focus:outline-none"
                 />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Engine</label>
+                  <label className="block text-xs font-bold text-slate-200 mb-1">Engine</label>
                   <select
                     value={createForm.engine}
                     onChange={(e) => setCreateForm({ ...createForm, engine: Number(e.target.value) })}
-                    className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                    className="w-full text-sm border border-white/20 rounded px-3 py-2 focus:ring-2 focus:ring-teal-500 focus:outline-none"
                   >
                     <option value={1}>PostgreSQL</option>
                     <option value={0}>MySQL</option>
@@ -328,39 +328,39 @@ export default function AdminDatabasesPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Phiên bản</label>
+                  <label className="block text-xs font-bold text-slate-200 mb-1">Phiên bản</label>
                   <input
                     type="text"
                     value={createForm.version}
                     onChange={(e) => setCreateForm({ ...createForm, version: e.target.value })}
-                    className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                    className="w-full text-sm border border-white/20 rounded px-3 py-2 focus:ring-2 focus:ring-teal-500 focus:outline-none"
                   />
                 </div>
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">User Quản Trị</label>
+                <label className="block text-xs font-bold text-slate-200 mb-1">User Quản Trị</label>
                 <input
                   type="text"
                   value={createForm.adminUser}
                   onChange={(e) => setCreateForm({ ...createForm, adminUser: e.target.value })}
-                  className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                  className="w-full text-sm border border-white/20 rounded px-3 py-2 focus:ring-2 focus:ring-teal-500 focus:outline-none"
                 />
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Mật khẩu Quản Trị</label>
+                <label className="block text-xs font-bold text-slate-200 mb-1">Mật khẩu Quản Trị</label>
                 <input
                   type="password"
                   placeholder="Pass123!@#"
                   value={createForm.adminPassword}
                   onChange={(e) => setCreateForm({ ...createForm, adminPassword: e.target.value })}
-                  className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                  className="w-full text-sm border border-white/20 rounded px-3 py-2 focus:ring-2 focus:ring-teal-500 focus:outline-none"
                 />
               </div>
               <div className="flex justify-end gap-2 pt-3 border-t border-slate-100">
                 <button
                   type="button"
                   onClick={() => setIsCreating(false)}
-                  className="px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded"
+                  className="px-4 py-2 text-xs font-bold text-slate-500 hover:bg-white/10 rounded"
                 >
                   Hủy
                 </button>
@@ -379,43 +379,43 @@ export default function AdminDatabasesPage() {
       {/* Modal Sửa Database */}
       {editingDb && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl max-w-md w-full p-6 shadow-2xl animate-in fade-in zoom-in-95">
-            <h3 className="text-lg font-bold text-slate-900 mb-4">Sửa Cấu Hình Database</h3>
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-xl max-w-md w-full p-6 shadow-2xl animate-in fade-in zoom-in-95">
+            <h3 className="text-lg font-bold text-white mb-4">Sửa Cấu Hình Database</h3>
             <form onSubmit={handleUpdateDatabase} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Tên Database</label>
+                <label className="block text-xs font-bold text-slate-200 mb-1">Tên Database</label>
                 <input
                   type="text"
                   required
                   value={editForm.name}
                   onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
-                  className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  className="w-full text-sm border border-white/20 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 />
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">User Quản Trị</label>
+                <label className="block text-xs font-bold text-slate-200 mb-1">User Quản Trị</label>
                 <input
                   type="text"
                   value={editForm.adminUser}
                   onChange={(e) => setEditForm({ ...editForm, adminUser: e.target.value })}
-                  className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  className="w-full text-sm border border-white/20 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 />
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Mật khẩu Mới (để trống nếu không đổi)</label>
+                <label className="block text-xs font-bold text-slate-200 mb-1">Mật khẩu Mới (để trống nếu không đổi)</label>
                 <input
                   type="password"
                   placeholder="Nhập mật khẩu mới..."
                   value={editForm.adminPassword}
                   onChange={(e) => setEditForm({ ...editForm, adminPassword: e.target.value })}
-                  className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  className="w-full text-sm border border-white/20 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 />
               </div>
               <div className="flex justify-end gap-2 pt-3 border-t border-slate-100">
                 <button
                   type="button"
                   onClick={() => setEditingDb(null)}
-                  className="px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded"
+                  className="px-4 py-2 text-xs font-bold text-slate-500 hover:bg-white/10 rounded"
                 >
                   Hủy
                 </button>

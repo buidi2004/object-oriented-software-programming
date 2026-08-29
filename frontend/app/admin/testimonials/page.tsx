@@ -78,7 +78,7 @@ export default function AdminTestimonialsPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[#0F172A] flex items-center justify-center">
         <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
       </div>
     );
@@ -108,16 +108,16 @@ export default function AdminTestimonialsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <header className="bg-white border-b border-slate-200 sticky top-0 z-50">
+    <div className="min-h-screen bg-[#0F172A]">
+      <header className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md border-b border-white/10 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link href="/admin" className="p-2 rounded-sm hover:bg-slate-100 transition-colors">
-              <ArrowLeft className="w-5 h-5 text-slate-600" />
+            <Link href="/admin" className="p-2 rounded-sm hover:bg-white/10 transition-colors">
+              <ArrowLeft className="w-5 h-5 text-slate-500" />
             </Link>
             <div>
-              <h1 className="text-xl font-bold text-slate-900">Quản lý Đánh giá & Testimonials</h1>
-              <p className="text-sm text-slate-600">{totalCount} đánh giá • {featuredCount} đang hiển thị</p>
+              <h1 className="text-xl font-bold text-white">Quản lý Đánh giá & Testimonials</h1>
+              <p className="text-sm text-slate-500">{totalCount} đánh giá • {featuredCount} đang hiển thị</p>
             </div>
           </div>
         </div>
@@ -126,38 +126,38 @@ export default function AdminTestimonialsPage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          <div className="bg-white rounded p-4 border border-slate-200">
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded p-4 border border-white/10">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-sm bg-blue-100 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-sm bg-blue-900/50 flex items-center justify-center">
                 <Star className="w-5 h-5 text-[#1F1F1F]" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-slate-900">{totalCount}</p>
-                <p className="text-xs text-slate-600">Tổng đánh giá</p>
+                <p className="text-2xl font-bold text-white">{totalCount}</p>
+                <p className="text-xs text-slate-500">Tổng đánh giá</p>
               </div>
             </div>
           </div>
           
-          <div className="bg-white rounded p-4 border border-slate-200">
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded p-4 border border-white/10">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-sm bg-emerald-100 flex items-center justify-center">
                 <CheckCircle className="w-5 h-5 text-emerald-600" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-slate-900">{featuredCount}</p>
-                <p className="text-xs text-slate-600">Đang hiển thị</p>
+                <p className="text-2xl font-bold text-white">{featuredCount}</p>
+                <p className="text-xs text-slate-500">Đang hiển thị</p>
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded p-4 border border-slate-200">
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded p-4 border border-white/10">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-sm bg-amber-100 flex items-center justify-center">
                 <XCircle className="w-5 h-5 text-amber-600" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-slate-900">{totalCount - featuredCount}</p>
-                <p className="text-xs text-slate-600">Chưa hiển thị</p>
+                <p className="text-2xl font-bold text-white">{totalCount - featuredCount}</p>
+                <p className="text-xs text-slate-500">Chưa hiển thị</p>
               </div>
             </div>
           </div>
@@ -176,7 +176,7 @@ export default function AdminTestimonialsPage() {
               className={`px-4 py-2 rounded-sm text-sm font-semibold transition-colors ${
                 filter === tab.key
                   ? 'bg-blue-600 text-white'
-                  : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
+                  : 'bg-[#1E293B] bg-opacity-70 backdrop-blur-md text-slate-500 hover:bg-white/10 border border-white/10'
               }`}
             >
               {tab.label}
@@ -187,15 +187,15 @@ export default function AdminTestimonialsPage() {
         {/* Testimonials List */}
         <div className="space-y-4">
           {filteredTestimonials.map((testimonial) => (
-            <div key={testimonial.id} className="bg-white rounded border border-slate-200 p-6">
+            <div key={testimonial.id} className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded border border-white/10 p-6">
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-slate-900 font-bold text-lg">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg">
                     {testimonial.customerName.charAt(0).toUpperCase()}
                   </div>
                   <div>
-                    <h3 className="font-bold text-slate-900">{testimonial.customerName}</h3>
-                    <p className="text-sm text-slate-600">
+                    <h3 className="font-bold text-white">{testimonial.customerName}</h3>
+                    <p className="text-sm text-slate-500">
                       {new Date(testimonial.createdAt).toLocaleDateString('vi-VN')}
                     </p>
                   </div>
@@ -206,7 +206,7 @@ export default function AdminTestimonialsPage() {
                     className={`px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 transition-colors ${
                       testimonial.isFeatured
                         ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200'
-                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                        : 'bg-white/10 text-slate-500 hover:bg-white/20'
                     }`}
                   >
                     {testimonial.isFeatured ? (
@@ -223,7 +223,7 @@ export default function AdminTestimonialsPage() {
                   </button>
                   <button
                     onClick={() => handleDelete(testimonial.id)}
-                    className="p-1 text-slate-600 hover:text-red-600 rounded"
+                    className="p-1 text-slate-500 hover:text-red-600 rounded"
                     title="Xóa đánh giá"
                   >
                     <XCircle className="w-4 h-4" />
@@ -239,17 +239,17 @@ export default function AdminTestimonialsPage() {
                       className={`w-4 h-4 ${
                         i < testimonial.rating
                           ? 'text-amber-400 fill-current'
-                          : 'text-slate-700'
+                          : 'text-slate-200'
                       }`}
                     />
                   ))}
                 </div>
-                <span className="text-sm text-slate-600 ml-2">
-                  Dịch vụ: <span className="font-medium text-slate-700">{testimonial.serviceType}</span>
+                <span className="text-sm text-slate-500 ml-2">
+                  Dịch vụ: <span className="font-medium text-slate-200">{testimonial.serviceType}</span>
                 </span>
               </div>
 
-              <p className="mt-4 text-slate-600 leading-relaxed">
+              <p className="mt-4 text-slate-500 leading-relaxed">
                 "{testimonial.comment}"
               </p>
             </div>
@@ -258,8 +258,8 @@ export default function AdminTestimonialsPage() {
 
         {filteredTestimonials.length === 0 && (
           <div className="text-center py-12">
-            <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-700" />
-            <p className="font-medium text-slate-600">Không có đánh giá nào</p>
+            <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-200" />
+            <p className="font-medium text-slate-500">Không có đánh giá nào</p>
           </div>
         )}
       </main>

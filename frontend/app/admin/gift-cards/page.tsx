@@ -151,14 +151,14 @@ export default function AdminGiftCardsPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[#0F172A] flex items-center justify-center">
         <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-[#0F172A]">
       {/* Toast */}
       {toast && (
         <div className={`fixed bottom-5 right-5 z-50 px-5 py-3 rounded shadow-xl text-white font-semibold text-sm flex items-center gap-2.5 animate-in slide-in-from-bottom-5 ${
@@ -170,21 +170,21 @@ export default function AdminGiftCardsPage() {
       )}
 
       {/* Header */}
-      <header className="bg-white border-b border-slate-200 sticky top-0 z-40">
+      <header className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md border-b border-white/10 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link href="/admin" className="p-2 rounded-sm hover:bg-slate-100 transition-colors">
-              <ArrowLeft className="w-5 h-5 text-slate-600" />
+            <Link href="/admin" className="p-2 rounded-sm hover:bg-white/10 transition-colors">
+              <ArrowLeft className="w-5 h-5 text-slate-500" />
             </Link>
             <div>
-              <h1 className="text-xl font-bold text-slate-900">Quản lý Thẻ Quà Tặng (Gift Cards)</h1>
-              <p className="text-xs text-slate-600">{giftCards.length} thẻ quà tặng trong hệ thống</p>
+              <h1 className="text-xl font-bold text-white">Quản lý Thẻ Quà Tặng (Gift Cards)</h1>
+              <p className="text-xs text-slate-500">{giftCards.length} thẻ quà tặng trong hệ thống</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
             <button
               onClick={fetchGiftCards}
-              className="p-2 text-slate-600 hover:bg-slate-100 rounded transition-colors"
+              className="p-2 text-slate-500 hover:bg-white/10 rounded transition-colors"
               title="Tải lại danh sách"
             >
               <RefreshCw className="w-5 h-5" />
@@ -204,13 +204,13 @@ export default function AdminGiftCardsPage() {
         {/* Filters */}
         <div className="flex flex-col sm:flex-row gap-4 mb-6 items-center justify-between">
           <div className="relative w-full sm:max-w-md">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-600" />
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
             <input
               type="text"
               placeholder="Tìm kiếm theo mã thẻ quà tặng..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 bg-white rounded border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 shadow-sm font-mono"
+              className="w-full pl-10 pr-4 py-2.5 bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded border border-white/10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 shadow-sm font-mono"
             />
           </div>
 
@@ -226,7 +226,7 @@ export default function AdminGiftCardsPage() {
                 className={`px-4 py-2 rounded text-xs font-semibold transition-colors ${
                   filter === f.id
                     ? 'bg-blue-600 text-white shadow-sm'
-                    : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
+                    : 'bg-[#1E293B] bg-opacity-70 backdrop-blur-md text-slate-500 border border-white/10 hover:bg-[#0F172A]'
                 }`}
               >
                 {f.label}
@@ -245,7 +245,7 @@ export default function AdminGiftCardsPage() {
             return (
               <div 
                 key={card.id} 
-                className="bg-white rounded-md border border-slate-200 p-5 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden flex flex-col justify-between"
+                className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-md border border-white/10 p-5 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden flex flex-col justify-between"
               >
                 <div>
                   <div className="flex items-center justify-between mb-3">
@@ -256,7 +256,7 @@ export default function AdminGiftCardsPage() {
                       <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold ${
                         isAvailable 
                           ? 'bg-emerald-100 text-emerald-700' 
-                          : 'bg-slate-100 text-slate-600'
+                          : 'bg-white/10 text-slate-500'
                       }`}>
                         {isAvailable ? 'Có thể sử dụng' : isUsed ? 'Đã sử dụng hết' : !card.isActive ? 'Đã vô hiệu hóa' : 'Đã hết hạn'}
                       </span>
@@ -264,7 +264,7 @@ export default function AdminGiftCardsPage() {
 
                     <button
                       onClick={() => handleDelete(card.id, card.code)}
-                      className="p-1.5 text-slate-600 hover:text-rose-600 hover:bg-rose-50 rounded-sm transition-colors"
+                      className="p-1.5 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-sm transition-colors"
                       title="Vô hiệu hóa thẻ"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -272,13 +272,13 @@ export default function AdminGiftCardsPage() {
                   </div>
 
                   {/* Code Box */}
-                  <div className="bg-slate-50 border border-slate-200 rounded p-3 mb-4 flex items-center justify-between">
-                    <span className="font-mono font-bold text-slate-900 text-sm tracking-wider">
+                  <div className="bg-[#0F172A] border border-white/10 rounded p-3 mb-4 flex items-center justify-between">
+                    <span className="font-mono font-bold text-white text-sm tracking-wider">
                       {card.code}
                     </span>
                     <button
                       onClick={() => copyToClipboard(card.code)}
-                      className="p-1.5 text-slate-600 hover:text-[#1F1F1F] hover:bg-white rounded-sm transition-colors"
+                      className="p-1.5 text-slate-500 hover:text-[#1F1F1F] hover:bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-sm transition-colors"
                       title="Sao chép mã"
                     >
                       {copiedCode === card.code ? (
@@ -290,25 +290,25 @@ export default function AdminGiftCardsPage() {
                   </div>
 
                   {/* Values */}
-                  <div className="space-y-1.5 text-xs text-slate-600 mb-4">
+                  <div className="space-y-1.5 text-xs text-slate-500 mb-4">
                     <div className="flex justify-between">
-                      <span className="text-slate-600">Mệnh giá ban đầu:</span>
-                      <span className="font-bold text-slate-900">{card.amount.toLocaleString('vi-VN')} đ</span>
+                      <span className="text-slate-500">Mệnh giá ban đầu:</span>
+                      <span className="font-bold text-white">{card.amount.toLocaleString('vi-VN')} đ</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-slate-600">Số dư còn lại:</span>
+                      <span className="text-slate-500">Số dư còn lại:</span>
                       <span className="font-bold text-[#1F1F1F]">{card.remainingAmount.toLocaleString('vi-VN')} đ</span>
                     </div>
                     {card.expiryDate && (
                       <div className="flex justify-between">
-                        <span className="text-slate-600">Hạn sử dụng:</span>
+                        <span className="text-slate-500">Hạn sử dụng:</span>
                         <span>{new Date(card.expiryDate).toLocaleDateString('vi-VN')}</span>
                       </div>
                     )}
                   </div>
                 </div>
 
-                <div className="pt-3 border-t border-slate-100 text-xs text-slate-600 flex items-center justify-between">
+                <div className="pt-3 border-t border-slate-100 text-xs text-slate-500 flex items-center justify-between">
                   <span>Tạo ngày {new Date(card.createdAt).toLocaleDateString('vi-VN')}</span>
                 </div>
               </div>
@@ -317,10 +317,10 @@ export default function AdminGiftCardsPage() {
         </div>
 
         {filteredGiftCards.length === 0 && (
-          <div className="text-center py-16 bg-white rounded-md border border-slate-200 text-slate-600">
-            <Gift className="w-12 h-12 mx-auto mb-3 text-slate-700" />
-            <p className="font-bold text-slate-700">Không tìm thấy thẻ quà tặng nào</p>
-            <p className="text-xs text-slate-600 mt-1">Bấm "Tạo Thẻ Mới" để phát hành mã thẻ</p>
+          <div className="text-center py-16 bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-md border border-white/10 text-slate-500">
+            <Gift className="w-12 h-12 mx-auto mb-3 text-slate-200" />
+            <p className="font-bold text-slate-200">Không tìm thấy thẻ quà tặng nào</p>
+            <p className="text-xs text-slate-500 mt-1">Bấm "Tạo Thẻ Mới" để phát hành mã thẻ</p>
           </div>
         )}
       </main>
@@ -328,31 +328,31 @@ export default function AdminGiftCardsPage() {
       {/* Add Modal */}
       {showAddModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg p-6 sm:p-8 max-w-md w-full shadow-2xl">
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-lg p-6 sm:p-8 max-w-md w-full shadow-2xl">
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h3 className="text-xl font-bold text-slate-900">Phát Hành Thẻ Quà Tặng Mới</h3>
-                <p className="text-xs text-slate-600 mt-0.5">Tạo mã nạp tiền trực tiếp vào tài khoản</p>
+                <h3 className="text-xl font-bold text-white">Phát Hành Thẻ Quà Tặng Mới</h3>
+                <p className="text-xs text-slate-500 mt-0.5">Tạo mã nạp tiền trực tiếp vào tài khoản</p>
               </div>
-              <button onClick={() => setShowAddModal(false)} className="p-2 text-slate-600 hover:text-slate-600 rounded-sm hover:bg-slate-100">
+              <button onClick={() => setShowAddModal(false)} className="p-2 text-slate-500 hover:text-slate-500 rounded-sm hover:bg-white/10">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             <form onSubmit={handleCreate} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Mã thẻ quà tặng (tùy chọn)</label>
+                <label className="block text-xs font-semibold text-slate-200 uppercase mb-1.5">Mã thẻ quà tặng (tùy chọn)</label>
                 <input
                   type="text"
                   placeholder="Để trống để hệ thống tự sinh mã tự động"
                   value={formData.code}
                   onChange={(e) => setFormData({ ...formData, code: e.target.value.toUpperCase() })}
-                  className="w-full px-4 py-2.5 rounded border border-slate-200 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500/20 uppercase"
+                  className="w-full px-4 py-2.5 rounded border border-white/10 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500/20 uppercase"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Mệnh giá (VNĐ)</label>
+                <label className="block text-xs font-semibold text-slate-200 uppercase mb-1.5">Mệnh giá (VNĐ)</label>
                 <div className="relative">
                   <input
                     type="number"
@@ -362,16 +362,16 @@ export default function AdminGiftCardsPage() {
                     placeholder="100000"
                     value={formData.amount}
                     onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
-                    className="w-full pl-4 pr-12 py-2.5 rounded border border-slate-200 text-sm font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                    className="w-full pl-4 pr-12 py-2.5 rounded border border-white/10 text-sm font-bold text-white focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                   />
-                  <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-600">
+                  <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-500">
                     VNĐ
                   </span>
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Thời hạn hiệu lực (Số ngày)</label>
+                <label className="block text-xs font-semibold text-slate-200 uppercase mb-1.5">Thời hạn hiệu lực (Số ngày)</label>
                 <input
                   type="number"
                   required
@@ -379,7 +379,7 @@ export default function AdminGiftCardsPage() {
                   placeholder="180"
                   value={formData.expiryDays}
                   onChange={(e) => setFormData({ ...formData, expiryDays: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full px-4 py-2.5 rounded border border-white/10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                 />
               </div>
 
@@ -387,7 +387,7 @@ export default function AdminGiftCardsPage() {
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}
-                  className="flex-1 py-3 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm transition-colors"
+                  className="flex-1 py-3 rounded bg-white/10 hover:bg-white/20 text-slate-200 font-semibold text-sm transition-colors"
                 >
                   Hủy bỏ
                 </button>

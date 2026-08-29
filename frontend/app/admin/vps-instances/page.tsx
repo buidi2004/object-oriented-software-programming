@@ -227,23 +227,23 @@ export default function AdminVpsInstancesPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[#0F172A] flex items-center justify-center">
         <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <header className="bg-white border-b border-slate-200 sticky top-0 z-50">
+    <div className="min-h-screen bg-[#0F172A]">
+      <header className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md border-b border-white/10 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link href="/admin" className="p-2 rounded-sm hover:bg-slate-100 transition-colors">
-              <ArrowLeft className="w-5 h-5 text-slate-600" />
+            <Link href="/admin" className="p-2 rounded-sm hover:bg-white/10 transition-colors">
+              <ArrowLeft className="w-5 h-5 text-slate-500" />
             </Link>
             <div>
-              <h1 className="text-xl font-bold text-slate-900">Quản lý VPS Instances</h1>
-              <p className="text-sm text-slate-600">{instances.length} instances tổng cộng</p>
+              <h1 className="text-xl font-bold text-white">Quản lý VPS Instances</h1>
+              <p className="text-sm text-slate-500">{instances.length} instances tổng cộng</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
@@ -272,21 +272,21 @@ export default function AdminVpsInstancesPage() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="bg-white rounded p-4 border border-slate-200 mb-6 flex flex-wrap gap-4 items-center">
+        <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded p-4 border border-white/10 mb-6 flex flex-wrap gap-4 items-center">
           <div className="flex-1 min-w-[200px] relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-600" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
             <input
               type="text"
               placeholder="Tìm theo tên, email, container ID..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 rounded-sm border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+              className="w-full pl-10 pr-4 py-2.5 rounded-sm border border-white/10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
             />
           </div>
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
-            className="px-3 py-2.5 rounded-sm border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+            className="px-3 py-2.5 rounded-sm border border-white/10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
           >
             <option value="all">Tất cả trạng thái</option>
             <option value="Running">Running — Đang chạy</option>
@@ -302,15 +302,15 @@ export default function AdminVpsInstancesPage() {
           {filteredInstances.map((instance) => {
             const statusMeta = getVpsStatusMeta(instance.status);
             return (
-              <div key={instance.id} className="bg-white rounded border border-slate-200 p-5 hover:border-blue-200 transition-colors">
+              <div key={instance.id} className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded border border-white/10 p-5 hover:border-blue-200 transition-colors">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-3">
                     <div className="w-12 h-12 rounded bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
-                      <Server className="w-6 h-6 text-slate-900" />
+                      <Server className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <h3 className="font-bold text-slate-900">{instance.containerName}</h3>
-                      <p className="text-xs font-mono text-slate-600">{instance.containerId.substring(0, 12)}...</p>
+                      <h3 className="font-bold text-white">{instance.containerName}</h3>
+                      <p className="text-xs font-mono text-slate-500">{instance.containerId.substring(0, 12)}...</p>
                     </div>
                   </div>
                   <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${statusMeta.color}`}>
@@ -318,7 +318,7 @@ export default function AdminVpsInstancesPage() {
                   </span>
                 </div>
 
-                <div className="space-y-2 mb-4 text-xs text-slate-600">
+                <div className="space-y-2 mb-4 text-xs text-slate-500">
                   <div className="flex justify-between">
                     <span className="flex items-center gap-1.5"><Cpu className="w-3.5 h-3.5" />CPU</span>
                     <span className="font-semibold">{instance.cpuCores} vCPU</span>
@@ -357,7 +357,7 @@ export default function AdminVpsInstancesPage() {
                         status: instance.status
                       });
                     }}
-                    className="flex-1 py-2 rounded-sm border border-blue-200 text-blue-600 hover:bg-blue-50 text-sm font-semibold flex items-center justify-center gap-1 transition-colors"
+                    className="flex-1 py-2 rounded-sm border border-blue-200 text-blue-400 hover:bg-blue-900/30 text-sm font-semibold flex items-center justify-center gap-1 transition-colors"
                   >
                     Sửa
                   </button>
@@ -380,8 +380,8 @@ export default function AdminVpsInstancesPage() {
         </div>
 
         {filteredInstances.length === 0 && (
-          <div className="text-center py-12 text-slate-600">
-            <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-700" />
+          <div className="text-center py-12 text-slate-500">
+            <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-200" />
             <p className="font-medium">Không tìm thấy instance nào</p>
           </div>
         )}
@@ -390,70 +390,70 @@ export default function AdminVpsInstancesPage() {
       {/* Modal Cấp Phát VPS */}
       {isCreating && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl max-w-md w-full p-6 shadow-2xl animate-in fade-in zoom-in-95">
-            <h3 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
-              <Server className="w-5 h-5 text-blue-600" />
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-xl max-w-md w-full p-6 shadow-2xl animate-in fade-in zoom-in-95">
+            <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+              <Server className="w-5 h-5 text-blue-400" />
               Cấp Phát VPS Thủ Công
             </h3>
             <form onSubmit={handleCreateVps} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Tên Máy Chủ / Hostname</label>
+                <label className="block text-xs font-bold text-slate-200 mb-1">Tên Máy Chủ / Hostname</label>
                 <input
                   type="text"
                   required
                   placeholder="vps-prod-worker"
                   value={createForm.containerName}
                   onChange={(e) => setCreateForm({ ...createForm, containerName: e.target.value })}
-                  className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  className="w-full text-sm border border-white/20 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 />
               </div>
               <div className="grid grid-cols-3 gap-2">
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">vCPU</label>
+                  <label className="block text-xs font-bold text-slate-200 mb-1">vCPU</label>
                   <input
                     type="number"
                     min="1"
                     value={createForm.cpuCores}
                     onChange={(e) => setCreateForm({ ...createForm, cpuCores: Number(e.target.value) })}
-                    className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    className="w-full text-sm border border-white/20 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">RAM (MB)</label>
+                  <label className="block text-xs font-bold text-slate-200 mb-1">RAM (MB)</label>
                   <input
                     type="number"
                     min="1024"
                     step="1024"
                     value={createForm.ramMb}
                     onChange={(e) => setCreateForm({ ...createForm, ramMb: Number(e.target.value) })}
-                    className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    className="w-full text-sm border border-white/20 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Disk (GB)</label>
+                  <label className="block text-xs font-bold text-slate-200 mb-1">Disk (GB)</label>
                   <input
                     type="number"
                     min="10"
                     value={createForm.diskGb}
                     onChange={(e) => setCreateForm({ ...createForm, diskGb: Number(e.target.value) })}
-                    className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    className="w-full text-sm border border-white/20 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                   />
                 </div>
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Tên Gói Cước</label>
+                <label className="block text-xs font-bold text-slate-200 mb-1">Tên Gói Cước</label>
                 <input
                   type="text"
                   value={createForm.planName}
                   onChange={(e) => setCreateForm({ ...createForm, planName: e.target.value })}
-                  className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  className="w-full text-sm border border-white/20 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 />
               </div>
               <div className="flex justify-end gap-2 pt-3 border-t border-slate-100">
                 <button
                   type="button"
                   onClick={() => setIsCreating(false)}
-                  className="px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded"
+                  className="px-4 py-2 text-xs font-bold text-slate-500 hover:bg-white/10 rounded"
                 >
                   Hủy
                 </button>
@@ -472,23 +472,23 @@ export default function AdminVpsInstancesPage() {
       {/* Modal Sửa Cấu Hình VPS */}
       {editingVps && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl max-w-md w-full p-6 shadow-2xl animate-in fade-in zoom-in-95">
-            <h3 className="text-lg font-bold text-slate-900 mb-4">Sửa Cấu Hình VPS: {editingVps.containerName}</h3>
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-xl max-w-md w-full p-6 shadow-2xl animate-in fade-in zoom-in-95">
+            <h3 className="text-lg font-bold text-white mb-4">Sửa Cấu Hình VPS: {editingVps.containerName}</h3>
             <form onSubmit={handleUpdateVps} className="space-y-4">
               <div className="grid grid-cols-3 gap-2">
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">vCPU</label>
+                  <label className="block text-xs font-bold text-slate-200 mb-1">vCPU</label>
                   <input
                     type="number"
                     min="1"
                     required
                     value={editForm.cpuCores}
                     onChange={(e) => setEditForm({ ...editForm, cpuCores: Number(e.target.value) })}
-                    className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    className="w-full text-sm border border-white/20 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">RAM (MB)</label>
+                  <label className="block text-xs font-bold text-slate-200 mb-1">RAM (MB)</label>
                   <input
                     type="number"
                     min="1024"
@@ -496,37 +496,37 @@ export default function AdminVpsInstancesPage() {
                     required
                     value={editForm.ramMb}
                     onChange={(e) => setEditForm({ ...editForm, ramMb: Number(e.target.value) })}
-                    className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    className="w-full text-sm border border-white/20 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Disk (GB)</label>
+                  <label className="block text-xs font-bold text-slate-200 mb-1">Disk (GB)</label>
                   <input
                     type="number"
                     min="10"
                     required
                     value={editForm.diskGb}
                     onChange={(e) => setEditForm({ ...editForm, diskGb: Number(e.target.value) })}
-                    className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    className="w-full text-sm border border-white/20 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                   />
                 </div>
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Tên Gói</label>
+                <label className="block text-xs font-bold text-slate-200 mb-1">Tên Gói</label>
                 <input
                   type="text"
                   required
                   value={editForm.planName}
                   onChange={(e) => setEditForm({ ...editForm, planName: e.target.value })}
-                  className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  className="w-full text-sm border border-white/20 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 />
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Trạng Thái</label>
+                <label className="block text-xs font-bold text-slate-200 mb-1">Trạng Thái</label>
                 <select
                   value={editForm.status}
                   onChange={(e) => setEditForm({ ...editForm, status: e.target.value })}
-                  className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  className="w-full text-sm border border-white/20 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 >
                   <option value="Running">Running</option>
                   <option value="Stopped">Stopped</option>
@@ -538,7 +538,7 @@ export default function AdminVpsInstancesPage() {
                 <button
                   type="button"
                   onClick={() => setEditingVps(null)}
-                  className="px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded"
+                  className="px-4 py-2 text-xs font-bold text-slate-500 hover:bg-white/10 rounded"
                 >
                   Hủy
                 </button>

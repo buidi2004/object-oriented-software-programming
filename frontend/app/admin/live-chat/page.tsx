@@ -161,11 +161,11 @@ export default function AdminLiveChatPage() {
   if (!adminId) return <div>Đang tải...</div>;
 
   return (
-    <div className="flex h-[calc(100vh-100px)] bg-white rounded-md shadow-sm border border-slate-200 overflow-hidden">
+    <div className="flex h-[calc(100vh-100px)] bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-md shadow-sm border border-white/10 overflow-hidden">
       
       {/* Sidebar: Active Sessions */}
-      <div className="w-1/3 border-r border-slate-200 flex flex-col bg-slate-50">
-        <div className="p-4 border-b border-slate-200 bg-white">
+      <div className="w-1/3 border-r border-white/10 flex flex-col bg-[#0F172A]">
+        <div className="p-4 border-b border-white/10 bg-[#1E293B] bg-opacity-70 backdrop-blur-md">
           <h2 className="font-semibold text-lg flex items-center gap-2">
             <MessageCircle className="text-emerald-500" />
             Phiên hỗ trợ đang mở
@@ -176,11 +176,11 @@ export default function AdminLiveChatPage() {
         </div>
         <div className="flex-1 overflow-y-auto">
           {sessions.length === 0 ? (
-            <div className="p-8 text-center text-slate-600">
+            <div className="p-8 text-center text-slate-500">
               Không có yêu cầu hỗ trợ nào.
             </div>
           ) : (
-            <ul className="divide-y divide-slate-100">
+            <ul className="divide-y divide-white/10">
               {sessions.map(s => (
                 <li key={s.id}>
                   <button 
@@ -191,8 +191,8 @@ export default function AdminLiveChatPage() {
                       <User size={18} />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="font-medium text-slate-900 truncate">{s.userFullName || s.userEmail || 'Khách hàng'}</p>
-                      <p className="text-xs text-slate-600 flex items-center gap-1 mt-1">
+                      <p className="font-medium text-white truncate">{s.userFullName || s.userEmail || 'Khách hàng'}</p>
+                      <p className="text-xs text-slate-500 flex items-center gap-1 mt-1">
                         <Clock size={12} />
                         {new Date(s.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </p>
@@ -206,17 +206,17 @@ export default function AdminLiveChatPage() {
       </div>
 
       {/* Main Chat Area */}
-      <div className="flex-1 flex flex-col bg-slate-50/50">
+      <div className="flex-1 flex flex-col bg-[#0F172A]/50">
         {selectedSession ? (
           <>
             {/* Chat Header */}
-            <div className="p-4 border-b border-slate-200 bg-white flex justify-between items-center shadow-sm z-10">
+            <div className="p-4 border-b border-white/10 bg-[#1E293B] bg-opacity-70 backdrop-blur-md flex justify-between items-center shadow-sm z-10">
               <div className="flex items-center gap-3">
                 <div className="bg-emerald-100 text-emerald-700 p-2 rounded-full">
                   <User size={20} />
                 </div>
                 <div>
-                  <h3 className="font-medium text-slate-900">{selectedSession.userFullName || selectedSession.userEmail || 'Khách hàng'}</h3>
+                  <h3 className="font-medium text-white">{selectedSession.userFullName || selectedSession.userEmail || 'Khách hàng'}</h3>
                   <p className="text-xs text-emerald-600 font-medium flex items-center gap-1">
                     <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span>
                     Đang hoạt động
@@ -225,7 +225,7 @@ export default function AdminLiveChatPage() {
               </div>
               <button 
                 onClick={() => handleCloseSession(selectedSession.id)}
-                className="flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-sm text-sm font-medium transition-colors"
+                className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-slate-200 rounded-sm text-sm font-medium transition-colors"
               >
                 <CheckCircle size={16} />
                 Đóng phiên
@@ -235,16 +235,16 @@ export default function AdminLiveChatPage() {
             {/* Chat Messages */}
             <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-4">
               {messages.length === 0 ? (
-                <div className="text-center text-slate-600 mt-10">Chưa có tin nhắn nào.</div>
+                <div className="text-center text-slate-500 mt-10">Chưa có tin nhắn nào.</div>
               ) : (
                 messages.map((msg) => {
                   const isMine = adminId ? normalizeId(msg.senderId) === normalizeId(adminId) : false;
                   return (
                     <div key={msg.id} className={`flex flex-col max-w-[70%] ${isMine ? 'self-end items-end' : 'self-start items-start'}`}>
-                      <div className={`px-4 py-2.5 rounded-md text-[15px] ${isMine ? 'bg-emerald-500 text-white rounded-tr-sm' : 'bg-white border border-slate-200 text-slate-800 rounded-tl-sm shadow-sm'}`}>
+                      <div className={`px-4 py-2.5 rounded-md text-[15px] ${isMine ? 'bg-emerald-500 text-white rounded-tr-sm' : 'bg-[#1E293B] bg-opacity-70 backdrop-blur-md border border-white/10 text-slate-100 rounded-tl-sm shadow-sm'}`}>
                         {msg.message}
                       </div>
-                      <span className="text-[11px] text-slate-600 mt-1.5 px-1">
+                      <span className="text-[11px] text-slate-500 mt-1.5 px-1">
                         {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </span>
                     </div>
@@ -255,11 +255,11 @@ export default function AdminLiveChatPage() {
             </div>
 
             {/* Chat Input */}
-            <div className="p-4 bg-white border-t border-slate-200">
+            <div className="p-4 bg-[#1E293B] bg-opacity-70 backdrop-blur-md border-t border-white/10">
               <form onSubmit={handleSendMessage} className="flex gap-3">
                 <input 
                   type="text" 
-                  className="flex-1 bg-slate-50 text-slate-800 rounded px-5 py-3 border border-slate-200 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
+                  className="flex-1 bg-[#0F172A] text-slate-100 rounded px-5 py-3 border border-white/10 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
                   placeholder="Nhập câu trả lời..." 
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
@@ -276,8 +276,8 @@ export default function AdminLiveChatPage() {
             </div>
           </>
         ) : (
-          <div className="flex-1 flex flex-col items-center justify-center text-slate-600">
-            <MessageCircle size={48} className="mb-4 text-slate-700 opacity-50" />
+          <div className="flex-1 flex flex-col items-center justify-center text-slate-500">
+            <MessageCircle size={48} className="mb-4 text-slate-200 opacity-50" />
             <p>Chọn một phiên hỗ trợ bên trái để bắt đầu trò chuyện</p>
           </div>
         )}

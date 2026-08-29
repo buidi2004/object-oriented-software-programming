@@ -159,7 +159,7 @@ export default function AdminLoyaltyPage() {
   );
 
   return (
-    <div className="min-h-screen bg-slate-50 py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#0F172A] py-8 px-4 sm:px-6 lg:px-8">
       {/* Toast */}
       {toast && (
         <div className={`fixed bottom-5 right-5 z-50 px-5 py-3 rounded shadow-xl text-white font-semibold text-sm flex items-center gap-2.5 animate-in slide-in-from-bottom-5 ${
@@ -174,26 +174,26 @@ export default function AdminLoyaltyPage() {
         {/* Navigation */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div>
-            <Link href="/admin" className="text-xs font-bold text-slate-600 hover:text-[#1F1F1F] flex items-center gap-1 mb-2">
+            <Link href="/admin" className="text-xs font-bold text-slate-500 hover:text-[#1F1F1F] flex items-center gap-1 mb-2">
               <ArrowLeft className="w-3.5 h-3.5" /> Quay lại Admin Panel
             </Link>
-            <h1 className="text-2xl font-black text-slate-900 flex items-center gap-2.5">
+            <h1 className="text-2xl font-black text-white flex items-center gap-2.5">
               <Award className="w-6 h-6 text-amber-500" /> Quản Lý Điểm Thưởng Khách Hàng (Loyalty &amp; Tiers)
             </h1>
-            <p className="text-xs text-slate-600 mt-0.5">
+            <p className="text-xs text-slate-500 mt-0.5">
               Theo dõi điểm tích lũy, cấp bậc thành viên và điều chỉnh điểm thưởng khách hàng.
             </p>
           </div>
 
           <div className="flex items-center gap-3">
             <div className="relative">
-              <Search className="w-4 h-4 text-slate-600 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <Search className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 placeholder="Tìm khách hàng / email..."
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                className="pl-10 pr-4 py-2.5 rounded bg-white border border-slate-200 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500 shadow-sm w-60"
+                className="pl-10 pr-4 py-2.5 rounded bg-[#1E293B] bg-opacity-70 backdrop-blur-md border border-white/10 text-xs text-white focus:outline-none focus:ring-2 focus:ring-amber-500 shadow-sm w-60"
               />
             </div>
             <button
@@ -207,51 +207,51 @@ export default function AdminLoyaltyPage() {
 
         {/* Modal Adjust Points */}
         {adjustingUser && (
-          <div className="fixed inset-0 bg-white/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-lg p-6 sm:p-8 max-w-md w-full border border-slate-200 shadow-2xl">
+          <div className="fixed inset-0 bg-[#1E293B] bg-opacity-70 backdrop-blur-md/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-lg p-6 sm:p-8 max-w-md w-full border border-white/10 shadow-2xl">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-base font-black text-slate-900">Điều Chỉnh Điểm Thưởng</h3>
-                <button onClick={() => setAdjustingUser(null)} className="p-1.5 text-slate-600 hover:text-slate-600 rounded-sm hover:bg-slate-100">
+                <h3 className="text-base font-black text-white">Điều Chỉnh Điểm Thưởng</h3>
+                <button onClick={() => setAdjustingUser(null)} className="p-1.5 text-slate-500 hover:text-slate-500 rounded-sm hover:bg-white/10">
                   <X className="w-5 h-5" />
                 </button>
               </div>
 
-              <p className="text-xs text-slate-600 mb-4">
+              <p className="text-xs text-slate-500 mb-4">
                 Khách hàng: <strong>{adjustingUser.userName}</strong> ({adjustingUser.userEmail})<br />
                 Số dư hiện tại: <strong className="text-amber-600">{adjustingUser.points} điểm</strong>
               </p>
 
               <div className="space-y-4">
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Số Điểm Cần Thay Đổi</label>
+                  <label className="block text-xs font-bold text-slate-200 mb-1">Số Điểm Cần Thay Đổi</label>
                   <input
                     type="number"
                     min={1}
                     value={pointsChange}
                     onChange={e => setPointsChange(Number(e.target.value))}
-                    className="w-full px-3.5 py-2.5 text-sm rounded border border-slate-200 focus:ring-2 focus:ring-amber-500 outline-none font-bold"
+                    className="w-full px-3.5 py-2.5 text-sm rounded border border-white/10 focus:ring-2 focus:ring-amber-500 outline-none font-bold"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Lý Do Điều Chỉnh</label>
+                  <label className="block text-xs font-bold text-slate-200 mb-1">Lý Do Điều Chỉnh</label>
                   <input
                     type="text"
                     value={reason}
                     onChange={e => setReason(e.target.value)}
-                    className="w-full px-3.5 py-2.5 text-sm rounded border border-slate-200 focus:ring-2 focus:ring-amber-500 outline-none"
+                    className="w-full px-3.5 py-2.5 text-sm rounded border border-white/10 focus:ring-2 focus:ring-amber-500 outline-none"
                   />
                 </div>
 
                 <div className="flex gap-2 justify-end pt-2">
                   <button
                     onClick={() => setAdjustingUser(null)}
-                    className="px-4 py-2.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold"
+                    className="px-4 py-2.5 rounded bg-white/10 hover:bg-white/20 text-slate-200 text-xs font-bold"
                   >
                     Hủy
                   </button>
                   <button
                     onClick={() => handleAdjustPoints('deduct')}
-                    className="px-4 py-2.5 rounded bg-rose-600 hover:bg-rose-700 text-slate-900 text-xs font-bold flex items-center gap-1"
+                    className="px-4 py-2.5 rounded bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold flex items-center gap-1"
                   >
                     <Minus className="w-3.5 h-3.5" /> Trừ Điểm
                   </button>
@@ -269,11 +269,11 @@ export default function AdminLoyaltyPage() {
 
         {/* Modal Rule Config */}
         {showConfigModal && (
-          <div className="fixed inset-0 bg-white/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-lg p-6 sm:p-8 max-w-lg w-full border border-slate-200 shadow-2xl">
+          <div className="fixed inset-0 bg-[#1E293B] bg-opacity-70 backdrop-blur-md/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-lg p-6 sm:p-8 max-w-lg w-full border border-white/10 shadow-2xl">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-base font-black text-slate-900">Cấu Hình Quy Đổi Điểm &amp; Cấp Bậc</h3>
-                <button onClick={() => setShowConfigModal(false)} className="p-1.5 text-slate-600 hover:text-slate-600 rounded-sm hover:bg-slate-100">
+                <h3 className="text-base font-black text-white">Cấu Hình Quy Đổi Điểm &amp; Cấp Bậc</h3>
+                <button onClick={() => setShowConfigModal(false)} className="p-1.5 text-slate-500 hover:text-slate-500 rounded-sm hover:bg-white/10">
                   <X className="w-5 h-5" />
                 </button>
               </div>
@@ -281,31 +281,31 @@ export default function AdminLoyaltyPage() {
               <form onSubmit={handleSaveConfig} className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1">Mức chi tiêu nhận 1 điểm</label>
+                    <label className="block text-xs font-bold text-slate-200 mb-1">Mức chi tiêu nhận 1 điểm</label>
                     <input
                       type="number"
                       required
                       value={rateConfig.spendAmountPerPoint}
                       onChange={e => setRateConfig({ ...rateConfig, spendAmountPerPoint: Number(e.target.value) })}
-                      className="w-full px-3.5 py-2 text-xs rounded border border-slate-200 font-bold"
+                      className="w-full px-3.5 py-2 text-xs rounded border border-white/10 font-bold"
                     />
-                    <span className="text-[10px] text-slate-600">VNĐ / 1 điểm thưởng</span>
+                    <span className="text-[10px] text-slate-500">VNĐ / 1 điểm thưởng</span>
                   </div>
                   <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1">Giá trị quy đổi 1 điểm</label>
+                    <label className="block text-xs font-bold text-slate-200 mb-1">Giá trị quy đổi 1 điểm</label>
                     <input
                       type="number"
                       required
                       value={rateConfig.pointValueInVnd}
                       onChange={e => setRateConfig({ ...rateConfig, pointValueInVnd: Number(e.target.value) })}
-                      className="w-full px-3.5 py-2 text-xs rounded border border-slate-200 font-bold"
+                      className="w-full px-3.5 py-2 text-xs rounded border border-white/10 font-bold"
                     />
-                    <span className="text-[10px] text-slate-600">VNĐ trừ vào đơn hàng</span>
+                    <span className="text-[10px] text-slate-500">VNĐ trừ vào đơn hàng</span>
                   </div>
                 </div>
 
                 <div className="border-t border-slate-100 pt-3">
-                  <h4 className="text-xs font-black text-slate-900 uppercase tracking-wider mb-2">Ngưỡng Điểm Nâng Hạng</h4>
+                  <h4 className="text-xs font-black text-white uppercase tracking-wider mb-2">Ngưỡng Điểm Nâng Hạng</h4>
                   <div className="grid grid-cols-3 gap-3 text-xs">
                     <div>
                       <label className="block font-bold text-amber-600 mb-1">Hạng Vàng (Gold)</label>
@@ -313,7 +313,7 @@ export default function AdminLoyaltyPage() {
                         type="number"
                         value={rateConfig.goldThreshold}
                         onChange={e => setRateConfig({ ...rateConfig, goldThreshold: Number(e.target.value) })}
-                        className="w-full px-2.5 py-1.5 rounded-sm border border-slate-200 font-bold"
+                        className="w-full px-2.5 py-1.5 rounded-sm border border-white/10 font-bold"
                       />
                     </div>
                     <div>
@@ -322,7 +322,7 @@ export default function AdminLoyaltyPage() {
                         type="number"
                         value={rateConfig.platinumThreshold}
                         onChange={e => setRateConfig({ ...rateConfig, platinumThreshold: Number(e.target.value) })}
-                        className="w-full px-2.5 py-1.5 rounded-sm border border-slate-200 font-bold"
+                        className="w-full px-2.5 py-1.5 rounded-sm border border-white/10 font-bold"
                       />
                     </div>
                     <div>
@@ -331,7 +331,7 @@ export default function AdminLoyaltyPage() {
                         type="number"
                         value={rateConfig.diamondThreshold}
                         onChange={e => setRateConfig({ ...rateConfig, diamondThreshold: Number(e.target.value) })}
-                        className="w-full px-2.5 py-1.5 rounded-sm border border-slate-200 font-bold"
+                        className="w-full px-2.5 py-1.5 rounded-sm border border-white/10 font-bold"
                       />
                     </div>
                   </div>
@@ -341,7 +341,7 @@ export default function AdminLoyaltyPage() {
                   <button
                     type="button"
                     onClick={() => setShowConfigModal(false)}
-                    className="px-4 py-2.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold"
+                    className="px-4 py-2.5 rounded bg-white/10 hover:bg-white/20 text-slate-200 text-xs font-bold"
                   >
                     Hủy
                   </button>
@@ -358,10 +358,10 @@ export default function AdminLoyaltyPage() {
         )}
 
         {/* Users Table */}
-        <div className="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden mb-8">
+        <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-lg border border-white/10 shadow-sm overflow-hidden mb-8">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 text-slate-600 font-extrabold uppercase tracking-wider border-b border-slate-100">
+              <thead className="bg-[#0F172A] text-slate-500 font-extrabold uppercase tracking-wider border-b border-slate-100">
                 <tr>
                   <th className="px-6 py-4">Khách Hàng</th>
                   <th className="px-6 py-4">Hạng Thành Viên</th>
@@ -371,18 +371,18 @@ export default function AdminLoyaltyPage() {
                   <th className="px-6 py-4 text-right">Thao Tác</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-white/10">
                 {filtered.map((u) => (
-                  <tr key={u.id} className="hover:bg-slate-50/60 transition-colors">
-                    <td className="px-6 py-4 font-bold text-slate-900">
+                  <tr key={u.id} className="hover:bg-[#0F172A]/60 transition-colors">
+                    <td className="px-6 py-4 font-bold text-white">
                       <div>{u.userName}</div>
-                      <div className="text-[11px] text-slate-600 font-normal">{u.userEmail}</div>
+                      <div className="text-[11px] text-slate-500 font-normal">{u.userEmail}</div>
                     </td>
                     <td className="px-6 py-4">
                       <span className={`px-2.5 py-1 rounded-full font-extrabold text-[10px] uppercase tracking-wider ${
                         u.tier === 'Diamond' ? 'bg-cyan-100 text-[#1F1F1F]' :
                         u.tier === 'Platinum' ? 'bg-purple-100 text-purple-800' :
-                        u.tier === 'Gold' ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-700'
+                        u.tier === 'Gold' ? 'bg-amber-100 text-amber-800' : 'bg-white/10 text-slate-200'
                       }`}>
                         {u.tier}
                       </span>
@@ -390,10 +390,10 @@ export default function AdminLoyaltyPage() {
                     <td className="px-6 py-4 font-black text-amber-600 text-sm">
                       {u.points.toLocaleString('vi-VN')} pts
                     </td>
-                    <td className="px-6 py-4 font-semibold text-slate-700">
+                    <td className="px-6 py-4 font-semibold text-slate-200">
                       {u.totalEarned.toLocaleString('vi-VN')} pts
                     </td>
-                    <td className="px-6 py-4 font-semibold text-slate-600">
+                    <td className="px-6 py-4 font-semibold text-slate-500">
                       {u.totalRedeemed.toLocaleString('vi-VN')} pts
                     </td>
                     <td className="px-6 py-4 text-right">

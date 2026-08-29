@@ -170,14 +170,14 @@ export default function AdminExchangeRatesPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[#0F172A] flex items-center justify-center">
         <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-[#0F172A]">
       {/* Toast */}
       {toast && (
         <div className={`fixed bottom-5 right-5 z-50 px-5 py-3 rounded shadow-xl text-white font-semibold text-sm flex items-center gap-2.5 animate-in slide-in-from-bottom-5 ${
@@ -189,21 +189,21 @@ export default function AdminExchangeRatesPage() {
       )}
 
       {/* Header */}
-      <header className="bg-white border-b border-slate-200 sticky top-0 z-40">
+      <header className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md border-b border-white/10 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link href="/admin" className="p-2 rounded-sm hover:bg-slate-100 transition-colors">
-              <ArrowLeft className="w-5 h-5 text-slate-600" />
+            <Link href="/admin" className="p-2 rounded-sm hover:bg-white/10 transition-colors">
+              <ArrowLeft className="w-5 h-5 text-slate-500" />
             </Link>
             <div>
-              <h1 className="text-xl font-bold text-slate-900">Quản lý Tỷ Giá Hối Đoái (Exchange Rates)</h1>
-              <p className="text-xs text-slate-600">{exchangeRates.length} cặp tiền tệ hỗ trợ</p>
+              <h1 className="text-xl font-bold text-white">Quản lý Tỷ Giá Hối Đoái (Exchange Rates)</h1>
+              <p className="text-xs text-slate-500">{exchangeRates.length} cặp tiền tệ hỗ trợ</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
             <button
               onClick={fetchExchangeRates}
-              className="p-2 text-slate-600 hover:bg-slate-100 rounded transition-colors"
+              className="p-2 text-slate-500 hover:bg-white/10 rounded transition-colors"
               title="Tải lại danh sách"
             >
               <RefreshCw className="w-5 h-5" />
@@ -222,7 +222,7 @@ export default function AdminExchangeRatesPage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Quick Converter Tool */}
         {selectedRate && (
-          <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-lg p-6 sm:p-8 text-slate-900 mb-8 shadow-xl">
+          <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-lg p-6 sm:p-8 text-white mb-8 shadow-xl">
             <div className="flex items-center gap-2 text-slate-200 text-xs font-bold uppercase tracking-wider mb-2">
               <TrendingUp className="w-4 h-4" /> Công cụ quy đổi nhanh thời gian thực
             </div>
@@ -237,7 +237,7 @@ export default function AdminExchangeRatesPage() {
                   type="number"
                   value={convertAmount}
                   onChange={(e) => setConvertAmount(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded bg-white/10 border border-white/20 text-slate-900 placeholder-white/50 text-sm font-bold focus:outline-none focus:bg-white/20"
+                  className="w-full px-4 py-2.5 rounded bg-[#1E293B] bg-opacity-70 backdrop-blur-md/10 border border-white/20 text-white placeholder-white/50 text-sm font-bold focus:outline-none focus:bg-[#1E293B] bg-opacity-70 backdrop-blur-md/20"
                 />
               </div>
 
@@ -246,7 +246,7 @@ export default function AdminExchangeRatesPage() {
                 <select
                   value={selectedRateId}
                   onChange={(e) => setSelectedRateId(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded bg-white/10 border border-white/20 text-slate-900 text-sm font-bold focus:outline-none focus:bg-white/20 [&>option]:text-slate-900"
+                  className="w-full px-4 py-2.5 rounded bg-[#1E293B] bg-opacity-70 backdrop-blur-md/10 border border-white/20 text-white text-sm font-bold focus:outline-none focus:bg-[#1E293B] bg-opacity-70 backdrop-blur-md/20 [&>option]:text-white"
                 >
                   {exchangeRates.map(r => (
                     <option key={r.id} value={r.id}>{r.fromCurrency} → {r.toCurrency}</option>
@@ -254,9 +254,9 @@ export default function AdminExchangeRatesPage() {
                 </select>
               </div>
 
-              <div className="bg-white/10 border border-white/20 rounded p-3 sm:mt-5 text-center">
+              <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md/10 border border-white/20 rounded p-3 sm:mt-5 text-center">
                 <div className="text-xs text-slate-200 font-semibold">Kết quả quy đổi tương đương</div>
-                <div className="text-xl font-black text-slate-900 mt-0.5">
+                <div className="text-xl font-black text-white mt-0.5">
                   {((parseFloat(convertAmount) || 0) * selectedRate.rate).toLocaleString('vi-VN')} {selectedRate.toCurrency}
                 </div>
               </div>
@@ -265,9 +265,9 @@ export default function AdminExchangeRatesPage() {
         )}
 
         {/* Rates Table */}
-        <div className="bg-white rounded-lg border border-slate-200 overflow-hidden shadow-sm">
+        <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-lg border border-white/10 overflow-hidden shadow-sm">
           <table className="w-full text-sm">
-            <thead className="bg-slate-50 border-b border-slate-200 text-xs uppercase tracking-wider text-slate-600">
+            <thead className="bg-[#0F172A] border-b border-white/10 text-xs uppercase tracking-wider text-slate-500">
               <tr>
                 <th className="px-6 py-3.5 text-left font-bold">Cặp tiền tệ</th>
                 <th className="px-6 py-3.5 text-left font-bold">Tỷ giá quy đổi</th>
@@ -275,41 +275,41 @@ export default function AdminExchangeRatesPage() {
                 <th className="px-6 py-3.5 text-right font-bold">Thao tác</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-white/10">
               {exchangeRates.map((rateItem) => (
-                <tr key={rateItem.id} className="hover:bg-slate-50 transition-colors">
+                <tr key={rateItem.id} className="hover:bg-[#0F172A] transition-colors">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded bg-blue-50 text-[#1F1F1F] flex items-center justify-center font-bold">
+                      <div className="w-10 h-10 rounded bg-blue-900/30 text-[#1F1F1F] flex items-center justify-center font-bold">
                         <ArrowRightLeft className="w-5 h-5" />
                       </div>
                       <div>
-                        <p className="font-bold text-slate-900 text-base">{rateItem.fromCurrency} / {rateItem.toCurrency}</p>
-                        <p className="text-xs text-slate-600">1 {rateItem.fromCurrency} = {rateItem.rate.toLocaleString('vi-VN')} {rateItem.toCurrency}</p>
+                        <p className="font-bold text-white text-base">{rateItem.fromCurrency} / {rateItem.toCurrency}</p>
+                        <p className="text-xs text-slate-500">1 {rateItem.fromCurrency} = {rateItem.rate.toLocaleString('vi-VN')} {rateItem.toCurrency}</p>
                       </div>
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    <span className="font-mono font-black text-slate-900 text-base">
+                    <span className="font-mono font-black text-white text-base">
                       {rateItem.rate.toLocaleString('vi-VN')}
                     </span>
-                    <span className="text-xs text-slate-600 font-semibold ml-1.5">{rateItem.toCurrency}</span>
+                    <span className="text-xs text-slate-500 font-semibold ml-1.5">{rateItem.toCurrency}</span>
                   </td>
-                  <td className="px-6 py-4 text-xs text-slate-600">
+                  <td className="px-6 py-4 text-xs text-slate-500">
                     {new Date(rateItem.updatedAt).toLocaleString('vi-VN')}
                   </td>
                   <td className="px-6 py-4 text-right">
                     <div className="flex items-center justify-end gap-1.5">
                       <button 
                         onClick={() => handleOpenEdit(rateItem)}
-                        className="p-2 text-slate-600 hover:text-[#1F1F1F] hover:bg-blue-50 rounded transition-colors"
+                        className="p-2 text-slate-500 hover:text-[#1F1F1F] hover:bg-blue-900/30 rounded transition-colors"
                         title="Sửa tỷ giá"
                       >
                         <Edit2 className="w-4 h-4" />
                       </button>
                       <button 
                         onClick={() => handleDelete(rateItem.id, rateItem.fromCurrency, rateItem.toCurrency)}
-                        className="p-2 text-slate-600 hover:text-rose-600 hover:bg-rose-50 rounded transition-colors"
+                        className="p-2 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded transition-colors"
                         title="Xóa tỷ giá"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -326,15 +326,15 @@ export default function AdminExchangeRatesPage() {
       {/* Add / Edit Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg p-6 sm:p-8 max-w-md w-full shadow-2xl">
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-lg p-6 sm:p-8 max-w-md w-full shadow-2xl">
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h3 className="text-xl font-bold text-slate-900">
+                <h3 className="text-xl font-bold text-white">
                   {editingId ? 'Chỉnh Sửa Tỷ Giá' : 'Thêm Tỷ Giá Tiền Tệ Mới'}
                 </h3>
-                <p className="text-xs text-slate-600 mt-0.5">Cập nhật hệ số quy đổi giá dịch vụ tự động</p>
+                <p className="text-xs text-slate-500 mt-0.5">Cập nhật hệ số quy đổi giá dịch vụ tự động</p>
               </div>
-              <button onClick={() => setShowModal(false)} className="p-2 text-slate-600 hover:text-slate-600 rounded-sm hover:bg-slate-100">
+              <button onClick={() => setShowModal(false)} className="p-2 text-slate-500 hover:text-slate-500 rounded-sm hover:bg-white/10">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -342,7 +342,7 @@ export default function AdminExchangeRatesPage() {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Từ tiền tệ (From)</label>
+                  <label className="block text-xs font-semibold text-slate-200 uppercase mb-1.5">Từ tiền tệ (From)</label>
                   <input
                     type="text"
                     required
@@ -350,11 +350,11 @@ export default function AdminExchangeRatesPage() {
                     placeholder="USD"
                     value={formData.fromCurrency}
                     onChange={(e) => setFormData({ ...formData, fromCurrency: e.target.value.toUpperCase() })}
-                    className="w-full px-4 py-2.5 rounded border border-slate-200 text-sm font-bold uppercase focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                    className="w-full px-4 py-2.5 rounded border border-white/10 text-sm font-bold uppercase focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Sang tiền tệ (To)</label>
+                  <label className="block text-xs font-semibold text-slate-200 uppercase mb-1.5">Sang tiền tệ (To)</label>
                   <input
                     type="text"
                     required
@@ -362,13 +362,13 @@ export default function AdminExchangeRatesPage() {
                     placeholder="VND"
                     value={formData.toCurrency}
                     onChange={(e) => setFormData({ ...formData, toCurrency: e.target.value.toUpperCase() })}
-                    className="w-full px-4 py-2.5 rounded border border-slate-200 text-sm font-bold uppercase focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                    className="w-full px-4 py-2.5 rounded border border-white/10 text-sm font-bold uppercase focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Tỷ giá quy đổi</label>
+                <label className="block text-xs font-semibold text-slate-200 uppercase mb-1.5">Tỷ giá quy đổi</label>
                 <input
                   type="number"
                   required
@@ -376,7 +376,7 @@ export default function AdminExchangeRatesPage() {
                   placeholder="25450"
                   value={formData.rate}
                   onChange={(e) => setFormData({ ...formData, rate: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded border border-slate-200 text-sm font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full px-4 py-2.5 rounded border border-white/10 text-sm font-bold text-white focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                 />
               </div>
 
@@ -384,7 +384,7 @@ export default function AdminExchangeRatesPage() {
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="flex-1 py-3 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm transition-colors"
+                  className="flex-1 py-3 rounded bg-white/10 hover:bg-white/20 text-slate-200 font-semibold text-sm transition-colors"
                 >
                   Hủy bỏ
                 </button>

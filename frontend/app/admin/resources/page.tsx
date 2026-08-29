@@ -111,7 +111,7 @@ export default function AdminResourcesPage() {
     const ext = url.split('.').pop()?.toLowerCase();
     if (ext === 'pdf') return <FileText className="w-5 h-5 text-rose-500" />;
     if (['zip', 'rar', 'tar', 'gz'].includes(ext || '')) return <FileArchive className="w-5 h-5 text-amber-500" />;
-    if (['exe', 'msi', 'sh'].includes(ext || '')) return <Settings className="w-5 h-5 text-slate-600" />;
+    if (['exe', 'msi', 'sh'].includes(ext || '')) return <Settings className="w-5 h-5 text-slate-500" />;
     return <File className="w-5 h-5 text-[#1F1F1F]" />;
   };
 
@@ -119,8 +119,8 @@ export default function AdminResourcesPage() {
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-slate-800">Quản lý Tài nguyên</h1>
-          <p className="text-sm text-slate-600">Tải lên các phần mềm, tài liệu cho khách hàng tải xuống.</p>
+          <h1 className="text-2xl font-bold text-slate-100">Quản lý Tài nguyên</h1>
+          <p className="text-sm text-slate-500">Tải lên các phần mềm, tài liệu cho khách hàng tải xuống.</p>
         </div>
         <button
           onClick={() => setIsModalOpen(true)}
@@ -131,11 +131,11 @@ export default function AdminResourcesPage() {
         </button>
       </div>
 
-      <div className="bg-white rounded-md shadow-sm border border-slate-200 overflow-hidden">
+      <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-md shadow-sm border border-white/10 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-slate-50 border-b border-slate-200 text-xs uppercase text-slate-600 font-semibold tracking-wider">
+              <tr className="bg-[#0F172A] border-b border-white/10 text-xs uppercase text-slate-500 font-semibold tracking-wider">
                 <th className="p-4">Tên tài nguyên</th>
                 <th className="p-4">Danh mục</th>
                 <th className="p-4">Kích thước</th>
@@ -143,44 +143,44 @@ export default function AdminResourcesPage() {
                 <th className="p-4 text-right">Thao tác</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-white/10">
               {loading ? (
                 <tr>
-                  <td colSpan={5} className="p-8 text-center text-slate-600">Đang tải dữ liệu...</td>
+                  <td colSpan={5} className="p-8 text-center text-slate-500">Đang tải dữ liệu...</td>
                 </tr>
               ) : resources.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="p-8 text-center text-slate-600">Chưa có tài nguyên nào.</td>
+                  <td colSpan={5} className="p-8 text-center text-slate-500">Chưa có tài nguyên nào.</td>
                 </tr>
               ) : (
                 resources.map(resource => (
-                  <tr key={resource.id} className="hover:bg-slate-50 transition-colors">
+                  <tr key={resource.id} className="hover:bg-[#0F172A] transition-colors">
                     <td className="p-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-sm bg-slate-100 flex items-center justify-center shrink-0">
+                        <div className="w-10 h-10 rounded-sm bg-white/10 flex items-center justify-center shrink-0">
                           {getFileIcon(resource.fileUrl)}
                         </div>
                         <div>
-                          <div className="font-bold text-slate-800">{resource.title}</div>
-                          <div className="text-xs text-slate-600 truncate max-w-md">{resource.description}</div>
+                          <div className="font-bold text-slate-100">{resource.title}</div>
+                          <div className="text-xs text-slate-500 truncate max-w-md">{resource.description}</div>
                         </div>
                       </div>
                     </td>
                     <td className="p-4">
-                      <span className="px-2.5 py-1 bg-slate-100 text-slate-600 text-xs font-semibold rounded-sm">
+                      <span className="px-2.5 py-1 bg-white/10 text-slate-500 text-xs font-semibold rounded-sm">
                         {resource.category}
                       </span>
                     </td>
-                    <td className="p-4 text-sm font-medium text-slate-600">
+                    <td className="p-4 text-sm font-medium text-slate-500">
                       {formatFileSize(resource.fileSize)}
                     </td>
-                    <td className="p-4 text-sm text-slate-600">
+                    <td className="p-4 text-sm text-slate-500">
                       {formatDistanceToNow(new Date(resource.createdAt), { addSuffix: true, locale: vi })}
                     </td>
                     <td className="p-4 text-right">
                       <button
                         onClick={() => handleDelete(resource.id)}
-                        className="p-2 text-slate-600 hover:text-rose-600 hover:bg-rose-50 rounded-sm transition-colors"
+                        className="p-2 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-sm transition-colors"
                         title="Xóa"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -196,55 +196,55 @@ export default function AdminResourcesPage() {
 
       {/* Upload Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-white/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-md shadow-xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+        <div className="fixed inset-0 bg-[#1E293B] bg-opacity-70 backdrop-blur-md/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-md shadow-xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in-95 duration-200">
             <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center">
-              <h3 className="font-bold text-slate-800 text-lg">Tải lên Tài nguyên mới</h3>
-              <button onClick={() => setIsModalOpen(false)} className="text-slate-600 hover:text-slate-600">
+              <h3 className="font-bold text-slate-100 text-lg">Tải lên Tài nguyên mới</h3>
+              <button onClick={() => setIsModalOpen(false)} className="text-slate-500 hover:text-slate-500">
                 <X className="w-5 h-5" />
               </button>
             </div>
             
             <form onSubmit={handleSubmit} className="p-6 space-y-4">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Tên tài nguyên <span className="text-rose-500">*</span></label>
+                <label className="block text-sm font-medium text-slate-200 mb-1">Tên tài nguyên <span className="text-rose-500">*</span></label>
                 <input
                   type="text"
                   required
                   value={title}
                   onChange={e => setTitle(e.target.value)}
-                  className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                  className="w-full px-4 py-2 bg-[#0F172A] border border-white/10 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
                   placeholder="VD: AnyDesk, TeamViewer, HDSD PDF..."
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Danh mục <span className="text-rose-500">*</span></label>
+                <label className="block text-sm font-medium text-slate-200 mb-1">Danh mục <span className="text-rose-500">*</span></label>
                 <input
                   type="text"
                   required
                   value={category}
                   onChange={e => setCategory(e.target.value)}
-                  className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                  className="w-full px-4 py-2 bg-[#0F172A] border border-white/10 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
                   placeholder="VD: Tools, Manuals, Drivers..."
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Mô tả ngắn <span className="text-rose-500">*</span></label>
+                <label className="block text-sm font-medium text-slate-200 mb-1">Mô tả ngắn <span className="text-rose-500">*</span></label>
                 <textarea
                   required
                   rows={3}
                   value={description}
                   onChange={e => setDescription(e.target.value)}
-                  className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 resize-none"
+                  className="w-full px-4 py-2 bg-[#0F172A] border border-white/10 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 resize-none"
                   placeholder="Mô tả công dụng của file này..."
                 ></textarea>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">File đính kèm <span className="text-rose-500">*</span></label>
-                <div className="relative border-2 border-dashed border-slate-300 rounded p-6 text-center hover:bg-slate-50 transition-colors">
+                <label className="block text-sm font-medium text-slate-200 mb-1">File đính kèm <span className="text-rose-500">*</span></label>
+                <div className="relative border-2 border-dashed border-white/20 rounded p-6 text-center hover:bg-[#0F172A] transition-colors">
                   <input
                     type="file"
                     required
@@ -252,13 +252,13 @@ export default function AdminResourcesPage() {
                     onChange={handleFileChange}
                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                   />
-                  <Upload className="w-8 h-8 text-slate-600 mx-auto mb-2" />
+                  <Upload className="w-8 h-8 text-slate-500 mx-auto mb-2" />
                   {file ? (
                     <div className="text-sm font-bold text-[#1F1F1F]">{file.name} ({formatFileSize(file.size)})</div>
                   ) : (
                     <>
-                      <div className="text-sm font-medium text-slate-700">Click hoặc kéo thả file vào đây</div>
-                      <div className="text-xs text-slate-600 mt-1">Hỗ trợ PDF, ZIP, RAR, EXE...</div>
+                      <div className="text-sm font-medium text-slate-200">Click hoặc kéo thả file vào đây</div>
+                      <div className="text-xs text-slate-500 mt-1">Hỗ trợ PDF, ZIP, RAR, EXE...</div>
                     </>
                   )}
                 </div>
@@ -268,7 +268,7 @@ export default function AdminResourcesPage() {
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded transition-colors"
+                  className="px-4 py-2 text-sm font-medium text-slate-500 hover:bg-white/10 rounded transition-colors"
                 >
                   Hủy
                 </button>

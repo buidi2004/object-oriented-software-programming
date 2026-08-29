@@ -117,7 +117,7 @@ export default function AdminRolesPage() {
         title: 'Kỹ Thuật Viên (Technician)',
         desc: 'Quản lý vận hành máy chủ Cloud VPS, hạ tầng mạng, backup và xử lý tickets kỹ thuật',
         icon: Wrench,
-        badgeClass: 'bg-blue-50 text-blue-700 border-blue-200',
+        badgeClass: 'bg-blue-900/30 text-blue-300 border-blue-200',
         preset: 'TECHNICIAN'
       };
     }
@@ -143,7 +143,7 @@ export default function AdminRolesPage() {
       title: name,
       desc: 'Nhóm quyền người dùng tùy chỉnh trong hệ thống',
       icon: Users,
-      badgeClass: 'bg-slate-100 text-slate-700 border-slate-200',
+      badgeClass: 'bg-white/10 text-slate-200 border-white/10',
       preset: 'CUSTOM'
     };
   };
@@ -159,7 +159,7 @@ export default function AdminRolesPage() {
     {
       name: 'Kỹ Thuật & Vận Hành Máy Chủ',
       icon: Server,
-      color: 'text-blue-600 bg-blue-50 border-blue-200',
+      color: 'text-blue-400 bg-blue-900/30 border-blue-200',
       permCodes: ['manage_vps', 'manage_services', 'manage_tickets']
     },
     {
@@ -404,14 +404,14 @@ export default function AdminRolesPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center py-20">
+      <div className="min-h-screen bg-[#0F172A] flex items-center justify-center py-20">
         <div className="w-12 h-12 border-4 border-[#1F1F1F] border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#0F172A] py-8 px-4 sm:px-6 lg:px-8">
       {/* Toast Notification */}
       {toast && (
         <div className={`fixed bottom-5 right-5 z-50 px-5 py-3 rounded-lg shadow-xl text-white font-semibold text-xs flex items-center gap-2.5 animate-in slide-in-from-bottom-5 ${
@@ -427,10 +427,10 @@ export default function AdminRolesPage() {
         {/* Header Bar */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <Link href="/admin" className="text-xs font-bold text-slate-600 hover:text-[#1F1F1F] flex items-center gap-1 mb-2">
+            <Link href="/admin" className="text-xs font-bold text-slate-500 hover:text-[#1F1F1F] flex items-center gap-1 mb-2">
               <ArrowLeft className="w-4 h-4" /> Quay lại Admin Panel
             </Link>
-            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 flex items-center gap-2.5">
+            <h1 className="text-2xl sm:text-3xl font-black text-white flex items-center gap-2.5">
               <ShieldCheck className="w-7 h-7 text-[#1F1F1F]" />
               Quản Lý Phân Quyền &amp; Quyền Hạn
             </h1>
@@ -449,7 +449,7 @@ export default function AdminRolesPage() {
             </button>
             <button
               onClick={fetchData}
-              className="p-2.5 rounded bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 transition-colors shadow-2xs"
+              className="p-2.5 rounded bg-[#1E293B] bg-opacity-70 backdrop-blur-md border border-white/10 hover:bg-[#0F172A] text-slate-500 transition-colors shadow-2xs"
               title="Làm mới dữ liệu"
             >
               <RefreshCw className="w-4 h-4" />
@@ -462,14 +462,14 @@ export default function AdminRolesPage() {
           
           {/* Left Column: Roles List (4 Cols) */}
           <div className="lg:col-span-4 space-y-4">
-            <div className="bg-white rounded-lg border border-slate-200 p-5 shadow-2xs">
+            <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-lg border border-white/10 p-5 shadow-2xs">
               <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
                 <div>
-                  <h2 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                    <Users className="w-4 h-4 text-slate-700" />
+                  <h2 className="text-sm font-bold text-white flex items-center gap-2">
+                    <Users className="w-4 h-4 text-slate-200" />
                     Danh Sách Vai Trò ({roles.length})
                   </h2>
-                  <p className="text-[11px] text-slate-400 mt-0.5">Chọn vai trò để quản lý nhân sự và quyền hạn</p>
+                  <p className="text-[11px] text-slate-500 mt-0.5">Chọn vai trò để quản lý nhân sự và quyền hạn</p>
                 </div>
               </div>
 
@@ -487,22 +487,22 @@ export default function AdminRolesPage() {
                       className={`p-3.5 rounded-lg border transition-all cursor-pointer flex items-start gap-3 ${
                         isSelected 
                           ? 'bg-slate-900 text-white border-slate-900 shadow-md scale-[1.01]' 
-                          : 'bg-slate-50/70 hover:bg-white text-slate-800 border-slate-200/80 hover:border-slate-300'
+                          : 'bg-[#0F172A]/70 hover:bg-[#1E293B] bg-opacity-70 backdrop-blur-md text-slate-100 border-white/10/80 hover:border-white/20'
                       }`}
                     >
                       <div className={`w-8 h-8 rounded-md flex items-center justify-center shrink-0 mt-0.5 ${
-                        isSelected ? 'bg-white/15 text-white' : 'bg-white text-slate-700 border border-slate-200'
+                        isSelected ? 'bg-[#1E293B] bg-opacity-70 backdrop-blur-md/15 text-white' : 'bg-[#1E293B] bg-opacity-70 backdrop-blur-md text-slate-200 border border-white/10'
                       }`}>
                         <RoleIcon className="w-4 h-4" />
                       </div>
 
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between gap-1">
-                          <h3 className={`font-bold text-xs truncate ${isSelected ? 'text-white' : 'text-slate-900'}`}>
+                          <h3 className={`font-bold text-xs truncate ${isSelected ? 'text-white' : 'text-white'}`}>
                             {meta.title}
                           </h3>
                           <span className={`text-[9px] font-mono px-1.5 py-0.5 rounded uppercase font-bold shrink-0 ${
-                            isSelected ? 'bg-white/20 text-white' : meta.badgeClass
+                            isSelected ? 'bg-[#1E293B] bg-opacity-70 backdrop-blur-md/20 text-white' : meta.badgeClass
                           }`}>
                             {memberCount} nhân sự
                           </span>
@@ -520,9 +520,9 @@ export default function AdminRolesPage() {
             </div>
 
             {/* Quick Summary Box */}
-            <div className="bg-blue-50/70 border border-blue-200/70 rounded-lg p-4 text-xs text-blue-900 space-y-2">
+            <div className="bg-blue-900/30/70 border border-blue-200/70 rounded-lg p-4 text-xs text-blue-900 space-y-2">
               <div className="flex items-center gap-1.5 font-bold text-blue-950">
-                <Info className="w-4 h-4 text-blue-700 shrink-0" />
+                <Info className="w-4 h-4 text-blue-300 shrink-0" />
                 <span>Gợi ý vai trò phòng ban:</span>
               </div>
               <ul className="space-y-1.5 text-[11px] text-blue-800 list-disc list-inside">
@@ -536,13 +536,13 @@ export default function AdminRolesPage() {
           {/* Right Column: Multi-tab Role Details (8 Cols) */}
           <div className="lg:col-span-8 space-y-4">
             {selectedRole ? (
-              <div className="bg-white rounded-lg border border-slate-200 p-6 shadow-2xs space-y-6">
+              <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-lg border border-white/10 p-6 shadow-2xs space-y-6">
                 
                 {/* Active Role Header Bar */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-100 gap-4">
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="text-xs text-slate-400 font-bold uppercase tracking-wider">Vai trò:</span>
+                      <span className="text-xs text-slate-500 font-bold uppercase tracking-wider">Vai trò:</span>
                       <span className="px-2.5 py-0.5 rounded text-xs font-black bg-slate-900 text-white">
                         {selectedRole.name}
                       </span>
@@ -553,11 +553,11 @@ export default function AdminRolesPage() {
                   </div>
 
                   {/* Tab Navigation */}
-                  <div className="flex items-center bg-slate-100 p-1 rounded-md text-xs font-bold">
+                  <div className="flex items-center bg-white/10 p-1 rounded-md text-xs font-bold">
                     <button
                       onClick={() => setActiveTab('permissions')}
                       className={`px-3 py-1.5 rounded transition-colors flex items-center gap-1.5 ${
-                        activeTab === 'permissions' ? 'bg-white text-slate-900 shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                        activeTab === 'permissions' ? 'bg-[#1E293B] bg-opacity-70 backdrop-blur-md text-white shadow-2xs' : 'text-slate-500 hover:text-white'
                       }`}
                     >
                       <ShieldCheck className="w-3.5 h-3.5" />
@@ -566,7 +566,7 @@ export default function AdminRolesPage() {
                     <button
                       onClick={() => setActiveTab('users')}
                       className={`px-3 py-1.5 rounded transition-colors flex items-center gap-1.5 ${
-                        activeTab === 'users' ? 'bg-white text-slate-900 shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                        activeTab === 'users' ? 'bg-[#1E293B] bg-opacity-70 backdrop-blur-md text-white shadow-2xs' : 'text-slate-500 hover:text-white'
                       }`}
                     >
                       <Users className="w-3.5 h-3.5" />
@@ -575,7 +575,7 @@ export default function AdminRolesPage() {
                     <button
                       onClick={() => setActiveTab('audit')}
                       className={`px-3 py-1.5 rounded transition-colors flex items-center gap-1.5 ${
-                        activeTab === 'audit' ? 'bg-white text-slate-900 shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                        activeTab === 'audit' ? 'bg-[#1E293B] bg-opacity-70 backdrop-blur-md text-white shadow-2xs' : 'text-slate-500 hover:text-white'
                       }`}
                     >
                       <History className="w-3.5 h-3.5" />
@@ -590,30 +590,30 @@ export default function AdminRolesPage() {
                     <div className="flex flex-wrap items-center justify-between gap-2 pb-2">
                       {/* Presets */}
                       <div className="flex flex-wrap items-center gap-1.5">
-                        <span className="text-xs font-bold text-slate-700 mr-1 flex items-center gap-1">
+                        <span className="text-xs font-bold text-slate-200 mr-1 flex items-center gap-1">
                           <Wrench className="w-3.5 h-3.5 text-slate-500" /> Mẫu nhanh:
                         </span>
                         <button
                           onClick={() => handleApplyPreset('ACCOUNTANT')}
-                          className="px-2.5 py-1 rounded bg-slate-50 hover:bg-emerald-50 text-emerald-700 border border-slate-200 text-[11px] font-bold transition-colors shadow-2xs"
+                          className="px-2.5 py-1 rounded bg-[#0F172A] hover:bg-emerald-50 text-emerald-700 border border-white/10 text-[11px] font-bold transition-colors shadow-2xs"
                         >
                           + Kế Toán
                         </button>
                         <button
                           onClick={() => handleApplyPreset('TECHNICIAN')}
-                          className="px-2.5 py-1 rounded bg-slate-50 hover:bg-blue-50 text-blue-700 border border-slate-200 text-[11px] font-bold transition-colors shadow-2xs"
+                          className="px-2.5 py-1 rounded bg-[#0F172A] hover:bg-blue-900/30 text-blue-300 border border-white/10 text-[11px] font-bold transition-colors shadow-2xs"
                         >
                           + Kỹ Thuật
                         </button>
                         <button
                           onClick={() => handleApplyPreset('EDITOR')}
-                          className="px-2.5 py-1 rounded bg-slate-50 hover:bg-purple-50 text-purple-700 border border-slate-200 text-[11px] font-bold transition-colors shadow-2xs"
+                          className="px-2.5 py-1 rounded bg-[#0F172A] hover:bg-purple-50 text-purple-700 border border-white/10 text-[11px] font-bold transition-colors shadow-2xs"
                         >
                           + Biên Tập
                         </button>
                         <button
                           onClick={() => handleApplyPreset('FULL')}
-                          className="px-2.5 py-1 rounded bg-slate-50 hover:bg-slate-100 text-slate-900 border border-slate-200 text-[11px] font-bold transition-colors shadow-2xs"
+                          className="px-2.5 py-1 rounded bg-[#0F172A] hover:bg-white/10 text-white border border-white/10 text-[11px] font-bold transition-colors shadow-2xs"
                         >
                           + Toàn Quyền
                         </button>
@@ -622,13 +622,13 @@ export default function AdminRolesPage() {
                       <div className="flex items-center gap-2">
                         <button
                           onClick={handleSelectAll}
-                          className="px-2.5 py-1 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-colors"
+                          className="px-2.5 py-1 rounded bg-white/10 hover:bg-white/20 text-slate-200 text-xs font-bold transition-colors"
                         >
                           Chọn hết
                         </button>
                         <button
                           onClick={handleDeselectAll}
-                          className="px-2.5 py-1 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-colors"
+                          className="px-2.5 py-1 rounded bg-white/10 hover:bg-white/20 text-slate-200 text-xs font-bold transition-colors"
                         >
                           Bỏ hết
                         </button>
@@ -653,18 +653,18 @@ export default function AdminRolesPage() {
                         const allSelectedInGroup = groupPerms.every(p => rolePermissions.includes(p.id));
 
                         return (
-                          <div key={group.name} className="border border-slate-200 rounded-lg overflow-hidden">
-                            <div className="bg-[#f8fafc] px-4 py-2.5 border-b border-slate-200 flex items-center justify-between">
+                          <div key={group.name} className="border border-white/10 rounded-lg overflow-hidden">
+                            <div className="bg-[#f8fafc] px-4 py-2.5 border-b border-white/10 flex items-center justify-between">
                               <div className="flex items-center gap-2">
                                 <div className={`w-6 h-6 rounded flex items-center justify-center ${group.color}`}>
                                   <GroupIcon className="w-3.5 h-3.5" />
                                 </div>
-                                <span className="font-bold text-xs text-slate-800">{group.name}</span>
+                                <span className="font-bold text-xs text-slate-100">{group.name}</span>
                               </div>
 
                               <button
                                 onClick={() => handleToggleGroup(group.permCodes)}
-                                className="text-[11px] font-bold text-slate-600 hover:text-slate-900 flex items-center gap-1"
+                                className="text-[11px] font-bold text-slate-500 hover:text-white flex items-center gap-1"
                               >
                                 {allSelectedInGroup ? (
                                   <>
@@ -673,14 +673,14 @@ export default function AdminRolesPage() {
                                   </>
                                 ) : (
                                   <>
-                                    <Square className="w-3.5 h-3.5 text-slate-400" />
+                                    <Square className="w-3.5 h-3.5 text-slate-500" />
                                     <span>Chọn nhóm</span>
                                   </>
                                 )}
                               </button>
                             </div>
 
-                            <div className="p-4 grid grid-cols-1 sm:grid-cols-2 gap-3 bg-white">
+                            <div className="p-4 grid grid-cols-1 sm:grid-cols-2 gap-3 bg-[#1E293B] bg-opacity-70 backdrop-blur-md">
                               {groupPerms.map((perm) => {
                                 const isChecked = rolePermissions.includes(perm.id);
 
@@ -694,20 +694,20 @@ export default function AdminRolesPage() {
                                     className={`p-3 rounded-md border flex items-start gap-3 cursor-pointer transition-all ${
                                       isChecked 
                                         ? 'bg-emerald-50/50 border-emerald-300 shadow-2xs' 
-                                        : 'bg-white hover:bg-slate-50 border-slate-200 text-slate-700'
+                                        : 'bg-[#1E293B] bg-opacity-70 backdrop-blur-md hover:bg-[#0F172A] border-white/10 text-slate-200'
                                     }`}
                                   >
                                     <div className={`w-4 h-4 rounded mt-0.5 flex items-center justify-center shrink-0 transition-colors ${
-                                      isChecked ? 'bg-emerald-600 text-white' : 'border border-slate-300 bg-white'
+                                      isChecked ? 'bg-emerald-600 text-white' : 'border border-white/20 bg-[#1E293B] bg-opacity-70 backdrop-blur-md'
                                     }`}>
                                       {isChecked && <Check className="w-3 h-3 stroke-[3]" />}
                                     </div>
 
                                     <div>
-                                      <span className={`text-xs font-bold block ${isChecked ? 'text-emerald-950' : 'text-slate-900'}`}>
+                                      <span className={`text-xs font-bold block ${isChecked ? 'text-emerald-950' : 'text-white'}`}>
                                         {perm.name}
                                       </span>
-                                      <span className="text-[10px] text-slate-400 font-mono block mt-0.5">
+                                      <span className="text-[10px] text-slate-500 font-mono block mt-0.5">
                                         {perm.code}
                                       </span>
                                     </div>
@@ -730,7 +730,7 @@ export default function AdminRolesPage() {
                         <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">
                           Thành viên thuộc vai trò {selectedRole.name}
                         </h3>
-                        <p className="text-xs text-slate-400">Các tài khoản được cấp quyền hạn của vai trò này</p>
+                        <p className="text-xs text-slate-500">Các tài khoản được cấp quyền hạn của vai trò này</p>
                       </div>
 
                       <button
@@ -743,10 +743,10 @@ export default function AdminRolesPage() {
                     </div>
 
                     {roleUsers.length === 0 ? (
-                      <div className="text-center py-12 border border-dashed border-slate-200 rounded-lg p-6 bg-slate-50">
-                        <Users className="w-10 h-10 mx-auto text-slate-400 mb-2" />
-                        <p className="text-sm font-bold text-slate-700">Chưa có nhân sự nào trong vai trò này</p>
-                        <p className="text-xs text-slate-400 mt-1 mb-4">Bấm nút bên dưới để tạo tài khoản nhân sự mới</p>
+                      <div className="text-center py-12 border border-dashed border-white/10 rounded-lg p-6 bg-[#0F172A]">
+                        <Users className="w-10 h-10 mx-auto text-slate-500 mb-2" />
+                        <p className="text-sm font-bold text-slate-200">Chưa có nhân sự nào trong vai trò này</p>
+                        <p className="text-xs text-slate-500 mt-1 mb-4">Bấm nút bên dưới để tạo tài khoản nhân sự mới</p>
                         <button
                           onClick={() => setShowAddUserModal(true)}
                           className="px-4 py-2 bg-[#1F1F1F] text-white text-xs font-bold rounded shadow-2xs"
@@ -755,9 +755,9 @@ export default function AdminRolesPage() {
                         </button>
                       </div>
                     ) : (
-                      <div className="border border-slate-200 rounded-lg overflow-hidden shadow-2xs">
-                        <table className="w-full text-left text-xs text-slate-600">
-                          <thead className="bg-[#f8fafc] border-b border-slate-200 text-slate-700 font-bold uppercase tracking-wider text-[10px]">
+                      <div className="border border-white/10 rounded-lg overflow-hidden shadow-2xs">
+                        <table className="w-full text-left text-xs text-slate-500">
+                          <thead className="bg-[#f8fafc] border-b border-white/10 text-slate-200 font-bold uppercase tracking-wider text-[10px]">
                             <tr>
                               <th className="p-3.5">Họ Tên / Email</th>
                               <th className="p-3.5">Số Điện Thoại</th>
@@ -766,23 +766,23 @@ export default function AdminRolesPage() {
                               <th className="p-3.5 text-right">Thao Tác</th>
                             </tr>
                           </thead>
-                          <tbody className="divide-y divide-slate-100">
+                          <tbody className="divide-y divide-white/10">
                             {roleUsers.map((u) => (
-                              <tr key={u.id} className="hover:bg-slate-50/70 transition-colors">
+                              <tr key={u.id} className="hover:bg-[#0F172A]/70 transition-colors">
                                 <td className="p-3.5">
                                   <div className="flex items-center gap-2.5">
                                     <div className="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-xs shrink-0">
                                       {(u.fullName || 'U').charAt(0).toUpperCase()}
                                     </div>
                                     <div>
-                                      <p className="font-bold text-slate-900">{u.fullName}</p>
-                                      <p className="text-[11px] text-slate-400">{u.email}</p>
+                                      <p className="font-bold text-white">{u.fullName}</p>
+                                      <p className="text-[11px] text-slate-500">{u.email}</p>
                                     </div>
                                   </div>
                                 </td>
 
-                                <td className="p-3.5 text-slate-700 font-mono">
-                                  {u.phoneNumber || <span className="text-slate-400 italic">Chưa có</span>}
+                                <td className="p-3.5 text-slate-200 font-mono">
+                                  {u.phoneNumber || <span className="text-slate-500 italic">Chưa có</span>}
                                 </td>
 
                                 <td className="p-3.5">
@@ -808,7 +808,7 @@ export default function AdminRolesPage() {
                                         setSelectedAuditUser(u);
                                         setShowUserAuditModal(true);
                                       }}
-                                      className="p-1.5 text-slate-600 hover:text-purple-600 hover:bg-purple-50 rounded transition-colors"
+                                      className="p-1.5 text-slate-500 hover:text-purple-600 hover:bg-purple-50 rounded transition-colors"
                                       title="Xem Audit Logs của nhân sự này"
                                     >
                                       <History className="w-4 h-4" />
@@ -817,7 +817,7 @@ export default function AdminRolesPage() {
                                     <button
                                       onClick={() => handleToggleUserLock(u)}
                                       className={`p-1.5 rounded transition-colors ${
-                                        u.isActive ? 'text-slate-600 hover:text-amber-600 hover:bg-amber-50' : 'text-slate-600 hover:text-emerald-600 hover:bg-emerald-50'
+                                        u.isActive ? 'text-slate-500 hover:text-amber-600 hover:bg-amber-50' : 'text-slate-500 hover:text-emerald-600 hover:bg-emerald-50'
                                       }`}
                                       title={u.isActive ? 'Khóa tài khoản' : 'Mở khóa tài khoản'}
                                     >
@@ -829,7 +829,7 @@ export default function AdminRolesPage() {
                                         setUserToDelete(u);
                                         setShowDeleteUserModal(true);
                                       }}
-                                      className="p-1.5 text-slate-600 hover:text-rose-600 hover:bg-rose-50 rounded transition-colors"
+                                      className="p-1.5 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded transition-colors"
                                       title="Xóa tài khoản"
                                     >
                                       <Trash2 className="w-4 h-4" />
@@ -853,26 +853,26 @@ export default function AdminRolesPage() {
                         <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">
                           Nhật Ký Thao Tác Của Vai Trò {selectedRole.name}
                         </h3>
-                        <p className="text-xs text-slate-400">Ghi lại toàn bộ hành động của các thành viên trong nhóm này</p>
+                        <p className="text-xs text-slate-500">Ghi lại toàn bộ hành động của các thành viên trong nhóm này</p>
                       </div>
 
                       <Link
                         href="/admin/audit-logs"
-                        className="text-xs font-bold text-blue-600 hover:underline flex items-center gap-1"
+                        className="text-xs font-bold text-blue-400 hover:underline flex items-center gap-1"
                       >
                         <span>Mở toàn bộ Audit Logs →</span>
                       </Link>
                     </div>
 
                     {roleAuditLogs.length === 0 ? (
-                      <div className="text-center py-12 border border-dashed border-slate-200 rounded-lg p-6 bg-slate-50">
-                        <History className="w-10 h-10 mx-auto text-slate-400 mb-2" />
-                        <p className="text-sm font-bold text-slate-700">Chưa có bản ghi nhật ký nào từ vai trò này</p>
+                      <div className="text-center py-12 border border-dashed border-white/10 rounded-lg p-6 bg-[#0F172A]">
+                        <History className="w-10 h-10 mx-auto text-slate-500 mb-2" />
+                        <p className="text-sm font-bold text-slate-200">Chưa có bản ghi nhật ký nào từ vai trò này</p>
                       </div>
                     ) : (
-                      <div className="border border-slate-200 rounded-lg overflow-hidden shadow-2xs">
-                        <table className="w-full text-left text-xs text-slate-600">
-                          <thead className="bg-[#f8fafc] border-b border-slate-200 text-slate-700 font-bold uppercase tracking-wider text-[10px]">
+                      <div className="border border-white/10 rounded-lg overflow-hidden shadow-2xs">
+                        <table className="w-full text-left text-xs text-slate-500">
+                          <thead className="bg-[#f8fafc] border-b border-white/10 text-slate-200 font-bold uppercase tracking-wider text-[10px]">
                             <tr>
                               <th className="p-3.5">Người Thực Hiện</th>
                               <th className="p-3.5">Hành Động</th>
@@ -881,26 +881,26 @@ export default function AdminRolesPage() {
                               <th className="p-3.5">Thời Gian</th>
                             </tr>
                           </thead>
-                          <tbody className="divide-y divide-slate-100">
+                          <tbody className="divide-y divide-white/10">
                             {roleAuditLogs.map((log) => (
-                              <tr key={log.id} className="hover:bg-slate-50/70 transition-colors">
+                              <tr key={log.id} className="hover:bg-[#0F172A]/70 transition-colors">
                                 <td className="p-3.5">
-                                  <p className="font-bold text-slate-900">{log.userEmail || 'Hệ thống'}</p>
-                                  <p className="text-[10px] text-slate-400 font-mono">{log.userId || 'system'}</p>
+                                  <p className="font-bold text-white">{log.userEmail || 'Hệ thống'}</p>
+                                  <p className="text-[10px] text-slate-500 font-mono">{log.userId || 'system'}</p>
                                 </td>
 
                                 <td className="p-3.5">
-                                  <span className="font-mono font-bold text-[11px] px-2 py-0.5 bg-slate-100 rounded text-slate-800">
+                                  <span className="font-mono font-bold text-[11px] px-2 py-0.5 bg-white/10 rounded text-slate-100">
                                     {log.action}
                                   </span>
                                 </td>
 
                                 <td className="p-3.5">
-                                  <span className="font-semibold text-slate-900">{log.entityName}</span>
-                                  <span className="block text-[10px] text-slate-400 font-mono">{log.entityId}</span>
+                                  <span className="font-semibold text-white">{log.entityName}</span>
+                                  <span className="block text-[10px] text-slate-500 font-mono">{log.entityId}</span>
                                 </td>
 
-                                <td className="p-3.5 font-mono text-[11px] text-slate-600">
+                                <td className="p-3.5 font-mono text-[11px] text-slate-500">
                                   {log.ipAddress}
                                 </td>
 
@@ -918,9 +918,9 @@ export default function AdminRolesPage() {
 
               </div>
             ) : (
-              <div className="bg-white rounded-lg border border-slate-200 p-12 text-center text-slate-500">
-                <ShieldCheck className="w-10 h-10 mx-auto mb-2 text-slate-400" />
-                <p className="font-bold text-slate-700 text-sm">Vui lòng chọn một vai trò bên trái</p>
+              <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-lg border border-white/10 p-12 text-center text-slate-500">
+                <ShieldCheck className="w-10 h-10 mx-auto mb-2 text-slate-500" />
+                <p className="font-bold text-slate-200 text-sm">Vui lòng chọn một vai trò bên trái</p>
               </div>
             )}
           </div>
@@ -930,8 +930,8 @@ export default function AdminRolesPage() {
         {/* MODAL 1: TẠO VAI TRÒ MỚI */}
         {showAddRoleModal && (
           <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center z-50 p-4 animate-in fade-in duration-200">
-            <div className="bg-white rounded-lg p-6 max-w-md w-full shadow-2xl border border-slate-200">
-              <h3 className="text-base font-black text-slate-900 mb-1 flex items-center gap-2">
+            <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-lg p-6 max-w-md w-full shadow-2xl border border-white/10">
+              <h3 className="text-base font-black text-white mb-1 flex items-center gap-2">
                 <Plus className="w-4 h-4 text-[#1F1F1F]" />
                 Tạo Nhóm Quyền Mới
               </h3>
@@ -941,26 +941,26 @@ export default function AdminRolesPage() {
 
               <div className="space-y-3 mb-5">
                 <div>
-                  <label className="text-xs font-bold text-slate-700 block mb-1">Tên vai trò (Role Name):</label>
+                  <label className="text-xs font-bold text-slate-200 block mb-1">Tên vai trò (Role Name):</label>
                   <input
                     type="text"
                     value={newRoleName}
                     onChange={(e) => setNewRoleName(e.target.value)}
                     placeholder="VD: Accountant, Technician, CSKH..."
-                    className="w-full px-3 py-2 text-xs border border-slate-200 rounded focus:border-[#1F1F1F] outline-none"
+                    className="w-full px-3 py-2 text-xs border border-white/10 rounded focus:border-[#1F1F1F] outline-none"
                     autoFocus
                   />
                 </div>
 
-                <div className="bg-slate-50 p-2.5 rounded text-[11px] text-slate-600">
-                  <span className="font-bold block mb-1 text-slate-800">Gợi ý chức danh:</span>
+                <div className="bg-[#0F172A] p-2.5 rounded text-[11px] text-slate-500">
+                  <span className="font-bold block mb-1 text-slate-100">Gợi ý chức danh:</span>
                   <div className="flex flex-wrap gap-1.5">
                     {['Accountant', 'Technician', 'Support', 'Editor', 'Marketing', 'Auditor'].map(name => (
                       <button
                         key={name}
                         type="button"
                         onClick={() => setNewRoleName(name)}
-                        className="px-2 py-0.5 bg-white border border-slate-200 rounded hover:bg-slate-100 font-mono text-[10px]"
+                        className="px-2 py-0.5 bg-[#1E293B] bg-opacity-70 backdrop-blur-md border border-white/10 rounded hover:bg-white/10 font-mono text-[10px]"
                       >
                         {name}
                       </button>
@@ -972,7 +972,7 @@ export default function AdminRolesPage() {
               <div className="flex justify-end gap-2">
                 <button
                   onClick={() => setShowAddRoleModal(false)}
-                  className="px-4 py-2 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold"
+                  className="px-4 py-2 rounded bg-white/10 hover:bg-white/20 text-slate-200 text-xs font-bold"
                 >
                   Hủy
                 </button>
@@ -991,66 +991,66 @@ export default function AdminRolesPage() {
         {/* MODAL 2: TẠO TÀI KHOẢN CHO VAI TRÒ NÀY */}
         {showAddUserModal && selectedRole && (
           <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center z-50 p-4 animate-in fade-in duration-200">
-            <div className="bg-white rounded-lg p-6 sm:p-7 max-w-md w-full shadow-2xl border border-slate-200">
+            <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-lg p-6 sm:p-7 max-w-md w-full shadow-2xl border border-white/10">
               <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
                 <div>
-                  <h3 className="text-base font-black text-slate-900 flex items-center gap-2">
+                  <h3 className="text-base font-black text-white flex items-center gap-2">
                     <Plus className="w-4 h-4 text-[#1F1F1F]" />
                     Tạo Tài Khoản {selectedRole.name}
                   </h3>
                   <p className="text-xs text-slate-500 mt-0.5">Tài khoản sẽ được tự động gán vai trò {selectedRole.name}</p>
                 </div>
-                <button onClick={() => setShowAddUserModal(false)} className="p-1 text-slate-400 hover:text-slate-700">
+                <button onClick={() => setShowAddUserModal(false)} className="p-1 text-slate-500 hover:text-slate-200">
                   <X className="w-5 h-5" />
                 </button>
               </div>
 
               <form onSubmit={handleCreateUserInRole} className="space-y-3.5">
                 <div>
-                  <label className="text-xs font-bold text-slate-700 block mb-1">Họ và tên nhân sự *</label>
+                  <label className="text-xs font-bold text-slate-200 block mb-1">Họ và tên nhân sự *</label>
                   <input
                     type="text"
                     required
                     value={addUserForm.fullName}
                     onChange={(e) => setAddUserForm({ ...addUserForm, fullName: e.target.value })}
                     placeholder="VD: Trần Văn Kế Toán"
-                    className="w-full px-3 py-2 text-xs border border-slate-200 rounded focus:border-[#1F1F1F] outline-none"
+                    className="w-full px-3 py-2 text-xs border border-white/10 rounded focus:border-[#1F1F1F] outline-none"
                     autoFocus
                   />
                 </div>
 
                 <div>
-                  <label className="text-xs font-bold text-slate-700 block mb-1">Email đăng nhập *</label>
+                  <label className="text-xs font-bold text-slate-200 block mb-1">Email đăng nhập *</label>
                   <input
                     type="email"
                     required
                     value={addUserForm.email}
                     onChange={(e) => setAddUserForm({ ...addUserForm, email: e.target.value })}
                     placeholder={`VD: ${selectedRole.name.toLowerCase()}@cloudhost.vn`}
-                    className="w-full px-3 py-2 text-xs border border-slate-200 rounded focus:border-[#1F1F1F] outline-none"
+                    className="w-full px-3 py-2 text-xs border border-white/10 rounded focus:border-[#1F1F1F] outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="text-xs font-bold text-slate-700 block mb-1">Mật khẩu khởi tạo *</label>
+                  <label className="text-xs font-bold text-slate-200 block mb-1">Mật khẩu khởi tạo *</label>
                   <input
                     type="password"
                     required
                     value={addUserForm.password}
                     onChange={(e) => setAddUserForm({ ...addUserForm, password: e.target.value })}
                     placeholder="Nhập mật khẩu an toàn..."
-                    className="w-full px-3 py-2 text-xs border border-slate-200 rounded focus:border-[#1F1F1F] outline-none"
+                    className="w-full px-3 py-2 text-xs border border-white/10 rounded focus:border-[#1F1F1F] outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="text-xs font-bold text-slate-700 block mb-1">Số điện thoại</label>
+                  <label className="text-xs font-bold text-slate-200 block mb-1">Số điện thoại</label>
                   <input
                     type="text"
                     value={addUserForm.phoneNumber}
                     onChange={(e) => setAddUserForm({ ...addUserForm, phoneNumber: e.target.value })}
                     placeholder="0912345678"
-                    className="w-full px-3 py-2 text-xs border border-slate-200 rounded focus:border-[#1F1F1F] outline-none"
+                    className="w-full px-3 py-2 text-xs border border-white/10 rounded focus:border-[#1F1F1F] outline-none"
                   />
                 </div>
 
@@ -1058,7 +1058,7 @@ export default function AdminRolesPage() {
                   <button
                     type="button"
                     onClick={() => setShowAddUserModal(false)}
-                    className="px-4 py-2 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold"
+                    className="px-4 py-2 rounded bg-white/10 hover:bg-white/20 text-slate-200 text-xs font-bold"
                   >
                     Hủy bỏ
                   </button>
@@ -1078,20 +1078,20 @@ export default function AdminRolesPage() {
         {/* MODAL 3: XÓA TÀI KHOẢN NHÂN SỰ */}
         {showDeleteUserModal && userToDelete && (
           <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center z-50 p-4 animate-in fade-in duration-200">
-            <div className="bg-white rounded-lg p-6 sm:p-7 max-w-sm w-full shadow-2xl border border-slate-200">
+            <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-lg p-6 sm:p-7 max-w-sm w-full shadow-2xl border border-white/10">
               <div className="flex items-center gap-2.5 text-rose-600 mb-3">
                 <AlertCircle className="w-6 h-6 shrink-0" />
-                <h3 className="text-base font-black text-slate-900">Xác Nhận Xóa Tài Khoản</h3>
+                <h3 className="text-base font-black text-white">Xác Nhận Xóa Tài Khoản</h3>
               </div>
 
-              <p className="text-xs text-slate-600 leading-relaxed mb-5">
+              <p className="text-xs text-slate-500 leading-relaxed mb-5">
                 Bạn có chắc chắn muốn xóa tài khoản <strong>{userToDelete.fullName}</strong> ({userToDelete.email}) khỏi vai trò {selectedRole?.name}?
               </p>
 
               <div className="flex justify-end gap-2">
                 <button
                   onClick={() => setShowDeleteUserModal(false)}
-                  className="px-4 py-2 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold"
+                  className="px-4 py-2 rounded bg-white/10 hover:bg-white/20 text-slate-200 text-xs font-bold"
                 >
                   Hủy
                 </button>
@@ -1110,38 +1110,38 @@ export default function AdminRolesPage() {
         {/* MODAL 4: XEM AUDIT LOGS RIÊNG CỦA MỘT NHÂN SỰ */}
         {showUserAuditModal && selectedAuditUser && (
           <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center z-50 p-4 animate-in fade-in duration-200">
-            <div className="bg-white rounded-lg p-6 sm:p-7 max-w-2xl w-full shadow-2xl border border-slate-200 flex flex-col max-h-[85vh]">
+            <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-lg p-6 sm:p-7 max-w-2xl w-full shadow-2xl border border-white/10 flex flex-col max-h-[85vh]">
               <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-3">
                 <div>
-                  <h3 className="text-base font-black text-slate-900 flex items-center gap-2">
+                  <h3 className="text-base font-black text-white flex items-center gap-2">
                     <History className="w-5 h-5 text-purple-600" />
                     Lịch Sử Audit Logs: {selectedAuditUser.fullName}
                   </h3>
-                  <p className="text-xs text-slate-400 mt-0.5">Email: {selectedAuditUser.email} • Vai trò: {selectedAuditUser.role}</p>
+                  <p className="text-xs text-slate-500 mt-0.5">Email: {selectedAuditUser.email} • Vai trò: {selectedAuditUser.role}</p>
                 </div>
-                <button onClick={() => setShowUserAuditModal(false)} className="p-1 text-slate-400 hover:text-slate-700">
+                <button onClick={() => setShowUserAuditModal(false)} className="p-1 text-slate-500 hover:text-slate-200">
                   <X className="w-5 h-5" />
                 </button>
               </div>
 
               <div className="overflow-y-auto flex-1 space-y-2.5 py-2">
                 {auditLogs.filter(l => l.userEmail?.toLowerCase() === selectedAuditUser.email.toLowerCase()).length === 0 ? (
-                  <div className="text-center py-10 text-slate-400">
+                  <div className="text-center py-10 text-slate-500">
                     <History className="w-8 h-8 mx-auto mb-1.5 opacity-40" />
-                    <p className="text-xs font-bold text-slate-600">Chưa có hành động nào được ghi nhận từ nhân sự này</p>
+                    <p className="text-xs font-bold text-slate-500">Chưa có hành động nào được ghi nhận từ nhân sự này</p>
                   </div>
                 ) : (
                   auditLogs.filter(l => l.userEmail?.toLowerCase() === selectedAuditUser.email.toLowerCase()).map(log => (
-                    <div key={log.id} className="p-3 rounded border border-slate-200 bg-slate-50/70 text-xs space-y-1">
+                    <div key={log.id} className="p-3 rounded border border-white/10 bg-[#0F172A]/70 text-xs space-y-1">
                       <div className="flex items-center justify-between">
-                        <span className="font-mono font-bold text-slate-900 bg-white px-2 py-0.5 rounded border border-slate-200">
+                        <span className="font-mono font-bold text-white bg-[#1E293B] bg-opacity-70 backdrop-blur-md px-2 py-0.5 rounded border border-white/10">
                           {log.action}
                         </span>
-                        <span className="text-[11px] text-slate-400">
+                        <span className="text-[11px] text-slate-500">
                           {new Date(log.timestamp).toLocaleString('vi-VN')}
                         </span>
                       </div>
-                      <p className="text-slate-600 text-[11px]">
+                      <p className="text-slate-500 text-[11px]">
                         Thực thể: <strong>{log.entityName}</strong> ({log.entityId}) • IP: <span className="font-mono">{log.ipAddress}</span>
                       </p>
                       {log.details && (

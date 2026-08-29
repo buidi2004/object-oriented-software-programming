@@ -179,7 +179,7 @@ export default function AdminJobsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#0F172A] py-8 px-4 sm:px-6 lg:px-8">
       {/* Toast */}
       {toast && (
         <div className={`fixed bottom-5 right-5 z-50 px-5 py-3 rounded shadow-xl text-white font-semibold text-sm flex items-center gap-2.5 animate-in slide-in-from-bottom-5 ${
@@ -194,13 +194,13 @@ export default function AdminJobsPage() {
         {/* Navigation */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div>
-            <Link href="/admin" className="text-xs font-bold text-slate-600 hover:text-[#1F1F1F] flex items-center gap-1 mb-2">
+            <Link href="/admin" className="text-xs font-bold text-slate-500 hover:text-[#1F1F1F] flex items-center gap-1 mb-2">
               <ArrowLeft className="w-3.5 h-3.5" /> Quay lại Admin Panel
             </Link>
-            <h1 className="text-2xl font-black text-slate-900 flex items-center gap-2.5">
+            <h1 className="text-2xl font-black text-white flex items-center gap-2.5">
               <Clock className="w-6 h-6 text-[#1F1F1F]" /> Quản Lý Tác Vụ Nền &amp; Cron Jobs (Hangfire)
             </h1>
-            <p className="text-xs text-slate-600 mt-0.5">
+            <p className="text-xs text-slate-500 mt-0.5">
               Kích hoạt thủ công, lập lịch và giám sát các cron jobs định kỳ của hệ thống Backend.
             </p>
           </div>
@@ -217,14 +217,14 @@ export default function AdminJobsPage() {
 
         {/* Live Execution Logs */}
         {logs.length > 0 && (
-          <div className="bg-white rounded-lg p-6 mb-8 text-slate-900 shadow-xl">
-            <div className="flex items-center justify-between mb-3 text-xs font-bold text-slate-600">
-              <span className="flex items-center gap-2 text-slate-700">
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-lg p-6 mb-8 text-white shadow-xl">
+            <div className="flex items-center justify-between mb-3 text-xs font-bold text-slate-500">
+              <span className="flex items-center gap-2 text-slate-200">
                 <Terminal className="w-4 h-4" /> Nhật Ký Thực Thi Tác Vụ Trực Tiếp (Live Console Logs)
               </span>
               <button 
                 onClick={() => setLogs([])}
-                className="text-[10px] hover:text-slate-900 underline cursor-pointer"
+                className="text-[10px] hover:text-white underline cursor-pointer"
               >
                 Xóa màn hình log
               </button>
@@ -242,7 +242,7 @@ export default function AdminJobsPage() {
           {jobs.map((job) => (
             <div
               key={job.id}
-              className="bg-white rounded-lg p-6 sm:p-7 border border-slate-200 shadow-sm hover:shadow-md transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+              className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-lg p-6 sm:p-7 border border-white/10 shadow-sm hover:shadow-md transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4"
             >
               <div className="flex items-start gap-4">
                 <div className="p-3.5 rounded-md bg-indigo-50 text-[#1F1F1F] shrink-0">
@@ -250,9 +250,9 @@ export default function AdminJobsPage() {
                 </div>
                 <div>
                   <div className="flex items-center gap-2.5 mb-1">
-                    <h3 className="text-base font-black text-slate-900">{job.name}</h3>
+                    <h3 className="text-base font-black text-white">{job.name}</h3>
                     {job.isPaused ? (
-                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-600">
+                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-white/10 text-slate-500">
                         Đang tạm ngưng
                       </span>
                     ) : (
@@ -261,21 +261,21 @@ export default function AdminJobsPage() {
                       </span>
                     )}
                   </div>
-                  <p className="text-xs text-slate-600 max-w-2xl leading-relaxed">
+                  <p className="text-xs text-slate-500 max-w-2xl leading-relaxed">
                     {job.description}
                   </p>
-                  <div className="flex flex-wrap items-center gap-3 mt-3 text-[11px] text-slate-600 font-semibold">
-                    <span className="flex items-center gap-1 text-slate-600">
+                  <div className="flex flex-wrap items-center gap-3 mt-3 text-[11px] text-slate-500 font-semibold">
+                    <span className="flex items-center gap-1 text-slate-500">
                       <Clock className="w-3 h-3 text-[#1F1F1F]" /> {job.schedule}
                     </span>
-                    <span className="font-mono bg-slate-100 text-slate-700 px-2 py-0.5 rounded">
+                    <span className="font-mono bg-white/10 text-slate-200 px-2 py-0.5 rounded">
                       Cron: {job.cronExpr}
                     </span>
-                    <span className="font-mono bg-slate-100 text-slate-700 px-2 py-0.5 rounded">
+                    <span className="font-mono bg-white/10 text-slate-200 px-2 py-0.5 rounded">
                       POST {job.endpoint}
                     </span>
                     {job.lastRun && (
-                      <span className="text-slate-600">
+                      <span className="text-slate-500">
                         Lần chạy cuối: {new Date(job.lastRun).toLocaleString('vi-VN')}
                       </span>
                     )}
@@ -286,14 +286,14 @@ export default function AdminJobsPage() {
               <div className="flex items-center gap-2 shrink-0 justify-end">
                 <button
                   onClick={() => handleTogglePause(job.id)}
-                  className="p-2.5 rounded border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors"
+                  className="p-2.5 rounded border border-white/10 text-slate-500 hover:bg-[#0F172A] transition-colors"
                   title={job.isPaused ? 'Tiếp tục lập lịch' : 'Tạm dừng tác vụ'}
                 >
                   {job.isPaused ? <Play className="w-4 h-4 text-emerald-600" /> : <Pause className="w-4 h-4" />}
                 </button>
                 <button
                   onClick={() => handleDeleteJob(job.id, job.name)}
-                  className="p-2.5 rounded border border-slate-200 text-slate-600 hover:text-rose-600 hover:bg-rose-50 transition-colors"
+                  className="p-2.5 rounded border border-white/10 text-slate-500 hover:text-rose-600 hover:bg-rose-50 transition-colors"
                   title="Xóa job"
                 >
                   <Trash2 className="w-4 h-4" />
@@ -320,72 +320,72 @@ export default function AdminJobsPage() {
 
         {/* Add Modal */}
         {showAddModal && (
-          <div className="fixed inset-0 bg-white/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-lg p-6 sm:p-8 max-w-md w-full border border-slate-200 shadow-2xl">
+          <div className="fixed inset-0 bg-[#1E293B] bg-opacity-70 backdrop-blur-md/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-lg p-6 sm:p-8 max-w-md w-full border border-white/10 shadow-2xl">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-base font-black text-slate-900">Lập Lịch Cron Job Mới</h3>
-                <button onClick={() => setShowAddModal(false)} className="p-1.5 text-slate-600 hover:text-slate-600 rounded-sm hover:bg-slate-100">
+                <h3 className="text-base font-black text-white">Lập Lịch Cron Job Mới</h3>
+                <button onClick={() => setShowAddModal(false)} className="p-1.5 text-slate-500 hover:text-slate-500 rounded-sm hover:bg-white/10">
                   <X className="w-5 h-5" />
                 </button>
               </div>
 
               <form onSubmit={handleCreateJob} className="space-y-3">
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Tên Tác Vụ</label>
+                  <label className="block text-xs font-bold text-slate-200 mb-1">Tên Tác Vụ</label>
                   <input
                     type="text"
                     required
                     value={formData.name}
                     onChange={e => setFormData({ ...formData, name: e.target.value })}
                     placeholder="VD: Quét Và Khóa VPS Quá Hạn 7 Ngày"
-                    className="w-full px-3 py-2 text-xs rounded border border-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none"
+                    className="w-full px-3 py-2 text-xs rounded border border-white/10 focus:ring-2 focus:ring-indigo-500 outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Endpoint API Gọi Thực Thi</label>
+                  <label className="block text-xs font-bold text-slate-200 mb-1">Endpoint API Gọi Thực Thi</label>
                   <input
                     type="text"
                     required
                     value={formData.endpoint}
                     onChange={e => setFormData({ ...formData, endpoint: e.target.value })}
                     placeholder="/jobs/terminate-expired-vps"
-                    className="w-full px-3 py-2 text-xs rounded border border-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none font-mono"
+                    className="w-full px-3 py-2 text-xs rounded border border-white/10 focus:ring-2 focus:ring-indigo-500 outline-none font-mono"
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1">Biểu Thức Cron</label>
+                    <label className="block text-xs font-bold text-slate-200 mb-1">Biểu Thức Cron</label>
                     <input
                       type="text"
                       required
                       value={formData.cronExpr}
                       onChange={e => setFormData({ ...formData, cronExpr: e.target.value })}
                       placeholder="0 0 * * *"
-                      className="w-full px-3 py-2 text-xs rounded border border-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none font-mono"
+                      className="w-full px-3 py-2 text-xs rounded border border-white/10 focus:ring-2 focus:ring-indigo-500 outline-none font-mono"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1">Diễn Giải Lịch Trình</label>
+                    <label className="block text-xs font-bold text-slate-200 mb-1">Diễn Giải Lịch Trình</label>
                     <input
                       type="text"
                       required
                       value={formData.schedule}
                       onChange={e => setFormData({ ...formData, schedule: e.target.value })}
                       placeholder="Mỗi ngày lúc 00:00"
-                      className="w-full px-3 py-2 text-xs rounded border border-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none"
+                      className="w-full px-3 py-2 text-xs rounded border border-white/10 focus:ring-2 focus:ring-indigo-500 outline-none"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Mô Tả Tác Vụ</label>
+                  <label className="block text-xs font-bold text-slate-200 mb-1">Mô Tả Tác Vụ</label>
                   <textarea
                     rows={2}
                     value={formData.description}
                     onChange={e => setFormData({ ...formData, description: e.target.value })}
-                    className="w-full px-3 py-2 text-xs rounded border border-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none"
+                    className="w-full px-3 py-2 text-xs rounded border border-white/10 focus:ring-2 focus:ring-indigo-500 outline-none"
                   />
                 </div>
 
@@ -393,7 +393,7 @@ export default function AdminJobsPage() {
                   <button
                     type="button"
                     onClick={() => setShowAddModal(false)}
-                    className="px-4 py-2.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold"
+                    className="px-4 py-2.5 rounded bg-white/10 hover:bg-white/20 text-slate-200 text-xs font-bold"
                   >
                     Hủy
                   </button>

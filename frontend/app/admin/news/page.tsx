@@ -226,14 +226,14 @@ export default function AdminNewsPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[#0F172A] flex items-center justify-center">
         <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-[#0F172A]">
       {/* Toast Notification */}
       {toast && (
         <div className={`fixed bottom-5 right-5 z-50 px-5 py-3 rounded shadow-xl text-white font-semibold text-sm flex items-center gap-2.5 animate-in slide-in-from-bottom-5 ${
@@ -244,21 +244,21 @@ export default function AdminNewsPage() {
         </div>
       )}
 
-      <header className="bg-white border-b border-slate-200 sticky top-0 z-40">
+      <header className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md border-b border-white/10 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link href="/admin" className="p-2 rounded-sm hover:bg-slate-100 transition-colors">
-              <ArrowLeft className="w-5 h-5 text-slate-600" />
+            <Link href="/admin" className="p-2 rounded-sm hover:bg-white/10 transition-colors">
+              <ArrowLeft className="w-5 h-5 text-slate-500" />
             </Link>
             <div>
-              <h1 className="text-xl font-bold text-slate-900">Quản lý Tin tức & Blog</h1>
-              <p className="text-xs text-slate-600">{news.length} bài viết • Quản trị nội dung</p>
+              <h1 className="text-xl font-bold text-white">Quản lý Tin tức & Blog</h1>
+              <p className="text-xs text-slate-500">{news.length} bài viết • Quản trị nội dung</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
             <button
               onClick={fetchNews}
-              className="p-2 text-slate-600 hover:bg-slate-100 rounded-sm transition-colors"
+              className="p-2 text-slate-500 hover:bg-white/10 rounded-sm transition-colors"
               title="Tải lại danh sách"
             >
               <RefreshCw className="w-5 h-5" />
@@ -278,13 +278,13 @@ export default function AdminNewsPage() {
         {/* Filters & Search */}
         <div className="flex flex-col sm:flex-row gap-4 mb-6 items-center justify-between">
           <div className="relative w-full sm:max-w-md">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-600" />
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
             <input
               type="text"
               placeholder="Tìm kiếm theo tiêu đề, tags hoặc slug..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 bg-white rounded border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 shadow-sm"
+              className="w-full pl-10 pr-4 py-2.5 bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded border border-white/10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 shadow-sm"
             />
           </div>
 
@@ -300,7 +300,7 @@ export default function AdminNewsPage() {
                 className={`px-4 py-2 rounded text-xs font-semibold transition-colors ${
                   statusFilter === f.id
                     ? 'bg-blue-600 text-white shadow-sm'
-                    : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
+                    : 'bg-[#1E293B] bg-opacity-70 backdrop-blur-md text-slate-500 border border-white/10 hover:bg-[#0F172A]'
                 }`}
               >
                 {f.label}
@@ -312,9 +312,9 @@ export default function AdminNewsPage() {
         {/* Grid Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {filteredNews.map((item) => (
-            <div key={item.id} className="bg-white rounded-md border border-slate-200 overflow-hidden hover:shadow-md transition-shadow flex flex-col">
+            <div key={item.id} className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-md border border-white/10 overflow-hidden hover:shadow-md transition-shadow flex flex-col">
               {/* Thumbnail */}
-              <div className="h-44 bg-slate-100 relative overflow-hidden border-b border-slate-100 flex items-center justify-center">
+              <div className="h-44 bg-white/10 relative overflow-hidden border-b border-slate-100 flex items-center justify-center">
                 {item.thumbnailUrl ? (
                   <img 
                     src={item.thumbnailUrl} 
@@ -325,7 +325,7 @@ export default function AdminNewsPage() {
                     }}
                   />
                 ) : (
-                  <div className="flex flex-col items-center gap-2 text-slate-600">
+                  <div className="flex flex-col items-center gap-2 text-slate-500">
                     <ImageIcon className="w-8 h-8 opacity-40" />
                     <span className="text-xs">Chưa có ảnh bìa</span>
                   </div>
@@ -338,24 +338,24 @@ export default function AdminNewsPage() {
               </div>
 
               <div className="p-5 flex-1 flex flex-col">
-                <div className="flex items-center gap-3 text-xs text-slate-600 mb-2">
+                <div className="flex items-center gap-3 text-xs text-slate-500 mb-2">
                   <span className="flex items-center gap-1">
                     <Eye className="w-3.5 h-3.5" />
                     {item.viewCount} lượt xem
                   </span>
                   {item.tags && (
-                    <span className="flex items-center gap-1 font-medium text-[#1F1F1F] bg-blue-50 px-2 py-0.5 rounded">
+                    <span className="flex items-center gap-1 font-medium text-[#1F1F1F] bg-blue-900/30 px-2 py-0.5 rounded">
                       <Tag className="w-3 h-3" />
                       {item.tags}
                     </span>
                   )}
                 </div>
                 
-                <h3 className="font-bold text-slate-900 mb-2 line-clamp-2 hover:text-[#1F1F1F] transition-colors">
+                <h3 className="font-bold text-white mb-2 line-clamp-2 hover:text-[#1F1F1F] transition-colors">
                   {item.title}
                 </h3>
                 
-                <p className="text-xs text-slate-600 font-mono mb-4 truncate">
+                <p className="text-xs text-slate-500 font-mono mb-4 truncate">
                   /{item.slug}
                 </p>
                 
@@ -371,7 +371,7 @@ export default function AdminNewsPage() {
                     <Link
                       href={`/news/${item.slug}`}
                       target="_blank"
-                      className="flex-1 py-2 rounded bg-slate-50 text-slate-600 hover:bg-slate-100 text-xs font-semibold transition-colors flex items-center justify-center gap-1.5"
+                      className="flex-1 py-2 rounded bg-[#0F172A] text-slate-500 hover:bg-white/10 text-xs font-semibold transition-colors flex items-center justify-center gap-1.5"
                     >
                       <ExternalLink className="w-3.5 h-3.5" /> Xem bài
                     </Link>
@@ -379,14 +379,14 @@ export default function AdminNewsPage() {
                   
                   <button 
                     onClick={() => handleOpenEditModal(item)} 
-                    className="p-2 text-slate-600 hover:text-[#1F1F1F] hover:bg-blue-50 rounded transition-colors"
+                    className="p-2 text-slate-500 hover:text-[#1F1F1F] hover:bg-blue-900/30 rounded transition-colors"
                     title="Chỉnh sửa bài viết"
                   >
                     <Edit2 className="w-4 h-4" />
                   </button>
                   <button 
                     onClick={() => handleDelete(item.id, item.title)} 
-                    className="p-2 text-slate-600 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
+                    className="p-2 text-slate-500 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
                     title="Xóa bài viết"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -398,10 +398,10 @@ export default function AdminNewsPage() {
         </div>
 
         {filteredNews.length === 0 && (
-          <div className="text-center py-16 bg-white rounded-md border border-slate-200 text-slate-600">
-            <Newspaper className="w-12 h-12 mx-auto mb-3 text-slate-700" />
-            <p className="font-semibold text-slate-700">Không tìm thấy bài viết nào</p>
-            <p className="text-xs text-slate-600 mt-1">Bấm "Viết bài mới" để tạo bài viết đầu tiên</p>
+          <div className="text-center py-16 bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-md border border-white/10 text-slate-500">
+            <Newspaper className="w-12 h-12 mx-auto mb-3 text-slate-200" />
+            <p className="font-semibold text-slate-200">Không tìm thấy bài viết nào</p>
+            <p className="text-xs text-slate-500 mt-1">Bấm "Viết bài mới" để tạo bài viết đầu tiên</p>
           </div>
         )}
       </main>
@@ -409,19 +409,19 @@ export default function AdminNewsPage() {
       {/* Add / Edit Article Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg p-6 sm:p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-lg p-6 sm:p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h3 className="text-xl font-bold text-slate-900">
+                <h3 className="text-xl font-bold text-white">
                   {editingId ? 'Chỉnh sửa bài viết' : 'Viết bài tin tức mới'}
                 </h3>
-                <p className="text-xs text-slate-600 mt-0.5">
+                <p className="text-xs text-slate-500 mt-0.5">
                   Đăng tải nội dung chia sẻ kiến thức, hướng dẫn và cập nhật hệ thống
                 </p>
               </div>
               <button 
                 onClick={() => setShowModal(false)}
-                className="p-2 text-slate-600 hover:text-slate-600 rounded-sm hover:bg-slate-100"
+                className="p-2 text-slate-500 hover:text-slate-500 rounded-sm hover:bg-white/10"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -430,7 +430,7 @@ export default function AdminNewsPage() {
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Title */}
               <div>
-                <label className="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Tiêu đề bài viết</label>
+                <label className="block text-xs font-semibold text-slate-200 uppercase mb-1.5">Tiêu đề bài viết</label>
                 <input
                   type="text"
                   required
@@ -448,33 +448,33 @@ export default function AdminNewsPage() {
                       .replace(/^-|-$/g, "");
                     setFormData({ ...formData, title, slug: formData.slug || slug });
                   }}
-                  className="w-full px-4 py-2.5 rounded border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full px-4 py-2.5 rounded border border-white/10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                 />
               </div>
 
               {/* Slug */}
               <div>
-                <label className="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Đường dẫn tĩnh (Slug URL)</label>
+                <label className="block text-xs font-semibold text-slate-200 uppercase mb-1.5">Đường dẫn tĩnh (Slug URL)</label>
                 <input
                   type="text"
                   required
                   placeholder="vd: huong-dan-cau-hinh-vps-nginx"
                   value={formData.slug}
                   onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded border border-slate-200 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full px-4 py-2.5 rounded border border-white/10 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                 />
               </div>
 
               {/* Thumbnail Image Upload & Preview */}
               <div>
-                <label className="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Ảnh bìa bài viết</label>
+                <label className="block text-xs font-semibold text-slate-200 uppercase mb-1.5">Ảnh bìa bài viết</label>
                 <div className="flex items-center gap-3">
                   <input
                     type="text"
                     placeholder="https://... hoặc tải ảnh từ máy tính"
                     value={formData.thumbnailUrl}
                     onChange={(e) => setFormData({ ...formData, thumbnailUrl: e.target.value })}
-                    className="flex-1 px-4 py-2.5 rounded border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                    className="flex-1 px-4 py-2.5 rounded border border-white/10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                   />
                   <input
                     type="file"
@@ -487,14 +487,14 @@ export default function AdminNewsPage() {
                     type="button"
                     disabled={isUploading}
                     onClick={() => fileInputRef.current?.click()}
-                    className="px-4 py-2.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-semibold flex items-center gap-2 transition-colors disabled:opacity-50"
+                    className="px-4 py-2.5 rounded bg-white/10 hover:bg-white/20 text-slate-200 text-sm font-semibold flex items-center gap-2 transition-colors disabled:opacity-50"
                   >
                     <Upload className="w-4 h-4" />
                     {isUploading ? 'Đang tải...' : 'Tải ảnh'}
                   </button>
                 </div>
                 {formData.thumbnailUrl && (
-                  <div className="mt-2 relative w-full h-32 rounded overflow-hidden border border-slate-200">
+                  <div className="mt-2 relative w-full h-32 rounded overflow-hidden border border-white/10">
                     <img 
                       src={formData.thumbnailUrl} 
                       alt="Preview" 
@@ -510,21 +510,21 @@ export default function AdminNewsPage() {
               {/* Tags & Status */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Tags (phân cách bằng dấu phẩy)</label>
+                  <label className="block text-xs font-semibold text-slate-200 uppercase mb-1.5">Tags (phân cách bằng dấu phẩy)</label>
                   <input
                     type="text"
                     placeholder="VPS, Cloud, Linux, Hướng dẫn..."
                     value={formData.tags}
                     onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                    className="w-full px-4 py-2.5 rounded border border-white/10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Trạng thái bài viết</label>
+                  <label className="block text-xs font-semibold text-slate-200 uppercase mb-1.5">Trạng thái bài viết</label>
                   <select
                     value={formData.status}
                     onChange={(e) => setFormData({ ...formData, status: Number(e.target.value) })}
-                    className="w-full px-4 py-2.5 rounded border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                    className="w-full px-4 py-2.5 rounded border border-white/10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                   >
                     <option value={2}>Xuất bản công khai (Published)</option>
                     <option value={1}>Lưu bản nháp (Draft)</option>
@@ -534,14 +534,14 @@ export default function AdminNewsPage() {
 
               {/* Content Markdown / HTML */}
               <div>
-                <label className="block text-xs font-semibold text-slate-700 uppercase mb-1.5">Nội dung bài viết (Markdown / HTML)</label>
+                <label className="block text-xs font-semibold text-slate-200 uppercase mb-1.5">Nội dung bài viết (Markdown / HTML)</label>
                 <textarea
                   rows={8}
                   required
                   placeholder="Nhập nội dung bài viết chi tiết tại đây..."
                   value={formData.content}
                   onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                  className="w-full px-4 py-3 rounded border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 font-sans"
+                  className="w-full px-4 py-3 rounded border border-white/10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 font-sans"
                 />
               </div>
 
@@ -549,7 +549,7 @@ export default function AdminNewsPage() {
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="flex-1 py-3 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm transition-colors"
+                  className="flex-1 py-3 rounded bg-white/10 hover:bg-white/20 text-slate-200 font-semibold text-sm transition-colors"
                 >
                   Hủy bỏ
                 </button>

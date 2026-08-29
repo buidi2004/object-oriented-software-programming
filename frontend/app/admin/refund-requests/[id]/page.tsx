@@ -60,7 +60,7 @@ export default function AdminRefundDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[#0F172A] flex items-center justify-center">
         <Loader className="w-8 h-8 text-[#1F1F1F] animate-spin" />
       </div>
     );
@@ -68,9 +68,9 @@ export default function AdminRefundDetailPage() {
 
   if (error || !refund) {
     return (
-      <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center">
+      <div className="min-h-screen bg-[#0F172A] flex flex-col items-center justify-center">
         <AlertCircle className="w-12 h-12 text-red-400 mb-3" />
-        <p className="text-slate-600">{error}</p>
+        <p className="text-slate-500">{error}</p>
         <Link href="/admin/refund-requests" className="mt-4 text-[#1F1F1F] font-semibold">Quay lại</Link>
       </div>
     );
@@ -79,25 +79,25 @@ export default function AdminRefundDetailPage() {
   const status = refund.status.toLowerCase();
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <header className="bg-white border-b border-slate-200">
+    <div className="min-h-screen bg-[#0F172A]">
+      <header className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md border-b border-white/10">
         <div className="max-w-3xl mx-auto px-4 h-16 flex items-center gap-4">
-          <Link href="/admin/refund-requests" className="p-2 rounded-sm hover:bg-slate-100">
-            <ArrowLeft className="w-5 h-5 text-slate-600" />
+          <Link href="/admin/refund-requests" className="p-2 rounded-sm hover:bg-white/10">
+            <ArrowLeft className="w-5 h-5 text-slate-500" />
           </Link>
-          <h1 className="text-xl font-bold text-slate-900">Chi tiết hoàn tiền</h1>
+          <h1 className="text-xl font-bold text-white">Chi tiết hoàn tiền</h1>
         </div>
       </header>
 
       <main className="max-w-3xl mx-auto px-4 py-8 space-y-6">
-        <div className="bg-white rounded-md border border-slate-200 p-6 shadow-sm">
+        <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-md border border-white/10 p-6 shadow-sm">
           <div className="flex items-start gap-4 mb-6">
             <div className="w-12 h-12 rounded bg-rose-100 flex items-center justify-center">
               <DollarSign className="w-6 h-6 text-rose-600" />
             </div>
             <div>
               <h2 className="text-xl font-bold">#{refund.id.slice(0, 8).toUpperCase()}</h2>
-              <p className="text-sm text-slate-600">Đơn hàng: {refund.orderId}</p>
+              <p className="text-sm text-slate-500">Đơn hàng: {refund.orderId}</p>
             </div>
           </div>
 
@@ -106,7 +106,7 @@ export default function AdminRefundDetailPage() {
             <p><span className="font-semibold">Số tiền:</span> <span className="text-rose-600 font-bold">{refund.amount.toLocaleString('vi-VN')}₫</span></p>
             <p><span className="font-semibold">Lý do:</span> {refund.reason}</p>
             <p><span className="font-semibold">Trạng thái:</span> {status}</p>
-            <p className="flex items-center gap-1 text-slate-600"><Clock className="w-4 h-4" /> {new Date(refund.createdAt).toLocaleString('vi-VN')}</p>
+            <p className="flex items-center gap-1 text-slate-500"><Clock className="w-4 h-4" /> {new Date(refund.createdAt).toLocaleString('vi-VN')}</p>
           </div>
 
           {status === 'pending' && (

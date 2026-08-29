@@ -122,7 +122,7 @@ export default function AdminReviewsPage() {
   });
 
   return (
-    <div className="min-h-screen bg-slate-50 py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#0F172A] py-8 px-4 sm:px-6 lg:px-8">
       {/* Toast Alert */}
       {toast && (
         <div className={`fixed bottom-5 right-5 z-50 px-4 py-3 rounded-lg shadow-xl text-white font-bold text-xs flex items-center gap-2.5 animate-in slide-in-from-bottom-5 ${
@@ -136,14 +136,14 @@ export default function AdminReviewsPage() {
       <div className="max-w-7xl mx-auto space-y-6">
         
         {/* Navigation & Header */}
-        <div className="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-2xs space-y-4">
+        <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md p-6 rounded-2xl border border-white/10/90 shadow-2xs space-y-4">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-              <Link href="/admin" className="text-xs font-bold text-slate-500 hover:text-slate-900 flex items-center gap-1 mb-2">
+              <Link href="/admin" className="text-xs font-bold text-slate-500 hover:text-white flex items-center gap-1 mb-2">
                 <ArrowLeft className="w-3.5 h-3.5" /> Quay lại Admin Panel
               </Link>
-              <h1 className="text-xl sm:text-2xl font-black text-slate-900 flex items-center gap-2.5">
-                <MessageSquare className="w-6 h-6 text-blue-600" />
+              <h1 className="text-xl sm:text-2xl font-black text-white flex items-center gap-2.5">
+                <MessageSquare className="w-6 h-6 text-blue-400" />
                 <span>Kiểm Duyệt Bình Luận &amp; Đánh Giá Khách Hàng</span>
               </h1>
               <p className="text-xs text-slate-500 mt-1">
@@ -154,7 +154,7 @@ export default function AdminReviewsPage() {
             <button
               onClick={fetchReviews}
               disabled={loading}
-              className="self-start md:self-auto px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-bold transition-all flex items-center gap-2 border border-slate-200 shadow-2xs cursor-pointer"
+              className="self-start md:self-auto px-4 py-2 bg-white/10 hover:bg-white/20 text-slate-200 rounded-lg text-xs font-bold transition-all flex items-center gap-2 border border-white/10 shadow-2xs cursor-pointer"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
               <span>Làm mới danh sách</span>
@@ -172,7 +172,7 @@ export default function AdminReviewsPage() {
             </Link>
             <Link
               href="/admin/blog-comments"
-              className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold flex items-center gap-2 transition-colors border border-slate-200/80"
+              className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-slate-200 text-xs font-bold flex items-center gap-2 transition-colors border border-white/10/80"
             >
               <MessageSquare className="w-3.5 h-3.5 text-slate-500" />
               <span>2. Bình Luận Bài Viết &amp; Tin Tức Blog</span>
@@ -182,18 +182,18 @@ export default function AdminReviewsPage() {
 
         {/* 4 Summary Stats Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-2xs">
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-2xl p-5 border border-white/10/90 shadow-2xs">
             <div className="flex items-center justify-between mb-2">
-              <div className="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
+              <div className="w-9 h-9 rounded-xl bg-blue-900/30 text-blue-400 flex items-center justify-center font-bold">
                 <MessageSquare className="w-4.5 h-4.5" />
               </div>
-              <span className="text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full">Tổng Đánh Giá</span>
+              <span className="text-[10px] font-bold text-slate-500 bg-white/10 px-2 py-0.5 rounded-full">Tổng Đánh Giá</span>
             </div>
-            <p className="text-2xl font-black text-slate-900">{totalCount}</p>
+            <p className="text-2xl font-black text-white">{totalCount}</p>
             <p className="text-xs font-bold text-slate-500 mt-1">Tất cả nhận xét của khách</p>
           </div>
 
-          <div className="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-2xs">
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-2xl p-5 border border-white/10/90 shadow-2xs">
             <div className="flex items-center justify-between mb-2">
               <div className="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold">
                 <Clock className="w-4.5 h-4.5" />
@@ -204,7 +204,7 @@ export default function AdminReviewsPage() {
             <p className="text-xs font-bold text-slate-500 mt-1">Đang chờ ban quản trị duyệt</p>
           </div>
 
-          <div className="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-2xs">
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-2xl p-5 border border-white/10/90 shadow-2xs">
             <div className="flex items-center justify-between mb-2">
               <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">
                 <CheckCircle2 className="w-4.5 h-4.5" />
@@ -215,7 +215,7 @@ export default function AdminReviewsPage() {
             <p className="text-xs font-bold text-slate-500 mt-1">Đã hiển thị trên trang dịch vụ</p>
           </div>
 
-          <div className="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-2xs">
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-2xl p-5 border border-white/10/90 shadow-2xs">
             <div className="flex items-center justify-between mb-2">
               <div className="w-9 h-9 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center font-bold">
                 <Sparkles className="w-4.5 h-4.5" />
@@ -228,17 +228,17 @@ export default function AdminReviewsPage() {
         </div>
 
         {/* Reviews Table & Filters */}
-        <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs overflow-hidden">
+        <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-2xl border border-white/10/90 shadow-2xs overflow-hidden">
           
           {/* Filter Bar */}
-          <div className="p-4 sm:p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-50/50">
+          <div className="p-4 sm:p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#0F172A]/50">
             <div className="flex items-center gap-2 overflow-x-auto text-xs font-bold">
               <button
                 onClick={() => setSelectedFilter('all')}
                 className={`px-3 py-1.5 rounded-lg transition-colors ${
                   selectedFilter === 'all' 
                     ? 'bg-slate-900 text-white' 
-                    : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
+                    : 'bg-[#1E293B] bg-opacity-70 backdrop-blur-md text-slate-500 hover:bg-white/10 border border-white/10'
                 }`}
               >
                 Tất Cả ({totalCount})
@@ -248,7 +248,7 @@ export default function AdminReviewsPage() {
                 className={`px-3 py-1.5 rounded-lg transition-colors ${
                   selectedFilter === 'pending' 
                     ? 'bg-amber-500 text-white' 
-                    : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
+                    : 'bg-[#1E293B] bg-opacity-70 backdrop-blur-md text-slate-500 hover:bg-white/10 border border-white/10'
                 }`}
               >
                 ⏳ Chờ Duyệt ({pendingCount})
@@ -258,7 +258,7 @@ export default function AdminReviewsPage() {
                 className={`px-3 py-1.5 rounded-lg transition-colors ${
                   selectedFilter === 'approved' 
                     ? 'bg-emerald-600 text-white' 
-                    : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
+                    : 'bg-[#1E293B] bg-opacity-70 backdrop-blur-md text-slate-500 hover:bg-white/10 border border-white/10'
                 }`}
               >
                 ✓ Đã Duyệt ({approvedCount})
@@ -268,14 +268,14 @@ export default function AdminReviewsPage() {
                 className={`px-3 py-1.5 rounded-lg transition-colors ${
                   selectedFilter === 'featured' 
                     ? 'bg-purple-600 text-white' 
-                    : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
+                    : 'bg-[#1E293B] bg-opacity-70 backdrop-blur-md text-slate-500 hover:bg-white/10 border border-white/10'
                 }`}
               >
                 ⭐ Nổi Bật ({featuredCount})
               </button>
             </div>
 
-            <span className="text-xs text-slate-400 font-medium">
+            <span className="text-xs text-slate-500 font-medium">
               Hiển thị {filteredReviews.length} / {totalCount} đánh giá
             </span>
           </div>
@@ -283,7 +283,7 @@ export default function AdminReviewsPage() {
           {/* Table */}
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs border-collapse">
-              <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200">
+              <thead className="bg-[#0F172A] text-slate-200 font-bold border-b border-white/10">
                 <tr>
                   <th className="p-3.5 sm:p-4">Khách Hàng &amp; Ngày Gửi</th>
                   <th className="p-3.5 sm:p-4">Gói Dịch Vụ &amp; Số Sao</th>
@@ -292,7 +292,7 @@ export default function AdminReviewsPage() {
                   <th className="p-3.5 sm:p-4 text-right">Thao Tác Duyệt</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 text-slate-700">
+              <tbody className="divide-y divide-white/10 text-slate-200">
                 {loading ? (
                   <tr>
                     <td colSpan={5} className="p-12 text-center text-slate-500">
@@ -302,25 +302,25 @@ export default function AdminReviewsPage() {
                   </tr>
                 ) : filteredReviews.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="p-12 text-center text-slate-400 font-medium">
+                    <td colSpan={5} className="p-12 text-center text-slate-500 font-medium">
                       Không có đánh giá nào phù hợp với bộ lọc đã chọn.
                     </td>
                   </tr>
                 ) : (
                   filteredReviews.map((rev) => (
-                    <tr key={rev.id} className="hover:bg-slate-50/70 transition-colors">
+                    <tr key={rev.id} className="hover:bg-[#0F172A]/70 transition-colors">
                       
                       {/* Customer Info */}
                       <td className="p-3.5 sm:p-4">
-                        <div className="font-bold text-slate-900">{rev.userEmail || 'Khách hàng ẩn danh'}</div>
-                        <div className="text-[11px] text-slate-400 mt-0.5">
+                        <div className="font-bold text-white">{rev.userEmail || 'Khách hàng ẩn danh'}</div>
+                        <div className="text-[11px] text-slate-500 mt-0.5">
                           {new Date(rev.createdAt).toLocaleString('vi-VN')}
                         </div>
                       </td>
 
                       {/* Service Plan & Rating */}
                       <td className="p-3.5 sm:p-4">
-                        <div className="font-bold text-blue-600">{rev.servicePlanName || 'Dịch Vụ Cloud'}</div>
+                        <div className="font-bold text-blue-400">{rev.servicePlanName || 'Dịch Vụ Cloud'}</div>
                         <div className="flex items-center gap-0.5 mt-1 bg-amber-50 px-2 py-0.5 rounded border border-amber-200/80 w-fit">
                           {[...Array(5)].map((_, i) => (
                             <Star 
@@ -334,7 +334,7 @@ export default function AdminReviewsPage() {
 
                       {/* Comment Content */}
                       <td className="p-3.5 sm:p-4">
-                        <p className="text-xs text-slate-800 italic leading-relaxed bg-slate-50 p-2.5 rounded-lg border border-slate-200/60">
+                        <p className="text-xs text-slate-100 italic leading-relaxed bg-[#0F172A] p-2.5 rounded-lg border border-white/10/60">
                           "{rev.comment}"
                         </p>
                       </td>
@@ -381,7 +381,7 @@ export default function AdminReviewsPage() {
                               onClick={() => handleFeature(rev.id, !rev.isFeatured)}
                               className={`px-2.5 py-1.5 text-xs font-bold rounded-lg transition-colors disabled:opacity-50 border flex items-center gap-1 cursor-pointer ${
                                 rev.isFeatured 
-                                  ? 'bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200' 
+                                  ? 'bg-white/10 hover:bg-white/20 text-slate-200 border-white/10' 
                                   : 'bg-purple-50 hover:bg-purple-100 text-purple-700 border-purple-200'
                               }`}
                               title={rev.isFeatured ? 'Bỏ ghim khỏi Trang Chủ' : 'Ghim nổi bật lên Trang Chủ'}
@@ -394,7 +394,7 @@ export default function AdminReviewsPage() {
                           <button
                             onClick={() => handleDelete(rev.id)}
                             disabled={processingId === rev.id}
-                            className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors border border-transparent hover:border-rose-200 cursor-pointer"
+                            className="p-1.5 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors border border-transparent hover:border-rose-200 cursor-pointer"
                             title="Xóa đánh giá"
                           >
                             <Trash2 className="w-4 h-4" />

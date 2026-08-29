@@ -148,7 +148,7 @@ export default function AdminContactsPage() {
   const closedCount = contacts.filter(c => c.status === 'closed').length;
 
   return (
-    <div className="min-h-screen bg-slate-50 py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#0F172A] py-8 px-4 sm:px-6 lg:px-8">
       
       {/* Toast Alert */}
       {toast && (
@@ -163,14 +163,14 @@ export default function AdminContactsPage() {
       <div className="max-w-7xl mx-auto space-y-6">
         
         {/* Navigation & Header */}
-        <div className="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-2xs space-y-4">
+        <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md p-6 rounded-2xl border border-white/10/90 shadow-2xs space-y-4">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-              <Link href="/admin" className="text-xs font-bold text-slate-500 hover:text-slate-900 flex items-center gap-1 mb-2">
+              <Link href="/admin" className="text-xs font-bold text-slate-500 hover:text-white flex items-center gap-1 mb-2">
                 <ArrowLeft className="w-3.5 h-3.5" /> Quay lại Admin Panel
               </Link>
-              <h1 className="text-xl sm:text-2xl font-black text-slate-900 flex items-center gap-2.5">
-                <Phone className="w-6 h-6 text-blue-600" />
+              <h1 className="text-xl sm:text-2xl font-black text-white flex items-center gap-2.5">
+                <Phone className="w-6 h-6 text-blue-400" />
                 <span>Quản Lý Yêu Cầu Liên Hệ &amp; Tư Vấn Khách Hàng</span>
               </h1>
               <p className="text-xs text-slate-500 mt-1">
@@ -181,7 +181,7 @@ export default function AdminContactsPage() {
             <button
               onClick={fetchContacts}
               disabled={loading}
-              className="self-start md:self-auto px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-bold transition-all flex items-center gap-2 border border-slate-200 shadow-2xs cursor-pointer"
+              className="self-start md:self-auto px-4 py-2 bg-white/10 hover:bg-white/20 text-slate-200 rounded-lg text-xs font-bold transition-all flex items-center gap-2 border border-white/10 shadow-2xs cursor-pointer"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
               <span>Làm mới danh sách</span>
@@ -199,7 +199,7 @@ export default function AdminContactsPage() {
             </Link>
             <Link
               href="/admin/tickets"
-              className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold flex items-center gap-2 transition-colors border border-slate-200/80"
+              className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-slate-200 text-xs font-bold flex items-center gap-2 transition-colors border border-white/10/80"
             >
               <MessageSquare className="w-3.5 h-3.5 text-slate-500" />
               <span>2. Tickets Hỗ Trợ Kỹ Thuật Khách Hàng</span>
@@ -209,18 +209,18 @@ export default function AdminContactsPage() {
 
         {/* 4 Summary Stats KPI */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-2xs">
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-2xl p-5 border border-white/10/90 shadow-2xs">
             <div className="flex items-center justify-between mb-2">
-              <div className="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
+              <div className="w-9 h-9 rounded-xl bg-blue-900/30 text-blue-400 flex items-center justify-center font-bold">
                 <Phone className="w-4.5 h-4.5" />
               </div>
-              <span className="text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full">Tổng Yêu Cầu</span>
+              <span className="text-[10px] font-bold text-slate-500 bg-white/10 px-2 py-0.5 rounded-full">Tổng Yêu Cầu</span>
             </div>
-            <p className="text-2xl font-black text-slate-900">{totalCount}</p>
+            <p className="text-2xl font-black text-white">{totalCount}</p>
             <p className="text-xs font-bold text-slate-500 mt-1">Từ trang liên hệ &amp; tư vấn</p>
           </div>
 
-          <div className="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-2xs">
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-2xl p-5 border border-white/10/90 shadow-2xs">
             <div className="flex items-center justify-between mb-2">
               <div className="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold">
                 <Clock className="w-4.5 h-4.5" />
@@ -231,7 +231,7 @@ export default function AdminContactsPage() {
             <p className="text-xs font-bold text-slate-500 mt-1">Cần gọi điện / gửi mail phản hồi</p>
           </div>
 
-          <div className="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-2xs">
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-2xl p-5 border border-white/10/90 shadow-2xs">
             <div className="flex items-center justify-between mb-2">
               <div className="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold">
                 <RefreshCw className="w-4.5 h-4.5" />
@@ -242,7 +242,7 @@ export default function AdminContactsPage() {
             <p className="text-xs font-bold text-slate-500 mt-1">Đang trao đổi báo giá giải pháp</p>
           </div>
 
-          <div className="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-2xs">
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-2xl p-5 border border-white/10/90 shadow-2xs">
             <div className="flex items-center justify-between mb-2">
               <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">
                 <CheckCircle2 className="w-4.5 h-4.5" />
@@ -255,9 +255,9 @@ export default function AdminContactsPage() {
         </div>
 
         {/* Search & Filter Bar */}
-        <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs overflow-hidden">
+        <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-2xl border border-white/10/90 shadow-2xs overflow-hidden">
           
-          <div className="p-4 sm:p-5 border-b border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-50/50">
+          <div className="p-4 sm:p-5 border-b border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-[#0F172A]/50">
             {/* Filter Tabs */}
             <div className="flex items-center gap-2 overflow-x-auto text-xs font-bold">
               <button
@@ -265,7 +265,7 @@ export default function AdminContactsPage() {
                 className={`px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${
                   selectedFilter === 'all' 
                     ? 'bg-slate-900 text-white' 
-                    : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
+                    : 'bg-[#1E293B] bg-opacity-70 backdrop-blur-md text-slate-500 hover:bg-white/10 border border-white/10'
                 }`}
               >
                 Tất Cả ({totalCount})
@@ -275,7 +275,7 @@ export default function AdminContactsPage() {
                 className={`px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${
                   selectedFilter === 'open' 
                     ? 'bg-amber-500 text-white' 
-                    : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
+                    : 'bg-[#1E293B] bg-opacity-70 backdrop-blur-md text-slate-500 hover:bg-white/10 border border-white/10'
                 }`}
               >
                 ⏳ Mới Tiếp Nhận ({openCount})
@@ -285,7 +285,7 @@ export default function AdminContactsPage() {
                 className={`px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${
                   selectedFilter === 'inprogress' 
                     ? 'bg-indigo-600 text-white' 
-                    : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
+                    : 'bg-[#1E293B] bg-opacity-70 backdrop-blur-md text-slate-500 hover:bg-white/10 border border-white/10'
                 }`}
               >
                 🔄 Đang Tư Vấn ({inProgressCount})
@@ -295,7 +295,7 @@ export default function AdminContactsPage() {
                 className={`px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${
                   selectedFilter === 'closed' 
                     ? 'bg-emerald-600 text-white' 
-                    : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
+                    : 'bg-[#1E293B] bg-opacity-70 backdrop-blur-md text-slate-500 hover:bg-white/10 border border-white/10'
                 }`}
               >
                 ✓ Đã Hoàn Tất ({closedCount})
@@ -304,13 +304,13 @@ export default function AdminContactsPage() {
 
             {/* Search Box */}
             <div className="relative w-full md:w-72">
-              <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Search className="w-3.5 h-3.5 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Tìm tên, email, sđt, chủ đề..."
-                className="w-full pl-9 pr-3 py-1.5 rounded-lg border border-slate-200 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full pl-9 pr-3 py-1.5 rounded-lg border border-white/10 text-xs bg-[#1E293B] bg-opacity-70 backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
           </div>
@@ -318,7 +318,7 @@ export default function AdminContactsPage() {
           {/* Table */}
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs border-collapse">
-              <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200">
+              <thead className="bg-[#0F172A] text-slate-200 font-bold border-b border-white/10">
                 <tr>
                   <th className="p-3.5 sm:p-4">Khách Hàng &amp; Liên Hệ</th>
                   <th className="p-3.5 sm:p-4">Chủ Đề Quan Tâm</th>
@@ -327,7 +327,7 @@ export default function AdminContactsPage() {
                   <th className="p-3.5 sm:p-4 text-right">Hành Động Phản Hồi</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 text-slate-700">
+              <tbody className="divide-y divide-white/10 text-slate-200">
                 {loading ? (
                   <tr>
                     <td colSpan={5} className="p-12 text-center text-slate-500">
@@ -337,7 +337,7 @@ export default function AdminContactsPage() {
                   </tr>
                 ) : filteredContacts.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="p-12 text-center text-slate-400 font-medium">
+                    <td colSpan={5} className="p-12 text-center text-slate-500 font-medium">
                       Không tìm thấy yêu cầu tư vấn nào phù hợp.
                     </td>
                   </tr>
@@ -345,39 +345,39 @@ export default function AdminContactsPage() {
                   filteredContacts.map((item) => {
                     const parsed = parseInquiryDetails(item.content);
                     return (
-                      <tr key={item.id} className="hover:bg-slate-50/70 transition-colors">
+                      <tr key={item.id} className="hover:bg-[#0F172A]/70 transition-colors">
                         
                         {/* Customer Info */}
                         <td className="p-3.5 sm:p-4">
-                          <div className="font-bold text-slate-900 flex items-center gap-1.5">
-                            <User className="w-3.5 h-3.5 text-slate-400" />
+                          <div className="font-bold text-white flex items-center gap-1.5">
+                            <User className="w-3.5 h-3.5 text-slate-500" />
                             <span>{parsed.name}</span>
                           </div>
-                          <div className="text-[11px] text-slate-600 font-mono mt-0.5 flex items-center gap-1">
-                            <Mail className="w-3 h-3 text-slate-400" />
+                          <div className="text-[11px] text-slate-500 font-mono mt-0.5 flex items-center gap-1">
+                            <Mail className="w-3 h-3 text-slate-500" />
                             <span>{parsed.email}</span>
                           </div>
                           {parsed.phone !== 'N/A' && (
-                            <div className="text-[11px] text-blue-600 font-bold font-mono mt-0.5 flex items-center gap-1">
+                            <div className="text-[11px] text-blue-400 font-bold font-mono mt-0.5 flex items-center gap-1">
                               <Phone className="w-3 h-3 text-blue-500" />
                               <span>{parsed.phone}</span>
                             </div>
                           )}
-                          <div className="text-[10px] text-slate-400 mt-1">
+                          <div className="text-[10px] text-slate-500 mt-1">
                             {new Date(item.createdAt).toLocaleString('vi-VN')}
                           </div>
                         </td>
 
                         {/* Subject / Topic */}
                         <td className="p-3.5 sm:p-4">
-                          <span className="font-bold text-blue-700 bg-blue-50 px-2.5 py-1 rounded-lg border border-blue-200/80 text-[11px] inline-block">
+                          <span className="font-bold text-blue-300 bg-blue-900/30 px-2.5 py-1 rounded-lg border border-blue-200/80 text-[11px] inline-block">
                             {parsed.topic}
                           </span>
                         </td>
 
                         {/* Message Preview */}
                         <td className="p-3.5 sm:p-4">
-                          <p className="text-xs text-slate-800 line-clamp-3 bg-slate-50 p-2 rounded-lg border border-slate-200/60 leading-relaxed font-normal">
+                          <p className="text-xs text-slate-100 line-clamp-3 bg-[#0F172A] p-2 rounded-lg border border-white/10/60 leading-relaxed font-normal">
                             {parsed.rawMessage}
                           </p>
                         </td>
@@ -421,7 +421,7 @@ export default function AdminContactsPage() {
                                 setSelectedItem(item);
                                 handleOpenEmailModal(item);
                               }}
-                              className="px-2.5 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 text-xs font-bold rounded-lg transition-colors flex items-center gap-1 cursor-pointer"
+                              className="px-2.5 py-1.5 bg-blue-900/30 hover:bg-blue-900/50 text-blue-300 border border-blue-200 text-xs font-bold rounded-lg transition-colors flex items-center gap-1 cursor-pointer"
                               title="Gửi email phản hồi"
                             >
                               <Mail className="w-3 h-3" />
@@ -431,7 +431,7 @@ export default function AdminContactsPage() {
                             {/* View Detail Modal */}
                             <button
                               onClick={() => setSelectedItem(item)}
-                              className="px-2 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-bold transition-colors cursor-pointer"
+                              className="px-2 py-1.5 bg-white/10 hover:bg-white/20 text-slate-200 rounded-lg text-xs font-bold transition-colors cursor-pointer"
                               title="Xem chi tiết"
                             >
                               <Eye className="w-3.5 h-3.5" />
@@ -467,50 +467,50 @@ export default function AdminContactsPage() {
       {/* DETAIL MODAL */}
       {selectedItem && !emailModalOpen && (
         <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-2xl w-full p-6 space-y-5 border border-slate-200 shadow-2xl animate-in zoom-in-95">
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-2xl max-w-2xl w-full p-6 space-y-5 border border-white/10 shadow-2xl animate-in zoom-in-95">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="text-base font-black text-slate-900 flex items-center gap-2">
-                <Phone className="w-5 h-5 text-blue-600" />
+              <h3 className="text-base font-black text-white flex items-center gap-2">
+                <Phone className="w-5 h-5 text-blue-400" />
                 <span>Chi Tiết Yêu Cầu Tư Vấn #{selectedItem.id.substring(0, 8)}</span>
               </h3>
               <button
                 onClick={() => setSelectedItem(null)}
-                className="p-1 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100"
+                className="p-1 rounded-lg text-slate-500 hover:text-slate-500 hover:bg-white/10"
               >
                 ✕
               </button>
             </div>
 
             <div className="space-y-3 text-xs">
-              <div className="grid grid-cols-2 gap-3 bg-slate-50 p-4 rounded-xl border border-slate-200/80">
+              <div className="grid grid-cols-2 gap-3 bg-[#0F172A] p-4 rounded-xl border border-white/10/80">
                 <div>
-                  <span className="text-slate-400 font-bold">Họ tên:</span>
-                  <p className="font-black text-slate-900 text-sm mt-0.5">{parseInquiryDetails(selectedItem.content).name}</p>
+                  <span className="text-slate-500 font-bold">Họ tên:</span>
+                  <p className="font-black text-white text-sm mt-0.5">{parseInquiryDetails(selectedItem.content).name}</p>
                 </div>
                 <div>
-                  <span className="text-slate-400 font-bold">Chủ đề:</span>
-                  <p className="font-bold text-blue-700 mt-0.5">{parseInquiryDetails(selectedItem.content).topic}</p>
+                  <span className="text-slate-500 font-bold">Chủ đề:</span>
+                  <p className="font-bold text-blue-300 mt-0.5">{parseInquiryDetails(selectedItem.content).topic}</p>
                 </div>
                 <div>
-                  <span className="text-slate-400 font-bold">Email:</span>
-                  <p className="font-mono text-slate-800 mt-0.5">{parseInquiryDetails(selectedItem.content).email}</p>
+                  <span className="text-slate-500 font-bold">Email:</span>
+                  <p className="font-mono text-slate-100 mt-0.5">{parseInquiryDetails(selectedItem.content).email}</p>
                 </div>
                 <div>
-                  <span className="text-slate-400 font-bold">Số điện thoại:</span>
-                  <p className="font-mono text-blue-600 font-bold mt-0.5">{parseInquiryDetails(selectedItem.content).phone}</p>
+                  <span className="text-slate-500 font-bold">Số điện thoại:</span>
+                  <p className="font-mono text-blue-400 font-bold mt-0.5">{parseInquiryDetails(selectedItem.content).phone}</p>
                 </div>
               </div>
 
               <div>
-                <span className="text-slate-400 font-bold block mb-1">Nội dung chi tiết của khách hàng:</span>
-                <div className="bg-slate-50 p-4 rounded-xl border border-slate-200/80 text-slate-800 leading-relaxed font-normal whitespace-pre-wrap">
+                <span className="text-slate-500 font-bold block mb-1">Nội dung chi tiết của khách hàng:</span>
+                <div className="bg-[#0F172A] p-4 rounded-xl border border-white/10/80 text-slate-100 leading-relaxed font-normal whitespace-pre-wrap">
                   {parseInquiryDetails(selectedItem.content).rawMessage}
                 </div>
               </div>
             </div>
 
             <div className="flex items-center justify-between pt-3 border-t border-slate-100">
-              <span className="text-[11px] text-slate-400">
+              <span className="text-[11px] text-slate-500">
                 Gửi lúc: {new Date(selectedItem.createdAt).toLocaleString('vi-VN')}
               </span>
               <div className="flex items-center gap-2">
@@ -539,15 +539,15 @@ export default function AdminContactsPage() {
       {/* EMAIL COMPOSE MODAL */}
       {emailModalOpen && (
         <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-xl w-full p-6 space-y-4 border border-slate-200 shadow-2xl animate-in zoom-in-95">
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-2xl max-w-xl w-full p-6 space-y-4 border border-white/10 shadow-2xl animate-in zoom-in-95">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="text-base font-black text-slate-900 flex items-center gap-2">
-                <Mail className="w-5 h-5 text-blue-600" />
+              <h3 className="text-base font-black text-white flex items-center gap-2">
+                <Mail className="w-5 h-5 text-blue-400" />
                 <span>Gửi Email Phản Hồi Cho Khách Hàng</span>
               </h3>
               <button
                 onClick={() => setEmailModalOpen(false)}
-                className="p-1 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100"
+                className="p-1 rounded-lg text-slate-500 hover:text-slate-500 hover:bg-white/10"
               >
                 ✕
               </button>
@@ -555,33 +555,33 @@ export default function AdminContactsPage() {
 
             <form onSubmit={handleSendEmail} className="space-y-4 text-xs">
               <div>
-                <label className="block font-bold text-slate-700 mb-1">Gửi Đến Email Khách Hàng:</label>
+                <label className="block font-bold text-slate-200 mb-1">Gửi Đến Email Khách Hàng:</label>
                 <input
                   type="text"
                   value={emailTo}
                   disabled
-                  className="w-full px-3 py-2 rounded-lg bg-slate-100 border border-slate-200 text-slate-600 font-mono"
+                  className="w-full px-3 py-2 rounded-lg bg-white/10 border border-white/10 text-slate-500 font-mono"
                 />
               </div>
 
               <div>
-                <label className="block font-bold text-slate-700 mb-1">Tiêu Đề Email:</label>
+                <label className="block font-bold text-slate-200 mb-1">Tiêu Đề Email:</label>
                 <input
                   type="text"
                   value={emailSubject}
                   onChange={(e) => setEmailSubject(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-500 font-medium"
+                  className="w-full px-3 py-2 rounded-lg border border-white/10 focus:ring-2 focus:ring-blue-500 font-medium"
                   required
                 />
               </div>
 
               <div>
-                <label className="block font-bold text-slate-700 mb-1">Nội Dung Thư Phản Hồi:</label>
+                <label className="block font-bold text-slate-200 mb-1">Nội Dung Thư Phản Hồi:</label>
                 <textarea
                   rows={6}
                   value={emailBody}
                   onChange={(e) => setEmailBody(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-500 font-medium leading-relaxed"
+                  className="w-full px-3 py-2 rounded-lg border border-white/10 focus:ring-2 focus:ring-blue-500 font-medium leading-relaxed"
                   required
                 />
               </div>
@@ -590,7 +590,7 @@ export default function AdminContactsPage() {
                 <button
                   type="button"
                   onClick={() => setEmailModalOpen(false)}
-                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold transition-all"
+                  className="px-4 py-2 bg-white/10 hover:bg-white/20 text-slate-200 rounded-xl font-bold transition-all"
                 >
                   Hủy
                 </button>

@@ -54,7 +54,7 @@ const getCategoryIcon = (name: string, slug?: string) => {
   if (n.includes('miền') || n.includes('domain')) return <Globe className="w-4 h-4 text-[#1F1F1F]" />;
   if (n.includes('bảo mật') || n.includes('security') || n.includes('waf')) return <Shield className="w-4 h-4 text-red-500" />;
   if (n.includes('chuyển') || n.includes('migration')) return <RefreshCw className="w-4 h-4 text-orange-500" />;
-  return <Package className="w-4 h-4 text-slate-600" />;
+  return <Package className="w-4 h-4 text-slate-500" />;
 };
 
 function AdminServicePlansContent() {
@@ -378,17 +378,17 @@ function AdminServicePlansContent() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[#0F172A] flex items-center justify-center">
         <div className="w-10 h-10 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] p-4 md:p-8 text-slate-800">
+    <div className="min-h-screen bg-[#f8fafc] p-4 md:p-8 text-slate-100">
       {/* Toast Notification */}
       {toastMessage && (
-        <div className="fixed top-5 right-5 z-50 px-4 py-3 bg-white text-slate-900 rounded shadow-2xl text-xs font-bold flex items-center gap-2 animate-in slide-in-from-top-2 border border-slate-300">
+        <div className="fixed top-5 right-5 z-50 px-4 py-3 bg-[#1E293B] bg-opacity-70 backdrop-blur-md text-white rounded shadow-2xl text-xs font-bold flex items-center gap-2 animate-in slide-in-from-top-2 border border-white/20">
           <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
           <span>{toastMessage}</span>
         </div>
@@ -396,21 +396,21 @@ function AdminServicePlansContent() {
 
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header Bar */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-md border border-slate-200 shadow-xs">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-[#1E293B] bg-opacity-70 backdrop-blur-md p-6 rounded-md border border-white/10 shadow-xs">
           <div className="flex items-center gap-4">
-            <Link href="/admin" className="p-2.5 hover:bg-slate-100 rounded transition-colors border border-slate-200">
-              <ArrowLeft className="w-5 h-5 text-slate-600" />
+            <Link href="/admin" className="p-2.5 hover:bg-white/10 rounded transition-colors border border-white/10">
+              <ArrowLeft className="w-5 h-5 text-slate-500" />
             </Link>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-xl md:text-2xl font-black text-slate-900 tracking-tight">
+                <h1 className="text-xl md:text-2xl font-black text-white tracking-tight">
                   Quản lý Bảng Giá & Gói Dịch Vụ
                 </h1>
                 <span className="px-2.5 py-0.5 bg-indigo-50 text-[#1F1F1F] border border-indigo-200 rounded-full text-xs font-bold">
                   {plans.length} Sản phẩm
                 </span>
               </div>
-              <p className="text-xs text-slate-600 mt-1">
+              <p className="text-xs text-slate-500 mt-1">
                 Tùy chỉnh giá bán, thông số CPU / RAM / NVMe, và chu kỳ thanh toán cho 11+ danh mục dịch vụ Cloud.
               </p>
             </div>
@@ -428,20 +428,20 @@ function AdminServicePlansContent() {
         </div>
 
         {/* 11+ Category Filter Pills Bar */}
-        <div className="bg-white p-3.5 rounded-md border border-slate-200 shadow-xs overflow-x-auto">
+        <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md p-3.5 rounded-md border border-white/10 shadow-xs overflow-x-auto">
           <div className="flex items-center gap-2 min-w-max">
             <button
               onClick={() => setSelectedCategory('all')}
               className={`flex items-center gap-2 px-3.5 py-2 rounded text-xs font-bold transition-all ${
                 selectedCategory === 'all'
                   ? 'bg-slate-900 text-white shadow-sm'
-                  : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200/60'
+                  : 'bg-[#0F172A] hover:bg-white/10 text-slate-200 border border-white/10/60'
               }`}
             >
               <Package className="w-3.5 h-3.5" />
               <span>Tất cả dịch vụ</span>
               <span className={`px-1.5 py-0.2 rounded-full text-[10px] ${
-                selectedCategory === 'all' ? 'bg-slate-800 text-slate-200' : 'bg-slate-200 text-slate-600'
+                selectedCategory === 'all' ? 'bg-slate-800 text-slate-200' : 'bg-white/20 text-slate-500'
               }`}>
                 {plans.length}
               </span>
@@ -457,14 +457,14 @@ function AdminServicePlansContent() {
                   className={`flex items-center gap-2 px-3.5 py-2 rounded text-xs font-bold transition-all ${
                     isSelected
                       ? 'bg-indigo-600 text-white shadow-sm'
-                      : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200/60'
+                      : 'bg-[#0F172A] hover:bg-white/10 text-slate-200 border border-white/10/60'
                   }`}
                 >
                   {getCategoryIcon(cat.name, cat.slug)}
                   <span>{cat.name}</span>
                   {count > 0 && (
                     <span className={`px-1.5 py-0.2 rounded-full text-[10px] ${
-                      isSelected ? 'bg-indigo-700 text-slate-200' : 'bg-slate-200 text-slate-600'
+                      isSelected ? 'bg-indigo-700 text-slate-200' : 'bg-white/20 text-slate-500'
                     }`}>
                       {count}
                     </span>
@@ -476,25 +476,25 @@ function AdminServicePlansContent() {
         </div>
 
         {/* Filter & Search Bar */}
-        <div className="bg-white p-4 rounded-md border border-slate-200 shadow-xs flex flex-wrap items-center justify-between gap-4">
+        <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md p-4 rounded-md border border-white/10 shadow-xs flex flex-wrap items-center justify-between gap-4">
           <div className="flex flex-wrap items-center gap-3 flex-1 min-w-[300px]">
             <div className="relative flex-1 max-w-md">
-              <Search className="w-4 h-4 text-slate-600 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Search className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 placeholder="Tìm theo tên gói, CPU, RAM, SSD..."
-                className="pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 text-xs w-full font-medium"
+                className="pl-9 pr-4 py-2 bg-[#0F172A] border border-white/10 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 text-xs w-full font-medium"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
 
             <div className="flex items-center gap-2 text-xs">
-              <span className="text-slate-600 font-medium">Trạng thái:</span>
+              <span className="text-slate-500 font-medium">Trạng thái:</span>
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value as any)}
-                className="p-2 bg-slate-50 border border-slate-200 rounded text-xs font-bold text-slate-700 outline-none focus:ring-2 focus:ring-indigo-500"
+                className="p-2 bg-[#0F172A] border border-white/10 rounded text-xs font-bold text-slate-200 outline-none focus:ring-2 focus:ring-indigo-500"
               >
                 <option value="all">Tất cả</option>
                 <option value="active">🟢 Đang bán</option>
@@ -504,11 +504,11 @@ function AdminServicePlansContent() {
           </div>
 
           <div className="flex items-center gap-2 text-xs">
-            <span className="text-slate-600 font-medium">Sắp xếp:</span>
+            <span className="text-slate-500 font-medium">Sắp xếp:</span>
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
-              className="p-2 bg-slate-50 border border-slate-200 rounded text-xs font-bold text-slate-700 outline-none focus:ring-2 focus:ring-indigo-500"
+              className="p-2 bg-[#0F172A] border border-white/10 rounded text-xs font-bold text-slate-200 outline-none focus:ring-2 focus:ring-indigo-500"
             >
               <option value="name_asc">Tên (A - Z)</option>
               <option value="price_asc">Giá (Thấp đến Cao)</option>
@@ -518,11 +518,11 @@ function AdminServicePlansContent() {
         </div>
 
         {/* Product Table */}
-        <div className="bg-white rounded-md shadow-xs border border-slate-200 overflow-hidden">
+        <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-md shadow-xs border border-white/10 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse text-xs">
               <thead>
-                <tr className="bg-slate-50/80 border-b border-slate-200 text-slate-600 font-bold uppercase tracking-wider text-[11px]">
+                <tr className="bg-[#0F172A]/80 border-b border-white/10 text-slate-500 font-bold uppercase tracking-wider text-[11px]">
                   <th className="p-4 w-16 text-center">Ảnh</th>
                   <th className="p-4">Tên Sản Phẩm / Dịch Vụ</th>
                   <th className="p-4">Danh Mục</th>
@@ -532,12 +532,12 @@ function AdminServicePlansContent() {
                   <th className="p-4 text-right w-36">Thao Tác</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 font-sans">
+              <tbody className="divide-y divide-white/10 font-sans">
                 {filteredPlans.length > 0 ? (
                   filteredPlans.map((plan) => (
-                    <tr key={plan.servicePlanId} className="hover:bg-slate-50/80 transition-colors group">
+                    <tr key={plan.servicePlanId} className="hover:bg-[#0F172A]/80 transition-colors group">
                       <td className="p-4 text-center">
-                        <div className="w-10 h-10 bg-slate-100 rounded border border-slate-200 overflow-hidden flex items-center justify-center mx-auto shadow-2xs">
+                        <div className="w-10 h-10 bg-white/10 rounded border border-white/10 overflow-hidden flex items-center justify-center mx-auto shadow-2xs">
                           {plan.imageUrl ? (
                             <img src={'http://localhost:5053' + plan.imageUrl} alt={plan.servicePlanName} className="w-full h-full object-cover" />
                           ) : (
@@ -546,10 +546,10 @@ function AdminServicePlansContent() {
                         </div>
                       </td>
                       <td className="p-4">
-                        <div className="font-bold text-slate-900 text-sm group-hover:text-[#1F1F1F] transition-colors">
+                        <div className="font-bold text-white text-sm group-hover:text-[#1F1F1F] transition-colors">
                           {plan.servicePlanName}
                         </div>
-                        <div className="text-[11px] text-slate-600 font-mono mt-0.5" title={plan.servicePlanId}>
+                        <div className="text-[11px] text-slate-500 font-mono mt-0.5" title={plan.servicePlanId}>
                           ID: {plan.servicePlanId.split('-')[0]}...
                         </div>
                       </td>
@@ -570,30 +570,30 @@ function AdminServicePlansContent() {
                           Quản lý đa chu kỳ &gt;
                         </button>
                       </td>
-                      <td className="p-4 text-slate-600 hidden md:table-cell text-xs">
+                      <td className="p-4 text-slate-500 hidden md:table-cell text-xs">
                         <div className="flex flex-wrap gap-1.5 max-w-sm">
                           {plan.cpu && (
-                            <span className="px-2 py-0.5 bg-slate-100 border border-slate-200 rounded text-[11px] text-slate-700 font-medium">
+                            <span className="px-2 py-0.5 bg-white/10 border border-white/10 rounded text-[11px] text-slate-200 font-medium">
                               CPU: {plan.cpu}
                             </span>
                           )}
                           {plan.ram && (
-                            <span className="px-2 py-0.5 bg-slate-100 border border-slate-200 rounded text-[11px] text-slate-700 font-medium">
+                            <span className="px-2 py-0.5 bg-white/10 border border-white/10 rounded text-[11px] text-slate-200 font-medium">
                               RAM: {plan.ram}
                             </span>
                           )}
                           {plan.ssd && (
-                            <span className="px-2 py-0.5 bg-slate-100 border border-slate-200 rounded text-[11px] text-slate-700 font-medium">
+                            <span className="px-2 py-0.5 bg-white/10 border border-white/10 rounded text-[11px] text-slate-200 font-medium">
                               SSD: {plan.ssd}
                             </span>
                           )}
                           {plan.bandwidth && (
-                            <span className="px-2 py-0.5 bg-slate-100 border border-slate-200 rounded text-[11px] text-slate-700 font-medium">
+                            <span className="px-2 py-0.5 bg-white/10 border border-white/10 rounded text-[11px] text-slate-200 font-medium">
                               BW: {plan.bandwidth}
                             </span>
                           )}
                           {!plan.cpu && !plan.ram && !plan.ssd && (
-                            <span className="text-slate-600 italic text-[11px]">Dịch vụ không dùng thông số CPU/RAM</span>
+                            <span className="text-slate-500 italic text-[11px]">Dịch vụ không dùng thông số CPU/RAM</span>
                           )}
                         </div>
                       </td>
@@ -640,10 +640,10 @@ function AdminServicePlansContent() {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={7} className="p-12 text-center text-slate-600">
-                      <Package className="w-12 h-12 text-slate-700 mx-auto mb-3" />
-                      <p className="font-bold text-slate-700 text-sm">Không tìm thấy sản phẩm phù hợp</p>
-                      <p className="text-xs text-slate-600 mt-1">Thử thay đổi bộ lọc danh mục hoặc từ khóa tìm kiếm</p>
+                    <td colSpan={7} className="p-12 text-center text-slate-500">
+                      <Package className="w-12 h-12 text-slate-200 mx-auto mb-3" />
+                      <p className="font-bold text-slate-200 text-sm">Không tìm thấy sản phẩm phù hợp</p>
+                      <p className="text-xs text-slate-500 mt-1">Thử thay đổi bộ lọc danh mục hoặc từ khóa tìm kiếm</p>
                     </td>
                   </tr>
                 )}
@@ -655,18 +655,18 @@ function AdminServicePlansContent() {
 
       {/* MODAL 1: ADD / EDIT PRODUCT & SPECS */}
       {showModal && (
-        <div className="fixed inset-0 bg-white/60 backdrop-blur-xs flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-md shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-slate-200 animate-in zoom-in-95">
-            <div className="p-6 border-b border-slate-100 flex items-center justify-between sticky top-0 bg-white z-10">
+        <div className="fixed inset-0 bg-[#1E293B] bg-opacity-70 backdrop-blur-md/60 backdrop-blur-xs flex items-center justify-center p-4 z-50">
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-md shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-white/10 animate-in zoom-in-95">
+            <div className="p-6 border-b border-slate-100 flex items-center justify-between sticky top-0 bg-[#1E293B] bg-opacity-70 backdrop-blur-md z-10">
               <div className="flex items-center gap-2">
                 <Package className="w-5 h-5 text-[#1F1F1F]" />
-                <h2 className="text-lg font-black text-slate-900">
+                <h2 className="text-lg font-black text-white">
                   {editingPlan ? `Sửa thông tin: ${editingPlan.servicePlanName}` : 'Thêm Gói Sản Phẩm Mới'}
                 </h2>
               </div>
               <button 
                 onClick={() => setShowModal(false)}
-                className="p-2 text-slate-600 hover:text-slate-600 rounded-full hover:bg-slate-100 transition-colors"
+                className="p-2 text-slate-500 hover:text-slate-500 rounded-full hover:bg-white/10 transition-colors"
               >
                 <XCircle className="w-5 h-5" />
               </button>
@@ -675,24 +675,24 @@ function AdminServicePlansContent() {
             <form onSubmit={handleSave} className="p-6 space-y-5 text-xs">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1.5">Tên Gói Sản Phẩm *</label>
+                  <label className="block font-bold text-slate-200 mb-1.5">Tên Gói Sản Phẩm *</label>
                   <input
                     type="text"
                     required
                     value={formName}
                     onChange={e => setFormName(e.target.value)}
-                    className="w-full px-3.5 py-2.5 border border-slate-200 rounded focus:ring-2 focus:ring-indigo-500 outline-none text-xs font-medium"
+                    className="w-full px-3.5 py-2.5 border border-white/10 rounded focus:ring-2 focus:ring-indigo-500 outline-none text-xs font-medium"
                     placeholder="VD: Dedicated AMD EPYC 7502, Cloud VPS Pro..."
                   />
                 </div>
 
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1.5">Danh Mục Dịch Vụ *</label>
+                  <label className="block font-bold text-slate-200 mb-1.5">Danh Mục Dịch Vụ *</label>
                   <select
                     required
                     value={formCategoryId}
                     onChange={e => setFormCategoryId(e.target.value)}
-                    className="w-full px-3.5 py-2.5 border border-slate-200 rounded focus:ring-2 focus:ring-indigo-500 outline-none bg-white text-xs font-medium"
+                    className="w-full px-3.5 py-2.5 border border-white/10 rounded focus:ring-2 focus:ring-indigo-500 outline-none bg-[#1E293B] bg-opacity-70 backdrop-blur-md text-xs font-medium"
                   >
                     <option value="" disabled>-- Chọn danh mục --</option>
                     {categories.map(c => (
@@ -703,20 +703,20 @@ function AdminServicePlansContent() {
               </div>
 
               {/* Hardware Specs */}
-              <div className="bg-slate-50 p-4 rounded border border-slate-200/80 space-y-3">
-                <h3 className="text-xs font-bold text-slate-800 flex items-center gap-2 uppercase tracking-wider">
+              <div className="bg-[#0F172A] p-4 rounded border border-white/10/80 space-y-3">
+                <h3 className="text-xs font-bold text-slate-100 flex items-center gap-2 uppercase tracking-wider">
                   <Cpu className="w-4 h-4 text-[#1F1F1F]" />
                   Thông số phần cứng / Cấu hình (Tùy chọn)
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <div>
-                    <label className="block font-medium text-slate-600 mb-1">CPU / vCPU</label>
+                    <label className="block font-medium text-slate-500 mb-1">CPU / vCPU</label>
                     <input
                       type="text"
                       list="cpu-suggestions"
                       value={formCpu}
                       onChange={e => setFormCpu(e.target.value)}
-                      className="w-full px-3 py-2 border border-slate-200 rounded-sm focus:ring-2 focus:ring-indigo-500 outline-none bg-white text-xs"
+                      className="w-full px-3 py-2 border border-white/10 rounded-sm focus:ring-2 focus:ring-indigo-500 outline-none bg-[#1E293B] bg-opacity-70 backdrop-blur-md text-xs"
                       placeholder="VD: 16 Core / 32 Thread"
                     />
                     <datalist id="cpu-suggestions">
@@ -731,13 +731,13 @@ function AdminServicePlansContent() {
                   </div>
 
                   <div>
-                    <label className="block font-medium text-slate-600 mb-1">RAM / Bộ nhớ</label>
+                    <label className="block font-medium text-slate-500 mb-1">RAM / Bộ nhớ</label>
                     <input
                       type="text"
                       list="ram-suggestions"
                       value={formRam}
                       onChange={e => setFormRam(e.target.value)}
-                      className="w-full px-3 py-2 border border-slate-200 rounded-sm focus:ring-2 focus:ring-indigo-500 outline-none bg-white text-xs"
+                      className="w-full px-3 py-2 border border-white/10 rounded-sm focus:ring-2 focus:ring-indigo-500 outline-none bg-[#1E293B] bg-opacity-70 backdrop-blur-md text-xs"
                       placeholder="VD: 64GB ECC DDR4"
                     />
                     <datalist id="ram-suggestions">
@@ -754,13 +754,13 @@ function AdminServicePlansContent() {
                   </div>
 
                   <div>
-                    <label className="block font-medium text-slate-600 mb-1">SSD / Ổ cứng lưu trữ</label>
+                    <label className="block font-medium text-slate-500 mb-1">SSD / Ổ cứng lưu trữ</label>
                     <input
                       type="text"
                       list="ssd-suggestions"
                       value={formSsd}
                       onChange={e => setFormSsd(e.target.value)}
-                      className="w-full px-3 py-2 border border-slate-200 rounded-sm focus:ring-2 focus:ring-indigo-500 outline-none bg-white text-xs"
+                      className="w-full px-3 py-2 border border-white/10 rounded-sm focus:ring-2 focus:ring-indigo-500 outline-none bg-[#1E293B] bg-opacity-70 backdrop-blur-md text-xs"
                       placeholder="VD: 2x 1TB NVMe RAID 1"
                     />
                     <datalist id="ssd-suggestions">
@@ -777,13 +777,13 @@ function AdminServicePlansContent() {
                   </div>
 
                   <div>
-                    <label className="block font-medium text-slate-600 mb-1">Băng thông / Đường truyền</label>
+                    <label className="block font-medium text-slate-500 mb-1">Băng thông / Đường truyền</label>
                     <input
                       type="text"
                       list="bw-suggestions"
                       value={formBandwidth}
                       onChange={e => setFormBandwidth(e.target.value)}
-                      className="w-full px-3 py-2 border border-slate-200 rounded-sm focus:ring-2 focus:ring-indigo-500 outline-none bg-white text-xs"
+                      className="w-full px-3 py-2 border border-white/10 rounded-sm focus:ring-2 focus:ring-indigo-500 outline-none bg-[#1E293B] bg-opacity-70 backdrop-blur-md text-xs"
                       placeholder="VD: 1Gbps / 20TB hoặc Unlimited"
                     />
                     <datalist id="bw-suggestions">
@@ -799,17 +799,17 @@ function AdminServicePlansContent() {
 
               {/* Image Upload */}
               <div>
-                <label className="block font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
-                  <ImageIcon className="w-4 h-4 text-slate-600" />
+                <label className="block font-bold text-slate-200 mb-1.5 flex items-center gap-1.5">
+                  <ImageIcon className="w-4 h-4 text-slate-500" />
                   Ảnh đại diện sản phẩm (Thumbnail)
                 </label>
                 <div className="flex items-center gap-4">
                   {previewImage ? (
-                    <div className="w-16 h-16 rounded overflow-hidden border border-slate-200 bg-slate-100 flex items-center justify-center flex-shrink-0">
+                    <div className="w-16 h-16 rounded overflow-hidden border border-white/10 bg-white/10 flex items-center justify-center flex-shrink-0">
                       <img src={previewImage.startsWith('blob:') ? previewImage : `http://localhost:5053${previewImage}`} alt="Preview" className="w-full h-full object-cover" />
                     </div>
                   ) : (
-                    <div className="w-16 h-16 rounded border-2 border-dashed border-slate-200 flex items-center justify-center text-slate-600 flex-shrink-0">
+                    <div className="w-16 h-16 rounded border-2 border-dashed border-white/10 flex items-center justify-center text-slate-500 flex-shrink-0">
                       <Upload className="w-6 h-6" />
                     </div>
                   )}
@@ -818,9 +818,9 @@ function AdminServicePlansContent() {
                       type="file"
                       accept="image/*"
                       onChange={handleFileChange}
-                      className="block w-full text-xs text-slate-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-sm file:border-0 file:text-xs file:font-bold file:bg-indigo-50 file:text-[#1F1F1F] hover:file:bg-indigo-100 cursor-pointer"
+                      className="block w-full text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-sm file:border-0 file:text-xs file:font-bold file:bg-indigo-50 file:text-[#1F1F1F] hover:file:bg-indigo-100 cursor-pointer"
                     />
-                    <p className="text-[11px] text-slate-600 mt-1">PNG, JPG, WEBP tối đa 2MB</p>
+                    <p className="text-[11px] text-slate-500 mt-1">PNG, JPG, WEBP tối đa 2MB</p>
                   </div>
                 </div>
               </div>
@@ -829,7 +829,7 @@ function AdminServicePlansContent() {
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded font-bold transition-colors"
+                  className="px-4 py-2 bg-white/10 hover:bg-white/20 text-slate-200 rounded font-bold transition-colors"
                 >
                   Hủy
                 </button>
@@ -849,40 +849,40 @@ function AdminServicePlansContent() {
 
       {/* MODAL 2: PRICING MANAGER (Monthly, Yearly, Multi-Cycle) */}
       {showPricingModal && editingPlan && (
-        <div className="fixed inset-0 bg-white/60 backdrop-blur-xs flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-md shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col border border-slate-200 animate-in zoom-in-95">
+        <div className="fixed inset-0 bg-[#1E293B] bg-opacity-70 backdrop-blur-md/60 backdrop-blur-xs flex items-center justify-center p-4 z-50">
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-md shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col border border-white/10 animate-in zoom-in-95">
             <div className="p-6 border-b border-slate-100 flex items-center justify-between">
               <div>
-                <h2 className="text-lg font-black text-slate-900 flex items-center gap-2">
+                <h2 className="text-lg font-black text-white flex items-center gap-2">
                   <DollarSign className="w-5 h-5 text-emerald-500" />
                   Quản lý Bảng Giá: {editingPlan.servicePlanName}
                 </h2>
-                <p className="text-xs text-slate-600 mt-0.5">
-                  Danh mục: <strong className="text-slate-700">{editingPlan.categoryName}</strong> • Thiết lập các mức giá chu kỳ thanh toán
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Danh mục: <strong className="text-slate-200">{editingPlan.categoryName}</strong> • Thiết lập các mức giá chu kỳ thanh toán
                 </p>
               </div>
               <button 
                 onClick={() => setShowPricingModal(false)}
-                className="p-2 text-slate-600 hover:text-slate-600 rounded-full hover:bg-slate-100"
+                className="p-2 text-slate-500 hover:text-slate-500 rounded-full hover:bg-white/10"
               >
                 <XCircle className="w-5 h-5" />
               </button>
             </div>
             
-            <div className="p-6 overflow-y-auto flex-1 bg-slate-50 space-y-6 text-xs">
+            <div className="p-6 overflow-y-auto flex-1 bg-[#0F172A] space-y-6 text-xs">
               {/* Form Add / Edit Price */}
-              <div className="bg-white p-5 rounded-md border border-slate-200 shadow-xs space-y-4">
-                <h3 className="font-bold text-slate-900 uppercase tracking-wider text-[11px] flex items-center gap-1.5">
+              <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md p-5 rounded-md border border-white/10 shadow-xs space-y-4">
+                <h3 className="font-bold text-white uppercase tracking-wider text-[11px] flex items-center gap-1.5">
                   <Tag className="w-3.5 h-3.5 text-[#1F1F1F]" />
                   {priceFormId ? 'Cập nhật mức giá đã chọn' : 'Thêm Mức Giá Chu Kỳ Mới'}
                 </h3>
                 <form onSubmit={handleSavePrice} className="grid grid-cols-1 sm:grid-cols-3 gap-3 items-end">
                   <div>
-                    <label className="block font-bold text-slate-700 mb-1">Chu kỳ thanh toán</label>
+                    <label className="block font-bold text-slate-200 mb-1">Chu kỳ thanh toán</label>
                     <select
                       value={priceFormCycle}
                       onChange={(e) => setPriceFormCycle(Number(e.target.value))}
-                      className="w-full p-2.5 border border-slate-200 rounded focus:ring-2 focus:ring-emerald-500 outline-none bg-white font-medium"
+                      className="w-full p-2.5 border border-white/10 rounded focus:ring-2 focus:ring-emerald-500 outline-none bg-[#1E293B] bg-opacity-70 backdrop-blur-md font-medium"
                     >
                       <option value={1}>1 Tháng (Monthly)</option>
                       <option value={3}>3 Tháng (Quarterly)</option>
@@ -894,7 +894,7 @@ function AdminServicePlansContent() {
                   </div>
 
                   <div>
-                    <label className="block font-bold text-slate-700 mb-1">Giá tiền (VNĐ) *</label>
+                    <label className="block font-bold text-slate-200 mb-1">Giá tiền (VNĐ) *</label>
                     <div className="relative">
                       <input
                         type="number"
@@ -903,10 +903,10 @@ function AdminServicePlansContent() {
                         required
                         value={priceFormAmount}
                         onChange={(e) => setPriceFormAmount(e.target.value)}
-                        className="w-full p-2.5 border border-slate-200 rounded focus:ring-2 focus:ring-emerald-500 outline-none font-bold text-emerald-700 pr-12"
+                        className="w-full p-2.5 border border-white/10 rounded focus:ring-2 focus:ring-emerald-500 outline-none font-bold text-emerald-700 pr-12"
                         placeholder="VD: 2800000"
                       />
-                      <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-600 font-bold text-[11px]">VNĐ</span>
+                      <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 font-bold text-[11px]">VNĐ</span>
                     </div>
                   </div>
 
@@ -923,7 +923,7 @@ function AdminServicePlansContent() {
                       <button
                         type="button"
                         onClick={resetPricingForm}
-                        className="p-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded font-bold"
+                        className="p-2.5 bg-white/10 hover:bg-white/20 text-slate-200 rounded font-bold"
                       >
                         Hủy
                       </button>
@@ -933,13 +933,13 @@ function AdminServicePlansContent() {
               </div>
 
               {/* Existing Prices Table */}
-              <div className="bg-white rounded-md border border-slate-200 overflow-hidden shadow-xs">
-                <div className="p-4 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
-                  <h4 className="font-bold text-slate-800">Các mức giá đang áp dụng</h4>
-                  <span className="text-[11px] text-slate-600">{currentPrices.length} chu kỳ</span>
+              <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-md border border-white/10 overflow-hidden shadow-xs">
+                <div className="p-4 border-b border-slate-100 bg-[#0F172A]/50 flex items-center justify-between">
+                  <h4 className="font-bold text-slate-100">Các mức giá đang áp dụng</h4>
+                  <span className="text-[11px] text-slate-500">{currentPrices.length} chu kỳ</span>
                 </div>
                 <table className="w-full text-left">
-                  <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold text-[11px]">
+                  <thead className="bg-[#0F172A] border-b border-white/10 text-slate-500 font-bold text-[11px]">
                     <tr>
                       <th className="p-3.5">Chu kỳ</th>
                       <th className="p-3.5">Giá bán</th>
@@ -947,13 +947,13 @@ function AdminServicePlansContent() {
                       <th className="p-3.5 text-right">Thao tác</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100">
+                  <tbody className="divide-y divide-white/10">
                     {isPricingLoading ? (
-                      <tr><td colSpan={4} className="p-8 text-center text-slate-600">Đang tải...</td></tr>
+                      <tr><td colSpan={4} className="p-8 text-center text-slate-500">Đang tải...</td></tr>
                     ) : currentPrices.length > 0 ? (
                       currentPrices.map(p => (
-                        <tr key={p.id} className="hover:bg-slate-50 transition-colors">
-                          <td className="p-3.5 font-bold text-slate-800">
+                        <tr key={p.id} className="hover:bg-[#0F172A] transition-colors">
+                          <td className="p-3.5 font-bold text-slate-100">
                             {p.billingCycle === 1 ? '1 Tháng' : 
                              p.billingCycle === 2 ? '1 Năm' : 
                              p.billingCycle === 3 ? '3 Tháng' :
@@ -963,7 +963,7 @@ function AdminServicePlansContent() {
                           <td className="p-3.5 font-extrabold text-emerald-600 text-sm">
                             {p.price.toLocaleString('vi-VN')} đ
                           </td>
-                          <td className="p-3.5 text-slate-600">
+                          <td className="p-3.5 text-slate-500">
                             {new Date(p.effectiveFrom).toLocaleDateString('vi-VN')}
                           </td>
                           <td className="p-3.5 text-right">
@@ -988,7 +988,7 @@ function AdminServicePlansContent() {
                       ))
                     ) : (
                       <tr>
-                        <td colSpan={4} className="p-8 text-center text-slate-600">
+                        <td colSpan={4} className="p-8 text-center text-slate-500">
                           Chưa có cấu hình giá nào cho sản phẩm này. Hãy thêm mức giá phía trên!
                         </td>
                       </tr>
@@ -1007,7 +1007,7 @@ function AdminServicePlansContent() {
 export default function AdminServicePlansPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[#0F172A] flex items-center justify-center">
         <div className="w-10 h-10 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
       </div>
     }>

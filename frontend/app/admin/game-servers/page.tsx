@@ -118,19 +118,19 @@ export default function AdminGameServersPage() {
   });
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <header className="bg-white border-b border-slate-200 sticky top-0 z-50">
+    <div className="min-h-screen bg-[#0F172A]">
+      <header className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md border-b border-white/10 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link href="/admin" className="p-2 rounded-sm hover:bg-slate-100 transition-colors">
-              <ArrowLeft className="w-5 h-5 text-slate-600" />
+            <Link href="/admin" className="p-2 rounded-sm hover:bg-white/10 transition-colors">
+              <ArrowLeft className="w-5 h-5 text-slate-500" />
             </Link>
             <div>
-              <h1 className="text-xl font-black text-slate-900 flex items-center gap-2">
+              <h1 className="text-xl font-black text-white flex items-center gap-2">
                 <Gamepad2 className="w-6 h-6 text-purple-600" />
                 Quản lý Game Servers (Admin)
               </h1>
-              <p className="text-xs text-slate-600">{servers.length} máy chủ game trên hạ tầng Docker</p>
+              <p className="text-xs text-slate-500">{servers.length} máy chủ game trên hạ tầng Docker</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
@@ -142,7 +142,7 @@ export default function AdminGameServersPage() {
             </button>
             <button
               onClick={fetchServers}
-              className="p-2 rounded border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 transition-colors"
+              className="p-2 rounded border border-white/10 bg-[#1E293B] bg-opacity-70 backdrop-blur-md hover:bg-[#0F172A] text-slate-500 transition-colors"
               title="Làm mới"
             >
               <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
@@ -152,21 +152,21 @@ export default function AdminGameServersPage() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
-        <div className="bg-white rounded-md p-4 border border-slate-200 flex flex-wrap gap-4 items-center shadow-sm">
+        <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-md p-4 border border-white/10 flex flex-wrap gap-4 items-center shadow-sm">
           <div className="flex-1 min-w-[200px] relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-600" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
             <input
               type="text"
               placeholder="Tìm theo tên máy chủ, email, ID..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 rounded border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full pl-9 pr-4 py-2 rounded border border-white/10 text-xs focus:outline-none focus:ring-2 focus:ring-purple-500"
             />
           </div>
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
-            className="px-3 py-2 rounded border border-slate-200 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white"
+            className="px-3 py-2 rounded border border-white/10 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-purple-500 bg-[#1E293B] bg-opacity-70 backdrop-blur-md"
           >
             <option value="all">Tất cả trạng thái</option>
             <option value="Running">Running / Active</option>
@@ -175,10 +175,10 @@ export default function AdminGameServersPage() {
           </select>
         </div>
 
-        <div className="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden">
+        <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-lg border border-white/10 shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs text-slate-600">
-              <thead className="bg-slate-50 text-slate-900 border-b border-slate-200 font-extrabold uppercase tracking-wider text-[11px]">
+            <table className="w-full text-left text-xs text-slate-500">
+              <thead className="bg-[#0F172A] text-white border-b border-white/10 font-extrabold uppercase tracking-wider text-[11px]">
                 <tr>
                   <th className="px-6 py-4">Tên Server</th>
                   <th className="px-6 py-4">Khách Hàng</th>
@@ -188,24 +188,24 @@ export default function AdminGameServersPage() {
                   <th className="px-6 py-4 text-right">Thao Tác</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-white/10">
                 {filteredServers.map((s) => {
                   const gameName = typeof s.gameType === 'number' 
                     ? (s.gameType === 1 ? 'Minecraft' : s.gameType === 2 ? 'CS2' : s.gameType === 3 ? 'Valheim' : 'Rust')
                     : s.gameType;
 
                   return (
-                    <tr key={s.id} className="hover:bg-slate-50/60 transition-colors">
+                    <tr key={s.id} className="hover:bg-[#0F172A]/60 transition-colors">
                       <td className="px-6 py-4">
-                        <div className="font-bold text-slate-900">{s.serverName}</div>
-                        <div className="text-[10px] font-mono text-slate-600 mt-0.5">ID: {s.id}</div>
+                        <div className="font-bold text-white">{s.serverName}</div>
+                        <div className="text-[10px] font-mono text-slate-500 mt-0.5">ID: {s.id}</div>
                       </td>
-                      <td className="px-6 py-4 font-medium text-slate-700">{s.ownerEmail || 'customer@cloudhost.vn'}</td>
+                      <td className="px-6 py-4 font-medium text-slate-200">{s.ownerEmail || 'customer@cloudhost.vn'}</td>
                       <td className="px-6 py-4">
                         <span className="font-bold text-purple-700 uppercase">{gameName}</span>
-                        <div className="font-mono text-[11px] text-slate-600 mt-0.5">Port: {s.port || 25565}</div>
+                        <div className="font-mono text-[11px] text-slate-500 mt-0.5">Port: {s.port || 25565}</div>
                       </td>
-                      <td className="px-6 py-4 font-mono text-[11px] text-slate-600">
+                      <td className="px-6 py-4 font-mono text-[11px] text-slate-500">
                         {s.containerId ? s.containerId.substring(0, 12) : `game-${s.id.replace(/-/g, '').substring(0, 12)}`}
                       </td>
                       <td className="px-6 py-4">
@@ -220,13 +220,13 @@ export default function AdminGameServersPage() {
                               port: s.port || 25565
                             });
                           }}
-                          className="px-2.5 py-1.5 rounded bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold transition-colors text-[11px]"
+                          className="px-2.5 py-1.5 rounded bg-blue-900/30 hover:bg-blue-900/50 text-blue-300 font-bold transition-colors text-[11px]"
                         >
                           Sửa
                         </button>
                         <button
                           onClick={() => handleRestart(s.id)}
-                          className="px-2.5 py-1.5 rounded bg-slate-100 hover:bg-purple-50 text-slate-700 hover:text-purple-700 font-bold transition-colors text-[11px]"
+                          className="px-2.5 py-1.5 rounded bg-white/10 hover:bg-purple-50 text-slate-200 hover:text-purple-700 font-bold transition-colors text-[11px]"
                         >
                           Restart
                         </button>
@@ -245,8 +245,8 @@ export default function AdminGameServersPage() {
           </div>
 
           {filteredServers.length === 0 && (
-            <div className="text-center py-12 text-slate-600">
-              <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-700" />
+            <div className="text-center py-12 text-slate-500">
+              <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-200" />
               <p className="font-medium">Không tìm thấy game server nào</p>
             </div>
           )}
@@ -256,30 +256,30 @@ export default function AdminGameServersPage() {
       {/* Modal Tạo Game Server */}
       {isCreating && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl max-w-md w-full p-6 shadow-2xl animate-in fade-in zoom-in-95">
-            <h3 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-xl max-w-md w-full p-6 shadow-2xl animate-in fade-in zoom-in-95">
+            <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
               <Gamepad2 className="w-5 h-5 text-purple-600" />
               Khởi Tạo Máy Chủ Game
             </h3>
             <form onSubmit={handleCreateServer} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Tên Máy Chủ Game</label>
+                <label className="block text-xs font-bold text-slate-200 mb-1">Tên Máy Chủ Game</label>
                 <input
                   type="text"
                   required
                   placeholder="Minecraft Survival Season 5"
                   value={createForm.serverName}
                   onChange={(e) => setCreateForm({ ...createForm, serverName: e.target.value })}
-                  className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:outline-none"
+                  className="w-full text-sm border border-white/20 rounded px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:outline-none"
                 />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Tựa Game</label>
+                  <label className="block text-xs font-bold text-slate-200 mb-1">Tựa Game</label>
                   <select
                     value={createForm.gameType}
                     onChange={(e) => setCreateForm({ ...createForm, gameType: Number(e.target.value) })}
-                    className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:outline-none"
+                    className="w-full text-sm border border-white/20 rounded px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:outline-none"
                   >
                     <option value={0}>Minecraft Java</option>
                     <option value={1}>Counter-Strike 2</option>
@@ -289,12 +289,12 @@ export default function AdminGameServersPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Cổng Port</label>
+                  <label className="block text-xs font-bold text-slate-200 mb-1">Cổng Port</label>
                   <input
                     type="number"
                     value={createForm.port}
                     onChange={(e) => setCreateForm({ ...createForm, port: Number(e.target.value) })}
-                    className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:outline-none"
+                    className="w-full text-sm border border-white/20 rounded px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:outline-none"
                   />
                 </div>
               </div>
@@ -302,7 +302,7 @@ export default function AdminGameServersPage() {
                 <button
                   type="button"
                   onClick={() => setIsCreating(false)}
-                  className="px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded"
+                  className="px-4 py-2 text-xs font-bold text-slate-500 hover:bg-white/10 rounded"
                 >
                   Hủy
                 </button>
@@ -321,34 +321,34 @@ export default function AdminGameServersPage() {
       {/* Modal Sửa Game Server */}
       {editingServer && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl max-w-md w-full p-6 shadow-2xl animate-in fade-in zoom-in-95">
-            <h3 className="text-lg font-bold text-slate-900 mb-4">Sửa Máy Chủ Game: {editingServer.serverName}</h3>
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-xl max-w-md w-full p-6 shadow-2xl animate-in fade-in zoom-in-95">
+            <h3 className="text-lg font-bold text-white mb-4">Sửa Máy Chủ Game: {editingServer.serverName}</h3>
             <form onSubmit={handleUpdateServer} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Tên Máy Chủ</label>
+                <label className="block text-xs font-bold text-slate-200 mb-1">Tên Máy Chủ</label>
                 <input
                   type="text"
                   required
                   value={editForm.serverName}
                   onChange={(e) => setEditForm({ ...editForm, serverName: e.target.value })}
-                  className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:outline-none"
+                  className="w-full text-sm border border-white/20 rounded px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:outline-none"
                 />
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Cổng Port</label>
+                <label className="block text-xs font-bold text-slate-200 mb-1">Cổng Port</label>
                 <input
                   type="number"
                   required
                   value={editForm.port}
                   onChange={(e) => setEditForm({ ...editForm, port: Number(e.target.value) })}
-                  className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:outline-none"
+                  className="w-full text-sm border border-white/20 rounded px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:outline-none"
                 />
               </div>
               <div className="flex justify-end gap-2 pt-3 border-t border-slate-100">
                 <button
                   type="button"
                   onClick={() => setEditingServer(null)}
-                  className="px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded"
+                  className="px-4 py-2 text-xs font-bold text-slate-500 hover:bg-white/10 rounded"
                 >
                   Hủy
                 </button>

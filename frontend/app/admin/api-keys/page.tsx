@@ -49,31 +49,31 @@ export default function AdminApiKeysPage() {
   return (
     <>
       {toast && <Toast message={toast.message} type={toast.type} onClose={() => showToast('', 'info')} />}
-      <div className="min-h-screen bg-slate-50 py-8 px-4 sm:px-6 lg:px-8">
+      <div className="min-h-screen bg-[#0F172A] py-8 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto space-y-6">
           <div className="flex items-center justify-between">
             <div>
-              <Link href="/admin" className="text-sm text-slate-600 hover:text-[#1F1F1F] flex items-center gap-1 mb-2">
+              <Link href="/admin" className="text-sm text-slate-500 hover:text-[#1F1F1F] flex items-center gap-1 mb-2">
                 <ArrowLeft className="w-4 h-4" /> Quay lại Dashboard
               </Link>
-              <h1 className="text-2xl font-black text-slate-900 flex items-center gap-2">
+              <h1 className="text-2xl font-black text-white flex items-center gap-2">
                 <Key className="w-6 h-6 text-purple-600" />
                 Quản Lý API Keys
               </h1>
-              <p className="text-slate-600 mt-1">Giám sát và thu hồi mã API Key của người dùng</p>
+              <p className="text-slate-500 mt-1">Giám sát và thu hồi mã API Key của người dùng</p>
             </div>
             <button
               onClick={fetchApiKeys}
-              className="p-2 rounded bg-white border border-slate-200 hover:text-purple-600 transition-colors"
+              className="p-2 rounded bg-[#1E293B] bg-opacity-70 backdrop-blur-md border border-white/10 hover:text-purple-600 transition-colors"
             >
               <RefreshCw className="w-5 h-5" />
             </button>
           </div>
 
-          <div className="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden">
+          <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-lg border border-white/10 shadow-sm overflow-hidden">
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-sm text-slate-600">
-                <thead className="bg-slate-50/80 border-b border-slate-200 text-slate-600">
+              <table className="w-full text-left text-sm text-slate-500">
+                <thead className="bg-[#0F172A]/80 border-b border-white/10 text-slate-500">
                   <tr>
                     <th className="p-4 font-semibold">Tên / Mô Tả</th>
                     <th className="p-4 font-semibold">Mã API Key (Hash)</th>
@@ -82,17 +82,17 @@ export default function AdminApiKeysPage() {
                     <th className="p-4 font-semibold text-right">Thao tác</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-white/10">
                   {apiKeys.length === 0 ? (
                     <tr>
-                      <td colSpan={5} className="p-8 text-center text-slate-600">Không có API Key nào</td>
+                      <td colSpan={5} className="p-8 text-center text-slate-500">Không có API Key nào</td>
                     </tr>
                   ) : (
                     apiKeys.map((key) => (
-                      <tr key={key.id} className="hover:bg-slate-50/50">
-                        <td className="p-4 font-bold text-slate-900">{key.name || 'API Key Khách'}</td>
+                      <tr key={key.id} className="hover:bg-[#0F172A]/50">
+                        <td className="p-4 font-bold text-white">{key.name || 'API Key Khách'}</td>
                         <td className="p-4">
-                          <div className="flex items-center gap-2 font-mono text-xs bg-slate-100 px-3 py-1.5 rounded-sm w-max">
+                          <div className="flex items-center gap-2 font-mono text-xs bg-white/10 px-3 py-1.5 rounded-sm w-max">
                             sk_...{key.keyHash?.substring(0, 8)}
                           </div>
                         </td>

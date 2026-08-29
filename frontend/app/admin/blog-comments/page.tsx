@@ -90,22 +90,22 @@ export default function AdminBlogCommentsPage() {
   );
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <header className="bg-white border-b border-slate-200 sticky top-0 z-40">
+    <div className="min-h-screen bg-[#0F172A]">
+      <header className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md border-b border-white/10 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-col gap-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <Link href="/admin" className="p-2 rounded-sm hover:bg-slate-100 transition-colors">
-                <ArrowLeft className="w-5 h-5 text-slate-600" />
+              <Link href="/admin" className="p-2 rounded-sm hover:bg-white/10 transition-colors">
+                <ArrowLeft className="w-5 h-5 text-slate-500" />
               </Link>
               <div>
-                <h1 className="text-xl font-bold text-slate-900">Quản lý Bình luận Tin tức &amp; Đánh Giá</h1>
-                <p className="text-xs text-slate-600">{comments.length} bình luận bài viết trên hệ thống</p>
+                <h1 className="text-xl font-bold text-white">Quản lý Bình luận Tin tức &amp; Đánh Giá</h1>
+                <p className="text-xs text-slate-500">{comments.length} bình luận bài viết trên hệ thống</p>
               </div>
             </div>
             <button 
               onClick={fetchComments}
-              className="px-4 py-2 rounded-sm bg-slate-100 text-slate-700 font-semibold text-xs hover:bg-slate-200 transition-colors flex items-center gap-2"
+              className="px-4 py-2 rounded-sm bg-white/10 text-slate-200 font-semibold text-xs hover:bg-white/20 transition-colors flex items-center gap-2"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
               Làm mới
@@ -116,7 +116,7 @@ export default function AdminBlogCommentsPage() {
           <div className="flex items-center gap-2 pt-1 border-t border-slate-100">
             <Link
               href="/admin/reviews"
-              className="px-4 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold flex items-center gap-2 transition-colors border border-slate-200/80"
+              className="px-4 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-slate-200 text-xs font-bold flex items-center gap-2 transition-colors border border-white/10/80"
             >
               <Star className="w-3.5 h-3.5 text-amber-500" />
               <span>1. Đánh Giá Sản Phẩm &amp; Dịch Vụ</span>
@@ -140,45 +140,45 @@ export default function AdminBlogCommentsPage() {
           </div>
         )}
 
-        <div className="bg-white rounded p-4 border border-slate-200 mb-6">
+        <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded p-4 border border-white/10 mb-6">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-600" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
             <input
               type="text"
               placeholder="Tìm kiếm theo người đăng, email, nội dung bình luận..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 rounded-sm border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+              className="w-full pl-10 pr-4 py-2.5 rounded-sm border border-white/10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
             />
           </div>
         </div>
 
-        <div className="bg-white rounded border border-slate-200 overflow-hidden shadow-sm">
-          <div className="divide-y divide-slate-100">
+        <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded border border-white/10 overflow-hidden shadow-sm">
+          <div className="divide-y divide-white/10">
             {filteredComments.map((comment) => (
-              <div key={comment.id} className="p-5 hover:bg-slate-50 transition-colors">
+              <div key={comment.id} className="p-5 hover:bg-[#0F172A] transition-colors">
                 <div className="flex items-start justify-between gap-4">
                   <div className="space-y-1.5 flex-1">
                     <div className="flex items-center gap-3">
-                      <span className="font-semibold text-slate-900 flex items-center gap-1.5">
-                        <User className="w-4 h-4 text-slate-600" />
+                      <span className="font-semibold text-white flex items-center gap-1.5">
+                        <User className="w-4 h-4 text-slate-500" />
                         {comment.authorName || 'Ẩn danh'}
                       </span>
                       {comment.authorEmail && (
-                        <span className="text-xs text-slate-600 font-mono">
+                        <span className="text-xs text-slate-500 font-mono">
                           ({comment.authorEmail})
                         </span>
                       )}
                       <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold ${comment.isApproved ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>
                         {comment.isApproved ? 'Đã duyệt' : 'Chờ duyệt'}
                       </span>
-                      <span className="text-xs text-slate-600 flex items-center gap-1">
+                      <span className="text-xs text-slate-500 flex items-center gap-1">
                         <Clock className="w-3.5 h-3.5" />
                         {new Date(comment.createdAt).toLocaleString('vi-VN')}
                       </span>
                     </div>
 
-                    <p className="text-slate-700 text-sm leading-relaxed bg-slate-50/80 p-3 rounded border border-slate-100">
+                    <p className="text-slate-200 text-sm leading-relaxed bg-[#0F172A]/80 p-3 rounded border border-slate-100">
                       {comment.content}
                     </p>
                   </div>
@@ -196,7 +196,7 @@ export default function AdminBlogCommentsPage() {
                     )}
                     <button
                       onClick={() => handleDelete(comment.id)}
-                      className="p-2 text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-sm transition-colors"
+                      className="p-2 text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-sm transition-colors"
                       title="Xóa bình luận"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -208,8 +208,8 @@ export default function AdminBlogCommentsPage() {
           </div>
 
           {filteredComments.length === 0 && (
-            <div className="text-center py-12 text-slate-600">
-              <MessageSquare className="w-12 h-12 mx-auto mb-3 text-slate-700" />
+            <div className="text-center py-12 text-slate-500">
+              <MessageSquare className="w-12 h-12 mx-auto mb-3 text-slate-200" />
               <p className="font-medium">Chưa có bình luận nào</p>
             </div>
           )}
