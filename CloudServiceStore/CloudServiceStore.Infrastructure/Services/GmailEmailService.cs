@@ -343,7 +343,7 @@ public class GmailEmailService : IEmailService
                     <tr>
                         <td style='background: #ffffff; padding: 28px 32px; border-radius: 16px 16px 0 0; text-align: center; border-bottom: 1px solid #e2e8f0;'>
                             <div style='margin-bottom: 6px;'>
-                                <img src='{_frontendBaseUrl}/images/logo.png' alt='SEN CloudHost VN' style='height: 48px; width: auto; max-width: 100%; object-fit: contain;' />
+                                <img src='{_frontendBaseUrl}/images/logo.png?v=2' alt='SEN CloudHost VN' style='height: 48px; width: auto; max-width: 100%; object-fit: contain;' />
                             </div>
                             <p style='margin: 0; color: #64748b; font-size: 11px; font-weight: 600; letter-spacing: 0.8px;'>
                                 NỀN TẢNG ĐIỆN TOÁN ĐÁM MÂY CHUẨN DOANH NGHIỆP
@@ -367,6 +367,11 @@ public class GmailEmailService : IEmailService
                                 <a href='{_frontendBaseUrl}/knowledge-base' style='color: #0f172a; text-decoration: none; margin: 0 8px;'>Tài liệu</a> &bull;
                                 <a href='{_frontendBaseUrl}/contact' style='color: #0f172a; text-decoration: none; margin: 0 8px;'>Liên hệ</a> &bull;
                                 <a href='{_frontendBaseUrl}/careers' style='color: #0f172a; text-decoration: none; margin: 0 8px;'>Tuyển dụng</a>
+                            </div>
+                            <div style='margin-bottom: 12px;'>
+                                <a href='{_frontendBaseUrl}' style='color: #0284c7; font-size: 13px; font-weight: 700; text-decoration: none;'>
+                                    🌐 {_frontendBaseUrl}
+                                </a>
                             </div>
                             <p style='margin: 0 0 6px 0; color: #64748b; font-size: 11px;'>
                                 © {DateTime.UtcNow.Year} SEN CloudHost VN &bull; Hotline: 1900 6868 &bull; Email: support@cloudhost.vn
