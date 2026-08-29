@@ -76,6 +76,7 @@ public class RealUserEndToEndFlowTests : BaseE2ETest
         var createGameCmd = new CreateGameServerCommand(
             "Survival-World-Minecraft",
             GameType.Minecraft,
+            Guid.NewGuid(),
             idempotencyKey);
 
         var createRes = await Client.PostAsJsonAsync("/api/game-servers", createGameCmd);

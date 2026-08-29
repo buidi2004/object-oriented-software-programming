@@ -29,8 +29,9 @@ public class DomainsController : ControllerBase
         return Ok(new { isAvailable });
     }
 
+    [HttpGet]
     [HttpGet("me")]
-    [Authorize(Roles = "Customer")]
+    [Authorize]
     public async Task<IActionResult> GetMyDomains(CancellationToken ct)
     {
         var domains = await _mediator.Send(new GetMyDomainsQuery(), ct);

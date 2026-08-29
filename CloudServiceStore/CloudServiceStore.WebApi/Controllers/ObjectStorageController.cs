@@ -38,6 +38,7 @@ public class ObjectStorageController : ControllerBase
         return Ok(new { bucketId });
     }
 
+    [HttpGet]
     [HttpGet("buckets")]
     [HttpGet("buckets/me")]
     public async Task<IActionResult> GetBuckets(CancellationToken ct)

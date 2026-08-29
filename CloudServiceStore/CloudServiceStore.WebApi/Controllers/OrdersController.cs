@@ -35,11 +35,20 @@ public class OrdersController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize(Roles = "Admin,Accountant,Technician,Editor,Support,Staff")]
+    [Authorize]
     public async Task<IActionResult> GetOrders([FromQuery] string? status, CancellationToken ct)
     {
-        var orders = await _mediator.Send(new GetOrdersQuery(status), ct);
-        return Ok(orders);
+        var isAdminOrStaff = User.IsInRole("Admin") || User.IsInRole("Accountant") || User.IsInRole("Technician") 
+            || User.IsInRole("Editor") || User.IsInRole("Support") || User.IsInRole("Staff");
+
+        if (isAdminOrStaff)
+        {
+            var orders = await _mediator.Send(new GetOrdersQuery(status), ct);
+            return Ok(orders);
+        }
+
+        var myOrders = await _mediator.Send(new GetMyOrdersQuery(status), ct);
+        return Ok(myOrders);
     }
 
     [HttpGet("me")]

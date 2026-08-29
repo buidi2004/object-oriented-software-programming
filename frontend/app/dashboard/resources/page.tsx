@@ -21,7 +21,7 @@ export default function ResourcesPage() {
   const [filter, setFilter] = useState("Tất cả");
 
   useEffect(() => {
-    api.get("/api/resources")
+    api.get("/resources")
       .then((res: any) => { setItems(Array.isArray(res.data) ? res.data : res.data.items ?? res.data.result ?? []); setLoading(false); })
       .catch((err: any) => { console.error(err); setLoading(false); });
   }, []);

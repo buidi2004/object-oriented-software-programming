@@ -67,16 +67,13 @@ const saveLocalGuestCart = (items: CartItem[]) => {
 // Helper to resolve non-GUID string slugs to actual Database GUID.
 // Uses the shared fetchAllPlansOnce() cache — NO extra network call per item.
 async function resolvePlanGuid(planIdOrSlug: string, itemName?: string): Promise<string> {
+  // 1. Fast Path: If it's already a valid GUID, return immediately (0ms network overhead!)
+  if (GUID_REGEX.test(planIdOrSlug)) {
+    return planIdOrSlug;
+  }
+
   try {
     const allPlans = await fetchAllPlansOnce();
-
-    // 1. If it's a GUID and actually exists in DB, use it directly
-    if (GUID_REGEX.test(planIdOrSlug)) {
-      const exists = allPlans.some((p: any) => (p.servicePlanId === planIdOrSlug || p.id === planIdOrSlug));
-      if (exists) {
-        return planIdOrSlug;
-      }
-    }
 
     // 2. If it's a fake dummy GUID, slug, or custom plan, search by name first
     const normalizedTarget = (itemName || planIdOrSlug).toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -97,7 +94,10 @@ async function resolvePlanGuid(planIdOrSlug: string, itemName?: string): Promise
         matched = allPlans.find((p: any) => (p.categoryName || p.categorySlug || '').toLowerCase().includes('static'));
       } else if (slugLower.includes('storage') || slugLower.includes('s3') || slugLower.includes('minio')) {
         matched = allPlans.find((p: any) => (p.categoryName || p.categorySlug || '').toLowerCase().includes('storage'));
-      } else if (slugLower.includes('dedicated') || slugLower.includes('máy chủ riêng') || slugLower.includes('xeon') || slugLower.includes('epyc')) {
+      } else if (
+        (slugLower.includes('dedicated') || slugLower.includes('máy chủ riêng') || slugLower.includes('xeon') || slugLower.includes('epyc')) &&
+        !slugLower.includes('minecraft') && !slugLower.includes('cs2') && !slugLower.includes('rust') && !slugLower.includes('game')
+      ) {
         matched = allPlans.find((p: any) => (p.categoryName || p.categorySlug || '').toLowerCase().includes('dedicated'));
       } else if (slugLower.includes('ssl')) {
         matched = allPlans.find((p: any) => (p.categoryName || p.categorySlug || '').toLowerCase().includes('ssl'));
@@ -134,6 +134,28 @@ async function resolvePlanGuid(planIdOrSlug: string, itemName?: string): Promise
   return planIdOrSlug;
 }
 
+function detectItemType(categorySlug?: string, name?: string): 'vps' | 'game' | 'dedicated' | 'database' | 'hosting' | 'domain' | 'storage' | 'security' | 'ssl' | 'email' | 'static' | 'cdn' | 'app' | 'migration' | 'website-builder' {
+  const cat = (categorySlug || '').toLowerCase();
+  const n = (name || '').toLowerCase();
+
+  if (cat.includes('game') || n.includes('game') || n.includes('minecraft') || n.includes('cs2') || n.includes('rust') || n.includes('valheim')) return 'game';
+  if (cat.includes('dedicated') || n.includes('máy chủ riêng') || n.includes('bare metal') || (n.includes('dedicated') && !n.includes('game') && !n.includes('minecraft') && !n.includes('cs2') && !n.includes('rust'))) return 'dedicated';
+  if (cat.includes('database') || n.includes('database') || n.includes('postgres') || n.includes('mysql') || n.includes('redis') || n.includes('db ')) return 'database';
+  if (cat.includes('storage') || n.includes('storage') || n.includes('s3') || n.includes('minio')) return 'storage';
+  if (cat.includes('security') || n.includes('security') || n.includes('waf') || n.includes('bảo mật') || n.includes('tường lửa')) return 'security';
+  if (cat.includes('ssl') || n.includes('ssl') || n.includes('chứng chỉ')) return 'ssl';
+  if (cat.includes('email') || n.includes('email') || n.includes('mail') || n.includes('hộp thư')) return 'email';
+  if (cat.includes('static') || n.includes('static') || n.includes('web tĩnh')) return 'static';
+  if (cat.includes('cdn') || n.includes('cdn')) return 'cdn';
+  if (cat.includes('app') || n.includes('wordpress') || n.includes('ghost') || n.includes('nextcloud')) return 'app';
+  if (cat.includes('hosting') || n.includes('hosting') || n.includes('cpanel')) return 'hosting';
+  if (cat.includes('ten-mien') || cat.includes('domain') || n.includes('domain') || n.includes('tên miền') || n.includes('.vn') || n.includes('.com')) return 'domain';
+  if (cat.includes('migration') || n.includes('migration') || n.includes('chuyển đổi') || n.includes('di dời')) return 'migration';
+  if (cat.includes('website-builder') || n.includes('website builder')) return 'website-builder';
+
+  return 'vps';
+}
+
 export const useCartStore = create<CartState>((set, get) => ({
   items: [],
   isLoading: false,
@@ -158,7 +180,7 @@ export const useCartStore = create<CartState>((set, get) => ({
           servicePlanId: it.servicePlanId || it.id,
           name: it.servicePlanName || it.name || it.title || matchingLocal?.name || 'Dịch vụ Cloud',
           title: it.servicePlanName || it.name || it.title || matchingLocal?.title || 'Dịch vụ Cloud',
-          type: it.type || matchingLocal?.type || (it.servicePlanName?.toLowerCase().includes('hosting') ? 'hosting' : it.servicePlanName?.toLowerCase().includes('domain') ? 'domain' : 'vps'),
+          type: (matchingLocal?.type || it.type || detectItemType(it.categorySlug, it.servicePlanName || it.name)) as any,
           details: it.details || matchingLocal?.details || `${it.billingCycle || 1} tháng`,
           billingCycle: it.billingCycle || matchingLocal?.billingCycle || 1,
           price: (it.price && it.price > 0) ? it.price : (matchingLocal?.price || 149000),

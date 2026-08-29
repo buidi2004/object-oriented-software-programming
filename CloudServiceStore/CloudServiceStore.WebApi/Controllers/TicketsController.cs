@@ -86,6 +86,7 @@ public class TicketsController : ControllerBase
         return NoContent();
     }
 
+    [HttpGet]
     [HttpGet("me")]
     [Authorize]
     public async Task<IActionResult> GetMyTickets(CancellationToken ct)

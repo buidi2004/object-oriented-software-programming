@@ -21,7 +21,7 @@ public class GameServerE2ETests : BaseE2ETest
         // Arrange
         var token = await RegisterAndLoginCustomerAsync("game_test1@test.com", "Password123!");
         Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-        var command = new CreateGameServerCommand("", GameType.Minecraft, "");
+        var command = new CreateGameServerCommand("", GameType.Minecraft, Guid.NewGuid(), "");
 
         // Act
         var response = await Client.PostAsJsonAsync("/api/game-servers", command);
@@ -40,7 +40,7 @@ public class GameServerE2ETests : BaseE2ETest
         var token = await RegisterAndLoginCustomerAsync("game_test2@test.com", "Password123!");
         Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
         var idempotencyKey = Guid.NewGuid().ToString();
-        var command1 = new CreateGameServerCommand("My Rust Server", GameType.Rust, idempotencyKey);
+        var command1 = new CreateGameServerCommand("My Rust Server", GameType.Rust, Guid.NewGuid(), idempotencyKey);
 
         // Act 1
         var response1 = await Client.PostAsJsonAsync("/api/game-servers", command1);
@@ -49,7 +49,7 @@ public class GameServerE2ETests : BaseE2ETest
         string id1 = result1?.GetProperty("serverId").GetString() ?? "";
 
         // Act 2 (Duplicate)
-        var command2 = new CreateGameServerCommand("Another Server", GameType.CS2, idempotencyKey);
+        var command2 = new CreateGameServerCommand("Another Server", GameType.CS2, Guid.NewGuid(), idempotencyKey);
         var response2 = await Client.PostAsJsonAsync("/api/game-servers", command2);
 
         // Assert

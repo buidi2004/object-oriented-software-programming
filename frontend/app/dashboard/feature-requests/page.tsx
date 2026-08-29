@@ -22,7 +22,7 @@ export default function FeatureRequestsPage() {
   const [description, setDescription] = useState("");
 
   const load = () => {
-    api.get("/api/feature-requests")
+    api.get("/feature-requests")
       .then((res: any) => { setItems(res.data); setLoading(false); })
       .catch((err: any) => { console.error(err); setLoading(false); });
   };
@@ -30,14 +30,14 @@ export default function FeatureRequestsPage() {
   useEffect(load, []);
 
   const vote = async (id: string) => {
-    await api.post(`/api/feature-requests/${id}/vote`);
+    await api.post(`/feature-requests/${id}/vote`);
     load();
   };
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim()) return;
-    await api.post("/api/feature-requests", { title, description });
+    await api.post("/feature-requests", { title, description });
     setTitle(""); setDescription("");
     load();
   };

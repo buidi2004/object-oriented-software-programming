@@ -38,6 +38,7 @@ public class AppInstallerController : ControllerBase
         return Ok(new { installationId });
     }
 
+    [HttpGet]
     [HttpGet("me")]
     public async Task<IActionResult> GetMyAppInstallations(CancellationToken ct)
     {

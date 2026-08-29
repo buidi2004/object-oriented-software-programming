@@ -20,4 +20,14 @@ public class SpendingReportsController : ControllerBase
         var result = await _mediator.Send(new GetMonthlySpendingQuery(month, year, userId));
         return Ok(result);
     }
+
+    [HttpGet]
+    [Authorize(Roles = "Admin,Accountant")]
+    public async Task<ActionResult<MonthlySpendingDto>> GetCurrentMonth()
+    {
+        var now = DateTime.UtcNow;
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var result = await _mediator.Send(new GetMonthlySpendingQuery(now.Month, now.Year, userId));
+        return Ok(result);
+    }
 }

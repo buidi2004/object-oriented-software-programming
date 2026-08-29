@@ -131,7 +131,7 @@ function ZaloPaySandboxContent() {
         setStatus('success');
         setMessage(`Hệ thống đã nhận được tiền ZaloPay và nạp thành công ${amount.toLocaleString('vi-VN')} đ vào ví của bạn!`);
       } else {
-        await fetch('/api/payments/sandbox/simulate-sepay', {
+        const res = await fetch('/api/payments/sandbox/simulate-sepay', {
           method: 'POST',
           headers,
           body: JSON.stringify({
@@ -139,6 +139,10 @@ function ZaloPaySandboxContent() {
             amount: amount,
           }),
         });
+        
+        if (!res.ok) {
+          throw new Error('Giao dịch thất bại (lỗi hệ thống).');
+        }
 
         if (orderId && orderId !== 'PAY_SAMPLE_ORDER') {
           try {

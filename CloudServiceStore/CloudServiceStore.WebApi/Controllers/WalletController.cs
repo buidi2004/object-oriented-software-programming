@@ -19,6 +19,7 @@ public class WalletController : ControllerBase
     private readonly IMediator _mediator;
     public WalletController(IMediator mediator) => _mediator = mediator;
 
+    [HttpGet]
     [HttpGet("me")]
     public async Task<IActionResult> GetMyWallet(CancellationToken ct)
     {

@@ -8,6 +8,7 @@ using CloudServiceStore.Domain.Entities;
 using CloudServiceStore.Domain.Primitives;
 using CloudServiceStore.Domain.Enums;
 using CloudServiceStore.Application.Interfaces;
+using CloudServiceStore.Application.Events;
 using MediatR;
 
 namespace CloudServiceStore.Infrastructure.Persistence;
@@ -16,11 +17,17 @@ public class AppDbContext : DbContext
 {
     private readonly IPublisher? _publisher;
     private readonly ICurrentUserService? _currentUserService;
+    private readonly IKafkaProducerService? _kafkaProducer;
 
-    public AppDbContext(DbContextOptions<AppDbContext> options, IPublisher publisher = null!, ICurrentUserService currentUserService = null!) : base(options) 
+    public AppDbContext(
+        DbContextOptions<AppDbContext> options,
+        IPublisher? publisher = null,
+        ICurrentUserService? currentUserService = null,
+        IKafkaProducerService? kafkaProducer = null) : base(options) 
     { 
         _publisher = publisher;
         _currentUserService = currentUserService;
+        _kafkaProducer = kafkaProducer;
     }
 
     public DbSet<AppUser> AppUsers => Set<AppUser>();
@@ -206,15 +213,45 @@ public class AppDbContext : DbContext
             }
         }
 
-        if (auditEntries.Any())
+        if (_kafkaProducer == null && auditEntries.Any())
         {
             AuditLogs.AddRange(auditEntries);
         }
 
         var result = await base.SaveChangesAsync(cancellationToken);
 
+        if (_kafkaProducer != null && auditEntries.Any())
+        {
+            var auditSnapshots = auditEntries.Select(entry => new AuditLogEvent
+            {
+                Id = entry.Id,
+                UserId = entry.UserId,
+                Action = entry.Action,
+                EntityName = entry.EntityName,
+                EntityId = entry.EntityId,
+                IpAddress = entry.IpAddress,
+                Timestamp = entry.Timestamp
+            }).ToList();
+
+            _ = Task.Run(async () =>
+            {
+                foreach (var auditEvent in auditSnapshots)
+                {
+                    try
+                    {
+                        using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(2));
+                        await _kafkaProducer.ProduceAuditEventAsync(auditEvent, cts.Token);
+                    }
+                    catch
+                    {
+                        // Ignore Kafka transient errors in background
+                    }
+                }
+            });
+        }
+
         // Dispatch Domain Events after saving to database
-        if (_publisher != null)
+        if (_publisher != null || _kafkaProducer != null)
         {
             var entities = ChangeTracker.Entries<Entity>()
                 .Where(e => e.Entity.GetDomainEvents().Any())
@@ -229,7 +266,19 @@ public class AppDbContext : DbContext
 
             foreach (var domainEvent in domainEvents)
             {
-                await _publisher.Publish(domainEvent, cancellationToken);
+                if (_publisher != null)
+                {
+                    await _publisher.Publish(domainEvent, cancellationToken);
+                }
+
+                if (_kafkaProducer != null)
+                {
+                    await _kafkaProducer.ProduceDomainEventAsync(
+                        domainEvent.GetType().Name,
+                        domainEvent.GetType().Name,
+                        domainEvent,
+                        cancellationToken);
+                }
             }
         }
 

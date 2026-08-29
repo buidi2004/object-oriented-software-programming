@@ -61,7 +61,7 @@ export default function LoyaltyPage() {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ rewardId, cost }),
+        body: JSON.stringify({ rewardId, cost, pointsToRedeem: cost }),
       });
       if (response.ok) {
         fetchLoyalty(token!);

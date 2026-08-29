@@ -18,8 +18,9 @@ public class ApiKeysController : ControllerBase
     private readonly IMediator _mediator;
     public ApiKeysController(IMediator mediator) => _mediator = mediator;
 
+    [HttpGet]
     [HttpGet("me")]
-    [Authorize(Roles = "Customer")]
+    [Authorize(Roles = "Customer,Admin,Staff,Technician")]
     public async Task<IActionResult> GetMyApiKeys(CancellationToken ct)
     {
         var keys = await _mediator.Send(new GetMyApiKeysQuery(), ct);

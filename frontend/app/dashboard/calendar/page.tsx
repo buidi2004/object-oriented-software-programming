@@ -7,7 +7,7 @@ export default function RenewalCalendarPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    api.get("/api/renewals/calendar?month=8&year=2026")
+    api.get("/renewals/calendar?month=8&year=2026")
       .then((res: any) => { setEvents(res.data); setLoading(false); })
       .catch((err: any) => { console.error(err); setLoading(false); });
   }, []);

@@ -36,7 +36,9 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IAsyn
             config.AddInMemoryCollection(new System.Collections.Generic.Dictionary<string, string?>
             {
                 { "ConnectionStrings:DefaultConnection", _dbContainer.GetConnectionString() },
-                { "Cache:Enabled", "false" }
+                { "Cache:Enabled", "false" },
+                { "Kafka:Enabled", "false" },
+                { "RabbitMQ:Enabled", "false" }
             });
         });
 

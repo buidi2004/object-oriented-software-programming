@@ -58,13 +58,17 @@ public class VpsTerminalHub : Hub
             }
 
             var instances = await _vpsRepo.GetAllAsync(Context.ConnectionAborted);
+            containerId = containerId.Trim();
             var instance = instances.FirstOrDefault(x => 
                 !string.IsNullOrEmpty(x.ContainerId) && 
-                (x.ContainerId == containerId || x.ContainerId.StartsWith(containerId) || containerId.StartsWith(x.ContainerId) || (Guid.TryParse(containerId, out var gId) && x.Id == gId)));
+                (x.ContainerId.Equals(containerId, StringComparison.OrdinalIgnoreCase) 
+                 || x.ContainerId.StartsWith(containerId, StringComparison.OrdinalIgnoreCase) 
+                 || containerId.StartsWith(x.ContainerId, StringComparison.OrdinalIgnoreCase) 
+                 || (Guid.TryParse(containerId, out var gId) && x.Id == gId)));
 
             if (instance == null)
             {
-                await Clients.Caller.SendAsync("ReceiveOutput", "Error: VPS instance not found.");
+                await Clients.Caller.SendAsync("ReceiveOutput", $"Error: VPS instance not found. (ID passed: {containerId})");
                 return;
             }
 

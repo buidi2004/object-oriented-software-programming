@@ -31,7 +31,12 @@ public static class DependencyInjection
         services.Configure<ProvisioningSettings>(configuration.GetSection(ProvisioningSettings.SectionName));
         services.Configure<MinIOSettings>(configuration.GetSection(MinIOSettings.SectionName));
         services.Configure<AcmeSettings>(configuration.GetSection(AcmeSettings.SectionName));
+        services.Configure<CloudServiceStore.Infrastructure.Configuration.KafkaSettings>(configuration.GetSection(CloudServiceStore.Infrastructure.Configuration.KafkaSettings.SectionName));
+        services.Configure<CloudServiceStore.Infrastructure.Configuration.RabbitMQSettings>(configuration.GetSection(CloudServiceStore.Infrastructure.Configuration.RabbitMQSettings.SectionName));
         AddCatalogCaching(services, configuration);
+
+        services.AddSingleton<IKafkaProducerService, KafkaProducerService>();
+        services.AddSingleton<IRabbitMQPublisher, RabbitMQPublisher>();
 
         services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
@@ -81,6 +86,10 @@ public static class DependencyInjection
         services.AddSingleton<IResourceProvisioningQueue, ResourceProvisioningQueue>();
         services.AddHostedService<ResourceProvisioningWorker>();
         services.AddHostedService<SubscriptionMonitorWorker>();
+        services.AddHostedService<AuditLogKafkaConsumerWorker>();
+        services.AddHostedService<DomainEventKafkaConsumerWorker>();
+        services.AddHostedService<OrderExpiryConsumerWorker>();
+        services.AddHostedService<NotificationEmailConsumerWorker>();
 
         return services;
     }

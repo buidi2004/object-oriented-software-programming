@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { 
   Gamepad2, Plus, Server, RefreshCw, Play, Square, 
-  RotateCcw, Terminal, CheckCircle2, AlertCircle, ArrowLeft, AlertTriangle 
+  RotateCcw, Terminal, CheckCircle2, AlertCircle, ArrowLeft, AlertTriangle, Settings 
 } from 'lucide-react';
 import { api } from '@/src/lib/api';
 import { useAuthStore } from '@/src/store/useAuthStore';
@@ -25,9 +25,15 @@ interface GameServer {
   createdAt: string;
 }
 
+interface GameServerRowItemProps {
+  server: GameServer;
+  onRefresh: () => void;
+}
+
 export default function DashboardGameServersPage() {
   const { user } = useAuthStore();
   const [servers, setServers] = useState<GameServer[]>([]);
+  const [plans, setPlans] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [creating, setCreating] = useState(false);
@@ -35,6 +41,7 @@ export default function DashboardGameServersPage() {
   // Form states
   const [serverName, setServerName] = useState('');
   const [gameType, setGameType] = useState('1'); // 1=Minecraft, 2=CS2, 3=Valheim, 4=Rust
+  const [selectedPlanId, setSelectedPlanId] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
@@ -50,12 +57,29 @@ export default function DashboardGameServersPage() {
     }
   };
 
+  const fetchPlans = async () => {
+    try {
+      const res = await api.get('/categories/game-server/plans');
+      setPlans(res.data?.plans || []);
+      if (res.data?.plans?.length > 0) {
+        setSelectedPlanId(res.data.plans[0].id);
+      }
+    } catch (err) {
+      console.warn('Failed to load plans', err);
+    }
+  };
+
   useEffect(() => {
     fetchServers();
+    fetchPlans();
   }, []);
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!selectedPlanId) {
+      setError('Vui lòng chọn cấu hình Game Server.');
+      return;
+    }
     setError('');
     setSuccess('');
     setCreating(true);
@@ -66,6 +90,7 @@ export default function DashboardGameServersPage() {
       const res = await api.post('/game-servers', {
         serverName,
         gameType: gType,
+        planId: selectedPlanId,
         idempotencyKey,
       });
 
@@ -80,11 +105,11 @@ export default function DashboardGameServersPage() {
       };
 
       setServers((prev) => [newServer, ...prev]);
-      setSuccess(`Đã tiếp nhận yêu cầu khởi tạo máy chủ "${serverName}"! Quá trình tải image và sinh thế giới game thường mất khoảng 30s - 120s...`);
+      setSuccess(`Khởi tạo thành công! Đã trừ tiền từ ví. Hệ thống đang tải image...`);
       setIsCreateOpen(false);
       setServerName('');
     } catch (err: any) {
-      setError(err?.response?.data?.message || err.message || 'Lỗi khi tạo Game Server');
+      setError(err?.response?.data?.detail || err?.response?.data?.message || err.message || 'Lỗi khi tạo Game Server');
     } finally {
       setCreating(false);
     }
@@ -207,6 +232,22 @@ export default function DashboardGameServersPage() {
               </div>
 
               <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Cấu hình Máy Chủ (Gói Dịch Vụ)</label>
+                <select
+                  value={selectedPlanId}
+                  onChange={(e) => setSelectedPlanId(e.target.value)}
+                  className="w-full px-3.5 py-2.5 rounded border border-slate-200 text-xs text-slate-900 outline-none focus:ring-2 focus:ring-purple-500 bg-white font-bold"
+                >
+                  {plans.map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.name} - {p.cpu || p.cpuCores} Core, {p.ram || p.ramMb} RAM - {p.monthlyPrice?.toLocaleString('vi-VN')}đ/tháng
+                    </option>
+                  ))}
+                </select>
+                <p className="text-[10px] text-slate-500 mt-1">Lưu ý: Hệ thống sẽ trừ tiền trực tiếp vào Ví của bạn.</p>
+              </div>
+
+              <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1">Tên Máy Chủ</label>
                 <input
                   type="text"
@@ -243,7 +284,7 @@ export default function DashboardGameServersPage() {
   );
 }
 
-function GameServerRowItem({ server, onRefresh }: { server: GameServer; onRefresh: () => void }) {
+function GameServerRowItem({ server, onRefresh }: GameServerRowItemProps) {
   const { status, isProvisioning, isSlow, elapsedSeconds, slowWarningText } = useResourceProvisioningDetails(
     'GameServerInstance',
     server.id,
@@ -258,8 +299,27 @@ function GameServerRowItem({ server, onRefresh }: { server: GameServer; onRefres
   const host = server.ipAddress || '127.0.0.1';
   const port = server.port || 25565;
 
+  const handleDelete = async () => {
+    if (!confirm('Bạn có chắc chắn muốn xóa Game Server này? Hành động này không thể hoàn tác.')) return;
+    try {
+      await api.delete(`/game-servers/${server.id}`);
+      onRefresh();
+    } catch (err) {
+      alert('Lỗi khi xóa Game Server');
+    }
+  };
+
+  const handleRestart = async () => {
+    try {
+      await api.post(`/game-servers/${server.id}/restart`);
+      alert('Đã gửi yêu cầu khởi động lại.');
+    } catch (err) {
+      alert('Lỗi khi khởi động lại Game Server');
+    }
+  };
+
   return (
-    <div className="p-6 hover:bg-slate-50/60 transition-colors space-y-4">
+    <div className="p-6 hover:bg-slate-50/60 transition-colors space-y-4 group">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-start sm:items-center gap-3">
           <div className="w-10 h-10 rounded-md bg-purple-100 text-purple-600 flex items-center justify-center flex-shrink-0">
@@ -279,6 +339,28 @@ function GameServerRowItem({ server, onRefresh }: { server: GameServer; onRefres
         </div>
 
         <div className="flex items-center gap-3">
+          <Link
+            href={`/dashboard/game-servers/${server.id}`}
+            className="px-3 py-1.5 rounded bg-purple-50 hover:bg-purple-100 text-purple-700 font-bold text-xs flex items-center gap-1.5 transition-colors border border-purple-200"
+          >
+            <Settings className="w-3.5 h-3.5" /> Quản lý
+          </Link>
+          <div className="opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-2 mr-2">
+            <button
+              onClick={handleRestart}
+              className="p-1.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900"
+              title="Khởi động lại"
+            >
+              <RefreshCw className="w-4 h-4" />
+            </button>
+            <button
+              onClick={handleDelete}
+              className="p-1.5 rounded bg-rose-50 hover:bg-rose-100 text-rose-500 hover:text-rose-700"
+              title="Xóa Server"
+            >
+              <Square className="w-4 h-4" />
+            </button>
+          </div>
           <ProvisioningStatusBadge status={status} elapsedSeconds={elapsedSeconds} isSlow={isSlow} />
         </div>
       </div>

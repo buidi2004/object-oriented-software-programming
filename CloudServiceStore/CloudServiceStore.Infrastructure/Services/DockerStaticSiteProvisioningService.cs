@@ -59,7 +59,7 @@ public class DockerStaticSiteProvisioningService : IStaticSiteProvisioningServic
 
             // 1. Pre-flight checks
             await _resourceChecker.EnsureContainerNameAvailableAsync(containerName, ct);
-            long requiredMemory = 64 * 1024 * 1024L; // 64MB — Nginx is very lightweight
+            long requiredMemory = 32 * 1024 * 1024L; // 32MB — Nginx is very lightweight
             await _resourceChecker.EnsureSufficientResourcesAsync(requiredMemory, ct);
 
             // 2. Allocate port

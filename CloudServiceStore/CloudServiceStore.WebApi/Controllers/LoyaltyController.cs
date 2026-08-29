@@ -10,13 +10,15 @@ namespace CloudServiceStore.WebApi.Controllers;
 
 [ApiController]
 [Route("api/loyalty")]
-[Authorize(Roles = "Customer")]
+[Authorize]
 public class LoyaltyController : ControllerBase
 {
     private readonly IMediator _mediator;
     public LoyaltyController(IMediator mediator) => _mediator = mediator;
 
+    [HttpGet]
     [HttpGet("me")]
+    [Authorize]
     public async Task<IActionResult> GetMyLoyalty(CancellationToken ct)
     {
         var loyalty = await _mediator.Send(new GetMyLoyaltyQuery(), ct);

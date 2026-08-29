@@ -16,6 +16,7 @@ public class UptimeController : ControllerBase
     private readonly IMediator _mediator;
     public UptimeController(IMediator mediator) => _mediator = mediator;
 
+    [HttpGet]
     [HttpGet("system")]
     [HttpGet("summary")]
     public async Task<IActionResult> GetSystemStatus(CancellationToken ct)

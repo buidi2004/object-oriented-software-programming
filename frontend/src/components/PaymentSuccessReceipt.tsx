@@ -20,7 +20,8 @@ import {
   FileText, 
   Mail,
   Zap,
-  Globe
+  Globe,
+  Gamepad2
 } from 'lucide-react';
 import { getServiceDashboardUrl, getPaymentSuccessMessage } from '@/src/lib/serviceRedirect';
 
@@ -71,6 +72,7 @@ export const PaymentSuccessReceipt: React.FC<PaymentSuccessReceiptProps> = ({
 
   const getServiceIcon = (name: string, cat: string) => {
     const combined = `${name} ${cat}`.toLowerCase();
+    if (combined.includes('game') || combined.includes('minecraft') || combined.includes('cs2') || combined.includes('rust')) return <Gamepad2 className="w-5 h-5 text-amber-500" />;
     if (combined.includes('database') || combined.includes('db')) return <Database className="w-5 h-5 text-amber-500" />;
     if (combined.includes('storage') || combined.includes('s3')) return <HardDrive className="w-5 h-5 text-amber-500" />;
     if (combined.includes('security') || combined.includes('waf')) return <Lock className="w-5 h-5 text-amber-500" />;

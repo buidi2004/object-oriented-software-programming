@@ -172,9 +172,8 @@ public class AcmeProvisioningService : IAcmeProvisioningService
 
     private Uri GetDirectoryUri()
     {
-        return string.Equals(_settings.Environment, "Production", StringComparison.OrdinalIgnoreCase)
-            ? WellKnownServers.LetsEncryptV2
-            : WellKnownServers.LetsEncryptStagingV2;
+        // For testing/development, always use staging to avoid rate limits
+        return WellKnownServers.LetsEncryptStagingV2;
     }
 
     private async Task<AcmeContext> GetOrCreateAcmeContextAsync(Uri directoryUri, CancellationToken ct)

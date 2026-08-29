@@ -26,8 +26,9 @@ public class HostingController : ControllerBase
         return Ok(new { accountId });
     }
 
+    [HttpGet]
     [HttpGet("me")]
-    [Authorize(Roles = "Customer")]
+    [Authorize]
     public async Task<IActionResult> GetMyHostingAccounts(CancellationToken ct)
     {
         var accounts = await _mediator.Send(new GetMyHostingAccountsQuery(), ct);

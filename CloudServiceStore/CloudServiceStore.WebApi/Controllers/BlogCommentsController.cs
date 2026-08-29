@@ -12,6 +12,7 @@ namespace CloudServiceStore.WebApi.Controllers;
 
 [ApiController]
 [Route("api")]
+[Route("api/blog-comments")]
 public class BlogCommentsController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -40,6 +41,7 @@ public class BlogCommentsController : ControllerBase
         return Ok(result);
     }
 
+    [HttpGet]
     [HttpGet("comments")]
     [Authorize(Roles = "Admin,Editor")]
     public async Task<IActionResult> GetAll(

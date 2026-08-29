@@ -20,6 +20,7 @@ public class SslCertificatesController : ControllerBase
         _mediator = mediator;
     }
 
+    [HttpGet]
     [HttpGet("certificates")]
     [Authorize]
     public async Task<IActionResult> GetCertificates()

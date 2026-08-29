@@ -228,9 +228,11 @@ public class CareersController : ControllerBase
         return Ok(filtered);
     }
 
+    [HttpGet]
+    [HttpGet("admin")]
     [HttpGet("admin/all")]
-    [Authorize(Roles = "Admin,Editor,Support,Staff,Technician,Accountant")]
-    public async Task<IActionResult> GetAllForAdmin(CancellationToken ct)
+    [Authorize(Roles = "Admin,Editor,HR,Support")]
+    public async Task<IActionResult> GetAllAdmin(CancellationToken ct)
     {
         await EnsureTableCreatedAsync(ct);
         var apps = await _jobAppRepo.GetAllAsync(ct);

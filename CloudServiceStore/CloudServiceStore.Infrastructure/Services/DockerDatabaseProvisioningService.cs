@@ -55,16 +55,16 @@ public class DockerDatabaseProvisioningService : IDatabaseProvisioningService
                 "Provisioning {Engine} database '{Name}' (Container: {ContainerName})",
                 instance.Engine, instance.Name, containerName);
 
+            // 3. Determine image and env based on engine
+            var (imageName, envVars, internalPort, healthCmd, requiredMemory) = GetEngineConfig(instance);
+
             // 1. Pre-flight checks
             await _resourceChecker.EnsureContainerNameAvailableAsync(containerName, ct);
-            long requiredMemory = 256 * 1024 * 1024L; // 256MB default
             await _resourceChecker.EnsureSufficientResourcesAsync(requiredMemory, ct);
 
             // 2. Allocate port
             int assignedPort = await _portAllocator.AllocatePortAsync(ct);
 
-            // 3. Determine image and env based on engine
-            var (imageName, envVars, internalPort, healthCmd) = GetEngineConfig(instance);
 
             // 4. Ensure image exists
             await EnsureImageAsync(client, imageName, ct);
@@ -167,7 +167,7 @@ public class DockerDatabaseProvisioningService : IDatabaseProvisioningService
         }
     }
 
-    private static (string Image, List<string> Env, int Port, string[] HealthCmd) GetEngineConfig(
+    private static (string Image, List<string> Env, int Port, string[] HealthCmd, long MemoryLimit) GetEngineConfig(
         ManagedDatabaseInstance instance)
     {
         return instance.Engine switch
@@ -181,7 +181,8 @@ public class DockerDatabaseProvisioningService : IDatabaseProvisioningService
                     $"POSTGRES_DB={instance.Name}"
                 },
                 5432,
-                new[] { "pg_isready", "-U", instance.AdminUser }
+                new[] { "pg_isready", "-U", instance.AdminUser },
+                128 * 1024 * 1024L
             ),
 
             ManagedDatabaseEngine.MySQL => (
@@ -194,14 +195,16 @@ public class DockerDatabaseProvisioningService : IDatabaseProvisioningService
                     $"MYSQL_PASSWORD={instance.AdminPassword}"
                 },
                 3306,
-                new[] { "mysqladmin", "ping", "-h", "localhost", "-u", instance.AdminUser, $"-p{instance.AdminPassword}" }
+                new[] { "mysqladmin", "ping", "-h", "localhost", "-u", instance.AdminUser, $"-p{instance.AdminPassword}" },
+                128 * 1024 * 1024L
             ),
 
             ManagedDatabaseEngine.Redis => (
                 $"redis:{instance.Version ?? "7"}-alpine",
                 new List<string>(), // Redis doesn't need auth env by default
                 6379,
-                new[] { "redis-cli", "ping" }
+                new[] { "redis-cli", "ping" },
+                64 * 1024 * 1024L
             ),
 
             _ => throw new Application.Exceptions.BadRequestException(

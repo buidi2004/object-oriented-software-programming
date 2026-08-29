@@ -66,6 +66,7 @@ public class LiveChatsController : ControllerBase
         return NoContent();
     }
 
+    [HttpGet]
     [HttpGet("active")]
     [HttpGet("admin/active")]
     [Authorize] // Can add Role check here if needed (e.g. Admin or Editor)

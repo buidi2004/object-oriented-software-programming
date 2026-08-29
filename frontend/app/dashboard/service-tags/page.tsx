@@ -12,7 +12,7 @@ export default function ServiceTagsPage() {
   const [color, setColor] = useState(COLORS[0]);
 
   const load = () => {
-    api.get("/api/service-tags")
+    api.get("/service-tags")
       .then((res: any) => { setTags(res.data); setLoading(false); })
       .catch((err: any) => { console.error(err); setLoading(false); });
   };
@@ -21,7 +21,7 @@ export default function ServiceTagsPage() {
 
   const save = async () => {
     if (!editing) return;
-    await api.put(`/api/service-tags/${editing.serviceId}`, { tagColor: color, note });
+    await api.put(`/service-tags/${editing.serviceId}`, { tagColor: color, note });
     setEditing(null);
     load();
   };

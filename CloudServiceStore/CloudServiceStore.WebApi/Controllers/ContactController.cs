@@ -13,6 +13,7 @@ namespace CloudServiceStore.WebApi.Controllers;
 
 [ApiController]
 [Route("api/contact")]
+[Route("api/contacts")]
 public class ContactController : ControllerBase
 {
     private readonly IEmailService _emailService;

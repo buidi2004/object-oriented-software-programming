@@ -26,8 +26,9 @@ public class MarketplaceController : ControllerBase
         _repo = repo;
     }
 
+    [HttpGet]
     [HttpGet("listings")]
-    [Authorize(Roles = "Customer")]
+    [Authorize]
     public async Task<IActionResult> GetListings(CancellationToken ct)
     {
         var result = await _mediator.Send(new GetAllMarketplaceListingsQuery(), ct);

@@ -36,16 +36,17 @@ public class CheckoutCommandHandler : IRequestHandler<CheckoutCommand, Guid>
         var orderItems = new System.Collections.Generic.List<OrderItem>();
         decimal subTotal = 0;
 
+        var planIds = cart.Items.Select(i => i.ServicePlanId).Distinct().ToList();
+        var allPrices = await _priceRepo.WhereAsync(p => planIds.Contains(p.ServicePlanId) && p.Currency == "VND", ct);
+
         foreach (var item in cart.Items)
         {
-            var prices = await _priceRepo.WhereAsync(p => p.ServicePlanId == item.ServicePlanId && p.BillingCycle == item.BillingCycle && p.Currency == "VND", ct);
-            var priceObj = prices.OrderByDescending(p => p.EffectiveFrom).FirstOrDefault();
+            var priceObj = allPrices.Where(p => p.ServicePlanId == item.ServicePlanId && p.BillingCycle == item.BillingCycle).OrderByDescending(p => p.EffectiveFrom).FirstOrDefault();
             decimal price = priceObj?.Price ?? 0;
 
             if (price <= 0)
             {
-                var fallbackPrices = await _priceRepo.WhereAsync(p => p.ServicePlanId == item.ServicePlanId && p.Currency == "VND", ct);
-                price = fallbackPrices.OrderByDescending(p => p.EffectiveFrom).FirstOrDefault()?.Price ?? 149000m;
+                price = allPrices.Where(p => p.ServicePlanId == item.ServicePlanId).OrderByDescending(p => p.EffectiveFrom).FirstOrDefault()?.Price ?? 149000m;
             }
 
             decimal itemTotal = price * item.Quantity;
@@ -79,23 +80,27 @@ public class CheckoutCommandHandler : IRequestHandler<CheckoutCommand, Guid>
 
         await _uow.SaveChangesAsync(ct);
 
-        // Send order confirmation email to customer
-        try
+        // Send order confirmation email to customer asynchronously in background
+        _ = Task.Run(async () =>
         {
-            var user = await _userRepo.GetByIdAsync(userId, ct);
-            if (user != null && !string.IsNullOrEmpty(user.Email))
+            try
             {
-                await _emailService.SendOrderConfirmationEmailAsync(
-                    user.Email,
-                    order.Id.ToString(),
-                    order.TotalAmount,
-                    ct);
+                using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+                var user = await _userRepo.GetByIdAsync(userId, cts.Token);
+                if (user != null && !string.IsNullOrEmpty(user.Email))
+                {
+                    await _emailService.SendOrderConfirmationEmailAsync(
+                        user.Email,
+                        order.Id.ToString(),
+                        order.TotalAmount,
+                        cts.Token);
+                }
             }
-        }
-        catch
-        {
-            // Don't let email failure crash the checkout flow
-        }
+            catch
+            {
+                // Don't let email failure crash or delay the checkout flow
+            }
+        });
 
         return order.Id;
     }

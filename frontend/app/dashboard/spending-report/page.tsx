@@ -11,7 +11,7 @@ export default function SpendingReportPage() {
 
   useEffect(() => {
     setLoading(true);
-    api.get(`/api/spending-reports/monthly?month=${month}&year=${year}`)
+    api.get(`/spending-reports/monthly?month=${month}&year=${year}`)
       .then((res: any) => { setData(res.data); setLoading(false); })
       .catch((err: any) => { console.error(err); setLoading(false); });
   }, [month, year]);

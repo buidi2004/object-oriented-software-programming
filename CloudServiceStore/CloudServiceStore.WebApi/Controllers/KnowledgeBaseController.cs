@@ -61,13 +61,20 @@ public class KnowledgeBaseController : ControllerBase
 
     [HttpGet("{id}")]
     [AllowAnonymous]
-    public async Task<IActionResult> GetById(Guid id)
+    public async Task<IActionResult> GetById(string id, CancellationToken ct)
     {
-        var result = await _mediator.Send(new GetKbArticleByIdQuery(id));
-        if (result == null)
-            return NotFound();
-            
-        return Ok(result);
+        if (Guid.TryParse(id, out var guidId))
+        {
+            var result = await _mediator.Send(new GetKbArticleByIdQuery(guidId), ct);
+            if (result != null)
+                return Ok(result);
+        }
+
+        var articleBySlug = await _kbRepo.FirstOrDefaultAsync(a => a.Slug == id, ct);
+        if (articleBySlug != null)
+            return Ok(articleBySlug);
+
+        return NotFound();
     }
 
     [HttpPost]

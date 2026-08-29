@@ -10,12 +10,13 @@ namespace CloudServiceStore.WebApi.Controllers;
 
 [ApiController]
 [Route("api/referrals")]
-[Authorize(Roles = "Customer")]
+[Authorize]
 public class ReferralsController : ControllerBase
 {
     private readonly IMediator _mediator;
     public ReferralsController(IMediator mediator) => _mediator = mediator;
 
+    [HttpGet]
     [HttpGet("me")]
     public async Task<IActionResult> GetMyReferral(CancellationToken ct)
     {

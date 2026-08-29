@@ -19,6 +19,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace CloudServiceStore.WebApi.Controllers;
 
 [Route("api/[controller]")]
+[Route("api/vps-instances")]
+[Route("api/vps")]
 [ApiController]
 public class VpsInstancesController : ControllerBase
 {

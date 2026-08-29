@@ -8,6 +8,8 @@ using MailKit.Security;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MimeKit;
+using CloudServiceStore.Infrastructure.Configuration;
+using CloudServiceStore.Application.Messages;
 
 namespace CloudServiceStore.Infrastructure.Services;
 
@@ -16,12 +18,16 @@ public class GmailEmailService : IEmailService
     private readonly EmailSettings _settings;
     private readonly ILogger<GmailEmailService> _logger;
     private readonly string _frontendBaseUrl;
+    private readonly RabbitMQSettings _rabbitSettings;
+    private readonly IRabbitMQPublisher _rabbitPublisher;
 
-    public GmailEmailService(IOptions<EmailSettings> settings, ILogger<GmailEmailService> logger, IOptions<FrontendSettings> frontendOptions)
+    public GmailEmailService(IOptions<EmailSettings> settings, ILogger<GmailEmailService> logger, IOptions<FrontendSettings> frontendOptions, IOptions<RabbitMQSettings> rabbitOptions, IRabbitMQPublisher rabbitPublisher)
     {
         _settings = settings.Value;
         _logger = logger;
         _frontendBaseUrl = (frontendOptions?.Value?.BaseUrl ?? "http://localhost:3000").TrimEnd('/');
+        _rabbitSettings = rabbitOptions?.Value ?? new RabbitMQSettings();
+        _rabbitPublisher = rabbitPublisher;
     }
 
     public async Task SendEmailAsync(string toEmail, string subject, string htmlBody, CancellationToken cancellationToken = default)
@@ -95,7 +101,9 @@ public class GmailEmailService : IEmailService
                 Nếu bạn không thực hiện yêu cầu này, vui lòng liên hệ ngay với Hotline 1900 6868 để được hỗ trợ bảo vệ tài khoản.
             </p>");
 
-        await SendEmailAsync(toEmail, "🔐 [SEN CloudHost] Khôi phục và cấp mật khẩu mới của bạn", html, cancellationToken);
+        var msg = new NotificationEmailMessage { ToEmail = toEmail, Subject = "🔐 [SEN CloudHost] Khôi phục và cấp mật khẩu mới của bạn", HtmlBody = html };
+        _rabbitPublisher.Publish(_rabbitSettings.Queues.Notification, msg);
+        await Task.CompletedTask;
     }
 
     public async Task SendOrderConfirmationEmailAsync(string toEmail, string orderId, decimal totalAmount, CancellationToken cancellationToken = default)
@@ -132,7 +140,9 @@ public class GmailEmailService : IEmailService
                 </a>
             </div>");
 
-        await SendEmailAsync(toEmail, $"📦 Đơn hàng #{shortId} đã được tạo - SEN CloudHost", html, cancellationToken);
+        var msg = new NotificationEmailMessage { ToEmail = toEmail, Subject = $"📦 Đơn hàng #{shortId} đã được tạo - SEN CloudHost", HtmlBody = html };
+        _rabbitPublisher.Publish(_rabbitSettings.Queues.Notification, msg);
+        await Task.CompletedTask;
     }
 
     public async Task SendPaymentSuccessEmailAsync(string toEmail, string orderId, string serviceName, CancellationToken cancellationToken = default)
@@ -170,7 +180,9 @@ public class GmailEmailService : IEmailService
                 </ul>
             </div>");
 
-        await SendEmailAsync(toEmail, $"✅ Thanh toán thành công #{shortId} - SEN CloudHost", html, cancellationToken);
+        var msg = new NotificationEmailMessage { ToEmail = toEmail, Subject = $"✅ Thanh toán thành công #{shortId} - SEN CloudHost", HtmlBody = html };
+        _rabbitPublisher.Publish(_rabbitSettings.Queues.Notification, msg);
+        await Task.CompletedTask;
     }
 
     public async Task SendWelcomeEmailAsync(string toEmail, string fullName, CancellationToken cancellationToken = default)
@@ -199,7 +211,9 @@ public class GmailEmailService : IEmailService
                 </a>
             </div>");
 
-        await SendEmailAsync(toEmail, "🚀 Chào mừng bạn đến với SEN CloudHost!", html, cancellationToken);
+        var msg = new NotificationEmailMessage { ToEmail = toEmail, Subject = "🚀 Chào mừng bạn đến với SEN CloudHost!", HtmlBody = html };
+        _rabbitPublisher.Publish(_rabbitSettings.Queues.Notification, msg);
+        await Task.CompletedTask;
     }
 
     public async Task SendPasswordChangedSecurityAlertAsync(string toEmail, string fullName, CancellationToken cancellationToken = default)
@@ -224,7 +238,9 @@ public class GmailEmailService : IEmailService
                 </a>
             </div>");
 
-        await SendEmailAsync(toEmail, "🔐 [Cảnh báo] Mật khẩu tài khoản đã thay đổi - SEN CloudHost", html, cancellationToken);
+        var msg = new NotificationEmailMessage { ToEmail = toEmail, Subject = "🔐 [Cảnh báo] Mật khẩu tài khoản đã thay đổi - SEN CloudHost", HtmlBody = html };
+        _rabbitPublisher.Publish(_rabbitSettings.Queues.Notification, msg);
+        await Task.CompletedTask;
     }
 
     public async Task SendVpsProvisionedEmailAsync(string toEmail, string vpsName, string ipAddress, string sshUser, string initialPassword, int sshPort, CancellationToken cancellationToken = default)
@@ -274,7 +290,9 @@ public class GmailEmailService : IEmailService
                 </a>
             </div>");
 
-        await SendEmailAsync(toEmail, $"🖥️ Thông tin bàn giao máy chủ {vpsName} - SEN CloudHost", html, cancellationToken);
+        var msg = new NotificationEmailMessage { ToEmail = toEmail, Subject = $"🖥️ Thông tin bàn giao máy chủ {vpsName} - SEN CloudHost", HtmlBody = html };
+        _rabbitPublisher.Publish(_rabbitSettings.Queues.Notification, msg);
+        await Task.CompletedTask;
     }
 
     public async Task SendServiceExpiryReminderEmailAsync(string toEmail, string serviceName, int daysLeft, DateTime expiresAt, CancellationToken cancellationToken = default)
@@ -298,7 +316,9 @@ public class GmailEmailService : IEmailService
                 </a>
             </div>");
 
-        await SendEmailAsync(toEmail, $"⏰ [Nhắc nhở] Dịch vụ {serviceName} còn {daysLeft} ngày sẽ hết hạn - SEN CloudHost", html, cancellationToken);
+        var msg = new NotificationEmailMessage { ToEmail = toEmail, Subject = $"⏰ [Nhắc nhở] Dịch vụ {serviceName} còn {daysLeft} ngày sẽ hết hạn - SEN CloudHost", HtmlBody = html };
+        _rabbitPublisher.Publish(_rabbitSettings.Queues.Notification, msg);
+        await Task.CompletedTask;
     }
 
     private string WrapInTemplate(string preheader, string bodyContent)
