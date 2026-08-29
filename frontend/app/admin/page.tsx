@@ -342,6 +342,7 @@ export default function AdminDashboardPage() {
         { href: '/admin/uptime', label: 'Giám Sát Uptime Server', desc: 'Tình trạng hoạt động của các cụm máy chủ', icon: Activity, color: 'cyan' },
         { href: '/admin/jobs', label: 'Tác Vụ Nền (Cron Jobs)', desc: 'Kích hoạt gia hạn tự động & dọn dẹp cache', icon: Clock, color: 'indigo' },
         { href: '/admin/roles', label: 'Phân Quyền & Quyền Hạn', desc: 'Quản lý vai trò Admin, Kế toán, Kỹ thuật & phân bổ quyền API', icon: ShieldCheck, color: 'blue' },
+        { href: '/admin/audit-logs', label: 'Nhật Ký Thao Tác (Audit Logs)', desc: 'Theo dõi và kiểm toán toàn bộ hành động bảo mật & hệ thống', icon: ShieldAlert, color: 'rose' },
         { href: '/admin/settings', label: 'Cài Đặt Hệ Thống', desc: 'Cấu hình SMTP, Cổng thanh toán & Brand', icon: Settings, color: 'slate' },
       ]
     }
