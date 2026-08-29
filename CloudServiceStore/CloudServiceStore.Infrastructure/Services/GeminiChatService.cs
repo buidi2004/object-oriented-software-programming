@@ -22,6 +22,11 @@ public class GeminiChatService : IChatBotService
 
     public async Task<string> AskAsync(string userMessage, string context)
     {
+        if (string.IsNullOrWhiteSpace(_apiKey))
+        {
+            return "Hệ thống: Tính năng Trợ lý AI hiện đang bị vô hiệu hóa do thiếu cấu hình API Key trên máy chủ. Xin vui lòng báo với Admin để cập nhật `GEMINI_API_KEY`.";
+        }
+
         var systemPrompt = $@"
 Bạn là trợ lý tư vấn của CloudServiceStore (CloudHost VN). 
 CHỈ trả lời dựa trên dữ liệu sau, KHÔNG được bịa giá hay thông số không có trong dữ liệu:
