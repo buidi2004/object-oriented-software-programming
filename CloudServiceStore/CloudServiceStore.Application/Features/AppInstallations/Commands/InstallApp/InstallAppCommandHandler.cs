@@ -1,8 +1,10 @@
+using System;
 using CloudServiceStore.Application.Exceptions;
 using CloudServiceStore.Application.Interfaces;
 using CloudServiceStore.Domain.Entities;
 using CloudServiceStore.Domain.Interfaces;
 using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CloudServiceStore.Application.Features.AppInstallations.Commands.InstallApp;
 
@@ -13,7 +15,9 @@ public class InstallAppCommandHandler : IRequestHandler<InstallAppCommand, Guid>
     private readonly IRepository<AppTemplate> _templateRepo;
     private readonly IRepository<HostingAccount> _hostingRepo;
     private readonly ICurrentUserService _currentUser;
-    private readonly IAppInstallerService _installerService;
+    // BUG #4 FIX: Use background queue instead of calling Docker synchronously in the HTTP thread.
+    // Pulling large images (e.g., WordPress ~500MB) would cause HTTP timeouts.
+    private readonly IResourceProvisioningQueue _taskQueue;
 
     public InstallAppCommandHandler(
         IUnitOfWork uow,
@@ -21,14 +25,14 @@ public class InstallAppCommandHandler : IRequestHandler<InstallAppCommand, Guid>
         IRepository<AppTemplate> templateRepo,
         IRepository<HostingAccount> hostingRepo,
         ICurrentUserService currentUser,
-        IAppInstallerService installerService)
+        IResourceProvisioningQueue taskQueue)
     {
         _uow = uow;
         _repo = repo;
         _templateRepo = templateRepo;
         _hostingRepo = hostingRepo;
         _currentUser = currentUser;
-        _installerService = installerService;
+        _taskQueue = taskQueue;
     }
 
     public async Task<Guid> Handle(InstallAppCommand request, CancellationToken cancellationToken)
@@ -65,20 +69,43 @@ public class InstallAppCommandHandler : IRequestHandler<InstallAppCommand, Guid>
         await _repo.AddAsync(installation, cancellationToken);
         await _uow.SaveChangesAsync(cancellationToken);
 
-        // Provisioning
-        string installUrl = await _installerService.InstallAppAsync(installation, cancellationToken);
+        var installationId = installation.Id;
 
-        if (!string.IsNullOrEmpty(installUrl))
+        // BUG #4 FIX: Queue Docker work to run in background worker — returns immediately to caller.
+        // Frontend can poll status or receive SignalR notification when complete.
+        await _taskQueue.QueueBackgroundWorkItemAsync(async (serviceProvider, ct) =>
         {
-            installation.MarkAsCompleted(installUrl);
-        }
-        else
-        {
-            installation.MarkAsFailed("Lỗi tạo container cho App.");
-        }
+            var scopedRepo = serviceProvider.GetRequiredService<IRepository<AppInstallation>>();
+            var scopedUow = serviceProvider.GetRequiredService<IUnitOfWork>();
+            var scopedInstallerService = serviceProvider.GetRequiredService<IAppInstallerService>();
+            var scopedNotifier = serviceProvider.GetRequiredService<IResourceStatusNotifier>();
 
-        await _uow.SaveChangesAsync(cancellationToken);
+            var dbInstallation = await scopedRepo.GetByIdAsync(installationId, ct);
+            if (dbInstallation == null) return;
 
-        return installation.Id;
+            try
+            {
+                string installUrl = await scopedInstallerService.InstallAppAsync(dbInstallation, ct);
+
+                if (!string.IsNullOrEmpty(installUrl))
+                {
+                    dbInstallation.MarkAsCompleted(installUrl);
+                }
+                else
+                {
+                    dbInstallation.MarkAsFailed("Lỗi tạo container cho App.");
+                }
+            }
+            catch (Exception ex)
+            {
+                dbInstallation.MarkAsFailed($"Lỗi cấp phát: {ex.Message}");
+            }
+
+            await scopedUow.SaveChangesAsync(ct);
+
+            await scopedNotifier.NotifyStatusChangedAsync("AppInstallation", dbInstallation.Id.ToString(), dbInstallation.Status.ToString());
+        });
+
+        return installationId;
     }
 }

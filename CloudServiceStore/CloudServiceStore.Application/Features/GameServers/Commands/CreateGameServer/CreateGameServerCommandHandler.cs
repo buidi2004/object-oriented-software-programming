@@ -74,18 +74,15 @@ public class CreateGameServerCommandHandler : IRequestHandler<CreateGameServerCo
 
             if (monthlyPrice > 0)
             {
-                // Check Wallet
+                // BUG #6 FIX: Check wallet balance and throw if insufficient — do NOT auto-deposit.
                 var wallet = await _walletRepo.FirstOrDefaultAsync(w => w.UserId == userId, cancellationToken);
-                if (wallet == null)
+                if (wallet == null || wallet.Balance < monthlyPrice)
                 {
-                    wallet = new Domain.Entities.Wallet(userId);
-                    wallet.Deposit(monthlyPrice);
-                    await _walletRepo.AddAsync(wallet, cancellationToken);
-                }
-                else if (wallet.Balance < monthlyPrice)
-                {
-                    wallet.Deposit(monthlyPrice);
-                    _walletRepo.Update(wallet);
+                    var currentBalance = wallet?.Balance ?? 0;
+                    throw new BadRequestException(
+                        $"Số dư ví không đủ để tạo Game Server. " +
+                        $"Cần {monthlyPrice:N0} VND, hiện có {currentBalance:N0} VND. " +
+                        "Vui lòng nạp thêm tiền vào ví.");
                 }
 
                 // Deduct Wallet

@@ -155,16 +155,15 @@ public class DockerAppInstallerService : IAppInstallerService
     {
         try
         {
+            // BUG #5 FIX: Use direct property access instead of reflection. Fallback is false (not true)
+            // to avoid false-positive where a crashed container is reported as running.
             var inspect = await client.Containers.InspectContainerAsync(containerId, ct);
-            var stateProp = inspect.GetType().GetProperty("State");
-            var stateObj = stateProp?.GetValue(inspect);
-            var runningProp = stateObj?.GetType().GetProperty("Running");
-            return (bool?)runningProp?.GetValue(stateObj) ?? true;
+            return inspect.State.Running;
         }
         catch (Exception ex)
         {
             _logger.LogWarning(ex, "Could not inspect app container {ContainerId}", containerId);
-            return true;
+            return false;
         }
     }
 

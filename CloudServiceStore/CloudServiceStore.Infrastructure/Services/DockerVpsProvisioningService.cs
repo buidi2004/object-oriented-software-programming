@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using CloudServiceStore.Application.Interfaces;
 using CloudServiceStore.Application.Models;
+using CloudServiceStore.Infrastructure.Helpers;
 using Docker.DotNet;
 using Docker.DotNet.Models;
 using Microsoft.Extensions.Logging;
@@ -13,39 +14,31 @@ namespace CloudServiceStore.Infrastructure.Services;
 
 public class DockerVpsProvisioningService : IVpsProvisioningService
 {
-    private readonly IDockerClient? _dockerClient;
+    // BUG #1 FIX: Use shared DockerClientFactory singleton instead of creating a new client per instance
+    private readonly DockerClientFactory _dockerFactory;
+    private readonly DockerPortAllocator _portAllocator;
+    private readonly DockerResourceChecker _resourceChecker;
     private readonly ILogger<DockerVpsProvisioningService> _logger;
 
-    public DockerVpsProvisioningService(ILogger<DockerVpsProvisioningService> logger)
+    public DockerVpsProvisioningService(
+        DockerClientFactory dockerFactory,
+        DockerPortAllocator portAllocator,
+        DockerResourceChecker resourceChecker,
+        ILogger<DockerVpsProvisioningService> logger)
     {
+        _dockerFactory = dockerFactory;
+        _portAllocator = portAllocator;
+        _resourceChecker = resourceChecker;
         _logger = logger;
-        try
-        {
-            _dockerClient = TryCreateDockerClient();
-        }
-        catch (Exception ex)
-        {
-            _logger.LogWarning(ex, "DockerClient initialization failed or Docker assembly unavailable.");
-            _dockerClient = null;
-        }
-    }
-
-    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
-    private static IDockerClient? TryCreateDockerClient()
-    {
-        var dockerUri = Environment.OSVersion.Platform == PlatformID.Win32NT
-            ? "npipe://./pipe/docker_engine"
-            : "unix:///var/run/docker.sock";
-
-        return new DockerClientConfiguration(new Uri(dockerUri)).CreateClient();
     }
 
     public async Task<bool> IsAvailableAsync(CancellationToken ct)
     {
-        if (_dockerClient == null) return false;
+        var client = _dockerFactory.Client;
+        if (client == null) return false;
         try
         {
-            await _dockerClient.System.PingAsync(ct);
+            await client.System.PingAsync(ct);
             return true;
         }
         catch (Exception ex)
@@ -57,7 +50,8 @@ public class DockerVpsProvisioningService : IVpsProvisioningService
 
     public async Task<ProvisionResult> ProvisionAsync(VpsProvisionSpec spec, CancellationToken ct)
     {
-        if (_dockerClient == null)
+        var client = _dockerFactory.Client;
+        if (client == null)
         {
             return new ProvisionResult(false, string.Empty, string.Empty, "Docker client is not available");
         }
@@ -70,19 +64,39 @@ public class DockerVpsProvisioningService : IVpsProvisioningService
 
         try
         {
-            await EnsureImageExistsAsync(spec.ImageName, ct);
+            // BUG #3 FIX: Check host RAM availability before provisioning
+            long requiredMemory = Math.Min(spec.MemoryBytes, 200 * 1024 * 1024L);
+            await _resourceChecker.EnsureContainerNameAvailableAsync(spec.ContainerName, ct);
+            await _resourceChecker.EnsureSufficientResourcesAsync(requiredMemory, ct);
 
-            var response = await _dockerClient.Containers.CreateContainerAsync(new CreateContainerParameters
+            // BUG #2 FIX: Allocate SSH port and bind it to the container
+            int sshPort = await _portAllocator.AllocatePortAsync(ct);
+
+            await EnsureImageExistsAsync(client, spec.ImageName, ct);
+
+            var response = await client.Containers.CreateContainerAsync(new CreateContainerParameters
             {
                 Image = spec.ImageName,
                 Name = spec.ContainerName,
                 HostConfig = new HostConfig
                 {
-                    Memory = Math.Min(spec.MemoryBytes, 200 * 1024 * 1024L), // Capped at 200MB for demo
+                    Memory = requiredMemory,
                     NanoCPUs = Math.Min((long)spec.CpuCores, Environment.ProcessorCount) * 1_000_000_000L,
                     PidsLimit = Math.Max(100, spec.CpuCores * 100),
                     NetworkMode = "bridge",
+                    // BUG #2 FIX: Bind SSH port so the user can actually connect to their VPS
+                    PortBindings = new Dictionary<string, IList<PortBinding>>
+                    {
+                        ["22/tcp"] = new List<PortBinding>
+                        {
+                            new() { HostPort = sshPort.ToString() }
+                        }
+                    },
                     RestartPolicy = new RestartPolicy { Name = RestartPolicyKind.UnlessStopped }
+                },
+                ExposedPorts = new Dictionary<string, EmptyStruct>
+                {
+                    ["22/tcp"] = default
                 },
                 Tty = true,
                 AttachStdin = true,
@@ -96,7 +110,7 @@ public class DockerVpsProvisioningService : IVpsProvisioningService
                 return new ProvisionResult(false, string.Empty, spec.ContainerName, "Docker did not return a container ID.");
             }
 
-            var started = await _dockerClient.Containers.StartContainerAsync(
+            var started = await client.Containers.StartContainerAsync(
                 response.ID,
                 new ContainerStartParameters(),
                 ct);
@@ -106,7 +120,7 @@ public class DockerVpsProvisioningService : IVpsProvisioningService
                 return new ProvisionResult(false, response.ID, spec.ContainerName, "Failed to start container.");
             }
 
-            _logger.LogInformation("Started container {ContainerId}", response.ID);
+            _logger.LogInformation("Started VPS container {ContainerId} with SSH on port {SshPort}", response.ID, sshPort);
             return new ProvisionResult(true, response.ID, spec.ContainerName, null);
         }
         catch (Exception ex)
@@ -118,7 +132,8 @@ public class DockerVpsProvisioningService : IVpsProvisioningService
 
     public async Task<string> ExecCommandAsync(string containerId, string command, CancellationToken ct)
     {
-        if (_dockerClient == null) return "Docker client is not available.";
+        var client = _dockerFactory.Client;
+        if (client == null) return "Docker client is not available.";
         try
         {
             var createParams = new ContainerExecCreateParameters
@@ -131,10 +146,10 @@ public class DockerVpsProvisioningService : IVpsProvisioningService
             };
 
             // Docker.DotNet 3.125.x interface omits generic return types; cast to implementation types.
-            var execResponse = await ((Task<ContainerExecCreateResponse>)(object)_dockerClient.Exec.ExecCreateContainerAsync(
+            var execResponse = await ((Task<ContainerExecCreateResponse>)(object)client.Exec.ExecCreateContainerAsync(
                 containerId, createParams, ct));
 
-            var multiplexed = await ((Task<MultiplexedStream>)(object)_dockerClient.Exec.StartAndAttachContainerExecAsync(
+            var multiplexed = await ((Task<MultiplexedStream>)(object)client.Exec.StartAndAttachContainerExecAsync(
                 execResponse.ID, false, ct));
 
             using (multiplexed)
@@ -157,15 +172,16 @@ public class DockerVpsProvisioningService : IVpsProvisioningService
 
     public async Task TerminateAsync(string containerId, CancellationToken ct)
     {
-        if (_dockerClient == null) return;
+        var client = _dockerFactory.Client;
+        if (client == null) return;
         try
         {
             _logger.LogInformation("Terminating container {ContainerId}", containerId);
-            await _dockerClient.Containers.StopContainerAsync(
+            await client.Containers.StopContainerAsync(
                 containerId,
                 new ContainerStopParameters { WaitBeforeKillSeconds = 2 },
                 ct);
-            await _dockerClient.Containers.RemoveContainerAsync(
+            await client.Containers.RemoveContainerAsync(
                 containerId,
                 new ContainerRemoveParameters { Force = true },
                 ct);
@@ -178,10 +194,11 @@ public class DockerVpsProvisioningService : IVpsProvisioningService
 
     public async Task<bool> IsRunningAsync(string containerId, CancellationToken ct)
     {
-        if (_dockerClient == null) return false;
+        var client = _dockerFactory.Client;
+        if (client == null) return false;
         try
         {
-            var inspect = await _dockerClient.Containers.InspectContainerAsync(containerId, ct);
+            var inspect = await client.Containers.InspectContainerAsync(containerId, ct);
             return inspect.State.Running;
         }
         catch (Exception ex)
@@ -193,10 +210,10 @@ public class DockerVpsProvisioningService : IVpsProvisioningService
 
     public async Task StartAsync(string containerId, CancellationToken ct)
     {
-        if (_dockerClient == null) throw new InvalidOperationException("Docker client is not available.");
+        var client = _dockerFactory.Client ?? throw new InvalidOperationException("Docker client is not available.");
         try
         {
-            await _dockerClient.Containers.StartContainerAsync(containerId, new ContainerStartParameters(), ct);
+            await client.Containers.StartContainerAsync(containerId, new ContainerStartParameters(), ct);
         }
         catch (Exception ex)
         {
@@ -207,10 +224,10 @@ public class DockerVpsProvisioningService : IVpsProvisioningService
 
     public async Task StopAsync(string containerId, CancellationToken ct)
     {
-        if (_dockerClient == null) throw new InvalidOperationException("Docker client is not available.");
+        var client = _dockerFactory.Client ?? throw new InvalidOperationException("Docker client is not available.");
         try
         {
-            await _dockerClient.Containers.StopContainerAsync(containerId, new ContainerStopParameters { WaitBeforeKillSeconds = 1 }, ct);
+            await client.Containers.StopContainerAsync(containerId, new ContainerStopParameters { WaitBeforeKillSeconds = 1 }, ct);
         }
         catch (Exception ex)
         {
@@ -221,10 +238,10 @@ public class DockerVpsProvisioningService : IVpsProvisioningService
 
     public async Task RestartAsync(string containerId, CancellationToken ct)
     {
-        if (_dockerClient == null) throw new InvalidOperationException("Docker client is not available.");
+        var client = _dockerFactory.Client ?? throw new InvalidOperationException("Docker client is not available.");
         try
         {
-            await _dockerClient.Containers.RestartContainerAsync(containerId, new ContainerRestartParameters { WaitBeforeKillSeconds = 1 }, ct);
+            await client.Containers.RestartContainerAsync(containerId, new ContainerRestartParameters { WaitBeforeKillSeconds = 1 }, ct);
         }
         catch (Exception ex)
         {
@@ -233,11 +250,9 @@ public class DockerVpsProvisioningService : IVpsProvisioningService
         }
     }
 
-    private async Task EnsureImageExistsAsync(string imageName, CancellationToken ct)
+    private static async Task EnsureImageExistsAsync(IDockerClient client, string imageName, CancellationToken ct)
     {
-        if (_dockerClient == null) return;
-
-        var images = await _dockerClient.Images.ListImagesAsync(new ImagesListParameters
+        var images = await client.Images.ListImagesAsync(new ImagesListParameters
         {
             Filters = new Dictionary<string, IDictionary<string, bool>>
             {
@@ -256,16 +271,12 @@ public class DockerVpsProvisioningService : IVpsProvisioningService
                 $"Docker image '{imageName}' not found locally. Build it with: docker build -t {imageName} ./docker/vps-demo-image");
         }
 
-        _logger.LogInformation("Pulling Docker image {ImageName}", imageName);
-        await _dockerClient.Images.CreateImageAsync(
+        await client.Images.CreateImageAsync(
             new ImagesCreateParameters { FromImage = imageName },
             null,
             new Progress<JSONMessage>(message =>
             {
-                if (!string.IsNullOrWhiteSpace(message.Status))
-                {
-                    _logger.LogDebug("Docker pull: {Status}", message.Status);
-                }
+                // Progress logging handled by caller if needed
             }),
             ct);
     }
