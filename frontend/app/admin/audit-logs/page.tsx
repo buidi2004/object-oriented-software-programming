@@ -141,6 +141,7 @@ export default function AdminAuditLogsPage() {
       const res = await api.get('/audit-logs').catch(() => null);
       if (res && Array.isArray(res.data) && res.data.length > 0) {
         setLogs(res.data);
+        localStorage.setItem('admin_audit_logs', JSON.stringify(res.data));
       } else {
         const saved = localStorage.getItem('admin_audit_logs');
         if (saved) {
@@ -161,17 +162,19 @@ export default function AdminAuditLogsPage() {
   };
 
   const handleExportCsv = () => {
-    const csvContent = "data:text/csv;charset=utf-8," 
-      + "ID,Thoi_Gian,Nguoi_Thuc_Hien,Hanh_Dong,Doi_Tuong,Ma_Doi_Tuong,IP_Address\n"
-      + filteredLogs.map(l => `"${l.id}","${l.timestamp}","${l.userEmail || 'System'}","${l.action}","${l.entityName}","${l.entityId}","${l.ipAddress}"`).join("\n");
+    const header = "ID,Thoi_Gian,Nguoi_Thuc_Hien,Hanh_Dong,Doi_Tuong,Ma_Doi_Tuong,IP_Address\n";
+    const rows = filteredLogs.map(l => `"${l.id}","${l.timestamp}","${l.userEmail || 'System'}","${l.action || ''}","${l.entityName || ''}","${l.entityId || ''}","${l.ipAddress || ''}"`).join("\n");
+    const csvContent = "\uFEFF" + header + rows; // Add BOM for Excel UTF-8 compatibility
     
-    const encodedUri = encodeURI(csvContent);
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
+    link.setAttribute("href", url);
     link.setAttribute("download", `audit_logs_${new Date().toISOString().split('T')[0]}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    URL.revokeObjectURL(url);
     showToast('Đã xuất toàn bộ nhật ký kiểm toán ra file CSV!');
   };
 
@@ -184,7 +187,7 @@ export default function AdminAuditLogsPage() {
 
   // Human-readable labels and metadata
   const getActionInfo = (action: string) => {
-    const a = action.toUpperCase();
+    const a = (action || '').toUpperCase();
     if (a.includes('TOPUP') || a.includes('WALLET')) {
       return { 
         label: 'Giao Dịch Ví Tiền', 
@@ -278,11 +281,11 @@ export default function AdminAuditLogsPage() {
       // Search filter
       if (searchTerm.trim()) {
         const term = searchTerm.toLowerCase();
-        const matchEmail = log.userEmail?.toLowerCase().includes(term);
-        const matchAction = log.action.toLowerCase().includes(term);
-        const matchEntity = log.entityName.toLowerCase().includes(term);
-        const matchEntityId = log.entityId.toLowerCase().includes(term);
-        const matchIp = log.ipAddress.toLowerCase().includes(term);
+        const matchEmail = (log.userEmail || '').toLowerCase().includes(term);
+        const matchAction = (log.action || '').toLowerCase().includes(term);
+        const matchEntity = (log.entityName || '').toLowerCase().includes(term);
+        const matchEntityId = (log.entityId || '').toLowerCase().includes(term);
+        const matchIp = (log.ipAddress || '').toLowerCase().includes(term);
         return matchEmail || matchAction || matchEntity || matchEntityId || matchIp;
       }
 
