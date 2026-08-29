@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   async rewrites() {
-    const backendUrl = process.env.BACKEND_URL || (process.env.NODE_ENV === 'production' ? 'https://buivandihhhh.duckdns.org' : 'http://localhost:5053');
+    const backendUrl = process.env.BACKEND_URL || (process.env.NODE_ENV === 'production' ? 'http://103.145.63.12:5053' : 'http://localhost:5053');
     return [
       {
         source: '/api/:path*',

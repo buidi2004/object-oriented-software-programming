@@ -341,14 +341,11 @@ public class GmailEmailService : IEmailService
                     
                     <!-- Header with Lotus Flower Logo -->
                     <tr>
-                        <td style='background: #0f172a; padding: 28px 32px; border-radius: 16px 16px 0 0; text-align: center; border-bottom: 2px solid #1e293b;'>
+                        <td style='background: #ffffff; padding: 28px 32px; border-radius: 16px 16px 0 0; text-align: center; border-bottom: 1px solid #e2e8f0;'>
                             <div style='margin-bottom: 6px;'>
-                                <span style='font-size: 28px; vertical-align: middle; display: inline-block; margin-right: 8px;'>🪷</span>
-                                <span style='color: #ffffff; font-size: 22px; font-weight: 800; vertical-align: middle; letter-spacing: -0.5px;'>
-                                    SEN CloudHost <span style='color: #38bdf8;'>VN</span>
-                                </span>
+                                <img src='{_frontendBaseUrl}/images/logo.png' alt='SEN CloudHost VN' style='height: 48px; width: auto; max-width: 100%; object-fit: contain;' />
                             </div>
-                            <p style='margin: 0; color: #94a3b8; font-size: 11px; font-weight: 600; letter-spacing: 0.8px;'>
+                            <p style='margin: 0; color: #64748b; font-size: 11px; font-weight: 600; letter-spacing: 0.8px;'>
                                 NỀN TẢNG ĐIỆN TOÁN ĐÁM MÂY CHUẨN DOANH NGHIỆP
                             </p>
                         </td>
