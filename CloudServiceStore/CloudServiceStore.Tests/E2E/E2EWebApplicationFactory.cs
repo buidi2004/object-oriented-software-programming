@@ -36,12 +36,20 @@ public class E2EWebApplicationFactory : WebApplicationFactory<Program>, IAsyncLi
             config.AddInMemoryCollection(new System.Collections.Generic.Dictionary<string, string?>
             {
                 { "ConnectionStrings:DefaultConnection", _dbContainer.GetConnectionString() },
-                { "Cache:Enabled", "false" }
+                { "Cache:Enabled", "false" },
+                { "Kafka:Enabled", "false" },
+                { "RabbitMQ:Enabled", "false" }
             });
         });
 
         builder.ConfigureServices(services =>
         {
+            var hostedServices = services.Where(d => d.ServiceType == typeof(Microsoft.Extensions.Hosting.IHostedService)).ToList();
+            foreach (var hostedService in hostedServices)
+            {
+                services.Remove(hostedService);
+            }
+
             var descriptor = services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<AppDbContext>));
             if (descriptor != null)
             {
