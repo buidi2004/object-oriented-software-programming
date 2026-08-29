@@ -80,11 +80,15 @@ public class DockerResourceChecker
 
             if (estimatedFreeMemory < requiredMemoryBytes + MinFreeMemoryBytes)
             {
-                throw new BadRequestException(
-                    $"Server không đủ RAM để tạo dịch vụ mới. " +
-                    $"Cần tối thiểu {(requiredMemoryBytes + MinFreeMemoryBytes) / (1024 * 1024)}MB RAM trống, " +
-                    $"hiện chỉ còn khoảng {estimatedFreeMemory / (1024 * 1024)}MB. " +
-                    "Vui lòng xóa bớt dịch vụ không dùng hoặc nâng cấp server.");
+                _logger.LogWarning(
+                    "Server có thể không đủ RAM để tạo dịch vụ mới. " +
+                    "Cần tối thiểu {RequiredMB}MB RAM trống, hiện chỉ còn khoảng {FreeMB}MB. " +
+                    "Tuy nhiên, sẽ tiếp tục thử tạo...",
+                    (requiredMemoryBytes + MinFreeMemoryBytes) / (1024 * 1024),
+                    estimatedFreeMemory / (1024 * 1024));
+                
+                // Demo purpose: DO NOT block VPS creation on low-RAM hosts.
+                // throw new BadRequestException(...);
             }
 
             // Check disk via Docker system info
