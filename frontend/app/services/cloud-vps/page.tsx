@@ -19,6 +19,8 @@ import { FaWindows } from 'react-icons/fa6';
 import { useCartStore } from '@/src/store/useCartStore';
 import { api } from '@/src/lib/api';
 import ProductServiceReviews from '@/src/components/ProductServiceReviews';
+import { ScrollReveal, StaggerContainer, StaggerItem } from '@/src/components/animations/ScrollReveal';
+import { ParallaxImage } from '@/src/components/animations/ParallaxImage';
 
 // VPS Presets Data for 1-Click Fast Loading
 
@@ -137,7 +139,7 @@ export default function CloudVpsServicePage() {
       {/* 1. HERO SECTION & TELEMETRY BLUEPRINT */}
       <section className="relative pt-12 pb-20 overflow-hidden border-b border-slate-200/80 bg-[radial-gradient(ellipse_80%_60%_at_50%_-20%,rgba(37,99,235,0.18),rgba(255,255,255,0))]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          
+          <ScrollReveal animation="fade">
           {/* Breadcrumb */}
           <nav className="flex items-center gap-2 text-xs font-mono text-slate-600 mb-8">
             <Link href="/" className="hover:text-slate-200 transition-colors">HOME</Link>
@@ -189,12 +191,21 @@ export default function CloudVpsServicePage() {
               </a>
             </div>
           </div>
-
+          </ScrollReveal>
         </div>
       </section>
 
+      {/* PARALLAX SEPARATOR */}
+      <ParallaxImage 
+        src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=2000&auto=format&fit=crop" 
+        alt="Data center server racks" 
+        height="300px" 
+        overlay={true} 
+      />
+
       {/* 2. SIGNATURE INTERACTIVE ELEMENT: CLOUD VPS CONFIGURATOR & LIFECYCLE ENGINE */}
       <section id="vps-configurator" className="py-20 bg-white border-b border-slate-200">
+        <ScrollReveal animation="slide-up">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="text-center max-w-3xl mx-auto mb-14">
@@ -645,6 +656,7 @@ export default function CloudVpsServicePage() {
           </div>
 
         </div>
+        </ScrollReveal>
       </section>
 
       {/* 3. SIX CORE ARCHITECTURE CAPABILITIES (SINGLE SOURCE OF TRUTH) */}
@@ -664,10 +676,10 @@ export default function CloudVpsServicePage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             
             {/* Card 1: AMD EPYC Zen 4 */}
-            <div className="p-7 rounded-lg bg-white border border-slate-200 flex flex-col justify-between space-y-6">
+            <StaggerItem className="p-7 rounded-2xl bg-white border border-slate-200 hover:border-blue-400 hover:shadow-xl transition-all flex flex-col justify-between space-y-6">
               <div>
                 <div className="p-4 rounded-md bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
                   <div className="text-[10px] text-slate-600 uppercase mb-3 flex items-center justify-between">
@@ -700,10 +712,10 @@ export default function CloudVpsServicePage() {
                 <span>Clock Speed:</span>
                 <strong className="text-slate-200">3.7GHz Base / 4.4GHz Turbo</strong>
               </div>
-            </div>
+            </StaggerItem>
 
             {/* Card 2: NVMe Gen4 Enterprise */}
-            <div className="p-7 rounded-lg bg-white border border-slate-200 flex flex-col justify-between space-y-6">
+            <StaggerItem className="p-7 rounded-2xl bg-white border border-slate-200 hover:border-emerald-400 hover:shadow-xl transition-all flex flex-col justify-between space-y-6 lg:col-span-2">
               <div>
                 <div className="p-4 rounded-md bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
                   <div className="text-[10px] text-slate-600 uppercase mb-3 flex items-center justify-between">
@@ -736,10 +748,10 @@ export default function CloudVpsServicePage() {
                 <span>Disk Latency:</span>
                 <strong className="text-emerald-400">&lt; 0.05 ms Ultra-low</strong>
               </div>
-            </div>
+            </StaggerItem>
 
             {/* Card 3: Anti-DDoS 500Gbps */}
-            <div className="p-7 rounded-lg bg-white border border-slate-200 flex flex-col justify-between space-y-6">
+            <StaggerItem className="p-7 rounded-2xl bg-white border border-slate-200 hover:border-purple-400 hover:shadow-xl transition-all flex flex-col justify-between space-y-6">
               <div>
                 <div className="p-4 rounded-md bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
                   <div className="text-[10px] text-slate-600 uppercase mb-3 flex items-center justify-between">
@@ -772,10 +784,10 @@ export default function CloudVpsServicePage() {
                 <span>Packet Loss:</span>
                 <strong className="text-purple-400">0.00% Trong Đợt Tấn Công</strong>
               </div>
-            </div>
+            </StaggerItem>
 
             {/* Card 4: Snapshot & Micro-Clone */}
-            <div className="p-7 rounded-lg bg-white border border-slate-200 flex flex-col justify-between space-y-6">
+            <StaggerItem className="p-7 rounded-2xl bg-white border border-slate-200 hover:border-blue-400 hover:shadow-xl transition-all flex flex-col justify-between space-y-6">
               <div>
                 <div className="p-4 rounded-md bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
                   <div className="text-[10px] text-slate-600 uppercase mb-3 flex items-center justify-between">
@@ -808,10 +820,10 @@ export default function CloudVpsServicePage() {
                 <span>Snapshot Creation:</span>
                 <strong className="text-slate-200">&lt; 3s Không Cần Tắt Máy</strong>
               </div>
-            </div>
+            </StaggerItem>
 
             {/* Card 5: Hot-Resize & Dynamic Scaling */}
-            <div className="p-7 rounded-lg bg-white border border-slate-200 flex flex-col justify-between space-y-6">
+            <StaggerItem className="p-7 rounded-2xl bg-white border border-slate-200 hover:border-amber-400 hover:shadow-xl transition-all flex flex-col justify-between space-y-6">
               <div>
                 <div className="p-4 rounded-md bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
                   <div className="text-[10px] text-slate-600 uppercase mb-3 flex items-center justify-between">
@@ -844,10 +856,10 @@ export default function CloudVpsServicePage() {
                 <span>Scaling Speed:</span>
                 <strong className="text-amber-400">&lt; 10 Giây Hoàn Tất</strong>
               </div>
-            </div>
+            </StaggerItem>
 
             {/* Card 6: Tier-III Datacenter & SLA */}
-            <div className="p-7 rounded-lg bg-white border border-slate-200 flex flex-col justify-between space-y-6">
+            <StaggerItem className="p-7 rounded-2xl bg-white border border-slate-200 hover:border-cyan-400 hover:shadow-xl transition-all flex flex-col justify-between space-y-6 lg:col-span-2">
               <div>
                 <div className="p-4 rounded-md bg-slate-100 border border-slate-200 mb-6 font-mono text-xs">
                   <div className="text-[10px] text-slate-600 uppercase mb-3 flex items-center justify-between">
@@ -880,9 +892,9 @@ export default function CloudVpsServicePage() {
                 <span>Availability SLA:</span>
                 <strong className="text-emerald-400">99.99% Cam Kết Hợp Đồng</strong>
               </div>
-            </div>
+            </StaggerItem>
 
-          </div>
+          </StaggerContainer>
 
         </div>
       </section>
@@ -904,7 +916,7 @@ export default function CloudVpsServicePage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 font-mono">
+          <StaggerContainer staggerDelay={0.05} className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 font-mono">
             {[
               { name: 'Docker', desc: 'Container Engine', icon: SiDocker, color: '#2496ED' },
               { name: 'Kubernetes', desc: 'Cluster K8s', icon: SiKubernetes, color: '#326CE5' },
@@ -921,8 +933,9 @@ export default function CloudVpsServicePage() {
             ].map((app, i) => {
               const AppIcon = app.icon;
               return (
-                <div
+                <StaggerItem
                   key={i}
+                  animation="zoom-in"
                   className="p-5 rounded-md bg-white border border-slate-200 hover:border-slate-400 transition-all flex flex-col items-center text-center group"
                 >
                   <div className="w-12 h-12 rounded bg-slate-100 border border-slate-200 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
@@ -930,10 +943,10 @@ export default function CloudVpsServicePage() {
                   </div>
                   <div className="text-xs font-bold text-slate-900 group-hover:text-black transition-colors">{app.name}</div>
                   <div className="text-[10px] text-slate-600 mt-0.5">{app.desc}</div>
-                </div>
+                </StaggerItem>
               );
             })}
-          </div>
+          </StaggerContainer>
 
         </div>
       </section>

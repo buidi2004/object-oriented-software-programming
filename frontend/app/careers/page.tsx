@@ -2,13 +2,16 @@
 
 import React, { useState, useRef } from 'react';
 import Link from 'next/link';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Briefcase, Send, CheckCircle2, Clock, FileText, Upload, 
   Search, AlertCircle, ArrowRight, Sparkles, Building2, 
   ShieldCheck, Zap, DollarSign, Calendar, User, Mail, Phone, 
-  ExternalLink, Eye, ChevronRight, Check, X, Award, Laptop
+  ExternalLink, Eye, ChevronRight, Check, X, Award, Laptop, Terminal
 } from 'lucide-react';
 import { api } from '@/src/lib/api';
+import { TypewriterText } from '@/src/components/animations/TypewriterText';
+import { ScrollReveal, StaggerContainer, StaggerItem } from '@/src/components/animations/ScrollReveal';
 
 interface JobPosition {
   id: string;
@@ -112,7 +115,7 @@ const JOB_POSITIONS: JobPosition[] = [
   },
   {
     id: 'b2b-sales',
-    title: 'Chuyên Viên Tư Vấn Giải Pháp Đám Mây Doanh Nghiệp (B2B Solution)',
+    title: 'Chuyên Viên Tư Vấn Giải Pháp Đám Mây Doanh Nghiệp (B2B)',
     department: 'Khối Kinh Doanh & Phát Triển Thị Trường',
     salary: '18.000.000 - 45.000.000 đ (Lương cứng + Hoa hồng)',
     location: 'Hà Nội / TP.HCM',
@@ -250,7 +253,7 @@ export default function CareersPage() {
         setTrackError('Không tìm thấy hồ sơ ứng tuyển nào khớp với mã hoặc email này.');
       }
     } catch (err: any) {
-      setTrackError('Không tìm thấy hồ sơ ứng tuyển. Vui lòng kiểm tra lại mã hồ sơ (vd: APP-1234) hoặc email đã nộp.');
+      setTrackError('Không tìm thấy hồ sơ. Vui lòng kiểm tra lại mã (vd: APP-1234) hoặc email.');
     } finally {
       setTrackLoading(false);
     }
@@ -262,639 +265,602 @@ export default function CareersPage() {
       case 2: return 2; // Reviewing
       case 3: return 3; // Interviewing
       case 4: return 4; // Accepted
-      case 5: return 4; // Rejected (Step 4 final)
+      case 5: return 4; // Rejected
       default: return 1;
     }
   };
 
   return (
-    <div className="min-h-screen bg-zinc-50 font-sans text-zinc-900 selection:bg-black selection:text-white">
+    <div className="min-h-screen bg-[#09090b] font-sans text-white selection:bg-emerald-500 selection:text-white">
       
-      {/* 1. HERO RECRUITMENT BANNER - MONOCHROME DARK */}
-      <section className="bg-[#121212] text-white py-16 px-4 sm:px-6 lg:px-8 border-b border-zinc-800 relative">
-        <div className="max-w-4xl mx-auto text-center space-y-6">
-          
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-zinc-800 text-zinc-300 text-xs font-mono border border-zinc-700">
-            <Briefcase className="w-3.5 h-3.5" />
-            <span>CAREERS &amp; TALENT RECRUITMENT</span>
-          </div>
+      {/* 1. CYBER HERO BANNER */}
+      <section className="relative pt-32 pb-24 overflow-hidden border-b border-white/10 px-4 sm:px-6 lg:px-8">
+        {/* Animated Cyber Grid Background */}
+        <div className="absolute inset-0 z-0 opacity-20">
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_50%,#000_70%,transparent_100%)]"></div>
+        </div>
+        <div className="absolute top-0 inset-x-0 h-40 bg-gradient-to-b from-emerald-500/20 to-transparent blur-3xl opacity-50 z-0"></div>
 
-          <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-white leading-tight">
-            Gia Nhập Đội Ngũ Kỹ Sư &amp; Chuyên Gia Điện Toán Đám Mây
+        <div className="relative z-10 max-w-5xl mx-auto text-center space-y-8">
+          <motion.div 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-black border border-emerald-500/30 text-emerald-400 text-xs font-mono shadow-[0_0_15px_rgba(16,185,129,0.2)]"
+          >
+            <Terminal className="w-4 h-4" />
+            <TypewriterText text="> RUN: RECRUITMENT_PROTOCOL.exe" speed={30} delay={0.2} />
+          </motion.div>
+
+          <h1 className="text-4xl sm:text-6xl md:text-7xl font-black tracking-tighter text-white leading-[1.1]">
+            GIA NHẬP ĐỘI NGŨ <br/>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-emerald-600">
+               <TypewriterText text="KỸ SƯ ĐÁM Mây." speed={50} delay={1.5} />
+            </span>
           </h1>
 
-          <p className="text-zinc-400 text-xs sm:text-sm max-w-2xl mx-auto font-normal leading-relaxed">
-            Cùng chúng tôi kiến tạo hạ tầng đám mây tốc độ cao, bảo mật và ổn định cho hàng triệu người dùng. Đãi ngộ xứng tầm, môi trường khai phóng và thử thách công nghệ đỉnh cao.
+          <p className="text-zinc-400 text-sm md:text-base max-w-2xl mx-auto font-medium leading-relaxed">
+            <TypewriterText text="Kiến tạo hạ tầng đám mây tốc độ cao, bảo mật và ổn định cho hàng triệu người dùng. Đãi ngộ xứng tầm, môi trường khai phóng và thử thách công nghệ đỉnh cao." speed={15} delay={3} />
           </p>
 
-          {/* Tab Switcher - Monochromatic */}
-          <div className="flex items-center justify-center gap-3 pt-4">
+          {/* Cyber Tab Switcher */}
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 5, duration: 0.5 }}
+            className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-8"
+          >
             <button
               onClick={() => setActiveTab('jobs')}
-              className={`px-5 py-2.5 rounded-xl font-bold text-xs transition-all flex items-center gap-2 cursor-pointer ${
+              className={`px-8 py-4 rounded-xl font-black text-sm transition-all flex items-center gap-2 relative overflow-hidden group ${
                 activeTab === 'jobs'
-                  ? 'bg-white text-black shadow-lg'
-                  : 'bg-zinc-800 hover:bg-zinc-700 text-zinc-300 border border-zinc-700'
+                  ? 'bg-emerald-500 text-black shadow-[0_0_30px_rgba(16,185,129,0.3)] border-emerald-400'
+                  : 'bg-black hover:bg-zinc-900 text-zinc-300 border border-zinc-800'
               }`}
             >
-              <Briefcase className="w-4 h-4" />
-              <span>Vị Trí Đang Tuyển ({JOB_POSITIONS.length})</span>
+              <Briefcase className="w-5 h-5 relative z-10" />
+              <span className="relative z-10">Vị Trí Đang Tuyển</span>
             </button>
 
             <button
               onClick={() => setActiveTab('track')}
-              className={`px-5 py-2.5 rounded-xl font-bold text-xs transition-all flex items-center gap-2 cursor-pointer ${
+              className={`px-8 py-4 rounded-xl font-black text-sm transition-all flex items-center gap-2 relative overflow-hidden ${
                 activeTab === 'track'
-                  ? 'bg-white text-black shadow-lg'
-                  : 'bg-zinc-800 hover:bg-zinc-700 text-zinc-300 border border-zinc-700'
+                  ? 'bg-emerald-500 text-black shadow-[0_0_30px_rgba(16,185,129,0.3)] border-emerald-400'
+                  : 'bg-black hover:bg-zinc-900 text-zinc-300 border border-zinc-800'
               }`}
             >
-              <Search className="w-4 h-4" />
-              <span>Tra Cứu Tiến Độ 4 Bước</span>
+              <Search className="w-5 h-5 relative z-10" />
+              <span className="relative z-10">Tra Cứu Hồ Sơ</span>
             </button>
-          </div>
-
+          </motion.div>
         </div>
       </section>
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 space-y-24 relative z-10">
         
         {/* ================= TAB 1: JOB OPENINGS & APPLICATION FORM ================= */}
         {activeTab === 'jobs' && (
-          <>
-            {/* Culture & Benefits Highlights - Monochrome */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              <div className="bg-white p-5 rounded-2xl border border-zinc-200 shadow-2xs space-y-2">
-                <div className="w-10 h-10 rounded-xl bg-zinc-100 text-black flex items-center justify-center font-bold">
-                  <DollarSign className="w-5 h-5" />
-                </div>
-                <div className="text-sm font-black text-black">Thu Nhập Hấp Dẫn</div>
-                <p className="text-xs text-zinc-500 leading-relaxed font-normal">Lương Net cạnh tranh + Thưởng tháng 13, 14 &amp; thưởng dự án theo quý.</p>
-              </div>
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="space-y-24"
+          >
+            
+            {/* 2. BENTO GRID BENEFITS */}
+            <section className="space-y-12">
+               <ScrollReveal animation="fade" className="text-center">
+                  <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tight text-white">Đãi ngộ <span className="text-emerald-400">Đặc Quyền</span></h2>
+                  <p className="text-zinc-500 mt-4 font-mono text-sm">Beyond standard benefits. We care about your growth.</p>
+               </ScrollReveal>
 
-              <div className="bg-white p-5 rounded-2xl border border-zinc-200 shadow-2xs space-y-2">
-                <div className="w-10 h-10 rounded-xl bg-zinc-100 text-black flex items-center justify-center font-bold">
-                  <Laptop className="w-5 h-5" />
-                </div>
-                <div className="text-sm font-black text-black">Thiết Bị Đỉnh Cao</div>
-                <p className="text-xs text-zinc-500 leading-relaxed font-normal">Cấp mới Macbook Pro M3/M4 hoặc Dell Workstation màn hình 4K.</p>
-              </div>
+               <StaggerContainer className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[250px]">
+                  {/* Large Card */}
+                  <StaggerItem className="md:col-span-2 relative rounded-3xl overflow-hidden bg-gradient-to-br from-zinc-900 to-black border border-white/10 p-8 flex flex-col justify-between group hover:border-emerald-500/50 transition-colors">
+                     <div className="absolute right-0 bottom-0 opacity-10 group-hover:opacity-30 group-hover:scale-110 transition-all duration-700">
+                        <DollarSign className="w-64 h-64 text-emerald-500" />
+                     </div>
+                     <div className="w-14 h-14 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold mb-4 backdrop-blur-md">
+                        <DollarSign className="w-7 h-7" />
+                     </div>
+                     <div className="relative z-10">
+                        <h3 className="text-2xl font-black text-white mb-2 uppercase tracking-wide">Thu Nhập Không Giới Hạn</h3>
+                        <p className="text-zinc-400 leading-relaxed">Lương Net cạnh tranh thị trường. Thưởng tháng 13, 14 &amp; thưởng dự án theo quý. Đặc biệt có chính sách cấp Cổ phần ESOP cho Key Members.</p>
+                     </div>
+                  </StaggerItem>
 
-              <div className="bg-white p-5 rounded-2xl border border-zinc-200 shadow-2xs space-y-2">
-                <div className="w-10 h-10 rounded-xl bg-zinc-100 text-black flex items-center justify-center font-bold">
-                  <Award className="w-5 h-5" />
-                </div>
-                <div className="text-sm font-black text-black">Chứng Chỉ Quốc Tế</div>
-                <p className="text-xs text-zinc-500 leading-relaxed font-normal">Tài trợ 100% học &amp; thi chứng chỉ CKA, RHCE, OSCP, AWS Architect.</p>
-              </div>
-
-              <div className="bg-white p-5 rounded-2xl border border-zinc-200 shadow-2xs space-y-2">
-                <div className="w-10 h-10 rounded-xl bg-zinc-100 text-black flex items-center justify-center font-bold">
-                  <ShieldCheck className="w-5 h-5" />
-                </div>
-                <div className="text-sm font-black text-black">Chăm Sóc Toàn Diện</div>
-                <p className="text-xs text-zinc-500 leading-relaxed font-normal">Bảo hiểm PVI Care VIP, khám sức khỏe tại Vinmec, Teambuilding 5 sao.</p>
-              </div>
-            </div>
-
-            {/* Job Openings List */}
-            <div className="space-y-6">
-              <div className="border-b border-zinc-200 pb-3">
-                <h2 className="text-xl font-black text-black flex items-center gap-2">
-                  <Briefcase className="w-5 h-5 text-black" />
-                  <span>Vị Trí Tuyển Dụng Nổi Bật ({JOB_POSITIONS.length})</span>
-                </h2>
-                <p className="text-xs text-zinc-500 mt-0.5">Chọn vị trí phù hợp với năng lực của bạn để nộp hồ sơ trực tuyến</p>
-              </div>
-
-              <div className="space-y-4">
-                {JOB_POSITIONS.map((job) => (
-                  <div 
-                    key={job.id}
-                    className="bg-white rounded-2xl border border-zinc-200 p-6 sm:p-7 shadow-2xs hover:shadow-md hover:border-black transition-all space-y-5"
-                  >
-                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                      <div>
-                        <div className="flex flex-wrap items-center gap-2 mb-2">
-                          <span className="text-[11px] font-bold text-black bg-zinc-100 px-2.5 py-0.5 rounded-md border border-zinc-300">
-                            {job.department}
-                          </span>
-                          <span className="text-[11px] font-mono text-zinc-600 bg-zinc-100 px-2.5 py-0.5 rounded-md">
-                            {job.type}
-                          </span>
-                          <span className="text-[11px] font-mono text-zinc-600 bg-zinc-100 px-2.5 py-0.5 rounded-md">
-                            {job.location}
-                          </span>
+                  {/* Tall Card */}
+                  <StaggerItem className="md:col-span-1 md:row-span-2 relative rounded-3xl overflow-hidden bg-zinc-900 border border-white/10 p-8 flex flex-col group hover:border-emerald-500/50 transition-colors">
+                     <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-100 group-hover:animate-pulse transition-all duration-500 text-emerald-500">
+                        <Laptop className="w-32 h-32" />
+                     </div>
+                     <div className="mt-auto relative z-10">
+                        <div className="w-14 h-14 rounded-2xl bg-zinc-800 text-white flex items-center justify-center font-bold mb-6 group-hover:bg-emerald-500 group-hover:text-black transition-colors">
+                           <Laptop className="w-7 h-7" />
                         </div>
-                        <h3 className="text-lg font-black text-black">{job.title}</h3>
-                        <p className="text-xs text-zinc-600 mt-1 font-normal leading-relaxed">{job.description}</p>
-                      </div>
+                        <h3 className="text-2xl font-black text-white mb-3 uppercase tracking-wide">Vũ Khí Sắc Bén</h3>
+                        <p className="text-zinc-400 leading-relaxed">Cấp mới Macbook Pro M3 Max / Dell Workstation & màn hình 4K cho toàn bộ kỹ sư. Môi trường làm việc thoải mái, ghế công thái học Herman Miller.</p>
+                     </div>
+                  </StaggerItem>
 
-                      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 shrink-0">
-                        <div className="text-left sm:text-right">
-                          <div className="text-sm font-black text-black font-mono">{job.salary}</div>
-                          <div className="text-[11px] text-zinc-400 font-mono">{job.experience}</div>
+                  {/* Standard Card 1 */}
+                  <StaggerItem className="md:col-span-1 relative rounded-3xl overflow-hidden bg-zinc-900 border border-white/10 p-8 flex flex-col group hover:border-emerald-500/50 transition-colors">
+                     <div className="w-12 h-12 rounded-xl bg-zinc-800 text-white flex items-center justify-center font-bold mb-4 group-hover:bg-emerald-500 group-hover:text-black transition-colors">
+                        <Award className="w-6 h-6" />
+                     </div>
+                     <h3 className="text-xl font-black text-white mb-2 uppercase">Chứng Chỉ Quốc Tế</h3>
+                     <p className="text-sm text-zinc-400 leading-relaxed">Tài trợ 100% học & thi chứng chỉ CKA, RHCE, OSCP, AWS Architect.</p>
+                  </StaggerItem>
+
+                  {/* Standard Card 2 */}
+                  <StaggerItem className="md:col-span-1 relative rounded-3xl overflow-hidden bg-zinc-900 border border-white/10 p-8 flex flex-col group hover:border-emerald-500/50 transition-colors">
+                     <div className="w-12 h-12 rounded-xl bg-zinc-800 text-white flex items-center justify-center font-bold mb-4 group-hover:bg-emerald-500 group-hover:text-black transition-colors">
+                        <ShieldCheck className="w-6 h-6" />
+                     </div>
+                     <h3 className="text-xl font-black text-white mb-2 uppercase">Chăm Sóc Hàng Đầu</h3>
+                     <p className="text-sm text-zinc-400 leading-relaxed">Bảo hiểm PVI Care VIP, khám sức khỏe tại Vinmec, Teambuilding chuẩn 5 sao.</p>
+                  </StaggerItem>
+               </StaggerContainer>
+            </section>
+
+            {/* 3. INTERACTIVE JOB LISTINGS */}
+            <section className="space-y-10">
+               <ScrollReveal animation="slide-up" className="flex flex-col md:flex-row md:items-end justify-between border-b border-white/10 pb-6">
+                  <div>
+                     <h2 className="text-3xl font-black text-white flex items-center gap-3 uppercase">
+                        <Terminal className="w-8 h-8 text-emerald-500" />
+                        <span>Mở Khóa Sự Nghiệp</span>
+                     </h2>
+                     <p className="text-zinc-500 mt-2 font-mono text-sm">Select a role to initiate recruitment protocol.</p>
+                  </div>
+                  <div className="text-2xl font-black text-emerald-500 font-mono mt-4 md:mt-0">
+                     [{JOB_POSITIONS.length} OPENINGS]
+                  </div>
+               </ScrollReveal>
+
+               <div className="space-y-6">
+                  {JOB_POSITIONS.map((job, idx) => (
+                     <ScrollReveal 
+                        key={job.id} 
+                        animation={idx % 2 === 0 ? "slide-right" : "slide-left"}
+                     >
+                        <div className="group bg-[#111] rounded-3xl border border-white/10 p-8 shadow-2xl hover:border-emerald-500/50 transition-all duration-500 relative overflow-hidden">
+                           {/* Hover Glow Background */}
+                           <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/0 via-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 translate-x-[-100%] group-hover:translate-x-[100%]"></div>
+                           
+                           <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 relative z-10">
+                              <div className="flex-1">
+                                 <div className="flex flex-wrap items-center gap-3 mb-4">
+                                    <span className="text-[10px] font-black uppercase tracking-wider text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
+                                       {job.department}
+                                    </span>
+                                    <span className="text-[10px] font-mono text-zinc-400 bg-white/5 px-3 py-1 rounded-full border border-white/5">
+                                       {job.type}
+                                    </span>
+                                    <span className="text-[10px] font-mono text-zinc-400 bg-white/5 px-3 py-1 rounded-full border border-white/5">
+                                       {job.location}
+                                    </span>
+                                 </div>
+                                 <h3 className="text-2xl md:text-3xl font-black text-white group-hover:text-emerald-400 transition-colors mb-3">
+                                    {job.title}
+                                 </h3>
+                                 <p className="text-zinc-400 text-sm leading-relaxed">{job.description}</p>
+                              </div>
+
+                              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 shrink-0 md:border-l md:border-white/10 md:pl-8">
+                                 <div className="text-left md:text-right">
+                                    <div className="text-emerald-400 font-black text-xl tracking-tight">{job.salary}</div>
+                                    <div className="text-[11px] text-zinc-500 font-mono mt-1 uppercase tracking-widest">{job.experience}</div>
+                                 </div>
+
+                                 <button
+                                    onClick={() => handleSelectJob(job.title)}
+                                    className="px-6 py-3.5 rounded-full bg-white text-black font-black text-xs transition-all flex items-center gap-2 cursor-pointer shrink-0 hover:bg-emerald-500 hover:shadow-[0_0_20px_rgba(16,185,129,0.4)] hover:scale-105"
+                                 >
+                                    <span>Gửi Lệnh Ứng Tuyển</span>
+                                    <ArrowRight className="w-4 h-4" />
+                                 </button>
+                              </div>
+                           </div>
+
+                           {/* Details Accordion style (Visible on hover via CSS for cool effect or just static) */}
+                           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 pt-8 mt-8 border-t border-white/5 text-sm opacity-60 group-hover:opacity-100 transition-opacity duration-300">
+                              <div>
+                                 <h4 className="font-bold text-white mb-3 flex items-center gap-2 uppercase tracking-wide text-xs">
+                                    <Terminal className="w-4 h-4 text-emerald-500" /> Yêu Cầu Chuyên Môn
+                                 </h4>
+                                 <ul className="space-y-2 text-zinc-400 font-mono text-xs">
+                                    {job.requirements.map((req, i) => (
+                                       <li key={i} className="flex items-start gap-2">
+                                          <span className="text-emerald-500 mt-0.5">{'>'}</span> 
+                                          <span className="leading-relaxed">{req}</span>
+                                       </li>
+                                    ))}
+                                 </ul>
+                              </div>
+
+                              <div>
+                                 <h4 className="font-bold text-white mb-3 flex items-center gap-2 uppercase tracking-wide text-xs">
+                                    <Sparkles className="w-4 h-4 text-emerald-500" /> Đặc Quyền Bổ Sung
+                                 </h4>
+                                 <ul className="space-y-2 text-zinc-400 font-mono text-xs">
+                                    {job.benefits.map((ben, i) => (
+                                       <li key={i} className="flex items-start gap-2">
+                                          <span className="text-emerald-500 mt-0.5">{'>'}</span> 
+                                          <span className="leading-relaxed">{ben}</span>
+                                       </li>
+                                    ))}
+                                 </ul>
+                              </div>
+                           </div>
                         </div>
+                     </ScrollReveal>
+                  ))}
+               </div>
+            </section>
 
-                        <button
-                          onClick={() => handleSelectJob(job.title)}
-                          className="px-5 py-2.5 rounded-xl bg-black hover:bg-zinc-800 text-white font-bold text-xs transition-all shadow-xs flex items-center gap-2 cursor-pointer shrink-0"
-                        >
-                          <span>Ứng Tuyển Ngay</span>
-                          <ArrowRight className="w-3.5 h-3.5" />
-                        </button>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-zinc-100 text-xs">
-                      <div>
-                        <h4 className="font-bold text-black mb-2 flex items-center gap-1.5">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-black" /> Yêu Cầu Chuyên Môn:
-                        </h4>
-                        <ul className="space-y-1 text-zinc-600 pl-5 list-disc font-normal">
-                          {job.requirements.map((req, i) => (
-                            <li key={i} className="leading-relaxed">{req}</li>
-                          ))}
-                        </ul>
-                      </div>
-
-                      <div>
-                        <h4 className="font-bold text-black mb-2 flex items-center gap-1.5">
-                          <Sparkles className="w-3.5 h-3.5 text-black" /> Quyền Lợi &amp; Đãi Ngộ:
-                        </h4>
-                        <ul className="space-y-1 text-zinc-600 pl-5 list-disc font-normal">
-                          {job.benefits.map((ben, i) => (
-                            <li key={i} className="leading-relaxed">{ben}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Application Form Section */}
-            <div id="apply-form-section" className="bg-white rounded-3xl border border-zinc-200 p-6 sm:p-10 shadow-2xs space-y-8 scroll-mt-20">
-              <div className="border-b border-zinc-100 pb-4">
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-zinc-100 text-black text-xs font-bold mb-2 border border-zinc-300">
-                  <Send className="w-3.5 h-3.5" />
-                  <span>FORM NỘP HỒ SƠ ỨNG TUYỂN TRỰC TUYẾN</span>
-                </div>
-                <h2 className="text-2xl font-black text-black">Gửi Hồ Sơ &amp; CV Của Bạn</h2>
-                <p className="text-xs text-zinc-500 mt-1">
-                  Điền thông tin và tải lên file CV (PDF/Word). Ban Tuyển Dụng sẽ gửi email xác nhận và cập nhật tiến trình 4 bước ngay sau khi tiếp nhận.
-                </p>
-              </div>
-
-              {applicationSuccess && (
-                <div className="p-6 rounded-2xl bg-zinc-900 text-white space-y-3 animate-in zoom-in-95 border border-zinc-800">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-6 h-6 text-white shrink-0" />
-                    <h3 className="text-base font-black">Nộp Hồ Sơ Thành Công!</h3>
-                  </div>
-                  <p className="text-xs text-zinc-300 leading-relaxed font-normal">
-                    Chúc mừng bạn <strong>{applicationSuccess.candidateName}</strong>! Hồ sơ ứng tuyển vị trí <strong>{applicationSuccess.jobPosition}</strong> đã được lưu trữ an toàn trên hệ thống tuyển dụng.
-                  </p>
-                  <div className="p-3 bg-zinc-800 rounded-xl border border-zinc-700 flex items-center justify-between">
-                    <div>
-                      <span className="text-[11px] text-zinc-400">Mã tra cứu hồ sơ:</span>
-                      <div className="text-base font-mono font-black text-white">{applicationSuccess.code}</div>
-                    </div>
-                    <button
-                      onClick={() => {
-                        setTrackQuery(applicationSuccess.code);
-                        setActiveTab('track');
-                      }}
-                      className="px-4 py-2 bg-white hover:bg-zinc-200 text-black font-bold text-xs rounded-lg transition-colors flex items-center gap-1.5 cursor-pointer"
-                    >
-                      <Search className="w-3.5 h-3.5" />
-                      <span>Xem Tiến Độ 4 Bước Ngay</span>
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              {errorMessage && (
-                <div className="p-4 rounded-xl bg-zinc-100 border border-zinc-300 text-black text-xs font-bold flex items-center gap-2">
-                  <AlertCircle className="w-4 h-4 text-black shrink-0" />
-                  <span>{errorMessage}</span>
-                </div>
-              )}
-
-              <form onSubmit={handleSubmitApplication} className="space-y-6">
-                
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-bold text-zinc-700 mb-1">Vị Trí Ứng Tuyển *</label>
-                    <select
-                      value={selectedJob}
-                      onChange={(e) => setSelectedJob(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl bg-zinc-50 border border-zinc-200 text-xs font-bold text-black focus:outline-none focus:ring-1 focus:ring-black focus:border-black"
-                    >
-                      {JOB_POSITIONS.map((j) => (
-                        <option key={j.id} value={j.title}>{j.title}</option>
-                      ))}
-                      <option value="Khác (General Talent Pool)">Ứng Tuyển Vị Trí Khác (General Talent Pool)</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold text-zinc-700 mb-1">Họ Và Tên Của Bạn *</label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="Ví dụ: Nguyễn Văn Hùng"
-                      value={candidateName}
-                      onChange={(e) => setCandidateName(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl bg-zinc-50 border border-zinc-200 text-xs font-bold text-black focus:outline-none focus:ring-1 focus:ring-black focus:border-black"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <div>
-                    <label className="block text-xs font-bold text-zinc-700 mb-1">Email Liên Hệ *</label>
-                    <input
-                      type="email"
-                      required
-                      placeholder="email@domain.vn"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl bg-zinc-50 border border-zinc-200 text-xs text-black focus:outline-none focus:ring-1 focus:ring-black focus:border-black"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold text-zinc-700 mb-1">Số Điện Thoại / Zalo *</label>
-                    <input
-                      type="tel"
-                      required
-                      placeholder="0988 888 999"
-                      value={phoneNumber}
-                      onChange={(e) => setPhoneNumber(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl bg-zinc-50 border border-zinc-200 text-xs text-black focus:outline-none focus:ring-1 focus:ring-black focus:border-black"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold text-zinc-700 mb-1">Mức Lương Mong Muốn (Net)</label>
-                    <input
-                      type="text"
-                      placeholder="Ví dụ: 35.000.000 đ hoặc Thỏa thuận"
-                      value={expectedSalary}
-                      onChange={(e) => setExpectedSalary(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl bg-zinc-50 border border-zinc-200 text-xs text-black focus:outline-none focus:ring-1 focus:ring-black focus:border-black"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-bold text-zinc-700 mb-1">Số Năm Kinh Nghiệm</label>
-                    <select
-                      value={experienceLevel}
-                      onChange={(e) => setExperienceLevel(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl bg-zinc-50 border border-zinc-200 text-xs font-bold text-black focus:outline-none focus:ring-1 focus:ring-black focus:border-black"
-                    >
-                      <option value="Dưới 1 năm / Mới tốt nghiệp">Dưới 1 năm / Mới tốt nghiệp</option>
-                      <option value="1 - 2 năm">1 - 2 năm</option>
-                      <option value="2 - 3 năm">2 - 3 năm</option>
-                      <option value="3 - 5 năm">3 - 5 năm (Senior)</option>
-                      <option value="Trên 5 năm (Lead / Expert)">Trên 5 năm (Lead / Expert)</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold text-zinc-700 mb-1">Link Portfolio / GitHub / LinkedIn</label>
-                    <input
-                      type="url"
-                      placeholder="https://github.com/yourname hoặc linkedin.com/in/yourprofile"
-                      value={portfolioUrl}
-                      onChange={(e) => setPortfolioUrl(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl bg-zinc-50 border border-zinc-200 text-xs text-black focus:outline-none focus:ring-1 focus:ring-black focus:border-black"
-                    />
-                  </div>
-                </div>
-
-                {/* Upload CV Box - Monochrome */}
-                <div>
-                  <label className="block text-xs font-bold text-zinc-700 mb-1.5">Tải Lên File CV / Hồ Sơ Của Bạn (PDF / Docx / Zip) *</label>
-                  <input
-                    type="file"
-                    ref={fileInputRef}
-                    onChange={handleFileChange}
-                    accept=".pdf,.doc,.docx,.zip"
-                    className="hidden"
-                  />
+            {/* 4. GLASSMORPHISM APPLICATION FORM */}
+            <ScrollReveal animation="fade">
+               <div id="apply-form-section" className="bg-[#111]/80 backdrop-blur-2xl rounded-3xl border border-white/10 p-8 sm:p-12 shadow-[0_0_50px_rgba(0,0,0,0.5)] space-y-10 scroll-mt-32 relative overflow-hidden">
                   
-                  <div 
-                    onClick={() => fileInputRef.current?.click()}
-                    className={`p-6 rounded-2xl border-2 border-dashed text-center transition-all cursor-pointer ${
-                      cvFile 
-                        ? 'border-black bg-zinc-100' 
-                        : 'border-zinc-300 hover:border-black bg-zinc-50/50 hover:bg-zinc-100'
-                    }`}
-                  >
-                    {cvFile ? (
-                      <div className="flex items-center justify-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-black text-white flex items-center justify-center font-bold">
-                          <FileText className="w-5 h-5" />
+                  {/* Decorative background glow */}
+                  <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/10 rounded-full blur-[100px] pointer-events-none"></div>
+
+                  <div className="border-b border-white/10 pb-6 relative z-10">
+                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-emerald-500/10 text-emerald-400 text-[10px] font-mono mb-4 border border-emerald-500/20 uppercase tracking-widest">
+                        <Send className="w-3.5 h-3.5" />
+                        <span>SECURE SUBMISSION PROTOCOL</span>
+                     </div>
+                     <h2 className="text-3xl md:text-4xl font-black text-white uppercase tracking-tight">Thiết Lập Hồ Sơ Ứng Tuyển</h2>
+                     <p className="text-sm text-zinc-400 mt-2 font-mono">Dữ liệu được mã hóa E2E. Ban tuyển dụng sẽ liên hệ trong vòng 24-48 giờ.</p>
+                  </div>
+
+                  {applicationSuccess && (
+                     <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="p-8 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-white space-y-4 relative z-10">
+                        <div className="flex items-center gap-3">
+                           <CheckCircle2 className="w-8 h-8 text-emerald-400 shrink-0" />
+                           <h3 className="text-xl font-black uppercase text-emerald-400">UPLOAD COMPLETE!</h3>
                         </div>
-                        <div className="text-left">
-                          <div className="text-xs font-bold text-black">{cvFile.name}</div>
-                          <div className="text-[10px] text-zinc-500 font-mono">
-                            {(cvFile.size / (1024 * 1024)).toFixed(2)} MB &bull; Bấm để chọn lại file khác
-                          </div>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="space-y-2">
-                        <div className="w-12 h-12 rounded-2xl bg-zinc-100 text-black flex items-center justify-center mx-auto shadow-2xs">
-                          <Upload className="w-6 h-6" />
-                        </div>
-                        <div className="text-xs font-bold text-black">
-                          Bấm vào đây để chọn tệp CV của bạn từ máy tính / điện thoại
-                        </div>
-                        <p className="text-[11px] text-zinc-400 font-mono">
-                          Định dạng hỗ trợ: PDF, Word (.docx), Zip (Kích thước tối đa 25MB)
+                        <p className="text-sm text-zinc-300 font-mono">
+                           Hồ sơ của <strong>{applicationSuccess.candidateName}</strong> cho vị trí <strong>{applicationSuccess.jobPosition}</strong> đã được đồng bộ vào hệ thống.
                         </p>
-                      </div>
-                    )}
-                  </div>
-                </div>
+                        <div className="p-4 bg-black/50 rounded-xl border border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+                           <div>
+                              <span className="text-[10px] uppercase tracking-widest text-zinc-500">Mã Tra Cứu (Tracking ID):</span>
+                              <div className="text-2xl font-mono font-black text-white mt-1">{applicationSuccess.code}</div>
+                           </div>
+                           <button
+                              onClick={() => {
+                                 setTrackQuery(applicationSuccess.code);
+                                 setActiveTab('track');
+                              }}
+                              className="w-full sm:w-auto px-6 py-3 bg-emerald-500 hover:bg-emerald-400 text-black font-black text-xs rounded-full transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-[0_0_15px_rgba(16,185,129,0.3)]"
+                           >
+                              <Search className="w-4 h-4" />
+                              <span>Tra Cứu Lộ Trình Xét Duyệt</span>
+                           </button>
+                        </div>
+                     </motion.div>
+                  )}
 
-                <div>
-                  <label className="block text-xs font-bold text-zinc-700 mb-1">Giới Thiệu Bản Thân &amp; Dự Án Nổi Bật (Tùy chọn)</label>
-                  <textarea
-                    rows={4}
-                    placeholder="Chia sẻ ngắn về thế mạnh công nghệ, dự án hạ tầng / phần mềm bạn tự hào nhất..."
-                    value={introduction}
-                    onChange={(e) => setIntroduction(e.target.value)}
-                    className="w-full px-4 py-3 rounded-2xl bg-zinc-50 border border-zinc-200 text-xs text-black focus:outline-none focus:ring-1 focus:ring-black focus:border-black leading-relaxed"
-                  />
-                </div>
+                  {errorMessage && (
+                     <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-bold flex items-center gap-2 relative z-10">
+                        <AlertCircle className="w-5 h-5 shrink-0" />
+                        <span>{errorMessage}</span>
+                     </div>
+                  )}
 
-                <div className="flex items-center justify-between pt-2">
-                  <div className="text-[11px] text-zinc-400">
-                    Bảo mật thông tin ứng viên 100% &bull; Cam kết phản hồi trong 1-3 ngày làm việc
-                  </div>
+                  <form onSubmit={handleSubmitApplication} className="space-y-8 relative z-10">
+                     
+                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div className="space-y-2 group">
+                           <label className="block text-[11px] uppercase tracking-widest font-black text-zinc-400 group-focus-within:text-emerald-400 transition-colors">Vị Trí Ứng Tuyển *</label>
+                           <select
+                              value={selectedJob}
+                              onChange={(e) => setSelectedJob(e.target.value)}
+                              className="w-full px-5 py-4 rounded-xl bg-black/50 border border-white/10 text-sm font-bold text-white focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all shadow-inner"
+                           >
+                              {JOB_POSITIONS.map((j) => (
+                                 <option key={j.id} value={j.title}>{j.title}</option>
+                              ))}
+                              <option value="Khác (General Talent Pool)">Ứng Tuyển Vị Trí Khác (General Talent Pool)</option>
+                           </select>
+                        </div>
 
-                  <button
-                    type="submit"
-                    disabled={submitting}
-                    className="px-8 py-3.5 rounded-xl bg-black hover:bg-zinc-800 text-white font-black text-xs transition-all shadow-md flex items-center gap-2 cursor-pointer disabled:opacity-50"
-                  >
-                    {submitting ? (
-                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    ) : (
-                      <Send className="w-4 h-4" />
-                    )}
-                    <span>Gửi Hồ Sơ Ứng Tuyển Ngay</span>
-                  </button>
-                </div>
+                        <div className="space-y-2 group">
+                           <label className="block text-[11px] uppercase tracking-widest font-black text-zinc-400 group-focus-within:text-emerald-400 transition-colors">Họ Tên Đầy Đủ *</label>
+                           <input
+                              type="text"
+                              required
+                              placeholder="Nhập tên của bạn..."
+                              value={candidateName}
+                              onChange={(e) => setCandidateName(e.target.value)}
+                              className="w-full px-5 py-4 rounded-xl bg-black/50 border border-white/10 text-sm font-bold text-white focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all placeholder:text-zinc-600 shadow-inner"
+                           />
+                        </div>
+                     </div>
 
-              </form>
-            </div>
-          </>
+                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div className="space-y-2 group">
+                           <label className="block text-[11px] uppercase tracking-widest font-black text-zinc-400 group-focus-within:text-emerald-400 transition-colors">Email *</label>
+                           <input
+                              type="email"
+                              required
+                              placeholder="email@example.com"
+                              value={email}
+                              onChange={(e) => setEmail(e.target.value)}
+                              className="w-full px-5 py-4 rounded-xl bg-black/50 border border-white/10 text-sm text-white focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all placeholder:text-zinc-600 font-mono"
+                           />
+                        </div>
+
+                        <div className="space-y-2 group">
+                           <label className="block text-[11px] uppercase tracking-widest font-black text-zinc-400 group-focus-within:text-emerald-400 transition-colors">Số Điện Thoại *</label>
+                           <input
+                              type="tel"
+                              required
+                              placeholder="0988..."
+                              value={phoneNumber}
+                              onChange={(e) => setPhoneNumber(e.target.value)}
+                              className="w-full px-5 py-4 rounded-xl bg-black/50 border border-white/10 text-sm text-white focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all placeholder:text-zinc-600 font-mono"
+                           />
+                        </div>
+
+                        <div className="space-y-2 group">
+                           <label className="block text-[11px] uppercase tracking-widest font-black text-zinc-400 group-focus-within:text-emerald-400 transition-colors">Mức Lương (Net)</label>
+                           <input
+                              type="text"
+                              placeholder="Ví dụ: 30.000.000 đ"
+                              value={expectedSalary}
+                              onChange={(e) => setExpectedSalary(e.target.value)}
+                              className="w-full px-5 py-4 rounded-xl bg-black/50 border border-white/10 text-sm text-white focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all placeholder:text-zinc-600 font-mono"
+                           />
+                        </div>
+                     </div>
+
+                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div className="space-y-2 group">
+                           <label className="block text-[11px] uppercase tracking-widest font-black text-zinc-400 group-focus-within:text-emerald-400 transition-colors">Kinh Nghiệm</label>
+                           <select
+                              value={experienceLevel}
+                              onChange={(e) => setExperienceLevel(e.target.value)}
+                              className="w-full px-5 py-4 rounded-xl bg-black/50 border border-white/10 text-sm font-bold text-white focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all font-mono"
+                           >
+                              <option value="Dưới 1 năm / Mới tốt nghiệp">Dưới 1 năm / Fresher</option>
+                              <option value="1 - 2 năm">1 - 2 năm (Junior)</option>
+                              <option value="2 - 3 năm">2 - 3 năm (Middle)</option>
+                              <option value="3 - 5 năm">3 - 5 năm (Senior)</option>
+                              <option value="Trên 5 năm (Lead / Expert)">Trêm 5 năm (Lead / Expert)</option>
+                           </select>
+                        </div>
+
+                        <div className="space-y-2 group">
+                           <label className="block text-[11px] uppercase tracking-widest font-black text-zinc-400 group-focus-within:text-emerald-400 transition-colors">Portfolio / Github / Linkedin</label>
+                           <input
+                              type="url"
+                              placeholder="https://github.com/..."
+                              value={portfolioUrl}
+                              onChange={(e) => setPortfolioUrl(e.target.value)}
+                              className="w-full px-5 py-4 rounded-xl bg-black/50 border border-white/10 text-sm text-white focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all placeholder:text-zinc-600 font-mono"
+                           />
+                        </div>
+                     </div>
+
+                     {/* Upload Area */}
+                     <div className="space-y-2">
+                        <label className="block text-[11px] uppercase tracking-widest font-black text-zinc-400">Tải File CV (PDF / DOCX) *</label>
+                        <input
+                           type="file"
+                           ref={fileInputRef}
+                           onChange={handleFileChange}
+                           accept=".pdf,.doc,.docx,.zip"
+                           className="hidden"
+                        />
+                        <div 
+                           onClick={() => fileInputRef.current?.click()}
+                           className={`w-full p-8 rounded-2xl border-2 border-dashed flex flex-col items-center justify-center gap-4 transition-all cursor-pointer ${
+                              cvFile 
+                                 ? 'border-emerald-500 bg-emerald-500/5' 
+                                 : 'border-white/20 bg-black/30 hover:border-emerald-500/50 hover:bg-black/60'
+                           }`}
+                        >
+                           {cvFile ? (
+                              <>
+                                 <div className="w-16 h-16 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400">
+                                    <FileText className="w-8 h-8" />
+                                 </div>
+                                 <div className="text-center">
+                                    <div className="text-sm font-bold text-white mb-1 font-mono">{cvFile.name}</div>
+                                    <div className="text-xs text-zinc-500 font-mono">{(cvFile.size / (1024 * 1024)).toFixed(2)} MB • Nhấp để thay đổi</div>
+                                 </div>
+                              </>
+                           ) : (
+                              <>
+                                 <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center text-zinc-400">
+                                    <Upload className="w-8 h-8" />
+                                 </div>
+                                 <div className="text-center">
+                                    <div className="text-sm font-bold text-white mb-1">Kéo thả hoặc nhấp để chọn file</div>
+                                    <div className="text-xs text-zinc-500 font-mono">Dung lượng tối đa 25MB (PDF, DOCX)</div>
+                                 </div>
+                              </>
+                           )}
+                        </div>
+                     </div>
+
+                     <div className="space-y-2 group">
+                        <label className="block text-[11px] uppercase tracking-widest font-black text-zinc-400 group-focus-within:text-emerald-400 transition-colors">Cover Letter / Giới Thiệu Ngắn</label>
+                        <textarea
+                           rows={4}
+                           placeholder="Hãy nói ngắn gọn vì sao bạn phù hợp với vị trí này..."
+                           value={introduction}
+                           onChange={(e) => setIntroduction(e.target.value)}
+                           className="w-full px-5 py-4 rounded-xl bg-black/50 border border-white/10 text-sm text-white focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all placeholder:text-zinc-600 resize-none font-mono"
+                        ></textarea>
+                     </div>
+
+                     <button
+                        type="submit"
+                        disabled={submitting}
+                        className="w-full py-5 bg-white text-black font-black text-lg uppercase tracking-widest rounded-xl hover:bg-emerald-500 hover:shadow-[0_0_30px_rgba(16,185,129,0.5)] transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                     >
+                        {submitting ? (
+                           <>
+                              <div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
+                              <span>ENCRYPTING & SENDING...</span>
+                           </>
+                        ) : (
+                           <>
+                              <span>EXECUTE UPLOAD</span>
+                              <Send className="w-5 h-5" />
+                           </>
+                        )}
+                     </button>
+                  </form>
+               </div>
+            </ScrollReveal>
+          </motion.div>
         )}
 
-        {/* ================= TAB 2: PIPELINE STATUS TRACKER (4 STEPS) - MONOCHROME ================= */}
+        {/* ================= TAB 2: TRACK APPLICATION ================= */}
         {activeTab === 'track' && (
-          <div className="space-y-8">
-            
-            <div className="bg-white rounded-3xl border border-zinc-200 p-6 sm:p-10 shadow-2xs space-y-6">
-              <div className="border-b border-zinc-100 pb-4">
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-zinc-100 text-black text-xs font-bold mb-2 border border-zinc-300">
-                  <Search className="w-3.5 h-3.5" />
-                  <span>TRA CỨU TIẾN TRÌNH TUYỂN DỤNG THEO THỜI GIAN THỰC</span>
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            className="max-w-4xl mx-auto space-y-8"
+          >
+            <div className="bg-[#111]/80 backdrop-blur-2xl rounded-3xl border border-white/10 p-8 sm:p-12 shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+              <div className="text-center mb-10">
+                <div className="w-20 h-20 rounded-full bg-emerald-500/10 text-emerald-500 mx-auto flex items-center justify-center mb-6 border border-emerald-500/20">
+                  <Search className="w-10 h-10" />
                 </div>
-                <h2 className="text-2xl font-black text-black">Tra Cứu Trạng Thái Hồ Sơ Ứng Tuyển</h2>
-                <p className="text-xs text-zinc-500 mt-1">
-                  Nhập mã hồ sơ (ví dụ: <code className="text-black font-bold font-mono">APP-5955</code>) hoặc địa chỉ Email của bạn để theo dõi 4 bước tuyển dụng.
-                </p>
+                <h2 className="text-3xl md:text-5xl font-black text-white mb-4 uppercase">Kiểm tra Radar</h2>
+                <p className="text-zinc-400 font-mono">Nhập mã hồ sơ (APP-xxxx) hoặc Email để truy xuất trạng thái mã hóa.</p>
               </div>
 
-              <form onSubmit={handleTrackApplication} className="flex flex-col sm:flex-row gap-3">
-                <div className="relative flex-1">
-                  <Search className="w-4 h-4 text-zinc-400 absolute left-4 top-1/2 -translate-y-1/2" />
-                  <input
-                    type="text"
-                    required
-                    placeholder="Nhập mã hồ sơ (APP-XXXX) hoặc Email của bạn..."
-                    value={trackQuery}
-                    onChange={(e) => setTrackQuery(e.target.value)}
-                    className="w-full pl-11 pr-4 py-3.5 rounded-xl bg-zinc-50 border border-zinc-200 text-xs font-bold text-black focus:outline-none focus:ring-1 focus:ring-black focus:border-black"
-                  />
+              <form onSubmit={handleTrackApplication} className="relative max-w-2xl mx-auto mb-12">
+                <div className="absolute inset-y-0 left-6 flex items-center pointer-events-none">
+                  <Search className="h-6 w-6 text-emerald-500" />
                 </div>
-
-                <button
-                  type="submit"
-                  disabled={trackLoading}
-                  className="px-6 py-3.5 rounded-xl bg-black hover:bg-zinc-800 text-white font-bold text-xs transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer shrink-0 disabled:opacity-50"
-                >
-                  {trackLoading ? (
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  ) : (
-                    <Search className="w-4 h-4" />
-                  )}
-                  <span>Tra Cứu Hồ Sơ</span>
-                </button>
+                <input
+                  type="text"
+                  required
+                  placeholder="Nhập mã APP-XXXX hoặc Email..."
+                  value={trackQuery}
+                  onChange={(e) => setTrackQuery(e.target.value)}
+                  className="w-full pl-16 pr-40 py-6 bg-black/60 border-2 border-white/10 rounded-full text-lg text-white font-mono focus:outline-none focus:border-emerald-500 focus:shadow-[0_0_30px_rgba(16,185,129,0.2)] transition-all placeholder:text-zinc-600"
+                />
+                <div className="absolute inset-y-2 right-2">
+                   <button
+                     type="submit"
+                     disabled={trackLoading}
+                     className="h-full px-8 rounded-full bg-emerald-500 hover:bg-emerald-400 text-black font-black text-sm uppercase tracking-widest transition-colors disabled:opacity-50 flex items-center gap-2"
+                   >
+                     {trackLoading ? 'SEARCHING...' : 'PULL DATA'}
+                   </button>
+                </div>
               </form>
 
               {trackError && (
-                <div className="p-4 rounded-xl bg-zinc-100 border border-zinc-300 text-black text-xs font-bold flex items-center gap-2">
-                  <AlertCircle className="w-4 h-4 text-black shrink-0" />
+                <div className="max-w-2xl mx-auto p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm font-bold flex justify-center items-center gap-2">
+                  <AlertCircle className="w-5 h-5" />
                   <span>{trackError}</span>
                 </div>
               )}
-            </div>
 
-            {/* Display Pipeline Results */}
-            {trackResults && trackResults.length > 0 && (
-              <div className="space-y-6">
-                <h3 className="text-base font-black text-black flex items-center gap-2">
-                  <span>Kết Quả Tra Cứu ({trackResults.length} hồ sơ)</span>
-                </h3>
+              {/* Tra cứu Results */}
+              {trackResults && trackResults.length > 0 && (
+                <div className="space-y-8 mt-12 border-t border-white/10 pt-12">
+                  <h3 className="text-xl font-black text-white text-center uppercase tracking-widest">
+                     [{trackResults.length} RECORD(S) FOUND]
+                  </h3>
+                  
+                  {trackResults.map((app: any, idx: number) => {
+                    const currentStep = getPipelineStep(app.status);
+                    const steps = [
+                      { num: 1, title: 'Hồ Sơ Được Tiếp Nhận', desc: 'Đã lưu trữ an toàn.' },
+                      { num: 2, title: 'Đang Xét Duyệt', desc: 'HR & Tech Lead đánh giá năng lực.' },
+                      { num: 3, title: 'Đang Phỏng Vấn', desc: 'Bài test chuyên môn & Văn hóa.' },
+                      { num: 4, title: app.status === 5 ? 'Chưa Phù Hợp' : 'Chào Đón Gia Nhập', desc: app.status === 5 ? 'Hẹn bạn ở cơ hội sau.' : 'Offer Letter đã được gửi.' }
+                    ];
 
-                {trackResults.map((item) => {
-                  const currentStep = getPipelineStep(item.status);
-                  const isAccepted = item.status === 4;
-                  const isRejected = item.status === 5;
-
-                  return (
-                    <div 
-                      key={item.id}
-                      className="bg-white rounded-3xl border border-zinc-200 p-6 sm:p-8 shadow-2xs space-y-8"
-                    >
-                      {/* Application Info Header */}
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-100 pb-4">
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <span className="text-xs font-mono font-black text-black bg-zinc-100 px-2.5 py-0.5 rounded-md border border-zinc-300">
-                              {item.applicationCode}
-                            </span>
-                            <span className="text-xs text-zinc-400 font-mono">
-                              Ngày nộp: {new Date(item.createdAt).toLocaleDateString('vi-VN')}
-                            </span>
+                    return (
+                      <div key={idx} className="bg-black/40 rounded-3xl border border-white/10 p-6 sm:p-10">
+                        
+                        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-10 pb-6 border-b border-white/10">
+                          <div>
+                            <div className="flex items-center gap-3 mb-2">
+                               <div className="text-sm font-mono text-emerald-500 bg-emerald-500/10 px-3 py-1 rounded-md border border-emerald-500/20">
+                                 {app.applicationCode}
+                               </div>
+                               <div className="text-xs text-zinc-500 font-mono">
+                                 {new Date(app.appliedAt).toLocaleString('vi-VN')}
+                               </div>
+                            </div>
+                            <h4 className="text-2xl font-black text-white">{app.candidateName}</h4>
+                            <p className="text-zinc-400 font-mono text-sm mt-1">Apply for: {app.jobPosition}</p>
                           </div>
-                          <h4 className="text-lg font-black text-black mt-1">{item.candidateName}</h4>
-                          <p className="text-xs text-zinc-600 font-bold">Vị trí: {item.jobPosition}</p>
-                        </div>
-
-                        <div className="text-right">
-                          <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border ${
-                            isAccepted ? 'bg-black text-white border-black' :
-                            isRejected ? 'bg-zinc-200 text-zinc-800 border-zinc-400' :
-                            'bg-zinc-100 text-black border-zinc-300'
-                          }`}>
-                            {isAccepted ? '🎉 Trúng Tuyển (Offer)' :
-                             isRejected ? 'Chưa Phù Hợp' :
-                             item.status === 3 ? 'Lên Lịch Phỏng Vấn' :
-                             item.status === 2 ? 'Đang Thẩm Định CV' :
-                             'Đã Tiếp Nhận Hồ Sơ'}
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* 4-STEP PIPELINE TRACKER BAR - MONOCHROME */}
-                      <div className="space-y-4">
-                        <h5 className="text-xs font-black uppercase tracking-wider text-zinc-500">
-                          Tiến Trình Tuyển Dụng 4 Bước (Recruitment Pipeline):
-                        </h5>
-
-                        <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 relative">
                           
-                          {/* Step 1 */}
-                          <div className={`p-4 rounded-2xl border transition-all ${
-                            currentStep >= 1 
-                              ? 'bg-zinc-900 text-white border-black' 
-                              : 'bg-zinc-50 border-zinc-200 text-zinc-400'
+                          <div className={`px-4 py-2 rounded-lg font-black text-sm border font-mono uppercase tracking-widest ${
+                            app.status === 4 ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30' :
+                            app.status === 5 ? 'bg-red-500/10 text-red-400 border-red-500/30' :
+                            'bg-blue-500/10 text-blue-400 border-blue-500/30'
                           }`}>
-                            <div className="flex items-center gap-2 mb-1.5">
-                              <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
-                                currentStep >= 1 ? 'bg-white text-black' : 'bg-zinc-300 text-zinc-600'
-                              }`}>
-                                1
-                              </div>
-                              <span className="text-xs font-bold">Tiếp Nhận CV</span>
-                            </div>
-                            <p className="text-[11px] text-zinc-400">Hệ thống đã nhận hồ sơ và gửi email xác nhận.</p>
+                            {app.status === 1 && 'RECEIVED'}
+                            {app.status === 2 && 'REVIEWING'}
+                            {app.status === 3 && 'INTERVIEWING'}
+                            {app.status === 4 && 'ACCEPTED'}
+                            {app.status === 5 && 'REJECTED'}
                           </div>
-
-                          {/* Step 2 */}
-                          <div className={`p-4 rounded-2xl border transition-all ${
-                            currentStep >= 2 
-                              ? 'bg-zinc-900 text-white border-black' 
-                              : 'bg-zinc-50 border-zinc-200 text-zinc-400'
-                          }`}>
-                            <div className="flex items-center gap-2 mb-1.5">
-                              <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
-                                currentStep >= 2 ? 'bg-white text-black' : 'bg-zinc-300 text-zinc-600'
-                              }`}>
-                                2
-                              </div>
-                              <span className="text-xs font-bold">Thẩm Định Hồ Sơ</span>
-                            </div>
-                            <p className="text-[11px] text-zinc-400">HR &amp; Trưởng bộ phận đang đánh giá chuyên môn.</p>
-                          </div>
-
-                          {/* Step 3 */}
-                          <div className={`p-4 rounded-2xl border transition-all ${
-                            currentStep >= 3 
-                              ? 'bg-zinc-900 text-white border-black' 
-                              : 'bg-zinc-50 border-zinc-200 text-zinc-400'
-                          }`}>
-                            <div className="flex items-center gap-2 mb-1.5">
-                              <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
-                                currentStep >= 3 ? 'bg-white text-black' : 'bg-zinc-300 text-zinc-600'
-                              }`}>
-                                3
-                              </div>
-                              <span className="text-xs font-bold">Phỏng Vấn &amp; Test</span>
-                            </div>
-                            <p className="text-[11px] text-zinc-400">Duyệt qua vòng CV, mời phỏng vấn kỹ thuật.</p>
-                          </div>
-
-                          {/* Step 4 */}
-                          <div className={`p-4 rounded-2xl border transition-all ${
-                            isAccepted ? 'bg-black text-white border-black ring-2 ring-zinc-700' :
-                            isRejected ? 'bg-zinc-200 text-zinc-800 border-zinc-400' :
-                            currentStep >= 4 ? 'bg-zinc-900 text-white border-black' :
-                            'bg-zinc-50 border-zinc-200 text-zinc-400'
-                          }`}>
-                            <div className="flex items-center gap-2 mb-1.5">
-                              <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
-                                isAccepted ? 'bg-white text-black' :
-                                isRejected ? 'bg-zinc-400 text-white' :
-                                currentStep >= 4 ? 'bg-white text-black' : 'bg-zinc-300 text-zinc-600'
-                              }`}>
-                                4
-                              </div>
-                              <span className="text-xs font-bold">Kết Quả Tuyển Dụng</span>
-                            </div>
-                            <p className="text-[11px] text-zinc-400">
-                              {isAccepted ? 'Chúc mừng bạn đã trúng tuyển nhận việc!' :
-                               isRejected ? 'Chưa phù hợp đợt tuyển này, lưu trữ hồ sơ.' :
-                               'Quyết định tuyển dụng & thư mời nhận việc.'}
-                            </p>
-                          </div>
-
                         </div>
+
+                        {/* Pipeline Progress */}
+                        <div className="relative">
+                           <div className="absolute top-6 left-6 right-6 h-1 bg-white/10 rounded-full hidden sm:block"></div>
+                           <div 
+                              className="absolute top-6 left-6 h-1 bg-emerald-500 rounded-full hidden sm:block transition-all duration-1000"
+                              style={{ width: `${((currentStep - 1) / 3) * 100}%` }}
+                           ></div>
+
+                           <div className="grid grid-cols-1 sm:grid-cols-4 gap-6 relative z-10">
+                              {steps.map((step) => {
+                                 const isActive = currentStep >= step.num;
+                                 const isCurrent = currentStep === step.num;
+                                 const isRejectedFinal = step.num === 4 && app.status === 5;
+                                 
+                                 let iconColor = isActive ? 'bg-emerald-500 text-black border-emerald-500' : 'bg-[#111] text-zinc-600 border-white/10';
+                                 if (isRejectedFinal) iconColor = 'bg-red-500 text-white border-red-500';
+
+                                 return (
+                                    <div key={step.num} className="flex flex-row sm:flex-col items-center sm:text-center gap-4 group">
+                                       <div className={`w-12 h-12 rounded-full border-2 flex items-center justify-center shrink-0 shadow-xl transition-all duration-500 ${iconColor} ${isCurrent ? 'scale-110 shadow-[0_0_20px_rgba(16,185,129,0.3)]' : ''}`}>
+                                          {isRejectedFinal ? <X className="w-5 h-5" /> : (isActive ? <Check className="w-5 h-5" /> : <Clock className="w-5 h-5" />)}
+                                       </div>
+                                       <div className="flex-1">
+                                          <div className={`font-black text-sm uppercase ${isActive ? (isRejectedFinal ? 'text-red-400' : 'text-emerald-400') : 'text-zinc-500'}`}>
+                                             {step.title}
+                                          </div>
+                                          <div className="text-[11px] text-zinc-500 font-mono mt-1 leading-relaxed">
+                                             {step.desc}
+                                          </div>
+                                       </div>
+                                    </div>
+                                 );
+                              })}
+                           </div>
+                        </div>
+
                       </div>
-
-                      {/* Admin Notes / Interview Details Box */}
-                      {(item.interviewSchedule || item.adminNotes) && (
-                        <div className="p-4 rounded-2xl bg-zinc-50 border border-zinc-200 space-y-2 text-xs">
-                          {item.interviewSchedule && (
-                            <div className="flex items-start gap-2 text-black">
-                              <Calendar className="w-4 h-4 shrink-0 mt-0.5 text-black" />
-                              <div>
-                                <span className="font-bold">Lịch hẹn phỏng vấn:</span> {item.interviewSchedule}
-                              </div>
-                            </div>
-                          )}
-                          {item.adminNotes && (
-                            <div className="flex items-start gap-2 text-zinc-700">
-                              <FileText className="w-4 h-4 shrink-0 mt-0.5 text-black" />
-                              <div>
-                                <span className="font-bold text-black">Thông điệp từ Ban Tuyển Dụng:</span> {item.adminNotes}
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      )}
-
-                      {/* File CV Attachment */}
-                      {item.cvFileUrl && (
-                        <div className="flex items-center justify-between p-3.5 bg-zinc-50 rounded-xl border border-zinc-200 text-xs">
-                          <div className="flex items-center gap-2 text-black font-bold truncate">
-                            <FileText className="w-4 h-4 text-black shrink-0" />
-                            <span className="truncate">File CV đã nộp: {item.cvFileName || 'Hồ_sơ_CV.pdf'}</span>
-                          </div>
-                          <a
-                            href={`/api/careers/download-cv/${item.id}`}
-                            target="_blank"
-                            download
-                            className="px-3 py-1 bg-black hover:bg-zinc-800 text-white font-bold rounded-lg transition-colors shadow-2xs shrink-0 flex items-center gap-1"
-                          >
-                            <ExternalLink className="w-3.5 h-3.5" />
-                            <span>Tải CV</span>
-                          </a>
-                        </div>
-                      )}
-
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-
-          </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          </motion.div>
         )}
 
       </div>
-
     </div>
   );
 }
