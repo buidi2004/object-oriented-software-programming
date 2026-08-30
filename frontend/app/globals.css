@@ -15,12 +15,14 @@
   }
 
   html {
+    font-size: 14px;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
   }
 
   body {
+    font-size: 14px;
     color: #0F172A;
     background-color: #FFFFFF;
     -webkit-font-smoothing: antialiased;

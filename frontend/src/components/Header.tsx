@@ -4,7 +4,8 @@ import React, { useState, useEffect } from 'react';
 import {
   Cloud, Server, Globe, Shield, ShoppingCart, Menu, X, Cpu, ChevronDown, LogOut, Wallet,
   Gamepad2, Mail, Database, HardDrive, ShieldCheck, Zap, Layers, Palette, ShoppingBag, Activity, ArrowRight, Compass,
-  LifeBuoy, Megaphone, BookOpen, DownloadCloud, ActivitySquare, Search, LayoutTemplate, Boxes, ArrowLeftRight, User, HelpCircle
+  LifeBuoy, Megaphone, BookOpen, DownloadCloud, ActivitySquare, Search, LayoutTemplate, Boxes, ArrowLeftRight, User, HelpCircle,
+  ChevronRight, Gift, FileText, PhoneCall, MessageSquare
 } from 'lucide-react';
 import { useAuthStore } from '../store/useAuthStore';
 import { useUIStore } from '../store/useUIStore';
@@ -44,6 +45,35 @@ const serviceCategories = [
       { id: 2, title: 'Object Storage (S3)', desc: 'MinIO S3 API All-Flash 11 số 9 độ bền', link: '/services/storage', icon: HardDrive, color: 'text-[#1F1F1F] bg-slate-100' },
       { id: 3, title: 'Bảo Mật & WAF', desc: 'Tường lửa AI, chống DDoS L7 & OWASP', link: '/services/security', icon: Shield, color: 'text-[#1F1F1F] bg-slate-100' },
       { id: 4, title: 'Chuyển Đổi Dữ Liệu', desc: 'Di dời Zero-Downtime 24/7 MIỄN PHÍ', link: '/services/migrations', icon: Activity, color: 'text-[#1F1F1F] bg-slate-100' }
+    ]
+  }
+];
+
+const solutionCategories = [
+  {
+    name: 'Theo quy mô',
+    description: 'Tối ưu chi phí và hiệu năng cho từng giai đoạn phát triển.',
+    services: [
+      { id: 1, title: 'Giải pháp cho Sinh viên', desc: 'Thực hành code, chạy đồ án giá rẻ', link: '/solutions/student', icon: BookOpen, color: 'text-[#1F1F1F] bg-amber-100' },
+      { id: 2, title: 'Doanh nghiệp SME', desc: 'Khởi chạy website an toàn, tiết kiệm', link: '/solutions/sme', icon: ActivitySquare, color: 'text-[#1F1F1F] bg-blue-100' },
+      { id: 3, title: 'Giải pháp Enterprise', desc: 'Hạ tầng chịu tải lớn, sẵn sàng 99.99%', link: '/solutions/enterprise', icon: Server, color: 'text-[#1F1F1F] bg-slate-200' }
+    ]
+  },
+  {
+    name: 'Theo ngành nghề',
+    description: 'Kiến trúc chuyên biệt giải quyết bài toán của từng lĩnh vực.',
+    services: [
+      { id: 4, title: 'Thương mại điện tử', desc: 'Chống giật lag mùa Sale, bảo mật WAF', link: '/solutions/ecommerce', icon: ShoppingBag, color: 'text-[#1F1F1F] bg-pink-100' },
+      { id: 5, title: 'Game Studio', desc: 'Máy chủ Low-ping, chống DDoS 500Gbps', link: '/solutions/gaming', icon: Gamepad2, color: 'text-[#1F1F1F] bg-purple-100' },
+      { id: 6, title: 'Agency & Developer', desc: 'Quản trị tập trung, CI/CD, 1-Click Apps', link: '/solutions/agency', icon: Cpu, color: 'text-[#1F1F1F] bg-green-100' }
+    ]
+  },
+  {
+    name: 'Nhu cầu chuyên biệt',
+    description: 'Các giải pháp hạ tầng mở rộng và tuân thủ tiêu chuẩn.',
+    services: [
+      { id: 7, title: 'Cloud Migration', desc: 'Dịch chuyển lên mây an toàn, 0 downtime', link: '/solutions/migration', icon: ArrowLeftRight, color: 'text-[#1F1F1F] bg-orange-100' },
+      { id: 8, title: 'Tối ưu Bảo mật (Security)', desc: 'Ngăn chặn tấn công L7 & lộ lọt dữ liệu', link: '/solutions/security', icon: ShieldCheck, color: 'text-[#1F1F1F] bg-red-100' }
     ]
   }
 ];
@@ -129,12 +159,56 @@ export const Header: React.FC<HeaderProps> = ({
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [servicesDropdownOpen, setServicesDropdownOpen] = useState(false);
+  const [solutionsDropdownOpen, setSolutionsDropdownOpen] = useState(false);
   const [activeServiceCategory, setActiveServiceCategory] = useState(0);
+  const [activeSolutionCategory, setActiveSolutionCategory] = useState(0);
   const [supportDropdownOpen, setSupportDropdownOpen] = useState(false);
   const [newsDropdownOpen, setNewsDropdownOpen] = useState(false);
+  const [activeNewsTab, setActiveNewsTab] = useState<'news' | 'promotions' | 'kb' | 'support'>('news');
+  const [newsList, setNewsList] = useState<any[]>([]);
+  const [promotionsList, setPromotionsList] = useState<any[]>([]);
+  const [kbList, setKbList] = useState<any[]>([]);
+  const [ticketsList, setTicketsList] = useState<any[]>([]);
+  const [isNewsDataLoading, setIsNewsDataLoading] = useState(false);
   const [isTopUpOpen, setIsTopUpOpen] = useState(false);
   const { user, setUser, logout, token } = useAuthStore();
   const walletBalance = user?.walletBalance ?? 0;
+
+  useEffect(() => {
+    if (newsDropdownOpen && newsList.length === 0 && promotionsList.length === 0 && !isNewsDataLoading) {
+      setIsNewsDataLoading(true);
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001';
+      
+      const fetches = [
+        fetch(`${apiUrl}/api/news`).then(res => res.ok ? res.json() : []),
+        fetch(`${apiUrl}/api/promotions/active`).then(res => res.ok ? res.json() : []),
+        fetch(`${apiUrl}/api/knowledge-base`).then(res => res.ok ? res.json() : [])
+      ];
+      
+      // If user logged in, fetch their tickets for Support tab
+      if (token || (typeof window !== 'undefined' && localStorage.getItem('accessToken'))) {
+        const savedToken = token || (typeof window !== 'undefined' ? localStorage.getItem('accessToken') : '');
+        fetches.push(
+          fetch(`${apiUrl}/api/tickets`, {
+            headers: { 'Authorization': `Bearer ${savedToken}` }
+          }).then(res => res.ok ? res.json() : [])
+        );
+      } else {
+        fetches.push(Promise.resolve([]));
+      }
+
+      Promise.all(fetches).then(([news, promos, kbs, tickets]) => {
+        setNewsList(Array.isArray(news) ? news : []);
+        setPromotionsList(Array.isArray(promos) ? promos : []);
+        setKbList(Array.isArray(kbs) ? kbs : []);
+        setTicketsList(Array.isArray(tickets) ? tickets : []);
+        setIsNewsDataLoading(false);
+      }).catch((err) => {
+        console.error('Failed to fetch news/support data:', err);
+        setIsNewsDataLoading(false);
+      });
+    }
+  }, [newsDropdownOpen, token, isNewsDataLoading, newsList.length, promotionsList.length]);
 
   useEffect(() => {
     const savedToken = token || (typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null);
@@ -346,52 +420,303 @@ export const Header: React.FC<HeaderProps> = ({
               )}
             </div>
 
+            {/* Giải pháp (Solutions) Dropdown */}
             <div
               className="relative shrink-0"
+              onMouseEnter={() => setSolutionsDropdownOpen(true)}
+              onMouseLeave={() => setSolutionsDropdownOpen(false)}
+            >
+              <button
+                type="button"
+                onClick={() => setSolutionsDropdownOpen(open => !open)}
+                aria-expanded={solutionsDropdownOpen}
+                aria-haspopup="true"
+                className={`${navLinkBase} ${solutionsDropdownOpen ? 'text-slate-900 font-black' : 'text-slate-600 hover:text-slate-900 font-bold'}`}
+              >
+                <span>Giải pháp</span>
+                {solutionsDropdownOpen && (
+                  <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-8 h-[2.5px] bg-[#1F1F1F] rounded-full transition-all duration-300" />
+                )}
+              </button>
+
+              {/* Mega menu */}
+              {solutionsDropdownOpen && (
+                <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 w-[800px] max-w-[80vw] z-50">
+                  <div className="bg-white rounded-lg shadow-[0_20px_60px_-15px_rgba(0,0,0,0.18)] border border-slate-200 flex flex-col overflow-hidden min-h-[380px] animate-in fade-in slide-in-from-top-2 duration-200">
+                    <div className="flex flex-1">
+                      {/* Left Sidebar */}
+                      <div className="w-[260px] bg-slate-50/80 border-r border-slate-200/80 py-5 flex flex-col justify-between shrink-0">
+                        <div className="space-y-1 px-3">
+                          <div className="text-[11px] font-black uppercase tracking-wider text-slate-600 px-3 pb-2">
+                            Danh Mục Giải Pháp
+                          </div>
+                          {solutionCategories.map((cat, idx) => (
+                            <button
+                              key={idx}
+                              onMouseEnter={() => setActiveSolutionCategory(idx)}
+                              onClick={() => setActiveSolutionCategory(idx)}
+                              className={`w-full text-left px-4 py-2.5 rounded text-[13px] font-bold transition-all flex items-center justify-between outline-none ${
+                                activeSolutionCategory === idx
+                                  ? 'bg-white text-slate-900 shadow-2xs border border-slate-200/60'
+                                  : 'text-slate-600 hover:bg-slate-100/50 hover:text-slate-900 border border-transparent'
+                              }`}
+                            >
+                              {cat.name}
+                              {activeSolutionCategory === idx && <ArrowRight className="w-4 h-4 text-[#d09e2b]" />}
+                            </button>
+                          ))}
+                        </div>
+                        <div className="px-5 mt-4">
+                          <Link href="/solutions" className="text-blue-600 hover:text-blue-800 text-[13px] font-bold flex items-center group" onClick={() => setSolutionsDropdownOpen(false)}>
+                            Tất cả giải pháp (12+) <ArrowRight className="w-3 h-3 ml-1 transition-transform group-hover:translate-x-1" />
+                          </Link>
+                        </div>
+                      </div>
+
+                      {/* Right Content */}
+                      <div className="flex-1 p-6 bg-white flex flex-col">
+                        <div className="mb-6 pb-4 border-b border-slate-100">
+                          <h4 className="text-base font-black text-slate-900 mb-1">{solutionCategories[activeSolutionCategory].name}</h4>
+                          <p className="text-[13px] text-slate-600 font-medium">
+                            {solutionCategories[activeSolutionCategory].description}
+                          </p>
+                        </div>
+                        
+                        <div className="grid grid-cols-2 gap-3.5">
+                          {solutionCategories[activeSolutionCategory].services.map((service, idx) => {
+                            const SIcon = service.icon;
+                            return (
+                              <Link
+                                key={idx}
+                                href={service.link}
+                                onClick={() => setSolutionsDropdownOpen(false)}
+                                className="flex items-start gap-3.5 p-3.5 rounded-md hover:bg-slate-50 border border-slate-100 hover:border-[#d09e2b]/30 transition-all group shadow-2xs hover:shadow-sm"
+                              >
+                                <div className={`w-10 h-10 rounded flex items-center justify-center shrink-0 ${service.color} transition-transform group-hover:scale-110 shadow-2xs`}>
+                                  <SIcon className="w-5 h-5" />
+                                </div>
+                                <div className="min-w-0">
+                                  <div className="text-[13px] font-black text-slate-900 group-hover:text-[#d09e2b] transition-colors mb-0.5 truncate">
+                                    {service.title}
+                                  </div>
+                                  <div className="text-[11px] font-medium text-slate-600 line-clamp-2 leading-snug">
+                                    {service.desc}
+                                  </div>
+                                </div>
+                              </Link>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Tin tức & Hỗ trợ Dropdown */}
+            <div
+              className="relative h-full flex items-center"
               onMouseEnter={() => setNewsDropdownOpen(true)}
               onMouseLeave={() => setNewsDropdownOpen(false)}
             >
               <button
                 type="button"
-                onClick={() => setNewsDropdownOpen(open => !open)}
-                aria-expanded={newsDropdownOpen}
-                aria-haspopup="true"
-                className={`${navLinkBase} ${isNewsActive ? 'text-slate-900 font-black' : 'text-slate-600 hover:text-slate-900 font-bold'}`}
+                onClick={() => setNewsDropdownOpen(!newsDropdownOpen)}
+                className={`flex items-center gap-1 px-3 h-full border-b-2 transition-colors ${
+                  newsDropdownOpen ? 'border-[#d09e2b] text-[#1F1F1F]' : 'border-transparent text-slate-700 hover:border-black'
+                } focus:outline-none`}
               >
-                <span>Tin tức</span>
-                {isNewsActive && (
-                  <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-8 h-[2.5px] bg-[#1F1F1F] rounded-full transition-all duration-300" />
-                )}
+                Tin tức & Hỗ trợ <ChevronDown className={`w-3 h-3 ml-0.5 transition-transform duration-200 ${newsDropdownOpen ? 'rotate-180' : ''}`} />
               </button>
 
+              {/* Mega menu */}
               {newsDropdownOpen && (
-                <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 w-[240px] z-50">
-                  <div className="bg-white rounded-md shadow-xl border border-slate-100 p-2 animate-in fade-in slide-in-from-top-2 duration-200 flex flex-col gap-1">
-                    <Link
-                      href="/news"
-                      onClick={() => setNewsDropdownOpen(false)}
-                      className="flex items-center gap-3 p-2.5 rounded hover:bg-slate-50 transition-colors group"
-                    >
-                      <div className="w-8 h-8 rounded-sm bg-slate-100/70 text-[#1F1F1F] flex items-center justify-center shrink-0">
-                        <Cpu className="w-4 h-4" />
-                      </div>
-                      <div>
-                        <div className="text-sm font-bold text-slate-700 group-hover:text-[#1F1F1F]">Tin công nghệ</div>
-                      </div>
-                    </Link>
+                <div className="absolute top-full left-0 pt-0 w-[700px] max-w-[80vw] z-50">
+                  <div className="bg-white rounded-b-md shadow-lg border border-t-0 border-slate-200 flex flex-col overflow-hidden min-h-[350px] animate-in fade-in duration-200">
+                    <div className="flex flex-1">
+                      {/* Left Sidebar */}
+                      <div className="w-[200px] bg-slate-50 border-r border-slate-200 py-4 flex flex-col justify-between shrink-0">
+                        <div className="space-y-0.5">
+                          <button
+                            onMouseEnter={() => setActiveNewsTab('news')}
+                            onClick={() => setActiveNewsTab('news')}
+                            className={`w-full text-left px-5 py-3 text-[13px] font-semibold transition-all flex items-center justify-between outline-none ${
+                              activeNewsTab === 'news'
+                                ? 'bg-white text-[#d09e2b] shadow-[inset_3px_0_0_0_#d09e2b]'
+                                : 'text-slate-600 hover:bg-slate-100/50 hover:text-slate-900'
+                            }`}
+                          >
+                            Tin Công Nghệ
+                            {activeNewsTab === 'news' && <ChevronRight className="w-4 h-4 text-[#d09e2b]" />}
+                          </button>
+                          
+                          <button
+                            onMouseEnter={() => setActiveNewsTab('promotions')}
+                            onClick={() => setActiveNewsTab('promotions')}
+                            className={`w-full text-left px-5 py-3 text-[13px] font-semibold transition-all flex items-center justify-between outline-none ${
+                              activeNewsTab === 'promotions'
+                                ? 'bg-white text-[#d09e2b] shadow-[inset_3px_0_0_0_#d09e2b]'
+                                : 'text-slate-600 hover:bg-slate-100/50 hover:text-slate-900'
+                            }`}
+                          >
+                            Khuyến Mãi
+                            {activeNewsTab === 'promotions' && <ChevronRight className="w-4 h-4 text-[#d09e2b]" />}
+                          </button>
 
-                    <Link
-                      href="/promotions"
-                      onClick={() => setNewsDropdownOpen(false)}
-                      className="flex items-center gap-3 p-2.5 rounded hover:bg-slate-50 transition-colors group"
-                    >
-                      <div className="w-8 h-8 rounded-sm bg-slate-100/70 text-[#1F1F1F] flex items-center justify-center shrink-0">
-                        <Megaphone className="w-4 h-4" />
+                          <button
+                            onMouseEnter={() => setActiveNewsTab('kb')}
+                            onClick={() => setActiveNewsTab('kb')}
+                            className={`w-full text-left px-5 py-3 text-[13px] font-semibold transition-all flex items-center justify-between outline-none ${
+                              activeNewsTab === 'kb'
+                                ? 'bg-white text-[#d09e2b] shadow-[inset_3px_0_0_0_#d09e2b]'
+                                : 'text-slate-600 hover:bg-slate-100/50 hover:text-slate-900'
+                            }`}
+                          >
+                            Tài Liệu Kỹ Thuật
+                            {activeNewsTab === 'kb' && <ChevronRight className="w-4 h-4 text-[#d09e2b]" />}
+                          </button>
+
+                          <button
+                            onMouseEnter={() => setActiveNewsTab('support')}
+                            onClick={() => setActiveNewsTab('support')}
+                            className={`w-full text-left px-5 py-3 text-[13px] font-semibold transition-all flex items-center justify-between outline-none ${
+                              activeNewsTab === 'support'
+                                ? 'bg-white text-[#d09e2b] shadow-[inset_3px_0_0_0_#d09e2b]'
+                                : 'text-slate-600 hover:bg-slate-100/50 hover:text-slate-900'
+                            }`}
+                          >
+                            Hỗ Trợ Kỹ Thuật
+                            {activeNewsTab === 'support' && <ChevronRight className="w-4 h-4 text-[#d09e2b]" />}
+                          </button>
+                        </div>
                       </div>
-                      <div>
-                        <div className="text-sm font-bold text-slate-700 group-hover:text-[#1F1F1F]">Tin khuyến mại</div>
+
+                      {/* Right Content */}
+                      <div className="flex-1 p-6 bg-white min-h-[350px]">
+                        {isNewsDataLoading ? (
+                          <div className="h-full flex items-center justify-center">
+                            <div className="w-6 h-6 border-2 border-[#d09e2b] border-t-transparent rounded-full animate-spin"></div>
+                          </div>
+                        ) : activeNewsTab === 'news' ? (
+                          <div className="space-y-4 animate-in fade-in zoom-in-95 duration-200">
+                            <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+                              <h3 className="text-[14px] font-bold text-[#1F1F1F] flex items-center gap-2">
+                                <Cpu className="w-4 h-4 text-[#d09e2b]" /> Tin Công Nghệ Mới Nhất
+                              </h3>
+                              <Link href="/news" onClick={() => setNewsDropdownOpen(false)} className="text-[12px] font-semibold text-[#d09e2b] hover:underline flex items-center gap-1">
+                                Xem tất cả <ArrowRight className="w-3 h-3" />
+                              </Link>
+                            </div>
+                            <div className="grid grid-cols-2 gap-4">
+                              {newsList.length > 0 ? newsList.slice(0, 4).map((item: any, idx: number) => (
+                                <Link key={idx} href={`/news/${item.slug}`} onClick={() => setNewsDropdownOpen(false)} className="group block">
+                                  <div className="text-[13px] font-bold text-slate-800 group-hover:text-[#d09e2b] line-clamp-2 leading-tight transition-colors">
+                                    {item.title}
+                                  </div>
+                                  <div className="text-[11px] text-slate-500 mt-1">{new Date(item.createdAt || Date.now()).toLocaleDateString('vi-VN')}</div>
+                                </Link>
+                              )) : (
+                                <p className="text-[13px] text-slate-500 col-span-2">Đang cập nhật tin tức mới...</p>
+                              )}
+                            </div>
+                          </div>
+                        ) : activeNewsTab === 'promotions' ? (
+                          <div className="space-y-4 animate-in fade-in zoom-in-95 duration-200">
+                            <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+                              <h3 className="text-[14px] font-bold text-[#1F1F1F] flex items-center gap-2">
+                                <Megaphone className="w-4 h-4 text-[#d09e2b]" /> Chương Trình Khuyến Mãi
+                              </h3>
+                              <Link href="/promotions" onClick={() => setNewsDropdownOpen(false)} className="text-[12px] font-semibold text-[#d09e2b] hover:underline flex items-center gap-1">
+                                Xem tất cả <ArrowRight className="w-3 h-3" />
+                              </Link>
+                            </div>
+                            <div className="grid grid-cols-1 gap-3">
+                              {promotionsList.length > 0 ? promotionsList.slice(0, 3).map((promo: any, idx: number) => (
+                                <Link key={idx} href={`/promotions/${promo.slug}`} onClick={() => setNewsDropdownOpen(false)} className="flex items-center gap-3 p-2 rounded-md hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-100 group">
+                                  <div className="w-10 h-10 rounded bg-[#d09e2b]/10 flex items-center justify-center shrink-0 text-[#d09e2b]">
+                                    <Gift className="w-5 h-5" />
+                                  </div>
+                                  <div>
+                                    <div className="text-[13px] font-bold text-slate-800 group-hover:text-[#d09e2b] line-clamp-1">{promo.title}</div>
+                                    <div className="text-[12px] text-slate-500 line-clamp-1">{promo.description}</div>
+                                  </div>
+                                </Link>
+                              )) : (
+                                <p className="text-[13px] text-slate-500">Chưa có chương trình khuyến mãi nào.</p>
+                              )}
+                            </div>
+                          </div>
+                        ) : activeNewsTab === 'kb' ? (
+                          <div className="space-y-4 animate-in fade-in zoom-in-95 duration-200">
+                            <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+                              <h3 className="text-[14px] font-bold text-[#1F1F1F] flex items-center gap-2">
+                                <BookOpen className="w-4 h-4 text-[#d09e2b]" /> Tài Liệu Kỹ Thuật (Knowledge Base)
+                              </h3>
+                              <Link href="/knowledge-base" onClick={() => setNewsDropdownOpen(false)} className="text-[12px] font-semibold text-[#d09e2b] hover:underline flex items-center gap-1">
+                                Truy cập Thư viện <ArrowRight className="w-3 h-3" />
+                              </Link>
+                            </div>
+                            <div className="grid grid-cols-2 gap-x-6 gap-y-3">
+                              {kbList.length > 0 ? kbList.slice(0, 6).map((kb: any, idx: number) => (
+                                <Link key={idx} href={`/knowledge-base/${kb.slug}`} onClick={() => setNewsDropdownOpen(false)} className="flex items-start gap-2 group">
+                                  <FileText className="w-4 h-4 text-slate-400 mt-0.5 shrink-0 group-hover:text-[#d09e2b]" />
+                                  <span className="text-[13px] text-slate-700 group-hover:text-[#1F1F1F] line-clamp-2">{kb.title}</span>
+                                </Link>
+                              )) : (
+                                <p className="text-[13px] text-slate-500 col-span-2">Đang cập nhật tài liệu...</p>
+                              )}
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="space-y-4 animate-in fade-in zoom-in-95 duration-200">
+                            <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+                              <h3 className="text-[14px] font-bold text-[#1F1F1F] flex items-center gap-2">
+                                <LifeBuoy className="w-4 h-4 text-[#d09e2b]" /> Hỗ Trợ Khách Hàng
+                              </h3>
+                              <Link href="/dashboard/tickets/new" onClick={() => setNewsDropdownOpen(false)} className="text-[12px] font-semibold text-[#d09e2b] hover:underline flex items-center gap-1">
+                                Gửi yêu cầu hỗ trợ <ArrowRight className="w-3 h-3" />
+                              </Link>
+                            </div>
+                            
+                            <div className="flex gap-4 mb-6">
+                              <a href="tel:19001234" className="flex-1 bg-slate-50 hover:bg-[#d09e2b]/5 border border-slate-200 hover:border-[#d09e2b]/30 p-3 rounded-md flex flex-col items-center justify-center text-center transition-colors">
+                                <PhoneCall className="w-5 h-5 text-slate-700 mb-1" />
+                                <span className="text-[11px] text-slate-500 uppercase tracking-wider font-semibold">Hotline 24/7</span>
+                                <span className="text-[14px] font-black text-[#1F1F1F]">1900 1234</span>
+                              </a>
+                              <button className="flex-1 bg-slate-50 hover:bg-[#d09e2b]/5 border border-slate-200 hover:border-[#d09e2b]/30 p-3 rounded-md flex flex-col items-center justify-center text-center transition-colors">
+                                <MessageSquare className="w-5 h-5 text-slate-700 mb-1" />
+                                <span className="text-[11px] text-slate-500 uppercase tracking-wider font-semibold">Live Chat</span>
+                                <span className="text-[14px] font-black text-[#1F1F1F]">Nhắn tin CSKH</span>
+                              </button>
+                            </div>
+
+                            {token ? (
+                              <>
+                                <h4 className="text-[12px] font-bold text-slate-900 uppercase tracking-wider mb-2">Ticket của bạn gần đây</h4>
+                                {ticketsList.length > 0 ? (
+                                  <div className="space-y-1">
+                                    {ticketsList.slice(0, 3).map((ticket: any, idx: number) => (
+                                      <Link key={idx} href={`/dashboard/tickets/${ticket.id}`} onClick={() => setNewsDropdownOpen(false)} className="flex items-center justify-between p-2 hover:bg-slate-50 rounded border border-transparent hover:border-slate-100">
+                                        <span className="text-[13px] font-medium text-slate-700 truncate max-w-[220px]">{ticket.subject}</span>
+                                        <span className={`text-[10px] px-2 py-0.5 rounded font-bold ${ticket.status === 0 ? 'bg-amber-100 text-amber-700' : 'bg-slate-200 text-slate-700'}`}>
+                                          {ticket.status === 0 ? 'Đang mở' : 'Đã đóng'}
+                                        </span>
+                                      </Link>
+                                    ))}
+                                  </div>
+                                ) : (
+                                  <p className="text-[13px] text-slate-500">Bạn chưa có ticket nào gần đây.</p>
+                                )}
+                              </>
+                            ) : (
+                              <p className="text-[13px] text-slate-500 bg-slate-50 p-3 rounded text-center border border-slate-100">Vui lòng <Link href="/login" className="text-[#d09e2b] font-bold hover:underline">Đăng nhập</Link> để xem các ticket hỗ trợ của bạn.</p>
+                            )}
+                          </div>
+                        )}
                       </div>
-                    </Link>
+                    </div>
                   </div>
                 </div>
               )}

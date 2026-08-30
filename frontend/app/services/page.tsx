@@ -10,6 +10,7 @@ import {
 import { api } from '@/src/lib/api';
 import { resolveCategorySlug } from '@/src/lib/categorySlugs';
 import ProductServiceReviews from '@/src/components/ProductServiceReviews';
+import { ScrollspyNav } from '@/src/components/ScrollspyNav';
 
 const CATEGORY_META: Record<string, {
   href: string;
@@ -334,9 +335,14 @@ export default function ServicesPage() {
         priceSuffix: slug === 'ten-mien' ? ' đ/năm' : ' đ/tháng',
       }));
 
-  return (
-    <div className="min-h-screen bg-slate-50">
+  const serviceNavItems = [
+    { id: 'services-list', label: 'Danh sách Dịch vụ' },
+    { id: 'stats-sla', label: 'Thống kê & SLA' },
+    { id: 'reviews', label: 'Khách hàng Đánh giá' }
+  ];
 
+  return (
+    <div className="min-h-screen bg-slate-50 relative">
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center max-w-3xl mx-auto mb-16">
@@ -357,7 +363,9 @@ export default function ServicesPage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <ScrollspyNav items={serviceNavItems} />
+
+        <div id="services-list" className="grid grid-cols-1 md:grid-cols-3 gap-8 scroll-mt-24 mt-8">
           {displayCategories.map((svc) => (
             <Link
               key={svc.slug}
@@ -396,7 +404,7 @@ export default function ServicesPage() {
           ))}
         </div>
 
-        <div className="mt-20 text-center">
+        <div id="stats-sla" className="mt-20 text-center scroll-mt-24">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {[
               { label: 'Uptime SLA', value: '99.99%' },
@@ -414,10 +422,12 @@ export default function ServicesPage() {
       </main>
 
       {/* Customer Reviews Section */}
-      <ProductServiceReviews 
-        serviceName="Tất Cả Dịch Vụ Cloud & Máy Chủ"
-        serviceCategory="Hạ Tầng Điện Toán Đám Mây"
-      />
+      <div id="reviews" className="scroll-mt-24">
+        <ProductServiceReviews 
+          serviceName="Tất Cả Dịch Vụ Cloud & Máy Chủ"
+          serviceCategory="Hạ Tầng Điện Toán Đám Mây"
+        />
+      </div>
 
       <footer className="bg-white text-slate-600 py-8 mt-16">
         <div className="max-w-7xl mx-auto px-4 text-center text-sm">
