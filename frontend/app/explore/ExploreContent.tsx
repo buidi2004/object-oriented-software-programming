@@ -59,7 +59,7 @@ export default function ExploreContent() {
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/50 to-black z-10" />
         
         <div className="relative z-20 max-w-6xl mx-auto text-center mt-20">
-          <ScrollReveal animation="slide-down">
+          <ScrollReveal animation="slide-up">
              <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-white/20 bg-black/50 backdrop-blur-md mb-8">
                <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
                <span className="text-sm font-bold tracking-widest uppercase text-gray-300">Khám Phá Sức Mạnh </span>
