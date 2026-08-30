@@ -51,6 +51,14 @@ public class ServicePlansController : ControllerBase
         return NoContent();
     }
 
+    [HttpGet("{id:guid}/qrcode")]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetQrCode(Guid id, CancellationToken ct)
+    {
+        var qrBase64 = await _mediator.Send(new CloudServiceStore.Application.Features.ServicePlans.Queries.GetPlanQrCode.GetPlanQrCodeQuery(id), ct);
+        return Ok(new { qrCode = qrBase64 });
+    }
+
     // --- PLAN PRICING MANAGEMENT ---
 
     [HttpGet("{id:guid}/prices")]

@@ -121,6 +121,31 @@ export default function AdminOrdersPage() {
     }
   };
 
+  const handleExportExcel = async () => {
+    const token = localStorage.getItem('accessToken');
+    if (!token) return;
+    try {
+      const res = await fetch('/api/orders/export', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.ok) {
+        const blob = await res.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `Orders_Export_${new Date().getTime()}.xlsx`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        a.remove();
+      } else {
+        alert('Lỗi xuất Excel');
+      }
+    } catch {
+      alert('Lỗi kết nối máy chủ');
+    }
+  };
+
   const filteredOrders = orders.filter(order => {
     const matchesSearch = order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          order.customerName.toLowerCase().includes(searchTerm.toLowerCase());
@@ -169,7 +194,10 @@ export default function AdminOrdersPage() {
               <p className="text-sm text-slate-500">{orders.length} đơn hàng tổng cộng</p>
             </div>
           </div>
-          <button className="px-4 py-2 rounded-sm bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 transition-colors flex items-center gap-2">
+          <button 
+            onClick={handleExportExcel}
+            className="px-4 py-2 rounded-sm bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 transition-colors flex items-center gap-2"
+          >
             <Download className="w-4 h-4" />
             Xuất Excel
           </button>

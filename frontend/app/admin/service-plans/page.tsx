@@ -80,6 +80,11 @@ function AdminServicePlansContent() {
   const [currentPrices, setCurrentPrices] = useState<PlanPrice[]>([]);
   const [isPricingLoading, setIsPricingLoading] = useState(false);
   
+  // QR Modal state
+  const [showQrModal, setShowQrModal] = useState(false);
+  const [currentQrCode, setCurrentQrCode] = useState<string>('');
+  const [isQrLoading, setIsQrLoading] = useState(false);
+  
   // Pricing Form state
   const [priceFormCycle, setPriceFormCycle] = useState<number>(1);
   const [priceFormAmount, setPriceFormAmount] = useState<string>('');
@@ -196,6 +201,20 @@ function AdminServicePlansContent() {
       showToast('Lỗi tải danh sách giá');
     } finally {
       setIsPricingLoading(false);
+    }
+  };
+
+  const openQrModal = async (plan: ServicePlan) => {
+    setEditingPlan(plan);
+    setShowQrModal(true);
+    setIsQrLoading(true);
+    try {
+      const res = await api.get(`/service-plans/${plan.servicePlanId}/qrcode`);
+      setCurrentQrCode(res.data.qrCode);
+    } catch {
+      showToast('Lỗi tải mã QR');
+    } finally {
+      setIsQrLoading(false);
     }
   };
 
@@ -621,6 +640,14 @@ function AdminServicePlansContent() {
                             <span className="hidden sm:inline">Sửa Giá</span>
                           </button>
                           <button
+                            onClick={() => openQrModal(plan)}
+                            className="p-2 text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 rounded-sm transition-colors font-bold text-xs flex items-center gap-1"
+                            title="Xem mã QR"
+                          >
+                            <Sparkles className="w-3.5 h-3.5" />
+                            <span className="hidden sm:inline">Xem QR</span>
+                          </button>
+                          <button
                             onClick={() => openEditModal(plan)}
                             className="p-2 text-[#1F1F1F] bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 rounded-sm transition-colors font-bold text-xs"
                             title="Sửa thông số gói"
@@ -996,6 +1023,42 @@ function AdminServicePlansContent() {
                   </tbody>
                 </table>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* QR Code Modal */}
+      {showQrModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="bg-[#1E293B] border border-white/10 rounded-xl shadow-2xl w-full max-w-sm overflow-hidden flex flex-col">
+            <div className="p-6 flex items-center justify-between border-b border-white/10 bg-[#0F172A]/50">
+              <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-indigo-400" />
+                Mã QR Đặt Hàng
+              </h3>
+              <button 
+                onClick={() => setShowQrModal(false)}
+                className="text-slate-400 hover:text-white transition-colors"
+              >
+                <XCircle className="w-6 h-6" />
+              </button>
+            </div>
+            
+            <div className="p-8 text-center flex flex-col items-center justify-center min-h-[300px]">
+              {isQrLoading ? (
+                <div className="w-10 h-10 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
+              ) : currentQrCode ? (
+                <>
+                  <div className="bg-white p-4 rounded-xl shadow-lg inline-block mb-6">
+                    <img src={currentQrCode} alt="QR Code" className="w-48 h-48" />
+                  </div>
+                  <h4 className="font-bold text-white text-lg mb-2">{editingPlan?.servicePlanName}</h4>
+                  <p className="text-sm text-slate-400">Khách hàng có thể quét mã này để truy cập trực tiếp vào trang đặt hàng của gói dịch vụ.</p>
+                </>
+              ) : (
+                <p className="text-slate-500">Không thể tải mã QR</p>
+              )}
             </div>
           </div>
         </div>

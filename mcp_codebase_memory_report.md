@@ -87,7 +87,7 @@ frontend/
 - **ServicePlan**: Quản lý tất cả dịch vụ hosting/VPS/cloud
 - **OrderRequest/OrderItem**: Xử lý đơn hàng
 - **Cart/CartItem**: Giỏ hàng
-- **Payment/Invoice**: Thanh toán & hóa đơn
+- **Payment/Invoice**: Thanh toán & hóa đơn (Tích hợp thật: Momo Webhook, SePay Webhook qua `PaymentsController` và frontend sandbox)
 - **Coupon/GiftCard**: Khuyến mãi & mã quà tặng
 
 ### 2. Dịch vụ Đám mây (Provisioning)
@@ -101,11 +101,11 @@ frontend/
 - **SslCertificate**: Quản lý SSL certificates
 - **DomainRecord**: Quản lý DNS/domains
 
-### 3. Tài khoản & Bảo mật Người dùng
-- **AppUser**: Tài khoản khách hàng
-- **Role/Permission**: RBAC system
-- **ApiKey**: API authentication
-- **TwoFactorBackupCode**: 2FA backup codes
+### 3. Tài khoản & Bảo mật Người dùng (Đã implement thật)
+- **AppUser**: Tài khoản khách hàng (Mật khẩu được hash bằng `BCryptPasswordHasher`)
+- **Role/Permission**: RBAC system (Xác thực qua JWT - `JwtTokenGenerator`)
+- **ApiKey**: API authentication (Tích hợp thực tế qua `ApiKeysController` và `RevokeApiKeyCommand`)
+- **TwoFactorBackupCode**: 2FA backup codes (Bảo mật 2 lớp thật với `SetupTwoFactorCommand`, `VerifyTwoFactorLoginCommand`)
 - **PasswordResetToken**: Reset password flow
 - **LoginHistory**: Audit login attempts
 
@@ -146,16 +146,16 @@ frontend/
 ```
 
 ### Application Layer (CQRS + MediatR)
-- **Commands**: Write operations (Create, Update, Delete)
-- **Queries**: Read operations (List, Get, Search)
+- **Commands**: Write operations (Create, Update, Delete) - Sử dụng **Entity Framework Core** qua Repository để đảm bảo toàn vẹn dữ liệu.
+- **Queries**: Read operations (List, Get, Search) - Sử dụng **Dapper** (`DapperContext`) để tối ưu tốc độ truy vấn đọc (VD: `GetMyCartQueryHandler`).
 - **Pipeline Behaviors**: Validation, Logging, Caching, Performance
 - **FluentValidation**: Request validators cho mỗi use case
 
 ### Domain Layer (DDD)
 - **Aggregates**: Mỗi entity là aggregate root
-- **Domain Events**: Events fired khi state changes
+- **Domain Events**: Events fired khi state changes (Được publish và handle thông qua **Kafka**)
 - **Value Objects**: Immutable objects (Money, Address, VpsSpec)
-- **Repository Pattern**: `IRepository<T>` + `IUnitOfWork`
+- **Repository Pattern**: `IRepository<T>` + `IUnitOfWork` (Triển khai bằng **EF Core**)
 
 ## Service Provisioning Flow
 
@@ -166,13 +166,15 @@ frontend/
    ↓
 3. ResourceProvisioningWorker nhận job từ queue
    ↓
-4. Specific provisioning service xử lý:
-   - DockerVpsProvisioningService → VPS instances (Ubuntu/Debian, SSH credentials, Cgroups 1GB)
-   - DockerGameServerProvisioningService → Game servers (Minecraft, CS2, Rust, TCP/UDP ports)
-   - DockerAppInstallerService → App marketplace (WordPress, Ghost, n8n, Adminer, Nextcloud)
-   - MinioProvisioningService → Object storage (MinIO S3 Buckets, AWS SDK, Capacity limits)
-   - DockerStaticSiteProvisioningService → Static sites (Nginx Alpine 64MB, Host Volume RO)
-   - AcmeProvisioningService → SSL certificates (Let's Encrypt ACME v2, DNS preflight, RSA-2048)
+4. Specific provisioning service xử lý (Thực tế hiện tại):
+   - ✅ DockerVpsProvisioningService      → TẠO CONTAINER THẬT
+   - ✅ DockerDatabaseProvisioningService → TẠO DATABASE THẬT
+   - ❌ MockStaticSiteProvisioningService → CHỈ DELAY + RETURN FAKE
+   - ❌ AcmeProvisioningService           → GENERATE FAKE CERT
+   - ❌ MinioProvisioningService          → KHÔNG TẠO BUCKET
+   - ❌ CloudflareCdnProvisioningService  → RETURN FAKE URL
+   - ❌ DockerGameServerProvisioningService → KHÔNG TẠO CONTAINER
+   - ❌ DockerAppInstallerService         → KHÔNG INSTALL APP
    ↓
 5. Status update qua SignalR đến customer
    ↓
@@ -180,6 +182,10 @@ frontend/
 ```
 
 ## Background Jobs & Workers
+
+### Message Brokers & Event Driven
+- **Kafka**: Hệ thống pub/sub xử lý Domain Events (`DomainEventKafkaConsumerWorker`) và Audit Logs (`AuditLogKafkaConsumerWorker`) thông qua `KafkaProducerService`.
+- **RabbitMQ**: Xử lý các luồng tác vụ bất đồng bộ như Gửi Email thông báo (`NotificationEmailConsumerWorker`) và Xử lý hết hạn đơn hàng (`OrderExpiryConsumerWorker`).
 
 ### Hangfire Jobs
 - `SubscriptionMonitorWorker`: Giám sát subscription sắp hết hạn
@@ -302,24 +308,41 @@ Khi làm việc với codebase này, cần tham khảo:
 ## Recent Updates & Changes
 
 ### Backend Updates
-- [ ] Added new entities và relations
-- [ ] Updated provisioning services
-- [ ] Enhanced security (2FA, API keys)
-- [ ] Improved caching strategy
-- [ ] Added new background jobs
+- [x] Added `ExportOrders` query (Excel/CSV/PDF) and `GetPlanQrCode` query
+- [x] Updated `OrdersController` and `ServicePlansController`
+- [x] Fixed `TypeLoadException` in `DockerClientFactory` for Docker Engine API
+- [x] Fixed VPS Quota checking bug for existing users with 0 quota
+- [x] Fixed email template to include explicit product web link and cache buster
 
 ### Frontend Updates
-- [ ] Updated page routes và navigation
-- [ ] Enhanced dashboard UI
-- [ ] Added new widgets và components
-- [ ] Improved responsive design
-- [ ] Updated API client integration
+- [x] UI/UX Overhaul: Converted admin dashboard to dark mode/glassmorphism aesthetics
+- [x] Implemented mega menu and homepage sections, fixed Next.js 15 bugs
+- [x] Redesigned explore and careers pages, added 14 new solution pages
+- [x] Optimized mobile layout for Header, Banner, Explore, Careers
+- [x] Standardized VPS and Dedicated Server dashboards
+- [x] Updated Admin Orders and Service Plans pages to integrate Export and QR Code features
 
 ### Infrastructure Updates
-- [ ] Database migration scripts
-- [ ] Docker Compose configurations
-- [ ] Environment variables setup
-- [ ] Monitoring & logging improvements
+- [x] Reverted incorrect backend proxy IP and used correct duckdns domain
+- [x] Deleted obsolete memory report v2 to consolidate into v1
+
+## 🔴 Critical Findings - Dịch Vụ Mock
+
+### Vấn Đề Nặng Nhất:
+1. **Chỉ 2/9 services provisioning là REAL** (VPS + Database)
+2. **7 services còn lại chỉ là MOCK** - không tạo tài nguyên thật
+3. **Customer sẽ mua sản phẩm nhưng không nhận được gì** - chỉ là mô phỏng
+
+### Dịch Vụ Cần Implement Thật:
+
+| Priority | Service | Required Integration | Estimated Effort |
+|----------|---------|---------------------|------------------|
+| P0 | Static Site | Vercel API / Netlify API | 2-3 days |
+| P0 | Object Storage | AWS S3 SDK / MinIO SDK | 2 days |
+| P1 | CDN | Cloudflare API | 2-3 days |
+| P1 | SSL Certificate | Let's Encrypt ACME client | 3 days |
+| P2 | Game Server | Docker + game server images | 2 days |
+| P2 | App Installer | Docker + app marketplace | 3 days |
 
 ## Recommendations
 

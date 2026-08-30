@@ -1,79 +1,179 @@
-# CloudServiceStore — Cloud Hosting Platform
-
-[![CI Develop](https://github.com/buidi2004/object-oriented-software-programming/actions/workflows/ci-develop.yml/badge.svg?branch=develop)](https://github.com/buidi2004/object-oriented-software-programming/actions/workflows/ci-develop.yml)
-[![Deploy to Production](https://github.com/buidi2004/object-oriented-software-programming/actions/workflows/deploy-main.yml/badge.svg?branch=main)](https://github.com/buidi2004/object-oriented-software-programming/actions/workflows/deploy-main.yml)
-
----
-
-
-## Bối cảnh
-Dự án `CloudServiceStore` (.NET Clean Architecture: Domain/Application/Infrastructure/WebApi/Tests, CQRS+MediatR, Docker Compose, đã có `VpsInstance` provisioning thật qua `Docker.DotNet`).
-
-Các service sau đang **mock/giả lập** (chỉ delay giả rồi trả về success), cần chuyển thành **provisioning thật, chạy trên chính hạ tầng Docker sẵn có, không tốn phí license/API key trả phí**:
-
-- `AcmeProvisioningService` (SSL)
-- `MinioProvisioningService` (Object Storage)
-- `ManagedDatabaseInstance` provisioning (hiện chưa có service thật)
-- `GameServerInstance` provisioning
-- `StaticSite` provisioning
-- `AppInstallation` provisioning
-
-## Yêu cầu bắt buộc (áp dụng cho MỌI service bên dưới)
-
-1. **Không dùng mock/delay giả** — mọi thao tác phải gọi API/Docker daemon thật.
-2. **Không dùng dịch vụ trả phí** — chỉ dùng: Let's Encrypt, MinIO (self-host), Docker container tự quản lý (Postgres/MySQL/Redis chính thức image), image open-source cho game server, Nginx/Caddy cho static site, Docker Compose template cho app installer.
-3. **Idempotency**: dùng `IdempotencyKey` đã có sẵn trong `ResourceProvisioningWorker` — nếu job retry, không được tạo trùng resource (check tồn tại trước khi tạo).
-4. **Validate trước khi thực thi** (qua FluentValidation pipeline behavior sẵn có):
-   - Check port trống trước khi bind container (tránh `port already allocated` → lỗi 500).
-   - Check tên container/bucket/database không trùng (tránh conflict → lỗi 400/409).
-   - Check tài nguyên server còn đủ (RAM/disk) trước khi spin container mới — nếu không đủ, trả về lỗi nghiệp vụ rõ ràng (400 với message cụ thể), KHÔNG để Docker daemon throw exception văng thẳng lên tới API (500).
-5. **Try/catch + rollback**: nếu bước nào trong provisioning fail giữa chừng (VD: container tạo được nhưng gán network fail), phải cleanup resource đã tạo dở, set trạng thái entity về `Failed` kèm lý do, KHÔNG để entity kẹt ở trạng thái `Provisioning` mãi mãi.
-6. **Timeout**: mọi lệnh gọi Docker/ACME phải có timeout (VD: 60s), không block worker vô thời hạn.
-7. **Retry với backoff**: dùng Hangfire's `AutomaticRetry` (giới hạn 3 lần) cho các lỗi tạm thời (network, Docker daemon busy), KHÔNG retry cho lỗi nghiệp vụ (VD: tên trùng).
-8. **Middleware exception handling sẵn có** (`Middlewares/ExceptionHandlingMiddleware`) phải bắt được toàn bộ exception mới phát sinh từ các service này và map đúng status code (400 cho lỗi input/nghiệp vụ, 409 cho conflict, 500 CHỈ khi thật sự là lỗi hệ thống không lường trước).
-9. **Log đầy đủ** ở mỗi bước provisioning (structured logging, có `CorrelationId`/`OrderId`) để debug khi có lỗi.
-10. **Cập nhật trạng thái real-time qua SignalR** đúng như pattern `VpsInstance` đã làm — không được giữ nguyên format cũ mà bỏ qua bước notify.
-11. **Viết unit test + integration test** cho mỗi service mới (theo cấu trúc `CloudServiceStore.Tests/`), bao gồm test case lỗi (port trùng, tài nguyên không đủ, Docker daemon down) để đảm bảo trả về đúng status code, không bao giờ để lộ raw exception ra response.
-
-## Chi tiết từng service
-
-### 1. SSL — `AcmeProvisioningService`
-- Dùng thư viện `Certes` (NuGet, free, MIT license).
-- Hỗ trợ HTTP-01 challenge (đơn giản hơn) và DNS-01 (nếu domain dùng Cloudflare, có thể tự động hoá qua Cloudflare free API).
-- Lưu private key + cert vào secure storage (VD: mount volume riêng hoặc DB encrypted field), KHÔNG log ra plaintext.
-- Xử lý lỗi: domain chưa trỏ đúng DNS (trả 400 "domain chưa point về server"), rate limit của Let's Encrypt (retry sau, không throw 500).
-- Thêm job renew tự động trước khi hết hạn 30 ngày (đã có `SslRenewalJob`, chỉ cần nối vào logic thật).
-
-### 2. Object Storage — `MinioProvisioningService`
-- MinIO server chạy sẵn 1 lần (không phải tạo container mới mỗi order) — dùng MinIO Admin API (`Minio.AdminApi` hoặc gọi `mc` CLI qua process) để tạo bucket + user + policy riêng cho từng khách trong 1 instance MinIO chung.
-- Set quota per-bucket theo gói dịch vụ khách mua.
-- Xử lý lỗi: bucket name trùng (S3 naming rules) → trả 400 kèm gợi ý tên khác.
-
-### 3. Managed Database — cần tạo mới `DockerDatabaseProvisioningService`
-- Mỗi order = 1 container Postgres/MySQL/Redis riêng, dùng `Docker.DotNet` (tái sử dụng pattern từ VPS).
-- Random port trong range cấu hình sẵn, kiểm tra port trống trước khi bind.
-- Tạo user/password riêng, không dùng chung root credentials.
-- Set resource limit cho container (`--memory`, `--cpus`) theo gói dịch vụ, tránh 1 khách chiếm hết tài nguyên server làm sập các container khác.
-- Healthcheck sau khi tạo (ping DB thật trước khi set status = `Active`), nếu healthcheck fail → rollback + status `Failed`.
-
-### 4. Game Server — cần tạo mới `DockerGameServerProvisioningService`
-- Dùng image community chuẩn theo game (VD: `itzg/minecraft-server`, `lloesche/valheim-server`).
-- Map port riêng, set env vars theo config khách chọn (RAM, version, mod...).
-- Volume riêng cho save data mỗi khách (persist qua restart).
-- Healthcheck: chờ log container báo "server started" (parse log) trước khi set Active.
-
-### 5. Static Site — cần tạo mới `StaticSiteProvisioningService`
-- Container Nginx/Caddy nhẹ, mount thư mục static đã upload/build của khách (read-only volume).
-- Tự động cấp domain phụ (subdomain) trỏ về container qua reverse proxy chung (Traefik hoặc Nginx reverse proxy đã có sẵn ở tầng ingress).
-- Auto SSL cho subdomain qua chính `AcmeProvisioningService` ở mục 1.
-
-### 6. App Installer — cần tạo mới `DockerAppInstallerService`
-- Chuẩn bị sẵn thư mục template Docker Compose cho từng app phổ biến (WordPress, Ghost, n8n...), mỗi app 1 file `docker-compose.{app}.yml`.
-- Khi khách cài: generate file compose từ template + env riêng (DB credentials, domain), chạy `docker compose -p {orderId} up -d`.
-- Lưu lại `docker-compose` đã generate để có thể `down`/cleanup khi khách huỷ dịch vụ.
-
-## Định nghĩa "Xong" (Definition of Done)
-- Không còn `Task.Delay` giả lập ở bất kỳ provisioning service nào trong danh sách trên.
-- Toàn bộ endpoint liên quan trả đúng status code theo tình huống thật (400/409/500 đúng nghĩa, không còn 500 do exception chưa bắt).
-- Có test case giả lập lỗi (port trùng, tài nguyên hết, Docker daemon lỗi) và assert response đúng, không server crash.
-- Entity không bao giờ kẹt ở trạng thái `Provisioning` quá timeout đã định — phải tự động chuyển `Failed` kèm message rõ ràng.
+IN4211– Phát triển phần mềm hướng đối tượng
+Bài tập lớn cuối kỳ
+TRƯỜNG ĐẠI HỌC ĐỒNG THÁP
+KHOA CÔNG NGHỆ VÀ KỸ THUẬT
+BỘ MÔN KHOA HỌC MÁY TÍNH
+ĐỀ BÀI TẬP LỚN CUỐI KỲ
+Website Bán Dịch vụ Cloud (VPS, Hosting, Domain...)
+Học phần: Phát triển phần mềm hướng đối tượng (IN4211)
+Hình thức đánh giá HĐ9.5– Báo cáo cuối môn, trọng số 0.5
+Chuẩn đầu ra
+5.1, 5.2, 5.3
+Hình thức làm bài Nhóm 3–4 sinh viên (giữ nguyên nhóm chủ đề)
+Thời hạn
+Báo cáo và demo tại Buổi 12
+1. Bối cảnh đề bài
+Một doanh nghiệp cung cấp dịch vụ cloud (tương tự https://vietnix.vn/) cần xây
+dựng website chính thức để:
+Giới thiệu doanh nghiệp, hạ tầng datacenter và các dịch vụ: VPS, Hosting, Domain,
+Email doanh nghiệp, SSL, Firewall chống DDoS...;
+Công bố bảng giá các gói dịch vụ theo chu kỳ thanh toán (tháng/năm) và chương
+trình khuyến mãi;
+Tiếp nhận yêu cầu đăng ký dịch vụ / tư vấn từ khách hàng cá nhân và doanh nghiệp;
+Đăng tin tức, blog kiến thức (hướng dẫn kỹ thuật, khuyến mãi, thông báo bảo trì...).
+Nhóm sinh viên đóng vai trò đội phát triển, xây dựng hệ thống gồm Backend Web API
+(.NET) và Frontend (Next.js hoặc Blazor).
+2. Kiến trúc và công nghệ bắt buộc
+2.1. Backend– ASP.NET Core Web API (.NET 8/9)
+Tổchức solution theo Clean Architecture 4 tầng: Domain, Application, Infrastructure,
+WebApi (buổi 4);
+Áp dụng SOLID principles và tối thiểu 3 Design Patterns (Repository, Unit of Work,
+Factory/Singleton/Observer...)– chỉ rõ trong báo cáo áp dụng ở đâu (buổi 2, 3);
+ORM:Entity Framework Core hoặc Dapper (hoặc hybrid– khuyến khích, buổi 5), CSDL
+SQL Server;
+RESTAPIđúngchuẩn:danhtừsốnhiều,statuscodehợplý,pagination/filtering/sorting,
+ProblemDetails cho lỗi, Swagger/OpenAPI (buổi 6);
+Bảo mật (buổi 7):
+1
+IN4211– Phát triển phần mềm hướng đối tượng
+Bài tập lớn cuối kỳ– JWTauthentication + refresh token cho khu vực quản trị;– Phân quyền theo role: Admin, Editor (tối thiểu 2 role);– Password hash bằng Bcrypt/PBKDF2;– Sinh mã QR cho mỗi gói dịch vụ (quét ra trang chi tiết gói / trang đặt hàng).
+2.2. Frontend– chọn MỘT trong hai
+Lựa
+chọn
+Công nghệ
+Ghi chú
+Option A Next.js
+(React,
+App Router)
+Option B Blazor
+bAssembly
+Server)
+(We
+hoặc
+Gọi API bằng fetch/axios, SSR/SSG cho landing page
+Gọi API bằng HttpClient
+Yêu cầu chung: responsive (desktop + mobile), có trang quản trị đăng nhập bằng JWT.
+2.3. Quy trình phát triển
+Git/GitHub (buổi 9): làm việc trên feature branch, merge qua Pull Request có re
+view, tối thiểu 10 PR và commit đều của tất cả thành viên;
+Unit Testing (buổi 8): xUnit + Moq, tối thiểu 15 test cases cho Domain/Application,
+báo cáo coverage;
+CI/CD (buổi 10): GitHub Actions tự động build + test khi push/PR; có Dockerfile
+cho API và docker-compose.yml (API + SQL Server);
+Triển khai (buổi 11, khuyến khích– điểm cộng): deploy lên Azure/AWS hoặc VPS, có
+logging bằng Serilog.
+3. Yêu cầu chức năng
+2
+IN4211– Phát triển phần mềm hướng đối tượng
+Bài tập lớn cuối kỳ
+3.1. Trang công khai (Landing Page)
+# Chứcnăng
+Mô tả
+1
+2
+3
+4
+5
+6
+7
+8
+Trang chủ
+Giới thiệu
+Dịch vụ
+Bảng giá
+Khách hàng
+Tin tức / Blog
+Liên hệ / Đặtdịch
+vụ
+Hero banner, gói dịch vụ nổi bật, khuyến mãi đang chạy, cam kết
+uptime, tin mới nhất
+Lịch sử, hạ tầng datacenter, chứng chỉ (ISO...), cam kết
+SLA/uptime 99.9%
+Danh mục: VPS (nhiều cấu hình), Hosting, Domain, Email doanh
+nghiệp, SSL, Firewall chống DDoS... kèm mô tả, thông số kỹ
+thuật
+So sánh các gói theo cấu hình (CPU/RAM/SSD/băng thông), giá
+theo chu kỳ tháng/năm, khuyến mãi có thời hạn, nút đặt hàng
+từng gói
+Đánh giá/testimonial, logo khách hàng tiêu biểu, mã QR từng gói
+dịch vụ
+Danh sách + chi tiết bài viết, phân trang, tìm kiếm, phân loại
+(hướng dẫn, khuyến mãi...)
+Form đăng ký: chọn dịch vụ, gói/cấu hình, chu kỳ thanh toán,
+thông tin khách hàng; lưu vào DB
+Đối tác / Affiliate Trang thông tin chính sách hoa hồng + form đăng ký làm đối
+tác/affiliate
+3.2. Trang quản trị (yêu cầu đăng nhập JWT)
+# Chứcnăng
+Role
+1
+2
+3
+4
+5
+6
+7
+8
+Đăng nhập, refresh token, đổi mật khẩu
+CRUD gói dịch vụ + bảng giá/khuyến mãi (tự động cập nhật giá
+ngoài trang chủ)
+CRUD danh mục dịch vụ, gói cấu hình (kèm sinh lại mã QR)
+CRUD tin tức/blog (soạn thảo rich text hoặc markdown)
+Quản lý yêu cầu đặt dịch vụ / đăng ký affiliate: xem, đổi trạng thái
+(Mới → Đang xử lý → Hoàn tất/Từ chối)
+Tất cả
+Admin
+Admin
+Admin, Editor
+Admin, Editor
+Thống kê: số yêu cầu theo tháng, gói dịch vụ được quan tâm– biểu đồ Admin
+Xuất danh sách yêu cầu đặt dịch vụ ra Excel (EPPlus/ClosedXML) Admin
+Audit log: ghi lại ai đăng nhập, ai sửa giá, khi nào
+Admin
+3.3. Gợi ý mô hình dữ liệu (tối thiểu)
+ServiceCategory (VPS/Hosting/Domain...), ServicePlan (gói dịch vụ), PlanPrice (giá
+theo chu kỳ tháng/năm), Promotion (khuyến mãi), NewsArticle, OrderRequest (yêu cầu
+đặt dịch vụ), AffiliateApplication, AppUser, Role, AuditLog.
+Nhóm được tự mở rộng mô hình, nhưng phải có sơ đồ ERD trong báo cáo.
+3
+IN4211– Phát triển phần mềm hướng đối tượng
+Bài tập lớn cuối kỳ
+4. Sản phẩm nộp
+1. Source code trên GitHub repository của nhóm (mời GV vào repo):
+README: mô tả kiến trúc, hướng dẫn chạy (docker compose up phải chạy được),
+tài khoản demo;
+Lịch sử commit/PR thể hiện đóng góp từng thành viên.
+2. Báo cáo (PDF, 15–25 trang): phân tích yêu cầu, ERD, sơ đồ kiến trúc Clean Architec
+ture, các Design Pattern đã áp dụng (kèm trích code), ảnh chụp màn hình, phân công
+công việc, kết quả test coverage.
+3. Slides + Demo trực tiếp tại buổi 12 (15 phút/nhóm + 5 phút hỏi đáp): demo end-to
+end cả trang công khai và trang quản trị, demo pipeline CI chạy trên GitHub Actions.
+5. Thang điểm (100 điểm → quy về trọng số 0.5)
+Tiêu chí
+Điểm
+Kiến trúc Clean Architecture + SOLID + Design Patterns đúng và có giải thích 20
+Backend API: đầy đủ chức năng, đúng chuẩn REST, ORM hợp lý
+20
+Frontend: đầy đủ chức năng, responsive, trải nghiệm tốt
+Bảo mật: JWT + role, hash password, QR code
+Unit Testing (≥15 tests, có coverage)
+Git teamwork (PR, review, đóng góp đều) + CI/CD + Docker
+Báo cáo + thuyết trình, demo trôi chảy
+Trả lời vấn đáp (hỏi từng thành viên về phần mình làm)
+15
+10
+10
+10
+10
+5
+Điểm cộng: deploy thực tế lên cloud có link chạy được
++5
+5.1. Quy định trừ điểm
+docker compose up không chạy được:–10;
+Thành viên không có commit/PR đáng kể: thành viên đó bị trừ tới 50% điểm cá nhân;
+Sao chép code nhóm khác hoặc dự án có sẵn không khai báo nguồn: 0 điểm toàn nhóm
+(theo quy định học phần);
+Nộp trễ:–10%/ngày.
+Mọi thắc mắc về đề bài liên hệ giảng viên qua email hoặc kênh lớp học.
+Đề bài có thể được điều chỉnh nhỏ và sẽ thông báo trước tối thiểu 1 tuần.
+4

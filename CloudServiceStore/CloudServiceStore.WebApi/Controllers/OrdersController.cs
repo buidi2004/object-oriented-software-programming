@@ -40,6 +40,14 @@ public class OrdersController : ControllerBase
         _uow = uow;
     }
 
+    [HttpGet("export")]
+    [Authorize(Roles = "Admin,Editor")]
+    public async Task<IActionResult> ExportOrders(CancellationToken ct)
+    {
+        var bytes = await _mediator.Send(new CloudServiceStore.Application.Features.Orders.Queries.ExportOrders.ExportOrderRequestsQuery(), ct);
+        return File(bytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Orders.xlsx");
+    }
+
     [HttpPost("checkout")]
     [Authorize]
     public async Task<IActionResult> Checkout([FromBody] CheckoutCommand command, CancellationToken ct)

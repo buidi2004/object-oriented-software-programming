@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { CheckCircle2, Cpu, HardDrive, Database, Wifi } from 'lucide-react';
+import { CheckCircle2, Cpu, HardDrive, Database, Wifi, QrCode, X } from 'lucide-react';
 import { api } from '@/src/lib/api';
 
 export interface CategoryPlanCard {
@@ -38,6 +38,27 @@ export default function CategoryPricingGrid({
   const [activeTab, setActiveTab] = useState<'starter' | 'professional' | 'enterprise'>('starter');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // QR Code Modal State
+  const [showQrModal, setShowQrModal] = useState(false);
+  const [currentQrCode, setCurrentQrCode] = useState<string>('');
+  const [isQrLoading, setIsQrLoading] = useState(false);
+  const [selectedPlanName, setSelectedPlanName] = useState<string>('');
+
+  const openQrModal = async (plan: CategoryPlanCard) => {
+    setShowQrModal(true);
+    setIsQrLoading(true);
+    setSelectedPlanName(plan.name);
+    try {
+      const res = await api.get(`/service-plans/${plan.id}/qrcode`);
+      setCurrentQrCode(res.data.qrCode);
+    } catch (err) {
+      console.error('Failed to load QR code', err);
+      setCurrentQrCode('');
+    } finally {
+      setIsQrLoading(false);
+    }
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -215,10 +236,63 @@ export default function CategoryPricingGrid({
               >
                 Xem chi tiết &amp; Đặt mua
               </Link>
+              
+              <button
+                onClick={() => openQrModal(plan)}
+                className={`mt-3 w-full py-2.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all ${
+                  isPopular
+                    ? 'bg-zinc-800/20 hover:bg-zinc-800/40 text-zinc-800 border border-zinc-800/30'
+                    : 'bg-zinc-50 hover:bg-zinc-200 text-zinc-600 border border-zinc-200'
+                }`}
+              >
+                <QrCode className="w-4 h-4" />
+                Quét mã QR
+              </button>
             </div>
           );
         })}
       </div>
+
+      {/* QR Code Modal */}
+      {showQrModal && (
+        <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-sm w-full overflow-hidden animate-in zoom-in-95 duration-200">
+            <div className="flex justify-between items-center p-4 border-b border-zinc-100">
+              <h3 className="font-bold text-lg text-zinc-900">Mã QR Gói {selectedPlanName}</h3>
+              <button 
+                onClick={() => setShowQrModal(false)}
+                className="p-1 hover:bg-zinc-100 rounded-full text-zinc-500 transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="p-8 flex flex-col items-center justify-center min-h-[250px]">
+              {isQrLoading ? (
+                <div className="w-10 h-10 border-4 border-black border-t-transparent rounded-full animate-spin" />
+              ) : currentQrCode ? (
+                <div className="flex flex-col items-center">
+                  <div className="p-4 bg-white border border-zinc-200 rounded-xl shadow-sm mb-4">
+                    <img src={currentQrCode} alt="QR Code" className="w-48 h-48" />
+                  </div>
+                  <p className="text-sm text-zinc-500 text-center">
+                    Sử dụng điện thoại quét mã QR để mở trang chi tiết và đặt hàng gói dịch vụ này.
+                  </p>
+                </div>
+              ) : (
+                <p className="text-red-500 text-sm">Không thể tải mã QR</p>
+              )}
+            </div>
+            <div className="p-4 bg-zinc-50 border-t border-zinc-100 flex justify-end">
+              <button 
+                onClick={() => setShowQrModal(false)}
+                className="px-4 py-2 bg-zinc-200 hover:bg-zinc-300 text-zinc-800 rounded-lg text-sm font-bold transition-colors"
+              >
+                Đóng
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

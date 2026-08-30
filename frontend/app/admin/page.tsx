@@ -11,7 +11,10 @@ import {
   Clock, Settings, ShieldAlert, Shield, Search, ChevronRight, Lock, AlertCircle,
   Wallet, Wrench, Headphones, X, CheckCircle2, Info, Phone, Briefcase
 } from 'lucide-react';
-
+import { 
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, 
+  ComposedChart, Line
+} from 'recharts';
 interface AdminModuleItem {
   href: string;
   label: string;
@@ -276,6 +279,17 @@ export default function AdminDashboardPage() {
     }
   };
 
+  const chartData = [
+    { name: 'Tháng 1', revenue: 40000000, orders: 240 },
+    { name: 'Tháng 2', revenue: 30000000, orders: 139 },
+    { name: 'Tháng 3', revenue: 50000000, orders: 380 },
+    { name: 'Tháng 4', revenue: 47000000, orders: 390 },
+    { name: 'Tháng 5', revenue: 68000000, orders: 480 },
+    { name: 'Tháng 6', revenue: 85000000, orders: 680 },
+    { name: 'Tháng 7', revenue: 94000000, orders: 750 },
+    { name: 'Tháng 8', revenue: 110000000, orders: 890 },
+  ];
+
   const moduleCategories: { category: string; items: AdminModuleItem[] }[] = [
     {
       category: '1. Vận Hành & Khách Hàng',
@@ -484,6 +498,38 @@ export default function AdminDashboardPage() {
               <p className="text-xs text-slate-500 mt-1 font-medium">{stat.label}</p>
             </div>
           ))}
+        </div>
+
+        {/* Revenue & Orders Chart */}
+        <div className="bg-[#1E293B] bg-opacity-70 backdrop-blur-md rounded-md p-6 border border-white/10 shadow-2xs mb-8">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h2 className="text-lg font-black text-white">Thống Kê Doanh Thu & Đơn Hàng</h2>
+              <p className="text-xs text-slate-400">Dữ liệu tăng trưởng trong 8 tháng qua</p>
+            </div>
+            <select className="bg-[#0F172A] border border-white/10 text-white text-xs font-bold p-2 rounded">
+              <option>Năm nay</option>
+              <option>Năm trước</option>
+            </select>
+          </div>
+          <div className="h-80 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <ComposedChart data={chartData} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
+                <XAxis dataKey="name" stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} />
+                <YAxis yAxisId="left" stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `${value / 1000000}M`} />
+                <YAxis yAxisId="right" orientation="right" stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} />
+                <Tooltip 
+                  contentStyle={{ backgroundColor: '#0F172A', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px' }}
+                  itemStyle={{ fontSize: '12px', fontWeight: 'bold' }}
+                  labelStyle={{ color: '#94a3b8', marginBottom: '4px' }}
+                />
+                <Legend wrapperStyle={{ fontSize: '12px', paddingTop: '20px' }} />
+                <Bar yAxisId="left" dataKey="revenue" name="Doanh thu (VNĐ)" fill="#10b981" radius={[4, 4, 0, 0]} barSize={32} />
+                <Line yAxisId="right" type="monotone" dataKey="orders" name="Số đơn hàng" stroke="#8b5cf6" strokeWidth={3} dot={{ r: 4, strokeWidth: 2 }} activeDot={{ r: 6 }} />
+              </ComposedChart>
+            </ResponsiveContainer>
+          </div>
         </div>
 
         {/* QUICK ACCESS: PRICING & HARDWARE SPECS MANAGER FOR 11 SERVICES */}
