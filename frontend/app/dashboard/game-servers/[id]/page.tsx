@@ -249,15 +249,16 @@ export default function GameServerDetailPage({ params }: { params: Promise<{ id:
               <Gamepad2 className="w-8 h-8 text-[#1F1F1F]" />
             </div>
             <div>
-              <h2 className="text-lg font-black text-[#ffffff]">{server.serverName}</h2>
-              <p className="text-xs text-[#94a3b8]">Game Server ({server.gameTypeName})</p>
+              <div className="flex items-center gap-3 justify-center md:justify-start">
+                <h2 className="text-lg font-black text-[#ffffff]">{server.serverName}</h2>
+                <span className={`flex items-center gap-1.5 px-2.5 py-0.5 rounded-sm text-[10px] uppercase font-bold border ${isRunning ? 'bg-[#0f291e] text-[#4ade80] border-[#166534]' : 'bg-slate-800 text-slate-400 border-slate-600'}`}>
+                  <span className={`w-1.5 h-1.5 rounded-full ${isRunning ? 'bg-[#4ade80]' : 'bg-slate-500'}`} />
+                  {isRunning ? 'ĐANG HOẠT ĐỘNG' : 'ĐÃ DỪNG'}
+                </span>
+              </div>
+              <p className="text-xs text-[#94a3b8] mt-1">Game Server ({server.gameTypeName})</p>
             </div>
             <div className="w-full space-y-2 max-w-xs">
-              <div className={`w-full py-1.5 px-3 rounded-sm font-bold text-xs uppercase tracking-wider text-center text-[#ffffff] transition-colors ${
-                isRunning ? 'bg-[#16a34a]' : 'bg-slate-500'
-              }`}>
-                {isRunning ? 'ĐANG HOẠT ĐỘNG' : 'ĐÃ DỪNG'}
-              </div>
               <button className="w-full py-1.5 px-3 bg-[#16a34a] hover:bg-[#15803d] text-[#ffffff] font-bold text-xs rounded-sm transition-colors flex items-center justify-center gap-1.5 shadow-sm">
                 <span>⬆</span> Nâng cấp Slot Game
               </button>
@@ -323,8 +324,8 @@ export default function GameServerDetailPage({ params }: { params: Promise<{ id:
       </div>
 
       {/* MAIN MANAGEMENT BOX MATCHING SCREENSHOT */}
-      <div className="max-w-5xl mx-auto bg-white rounded-md border border-slate-200 shadow-xl overflow-hidden">
-        <div className="p-6 border-b border-slate-100">
+      <div className="max-w-5xl mx-auto bg-[#0b1120] rounded-md border border-slate-700 shadow-xl overflow-hidden mt-6">
+        <div className="p-6 border-b border-slate-700">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-600 flex items-center justify-center text-white shadow-sm font-bold text-xl">
@@ -332,23 +333,19 @@ export default function GameServerDetailPage({ params }: { params: Promise<{ id:
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <h3 className="text-2xl font-bold text-slate-900 tracking-tight font-sans">{hostname}</h3>
+                  <h3 className="text-2xl font-bold text-white tracking-tight font-sans">{server.serverName}</h3>
                   <span className="text-lg" title="Việt Nam">🇻🇳</span>
                 </div>
+                <div className="text-xs text-slate-400 font-mono mt-0.5">{hostname}</div>
               </div>
             </div>
 
             <div className="flex items-center gap-3">
-              <span className={`flex items-center gap-1.5 px-3 py-1 rounded-sm text-xs font-bold border ${isRunning ? 'bg-[#f0fdf4] text-[#16a34a] border-[#bbf7d0]' : 'bg-slate-100 text-slate-600 border-slate-200'}`}>
-                <span className={`w-2 h-2 rounded-full ${isRunning ? 'bg-[#16a34a]' : 'bg-slate-400'}`} />
-                {isRunning ? 'Online' : 'Offline'}
-              </span>
-
-              <button className="p-2 text-slate-600 hover:text-slate-600 rounded-sm hover:bg-slate-100 transition-colors">
+              <button className="p-2 text-slate-400 hover:text-white rounded-sm hover:bg-white/5 transition-colors">
                 <Moon className="w-4 h-4" />
               </button>
 
-              <button onClick={fetchStatsAndLogs} className="p-2 text-slate-600 hover:text-slate-600 rounded-sm hover:bg-slate-100 transition-colors">
+              <button onClick={fetchStatsAndLogs} className="p-2 text-slate-400 hover:text-white rounded-sm hover:bg-white/5 transition-colors">
                 <RefreshCw className="w-4 h-4" />
               </button>
             </div>
@@ -360,8 +357,8 @@ export default function GameServerDetailPage({ params }: { params: Promise<{ id:
               <button 
                 onClick={() => handleAction('stop')}
                 disabled={actionLoading !== null}
-                className={`w-8 h-8 rounded border flex items-center justify-center transition-colors ${actionLoading === 'stop' ? 'border-red-300 bg-red-50 text-red-500' : 'border-red-300 hover:bg-red-50 text-red-500'}`}
-                title="Stop Game Server"
+                className={`w-8 h-8 rounded border flex items-center justify-center transition-colors ${actionLoading === 'stop' ? 'border-red-500/50 bg-red-500/10 text-red-400' : 'border-red-500/30 hover:bg-red-500/20 text-red-400'}`}
+                title="Dừng Game Server"
               >
                 {actionLoading === 'stop' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Square className="w-4 h-4" />}
               </button>
@@ -369,8 +366,8 @@ export default function GameServerDetailPage({ params }: { params: Promise<{ id:
               <button 
                 onClick={() => handleAction('start')}
                 disabled={actionLoading !== null}
-                className={`w-8 h-8 rounded border flex items-center justify-center transition-colors ${actionLoading === 'start' ? 'border-emerald-300 bg-emerald-50 text-emerald-500' : 'border-emerald-300 hover:bg-emerald-50 text-emerald-500'}`}
-                title="Start Game Server"
+                className={`w-8 h-8 rounded border flex items-center justify-center transition-colors ${actionLoading === 'start' ? 'border-emerald-500/50 bg-emerald-500/10 text-emerald-400' : 'border-emerald-500/30 hover:bg-emerald-500/20 text-emerald-400'}`}
+                title="Bật Game Server"
               >
                 {actionLoading === 'start' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Play className="w-4 h-4" />}
               </button>
@@ -378,38 +375,28 @@ export default function GameServerDetailPage({ params }: { params: Promise<{ id:
             <button 
               onClick={() => handleAction('restart')}
               disabled={actionLoading !== null}
-              className="w-8 h-8 rounded border border-blue-300 hover:bg-blue-50 flex items-center justify-center text-[#1F1F1F] transition-colors"
-              title="Restart Game Server"
+              className="w-8 h-8 rounded border border-blue-500/30 hover:bg-blue-500/20 flex items-center justify-center text-blue-400 transition-colors"
+              title="Khởi động lại Game Server"
             >
               <RefreshCw className={`w-4 h-4 ${actionLoading === 'restart' ? 'animate-spin' : ''}`} />
             </button>
             <button 
               onClick={() => setIsTerminalModalOpen(true)}
-              className="w-8 h-8 rounded border border-slate-300 bg-white text-slate-900 hover:bg-slate-100 flex items-center justify-center transition-colors shadow-sm"
-              title="Open Terminal Fullscreen"
+              className="w-8 h-8 rounded border border-slate-600 bg-slate-800 text-slate-300 hover:bg-slate-700 flex items-center justify-center transition-colors shadow-sm"
+              title="Mở Terminal Toàn màn hình"
             >
               <Terminal className="w-4 h-4" />
             </button>
           </div>
-
-          <div className="mt-3">
-            <span className="inline-block px-3 py-1 bg-slate-50 border border-slate-200 rounded text-xs font-mono text-slate-700 font-bold">
-              {ipAddress}
-            </span>
-          </div>
         </div>
 
         {/* Tab Navigation Pill Bar */}
-        <div className="flex items-center justify-between px-6 border-b border-slate-100 overflow-x-auto bg-white">
+        <div className="flex items-center justify-between px-6 border-b border-slate-700 overflow-visible bg-[#0b1120]">
           <div className="flex items-center gap-1.5 py-2">
             {[
-              { id: 'overview', label: 'Overview', icon: Layers },
-              { id: 'graphs', label: 'Graphs', icon: BarChart3 },
-              { id: 'settings', label: 'Settings', icon: Settings },
-              { id: 'install', label: 'Install', icon: Sliders },
-              { id: 'tasks', label: 'Tasks And Logs', icon: FileText },
-              { id: 'networking', label: 'Networking', icon: Globe },
-              { id: 'backups', label: 'Backups & Snapshots', icon: Camera },
+              { id: 'overview', label: 'Tổng quan', icon: Layers },
+              { id: 'graphs', label: 'Biểu đồ', icon: BarChart3 },
+              { id: 'settings', label: 'Cài đặt', icon: Settings },
             ].map((tab) => {
               const Icon = tab.icon;
               const isActive = activeTab === tab.id;
@@ -419,8 +406,8 @@ export default function GameServerDetailPage({ params }: { params: Promise<{ id:
                   onClick={() => setActiveTab(tab.id as any)}
                   className={`flex items-center gap-2 py-2 px-3.5 rounded-sm text-xs font-bold transition-all whitespace-nowrap ${
                     isActive 
-                      ? 'bg-[#eff6ff] text-[#2563eb] border border-[#bfdbfe]' 
-                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                      ? 'bg-blue-900/30 text-blue-400 border border-blue-500/30' 
+                      : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'
                   }`}
                 >
                   <Icon className="w-4 h-4" />
@@ -428,24 +415,44 @@ export default function GameServerDetailPage({ params }: { params: Promise<{ id:
                 </button>
               );
             })}
+            
+            <div className="relative group">
+              <button className="flex items-center gap-2 py-2 px-3.5 rounded-sm text-xs font-bold transition-all whitespace-nowrap text-slate-400 hover:text-white hover:bg-white/5 border border-transparent">
+                <Sliders className="w-4 h-4" />
+                <span>Thêm...</span>
+                <ChevronDown className="w-3 h-3 ml-1" />
+              </button>
+              <div className="absolute top-full left-0 mt-1 w-48 bg-[#1e293b] border border-slate-700 rounded-md shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+                {[
+                  { id: 'install', label: 'Cài đặt HĐH', icon: Sliders },
+                  { id: 'tasks', label: 'Tác vụ & Log', icon: FileText },
+                  { id: 'networking', label: 'Mạng', icon: Globe },
+                  { id: 'backups', label: 'Sao lưu', icon: Camera },
+                ].map(tab => (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id as any)}
+                    className="w-full text-left px-4 py-2 text-xs font-medium text-slate-300 hover:bg-white/5 hover:text-white flex items-center gap-2"
+                  >
+                    <tab.icon className="w-4 h-4" /> {tab.label}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
-
-          <button className="text-slate-600 hover:text-slate-600 p-1">
-            <ChevronDown className="w-4 h-4 text-[#1F1F1F]" />
-          </button>
         </div>
 
         {/* TAB 1: OVERVIEW (MATCHING SCREENSHOT PIXEL-FOR-PIXEL) */}
         {activeTab === 'overview' && (
-          <div className="p-6 space-y-6">
+          <div className="p-6 space-y-6 bg-[#0b1120]">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Card 1: Disk Usage */}
-              <div className="bg-white p-5 rounded border border-slate-200/80 shadow-sm space-y-4">
+              <div className="bg-[#101828] p-5 rounded border border-slate-700 shadow-sm space-y-4">
                 <div className="flex justify-between items-center text-xs">
-                  <span className="font-bold text-slate-800">Disk Usage</span>
-                  <span className="font-mono text-slate-600 font-bold">2.4 / 100 GB</span>
+                  <span className="font-bold text-white">Dung lượng ổ cứng</span>
+                  <span className="font-mono text-slate-400 font-bold">2.4 / 100 GB</span>
                 </div>
-                <div className="w-full bg-slate-100 rounded-sm h-5 overflow-hidden p-0.5 border border-slate-200">
+                <div className="w-full bg-slate-800 rounded-sm h-5 overflow-hidden p-0.5 border border-slate-700">
                   <div 
                     className="bg-[#f59e0b] h-full rounded text-[10px] text-slate-900 font-bold flex items-center justify-center transition-all duration-500"
                     style={{ width: '24%' }}
@@ -456,14 +463,14 @@ export default function GameServerDetailPage({ params }: { params: Promise<{ id:
               </div>
 
               {/* Card 2: CPU Line Chart */}
-              <div className="bg-white p-5 rounded border border-slate-200/80 shadow-sm relative overflow-hidden">
+              <div className="bg-[#101828] p-5 rounded border border-slate-700 shadow-sm relative overflow-hidden">
                 <div className="flex justify-between items-center text-xs mb-2">
-                  <span className="font-bold text-slate-800">CPU</span>
-                  <span className="font-mono font-bold text-slate-700">{currentCpu}%</span>
+                  <span className="font-bold text-white">CPU</span>
+                  <span className="font-mono font-bold text-slate-300">{currentCpu}%</span>
                 </div>
                 
                 <div className="h-28 w-full flex items-end pt-2">
-                  <div className="w-12 text-[9px] text-slate-600 font-mono flex flex-col justify-between h-full pr-1 text-right">
+                  <div className="w-12 text-[9px] text-slate-400 font-mono flex flex-col justify-between h-full pr-1 text-right">
                     <span>10.00 %</span>
                     <span>8.00 %</span>
                     <span>6.00 %</span>
@@ -471,12 +478,12 @@ export default function GameServerDetailPage({ params }: { params: Promise<{ id:
                     <span>2.00 %</span>
                     <span>0.00 %</span>
                   </div>
-                  <div className="flex-1 h-full border-l border-b border-slate-200 relative flex items-end overflow-hidden">
+                  <div className="flex-1 h-full border-l border-b border-slate-600 relative flex items-end overflow-hidden">
                     <svg className="w-full h-full overflow-hidden" viewBox="0 0 100 100" preserveAspectRatio="none">
-                      <line x1="0" y1="20" x2="100" y2="20" stroke="#f1f5f9" strokeWidth="1" />
-                      <line x1="0" y1="40" x2="100" y2="40" stroke="#f1f5f9" strokeWidth="1" />
-                      <line x1="0" y1="60" x2="100" y2="60" stroke="#f1f5f9" strokeWidth="1" />
-                      <line x1="0" y1="80" x2="100" y2="80" stroke="#f1f5f9" strokeWidth="1" />
+                      <line x1="0" y1="20" x2="100" y2="20" stroke="#334155" strokeWidth="1" />
+                      <line x1="0" y1="40" x2="100" y2="40" stroke="#334155" strokeWidth="1" />
+                      <line x1="0" y1="60" x2="100" y2="60" stroke="#334155" strokeWidth="1" />
+                      <line x1="0" y1="80" x2="100" y2="80" stroke="#334155" strokeWidth="1" />
                       <polygon 
                         points={polygonStr} 
                         fill="rgba(59, 130, 246, 0.15)" 
@@ -492,51 +499,47 @@ export default function GameServerDetailPage({ params }: { params: Promise<{ id:
                     </svg>
                   </div>
                 </div>
-
-                <div className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-700 pointer-events-none">
-                  <ChevronLeft className="w-4 h-4" />
-                </div>
               </div>
 
               {/* Card 3: Bandwidth */}
-              <div className="bg-white p-5 rounded border border-slate-200/80 shadow-sm space-y-4">
+              <div className="bg-[#101828] p-5 rounded border border-slate-700 shadow-sm space-y-4">
                 <div className="flex justify-between items-center text-xs">
-                  <span className="font-bold text-slate-800">Bandwidth</span>
-                  <span className="font-mono text-slate-600 font-bold">1.45 / ∞ GB</span>
+                  <span className="font-bold text-white">Băng thông</span>
+                  <span className="font-mono text-slate-400 font-bold">Không giới hạn</span>
                 </div>
-                <div className="space-y-1">
-                  <div className="flex justify-between text-[10px] text-slate-600 font-bold px-1">
-                    <span>IN</span>
-                    <span>OUT</span>
+                <div className="grid grid-cols-2 gap-4 mt-2">
+                  <div className="bg-slate-800/50 p-3 rounded border border-slate-700 flex flex-col items-center justify-center">
+                    <div className="text-emerald-400 font-bold text-lg">1.45 GB</div>
+                    <div className="text-[10px] text-slate-400 font-semibold uppercase mt-1">Tải xuống (IN)</div>
                   </div>
-                  <div className="w-full bg-slate-100 rounded-sm h-6 flex overflow-hidden border border-slate-200 text-[10px] font-bold text-center leading-6">
-                    <div className="bg-[#93c5fd] text-slate-800" style={{ width: '94.90%' }}>94.90%</div>
-                    <div className="bg-[#fecdd3] text-slate-800" style={{ width: '5.10%' }}>5.10%</div>
+                  <div className="bg-slate-800/50 p-3 rounded border border-slate-700 flex flex-col items-center justify-center">
+                    <div className="text-blue-400 font-bold text-lg">0.08 GB</div>
+                    <div className="text-[10px] text-slate-400 font-semibold uppercase mt-1">Tải lên (OUT)</div>
                   </div>
                 </div>
               </div>
 
               {/* Card 4: Network Speed (MB/s) */}
-              <div className="bg-white p-5 rounded border border-slate-200/80 shadow-sm space-y-3 overflow-hidden">
+              <div className="bg-[#101828] p-5 rounded border border-slate-700 shadow-sm space-y-3 overflow-hidden">
                 <div className="flex justify-between items-center text-xs">
-                  <span className="font-bold text-slate-800">Network Speed (MB/s)</span>
-                  <span className="font-mono font-bold text-slate-700">0.00 MB/s</span>
+                  <span className="font-bold text-white">Tốc độ mạng (MB/s)</span>
+                  <span className="font-mono font-bold text-slate-300">0.00 MB/s</span>
                 </div>
 
                 <div className="h-24 w-full flex items-end pt-1">
-                  <div className="w-14 text-[9px] text-slate-600 font-mono flex flex-col justify-between h-full pr-1 text-right">
+                  <div className="w-14 text-[9px] text-slate-400 font-mono flex flex-col justify-between h-full pr-1 text-right">
                     <span>2.0 KB/s</span>
                     <span>1.5 KB/s</span>
                     <span>1000 B/S</span>
                     <span>500 B/S</span>
                     <span>0 B/S</span>
                   </div>
-                  <div className="flex-1 h-full border-l border-b border-slate-200 relative flex items-end overflow-hidden">
+                  <div className="flex-1 h-full border-l border-b border-slate-600 relative flex items-end overflow-hidden">
                     <svg className="w-full h-full overflow-hidden" viewBox="0 0 100 100" preserveAspectRatio="none">
-                      <line x1="0" y1="20" x2="100" y2="20" stroke="#f1f5f9" strokeWidth="1" />
-                      <line x1="0" y1="40" x2="100" y2="40" stroke="#f1f5f9" strokeWidth="1" />
-                      <line x1="0" y1="60" x2="100" y2="60" stroke="#f1f5f9" strokeWidth="1" />
-                      <line x1="0" y1="80" x2="100" y2="80" stroke="#f1f5f9" strokeWidth="1" />
+                      <line x1="0" y1="20" x2="100" y2="20" stroke="#334155" strokeWidth="1" />
+                      <line x1="0" y1="40" x2="100" y2="40" stroke="#334155" strokeWidth="1" />
+                      <line x1="0" y1="60" x2="100" y2="60" stroke="#334155" strokeWidth="1" />
+                      <line x1="0" y1="80" x2="100" y2="80" stroke="#334155" strokeWidth="1" />
                       <polygon 
                         points="0,100 0,98 20,95 40,90 60,92 80,95 95,20 100,100" 
                         fill="rgba(13, 148, 136, 0.15)" 
@@ -553,66 +556,63 @@ export default function GameServerDetailPage({ params }: { params: Promise<{ id:
                   </div>
                 </div>
 
-                <div className="flex items-center justify-center gap-4 text-[10px] text-slate-600 pt-1">
-                  <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-blue-600" /> Total speed</span>
-                  <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-emerald-500" /> Download</span>
-                  <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-amber-500" /> Upload</span>
+                <div className="flex items-center justify-center gap-4 text-[10px] text-slate-400 pt-1">
+                  <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-blue-600" /> Tổng tốc độ</span>
+                  <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-emerald-500" /> Tải xuống</span>
+                  <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-amber-500" /> Tải lên</span>
                 </div>
               </div>
 
               {/* Card 5: Account (Bottom Right) */}
-              <div className="bg-white p-5 rounded border border-slate-200/80 shadow-sm space-y-4 md:col-start-2">
-                <div className="text-xs font-bold text-slate-800">Account</div>
-                <div className="pt-2 border-t border-slate-100 text-xs text-slate-600">
-                  <p className="font-semibold text-slate-700">Last Login</p>
-                  <p className="font-mono text-slate-600 mt-1">{new Date().toLocaleString('en-US', { month: 'long', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
+              <div className="bg-[#101828] p-5 rounded border border-slate-700 shadow-sm space-y-4 md:col-start-2">
+                <div className="text-xs font-bold text-white">Tài khoản</div>
+                <div className="pt-2 border-t border-slate-700 text-xs text-slate-400">
+                  <p className="font-semibold text-slate-300">Đăng nhập lần cuối</p>
+                  <p className="font-mono text-slate-400 mt-1">{new Date().toLocaleString('vi-VN', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric' })}</p>
                 </div>
               </div>
             </div>
 
             {/* EMBEDDED WEB TERMINAL CONSOLE EXACTLY LIKE SCREENSHOT */}
-            <div className="bg-white rounded border border-slate-200 overflow-hidden shadow-inner mt-6">
-              <div className="flex items-center justify-between px-4 py-2.5 bg-white border-b border-slate-300 text-xs">
+            <div className="bg-[#050505] rounded border border-slate-700 overflow-hidden shadow-inner mt-6">
+              <div className="flex items-center justify-between px-4 py-2.5 bg-[#101828] border-b border-slate-700 text-xs">
                 <div className="flex items-center gap-2">
                   <div className="flex gap-1.5">
                     <span className="w-2.5 h-2.5 rounded-full bg-red-500" />
                     <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
                     <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
                   </div>
-                  <span className="text-slate-700 font-mono font-bold ml-2">root@{hostname}:~#</span>
+                  <span className="text-slate-300 font-mono font-bold ml-2">root@{hostname}:~#</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-emerald-500 text-[10px] font-bold uppercase flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" /> Live Terminal
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" /> TERMINAL TRỰC TIẾP
                   </span>
-                  <button onClick={() => setIsTerminalModalOpen(true)} className="text-slate-600 hover:text-slate-900 text-xs font-mono ml-2">
+                  <button onClick={() => setIsTerminalModalOpen(true)} className="text-slate-400 hover:text-white text-xs font-mono ml-2">
                     [Phóng to]
                   </button>
                 </div>
               </div>
 
-              <div ref={consoleRef} className="p-4 font-mono text-xs text-emerald-600 bg-slate-50 h-44 overflow-y-auto space-y-1">
+              <div ref={consoleRef} className="p-4 font-mono text-xs text-emerald-400 bg-black h-44 overflow-y-auto space-y-1">
                 {consoleOutput.map((line, idx) => (
                   <div key={idx} className="whitespace-pre-wrap">{line}</div>
                 ))}
               </div>
 
-              <form onSubmit={handleExecCommand} className="p-2.5 bg-white/90 border-t border-slate-300 flex items-center gap-2">
-                <span className="text-emerald-500 font-mono text-xs font-bold">$</span>
-                <input
-                  type="text"
+              <form onSubmit={handleExecCommand} className="p-2.5 bg-[#101828] border-t border-slate-700 flex items-center gap-2">
+                <span className="text-emerald-500 font-mono text-xs font-bold w-4">{'>'}</span>
+                <input 
+                  type="text" 
                   value={command}
-                  onChange={(e) => setCommand(e.target.value)}
-                  placeholder={isRunning ? "Nhập lệnh Linux (ví dụ: free -m, top, df -h, op admin)..." : "Game Server đang tắt. Vui lòng khởi động lại để dùng Terminal."}
-                  disabled={!isRunning || isExecRunning}
-                  className="flex-1 bg-white text-slate-900 text-xs font-mono px-3 py-1.5 rounded border border-slate-300 focus:outline-none focus:border-emerald-500 disabled:bg-slate-100 disabled:text-slate-600"
+                  onChange={e => setCommand(e.target.value)}
+                  placeholder="Nhập lệnh Linux..."
+                  disabled={isExecRunning}
+                  className="flex-1 bg-transparent border-none outline-none text-xs text-emerald-400 font-mono placeholder:text-slate-400 disabled:opacity-50"
+                  autoComplete="off"
                 />
-                <button
-                  type="submit"
-                  disabled={!isRunning || isExecRunning || !command.trim()}
-                  className="px-4 py-1.5 bg-emerald-600 text-white text-xs font-bold rounded hover:bg-emerald-700 disabled:opacity-50 transition-colors shadow-sm"
-                >
-                  {isExecRunning ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : 'Chạy'}
+                <button type="submit" disabled={isExecRunning || !command.trim()} className="text-slate-400 hover:text-white disabled:opacity-50">
+                  <Send className="w-4 h-4" />
                 </button>
               </form>
             </div>
