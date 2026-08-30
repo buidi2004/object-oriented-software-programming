@@ -99,9 +99,9 @@ export const HomeHeroBanner = () => {
 
   return (
     <div className="relative w-full overflow-hidden min-h-[500px] md:min-h-[600px] flex items-center justify-center pt-16 pb-20 group">
-      {/* Sharp Diagonal Background (White to Black/Earthy Yellow Multi-color Gradient) */}
+      {/* Background for Desktop */}
       <div 
-        className="absolute inset-0 z-0"
+        className="absolute inset-0 z-0 hidden lg:block"
         style={{
           background: `
             linear-gradient(108deg, #ffffff 0%, #ffffff 45%, transparent 45.1%),
@@ -112,13 +112,18 @@ export const HomeHeroBanner = () => {
         {/* Additional glowing mesh blobs on the dark side to make it "nhiều màu" (multi-color) */}
         <div className="absolute top-0 right-0 w-[50%] h-[100%] bg-gradient-to-bl from-orange-400/40 via-yellow-500/20 to-transparent blur-[80px] pointer-events-none"></div>
         <div className="absolute bottom-[-10%] right-[10%] w-[40%] h-[60%] bg-[#d09e2b]/50 blur-[100px] pointer-events-none"></div>
-        {/* The sharp diagonal accent line (like Azure's pink line) */}
+        {/* The sharp diagonal accent line */}
         <div 
           className="absolute inset-0 z-0 pointer-events-none"
           style={{
             background: `linear-gradient(108deg, transparent 0%, transparent 45%, #d09e2b 45.1%, #d09e2b 45.3%, transparent 45.4%)`
           }}
         ></div>
+      </div>
+
+      {/* Background for Mobile */}
+      <div className="absolute inset-0 z-0 lg:hidden bg-gradient-to-b from-white via-slate-50 to-slate-900">
+        <div className="absolute bottom-0 left-0 right-0 h-2/3 bg-gradient-to-t from-[#d09e2b]/30 to-transparent blur-3xl pointer-events-none"></div>
       </div>
 
       <div className="relative z-10 w-full max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 min-h-[450px]">
@@ -192,21 +197,7 @@ export const HomeHeroBanner = () => {
           </div>
         ))}
 
-        {/* Navigation Arrows */}
-        <button 
-          onClick={prevSlide}
-          className="absolute left-0 lg:-left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/80 backdrop-blur-md shadow-md hover:bg-white text-slate-700 flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 z-20 border border-slate-200"
-          aria-label="Previous Slide"
-        >
-          <ChevronLeft className="w-6 h-6" />
-        </button>
-        <button 
-          onClick={nextSlide}
-          className="absolute right-0 lg:-right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/80 backdrop-blur-md shadow-md hover:bg-white text-slate-700 flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 z-20 border border-slate-200"
-          aria-label="Next Slide"
-        >
-          <ChevronRight className="w-6 h-6" />
-        </button>
+        {/* Navigation Arrows (Removed per request) */}
 
         {/* Dots */}
         <div className="absolute -bottom-10 left-0 right-0 flex justify-center gap-2 z-20">

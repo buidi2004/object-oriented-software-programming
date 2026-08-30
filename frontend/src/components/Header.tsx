@@ -793,15 +793,15 @@ export const Header: React.FC<HeaderProps> = ({
 
         {mobileMenuOpen && (
           <div className="lg:hidden bg-white border-b border-slate-100 px-4 pt-2 pb-6 space-y-3 animate-in slide-in-from-top duration-200 max-h-[85vh] overflow-y-auto">
-            <div className="space-y-1">
+            <div className="space-y-1.5">
               {navItems.map(item => (
                 <Link
                   key={item.id}
                   href={item.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className={`block w-full text-left px-4 py-2.5 rounded text-sm font-bold transition-all ${pathname === item.href || (item.href !== '/' && item.href !== '/#contact' && pathname.startsWith(item.href))
-                      ? 'bg-blue-50 text-[#1F1F1F]'
-                      : 'text-slate-700 hover:bg-slate-50'
+                  className={`block w-full text-left px-4 py-3.5 rounded-xl text-[15px] font-bold transition-all ${pathname === item.href || (item.href !== '/' && item.href !== '/#contact' && pathname.startsWith(item.href))
+                      ? 'bg-blue-50 text-blue-700'
+                      : 'text-slate-700 hover:bg-slate-50 active:bg-slate-100'
                     }`}
                 >
                   {item.label}
@@ -817,59 +817,63 @@ export const Header: React.FC<HeaderProps> = ({
                   xem tất cả →
                 </Link>
               </div>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+              <div className="grid grid-cols-2 gap-2.5 mt-3">
                 {[
-                  { label: 'Cloud VPS', href: '/services/cloud-vps', icon: Server, color: 'text-[#1F1F1F]' },
-                  { label: 'Dedicated Server', href: '/services/dedicated-servers', icon: Server, color: 'text-[#1F1F1F]' },
-                  { label: 'Managed DB', href: '/services/databases', icon: Database, color: 'text-[#1F1F1F]' },
-                  { label: 'Game Servers', href: '/services/game-servers', icon: Gamepad2, color: 'text-[#1F1F1F]' },
-                  { label: '1-Click Apps', href: '/apps', icon: Boxes, color: 'text-[#1F1F1F]' },
-                  { label: 'Static Sites', href: '/services/static-sites', icon: Globe, color: 'text-[#1F1F1F]' },
-                  { label: 'Object Storage', href: '/services/storage', icon: HardDrive, color: 'text-[#1F1F1F]' },
-                  { label: 'Chứng Chỉ SSL', href: '/services/ssl-certificates', icon: ShieldCheck, color: 'text-[#1F1F1F]' },
-                  { label: 'Tên Miền (DNS)', href: '/domains', icon: Compass, color: 'text-[#1F1F1F]' },
-                  { label: 'Bảo Mật & WAF', href: '/services/security', icon: Shield, color: 'text-[#1F1F1F]' },
-                  { label: 'Chuyển Đổi Data', href: '/services/migrations', icon: ArrowLeftRight, color: 'text-[#1F1F1F]' },
-                  { label: 'Web Hosting', href: '/services/hosting', icon: LayoutTemplate, color: 'text-[#1F1F1F]' },
+                  { label: 'Cloud VPS', href: '/services/cloud-vps', icon: Server, color: 'text-blue-600' },
+                  { label: 'Dedicated Server', href: '/services/dedicated-servers', icon: Server, color: 'text-indigo-600' },
+                  { label: 'Managed DB', href: '/services/databases', icon: Database, color: 'text-emerald-600' },
+                  { label: 'Game Servers', href: '/services/game-servers', icon: Gamepad2, color: 'text-purple-600' },
+                  { label: '1-Click Apps', href: '/apps', icon: Boxes, color: 'text-orange-600' },
+                  { label: 'Static Sites', href: '/services/static-sites', icon: Globe, color: 'text-sky-600' },
+                  { label: 'Object Storage', href: '/services/storage', icon: HardDrive, color: 'text-teal-600' },
+                  { label: 'Chứng Chỉ SSL', href: '/services/ssl-certificates', icon: ShieldCheck, color: 'text-rose-600' },
+                  { label: 'Tên Miền (DNS)', href: '/domains', icon: Compass, color: 'text-cyan-600' },
+                  { label: 'Bảo Mật & WAF', href: '/services/security', icon: Shield, color: 'text-red-600' },
+                  { label: 'Chuyển Đổi Data', href: '/services/migrations', icon: ArrowLeftRight, color: 'text-amber-600' },
+                  { label: 'Web Hosting', href: '/services/hosting', icon: LayoutTemplate, color: 'text-pink-600' },
                 ].map((svc, idx) => (
                   <Link 
                     key={idx}
                     href={svc.href} 
                     onClick={() => setMobileMenuOpen(false)}
-                    className="p-2.5 bg-white rounded border border-slate-200/70 text-xs font-bold text-slate-800 hover:text-[#1F1F1F] flex items-center gap-2 shadow-2xs"
+                    className="p-3 bg-white rounded-xl border border-slate-200/70 text-[13px] font-bold text-slate-800 active:scale-[0.98] transition-transform flex flex-col items-center justify-center gap-2 shadow-sm text-center min-h-[80px]"
                   >
-                    <svc.icon className={`w-4 h-4 ${svc.color} shrink-0`} /> 
-                    <span className="truncate">{svc.label}</span>
+                    <div className={`p-2 rounded-full bg-slate-50 border border-slate-100 ${svc.color}`}>
+                      <svc.icon className="w-5 h-5 shrink-0" />
+                    </div>
+                    <span className="truncate w-full text-center leading-tight">{svc.label}</span>
                   </Link>
                 ))}
               </div>
             </div>
 
             {/* Quick Support Links */}
-            <div className="flex items-center justify-between px-2 pt-1 text-xs font-semibold text-slate-600">
-              <Link href="/news" onClick={() => setMobileMenuOpen(false)} className="hover:text-[#1F1F1F] flex items-center gap-1">
-                <Megaphone className="w-3.5 h-3.5 text-amber-500" /> Tin tức & Ưu đãi
+            <div className="flex flex-col gap-2 mt-4 px-2">
+              <Link href="/news" onClick={() => setMobileMenuOpen(false)} className="py-3 text-[14px] font-semibold text-slate-700 hover:text-black flex items-center gap-3 border-b border-slate-100">
+                <div className="w-8 h-8 rounded-full bg-amber-50 flex items-center justify-center border border-amber-100"><Megaphone className="w-4 h-4 text-amber-500" /></div> 
+                Tin tức & Ưu đãi
               </Link>
-              <Link href="/support/tickets" onClick={() => setMobileMenuOpen(false)} className="hover:text-[#1F1F1F] flex items-center gap-1">
-                <LifeBuoy className="w-3.5 h-3.5 text-[#1F1F1F]" /> Gửi Yêu Cầu Hỗ Trợ
+              <Link href="/support/tickets" onClick={() => setMobileMenuOpen(false)} className="py-3 text-[14px] font-semibold text-slate-700 hover:text-black flex items-center gap-3 border-b border-slate-100">
+                <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200"><LifeBuoy className="w-4 h-4 text-slate-700" /></div>
+                Gửi Yêu Cầu Hỗ Trợ
               </Link>
             </div>
 
-            <div className="pt-3 border-t border-slate-100 flex flex-col gap-2">
+            <div className="pt-4 flex flex-col gap-3">
               {user ? (
                 <>
-                  <div className="flex items-center justify-between p-3 bg-blue-50/70 rounded border border-blue-100">
-                    <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-full bg-blue-600 text-white font-bold text-xs flex items-center justify-center">
+                  <div className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-100/50 shadow-sm">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-blue-600 text-white font-bold text-sm flex items-center justify-center shadow-inner">
                         {(user?.fullName || user?.email || 'U').charAt(0).toUpperCase()}
                       </div>
                       <div>
-                        <div className="text-xs font-bold text-slate-900 truncate max-w-[160px]">{user?.fullName || user?.email || 'Khách hàng'}</div>
-                        <div className="text-[11px] font-semibold text-emerald-600">{walletBalance.toLocaleString('vi-VN')} đ</div>
+                        <div className="text-sm font-bold text-slate-900 truncate max-w-[150px]">{user?.fullName || user?.email || 'Khách hàng'}</div>
+                        <div className="text-[13px] font-black text-emerald-600">{walletBalance.toLocaleString('vi-VN')} đ</div>
                       </div>
                     </div>
                     <Link href="/dashboard/billing" onClick={() => setMobileMenuOpen(false)}
-                      className="px-4 py-1.5 bg-[#1F1F1F] text-white font-bold text-xs rounded-full hover:bg-black shadow-xs transition-colors"
+                      className="px-5 py-2.5 bg-slate-900 text-white font-bold text-sm rounded-lg hover:bg-black shadow-md transition-colors active:scale-95"
                     >
                       Nạp tiền
                     </Link>
@@ -882,7 +886,7 @@ export const Header: React.FC<HeaderProps> = ({
                       <Link
                         href="/admin"
                         onClick={() => setMobileMenuOpen(false)}
-                        className={`w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded font-bold text-xs ${panelInfo.mobileClass}`}
+                        className={`w-full flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl font-bold text-sm shadow-sm ${panelInfo.mobileClass}`}
                       >
                         <Shield className="w-4 h-4" />
                         {panelInfo.title}
@@ -895,28 +899,28 @@ export const Header: React.FC<HeaderProps> = ({
                       logout();
                       setMobileMenuOpen(false);
                     }}
-                    className="w-full text-center px-4 py-2 text-xs font-bold text-rose-500 hover:bg-rose-50 rounded transition-colors"
+                    className="w-full text-center px-4 py-3.5 text-sm font-bold text-rose-600 hover:bg-rose-50 rounded-xl border border-rose-100 transition-colors active:bg-rose-100"
                   >
                     Đăng xuất tài khoản
                   </button>
                 </>
               ) : (
-                <div className="grid grid-cols-2 gap-2">
+                <>
                   <button
                     onClick={() => {
                       handleOpenAuth('login');
                       setMobileMenuOpen(false);
                     }}
-                    className="w-full text-center px-4 py-2.5 text-sm font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded"
+                    className="w-full py-3.5 border-2 border-slate-200 rounded-xl text-[15px] font-bold text-slate-700 active:bg-slate-50 transition-colors"
                   >
                     Đăng nhập
                   </button>
                   <button onClick={() => { setMobileMenuOpen(false); handleOpenAuth('register'); }}
-                    className="w-full text-center px-4 py-2.5 text-sm font-bold text-white bg-[#1F1F1F] hover:bg-black rounded-full shadow-md transition-colors"
+                    className="w-full py-3.5 bg-slate-900 text-white rounded-xl text-[15px] font-bold shadow-md active:scale-[0.98] transition-all"
                   >
-                    Đăng ký
+                    Tạo tài khoản mới
                   </button>
-                </div>
+                </>
               )}
             </div>
           </div>

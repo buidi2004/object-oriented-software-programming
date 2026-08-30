@@ -231,7 +231,23 @@ export default function CareersPage() {
       }
     } catch (err: any) {
       console.error(err);
-      setErrorMessage('Nộp hồ sơ không thành công. Vui lòng kiểm tra lại thông tin và thử lại!');
+      let apiMsg = '';
+      if (err.response?.data) {
+        if (typeof err.response.data === 'string') {
+          apiMsg = err.response.data;
+        } else if (err.response.data.errors) {
+          // Flatten standard .NET validation errors
+          apiMsg = Object.values(err.response.data.errors).flat().join(' | ');
+        } else {
+          apiMsg = err.response.data.message || err.response.data.title;
+        }
+      }
+      
+      if (!apiMsg) {
+        apiMsg = err.message || 'Lỗi không xác định hoặc không kết nối được tới máy chủ.';
+      }
+
+      setErrorMessage(`Nộp hồ sơ thất bại: ${apiMsg}`);
     } finally {
       setSubmitting(false);
     }

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { ArrowRight, Server, Shield, Globe, Cpu, Database, Zap, Lock, Terminal, Cloud, Activity } from 'lucide-react';
@@ -21,7 +21,15 @@ export default function ExploreContent() {
     target: horizontalRef,
     offset: ["start start", "end end"]
   });
-  const xTransform = useTransform(horizontalProgress, [0, 1], ["0%", "-75%"]);
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  const xTransform = useTransform(horizontalProgress, [0, 1], ["0%", isMobile ? "0%" : "-75%"]);
 
   // Global smooth progress bar
   const scaleX = useSpring(scrollYProgress, {
@@ -134,15 +142,15 @@ export default function ExploreContent() {
       </section>
 
       {/* 3. HORIZONTAL SCROLLING GALLERY */}
-      <section ref={horizontalRef} className="h-[400vh] relative z-30">
-         <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden bg-black py-20">
+      <section ref={horizontalRef} className="md:h-[400vh] h-auto relative z-30">
+         <div className="md:sticky md:top-0 md:h-screen h-auto flex flex-col justify-center overflow-hidden bg-black py-20">
             <div className="px-6 lg:px-12 mb-12">
                <h2 className="text-4xl md:text-7xl font-black uppercase tracking-tight">Hạ tầng <br/><span className="text-gray-500">Quy mô lớn</span></h2>
             </div>
             
-            <motion.div style={{ x: xTransform }} className="flex gap-8 px-6 lg:px-12 w-[400vw]">
+            <motion.div style={{ x: xTransform }} className="flex flex-col md:flex-row gap-8 px-6 lg:px-12 md:w-[400vw] w-full">
                {/* Card 1 */}
-               <div className="w-[80vw] sm:w-[60vw] md:w-[45vw] lg:w-[35vw] shrink-0 h-[60vh] relative rounded-3xl overflow-hidden group">
+               <div className="w-full md:w-[45vw] lg:w-[35vw] shrink-0 h-[45vh] md:h-[60vh] relative rounded-3xl overflow-hidden group">
                   <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=2034&auto=format&fit=crop" className="absolute inset-0 w-full h-full object-cover grayscale opacity-50 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700" alt="Server 1"/>
                   <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
                   <div className="absolute bottom-10 left-10 right-10">
@@ -153,7 +161,7 @@ export default function ExploreContent() {
                </div>
 
                {/* Card 2 */}
-               <div className="w-[80vw] sm:w-[60vw] md:w-[45vw] lg:w-[35vw] shrink-0 h-[60vh] relative rounded-3xl overflow-hidden group">
+               <div className="w-full md:w-[45vw] lg:w-[35vw] shrink-0 h-[45vh] md:h-[60vh] relative rounded-3xl overflow-hidden group">
                   <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=2070&auto=format&fit=crop" className="absolute inset-0 w-full h-full object-cover grayscale opacity-50 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700" alt="Server 2"/>
                   <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
                   <div className="absolute bottom-10 left-10 right-10">
@@ -164,7 +172,7 @@ export default function ExploreContent() {
                </div>
 
                {/* Card 3 */}
-               <div className="w-[80vw] sm:w-[60vw] md:w-[45vw] lg:w-[35vw] shrink-0 h-[60vh] relative rounded-3xl overflow-hidden group">
+               <div className="w-full md:w-[45vw] lg:w-[35vw] shrink-0 h-[45vh] md:h-[60vh] relative rounded-3xl overflow-hidden group">
                   <img src="https://images.unsplash.com/photo-1544197150-b99a580bb7a8?q=80&w=2070&auto=format&fit=crop" className="absolute inset-0 w-full h-full object-cover grayscale opacity-50 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700" alt="Server 3"/>
                   <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
                   <div className="absolute bottom-10 left-10 right-10">
@@ -175,7 +183,7 @@ export default function ExploreContent() {
                </div>
 
                {/* Card 4 */}
-               <div className="w-[80vw] sm:w-[60vw] md:w-[45vw] lg:w-[35vw] shrink-0 h-[60vh] relative rounded-3xl overflow-hidden group flex items-center justify-center bg-zinc-900">
+               <div className="w-full md:w-[45vw] lg:w-[35vw] shrink-0 h-[45vh] md:h-[60vh] relative rounded-3xl overflow-hidden group flex items-center justify-center bg-zinc-900">
                   <div className="text-center px-10">
                      <h3 className="text-4xl font-black mb-6">Trải nghiệm sức mạnh?</h3>
                      <Link href="/services" className="px-10 py-5 bg-white text-black rounded-full font-bold text-lg hover:scale-105 transition-transform inline-flex items-center gap-2">
